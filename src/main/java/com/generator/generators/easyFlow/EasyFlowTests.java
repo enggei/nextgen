@@ -11,8 +11,21 @@ public class EasyFlowTests {
 
    	// todo add EasyFlowGroup- tests here;
 
+		 EasyFlowGroup.easyFlowST easyFlowST = group.neweasyFlow();
 
-   } ;
+		 addBinding(group, easyFlowST, "STATE1", "XXX");
+		 addBinding(group, easyFlowST, "STATE2", "YYY");
+		 addBinding(group, easyFlowST, "STATE3", "ZZZ");
+		 System.out.println(easyFlowST);
+	 }
+
+	private static void addBinding(EasyFlowGroup group, EasyFlowGroup.easyFlowST easyFlowST, String state1, String yyy) {
+		EasyFlowGroup.declarationST declaration_ = group.newdeclaration().setName(state1).setState(yyy);
+		EasyFlowGroup.implST impl_ = group.newimpl().setName(state1).setState(yyy);
+		easyFlowST.addBindingsValue(declaration_, impl_);
+	}
+
+	;
 
     @Test
    public void testEasyFlowNeo() {

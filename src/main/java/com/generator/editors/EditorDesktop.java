@@ -6,8 +6,11 @@ import com.generator.editors.graph.d2.GraphNode2D;
 import com.generator.generators.easyFlow.*;
 import com.generator.generators.generatorDomain.Generator;
 import com.generator.generators.generatorDomain.GeneratorDomain;
-import com.generator.generators.junit.JunitDomain;
-import com.generator.generators.junit.JunitDomainEditor;
+import com.generator.generators.pante.Pante;
+import com.generator.generators.pante.PanteEditor;
+import com.generator.generators.protobuf.Protobuf;
+import com.generator.generators.protobuf.ProtobufDomain;
+import com.generator.generators.protobuf.ProtobufDomainEditor;
 import com.generator.generators.templates.editors.TemplateFileEditor;
 import com.generator.generators.vertxWeb.vertxWeb;
 import com.generator.generators.vertxWeb.vertxWebEditor;
@@ -60,6 +63,22 @@ public class EditorDesktop extends JFrame {
 			JComponent newDomainEditor() {
 				// external
 				return Generator.newGeneratorDomainEditor(new GeneratorDomain(state.model));
+			}
+		}));
+
+		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "Pante") {
+			@Override
+			JComponent newDomainEditor() {
+				// external
+				return new PanteEditor(new Pante(state.model));
+			}
+		}));
+
+		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "Protobuf") {
+			@Override
+			JComponent newDomainEditor() {
+				// external
+				return Protobuf.newProtobufDomainEditor(new ProtobufDomain(state.model));
 			}
 		}));
 

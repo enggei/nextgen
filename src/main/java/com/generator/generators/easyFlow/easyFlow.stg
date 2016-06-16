@@ -1,9 +1,8 @@
-/* uuid : 8864e0c5-3bd6-451c-bfcc-36de9cdb7f95 */
+/* uuid : 245d5245-c5cd-4d08-81ea-b53af616a656 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;state,STRINGPROPERTY; **/
-declaration(name,state) ::= << 
-.whenEnter(~state~, new ContextHandler<~name~Context>() {
+declaration(name,state) ::= <<.whenEnter(~state~, new ContextHandler<~name~Context>() {
     @Override
     public void call(final ~name~Context context) throws Exception {
         //log.debug("~state;format="humpToCap"~");
