@@ -1,0 +1,58 @@
+/* uuid : 4571f1f7-99cb-48a6-8076-8537b7f04ea3 */
+delimiters "~", "~"
+
+/**  **/
+declaration() ::= <<
+
+>>
+
+/** context,STRINGPROPERTY;contextName,STRINGPROPERTY;events,STRINGPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;states,STRINGPROPERTY;transit,STRINGPROPERTY; **/
+easyFlow(context,contextName,events,name,package,states,transit) ::= <<
+writeFile(fsm.neweasyFlow().
+                        setName("~name~").
+                        setPackage("~package~").
+                        setContext(~context~).
+                        setContextName("~contextName~").
+                        setStates(~states~).
+                        setEvents(~events~).
+                        setTransit("~transit~"),
+                new File(javaSource, "~package;format="packageToPath"~" + "~name~.java"));
+>>
+
+/** events,LISTPROPERTY; **/
+events(events) ::= <<
+fsm.newevents().
+    ~events:{it|addEventsValue("~it~")};separator=".\n"~
+>>
+
+/**  **/
+impl() ::= <<
+
+>>
+
+/** comment,STRINGPROPERTY;name,STRINGPROPERTY; **/
+stateDeclaration(comment,name) ::= <<
+ 
+ 
+fsm.newstateDeclaration().
+    setName("~name~")~if(comment)~.
+    setComment("~comment~")~endif~  
+>>
+
+/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,comment,modifier,name,type,value; **/
+statefulContext(name,properties) ::= <<
+fsm.newstatefulContext().
+    setName("~name~").
+    ~properties:{it|addPropertiesValue( ~if(it.comment)~"~it.comment~"~else~null~endif~, ~if(it.modifier)~"~it.modifier~"~else~null~endif~, ~if(it.name)~"~it.name~"~else~null~endif~, ~if(it.type)~"~it.type~"~else~null~endif~, ~if(it.value)~"~it.value~~else~null~endif~)};separator=".\n"~
+>>
+
+/** states,LISTPROPERTY; **/
+states(states) ::= <<
+fsm.newstates().
+    ~states:{it|addStatesValue(~it~)};separator=".\n"~
+>>
+
+/** event,STRINGPROPERTY;isFinish,STRINGPROPERTY;isInit,STRINGPROPERTY;state,STRINGPROPERTY;transits,LISTPROPERTY; **/
+transit(event,isFinish,isInit,state,transits) ::= <<
+ ~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(~transits:{it|~it~};separator=","~)~endif~ 
+>>

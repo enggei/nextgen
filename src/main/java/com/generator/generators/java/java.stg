@@ -1,0 +1,716 @@
+/* uuid : 69dc2bab-dd29-4ffe-93a8-d5b6e6e58da8 */
+delimiters "$", "$"
+
+/** comments,STRINGPROPERTY;destination,STRINGPROPERTY;eqha,LISTPROPERTY;fields,KEYVALUELISTPROPERTY,comment,jsonName,name,type;imports,LISTPROPERTY;lexical,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;source,STRINGPROPERTY; **/
+Relation(comments,destination,eqha,fields,imports,lexical,name,package,source) ::= <<
+package $package$;
+
+$imports:{it|import ~it~;}$
+
+/**
+ * $comments$
+ */
+public class $name$ {
+
+	 private java.util.UUID $source$;
+	 private java.util.UUID $destination$; 
+    $fields:{it|private $it.type$ $it.name$; $if(it.comment)$//$it.comment$$endif$};separator="\n"$
+
+    @com.fasterxml.jackson.annotation.JsonCreator
+    public $name$(@com.fasterxml.jackson.annotation.JsonProperty("$source;format="lowFirst"$") java.util.UUID $source$, @com.fasterxml.jackson.annotation.JsonProperty("$destination;format="lowFirst"$") java.util.UUID $destination$, $fields:{it|@com.fasterxml.jackson.annotation.JsonProperty("$it.jsonName$") $it.type$ $it.name$};separator=", "$) {
+      this.$source$ = $source$;
+      this.$destination$ = $destination$;
+		$fields:{it|this.$it.name$ = $it.name$;};separator="\n"$
+    }
+    
+	$fields:{it|
+
+public $it.type$ get$it.name;format="capitalize"$() {
+	return $it.name$;
+$methodEnd()$
+
+public void set$it.name;format="capitalize"$($it.type$ $it.name$) {
+	this.$it.name$ = $it.name$;
+$methodEnd()$};separator="\n"$
+
+	public void save(com.fj.database.NeoModel model) {
+		final org.neo4j.graphdb.Node $source$Node = model.getNode($source$);
+		final org.neo4j.graphdb.Node $destination$Node = model.getNode($destination$);
+		final org.neo4j.graphdb.Relationship relationship = locationNode.createRelationshipTo(tagNode, org.neo4j.graphdb.DynamicRelationshipType.withName("$destination$"));
+    	$fields:{it|relationship.setProperty("$it.name$", $it.name$);};separator="\n"$
+	}
+
+   @Override
+	public boolean equals(Object o) {
+   	if(this==o) return true;
+	   if(o==null||getClass()!=o.getClass()) return false;
+	   $name$ that = ($name$) o;
+	   $eqha:{it | if($it$!=null ? !$it$.equals(that.$it$) : that.$it$!=null) return false;$\n$}$		return true;
+	}
+
+	@Override
+	public int hashCode() {
+   	int result;
+	   result = $first(eqha):{it | ($it$!=null ? $it$.hashCode() : 0)}$;
+	   $rest(eqha):{it | result = 31*result+($it$!=null ? $it$.hashCode() : 0);$\n$}$      return result;
+	}
+
+   @Override
+   public String toString() {
+       return $lexical:{it| $it$};separator=" + \" \" +"$;
+   }
+}
+>>
+
+/** properties,KEYVALUELISTPROPERTY,elementType,impl,isList,isMap,isSet,keyType,mutable,name,type,valueType; **/
+accessors(properties) ::= <<
+$properties: {it |$if(it.isMap)$$mapAccessors(type=it.type,name=it.name,impl=it.impl,keyType=it.keyType,valueType=it.valueType)$$elseif(it.isList)$$listAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$elseif(it.isSet)$$setAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$else$$setter(name=it.name,type=it.type,mutable=it.mutable)$
+$getter(name=it.name,type=it.type,mutable=it.mutable)$$endif$}; separator="\n"$
+>>
+
+/** source,STRINGPROPERTY;target,STRINGPROPERTY; **/
+ass(source,target) ::= <<
+ $target$=$source$; 
+>>
+
+/** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+assign(mutable,name,type) ::= <<
+$if(mutable)$  this.$name$ = new $type$($name$$mutableGetter.(type)$);$else$   this.$name$ = $name$;$endif$
+>>
+
+/**  **/
+bugfix() ::= <<
+>
+>>
+
+/** action,STRINGPROPERTY;finally,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
+ca(action,finally,predicate) ::= <<
+ 
+ 
+ case$predicate$:$action$ $finally$;  
+>>
+
+/** abstract,STRINGPROPERTY;comment,STRINGPROPERTY;comparable,STRINGPROPERTY;equality,STRINGPROPERTY;extends,STRINGPROPERTY;final,STRINGPROPERTY;implement,LISTPROPERTY;imports,LISTPROPERTY;innerClasses,LISTPROPERTY;lexical,STRINGPROPERTY;methods,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,elementType,final,impl,isList,isMap,isSet,keyType,mutable,name,scope,type,valueType;scope,STRINGPROPERTY;test,STRINGPROPERTY; **/
+class(abstract,comment,comparable,equality,extends,final,implement,imports,innerClasses,lexical,methods,name,package,properties,scope,test) ::= <<
+$package(package)$
+$imports(imports)$
+
+import java.util.*;
+
+$classComment(text=comment)$
+$classDeclaration(scope=scope,abstract=abstract,final=final,name=name,extends=extends,implement=implement,comparable=comparable)$
+
+	// $test$
+   $propertiesDeclaration(properties)$
+   $constructor(name=name,properties=properties)$
+   $accessors(properties)$
+   $methods(methods)$
+   $equality(name=name,properties=equality)$
+   $lexical(properties=lexical)$
+   $comparable(comparable=comparable,type=name,property=comparable)$
+
+   $innerClasses:{it | $it$};separator="\n"$
+}
+>>
+
+/** text,STRINGPROPERTY; **/
+classComment(text) ::= <<
+$if(text)$/**
+ * $text$
+ */$endif$
+>>
+
+/** abstract,STRINGPROPERTY;comparable,STRINGPROPERTY;extends,STRINGPROPERTY;final,STRINGPROPERTY;implement,LISTPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+classDeclaration(abstract,comparable,extends,final,implement,name,scope) ::= <<
+$if(scope)$$scope$ $else$$endif$$if(final)$final $elseif(abstract)$abstract $endif$class $name$ $if(extends)$extends $extends$ $endif$$if(implement)$implements $implement:{it | $it$}; separator=","$ $if(comparable)$,Comparable<$name$>$endif$$else$$if(comparable)$implements Comparable<$name$>$endif$$endif$ {
+>>
+
+/** comparable,STRINGPROPERTY;property,STRINGPROPERTY;type,STRINGPROPERTY; **/
+comparable(comparable,property,type) ::= <<
+$if(comparable)$
+@Override
+public int compareTo($type$ other) {
+   if(this.$property$==null) return 1;
+   if(other.$property$==null) return -1;
+   return this.$property$.compareTo(other.$property$);
+}$endif$
+>>
+
+/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,mutable,name,type; **/
+constructor(name,properties) ::= <<
+
+
+public $name$() {
+}
+$if(properties)$
+
+public $name$($methodParams(params=properties)$) {
+$properties:{it | $assign(name=it.name,type=it.type,mutable=it.mutable)$}; separator="\n"$
+}$endif$
+
+>>
+
+/** immutable,STRINGPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY;type,STRINGPROPERTY; **/
+declare(immutable,name,scope,type) ::= <<
+ $if(scope)$$scope$ $endif$$if(immutable)$final $endif$$type$ $name$
+>>
+
+/** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
+dw(action,predicate) ::= <<
+ do $action$ while($predicate$);
+>>
+
+/** name,STRINGPROPERTY; **/
+emptyconstructor(name) ::= <<
+
+public $name$() {
+}
+>>
+
+/** comment,STRINGPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;scope,STRINGPROPERTY;values,LISTPROPERTY; **/
+enum(comment,name,package,scope,values) ::= <<
+$package(package)$
+$comment$
+$if(scope)$$scope$ $else$$endif$enum $name$ {
+    $values:{it | $it$}; separator=",\n"$
+}
+>>
+
+/** name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+equality(name,properties) ::= <<
+$if(name)$$if(properties)$
+@Override
+public boolean equals(Object o) {
+   if(this==o) return true;
+   if(o==null||getClass()!=o.getClass()) return false;
+   $name$ that = ($name$) o;
+   $properties:{it | if($it$!=null ? !$it$.equals(that.$it$) : that.$it$!=null) return false;$\n$}$   return true;
+}
+
+@Override
+public int hashCode() {
+   int result;
+   result = $first(properties):{it | ($it$!=null ? $it$.hashCode() : 0)}$;
+   $rest(properties):{it | result = 31*result+($it$!=null ? $it$.hashCode() : 0);$\n$}$   return result;
+}$endif$$endif$
+>>
+
+/** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
+filearray(init,reference) ::= <<
+final java.io.File[] $reference$ = $init$
+>>
+
+/** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
+fl(action,predicate) ::= <<
+ for($predicate$) { $action$ } 
+>>
+
+/** reference,STRINGPROPERTY;scope,STRINGPROPERTY;source,STRINGPROPERTY; **/
+forC(reference,scope,source) ::= <<
+for($reference$ : $source$) {
+    $scope$
+}
+>>
+
+/** package,STRINGPROPERTY; **/
+formatUtil(package) ::= <<
+$package(package)$
+
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.text.SimpleDateFormat;
+
+public class FormatUtil {
+
+    public static final long SECONDms = 1000;
+    public static final long MINUTEms = SECONDms * 60L;
+    public static final long HOURms = MINUTEms * 60L;
+    public static final long DAYms = HOURms * 24L;
+    private static final SimpleDateFormat DATETIMEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
+    public static String formatTime(long runningTime) {
+
+        final boolean negative = runningTime < 0;
+
+        runningTime = Math.abs(runningTime);
+
+        final StringBuilder t = new StringBuilder();
+        final long d = runningTime / DAYms;
+        if (d > 0L) {
+            t.append(" ").append(d).append(" day").append(d == 1 ? "" : "s");
+            runningTime %= DAYms;
+        }
+        final long h = runningTime / HOURms;
+        if (h > 0L) {
+            t.append(" ").append(h).append(" hour").append(h == 1 ? "" : "s");
+            runningTime %= HOURms;
+        }
+        final long m = runningTime / MINUTEms;
+        if (m > 0L) {
+            t.append(" ").append(m).append(" minute").append(m == 1 ? "" : "s");
+            runningTime %= MINUTEms;
+        }
+        final long s = runningTime / SECONDms;
+        if (s > 0L) {
+            t.append(" ").append(s).append(" second").append(s == 1 ? "" : "s");
+            runningTime %= SECONDms;
+        }
+
+        final String x = t.toString().trim();
+        return (negative ? "-" : "") + (x.length() == 0 ? (runningTime + " ms") : x);
+    }
+
+    public static String formatBytes(long bytes, boolean si) {
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    public static String formatDate(long time) {
+        return DATETIMEFORMAT.format(time);
+    }
+
+    public static String getChecksum(String filename) throws Exception {
+        byte[] b = createChecksum(filename);
+        String result = "";
+        for (byte aB : b) result += Integer.toString((aB & 0xff) + 0x100, 16).substring(1);
+        return result;
+    }
+
+    public static byte[] createChecksum(String filename) throws Exception {
+        InputStream fis = new FileInputStream(filename);
+
+        byte[] buffer = new byte[1024];
+        MessageDigest complete = MessageDigest.getInstance("SHA-1");
+        int numRead;
+
+        do {
+            numRead = fis.read(buffer);
+            if (numRead > 0) complete.update(buffer, 0, numRead);
+        } while (numRead != -1);
+
+        fis.close();
+        return complete.digest();
+    }
+
+    public static String formatStacktrace(Throwable throwable) {
+        final StackTraceElement[] stackTrace = throwable == null ? null : throwable.getStackTrace();
+        if (stackTrace == null) return "NO STACKTRACE";
+        int maxDepth = Math.min(5, stackTrace.length);
+        final StringBuilder stack = new StringBuilder();
+        for (int i = 0; i < maxDepth; i++)
+            stack.append(stackTrace[i].getClassName()).append(":").append(stackTrace[i].getMethodName()).append(":").append(stackTrace[i].getLineNumber()).append("\n");
+        return stack.toString();
+    }
+}
+>>
+
+/** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+getter(mutable,name,type) ::= <<
+
+
+public $type$ $accessorTypeGetter.(type)$$name;format="capitalize"$() {
+$if(mutable)$   return new $type$($name$$mutableGetter.(type)$);$else$   return $name$;$endif$
+}
+
+>>
+
+/** name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+getterInterface(name,type) ::= <<
+public $type$ $accessorTypeGetter.(type)$$name;format="capitalize"$();
+>>
+
+/** condition,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+ifStatement(condition,scope) ::= <<
+if($condition$) $scope$
+>>
+
+/** imports,LISTPROPERTY; **/
+imports(imports) ::= <<
+$imports:{it | import $it$;}; separator="\n"$
+>>
+
+/** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;type,STRINGPROPERTY; **/
+instantiate(params,type) ::= <<
+ new $type$($if(params)$$methodParams(params=params)$$endif$); 
+>>
+
+/** comment,STRINGPROPERTY;extends,STRINGPROPERTY;imports,LISTPROPERTY;methods,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
+interface(comment,extends,imports,methods,name,package) ::= <<
+$package(package)$
+$imports(imports)$
+
+$classComment(text=comment)$
+public interface $name$ $if(extends)$extends $extends$ $endif${
+
+$methods:{it |    $it$;
+}; separator="\n"$
+}
+>>
+
+/** extends,STRINGPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+interfaceDeclaration(extends,name,scope) ::= <<
+$if(scope)$$scope$ $endif$interface $name$ $if(extends)$extends $extends$ $endif${
+>>
+
+/** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;scope,STRINGPROPERTY;type,STRINGPROPERTY; **/
+interfaceMethod(name,params,scope,type) ::= <<
+$if(scope)$$scope$$else$public $endif$$if(type)$$type$$else$void$endif$ $name$($methodParams(params=params)$)
+>>
+
+/** action,STRINGPROPERTY;iterator,STRINGPROPERTY; **/
+it(action,iterator) ::= <<
+ while($iterator$.next()) { $action$ } 
+>>
+
+/** properties,LISTPROPERTY; **/
+lexical(properties) ::= <<
+$if(properties)$
+
+@Override
+public String toString() {
+   final StringBuilder sb = new StringBuilder();
+   $properties:{it | if($it$!=null) sb.append($it$).append(" ");separator="\n"}$   return sb.toString().trim();
+}$endif$
+>>
+
+/** elementType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+listAccessors(elementType,name,type) ::= <<
+
+public void add$name;format="singlify"$($elementType$ delegate) {
+    this.$name$.add(delegate);
+}
+
+public void remove$name;format="singlify"$($elementType$ delegate) {
+    this.$name$.remove(delegate);
+}
+
+public Iterator<$elementType$> iterate$name;format="capitalize"$() {
+    return this.$name$.iterator();
+}
+
+public $type$<$elementType$> get$name;format="capitalize"$() {
+    return this.$name$;
+}
+
+>>
+
+/** statement,STRINGPROPERTY; **/
+loginfo(statement) ::= <<
+log.info($statement$)
+>>
+
+/** string,STRINGPROPERTY; **/
+loginfoString(string) ::= <<
+log.info("$string$")
+>>
+
+/** statements,LISTPROPERTY; **/
+mainMethod(statements) ::= <<
+public static void main(String[] args) {
+    $statements:{it | $it$;}; separator="\r\n\r\n"$
+}
+>>
+
+/** keyType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY;valueType,STRINGPROPERTY; **/
+mapAccessors(keyType,name,type,valueType) ::= <<
+
+public void add$name;format="singlify"$($keyType$ key,$valueType$ value) {
+    this.$name$.put(key,value);
+}
+
+public void remove$name;format="singlify"$($keyType$ key) {
+    this.$name$.remove(key);
+}
+
+public $valueType$ get$name;format="singlify"$($keyType$ key) {
+    return this.$name$.get(key);
+}
+
+public Iterator<Map.Entry<$keyType$,$valueType$>$bugfix()$ iterate$name;format="capitalize"$() {
+    return this.$name$.entrySet().iterator();
+}
+
+public $type$<$keyType$,$valueType$> get$name;format="capitalize"$() {
+    return this.$name$;
+}
+
+>>
+
+/** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;returnVal,STRINGPROPERTY;scope,STRINGPROPERTY;statements,LISTPROPERTY; **/
+method(name,params,returnVal,scope,statements) ::= <<
+ $scope$ $if(returnVal)$$returnVal$$else$void$endif$ $name$($methodParams(params=params)$) {
+    $statements:{it |$it$};separator="\n"$
+}
+>>
+
+/**  **/
+methodEnd() ::= <<
+}
+>>
+
+/** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,name,type;returnValue,STRINGPROPERTY; **/
+methodHeader(name,params,returnValue) ::= <<
+public $if(returnValue)$$returnValue$$else$void$endif$ $name$($params:{it | $it.type$ $it.name$}; separator=","$)
+>>
+
+/** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType; **/
+methodParams(params) ::= <<
+$params:{it |$if(it.annotation)$$it.annotation$$endif$ $it.type$$if(it.isMap)$<$it.keyType$,$it.valueType$>$elseif(it.isList)$<$it.elementType$>$elseif(it.isSet)$<$it.elementType$>$endif$ $it.name$}; separator=", "$
+>>
+
+/** methods,LISTPROPERTY; **/
+methods(methods) ::= <<
+$methods:{it | $it$}; separator="\n"$
+>>
+
+/** declaration,STRINGPROPERTY;instantiate,STRINGPROPERTY; **/
+newVariable(declaration,instantiate) ::= <<
+ $assign(source=declaration,target=instantiate)$ 
+>>
+
+/** package,STRINGPROPERTY; **/
+package(package) ::= <<
+$if(package)$package $package$;$endif$
+
+>>
+
+/** comments,STRINGPROPERTY;eqha,LISTPROPERTY;fields,KEYVALUELISTPROPERTY,comment,jsonName,name,type;imports,LISTPROPERTY;lexical,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
+pojo(comments,eqha,fields,imports,lexical,name,package) ::= <<
+package $package$;
+
+$imports:{it|import ~it~;}$
+
+/**
+ * $comments$
+ */
+public class $name$ {
+
+	 private java.util.UUID uuid;
+    $fields:{it|private $it.type$ $it.name$; $if(it.comment)$//$it.comment$$endif$};separator="\n"$
+
+    @com.fasterxml.jackson.annotation.JsonCreator
+    public $name$(@com.fasterxml.jackson.annotation.JsonProperty("uuid") java.util.UUID uuid, $fields:{it|@com.fasterxml.jackson.annotation.JsonProperty("$it.jsonName$") $it.type$ $it.name$};separator=", "$) {
+      this.uuid = uuid;  
+		$fields:{it|this.$it.name$ = $it.name$;};separator="\n"$
+    }
+    
+	 public java.util.UUID getUuid() {
+		 return uuid;
+	 }
+
+	$fields:{it|
+
+public $it.type$ get$it.name;format="capitalize"$() {
+	return $it.name$;
+$methodEnd()$
+
+public void set$it.name;format="capitalize"$($it.type$ $it.name$) {
+	this.$it.name$ = $it.name$;
+$methodEnd()$};separator="\n"$
+
+	public void save(com.fj.database.NeoModel model) {
+		model.newNode(uuid, $fields:{it|"$it.name$", $it.name$};separator=", "$);
+	}
+
+   @Override
+	public boolean equals(Object o) {
+   	if(this==o) return true;
+	   if(o==null||getClass()!=o.getClass()) return false;
+	   $name$ that = ($name$) o;
+	   $eqha:{it | if($it$!=null ? !$it$.equals(that.$it$) : that.$it$!=null) return false;$\n$}$		return true;
+	}
+
+	@Override
+	public int hashCode() {
+   	int result;
+	   result = $first(eqha):{it | ($it$!=null ? $it$.hashCode() : 0)}$;
+	   $rest(eqha):{it | result = 31*result+($it$!=null ? $it$.hashCode() : 0);$\n$}$      return result;
+	}
+
+   @Override
+   public String toString() {
+       return $lexical:{it| $it$};separator=" + \" \" +"$;
+   }
+}
+>>
+
+/** predicate,STRINGPROPERTY;values,STRINGPROPERTY; **/
+pr(predicate,values) ::= <<
+ $predicate$.test($methodValues(params=values)$)
+>>
+
+/** properties,KEYVALUELISTPROPERTY,elementType,final,impl,isList,isMap,isSet,keyType,name,scope,type,valueType; **/
+propertiesDeclaration(properties) ::= <<
+
+$properties:{it|$if(it.scope)$$it.scope$ $else$$endif$$if(it.final)$final $endif$$it.type$ $if(it.isMap)$<$it.keyType$,$it.valueType$> $elseif(it.isList)$<$it.elementType$> $elseif(it.isSet)$<$it.elementType$> $endif$$it.name$$if(it.impl)$ = new $it.impl$$if(it.isMap)$<$it.keyType$,$it.valueType$>$elseif(it.isList)$<$it.elementType$>$elseif(it.isSet)$<$it.elementType$>$endif$()$endif$;}; separator="\n"$
+>>
+
+/** stringValue,STRINGPROPERTY;value,STRINGPROPERTY; **/
+return(stringValue,value) ::= <<
+ return $if(value)$$value$$else$"$stringValue$"$endif$
+>>
+
+/** content,STRINGPROPERTY; **/
+runMethod(content) ::= <<
+@Override
+public void run() {
+	$content$;           
+}
+>>
+
+/** statements,KEYVALUELISTPROPERTY,statement; **/
+scope(statements) ::= <<
+{
+    $statements:{it|$it.statement$;};separator="\n"$
+}
+>>
+
+/** attachments,KEYVALUELISTPROPERTY,filename;from,STRINGPROPERTY;host,STRINGPROPERTY;messageBody,STRINGPROPERTY;recipients,KEYVALUELISTPROPERTY,email;subject,STRINGPROPERTY; **/
+sendEmail(attachments,from,host,messageBody,recipients,subject) ::= <<
+    final String from = "$from$";
+    final String host = "$host$";
+
+    Properties properties = System.getProperties();
+    properties.setProperty("mail.smtp.host", host);
+
+    Session session = Session.getDefaultInstance(properties);
+
+    try {
+
+        // Create a default MimeMessage object.
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(from));
+        $recipients:{it|message.addRecipient(Message.RecipientType.TO, new InternetAddress("$it.email$"));};separator="\n"$
+        message.setSubject($subject$);
+
+        BodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setText($messageBody$);
+
+        Multipart multipart = new MimeMultipart();
+        multipart.addBodyPart(messageBodyPart);
+
+        $if(attachments)$
+        // Attachments:
+        File filename;
+        DataSource source;
+
+        $attachments:{it|
+messageBodyPart = new MimeBodyPart();
+filename = new File($it.filename$);
+source = new FileDataSource(filename);
+messageBodyPart.setDataHandler(new DataHandler(source));
+messageBodyPart.setFileName(filename.getName());
+multipart.addBodyPart(messageBodyPart);
+};separator="\n"$$endif$
+
+        // Send the complete message parts
+        message.setContent(multipart);
+
+        // Send message
+        Transport.send(message);
+
+    } catch (Exception mex) {
+        mex.printStackTrace();
+    }
+>>
+
+/** elementType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+setAccessors(elementType,name,type) ::= <<
+
+public void add$name;format="singlify"$($elementType$ delegate) {
+    this.$name$.add(delegate);
+}
+
+public void remove$name;format="singlify"$($elementType$ delegate) {
+    this.$name$.remove(delegate);
+}
+
+public Iterator<$elementType$> iterate$name;format="capitalize"$() {
+    return this.$name$.iterator();
+}
+
+public $type$<$elementType$> get$name;format="capitalize"$() {
+    return this.$name$;
+}
+
+>>
+
+/** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+setter(mutable,name,type) ::= <<
+ $if(mutable)$
+
+public void set$name;format="capitalize"$($type$ $name$) {
+$assign(name=name,type=type,mutable=mutable)$
+}
+$endif$
+>>
+
+/** statement,STRINGPROPERTY; **/
+statement(statement) ::= <<
+ $if(statement)$$statement$;$endif$ 
+>>
+
+/** statements,KEYVALUELISTPROPERTY,statement; **/
+statements(statements) ::= <<
+$statements:{it|$it.statement$;};separator="\n"$
+>>
+
+/** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;type,STRINGPROPERTY; **/
+staticInstantiate(params,type) ::= <<
+ $type$.new$type$($if(params)$$methodParams(params=params)$$endif$); 
+>>
+
+/** value,STRINGPROPERTY; **/
+string(value) ::= <<
+"$value$"
+>>
+
+/** values,LISTPROPERTY; **/
+stringarray(values) ::= <<
+$values:{it|"$it$"};separator=", "$
+>>
+
+/** cases,KEYVALUELISTPROPERTY,case,stmt;state,STRINGPROPERTY; **/
+switch(cases,state) ::= <<
+ switch($state$) $cases:{it | case $it.case$: $it.stmt$ break;}$ 
+>>
+
+/** statement,STRINGPROPERTY; **/
+systemPrintln(statement) ::= <<
+System.out.println($statement$)
+>>
+
+/** string,STRINGPROPERTY; **/
+systemPrintlnString(string) ::= <<
+System.out.println("$string$");
+>>
+
+/** text,STRINGPROPERTY; **/
+todo(text) ::= <<
+// todo: $text$
+>>
+
+/** handleException,STRINGPROPERTY;statements,LISTPROPERTY; **/
+tryCatch(handleException,statements) ::= <<
+try {
+
+    $statements:{it|$it$;};separator="\n\n"$
+
+} catch(java.lang.Throwable t) {
+    $handleException$
+}
+>>
+
+/** init,STRINGPROPERTY;reference,STRINGPROPERTY;type,STRINGPROPERTY; **/
+var(init,reference,type) ::= <<
+$if(init)$final $endif$$type$ $reference$$if(init)$ = $init$$endif$
+>>
+
+/** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
+wd(action,predicate) ::= <<
+ while($predicate$) { $action$ } 
+>>

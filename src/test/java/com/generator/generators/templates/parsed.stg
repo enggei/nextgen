@@ -1,0 +1,75 @@
+delimiters "$", "$"
+
+import "testParent.stg"
+
+/** parameter inside iteration **/
+xx() ::= <<
+TEXT$params:{it|set$it.type$(stmt, $i$, $element$.get$it.name$());};separator="\n"$
+>>
+
+return(value,stringValue) ::= << return $if(value)$$value$$else$"$stringValue$"$endif$>>
+
+messageField(fieldConstraint,name,type,comment,defaultValue,ordinal,comments) ::= <<$fieldConstraint$ $type$ $name$ = $ordinal$$if(defaultValue)$ [default=$defaultValue$]$endif$;$if(comments)$ //$comments$$endif$>>
+
+/** aa_stringProperty,StringProperty; **/
+aa_(aa_stringProperty) ::= <<
+TEXT$if(aa_stringProperty)$TEXT$endif$TEXT
+>>
+
+/** bb_stringProperty,StringProperty; **/
+bb_(bb_stringProperty) ::= <<
+TEXT$bb_stringProperty$TEXT
+>>
+
+/** cc_listProperty,ListProperty; **/
+cc_(cc_listProperty) ::= <<
+TEXT$cc_listProperty:{cc_it|TEXT$cc_it$TEXT};separator=","$TEXT
+>>
+
+/** dd_kvProperty,ListProperty; **/
+dd_(dd_kvProperty) ::= <<
+TEXT$dd_kvProperty:{dd_it|TEXT$dd_it.dd_one$TEXT$dd_it.dd_two$TEXT};separator=","$TEXT
+>>
+
+/**  **/
+ee_(ee_stringProperty) ::= <<
+TEXT$bb_(ee_stringProperty)$TEXT
+>>
+
+/** ff_stringProperty,StringProperty; **/
+ff_(ff_stringProperty) ::= <<
+TEXT$bb_(bb_stringProperty=ff_stringProperty)$TEXT
+>>
+
+/** gg_stringProperty,StringProperty; **/
+gg_(gg_stringProperty) ::= <<
+TEXT$gg_stringProperty;format="lowFirst"$TEXT
+>>
+
+/** hh_stringPropertyOne,StringProperty;hh_stringPropertyTwo,StringProperty; **/
+hh_(hh_stringPropertyOne,hh_stringPropertyTwo) ::= <<
+TEXT$if(hh_stringPropertyOne)$TEXT$elseif(hh_stringPropertyTwo)$TEXT$elseif(hh_stringPropertyThree)$"TEXT"c$else$TEXT$endif$TEXT
+>>
+
+/** ii_first,StringProperty;ii_rest,StringProperty; **/
+ii_(ii_listProperty) ::= <<
+TEXT$first(ii_listProperty):{ii_first|TEXT$ii_first$TEXT};separator="\n"$TEXT
+TEXT$rest(ii_listProperty):{ii_rest|TEXT$ii_rest$TEXT};separator="\n"$TEXT
+>>
+
+/**  **/
+jj_() ::= <<
+TEXT$super.aa_(jj_stringProperty)$TEXT
+>>
+
+/** kk_kvProperty,ListProperty;hh_stringPropertyOne,StringProperty;hh_stringPropertyTwo,StringProperty;kk_stringPropertyParam,StringProperty;kk_two,KeyValueListProperty,kk_two;kk_stringProperty,StringProperty; **/
+kk_(kk_kvProperty,hh_stringPropertyOne,hh_stringPropertyTwo,kk_stringPropertyParam,kk_two,kk_stringProperty) ::= <<
+TEXT$kk_kvProperty:{kk_it|TEXT$hh_(hh_stringPropertyOne=kk_it.kk_one, hh_stringPropertyTwo=kk_stringPropertyParam)
+$TEXT$kk_it.kk_two$TEXT$kk_stringProperty$TEXT};separator=","$TEXT
+>>
+
+/** ll_listProperty,ListProperty; **/
+ll_(ll_listProperty) ::= <<
+TEXT$ll_listProperty:aa_()$TEXT
+>>
+

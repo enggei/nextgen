@@ -1,0 +1,490 @@
+/* uuid : 082477d9-e414-4aba-953d-d57941f0a271 */
+delimiters "~", "~"
+
+/** columns,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
+CrudHtml(columns,type) ::= <<<section>
+    <div class="page-header">
+
+        <h2>~type~</h2>
+
+        <form role="search" data-bind="submit:search">
+            <div class="input-group">
+                <span class="input-group-addon">Search</span>
+                <input type="text" class="form-control" id="searchTerm" placeholder="Search"/>
+            </div>
+        </form>
+        <button class="btn btn-success " data-bind='click: function() { listAll(); }'>List</button>
+        <button class="btn btn-success" data-bind='click: function() { newElement(); }'>New</button>
+
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                ~columns:{it|<th>~it.name;format="capitalize"~</th>};separator="\n"~
+				<th>Edit</th>
+                <th>Remove</th>
+            </tr>
+            </thead>
+
+            <tbody data-bind="foreach: list">
+            <tr>
+                ~columns:{it|<td data-bind="text: ~it.name~"></td>};separator="\n"~
+                <td>
+                    <button class="btn btn-info btn-sm" data-bind='click: function() { $parent.edit(uuid) }'>Edit</button>
+                </td>
+                <td>
+                    <button class="btn btn-warning btn-sm" data-bind='click: function() { $parent.remove(uuid) }'>Remove</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section> 
+>>
+
+/** columns,KEYVALUELISTPROPERTY,defaultValue,name;editableFields,KEYVALUELISTPROPERTY,defaultValue,name;type,STRINGPROPERTY; **/
+CrudJS(columns,editableFields,type) ::= << define(['serverChannel', 'knockout', 'knockoutMapping', 'utils', 'domain', './Edit~type~Dialog', './New~type~Dialog', 'durandal/app'], function (serverchannel, ko, knockoutMapping, utils, Domain, EditDialog, NewDialog, app) {
+
+    var list = ko.observableArray();
+
+    return {
+
+        list: list,
+
+        search: function (formElement) {
+
+            var searchTerm = $(formElement).find("#searchTerm").val();
+
+            serverchannel.send(Domain.USER_ACTIONS,
+                {
+                    'action': Domain.SEARCH,
+                    'type': '~type~',
+                    'searchTerm': searchTerm
+                },
+
+                function (content) {
+                    console.info("Search: " + JSON.stringify(content));
+                    list.removeAll();
+                    for (var i = 0; i < content.length; i++)
+                        list.push(knockoutMapping.fromJS(content[i]));
+                },
+
+                function (cause) {
+                    console.info("error listAll: " + JSON.stringify(cause));
+                });
+
+        },
+
+        listAll: function () {
+
+            serverchannel.send(Domain.USER_ACTIONS,
+
+                {
+                    'action': Domain.LIST,
+                    'type': '~type~',
+                    'properties': [
+							~columns:{it|{'key': '~it.name~', 'defaultValue': '~it.defaultValue~'~bugfix2()~};separator="\n"~
+						  ]
+                },
+
+                function (content) {
+                    console.info("List: " + JSON.stringify(content));
+                    list.removeAll();
+                    for (var i = 0; i < content.length; i++)
+                        list.push(knockoutMapping.fromJS(content[i]));
+                },
+
+                function (cause) {
+                    console.info("error listAll: " + JSON.stringify(cause));
+                });
+        },
+
+        remove: function (uuid) {
+
+            serverchannel.send(Domain.USER_ACTIONS,
+                {
+                    'action': Domain.REMOVE,
+                    'type': '~type~',
+                    'uuid': uuid()
+                },
+                function (content) {
+                    console.info("Remove: " + JSON.stringify(content));
+                    list.remove(function (item) {
+                        return item.uuid() == content.uuid;
+                    });
+                },
+                function (cause) {
+                    console.info("error remove: " + JSON.stringify(cause));
+                });
+        },
+
+        newElement: function () {
+
+            NewDialog.show({~editableFields:{it|'~it.name~':'~it.defaultValue~'};separator=", "~}).then(function (fnDone, fnFail, fnProgress) {
+                console.info(": " + fnDone);
+
+                if ("CANCEL" == fnDone)
+                    return;
+
+                list.push(knockoutMapping.fromJS(fnDone));
+            });
+        },
+
+        edit: function (uuid) {
+            console.info("editing : " + uuid());
+
+            serverchannel.send(Domain.USER_ACTIONS,
+
+                {
+                    'action': Domain.GET,
+                    'Traverser': Domain.GET,
+                    'uuid': uuid(),
+                    'properties': [
+								~editableFields:{it|{'key': '~it.name~', 'defaultValue': '~it.defaultValue~'~bugfix2()~};separator=",\n"~
+						  ]
+                },
+
+                function (content) {
+                    console.info("edit: " + JSON.stringify(content));
+
+                    EditDialog.show(content).then(function (fnDone, fnFail, fnProgress) {
+                        console.info(": " + fnDone);
+
+                        if ("CANCEL" == fnDone)
+                            return;
+
+                        var found = ko.utils.arrayFirst(list(), function (item) {
+                            return item.uuid() == fnDone.uuid;
+                        });
+
+                        console.info("found: " + found);
+
+                        if (found) {
+							~columns:{it|found.~it.name~(fnDone.~it.name~);};separator="\n"~
+                        }
+                    });
+                },
+
+                function (cause) {
+                    console.info("error edit: " + JSON.stringify(cause));
+                });
+        }
+    }
+}); 
+>>
+
+/** fields,KEYVALUELISTPROPERTY,label,name;type,STRINGPROPERTY; **/
+EditDialogHTML(fields,type) ::= << <div class="modal-content">
+    <div class="modal-header">
+        <h3>Edit ~type~</h3>
+    </div>
+    <div class="modal-body">
+        <form role="form" data-bind="submit: ok">
+~fields:{it|
+	<div>
+   	<label class="control-label" for="~it.name~">~it.label~:</label>
+      <input type="text" class="form-control" id="~it.name~" data-bind="value : ~it.name~, valueUpdate: 'afterkeydown'">
+     </div>};separator="\n"~
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" data-bind="click: ok">Ok</button>
+        <button class="btn btn-primary" data-bind="click: cancel">Cancel</button>
+    </div>
+</div> 
+>>
+
+/** fields,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
+EditDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
+
+   var closeable = false;
+
+	var Edit~type~Dialog = function (element) {
+		self = this;
+		self.uuid = ko.observable(element.uuid);
+		~fields:{it|self.~it.name~ = ko.observable(element.~it.name~);};separator="\n"~
+    };
+
+	Edit~type~Dialog.prototype.ok = function () {
+
+   	// todo: do all validation here, and set closeable=false if invalid state, and return
+
+      serverChannel.sendAction( 
+			{
+         	'action': Domain.UPDATE,
+            'type': '~type~',
+            'uuid': self.uuid(),
+            'properties': [
+					~fields:{it|{'key': '~it.name~', 'value': self.~it.name~()~bugfix2()~};separator=", \n"~
+            	]
+			},
+
+			function (content) {
+         	console.info("SAVED: " + JSON.stringify(content));
+            closeable = true;
+            dialog.close(self, content);
+			});
+   };
+
+   Edit~type~Dialog.prototype.cancel = function () {
+       closeable = true;
+       dialog.close(self, "CANCEL");
+   };
+
+   Edit~type~Dialog.prototype.canDeactivate = function () {
+       return closeable;
+   };
+
+   Edit~type~Dialog.show = function (element) {
+       return dialog.show(new Edit~type~Dialog(element));
+   };
+
+	return Edit~type~Dialog;
+}); 
+>>
+
+/** fields,KEYVALUELISTPROPERTY,label,name;type,STRINGPROPERTY; **/
+NewDialogHTML(fields,type) ::= << <div class="modal-content">
+    <div class="modal-header">
+        <h3>New ~type~</h3>
+    </div>
+    <div class="modal-body">
+        <form role="form" data-bind="submit: ok">
+~fields:{it|
+	<div>
+   	<label class="control-label" for="~it.name~">~it.label~:</label>
+      <input type="text" class="form-control" id="~it.name~" data-bind="value : ~it.name~, valueUpdate: 'afterkeydown'">
+     </div>};separator="\n"~
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" data-bind="click: ok">Ok</button>
+        <button class="btn btn-primary" data-bind="click: cancel">Cancel</button>
+    </div>
+</div> 
+>>
+
+/** fields,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
+NewDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
+
+    var closeable = false;
+
+    var New~type~Dialog = function (element) {
+        self = this;
+		  ~fields:{it|self.~it.name~ = ko.observable(element.~it.name~);};separator="\n"~
+    };
+
+    New~type~Dialog.prototype.ok = function () {
+
+        // todo: do all validation here, and set closeable=false if invalid state, and return
+        closeable = true;
+
+        serverChannel.send(Domain.USER_ACTIONS,
+
+            {
+                'action': Domain.INSERT,
+                'type': '~type~',
+                'properties': [
+                    ~fields:{it|{'key': '~it.name~', 'value': self.~it.name~()~bugfix2()~};separator=",\n"~
+                ]
+            },
+
+            function (content) {
+                var returnValue = {'uuid': content.uuid, ~fields:{it|'~it.name~': self.~it.name~()};separator=","~};
+                console.info("New~type~Dialog.returnValue " + JSON.stringify(content));
+                dialog.close(self, returnValue);
+            },
+
+            function (cause) {
+                console.info("new ~type~: " + JSON.stringify(cause));
+            });
+    };
+
+    New~type~Dialog.prototype.cancel = function () {
+        closeable = true;
+        dialog.close(self, "CANCEL");
+    };
+
+    New~type~Dialog.prototype.canDeactivate = function () {
+        return closeable;
+    };
+
+    New~type~Dialog.show = function (element) {
+        return dialog.show(new New~type~Dialog(element));
+    };
+
+    return New~type~Dialog;
+}); 
+>>
+
+/** appStylesheetPath,STRINGPROPERTY;splashTitle,STRINGPROPERTY; **/
+appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <!-- uncomment this to force a refresh on the favicon -->
+    <!--<link rel="shortcut icon" href="https://localhost:8080/favicon.ico?v=2" />-->
+
+    <link rel="apple-touch-startup-image" href="../lib/durandal/img/ios-startup-image-landscape.png" media="(orientation:landscape)"/>
+    <link rel="apple-touch-startup-image" href="../lib/durandal/img/ios-startup-image-portrait.png" media="(orientation:portrait)"/>
+    <link rel="apple-touch-icon" href="../lib/durandal/img/icon.png"/>
+
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="../lib/durandal/css/durandal.css"/>
+
+    <link href="../lib/bootstrap/css/bootstrap-material-design.min.css" rel="stylesheet">
+    <link href="../lib/bootstrap/css/ripples.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="../lib/css/ie10mobile.css"/>
+    <link rel="stylesheet" href="../lib/durandal/css/starterkit.css"/>
+
+    <!-- use this file to set all app-specific css-->
+    ~if(appStylesheetPath)~<link rel="stylesheet" href="~appStylesheetPath~"/>~endif~
+
+    <script type="text/javascript">
+        if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+            var msViewportStyle = document.createElement("style");
+            var mq = "@@-ms-viewport{width:auto!important}";
+            msViewportStyle.appendChild(document.createTextNode(mq));
+            document.getElementsByTagName("head")[0].appendChild(msViewportStyle);
+        }
+    </script>
+</head>
+<body>
+<div id="applicationHost">
+    <div class="splash">
+        <div class="message">~splashTitle~</div>
+        <i class="fa fa-spinner fa-spin"></i>
+    </div>
+</div>
+<script src="../lib/require/require.js" data-main="/app/main.js"></script>
+</body>
+</html> 
+>>
+
+/**  **/
+bugfix2() ::= << } 
+>>
+
+/** appTitle,STRINGPROPERTY;paths,KEYVALUELISTPROPERTY,name,path;plugins,KEYVALUELISTPROPERTY,name;systemDebug,STRINGPROPERTY; **/
+mainJS(appTitle,paths,plugins,systemDebug) ::= << requirejs.config({
+    paths: {
+        ~paths:{it|'~it.name~': '~it.path~',};separator=",\n"~
+    }
+});
+
+define(function (require) {
+    var system = require('durandal/system'),
+        app    = require('durandal/app');
+
+
+    system.debug(~systemDebug~);
+
+    app.title = '~appTitle~';
+
+    app.configurePlugins({
+			~plugins:{it|~it.name~: true};separator=",\n"~
+    });
+
+    app.start().then(function () {
+        app.setRoot('shell');
+    });
+}); 
+>>
+
+/** content,LISTPROPERTY;title,STRINGPROPERTY; **/
+moduleHTML(content,title) ::= << <section>
+	<div class="page-header">
+
+		<h2>~title~</h2>
+
+   	~content:{it|~it~};separator="\n"~
+	</div>
+</section> 
+>>
+
+/** dependencies,KEYVALUELISTPROPERTY,importName,refName;returns,KEYVALUELISTPROPERTY,impl,name;statements,LISTPROPERTY; **/
+moduleJS(dependencies,returns,statements) ::= << define([~dependencies:{it|'~it.importName~'};separator=", "~], function (~dependencies:{it|~it.refName~};separator=", "~) {
+
+   ~statements:{it|~it~};separator="\n"~
+
+	return {
+      ~returns:{it|~it.name~: ~it.impl~};separator=",\n\n"~
+	}
+}); 
+>>
+
+/**  **/
+shellHTML() ::= << <div>
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <i class="fa fa-home"></i>
+                <span></span>
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav" data-bind="foreach: router.navigationModel">
+                <li data-bind="css: { active: isActive }">
+                    <a data-bind="attr: { href: hash }, text: title"></a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="loader" data-bind="css: { active: router.isNavigating }">
+                    <i class="fa fa-spinner fa-spin fa-2x"></i>
+                </li>
+            </ul>
+
+            <form class="navbar-form navbar-right" role="search" data-bind="submit:search">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchTerm" placeholder="Search"/>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <div class="page-host" data-bind="router: { transition:'entrance' }"></div>
+</div> 
+>>
+
+/** routes,KEYVALUELISTPROPERTY,moduleId,nav,route,title;unknownRoutePage,STRINGPROPERTY;unknownRoutePath,STRINGPROPERTY; **/
+shellJS(routes,unknownRoutePage,unknownRoutePath) ::= << define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
+
+    return {
+
+        router: router,
+
+        search: function (formElement) {
+            var searchTerm = $(formElement).find("#searchTerm").val();
+            app.showMessage('Search for \"' + searchTerm + '\" not implemented!');
+        },
+
+        activate: function () {
+
+            $.material.init();
+
+            return router.map([
+               ~routes:{it|{route: ['~it.route~'], moduleId: '~it.moduleId~', title: '~it.title~'~if(it.nav)~, nav: ~it.nav~~endif~~bugfix2()~};separator=",\n"~ 
+            ]).buildNavigationModel().
+                mapUnknownRoutes('~unknownRoutePath~', '~unknownRoutePage~').
+                activate();
+        }
+    };
+}); 
+>>

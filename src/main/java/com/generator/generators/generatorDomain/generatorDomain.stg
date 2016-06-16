@@ -1,0 +1,331 @@
+/* uuid : e2da56a0-a49b-4674-8d53-2f5daf1a02b1 */
+delimiters "~", "~"
+
+/** name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+addEntity(name,properties) ::= <<public Node add~name;format="capitalize"~(UUID uuid~if(properties)~, ~properties:{it|String _~it~};separator=", "~~endif~) {
+    return newNode(ENTITIES.~name;format="capitalize"~, uuid~if(properties)~, ~properties:{it|"~it~", (_~it~ == null || _~it~.trim().length()==0) ? "[]" : _~it~};separator=", "~~endif~);
+}
+>>
+
+/** domain,STRINGPROPERTY;dst,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY;src,STRINGPROPERTY; **/
+addRelation(domain,dst,name,properties,src) ::= << 
+
+
+public ~domain~ relate~src;format="capitalize"~_~name;format="capitalize"~_~dst;format="capitalize"~(Node ~src;format="toLower"~Src, Node ~dst;format="toLower"~Dst~if(properties)~, ~properties:{it|String _~it~};separator=", "~~endif~) {
+    relate(RELATIONS.~name;format="toUpper"~, ~src;format="toLower"~Src, ~dst;format="toLower"~Dst~if(properties)~, ~properties:{it|"~it~", (_~it~ == null || _~it~.trim().length()==0) ? "[]" : _~it~};separator=", "~~endif~);
+    return this;
+} 
+>>
+
+/**  **/
+bugfix() ::= <<>
+>>
+
+/** keyValues,KEYVALUELISTPROPERTY,name,value;type,STRINGPROPERTY;uuid,STRINGPROPERTY;valueKey,STRINGPROPERTY; **/
+defaultValueInitialization(keyValues,type,uuid,valueKey) ::= <<default~type~.put("~valueKey~", newNode(ENTITIES.~type~, UUID.fromString("~uuid~"), ~keyValues:{it|"~it.name~", "~it.value~"};separator=", "~));
+>>
+
+/** values,LISTPROPERTY; **/
+defaultValues(values) ::= <<~values:{it|~it~};separator="\n"~
+>>
+
+/** name,STRINGPROPERTY; **/
+defaultValuesAccessor(name) ::= <<public Map<String, Node> default~name;format="capitalize"~() { return default~name;format="capitalize"~; }
+>>
+
+/** comments,STRINGPROPERTY;entities,KEYVALUELISTPROPERTY,add,declaration,defaultValueAccessor,defaultValues,name;name,STRINGPROPERTY;package,STRINGPROPERTY;relations,KEYVALUELISTPROPERTY,add,declaration,name;root,STRINGPROPERTY; **/
+domain(comments,entities,name,package,relations,root) ::= <<~if(package)~package ~package~;
+
+~endif~
+import com.generator.editors.domain.NeoModel;
+import com.generator.editors.domain.*;
+
+import org.neo4j.graphdb.*;
+
+import static com.generator.editors.domain.MetaRelation.Cardinality.*;
+import static com.generator.editors.domain.MetaRelation.Direction.*;
+
+import java.util.*;
+
+import static ~if(package)~~package~.~endif~~name~.ENTITIES.*;
+import static ~if(package)~~package~.~endif~~name~.RELATIONS.*;
+
+/**
+ * ~comments~
+ */
+public class ~name~ extends MetaDomain<~name~.ENTITIES, ~name~.RELATIONS> {
+
+    public enum ENTITIES {
+        ~entities:{it|~it.name;format="capitalize"~};separator=", "~
+    }
+
+    public enum RELATIONS implements RelationshipType {
+        ~relations:{it|~it.name;format="toUpper"~};separator=", "~
+    }
+
+    ~entities:{it|~if(it.defaultValues)~private final java.util.Map<String, Node> default~it.name;format="capitalize"~ = new java.util.LinkedHashMap<>();
+     ~endif~}~
+    ~entities:{it|~if(it.defaultValueAccessor)~~it.defaultValueAccessor~
+    ~endif~}~
+    public ~name~(final NeoModel model) {
+        super(model, "~name~");
+
+        try (Transaction tx = model.beginTx()) {
+
+            ~entities:{it|~it.declaration~};separator="\n"~
+
+            ~relations:{it|~it.declaration~};separator="\n"~
+
+            validate();
+
+            ~entities:{it|~if(it.defaultValues)~~it.defaultValues~
+
+            ~endif~}~
+            tx.success();
+        }
+    }
+
+    @Override
+    protected final ENTITIES entity(String s) {
+        return ENTITIES.valueOf(s);
+    }
+
+    @Override
+    protected final RELATIONS relation(String s) {
+        return RELATIONS.valueOf(s);
+    }
+
+    @Override
+    public final MetaNode<ENTITIES> getRootNode() {
+        return getNode(~root;format="capitalize"~);
+    }
+
+    @Override
+    public final boolean isConstrained(Node node) {
+        ~entities:{it|~if(it.defaultValues)~
+for (Node default~it.name;format="capitalize"~Node : default~it.name;format="capitalize"~.values())
+    if (default~it.name;format="capitalize"~Node.equals(node)) return true;
+
+             ~endif~}~
+        return super.isConstrained(node);
+    }
+    ~entities:{it|~it.add~};separator="\n"~
+    ~relations:{it|~it.add~};separator="\n"~
+}
+>>
+
+/** comments,STRINGPROPERTY;entities,KEYVALUELISTPROPERTY,graphEditorDeclaration,graphEditorImpl,graphNodeDeclaration,graphNodeImpl,name,onRightClick;name,STRINGPROPERTY;package,STRINGPROPERTY;relations,KEYVALUELISTPROPERTY,graphRelationDeclaration,graphRelationImpl,name; **/
+editor(comments,entities,name,package,relations) ::= <<~if(package)~package ~package~;
+
+~endif~
+
+import com.generator.editors.domain.MetaDomain;
+import com.generator.editors.domain.MetaNode;
+import com.generator.editors.domain.NeoModel;
+import com.generator.editors.domain.MetaRelation;
+import com.generator.editors.domain.editors.NodeEditor;
+import com.generator.editors.graph.GraphRelation;
+import com.generator.editors.graph.GraphEditor;
+import com.generator.editors.graph.d2.GraphEditor2D;
+import com.generator.editors.graph.d2.GraphNode2D;
+import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+
+/**
+ * ~comments~
+ */
+public class ~name~Editor extends GraphEditor2D<~name~.ENTITIES, ~name~.RELATIONS, GraphNode2D<~name~.ENTITIES>~bugfix()~ {
+
+    public ~name~Editor(MetaDomain<~name~.ENTITIES, ~name~.RELATIONS> domain) {
+        super(domain);
+    }
+
+    @Override
+    protected GraphRelation<GraphNode2D<~name~.ENTITIES>, GraphNode2D<~name~.ENTITIES>, ~name~.ENTITIES> newGraphRelation(MetaRelation<~name~.ENTITIES, ~name~.RELATIONS> metaRelation, Relationship relationship, GraphNode2D<~name~.ENTITIES> source, GraphNode2D<~name~.ENTITIES> target) {
+
+        if (metaRelation == null) return null;
+
+        switch (~name~.RELATIONS.valueOf(metaRelation.getName().name())) {
+            ~relations:{it|
+case ~it.name;format="toUpper"~:
+    return ~it.graphRelationDeclaration~
+    };separator=""~
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public NodeEditor getNodeEditor(MetaNode<~name~.ENTITIES> metaNode, GraphNode2D<~name~.ENTITIES> node, GraphEditor editor) {
+
+        if (metaNode == null) return null;
+
+        switch (metaNode.getLabel()) {
+            ~entities:{it|
+case ~it.name;format="capitalize"~:
+    return ~it.graphEditorDeclaration~
+    };separator=""~
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    protected GraphNode2D<~name~.ENTITIES> newGraphNodeFor(MetaNode<~name~.ENTITIES> metaNode, Node node) {
+
+        if (metaNode == null) return null;
+
+        final int x = Math.max(0, random.nextInt(getWidth() - 60) + 30);
+        final int y = Math.max(0, random.nextInt(getHeight() - 60) + 30);
+
+        switch (metaNode.getLabel()) {
+            ~entities:{it|
+case ~it.name;format="capitalize"~:
+    return ~it.graphNodeDeclaration~
+    };separator=""~
+            default:
+                return null;
+        }
+    }
+
+    @Override
+    public final void rightClickSelect(MouseEvent mouseEvent, JPopupMenu popupMenu, GraphNode2D<~name~.ENTITIES> targetNode) {
+        super.rightClickSelect(mouseEvent, popupMenu, targetNode);
+
+        final MetaNode<~name~.ENTITIES> metaNode = targetNode.getMetaNode();
+        if (metaNode == null) return;   // targetNode not recognized by ~name~
+
+        switch (metaNode.getLabel()) {
+            ~entities:{it|
+case ~it.name;format="capitalize"~:
+    rightClick~it.name;format="capitalize"~(mouseEvent, popupMenu, targetNode);
+    break;};separator="\n"~
+        }
+    }
+
+    ~entities:{it|~it.onRightClick~};separator="\n"~
+    ~relations:{it|~it.graphRelationImpl~};separator="\n"~
+    ~entities:{it|~it.graphNodeImpl~};separator="\n"~
+    ~entities:{it|~it.graphEditorImpl~};separator="\n"~
+
+    public static void main(String[] args) {
+
+        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(args[0]);
+        final ~name~ domain = new ~name~(new NeoModel(db));
+        final ~name~Editor editor = new ~name~Editor(domain);
+
+        SwingUtil.setLookAndFeel_Nimbus();
+        final JFrame frame = new JFrame("~name~");
+        frame.addKeyListener(editor);
+        frame.getContentPane().add(editor, BorderLayout.CENTER);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        SwingUtil.show(frame);
+    }
+} 
+>>
+
+/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,instantiation; **/
+entityDeclaration(name,properties) ::= <<addMetaNode(ENTITIES.~name;format="capitalize"~, UUID.randomUUID())~if(properties)~
+        ~properties:{it|.addProperty(~it.instantiation~)};separator="\n"~~endif~;
+>>
+
+/** domain,STRINGPROPERTY;name,STRINGPROPERTY; **/
+entityEditorImplementation(domain,name) ::= <<
+public NodeEditor new~name~GraphEditor(MetaNode<~domain~.ENTITIES> metaNode, GraphNode2D<~domain~.ENTITIES> node, GraphEditor editor) {
+    return super.getNodeEditor(metaNode, node, editor);
+}
+>>
+
+/** name,STRINGPROPERTY; **/
+entityGraphNodeDeclaration(name) ::= <<new~name~GraphNode(metaNode, node, x, y);
+>>
+
+/** domain,STRINGPROPERTY;gBackground,STRINGPROPERTY;gLabelColor,STRINGPROPERTY;gSelBackground,STRINGPROPERTY;gSelLabelColor,STRINGPROPERTY;height,STRINGPROPERTY;name,STRINGPROPERTY;width,STRINGPROPERTY; **/
+entityGraphNodeImplementation(domain,gBackground,gLabelColor,gSelBackground,gSelLabelColor,height,name,width) ::= <<
+protected GraphNode2D<~domain~.ENTITIES> new~name~GraphNode(MetaNode<~domain~.ENTITIES> metaNode, Node node, int x, int y) {
+    return new GraphNode2D<>(node, metaNode, x, y, ~width~, ~height~, Color.decode("~gBackground~"), Color.decode("~gSelBackground~"), Color.decode("~gLabelColor~"), Color.decode("~gSelLabelColor~"), NeoModel.getNameOrLabelFrom(node), false);
+}
+>>
+
+/** domain,STRINGPROPERTY;name,STRINGPROPERTY; **/
+entityRightClick(domain,name) ::= <<protected void rightClick~name;format="capitalize"~(MouseEvent mouseEvent, JPopupMenu popupMenu, GraphNode2D<~domain~.ENTITIES> targetNode) {
+}
+
+>>
+
+/** name,STRINGPROPERTY; **/
+graphEditorDeclaration(name) ::= <<new~name~GraphEditor(metaNode, node, editor);
+>>
+
+/** name,STRINGPROPERTY; **/
+graphRelationDeclaration(name) ::= <<new~name;format="toUpper"~Relation(relationship, source, target);
+>>
+
+/** domain,STRINGPROPERTY;name,STRINGPROPERTY; **/
+graphRelationImpl(domain,name) ::= <<
+protected GraphRelation<GraphNode2D<~domain~.ENTITIES>, GraphNode2D<~domain~.ENTITIES>, ~domain~.ENTITIES> new~name;format="toUpper"~Relation(Relationship relationship, GraphNode2D<~domain~.ENTITIES> source, GraphNode2D<~domain~.ENTITIES> target) {
+    return new com.generator.editors.graph.d2.ShortestPathGraphRelation(relationship, source, target);
+}
+>>
+
+/** defaultValue,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+propertyInstantiation(defaultValue,name,type) ::= <<new MetaProperty("~name~"~if(defaultValue)~, "~defaultValue~"~endif~).setType("~type~")
+>>
+
+/** legalValues,LISTPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+propertyInstantiationLegalValues(legalValues,name,type) ::= <<new MetaProperty("~name~"~if(legalValues)~,~legalValues:{it|"~it~"};separator=", "~~endif~).setType("~type~")
+>>
+
+/** cardinality,STRINGPROPERTY;destination,LISTPROPERTY;direction,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,instantiation;source,LISTPROPERTY; **/
+relationDeclaration(cardinality,destination,direction,name,properties,source) ::= <<addMetaRelation(~name;format="toUpper"~, newNodeSet(~source:{it|~it;format="capitalize"~};separator=","~), newNodeSet(~destination:{it|~it;format="capitalize"~};separator=","~), ~cardinality;format="capitalize"~, ~direction;format="capitalize"~)~if(properties)~
+        ~properties:{it|.addProperty(~it.instantiation~)};separator="\n"~~endif~;
+>>
+
+/** term,STRINGPROPERTY; **/
+termCase(term) ::= <<case ~term;format="capitalize"~:
+    return visit~term;format="capitalize"~(node);
+>>
+
+/** term,STRINGPROPERTY; **/
+termImpl(term) ::= <<
+<T> T visit~term;format="capitalize"~(Node node) {
+    return null;
+}
+>>
+
+/** domain,STRINGPROPERTY;package,STRINGPROPERTY;terms,KEYVALUELISTPROPERTY,case,impl; **/
+visitor(domain,package,terms) ::= <<package ~package~;
+
+import com.generator.editors.domain.BaseDomainVisitor;
+import com.generator.editors.domain.MetaNode;
+import org.neo4j.graphdb.Node;
+
+import java.awt.*;
+
+public abstract class ~domain~Visitor extends BaseDomainVisitor<~domain~.ENTITIES> {
+
+    protected ~domain~Visitor(Component component, String name) {
+        super(component, name);
+    }
+
+    @Override
+    public <T> T visit(Node node, MetaNode<~domain~.ENTITIES> entity) {
+
+        if (entity == null) return null;
+
+        switch (entity.getLabel()) {
+            ~terms:{it|~it.case~};separator="\n"~
+        }
+
+        return null;
+    }
+    ~terms:{it|~it.impl~};separator="\n"~
+}
+>>

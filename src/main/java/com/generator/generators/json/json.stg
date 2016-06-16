@@ -1,0 +1,27 @@
+/* uuid : ae342ccb-e9b5-43de-a79e-43f49341f695 */
+delimiters "~", "~"
+
+/** elements,LISTPROPERTY; **/
+array(elements) ::= << [
+  ~elements:{it|~it~};separator=",\n"~
+] 
+>>
+
+/** content,LISTPROPERTY; **/
+document(content) ::= << ~content:{it|~it~};separator="\n"~ 
+>>
+
+/** functions,KEYVALUELISTPROPERTY,name,value;pairs,KEYVALUELISTPROPERTY,name,value; **/
+object(functions,pairs) ::= << {
+  ~pairs:{it|"~it.name~": ~it.value~};separator=",\n"~~if(pairs)~,~endif~
+  ~functions:{it|~it.name~: ~it.value~};separator=",\n"~
+} 
+>>
+
+/** value,STRINGPROPERTY; **/
+primitive(value) ::= << ~value~ 
+>>
+
+/** value,STRINGPROPERTY; **/
+primitiveString(value) ::= <<"~value~"
+>>

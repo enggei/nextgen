@@ -1,0 +1,234 @@
+/* uuid : 55e5aab3-634a-42aa-8e45-a730c60f8df6 */
+delimiters "~", "~"
+
+/**  **/
+AttributeRendererDeclaration() ::= << private enum FormatCode {
+      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
+   }
+
+   private final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
+
+      @Override
+      public String toString(Object o, String formatString, java.util.Locale locale) {
+
+         final String text = o.toString();
+
+         if (formatString == null) return text;
+
+         switch (FormatCode.valueOf(formatString)) {
+            case capitalize:
+               return capitalize(text);
+            case toUpper:
+               return toUpper(text);
+            case lowFirst:
+               return lowFirst(text);
+            case toLower:
+               return text.toLowerCase();
+            case humpToCap:
+               return humpToCap(text);
+            case camelHump:
+               return camelHump(text);
+            case splitCamelHump:
+               return splitCamelHump(text);
+            case singlify:
+               String s = toUpper(text).substring(0, 1) + text.substring(1);
+               if (s.toLowerCase().endsWith("ies")) return s.substring(0, s.length() - 3) + "y";
+               else if (s.toLowerCase().endsWith("es") || s.toLowerCase().endsWith("nts")) return s.substring(0, s.length() - 1);
+               else if (s.toLowerCase().endsWith("ions") || s.toLowerCase().endsWith("mns"))
+                  return s.substring(0, s.length() - 1);
+               return s;
+            case packageToPath:
+               return packageToPath((text));
+            default:
+               return o.toString();
+         }
+      }
+
+      private String capitalize(String string) {
+         if (string == null || string.length() == 0) return "";
+         return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+      }
+
+      private String lowFirst(String string) {
+         if (string == null || string.length() == 0) return "";
+         return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+      }
+
+      private String toUpper(String text) {
+         return text.toUpperCase();
+      }
+
+      private String humpToCap(String text) {
+         final char[] chars = text.toCharArray();
+         final StringBuilder out = new StringBuilder();
+         boolean first = true;
+         for (int i = 0; i < chars.length; i++) {
+            char aChar = chars[i];
+            if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
+               out.append("_");
+            }
+            first = false;
+            out.append(Character.toUpperCase(aChar));
+         }
+         return out.toString();
+      }
+
+      private String camelHump(String text) {
+         final char[] chars = text.toCharArray();
+         final StringBuilder out = new StringBuilder();
+         boolean capitalize = true;
+         for (char aChar : chars) {
+            if (Character.isWhitespace(aChar)) {
+               capitalize = true;
+               continue;
+            }
+            out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
+            capitalize = false;
+         }
+         return out.toString();
+      }
+
+      private String splitCamelHump(String text) {
+         final char[] chars = text.toCharArray();
+         final StringBuilder out = new StringBuilder();
+         boolean first = true;
+         for (char aChar : chars) {
+            if (Character.isUpperCase(aChar)) out.append(" ");
+            out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
+            first = false;
+         }
+         return out.toString();
+      }
+
+      private String packageToPath(String packageName) {
+          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
+      }
+   } 
+>>
+
+/** domain,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
+GroupClassDeclaration(domain,name,packageName,statements) ::= << ~if(packageName)~package ~packageName~;
+
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+
+~endif~
+/**
+ * Wraps STGroup-methods based on '~name~.stg' file<br/>
+ */
+public final class ~name~ {
+
+   private final STGroup stGroup;
+   private final char delimiter;
+
+	~if(packageName)~public ~else~private ~endif~~name~() {
+		this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "~domain;format="lowFirst"~" + java.io.File.separator + "~domain~.stg"));
+   }
+
+   ~if(packageName)~public ~else~private ~endif~~name~(STGroup stGroup~if(packageName)~~else~,DefaultAttributeRenderer renderer~endif~) {
+      this.stGroup = stGroup;
+      this.stGroup.registerRenderer(String.class, ~if(packageName)~new DefaultAttributeRenderer()~else~renderer~endif~);
+      this.delimiter = stGroup.delimiterStartChar;
+   }
+
+   ~if(packageName)~public ~name~(java.io.File templateFile) {
+   this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
+   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+   this.delimiter = stGroup.delimiterStartChar;
+}
+
+   ~endif~
+   public STGroup getSTGroup() {
+      return stGroup;
+   }
+
+   public char getDelimiter() {
+      return delimiter;
+   }
+
+   ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
+
+   ~statements:{it|~it.declaration~};separator="\r\n\r\n"~
+
+	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
+		if (alreadySet.get()) return;
+		if (value == null || value.toString().length() == 0) return;
+		alreadySet.set(true);
+		template.add(name, value);
+	}
+
+	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
+		if (value == null || value.toString().length() == 0) return true;
+		alreadySet.set(true);
+		template.add(name, value);
+		return false;
+	}
+~if(packageName)~
+
+~AttributeRendererDeclaration()~~endif~
+} 
+>>
+
+/** filename,STRINGPROPERTY;name,STRINGPROPERTY; **/
+NewGroupInstance(filename,name) ::= << 
+public ~name~ new~name~() {
+   return new ~name~(get("~filename~"), renderer);
+} 
+>>
+
+/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
+NewStatementDeclaration(name,properties) ::= << public final class ~name~ST {
+
+   ~properties:{it|private final AtomicBoolean ~it.name~IsSet = new AtomicBoolean(false);};separator="\n"~
+   private final ST template;
+
+   private ~name~ST(STGroup group) {
+		template = group.getInstanceOf("~name~");
+	}
+
+~if(properties)~
+   ~properties:{it|~it.setter~};separator="\n"~
+~endif~
+
+   @Override
+	public String toString() {
+		return template.render();
+	}
+} 
+>>
+
+/** name,STRINGPROPERTY; **/
+NewStatementInstance(name) ::= << 
+
+public ~name~ST new~name~() {
+   return new ~name~ST(stGroup);
+} 
+>>
+
+/** kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+StatementKeyValueListPropertySetter(kvNames,propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format="capitalize"~Value(~kvNames:{it|Object ~it~_};separator=", "~) {
+   ~propertyName~IsSet.set(true);
+   template.addAggr("~propertyName~.{~kvNames:{it|~it~};separator=", "~}", ~kvNames:{it|( (~it~_==null || ~it~_.toString().length()==0) ? null : ~it~_)};separator=", "~);
+   return this;
+}
+>>
+
+/** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+StatementListPropertySetter(propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format="capitalize"~Value(Object value) {
+	tryToSetListProperty(template, value, ~propertyName~IsSet, "~propertyName~");
+   return this;
+}
+>>
+
+/** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+StatementStringPropertySetter(propertyName,statementName) ::= << public ~statementName~ST set~propertyName;format="capitalize"~(Object value) {
+	tryToSetStringProperty(template, value, ~propertyName~IsSet, "~propertyName~");   
+   return this;
+} 
+>>
+
+/**  **/
+bugfix() ::= << > 
+>>

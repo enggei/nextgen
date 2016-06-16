@@ -1,0 +1,49 @@
+/* uuid : eb22b6ef-3ee5-4a12-9d25-dabd89371ba9 */
+delimiters "~", "~"
+
+/** views,LISTPROPERTY; **/
+applyBindings(views) ::= <<
+ ~views:{it|ko.applyBindings(~it~);};separator="\n"~ 
+>>
+
+/** computed,STRINGPROPERTY; **/
+computed(computed) ::= <<
+ ko.computed(function() {
+   return ~computed~; }, self); 
+>>
+
+/** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
+kv(name,value) ::= <<
+ ~name~ : ~value~ 
+>>
+
+/** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
+observable(init,reference) ::= <<
+ var ~reference~ = ko.observable(~init~); 
+>>
+
+/** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
+observableArray(init,reference) ::= <<
+ var ~reference~ = ko.observable(~if(init)~~init~~else~[]~endif~); 
+>>
+
+/** attributes,KEYVALUELISTPROPERTY,array,reference,value;computed,KEYVALUELISTPROPERTY,computed,reference;reference,STRINGPROPERTY; **/
+observableView(attributes,computed,reference) ::= <<
+var ~reference~ = {
+    var self = this;
+    ~attributes:{it|self.~it.reference~ = ko.observable~if(it.array)~Array~endif~(~it.value~);};separator="\n"~
+    ~computed:{it|self.~it.reference~ = ~computed(computed=it.computed)~ };separator="\n"~
+};
+>>
+
+/** values,LISTPROPERTY; **/
+row(values) ::= <<
+{~values:{it|~it~};separator=","~}
+>>
+
+/** observables,KEYVALUELISTPROPERTY,declaration;reference,STRINGPROPERTY; **/
+viewModel(observables,reference) ::= <<
+~if(reference)~var ~reference~ = ~endif~{
+    ~observables:{it|~it.declaration~};separator=",\n"~
+}
+>>

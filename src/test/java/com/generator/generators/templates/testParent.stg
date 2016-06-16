@@ -1,0 +1,73 @@
+/* uuid : 00327357-b720-47a6-9f95-de14b7672551 */
+delimiters "$", "$"
+
+/** name,STRINGPROPERTY; **/
+build(name) ::= <<
+ 
+<?xml version="1.0"?>
+<project name="$name$" default="run" basedir=".">
+  <property name="prop1" value="Property 1 from Buildfile"/>
+  <property name="prop2" value="Property 2 from Buildfile"/>
+
+  <target name="clean">
+    <delete dir="com"/>
+  </target>
+
+  <target name="compile">
+    <javac srcdir="." destdir=".">
+      <classpath path="."/>
+    </javac>
+  </target>
+
+  <target name="run" depends="compile">
+    <echo message="Now in buildfile..."/>
+    <echo message="prop1     = {prop1}"/>
+    <echo message="prop2     = {prop2}"/>
+    <echo message="user.home = {user.home}"/>
+
+
+    <java classname="ShowProps">
+      <classpath path="."/>
+
+      <sysproperty key="prop1" value="{prop1}"/>
+    </java>
+  </target>
+
+</project 
+>>
+
+/** listOne,LISTPROPERTY;listThree,KEYVALUELISTPROPERTY,name;listTwo,LISTPROPERTY;name,STRINGPROPERTY;newVar,STRINGPROPERTY;what,STRINGPROPERTY; **/
+parentMethod(listOne,listThree,listTwo,name,newVar,what) ::= <<
+PARENT: $name$ !!
+what about this: $what$
+
+$listOne:{it|make $it$ cool};separator="\n"$
+
+$listTwo:{it|this works awesome!!! };separator="\n"$
+
+$listThree:{it|j how awesome, right $it.name$?};separator=",,"$
+
+
+$newVar$
+>>
+
+/** cond,STRINGPROPERTY;listValue,LISTPROPERTY;namex,STRINGPROPERTY;newVar,STRINGPROPERTY;newVariable,STRINGPROPERTY;what,STRINGPROPERTY;xx,STRINGPROPERTY; **/
+xx(cond,listValue,namex,newVar,newVariable,what,xx) ::= <<
+hello from xx: $xx$
+
+$listValue:{it|test of $it$}$
+
+$what$ kan we do about this ??? fucking awesome, right ?
+$newVariable$
+hello $namex$, so now I can create templates in a fly... need to support new template file as well, using ~ as default delimiter...
+
+I need to be able to now, generate output, based on data-input (domain.dat) example....
+
+$newVar$
+
+$newVar;format="toUpper"$
+
+$if(newVar)$$newVar$ works on if too$endif$
+
+$if(cond)$cond also$endif$
+>>

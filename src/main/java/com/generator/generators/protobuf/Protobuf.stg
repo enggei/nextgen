@@ -1,0 +1,86 @@
+/* uuid : 9591d847-9021-4f06-b492-3689f34986b1 */
+delimiters "~", "~"
+
+/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+enum(comments,name,properties) ::= <<
+ /* uuid : bac3bf13-2219-44e4-8d68-fcf2d476a48c */
+delimiters "~", "~"
+
+/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+enum(comments,name,properties) ::= <<
+ /* uuid : 502e84f6-4cfe-4549-a012-0b6163d62afc */
+delimiters "~", "~"
+
+/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+enum(comments,name,properties) ::= <<
+ 
+ ~if(comments)~
+//~comments~
+~endif~
+enum ~name~ {
+	~properties:{it|~it;format="humpToCap"~ = ~i~;}; separator="\n"~
+} 
+>>
+
+/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+extend(comments,name,properties) ::= <<
+ ~if(comments)~
+//~comments~
+~endif~
+extend ~name;format="capitalize"~ {
+  ~properties:{it|~it~}; separator="\n"~
+}
+>>
+
+/** max,STRINGPROPERTY;min,STRINGPROPERTY; **/
+extensions(max,min) ::= <<
+ 
+extensions ~min~ to ~max~; 
+>>
+
+/** groupName,STRINGPROPERTY;messages,KEYVALUELISTPROPERTY,name;packageName,STRINGPROPERTY; **/
+groupMessagesModel(groupName,messages,packageName) ::= <<
+define(['ProtoBuf'], function (ProtoBuf) {
+
+    // package : ~packageName~
+    var builder = ProtoBuf.loadProtoFile("~groupName~.proto");
+
+    ~messages:{it|var ~it.name~ = builder.build("~packageName~.~it.name~");};separator="\n"~
+
+    return {
+        ~messages:{it|~it.name~: ~it.name~};separator=",\n"~
+    };
+});
+>>
+
+/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
+message(comments,name,properties) ::= <<
+ ~if(comments)~
+//~comments~
+~endif~
+message ~name;format="capitalize"~ {
+   ~properties:{it|~it~}; separator="\n"~
+}
+>>
+
+/** comments,STRINGPROPERTY;defaultValue,STRINGPROPERTY;fieldConstraint,STRINGPROPERTY;name,STRINGPROPERTY;ordinal,STRINGPROPERTY;type,STRINGPROPERTY; **/
+messageField(comments,defaultValue,fieldConstraint,name,ordinal,type) ::= <<
+~fieldConstraint~ ~type~ ~name~ = ~ordinal~~if(defaultValue)~ [default = ~defaultValue~]~endif~;~if(comments)~ //~comments~~endif~
+>>
+
+/** deliverables,LISTPROPERTY;imports,LISTPROPERTY;options,KEYVALUELISTPROPERTY,name,value;package,STRINGPROPERTY; **/
+protobufPackage(deliverables,imports,options,package) ::= <<
+package ~package~;
+
+// AUTO-GENERATED - edit 'Protobuf.stg' to make output-changes
+
+~if(options)~
+~options:{it|option ~it.name~ = ~it.value~;};separator="\n"~~endif~
+
+~if(imports)~
+
+~imports:{it|import "~it~";};separator="\n"~~endif~
+
+
+~deliverables:{it|~it~}; separator="\n\n"~
+>>

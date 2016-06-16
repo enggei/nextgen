@@ -1,0 +1,147 @@
+/* uuid : 4066b287-2b45-4771-8852-d64706b67d89 */
+delimiters "~", "~"
+
+/** domain,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
+NeoGroupClassDeclaration(domain,name,packageName,statements) ::= <<
+ ~if(packageName)~package ~packageName~;
+
+import com.generator.editors.domain.NeoModel;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+
+import java.util.UUID;
+
+import static com.generator.editors.domain.BaseDomainVisitor.*;
+
+~endif~
+/**
+ * Wraps Neo4j methods based on '~name~.stg' file <br/>	~domain~
+ */
+public final class ~name~Neo {
+
+	private static final ~name~Group group = new ~name~Group();
+
+	private final NeoModel model;
+
+   public ~name~Neo(final NeoModel model) {
+ 		this.model = model;
+	}
+
+   ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
+
+   ~statements:{it|~it.declaration~};separator="\r\n\r\n"~
+} 
+>>
+
+/**  **/
+bugfix2() ::= <<
+ } 
+>>
+
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
+declaration(groupName,name,properties) ::= <<
+ public static final class ~name~Node {
+
+   private final NeoModel model;
+	private final UUID uuid;
+
+~if(properties)~
+	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
+	   ~properties:{it|~it.name;format="toUpper"~};separator=", "~
+	}
+
+~endif~   private ~name~Node(final NeoModel model, UUID uuid) {
+		this.model = model;
+		this.uuid = uuid;
+	}
+
+	public ~groupName~Group.~name~ST fill(~groupName~Group.~name~ST statement) {
+		~properties:{it|fill~it.name;format="capitalize"~(statement);};separator="\n"~
+		return statement;
+	}
+
+	@Override
+	public String toString() {
+		return fill(group.new~name~()).toString();
+	}
+   ~properties:{it|~it.setter~};separator="\n\n"~
+
+	public UUID getUUID() {
+		return uuid;
+	}
+
+	public Node getNode() {
+		return model.getNode(uuid);
+	}
+} 
+>>
+
+/**  **/
+endParens() ::= <<
+ } 
+>>
+
+/** groupName,STRINGPROPERTY;kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+keyValueListSetter(groupName,kvNames,propertyName,statementName) ::= <<
+ // ~propertyName~
+public ~statementName~Node add~propertyName;format="capitalize"~Value(~kvNames:{it|String ~it~_};separator=", "~) {
+	final Node newNode = model.newNode("~statementName~_~propertyName~", UUID.randomUUID());
+	getNode().createRelationshipTo(newNode, PARAMS.~propertyName;format="toUpper"~);
+~kvNames:{it|
+	if (~it~_ != null) newNode.setProperty("~it~", ~it~_); };separator="\n"~   
+	return this;
+}
+
+private ~statementName~Node fill~propertyName;format="capitalize"~(~groupName~Group.~statementName~ST statement) {
+	for (Relationship relationship : outgoing(getNode(), PARAMS.~propertyName;format="toUpper"~)) {
+		final Node node = other(getNode(), relationship);
+		statement.add~propertyName;format="capitalize"~Value(~kvNames:{it|node.hasProperty("~it~") ? node.getProperty("~it~") : null};separator=", "~);
+	}
+	return this;
+} 
+>>
+
+/** groupName,STRINGPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+listSetter(groupName,propertyName,statementName) ::= <<
+ // ~propertyName~
+public ~statementName~Node add~propertyName;format="capitalize"~Value(String value) {
+	if (value != null) {
+		final Node newNode = model.newNode("~statementName~_~propertyName~", UUID.randomUUID());
+		newNode.setProperty("value", value);
+		getNode().createRelationshipTo(newNode, PARAMS.~propertyName;format="toUpper"~);
+	}
+   return this;
+}
+
+private ~statementName~Node fill~propertyName;format="capitalize"~(~groupName~Group.~statementName~ST statement) {
+	for (Relationship relationship : outgoing(getNode(), PARAMS.~propertyName;format="toUpper"~))
+		statement.add~propertyName;format="capitalize"~Value(getOtherProperty(getNode(), relationship, "value"));
+	return this;
+} 
+>>
+
+/** name,STRINGPROPERTY; **/
+newInstance(name) ::= <<
+ public ~name~Node new~name~() {
+	return new ~name~Node(model, NeoModel.uuidOf(model.newNode("~name~", UUID.randomUUID())));
+}
+
+public ~name~Node get~name~(UUID uuid) {
+	return new ~name~Node(model, uuid);
+} 
+>>
+
+/** groupName,STRINGPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
+stringSetter(groupName,propertyName,statementName) ::= <<
+ // ~propertyName~
+public ~statementName~Node set~propertyName;format="capitalize"~(String value) {
+	if (has(getNode(), "~propertyName~")) getNode().removeProperty("~propertyName~");
+	if (value!=null) getNode().setProperty("~propertyName~", value);
+   return this;
+}
+
+private ~statementName~Node fill~propertyName;format="capitalize"~(~groupName~Group.~statementName~ST statement) {
+	if (has(getNode(), "~propertyName~")) statement.set~propertyName;format="capitalize"~(get(getNode(), "~propertyName~"));
+	return this;
+} 
+>>

@@ -1,0 +1,158 @@
+/* uuid : c0bc2a2e-129d-401f-9ea4-c34e176f1c15 */
+delimiters "~", "~"
+
+/** name,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,addGroupVerticleAction,groupClassDeclarationPanel; **/
+GroupPanel(name,packageName,verticles) ::= <<
+ package ~packageName~;
+
+import ~packageName~.vertx.*;
+import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.util.CompileUtil;
+import com.generator.util.SwingUtil;
+import com.generator.util.FileUtil;
+import com.generator.util.VertxUtil;
+import io.vertx.core.Verticle;
+import io.vertx.core.Vertx;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.UUID;
+
+/**
+ * from wrapped STGroupFile
+ */
+public final class ~name~ extends JPanel {
+
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);
+
+	public static void main(String[] args) {
+		System.setProperty("generator.path", "src/main/java/com/generator/generators");
+		final Vertx vertx = Vertx.vertx();
+		final JPanel owner = new JPanel(new BorderLayout());
+		final JTabbedPane declarationsPanel = new JTabbedPane();
+		owner.add(new ~name~(vertx, declarationsPanel, new JTextField("/media/storage/nextgen/src/main/java")), BorderLayout.NORTH);
+		owner.add(declarationsPanel, BorderLayout.CENTER);
+		SwingUtil.showPanel(owner);
+	}
+
+	public ~name~(Vertx vertx, final JTabbedPane declarationsPanel, final JTextField txtRoot) {
+		super(new com.generator.util.WrapLayout());
+		~verticles:{it|~it.addGroupVerticleAction~};separator="\n"~
+	}
+
+	private static JButton deployVerticleAction(final Vertx vertx, final JTextField txtRoot, final String packageName, final String name, final VertxUtil.SuccessHandler<String> handler) {
+		return new JButton(new AbstractAction("new " + name) {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(() -> {
+					final File file = new File(txtRoot.getText(), GeneratedFile.packageToPath(packageName, name + ".java"));
+					log.info("deploying from file " + file.getAbsolutePath() + "");
+					try {
+						VertxUtil.deploy(vertx, (Verticle) CompileUtil.compileAndLoad(packageName + "." + name, FileUtil.readIntact(file)), log, handler);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				});
+			}
+		});
+	}
+
+	~verticles:{it|~it.groupClassDeclarationPanel~};separator="\n"~
+} 
+>>
+
+/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,stringPanel; **/
+TemplatePanel(name,properties) ::= <<
+ private static final class Group~name~Panel extends JPanel {
+
+		public Group~name~Panel(Vertx vertx) {
+			super(new BorderLayout());
+
+			final JTabbedPane instancesPanel = new JTabbedPane();
+
+			final JButton btnDeploy = new JButton(new AbstractAction("newInstance") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					final UUID instanceID = UUID.randomUUID();
+					~name~Verticle.sendInstanceMessage(vertx, instanceID, s -> {
+						instancesPanel.add(instanceID.toString(), actionPanel(vertx, instanceID));
+					});
+				}
+			});
+			add(btnDeploy, BorderLayout.NORTH);
+			add(instancesPanel, BorderLayout.CENTER);
+		}
+
+		private JPanel actionPanel(Vertx vertx, UUID instanceID) {
+
+			final JPanel actionPanel = new JPanel(new com.generator.util.WrapLayout());
+
+			actionPanel.add(new JLabel("Group~name~Instance "));
+			actionPanel.add(new JLabel(instanceID.toString()));
+			actionPanel.add(new JLabel());
+
+			// todo all properties here, with their proper ui
+			~properties:{it|~it.stringPanel~};separator="\n"~
+
+			final JPanel container = new JPanel(new BorderLayout());
+			container.add(actionPanel, BorderLayout.NORTH);			
+
+			actionPanel.add(new JLabel("Output "));
+			final JTextArea txtToString = new JTextArea(10, 50);
+			actionPanel.add(txtToString);
+			actionPanel.add(new JButton(new AbstractAction("toString") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					~name~Verticle.sendToStringMessage(vertx, instanceID, s -> SwingUtilities.invokeLater(() -> {
+						txtToString.setText(s);
+					}));
+				}
+			}));
+			container.add(new JScrollPane(txtToString), BorderLayout.CENTER);
+			
+			return container;
+		}
+	} 
+>>
+
+/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
+addVerticleAction(name,packageName) ::= <<
+ add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
+	@Override
+	public void onSuccess(String result) {
+		SwingUtilities.invokeLater(() -> {
+			final UUID instanceID = UUID.randomUUID();
+			~name~Verticle.sendInstanceMessage(vertx, instanceID, s ->
+				SwingUtilities.invokeLater(() -> {
+					declarationsPanel.add("~name~Instance", new Group~name~Panel(vertx));
+				}));
+		});
+	}
+
+	@Override
+	public void onFail(Throwable t) {
+
+	}
+}));  
+>>
+
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
+stringPropertyEditor(groupName,name) ::= <<
+ final JPanel ~name~Editor = new JPanel(new GridLayout(1,3));
+
+~name~Editor.add(new JLabel("~name~ "));
+final JTextField txt~name~ = new JTextField(10);
+~name~Editor.add(txt~name~);
+~name~Editor.add(new JButton(new AbstractAction("set") {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// DomainBooleanPropertySetterVerticle.sendPropertyNameMessage
+		~groupName~Verticle.send~name;format="capitalize"~Message(vertx, instanceID, txt~name~.getText(), s -> SwingUtilities.invokeLater(() -> {
+			((JButton) e.getSource()).setEnabled(false);
+		}));
+	}
+}));
+actionPanel.add(~name~Editor); 
+>>
