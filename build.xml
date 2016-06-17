@@ -1,0 +1,30 @@
+<project name="Nextgen">
+
+    <target name="build.parsers" description="generate parsers from .g4 files">
+
+        <buildParser grammarFile="src/main/java/com/generator/generators/json/parser/JSON.g4"
+                     packageName="com.generator.generators.json.parser"/>
+
+        <buildParser grammarFile="src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4"
+                     packageName="com.generator.generators.protobuf.parser"
+                     visitor="-visitor" listener="-listener"/>
+    </target>
+
+    <target name="show.antlr.options">
+        <java jar="antlr-4.5.3-complete.jar" fork="true" failonerror="true" maxmemory="128m"/>
+    </target>
+
+    <macrodef name="buildParser" description="run antlr on grammar file, and generate parser-classes">
+        <attribute name="grammarFile"/>
+        <attribute name="packageName"/>
+        <attribute name="lib" default="."/>
+        <attribute name="listener" default="-no-listener"/>
+        <attribute name="visitor" default="-no-visitor"/>
+        <sequential>
+            <java jar="antlr-4.5.3-complete.jar" fork="true" failonerror="true" maxmemory="128m">
+                <arg line="@{grammarFile} -o . -lib @{lib} -package @{packageName} @{listener} @{visitor}"/>
+            </java>
+        </sequential>
+    </macrodef>
+
+</project>

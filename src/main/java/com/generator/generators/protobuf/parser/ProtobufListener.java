@@ -1,164 +1,150 @@
-// Generated from src/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.1
+// Generated from src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.5.3
 package com.generator.generators.protobuf.parser;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
  * This interface defines a complete listener for a parse tree produced by
- * {@link com.generator.generators.protobuf.parser.ProtobufParser}.
+ * {@link ProtobufParser}.
  */
 public interface ProtobufListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyName}.
+	 * Enter a parse tree produced by {@link ProtobufParser#file}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertyName(@NotNull ProtobufParser.PropertyNameContext ctx);
+	void enterFile(ProtobufParser.FileContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyName}.
+	 * Exit a parse tree produced by {@link ProtobufParser#file}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertyName(@NotNull ProtobufParser.PropertyNameContext ctx);
-
+	void exitFile(ProtobufParser.FileContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageDecl}.
+	 * Enter a parse tree produced by {@link ProtobufParser#packageDecl}.
 	 * @param ctx the parse tree
 	 */
-	void enterPackageDecl(@NotNull ProtobufParser.PackageDeclContext ctx);
+	void enterPackageDecl(ProtobufParser.PackageDeclContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageDecl}.
+	 * Exit a parse tree produced by {@link ProtobufParser#packageDecl}.
 	 * @param ctx the parse tree
 	 */
-	void exitPackageDecl(@NotNull ProtobufParser.PackageDeclContext ctx);
-
+	void exitPackageDecl(ProtobufParser.PackageDeclContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageName}.
+	 * Enter a parse tree produced by {@link ProtobufParser#packageName}.
 	 * @param ctx the parse tree
 	 */
-	void enterPackageName(@NotNull ProtobufParser.PackageNameContext ctx);
+	void enterPackageName(ProtobufParser.PackageNameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageName}.
+	 * Exit a parse tree produced by {@link ProtobufParser#packageName}.
 	 * @param ctx the parse tree
 	 */
-	void exitPackageName(@NotNull ProtobufParser.PackageNameContext ctx);
-
+	void exitPackageName(ProtobufParser.PackageNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#messageContent}.
+	 * Enter a parse tree produced by {@link ProtobufParser#option}.
 	 * @param ctx the parse tree
 	 */
-	void enterMessageContent(@NotNull ProtobufParser.MessageContentContext ctx);
+	void enterOption(ProtobufParser.OptionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#messageContent}.
+	 * Exit a parse tree produced by {@link ProtobufParser#option}.
 	 * @param ctx the parse tree
 	 */
-	void exitMessageContent(@NotNull ProtobufParser.MessageContentContext ctx);
-
+	void exitOption(ProtobufParser.OptionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensionMax}.
+	 * Enter a parse tree produced by {@link ProtobufParser#imports}.
 	 * @param ctx the parse tree
 	 */
-	void enterExtensionMax(@NotNull ProtobufParser.ExtensionMaxContext ctx);
+	void enterImports(ProtobufParser.ImportsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensionMax}.
+	 * Exit a parse tree produced by {@link ProtobufParser#imports}.
 	 * @param ctx the parse tree
 	 */
-	void exitExtensionMax(@NotNull ProtobufParser.ExtensionMaxContext ctx);
-
+	void exitImports(ProtobufParser.ImportsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#property}.
+	 * Enter a parse tree produced by {@link ProtobufParser#message}.
 	 * @param ctx the parse tree
 	 */
-	void enterProperty(@NotNull ProtobufParser.PropertyContext ctx);
+	void enterMessage(ProtobufParser.MessageContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#property}.
+	 * Exit a parse tree produced by {@link ProtobufParser#message}.
 	 * @param ctx the parse tree
 	 */
-	void exitProperty(@NotNull ProtobufParser.PropertyContext ctx);
-
+	void exitMessage(ProtobufParser.MessageContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensions}.
+	 * Enter a parse tree produced by {@link ProtobufParser#enumName}.
 	 * @param ctx the parse tree
 	 */
-	void enterExtensions(@NotNull ProtobufParser.ExtensionsContext ctx);
+	void enterEnumName(ProtobufParser.EnumNameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensions}.
+	 * Exit a parse tree produced by {@link ProtobufParser#enumName}.
 	 * @param ctx the parse tree
 	 */
-	void exitExtensions(@NotNull ProtobufParser.ExtensionsContext ctx);
-
+	void exitEnumName(ProtobufParser.EnumNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#imports}.
+	 * Enter a parse tree produced by {@link ProtobufParser#messageContent}.
 	 * @param ctx the parse tree
 	 */
-	void enterImports(@NotNull ProtobufParser.ImportsContext ctx);
+	void enterMessageContent(ProtobufParser.MessageContentContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#imports}.
+	 * Exit a parse tree produced by {@link ProtobufParser#messageContent}.
 	 * @param ctx the parse tree
 	 */
-	void exitImports(@NotNull ProtobufParser.ImportsContext ctx);
-
+	void exitMessageContent(ProtobufParser.MessageContentContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#message}.
+	 * Enter a parse tree produced by {@link ProtobufParser#property}.
 	 * @param ctx the parse tree
 	 */
-	void enterMessage(@NotNull ProtobufParser.MessageContext ctx);
+	void enterProperty(ProtobufParser.PropertyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#message}.
+	 * Exit a parse tree produced by {@link ProtobufParser#property}.
 	 * @param ctx the parse tree
 	 */
-	void exitMessage(@NotNull ProtobufParser.MessageContext ctx);
-
+	void exitProperty(ProtobufParser.PropertyContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyType}.
+	 * Enter a parse tree produced by {@link ProtobufParser#defaultValue}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertyType(@NotNull ProtobufParser.PropertyTypeContext ctx);
+	void enterDefaultValue(ProtobufParser.DefaultValueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyType}.
+	 * Exit a parse tree produced by {@link ProtobufParser#defaultValue}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertyType(@NotNull ProtobufParser.PropertyTypeContext ctx);
-
+	void exitDefaultValue(ProtobufParser.DefaultValueContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#file}.
+	 * Enter a parse tree produced by {@link ProtobufParser#extensions}.
 	 * @param ctx the parse tree
 	 */
-	void enterFile(@NotNull ProtobufParser.FileContext ctx);
+	void enterExtensions(ProtobufParser.ExtensionsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#file}.
+	 * Exit a parse tree produced by {@link ProtobufParser#extensions}.
 	 * @param ctx the parse tree
 	 */
-	void exitFile(@NotNull ProtobufParser.FileContext ctx);
-
+	void exitExtensions(ProtobufParser.ExtensionsContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#enumName}.
+	 * Enter a parse tree produced by {@link ProtobufParser#propertyName}.
 	 * @param ctx the parse tree
 	 */
-	void enterEnumName(@NotNull ProtobufParser.EnumNameContext ctx);
+	void enterPropertyName(ProtobufParser.PropertyNameContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#enumName}.
+	 * Exit a parse tree produced by {@link ProtobufParser#propertyName}.
 	 * @param ctx the parse tree
 	 */
-	void exitEnumName(@NotNull ProtobufParser.EnumNameContext ctx);
-
+	void exitPropertyName(ProtobufParser.PropertyNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#defaultValue}.
+	 * Enter a parse tree produced by {@link ProtobufParser#propertyType}.
 	 * @param ctx the parse tree
 	 */
-	void enterDefaultValue(@NotNull ProtobufParser.DefaultValueContext ctx);
+	void enterPropertyType(ProtobufParser.PropertyTypeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#defaultValue}.
+	 * Exit a parse tree produced by {@link ProtobufParser#propertyType}.
 	 * @param ctx the parse tree
 	 */
-	void exitDefaultValue(@NotNull ProtobufParser.DefaultValueContext ctx);
-
+	void exitPropertyType(ProtobufParser.PropertyTypeContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#option}.
+	 * Enter a parse tree produced by {@link ProtobufParser#extensionMax}.
 	 * @param ctx the parse tree
 	 */
-	void enterOption(@NotNull ProtobufParser.OptionContext ctx);
+	void enterExtensionMax(ProtobufParser.ExtensionMaxContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#option}.
+	 * Exit a parse tree produced by {@link ProtobufParser#extensionMax}.
 	 * @param ctx the parse tree
 	 */
-	void exitOption(@NotNull ProtobufParser.OptionContext ctx);
+	void exitExtensionMax(ProtobufParser.ExtensionMaxContext ctx);
 }

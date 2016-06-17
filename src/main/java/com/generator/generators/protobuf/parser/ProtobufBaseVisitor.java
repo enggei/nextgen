@@ -1,10 +1,9 @@
-// Generated from src/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.1
+// Generated from src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.5.3
 package com.generator.generators.protobuf.parser;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
- * This class provides an empty implementation of {@link com.generator.generators.protobuf.parser.ProtobufVisitor},
+ * This class provides an empty implementation of {@link ProtobufVisitor},
  * which can be extended to create a visitor which only needs to handle a subset
  * of the available methods.
  *
@@ -14,113 +13,100 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 public class ProtobufBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ProtobufVisitor<T> {
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPropertyName(@NotNull ProtobufParser.PropertyNameContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitFile(ProtobufParser.FileContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPackageDecl(@NotNull ProtobufParser.PackageDeclContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitPackageDecl(ProtobufParser.PackageDeclContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPackageName(@NotNull ProtobufParser.PackageNameContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitPackageName(ProtobufParser.PackageNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMessageContent(@NotNull ProtobufParser.MessageContentContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitOption(ProtobufParser.OptionContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExtensionMax(@NotNull ProtobufParser.ExtensionMaxContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitImports(ProtobufParser.ImportsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitProperty(@NotNull ProtobufParser.PropertyContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitMessage(ProtobufParser.MessageContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitExtensions(@NotNull ProtobufParser.ExtensionsContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitEnumName(ProtobufParser.EnumNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitImports(@NotNull ProtobufParser.ImportsContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitMessageContent(ProtobufParser.MessageContentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitMessage(@NotNull ProtobufParser.MessageContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitProperty(ProtobufParser.PropertyContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPropertyType(@NotNull ProtobufParser.PropertyTypeContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitDefaultValue(ProtobufParser.DefaultValueContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFile(@NotNull ProtobufParser.FileContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitExtensions(ProtobufParser.ExtensionsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitEnumName(@NotNull ProtobufParser.EnumNameContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitPropertyName(ProtobufParser.PropertyNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDefaultValue(@NotNull ProtobufParser.DefaultValueContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitPropertyType(ProtobufParser.PropertyTypeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitOption(@NotNull ProtobufParser.OptionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitExtensionMax(ProtobufParser.ExtensionMaxContext ctx) { return visitChildren(ctx); }
 }

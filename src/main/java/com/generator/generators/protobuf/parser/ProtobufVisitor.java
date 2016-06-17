@@ -1,111 +1,97 @@
-// Generated from src/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.1
+// Generated from src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.5.3
 package com.generator.generators.protobuf.parser;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
 /**
  * This interface defines a complete generic visitor for a parse tree produced
- * by {@link com.generator.generators.protobuf.parser.ProtobufParser}.
+ * by {@link ProtobufParser}.
  *
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
 public interface ProtobufVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyName}.
+	 * Visit a parse tree produced by {@link ProtobufParser#file}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertyName(@NotNull ProtobufParser.PropertyNameContext ctx);
-
+	T visitFile(ProtobufParser.FileContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageDecl}.
+	 * Visit a parse tree produced by {@link ProtobufParser#packageDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPackageDecl(@NotNull ProtobufParser.PackageDeclContext ctx);
-
+	T visitPackageDecl(ProtobufParser.PackageDeclContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#packageName}.
+	 * Visit a parse tree produced by {@link ProtobufParser#packageName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPackageName(@NotNull ProtobufParser.PackageNameContext ctx);
-
+	T visitPackageName(ProtobufParser.PackageNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#messageContent}.
+	 * Visit a parse tree produced by {@link ProtobufParser#option}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMessageContent(@NotNull ProtobufParser.MessageContentContext ctx);
-
+	T visitOption(ProtobufParser.OptionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensionMax}.
+	 * Visit a parse tree produced by {@link ProtobufParser#imports}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExtensionMax(@NotNull ProtobufParser.ExtensionMaxContext ctx);
-
+	T visitImports(ProtobufParser.ImportsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#property}.
+	 * Visit a parse tree produced by {@link ProtobufParser#message}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProperty(@NotNull ProtobufParser.PropertyContext ctx);
-
+	T visitMessage(ProtobufParser.MessageContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#extensions}.
+	 * Visit a parse tree produced by {@link ProtobufParser#enumName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExtensions(@NotNull ProtobufParser.ExtensionsContext ctx);
-
+	T visitEnumName(ProtobufParser.EnumNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#imports}.
+	 * Visit a parse tree produced by {@link ProtobufParser#messageContent}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitImports(@NotNull ProtobufParser.ImportsContext ctx);
-
+	T visitMessageContent(ProtobufParser.MessageContentContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#message}.
+	 * Visit a parse tree produced by {@link ProtobufParser#property}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitMessage(@NotNull ProtobufParser.MessageContext ctx);
-
+	T visitProperty(ProtobufParser.PropertyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#propertyType}.
+	 * Visit a parse tree produced by {@link ProtobufParser#defaultValue}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertyType(@NotNull ProtobufParser.PropertyTypeContext ctx);
-
+	T visitDefaultValue(ProtobufParser.DefaultValueContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#file}.
+	 * Visit a parse tree produced by {@link ProtobufParser#extensions}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFile(@NotNull ProtobufParser.FileContext ctx);
-
+	T visitExtensions(ProtobufParser.ExtensionsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#enumName}.
+	 * Visit a parse tree produced by {@link ProtobufParser#propertyName}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEnumName(@NotNull ProtobufParser.EnumNameContext ctx);
-
+	T visitPropertyName(ProtobufParser.PropertyNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#defaultValue}.
+	 * Visit a parse tree produced by {@link ProtobufParser#propertyType}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDefaultValue(@NotNull ProtobufParser.DefaultValueContext ctx);
-
+	T visitPropertyType(ProtobufParser.PropertyTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link com.generator.generators.protobuf.parser.ProtobufParser#option}.
+	 * Visit a parse tree produced by {@link ProtobufParser#extensionMax}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOption(@NotNull ProtobufParser.OptionContext ctx);
+	T visitExtensionMax(ProtobufParser.ExtensionMaxContext ctx);
 }
