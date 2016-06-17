@@ -1,0 +1,67 @@
+/* uuid : fd4a3969-c13a-4894-a63d-8687b02cda5a */
+delimiters "~", "~"
+
+/** name,STRINGPROPERTY;private,LISTPROPERTY;protected,LISTPROPERTY;public,LISTPROPERTY; **/
+Class(name,private,protected,public) ::= <<class ~name;format="capitalize"~ {
+~if(public)~public:
+~public:{it|~it~}; separator="\n"~
+~endif~
+
+~if(protected)~protected:
+~protected:{it|~it~}; separator="\n"~
+~endif~
+
+~if(private)~private:
+~private:{it|~it~}; separator="\n"~
+~endif~
+}; // class ~name;format="capitalize"~ 
+>>
+
+/** entry,LISTPROPERTY;includes,KEYVALUELISTPROPERTY,name,system;name,STRINGPROPERTY;namespace,LISTPROPERTY; **/
+HeaderFile(entry,includes,name,namespace) ::= <<#ifndef __~name;format="toUpper"~_HPP__
+#define __~name;format="toUpper"~_HPP__
+~if(includes)~~includes:{it|#include ~if(it.system)~<~else~"~endif~~it.name~~if(it.system)~>~else~"~endif~};separator="\n"~~endif~
+~if(namespace)~namespace ~namespace:{it|~it;format="lowFirst"~ {};separator="\n"~~endif~
+~entry:{it|~entry~}~
+~if(namespace)~~namespace:{it|\} // namespace ~it;format="lowFirst"~};separator="\n"~~endif~
+#endif // __~name;format="toUpper"~_HPP__ 
+>>
+
+/** name,STRINGPROPERTY;static,STRINGPROPERTY;type,STRINGPROPERTY; **/
+Member(name,static,type) ::= <<~if(static)~static ~endif~~if(type)~~type~~else~void~endif~ ~name;format="lowFirst"~; 
+>>
+
+/** const,STRINGPROPERTY;name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name,type;returnType,STRINGPROPERTY;static,STRINGPROPERTY; **/
+Method(const,name,parameters,returnType,static) ::= <<~if(static)~static ~endif~~if(returnType)~~returnType~~else~void~endif~ ~name;format="lowFirst"~(~parameters:{it|~it.type~ ~it.name;format="lowFirst"~}; separator=", "~)~if(const)~ const~endif~; 
+>>
+
+/** content,STRINGPROPERTY;name,STRINGPROPERTY; **/
+Namespace(content,name) ::= <<namespace ~name~ {
+~content~
+} // namespace ~name~
+ 
+>>
+
+/** name,STRINGPROPERTY;private,LISTPROPERTY;protected,LISTPROPERTY;public,LISTPROPERTY; **/
+Struct(name,private,protected,public) ::= <<struct ~name;format="capitalize"~ {
+~if(public)~public:
+~public:{it|~it~}; separator="\n"~
+~endif~
+
+~if(protected)~protected:
+~protected:{it|~it~}; separator="\n"~
+~endif~
+
+~if(private)~private:
+~private:{it|~it~}; separator="\n"~
+~endif~
+} 
+>>
+
+/** const,STRINGPROPERTY;name,STRINGPROPERTY;namespace,STRINGPROPERTY;pointer,STRINGPROPERTY;reference,STRINGPROPERTY; **/
+Type(const,name,namespace,pointer,reference) ::= <<~if(const)~const ~endif~~if(namespace)~~namespace~::~endif~~name;format="lowFirst"~~if(pointer)~*~endif~~if(reference)~&~endif~ 
+>>
+
+/** name,STRINGPROPERTY;type,STRINGPROPERTY; **/
+Typedef(name,type) ::= <<typedef ~type~ ~name~; 
+>>
