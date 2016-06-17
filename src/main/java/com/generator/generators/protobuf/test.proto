@@ -1,7 +1,5 @@
 package com.generator.name;
 
-// AUTO-GENERATED - edit 'Protobuf.stg' to make output-changes
-
 option optimize_for = SPEED;
 
 import "test.proto";
