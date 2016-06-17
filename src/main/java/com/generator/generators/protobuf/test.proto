@@ -2,7 +2,6 @@ package com.generator.name;
 
 option optimize_for = SPEED;
 
-import "test.proto";
 import "test2.proto";
 
 message MessageOne {
