@@ -108,6 +108,16 @@ public interface ProtobufListener extends ParseTreeListener {
 	 */
 	void exitDefaultValue(ProtobufParser.DefaultValueContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ProtobufParser#packedValue}.
+	 * @param ctx the parse tree
+	 */
+	void enterPackedValue(ProtobufParser.PackedValueContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ProtobufParser#packedValue}.
+	 * @param ctx the parse tree
+	 */
+	void exitPackedValue(ProtobufParser.PackedValueContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ProtobufParser#extensions}.
 	 * @param ctx the parse tree
 	 */

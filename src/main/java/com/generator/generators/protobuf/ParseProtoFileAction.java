@@ -77,8 +77,8 @@ public class ParseProtoFileAction extends GraphEditorAction<ENTITIES, RELATIONS,
                 }
 
                 @Override
-                public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue) {
-                    final Node node = editor.getDomain().newNode(Property, UUID.randomUUID(), "parent", (parent == null ? "" : parent), "name", propertyName, "ordinal", ordinal.toString(), "comment", filterComments(comment), "defaultValue", defaultValue);
+                public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue, String packedValue) {
+                    final Node node = editor.getDomain().newNode(Property, UUID.randomUUID(), "parent", (parent == null ? "" : parent), "name", propertyName, "ordinal", ordinal.toString(), "comment", filterComments(comment), "defaultValue", defaultValue, "packedValue", packedValue);
 
                     editor.getDomain().relate(FIELD, messageStack.peek(), node);
                     editor.getDomain().relate(RELATIONS.FIELDRULE, node, ((ProtobufDomain)editor.getDomain()).defaultFieldRule().get(rule.name()));

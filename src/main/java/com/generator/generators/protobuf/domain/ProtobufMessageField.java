@@ -24,5 +24,7 @@ public interface ProtobufMessageField  extends ProtobufEntity {
 
    String getDefaultValue();
 
+   String getPackedValue();
+
    ProtobufMessageField setDefaultValue(String value);
 }

@@ -225,6 +225,7 @@ public final class ProtobufGroup {
       private final AtomicBoolean fieldConstraintIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean ordinalIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packedValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -250,6 +251,10 @@ public final class ProtobufGroup {
       } 
        public messageFieldST setOrdinal(Object value) {
       	tryToSetStringProperty(template, value, ordinalIsSet, "ordinal");   
+         return this;
+      } 
+       public messageFieldST setPackedValue(Object value) {
+      	tryToSetStringProperty(template, value, packedValueIsSet, "packedValue");   
          return this;
       } 
        public messageFieldST setType(Object value) {

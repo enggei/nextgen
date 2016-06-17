@@ -19,27 +19,28 @@ public class ProtobufParser extends Parser {
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
 		T__9=10, T__10=11, T__11=12, T__12=13, T__13=14, T__14=15, T__15=16, T__16=17, 
-		T__17=18, T__18=19, FIELDRULE=20, INT=21, ID=22, WS=23, SL_COMMENT=24;
+		T__17=18, T__18=19, T__19=20, T__20=21, T__21=22, FIELDRULE=23, INT=24, 
+		ID=25, WS=26, SL_COMMENT=27;
 	public static final int
 		RULE_file = 0, RULE_packageDecl = 1, RULE_packageName = 2, RULE_option = 3, 
 		RULE_imports = 4, RULE_message = 5, RULE_enumName = 6, RULE_messageContent = 7, 
-		RULE_property = 8, RULE_defaultValue = 9, RULE_extensions = 10, RULE_propertyName = 11, 
-		RULE_propertyType = 12, RULE_extensionMax = 13;
+		RULE_property = 8, RULE_defaultValue = 9, RULE_packedValue = 10, RULE_extensions = 11, 
+		RULE_propertyName = 12, RULE_propertyType = 13, RULE_extensionMax = 14;
 	public static final String[] ruleNames = {
 		"file", "packageDecl", "packageName", "option", "imports", "message", 
-		"enumName", "messageContent", "property", "defaultValue", "extensions", 
-		"propertyName", "propertyType", "extensionMax"
+		"enumName", "messageContent", "property", "defaultValue", "packedValue", 
+		"extensions", "propertyName", "propertyType", "extensionMax"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
 		null, "'package'", "';'", "'.'", "'option'", "'='", "'import'", "'\"'", 
 		"'message'", "'{'", "'}'", "'enum'", "'extend'", "'['", "'default'", "'-'", 
-		"']'", "'extensions'", "'to'", "'max'"
+		"']'", "'packed'", "'true'", "'false'", "'extensions'", "'to'", "'max'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, "FIELDRULE", "INT", "ID", 
-		"WS", "SL_COMMENT"
+		null, null, null, null, null, null, null, null, null, null, null, "FIELDRULE", 
+		"INT", "ID", "WS", "SL_COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -97,7 +98,7 @@ public class ProtobufParser extends Parser {
 
 	public void newMessage(String name, String comment) { }
 	public void newExtension(String name) { }
-	public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue) { }
+	public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue, String packedValue) { }
 	public void endMessage() { }
 
 	public void newExtensions(String min, String max) { }
@@ -110,6 +111,11 @@ public class ProtobufParser extends Parser {
 
 	private String getDefaultValue(String text) {
 	    //'[' 'default' '=' (ID|INT|'-'|'"')+ ']'
+	    return text.substring(text.indexOf("=") + 1, text.length() - 1);
+	}
+
+	private String getPackedValue(String text) {
+	    //'[' 'packed' '=' ('true'|'false') ']'
 	    return text.substring(text.indexOf("=") + 1, text.length() - 1);
 	}
 
@@ -171,54 +177,54 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29);
+			setState(31);
 			_la = _input.LA(1);
 			if (_la==T__0) {
 				{
-				setState(28);
+				setState(30);
 				packageDecl();
 				}
 			}
 
-			setState(34);
+			setState(36);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__3) {
 				{
 				{
-				setState(31);
+				setState(33);
 				option();
 				}
 				}
-				setState(36);
+				setState(38);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(40);
+			setState(42);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__5) {
 				{
 				{
-				setState(37);
+				setState(39);
 				imports();
 				}
 				}
-				setState(42);
+				setState(44);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(44); 
+			setState(46); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(43);
+				setState(45);
 				message();
 				}
 				}
-				setState(46); 
+				setState(48); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__10) | (1L << T__11) | (1L << SL_COMMENT))) != 0) );
@@ -266,12 +272,12 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(50);
+			setState(52);
 			match(T__0);
-			setState(51);
+			setState(53);
 			((PackageDeclContext)_localctx).packageName = packageName();
 			 packageName((((PackageDeclContext)_localctx).packageName!=null?_input.getText(((PackageDeclContext)_localctx).packageName.start,((PackageDeclContext)_localctx).packageName.stop):null)); 
-			setState(53);
+			setState(55);
 			match(T__1);
 			}
 		}
@@ -317,21 +323,21 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(55);
+			setState(57);
 			match(ID);
-			setState(60);
+			setState(62);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==T__2) {
 				{
 				{
-				setState(56);
+				setState(58);
 				match(T__2);
-				setState(57);
+				setState(59);
 				match(ID);
 				}
 				}
-				setState(62);
+				setState(64);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
@@ -380,16 +386,16 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(63);
-			match(T__3);
-			setState(64);
-			((OptionContext)_localctx).propertyName = propertyName();
 			setState(65);
-			match(T__4);
+			match(T__3);
 			setState(66);
+			((OptionContext)_localctx).propertyName = propertyName();
+			setState(67);
+			match(T__4);
+			setState(68);
 			((OptionContext)_localctx).ID = match(ID);
 			 option((((OptionContext)_localctx).propertyName!=null?_input.getText(((OptionContext)_localctx).propertyName.start,((OptionContext)_localctx).propertyName.stop):null), ((OptionContext)_localctx).ID.getText()); 
-			setState(68);
+			setState(70);
 			match(T__1);
 			}
 		}
@@ -432,16 +438,16 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(70);
-			match(T__5);
-			setState(71);
-			match(T__6);
 			setState(72);
-			((ImportsContext)_localctx).ID = match(ID);
+			match(T__5);
 			setState(73);
 			match(T__6);
-			 imports(((ImportsContext)_localctx).ID.getText()); 
+			setState(74);
+			((ImportsContext)_localctx).ID = match(ID);
 			setState(75);
+			match(T__6);
+			 imports(((ImportsContext)_localctx).ID.getText()); 
+			setState(77);
 			match(T__1);
 			}
 		}
@@ -500,53 +506,53 @@ public class ProtobufParser extends Parser {
 		enterRule(_localctx, 10, RULE_message);
 		int _la;
 		try {
-			setState(131);
+			setState(133);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,14,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(78);
+				setState(80);
 				_la = _input.LA(1);
 				if (_la==SL_COMMENT) {
 					{
-					setState(77);
+					setState(79);
 					((MessageContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 					}
 				}
 
-				setState(80);
+				setState(82);
 				match(T__7);
-				setState(81);
+				setState(83);
 				((MessageContext)_localctx).ID = match(ID);
 				 newMessage(((MessageContext)_localctx).ID.getText(), ((MessageContext)_localctx).SL_COMMENT!=null ? ((MessageContext)_localctx).SL_COMMENT.getText() : null); 
-				setState(83);
-				match(T__8);
 				setState(85);
+				match(T__8);
+				setState(87);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 				case 1:
 					{
-					setState(84);
+					setState(86);
 					((MessageContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 					}
 					break;
 				}
-				setState(88); 
+				setState(90); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(87);
+					setState(89);
 					messageContent();
 					}
 					}
-					setState(90); 
+					setState(92); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
-				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__10) | (1L << T__11) | (1L << T__16) | (1L << FIELDRULE) | (1L << SL_COMMENT))) != 0) );
-				setState(92);
+				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__10) | (1L << T__11) | (1L << T__19) | (1L << FIELDRULE) | (1L << SL_COMMENT))) != 0) );
+				setState(94);
 				match(T__9);
 				 endMessage(); 
 				}
@@ -554,46 +560,46 @@ public class ProtobufParser extends Parser {
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(96);
+				setState(98);
 				_la = _input.LA(1);
 				if (_la==SL_COMMENT) {
 					{
-					setState(95);
+					setState(97);
 					((MessageContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 					}
 				}
 
-				setState(98);
+				setState(100);
 				match(T__10);
-				setState(99);
+				setState(101);
 				((MessageContext)_localctx).ID = match(ID);
 				 newEnum(((MessageContext)_localctx).ID.getText(), ((MessageContext)_localctx).SL_COMMENT!=null ? ((MessageContext)_localctx).SL_COMMENT.getText() : null); 
-				setState(101);
-				match(T__8);
 				setState(103);
+				match(T__8);
+				setState(105);
 				_la = _input.LA(1);
 				if (_la==SL_COMMENT) {
 					{
-					setState(102);
+					setState(104);
 					((MessageContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 					}
 				}
 
-				setState(106); 
+				setState(108); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(105);
+					setState(107);
 					enumName();
 					}
 					}
-					setState(108); 
+					setState(110); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==ID );
-				setState(110);
+				setState(112);
 				match(T__9);
 				 endEnum(); 
 				}
@@ -601,47 +607,47 @@ public class ProtobufParser extends Parser {
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(114);
+				setState(116);
 				_la = _input.LA(1);
 				if (_la==SL_COMMENT) {
 					{
-					setState(113);
+					setState(115);
 					match(SL_COMMENT);
 					}
 				}
 
-				setState(116);
+				setState(118);
 				match(T__11);
-				setState(117);
+				setState(119);
 				((MessageContext)_localctx).ID = match(ID);
 				 newExtension(((MessageContext)_localctx).ID.getText()); 
-				setState(119);
-				match(T__8);
 				setState(121);
+				match(T__8);
+				setState(123);
 				_errHandler.sync(this);
 				switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 				case 1:
 					{
-					setState(120);
+					setState(122);
 					match(SL_COMMENT);
 					}
 					break;
 				}
-				setState(124); 
+				setState(126); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(123);
+					setState(125);
 					messageContent();
 					}
 					}
-					setState(126); 
+					setState(128); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
-				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__10) | (1L << T__11) | (1L << T__16) | (1L << FIELDRULE) | (1L << SL_COMMENT))) != 0) );
-				setState(128);
+				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__7) | (1L << T__10) | (1L << T__11) | (1L << T__19) | (1L << FIELDRULE) | (1L << SL_COMMENT))) != 0) );
+				setState(130);
 				match(T__9);
 				 endExtension(); 
 				}
@@ -692,19 +698,19 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(133);
-			((EnumNameContext)_localctx).ID = match(ID);
-			setState(134);
-			match(T__4);
 			setState(135);
-			((EnumNameContext)_localctx).INT = match(INT);
+			((EnumNameContext)_localctx).ID = match(ID);
 			setState(136);
-			match(T__1);
+			match(T__4);
+			setState(137);
+			((EnumNameContext)_localctx).INT = match(INT);
 			setState(138);
+			match(T__1);
+			setState(140);
 			_la = _input.LA(1);
 			if (_la==SL_COMMENT) {
 				{
-				setState(137);
+				setState(139);
 				((EnumNameContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 				}
 			}
@@ -756,19 +762,19 @@ public class ProtobufParser extends Parser {
 		MessageContentContext _localctx = new MessageContentContext(_ctx, getState());
 		enterRule(_localctx, 14, RULE_messageContent);
 		try {
-			setState(145);
+			setState(147);
 			switch (_input.LA(1)) {
 			case FIELDRULE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(142);
+				setState(144);
 				property();
 				}
 				break;
-			case T__16:
+			case T__19:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(143);
+				setState(145);
 				extensions();
 				}
 				break;
@@ -778,7 +784,7 @@ public class ProtobufParser extends Parser {
 			case SL_COMMENT:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(144);
+				setState(146);
 				message();
 				}
 				break;
@@ -803,6 +809,7 @@ public class ProtobufParser extends Parser {
 		public Token ID;
 		public Token INT;
 		public DefaultValueContext defaultValue;
+		public PackedValueContext packedValue;
 		public Token SL_COMMENT;
 		public TerminalNode FIELDRULE() { return getToken(ProtobufParser.FIELDRULE, 0); }
 		public PropertyTypeContext propertyType() {
@@ -812,6 +819,9 @@ public class ProtobufParser extends Parser {
 		public TerminalNode INT() { return getToken(ProtobufParser.INT, 0); }
 		public DefaultValueContext defaultValue() {
 			return getRuleContext(DefaultValueContext.class,0);
+		}
+		public PackedValueContext packedValue() {
+			return getRuleContext(PackedValueContext.class,0);
 		}
 		public TerminalNode SL_COMMENT() { return getToken(ProtobufParser.SL_COMMENT, 0); }
 		public PropertyContext(ParserRuleContext parent, int invokingState) {
@@ -836,42 +846,48 @@ public class ProtobufParser extends Parser {
 	public final PropertyContext property() throws RecognitionException {
 		PropertyContext _localctx = new PropertyContext(_ctx, getState());
 		enterRule(_localctx, 16, RULE_property);
-		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(147);
-			((PropertyContext)_localctx).FIELDRULE = match(FIELDRULE);
-			setState(148);
-			((PropertyContext)_localctx).propertyType = propertyType();
 			setState(149);
-			((PropertyContext)_localctx).ID = match(ID);
+			((PropertyContext)_localctx).FIELDRULE = match(FIELDRULE);
 			setState(150);
-			match(T__4);
+			((PropertyContext)_localctx).propertyType = propertyType();
 			setState(151);
-			((PropertyContext)_localctx).INT = match(INT);
+			((PropertyContext)_localctx).ID = match(ID);
+			setState(152);
+			match(T__4);
 			setState(153);
-			_la = _input.LA(1);
-			if (_la==T__12) {
+			((PropertyContext)_localctx).INT = match(INT);
+			setState(156);
+			_errHandler.sync(this);
+			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
+			case 1:
 				{
-				setState(152);
+				setState(154);
 				((PropertyContext)_localctx).defaultValue = defaultValue();
 				}
+				break;
+			case 2:
+				{
+				setState(155);
+				((PropertyContext)_localctx).packedValue = packedValue();
+				}
+				break;
 			}
-
-			setState(155);
+			setState(158);
 			match(T__1);
-			setState(157);
+			setState(160);
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
 				{
-				setState(156);
+				setState(159);
 				((PropertyContext)_localctx).SL_COMMENT = match(SL_COMMENT);
 				}
 				break;
 			}
-			 newProperty(FieldRules.valueOf(((PropertyContext)_localctx).FIELDRULE.getText()), (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null), ((PropertyContext)_localctx).ID.getText(), Integer.valueOf(((PropertyContext)_localctx).INT.getText()), ((PropertyContext)_localctx).SL_COMMENT!=null ? ((PropertyContext)_localctx).SL_COMMENT.getText() : null, (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).contains(".") ? (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).substring(0,(((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).lastIndexOf(".")) : null, (((PropertyContext)_localctx).defaultValue!=null?_input.getText(((PropertyContext)_localctx).defaultValue.start,((PropertyContext)_localctx).defaultValue.stop):null)==null ? null : getDefaultValue((((PropertyContext)_localctx).defaultValue!=null?_input.getText(((PropertyContext)_localctx).defaultValue.start,((PropertyContext)_localctx).defaultValue.stop):null)) ); 
+			 newProperty(FieldRules.valueOf(((PropertyContext)_localctx).FIELDRULE.getText()), (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null), ((PropertyContext)_localctx).ID.getText(), Integer.valueOf(((PropertyContext)_localctx).INT.getText()), ((PropertyContext)_localctx).SL_COMMENT!=null ? ((PropertyContext)_localctx).SL_COMMENT.getText() : null, (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).contains(".") ? (((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).substring(0,(((PropertyContext)_localctx).propertyType!=null?_input.getText(((PropertyContext)_localctx).propertyType.start,((PropertyContext)_localctx).propertyType.stop):null).lastIndexOf(".")) : null, (((PropertyContext)_localctx).defaultValue!=null?_input.getText(((PropertyContext)_localctx).defaultValue.start,((PropertyContext)_localctx).defaultValue.stop):null)==null ? null : getDefaultValue((((PropertyContext)_localctx).defaultValue!=null?_input.getText(((PropertyContext)_localctx).defaultValue.start,((PropertyContext)_localctx).defaultValue.stop):null)), (((PropertyContext)_localctx).packedValue!=null?_input.getText(((PropertyContext)_localctx).packedValue.start,((PropertyContext)_localctx).packedValue.stop):null)==null ? null : getPackedValue((((PropertyContext)_localctx).packedValue!=null?_input.getText(((PropertyContext)_localctx).packedValue.start,((PropertyContext)_localctx).packedValue.stop):null)) ); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -920,19 +936,19 @@ public class ProtobufParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(161);
+			setState(164);
 			match(T__12);
-			setState(162);
+			setState(165);
 			match(T__13);
-			setState(163);
+			setState(166);
 			match(T__4);
-			setState(165); 
+			setState(168); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(164);
+				setState(167);
 				_la = _input.LA(1);
 				if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__6) | (1L << T__14) | (1L << INT) | (1L << ID))) != 0)) ) {
 				_errHandler.recoverInline(this);
@@ -941,11 +957,66 @@ public class ProtobufParser extends Parser {
 				}
 				}
 				}
-				setState(167); 
+				setState(170); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__6) | (1L << T__14) | (1L << INT) | (1L << ID))) != 0) );
-			setState(169);
+			setState(172);
+			match(T__15);
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
+	public static class PackedValueContext extends ParserRuleContext {
+		public PackedValueContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_packedValue; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ProtobufListener ) ((ProtobufListener)listener).enterPackedValue(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ProtobufListener ) ((ProtobufListener)listener).exitPackedValue(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ProtobufVisitor ) return ((ProtobufVisitor<? extends T>)visitor).visitPackedValue(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final PackedValueContext packedValue() throws RecognitionException {
+		PackedValueContext _localctx = new PackedValueContext(_ctx, getState());
+		enterRule(_localctx, 20, RULE_packedValue);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(174);
+			match(T__12);
+			setState(175);
+			match(T__16);
+			setState(176);
+			match(T__4);
+			setState(177);
+			_la = _input.LA(1);
+			if ( !(_la==T__17 || _la==T__18) ) {
+			_errHandler.recoverInline(this);
+			} else {
+				consume();
+			}
+			setState(178);
 			match(T__15);
 			}
 		}
@@ -988,19 +1059,19 @@ public class ProtobufParser extends Parser {
 
 	public final ExtensionsContext extensions() throws RecognitionException {
 		ExtensionsContext _localctx = new ExtensionsContext(_ctx, getState());
-		enterRule(_localctx, 20, RULE_extensions);
+		enterRule(_localctx, 22, RULE_extensions);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(171);
-			match(T__16);
-			setState(172);
+			setState(180);
+			match(T__19);
+			setState(181);
 			((ExtensionsContext)_localctx).INT = match(INT);
-			setState(173);
-			match(T__17);
-			setState(174);
+			setState(182);
+			match(T__20);
+			setState(183);
 			((ExtensionsContext)_localctx).extensionMax = extensionMax();
-			setState(175);
+			setState(184);
 			match(T__1);
 			 newExtensions(((ExtensionsContext)_localctx).INT.getText(), (((ExtensionsContext)_localctx).extensionMax!=null?_input.getText(((ExtensionsContext)_localctx).extensionMax.start,((ExtensionsContext)_localctx).extensionMax.stop):null)); 
 			}
@@ -1039,11 +1110,11 @@ public class ProtobufParser extends Parser {
 
 	public final PropertyNameContext propertyName() throws RecognitionException {
 		PropertyNameContext _localctx = new PropertyNameContext(_ctx, getState());
-		enterRule(_localctx, 22, RULE_propertyName);
+		enterRule(_localctx, 24, RULE_propertyName);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(178);
+			setState(187);
 			match(ID);
 			}
 		}
@@ -1082,18 +1153,18 @@ public class ProtobufParser extends Parser {
 
 	public final PropertyTypeContext propertyType() throws RecognitionException {
 		PropertyTypeContext _localctx = new PropertyTypeContext(_ctx, getState());
-		enterRule(_localctx, 24, RULE_propertyType);
+		enterRule(_localctx, 26, RULE_propertyType);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(180);
+			setState(189);
 			match(ID);
-			setState(182);
+			setState(191);
 			_la = _input.LA(1);
 			if (_la==INT) {
 				{
-				setState(181);
+				setState(190);
 				match(INT);
 				}
 			}
@@ -1134,14 +1205,14 @@ public class ProtobufParser extends Parser {
 
 	public final ExtensionMaxContext extensionMax() throws RecognitionException {
 		ExtensionMaxContext _localctx = new ExtensionMaxContext(_ctx, getState());
-		enterRule(_localctx, 26, RULE_extensionMax);
+		enterRule(_localctx, 28, RULE_extensionMax);
 		int _la;
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(184);
+			setState(193);
 			_la = _input.LA(1);
-			if ( !(_la==T__18 || _la==INT) ) {
+			if ( !(_la==T__21 || _la==INT) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
@@ -1160,62 +1231,65 @@ public class ProtobufParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\32\u00bd\4\2\t\2"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\35\u00c6\4\2\t\2"+
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
-		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\3\2\5\2 \n\2\3\2\7\2#\n\2\f"+
-		"\2\16\2&\13\2\3\2\7\2)\n\2\f\2\16\2,\13\2\3\2\6\2/\n\2\r\2\16\2\60\3\2"+
-		"\3\2\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\7\4=\n\4\f\4\16\4@\13\4\3\5\3\5\3"+
-		"\5\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\5\7Q\n\7\3\7\3\7\3"+
-		"\7\3\7\3\7\5\7X\n\7\3\7\6\7[\n\7\r\7\16\7\\\3\7\3\7\3\7\3\7\5\7c\n\7\3"+
-		"\7\3\7\3\7\3\7\3\7\5\7j\n\7\3\7\6\7m\n\7\r\7\16\7n\3\7\3\7\3\7\3\7\5\7"+
-		"u\n\7\3\7\3\7\3\7\3\7\3\7\5\7|\n\7\3\7\6\7\177\n\7\r\7\16\7\u0080\3\7"+
-		"\3\7\3\7\5\7\u0086\n\7\3\b\3\b\3\b\3\b\3\b\5\b\u008d\n\b\3\b\3\b\3\t\3"+
-		"\t\3\t\5\t\u0094\n\t\3\n\3\n\3\n\3\n\3\n\3\n\5\n\u009c\n\n\3\n\3\n\5\n"+
-		"\u00a0\n\n\3\n\3\n\3\13\3\13\3\13\3\13\6\13\u00a8\n\13\r\13\16\13\u00a9"+
-		"\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\16\3\16\5\16\u00b9\n"+
-		"\16\3\17\3\17\3\17\2\2\20\2\4\6\b\n\f\16\20\22\24\26\30\32\34\2\4\5\2"+
-		"\t\t\21\21\27\30\4\2\25\25\27\27\u00c5\2\37\3\2\2\2\4\64\3\2\2\2\69\3"+
-		"\2\2\2\bA\3\2\2\2\nH\3\2\2\2\f\u0085\3\2\2\2\16\u0087\3\2\2\2\20\u0093"+
-		"\3\2\2\2\22\u0095\3\2\2\2\24\u00a3\3\2\2\2\26\u00ad\3\2\2\2\30\u00b4\3"+
-		"\2\2\2\32\u00b6\3\2\2\2\34\u00ba\3\2\2\2\36 \5\4\3\2\37\36\3\2\2\2\37"+
-		" \3\2\2\2 $\3\2\2\2!#\5\b\5\2\"!\3\2\2\2#&\3\2\2\2$\"\3\2\2\2$%\3\2\2"+
-		"\2%*\3\2\2\2&$\3\2\2\2\')\5\n\6\2(\'\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2"+
-		"\2\2+.\3\2\2\2,*\3\2\2\2-/\5\f\7\2.-\3\2\2\2/\60\3\2\2\2\60.\3\2\2\2\60"+
-		"\61\3\2\2\2\61\62\3\2\2\2\62\63\b\2\1\2\63\3\3\2\2\2\64\65\7\3\2\2\65"+
-		"\66\5\6\4\2\66\67\b\3\1\2\678\7\4\2\28\5\3\2\2\29>\7\30\2\2:;\7\5\2\2"+
-		";=\7\30\2\2<:\3\2\2\2=@\3\2\2\2><\3\2\2\2>?\3\2\2\2?\7\3\2\2\2@>\3\2\2"+
-		"\2AB\7\6\2\2BC\5\30\r\2CD\7\7\2\2DE\7\30\2\2EF\b\5\1\2FG\7\4\2\2G\t\3"+
-		"\2\2\2HI\7\b\2\2IJ\7\t\2\2JK\7\30\2\2KL\7\t\2\2LM\b\6\1\2MN\7\4\2\2N\13"+
-		"\3\2\2\2OQ\7\32\2\2PO\3\2\2\2PQ\3\2\2\2QR\3\2\2\2RS\7\n\2\2ST\7\30\2\2"+
-		"TU\b\7\1\2UW\7\13\2\2VX\7\32\2\2WV\3\2\2\2WX\3\2\2\2XZ\3\2\2\2Y[\5\20"+
-		"\t\2ZY\3\2\2\2[\\\3\2\2\2\\Z\3\2\2\2\\]\3\2\2\2]^\3\2\2\2^_\7\f\2\2_`"+
-		"\b\7\1\2`\u0086\3\2\2\2ac\7\32\2\2ba\3\2\2\2bc\3\2\2\2cd\3\2\2\2de\7\r"+
-		"\2\2ef\7\30\2\2fg\b\7\1\2gi\7\13\2\2hj\7\32\2\2ih\3\2\2\2ij\3\2\2\2jl"+
-		"\3\2\2\2km\5\16\b\2lk\3\2\2\2mn\3\2\2\2nl\3\2\2\2no\3\2\2\2op\3\2\2\2"+
-		"pq\7\f\2\2qr\b\7\1\2r\u0086\3\2\2\2su\7\32\2\2ts\3\2\2\2tu\3\2\2\2uv\3"+
-		"\2\2\2vw\7\16\2\2wx\7\30\2\2xy\b\7\1\2y{\7\13\2\2z|\7\32\2\2{z\3\2\2\2"+
-		"{|\3\2\2\2|~\3\2\2\2}\177\5\20\t\2~}\3\2\2\2\177\u0080\3\2\2\2\u0080~"+
-		"\3\2\2\2\u0080\u0081\3\2\2\2\u0081\u0082\3\2\2\2\u0082\u0083\7\f\2\2\u0083"+
-		"\u0084\b\7\1\2\u0084\u0086\3\2\2\2\u0085P\3\2\2\2\u0085b\3\2\2\2\u0085"+
-		"t\3\2\2\2\u0086\r\3\2\2\2\u0087\u0088\7\30\2\2\u0088\u0089\7\7\2\2\u0089"+
-		"\u008a\7\27\2\2\u008a\u008c\7\4\2\2\u008b\u008d\7\32\2\2\u008c\u008b\3"+
-		"\2\2\2\u008c\u008d\3\2\2\2\u008d\u008e\3\2\2\2\u008e\u008f\b\b\1\2\u008f"+
-		"\17\3\2\2\2\u0090\u0094\5\22\n\2\u0091\u0094\5\26\f\2\u0092\u0094\5\f"+
-		"\7\2\u0093\u0090\3\2\2\2\u0093\u0091\3\2\2\2\u0093\u0092\3\2\2\2\u0094"+
-		"\21\3\2\2\2\u0095\u0096\7\26\2\2\u0096\u0097\5\32\16\2\u0097\u0098\7\30"+
-		"\2\2\u0098\u0099\7\7\2\2\u0099\u009b\7\27\2\2\u009a\u009c\5\24\13\2\u009b"+
-		"\u009a\3\2\2\2\u009b\u009c\3\2\2\2\u009c\u009d\3\2\2\2\u009d\u009f\7\4"+
-		"\2\2\u009e\u00a0\7\32\2\2\u009f\u009e\3\2\2\2\u009f\u00a0\3\2\2\2\u00a0"+
-		"\u00a1\3\2\2\2\u00a1\u00a2\b\n\1\2\u00a2\23\3\2\2\2\u00a3\u00a4\7\17\2"+
-		"\2\u00a4\u00a5\7\20\2\2\u00a5\u00a7\7\7\2\2\u00a6\u00a8\t\2\2\2\u00a7"+
-		"\u00a6\3\2\2\2\u00a8\u00a9\3\2\2\2\u00a9\u00a7\3\2\2\2\u00a9\u00aa\3\2"+
-		"\2\2\u00aa\u00ab\3\2\2\2\u00ab\u00ac\7\22\2\2\u00ac\25\3\2\2\2\u00ad\u00ae"+
-		"\7\23\2\2\u00ae\u00af\7\27\2\2\u00af\u00b0\7\24\2\2\u00b0\u00b1\5\34\17"+
-		"\2\u00b1\u00b2\7\4\2\2\u00b2\u00b3\b\f\1\2\u00b3\27\3\2\2\2\u00b4\u00b5"+
-		"\7\30\2\2\u00b5\31\3\2\2\2\u00b6\u00b8\7\30\2\2\u00b7\u00b9\7\27\2\2\u00b8"+
-		"\u00b7\3\2\2\2\u00b8\u00b9\3\2\2\2\u00b9\33\3\2\2\2\u00ba\u00bb\t\3\2"+
-		"\2\u00bb\35\3\2\2\2\27\37$*\60>PW\\bint{\u0080\u0085\u008c\u0093\u009b"+
-		"\u009f\u00a9\u00b8";
+		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\3\2\5\2\"\n\2\3\2"+
+		"\7\2%\n\2\f\2\16\2(\13\2\3\2\7\2+\n\2\f\2\16\2.\13\2\3\2\6\2\61\n\2\r"+
+		"\2\16\2\62\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\4\3\4\3\4\7\4?\n\4\f\4\16\4B"+
+		"\13\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\5\7"+
+		"S\n\7\3\7\3\7\3\7\3\7\3\7\5\7Z\n\7\3\7\6\7]\n\7\r\7\16\7^\3\7\3\7\3\7"+
+		"\3\7\5\7e\n\7\3\7\3\7\3\7\3\7\3\7\5\7l\n\7\3\7\6\7o\n\7\r\7\16\7p\3\7"+
+		"\3\7\3\7\3\7\5\7w\n\7\3\7\3\7\3\7\3\7\3\7\5\7~\n\7\3\7\6\7\u0081\n\7\r"+
+		"\7\16\7\u0082\3\7\3\7\3\7\5\7\u0088\n\7\3\b\3\b\3\b\3\b\3\b\5\b\u008f"+
+		"\n\b\3\b\3\b\3\t\3\t\3\t\5\t\u0096\n\t\3\n\3\n\3\n\3\n\3\n\3\n\3\n\5\n"+
+		"\u009f\n\n\3\n\3\n\5\n\u00a3\n\n\3\n\3\n\3\13\3\13\3\13\3\13\6\13\u00ab"+
+		"\n\13\r\13\16\13\u00ac\3\13\3\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3"+
+		"\r\3\r\3\r\3\r\3\16\3\16\3\17\3\17\5\17\u00c2\n\17\3\20\3\20\3\20\2\2"+
+		"\21\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36\2\5\5\2\t\t\21\21\32\33\3\2"+
+		"\24\25\4\2\30\30\32\32\u00ce\2!\3\2\2\2\4\66\3\2\2\2\6;\3\2\2\2\bC\3\2"+
+		"\2\2\nJ\3\2\2\2\f\u0087\3\2\2\2\16\u0089\3\2\2\2\20\u0095\3\2\2\2\22\u0097"+
+		"\3\2\2\2\24\u00a6\3\2\2\2\26\u00b0\3\2\2\2\30\u00b6\3\2\2\2\32\u00bd\3"+
+		"\2\2\2\34\u00bf\3\2\2\2\36\u00c3\3\2\2\2 \"\5\4\3\2! \3\2\2\2!\"\3\2\2"+
+		"\2\"&\3\2\2\2#%\5\b\5\2$#\3\2\2\2%(\3\2\2\2&$\3\2\2\2&\'\3\2\2\2\',\3"+
+		"\2\2\2(&\3\2\2\2)+\5\n\6\2*)\3\2\2\2+.\3\2\2\2,*\3\2\2\2,-\3\2\2\2-\60"+
+		"\3\2\2\2.,\3\2\2\2/\61\5\f\7\2\60/\3\2\2\2\61\62\3\2\2\2\62\60\3\2\2\2"+
+		"\62\63\3\2\2\2\63\64\3\2\2\2\64\65\b\2\1\2\65\3\3\2\2\2\66\67\7\3\2\2"+
+		"\678\5\6\4\289\b\3\1\29:\7\4\2\2:\5\3\2\2\2;@\7\33\2\2<=\7\5\2\2=?\7\33"+
+		"\2\2><\3\2\2\2?B\3\2\2\2@>\3\2\2\2@A\3\2\2\2A\7\3\2\2\2B@\3\2\2\2CD\7"+
+		"\6\2\2DE\5\32\16\2EF\7\7\2\2FG\7\33\2\2GH\b\5\1\2HI\7\4\2\2I\t\3\2\2\2"+
+		"JK\7\b\2\2KL\7\t\2\2LM\7\33\2\2MN\7\t\2\2NO\b\6\1\2OP\7\4\2\2P\13\3\2"+
+		"\2\2QS\7\35\2\2RQ\3\2\2\2RS\3\2\2\2ST\3\2\2\2TU\7\n\2\2UV\7\33\2\2VW\b"+
+		"\7\1\2WY\7\13\2\2XZ\7\35\2\2YX\3\2\2\2YZ\3\2\2\2Z\\\3\2\2\2[]\5\20\t\2"+
+		"\\[\3\2\2\2]^\3\2\2\2^\\\3\2\2\2^_\3\2\2\2_`\3\2\2\2`a\7\f\2\2ab\b\7\1"+
+		"\2b\u0088\3\2\2\2ce\7\35\2\2dc\3\2\2\2de\3\2\2\2ef\3\2\2\2fg\7\r\2\2g"+
+		"h\7\33\2\2hi\b\7\1\2ik\7\13\2\2jl\7\35\2\2kj\3\2\2\2kl\3\2\2\2ln\3\2\2"+
+		"\2mo\5\16\b\2nm\3\2\2\2op\3\2\2\2pn\3\2\2\2pq\3\2\2\2qr\3\2\2\2rs\7\f"+
+		"\2\2st\b\7\1\2t\u0088\3\2\2\2uw\7\35\2\2vu\3\2\2\2vw\3\2\2\2wx\3\2\2\2"+
+		"xy\7\16\2\2yz\7\33\2\2z{\b\7\1\2{}\7\13\2\2|~\7\35\2\2}|\3\2\2\2}~\3\2"+
+		"\2\2~\u0080\3\2\2\2\177\u0081\5\20\t\2\u0080\177\3\2\2\2\u0081\u0082\3"+
+		"\2\2\2\u0082\u0080\3\2\2\2\u0082\u0083\3\2\2\2\u0083\u0084\3\2\2\2\u0084"+
+		"\u0085\7\f\2\2\u0085\u0086\b\7\1\2\u0086\u0088\3\2\2\2\u0087R\3\2\2\2"+
+		"\u0087d\3\2\2\2\u0087v\3\2\2\2\u0088\r\3\2\2\2\u0089\u008a\7\33\2\2\u008a"+
+		"\u008b\7\7\2\2\u008b\u008c\7\32\2\2\u008c\u008e\7\4\2\2\u008d\u008f\7"+
+		"\35\2\2\u008e\u008d\3\2\2\2\u008e\u008f\3\2\2\2\u008f\u0090\3\2\2\2\u0090"+
+		"\u0091\b\b\1\2\u0091\17\3\2\2\2\u0092\u0096\5\22\n\2\u0093\u0096\5\30"+
+		"\r\2\u0094\u0096\5\f\7\2\u0095\u0092\3\2\2\2\u0095\u0093\3\2\2\2\u0095"+
+		"\u0094\3\2\2\2\u0096\21\3\2\2\2\u0097\u0098\7\31\2\2\u0098\u0099\5\34"+
+		"\17\2\u0099\u009a\7\33\2\2\u009a\u009b\7\7\2\2\u009b\u009e\7\32\2\2\u009c"+
+		"\u009f\5\24\13\2\u009d\u009f\5\26\f\2\u009e\u009c\3\2\2\2\u009e\u009d"+
+		"\3\2\2\2\u009e\u009f\3\2\2\2\u009f\u00a0\3\2\2\2\u00a0\u00a2\7\4\2\2\u00a1"+
+		"\u00a3\7\35\2\2\u00a2\u00a1\3\2\2\2\u00a2\u00a3\3\2\2\2\u00a3\u00a4\3"+
+		"\2\2\2\u00a4\u00a5\b\n\1\2\u00a5\23\3\2\2\2\u00a6\u00a7\7\17\2\2\u00a7"+
+		"\u00a8\7\20\2\2\u00a8\u00aa\7\7\2\2\u00a9\u00ab\t\2\2\2\u00aa\u00a9\3"+
+		"\2\2\2\u00ab\u00ac\3\2\2\2\u00ac\u00aa\3\2\2\2\u00ac\u00ad\3\2\2\2\u00ad"+
+		"\u00ae\3\2\2\2\u00ae\u00af\7\22\2\2\u00af\25\3\2\2\2\u00b0\u00b1\7\17"+
+		"\2\2\u00b1\u00b2\7\23\2\2\u00b2\u00b3\7\7\2\2\u00b3\u00b4\t\3\2\2\u00b4"+
+		"\u00b5\7\22\2\2\u00b5\27\3\2\2\2\u00b6\u00b7\7\26\2\2\u00b7\u00b8\7\32"+
+		"\2\2\u00b8\u00b9\7\27\2\2\u00b9\u00ba\5\36\20\2\u00ba\u00bb\7\4\2\2\u00bb"+
+		"\u00bc\b\r\1\2\u00bc\31\3\2\2\2\u00bd\u00be\7\33\2\2\u00be\33\3\2\2\2"+
+		"\u00bf\u00c1\7\33\2\2\u00c0\u00c2\7\32\2\2\u00c1\u00c0\3\2\2\2\u00c1\u00c2"+
+		"\3\2\2\2\u00c2\35\3\2\2\2\u00c3\u00c4\t\4\2\2\u00c4\37\3\2\2\2\27!&,\62"+
+		"@RY^dkpv}\u0082\u0087\u008e\u0095\u009e\u00a2\u00ac\u00c1";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

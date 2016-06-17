@@ -11,7 +11,7 @@ public void imports(String name) {}
 
 public void newMessage(String name, String comment) { }
 public void newExtension(String name) { }
-public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue) { }
+public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue, String packedValue) { }
 public void endMessage() { }
 
 public void newExtensions(String min, String max) { }
@@ -24,6 +24,11 @@ public void end() { }
 
 private String getDefaultValue(String text) {
     //'[' 'default' '=' (ID|INT|'-'|'"')+ ']'
+    return text.substring(text.indexOf("=") + 1, text.length() - 1);
+}
+
+private String getPackedValue(String text) {
+    //'[' 'packed' '=' ('true'|'false') ']'
     return text.substring(text.indexOf("=") + 1, text.length() - 1);
 }
 
@@ -68,13 +73,17 @@ messageContent
 	;
 
 property 
-	:	FIELDRULE propertyType ID '=' INT defaultValue? ';' SL_COMMENT? { newProperty(FieldRules.valueOf($FIELDRULE.getText()), $propertyType.text, $ID.getText(), Integer.valueOf($INT.getText()), $SL_COMMENT!=null ? $SL_COMMENT.getText() : null, $propertyType.text.contains(".") ? $propertyType.text.substring(0,$propertyType.text.lastIndexOf(".")) : null, $defaultValue.text==null ? null : getDefaultValue($defaultValue.text) ); }
+	:	FIELDRULE propertyType ID '=' INT (defaultValue|packedValue)? ';' SL_COMMENT? { newProperty(FieldRules.valueOf($FIELDRULE.getText()), $propertyType.text, $ID.getText(), Integer.valueOf($INT.getText()), $SL_COMMENT!=null ? $SL_COMMENT.getText() : null, $propertyType.text.contains(".") ? $propertyType.text.substring(0,$propertyType.text.lastIndexOf(".")) : null, $defaultValue.text==null ? null : getDefaultValue($defaultValue.text), $packedValue.text==null ? null : getPackedValue($packedValue.text) ); }
 	;
 
 defaultValue
 	:	 '[' 'default' '=' (ID|INT|'-'|'"')+ ']'
 	;
 	
+packedValue
+	:	 '[' 'packed' '=' ('true'|'false') ']'
+	;
+
 extensions
 	:	'extensions' INT 'to' extensionMax ';' { newExtensions($INT.getText(), $extensionMax.text); }
 	;

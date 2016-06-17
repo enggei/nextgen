@@ -71,6 +71,12 @@ public interface ProtobufVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDefaultValue(ProtobufParser.DefaultValueContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ProtobufParser#packedValue}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPackedValue(ProtobufParser.PackedValueContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ProtobufParser#extensions}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
