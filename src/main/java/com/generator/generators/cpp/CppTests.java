@@ -1,27 +1,25 @@
  package com.generator.generators.cpp;
-import com.generator.generators.cpp.parser.CPP14Lexer;
-import com.generator.generators.cpp.parser.CPP14Parser;
-import com.generator.generators.json.parser.JSONLexer;
-import com.generator.util.FileUtil;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.junit.Test;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+ import com.generator.generators.cpp.parser.CPP14Lexer;
+ import com.generator.generators.cpp.parser.CPP14Parser;
+ import org.antlr.v4.runtime.ANTLRInputStream;
+ import org.antlr.v4.runtime.CommonTokenStream;
+ import org.junit.Test;
+ import org.stringtemplate.v4.ST;
+ import org.stringtemplate.v4.STGroup;
+ import org.stringtemplate.v4.STGroupFile;
 
-import static com.generator.util.FileUtil.*;
+ import java.io.File;
+ import java.io.FileReader;
+ import java.io.IOException;
+
+ import static com.generator.util.FileUtil.write;
 
  public class CppTests {
 
     @Test
    public void testCPPParser() throws IOException {
-		 final ANTLRInputStream input = new ANTLRInputStream(new FileReader("/home/sogern/projects/gullkode/nextgen/src/main/java/com/generator/generators/cpp/player.hpp"));
+		 final ANTLRInputStream input = new ANTLRInputStream(new FileReader("src/main/java/com/generator/generators/cpp/player.hpp"));
 		 final CPP14Lexer lexer = new CPP14Lexer(input);
 		 CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 		 CPP14Parser parser = new CPP14Parser(tokenStream);
@@ -79,7 +77,7 @@ import static com.generator.util.FileUtil.*;
 			 );
 
 //		 System.out.println(headerFileST);
-		 write(headerFileST, new File("/home/sogern/projects/gullkode/nextgen/src/main/java/com/generator/generators/cpp/" + File.separator + className + ".hpp"));
+		 write(headerFileST, new File("src/main/java/com/generator/generators/cpp/" + File.separator + className + ".hpp"));
 	 }
 
 	 @Test
@@ -89,7 +87,7 @@ import static com.generator.util.FileUtil.*;
 		 hello.add("name", "World");
 		 System.out.println(hello.render());
 
-		 STGroup group = new STGroupFile("/home/sogern/projects/gullkode/nextgen/src/main/java/com/generator/generators/cpp/cpp.stg");
+		 STGroup group = new STGroupFile("src/main/java/com/generator/generators/cpp/cpp.stg");
 		 ST cppClass = group.getInstanceOf("CppClass");
 		 cppClass.add("name","XXX");
 		 System.out.println(cppClass.render());
