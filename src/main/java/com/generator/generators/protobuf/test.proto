@@ -14,6 +14,7 @@ message MessageOne {
       required string url = 1;
       optional string title = 2;
       repeated string snippets = 3;
+      repeated int32 values = 4 [packed=true];
    }
 }
 

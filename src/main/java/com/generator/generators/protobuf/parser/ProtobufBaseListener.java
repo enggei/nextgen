@@ -136,6 +136,18 @@ public class ProtobufBaseListener implements ProtobufListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPackedValue(ProtobufParser.PackedValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPackedValue(ProtobufParser.PackedValueContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterExtensions(ProtobufParser.ExtensionsContext ctx) { }
 	/**
 	 * {@inheritDoc}

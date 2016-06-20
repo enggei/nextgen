@@ -19,6 +19,8 @@ public class ProtobufTests {
 	public void testProtobufGroup() {
 		// todo add ProtobufGroup- tests here;
 
+
+		group.newmessageField().setPackedValue("true");
 	}
 
 	@Test
@@ -39,16 +41,16 @@ public class ProtobufTests {
 			}
 
 			@Override
-			public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue) {
+			public void newProperty(FieldRules rule, String propertyType, String propertyName, Integer ordinal, String comment, String parent, String defaultValue, String packedValue) {
 				switch (rule) {
 					case required:
-						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue);
+						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue + " packed:" + packedValue);
 						break;
 					case optional:
-						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue);
+						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue + " packed:" + packedValue);
 						break;
 					case repeated:
-						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue);
+						System.out.println("\tproperty " + rule + " " + propertyType + " " + (parent != null ? ("(PARENT: " + parent + ") ") : "") + propertyName + " " + ordinal + " comment: " + comment + " default:" + defaultValue + " packed:" + packedValue);
 						break;
 				}
 			}

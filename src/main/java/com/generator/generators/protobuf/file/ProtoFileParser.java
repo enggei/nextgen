@@ -163,7 +163,7 @@ public class ProtoFileParser extends ProtobufParser {
    }
 
    @Override
-   public void newProperty(final FieldRules rule, final String propertyType, final String propertyName, Integer ordinal, final String comment, final String parent, final String defaultValue) {
+   public void newProperty(final FieldRules rule, final String propertyType, final String propertyName, Integer ordinal, final String comment, final String parent, final String defaultValue, final String packedValue) {
 
       final UUID uuid = UUID.randomUUID();
 
@@ -221,6 +221,11 @@ public class ProtoFileParser extends ProtobufParser {
          @Override
          public String getDefaultValue() {
             return defaultValue;
+         }
+
+         @Override
+         public String getPackedValue() {
+            return packedValue;
          }
 
          @Override

@@ -90,6 +90,16 @@ public class ProtobufMessageFieldNode extends ProtobufEntityNode implements Prot
          }
       return defaultValue;
    }
+   private String packedValue;
+
+   public String getPackedValue() {
+      if (packedValue == null)
+         try (Transaction tx = graphDb.beginTx()) {
+            packedValue = node.hasProperty("com.generator.generators.protobuf.domain.ProtobufMessageField.packedValue") ? (String) node.getProperty("com.generator.generators.protobuf.domain.ProtobufMessageField.packedValue") : null;
+            tx.success();
+         }
+      return packedValue;
+   }
 
    public ProtobufMessageField setDefaultValue(String value) {
       this.defaultValue = null;

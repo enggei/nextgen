@@ -5,6 +5,10 @@
         <buildParser grammarFile="src/main/java/com/generator/generators/json/parser/JSON.g4"
                      packageName="com.generator.generators.json.parser"/>
 
+        <buildParser grammarFile="src/main/java/com/generator/generators/cpp/parser/CPP14.g4"
+                     packageName="com.generator.generators.cpp.parser"
+                     visitor="-visitor" listener="-listener"/>
+
         <buildParser grammarFile="src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4"
                      packageName="com.generator.generators.protobuf.parser"
                      visitor="-visitor" listener="-listener"/>
