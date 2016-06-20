@@ -48,10 +48,8 @@ public class GeneratorDomain extends MetaDomain<GeneratorDomain.ENTITIES, Genera
 				.addProperty(new MetaProperty("comments").setType("String"));
 			addMetaNode(ENTITIES.DOMAIN, UUID.randomUUID())
 				.addProperty(new MetaProperty("name", "name").setType("String"))
-//                    .addProperty(new MetaProperty("templateFile", "/media/storage/projects/generator/src/com/generator/generators/generator/generatorDomain.stg").setType("String"))
 				.addProperty(new MetaProperty("package").setType("java package"))
 				.addProperty(new MetaProperty("comments").setType("String"))
-//                    .addProperty(new MetaProperty("targetFile", "/media/storage/projects/generator/src/com/generator/generators").setType("File"))
 			;
 			addMetaNode(ENTITIES.RELATION, UUID.randomUUID())
 				.addProperty(new MetaProperty("name", "name").setType("String"))

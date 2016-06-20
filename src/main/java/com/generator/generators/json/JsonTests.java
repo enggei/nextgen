@@ -11,8 +11,8 @@ public class JsonTests {
 
    	// todo add JsonGroup- tests here;
 
-
-   } ;
+		 System.out.println(group.newdocument().addContentValue(group.newobject().addPairsValue("NAME",group.newarray().addElementsValue(group.newobject().addPairsValue("VAL","1")))));
+	 } ;
 
     @Test
    public void testJsonNeo() {

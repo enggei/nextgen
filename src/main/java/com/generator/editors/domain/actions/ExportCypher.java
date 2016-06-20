@@ -44,9 +44,8 @@ public class ExportCypher<E extends Enum<E>, R extends Enum<R>, G extends GraphN
 		final CypherGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
 
 		final LinkedHashSet<Relationship> relationships = new LinkedHashSet<>();
-		for (Node node : rootNodes) {
-			exportNode(createNodesST, cypherGroup, node, new LinkedHashSet<Node>(), relationships);
-		}
+		for (Node node : rootNodes)
+			exportNode(createNodesST, cypherGroup, node, new LinkedHashSet<>(), relationships);
 
 		// add relations at end, using node-uuids:
 		final CypherGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();

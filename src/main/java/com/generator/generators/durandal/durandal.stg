@@ -1,4 +1,4 @@
-/* uuid : 082477d9-e414-4aba-953d-d57941f0a271 */
+/* uuid : d58d4419-c78e-4c44-8e06-9a122b480590 */
 delimiters "~", "~"
 
 /** columns,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
@@ -464,15 +464,21 @@ shellHTML() ::= << <div>
 >>
 
 /** routes,KEYVALUELISTPROPERTY,moduleId,nav,route,title;unknownRoutePage,STRINGPROPERTY;unknownRoutePath,STRINGPROPERTY; **/
-shellJS(routes,unknownRoutePage,unknownRoutePath) ::= << define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
+shellJS(routes,unknownRoutePage,unknownRoutePath) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
 
     return {
 
         router: router,
 
         search: function (formElement) {
-            var searchTerm = $(formElement).find("#searchTerm").val();
-            app.showMessage('Search for \"' + searchTerm + '\" not implemented!');
+            var menuItem = $(formElement).find("#searchTerm").val().toLowerCase();
+            for (var i = 0; i < router.routes.length; i++) {
+                var obj = router.routes[i];
+                if (obj.route.toLowerCase().includes(menuItem)) {
+                    router.navigate(obj.route);
+                    return;
+                }
+            }
         },
 
         activate: function () {
