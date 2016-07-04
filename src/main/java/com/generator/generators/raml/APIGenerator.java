@@ -103,7 +103,7 @@ public class APIGenerator {
 							newResponseProperty("userId", "string", true)))))
 		);
 
-		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+		FileUtil.write(loopsi, new File("src/main/web/api/loopsi/loopsi.raml"));
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
