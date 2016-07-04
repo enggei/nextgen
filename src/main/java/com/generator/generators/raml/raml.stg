@@ -1,4 +1,4 @@
-/* uuid : 13cd3c3b-dc6a-4479-85a2-f1aa7131c865 */
+/* uuid : 8c70b7e1-a57b-413f-996c-b3811f979125 */
 delimiters "~", "~"
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
@@ -43,9 +43,9 @@ errorResponse(code,description) ::= <<~code~:
             "status":  { "type": "integer" },
             "type":  { "type": "string" },
             "message":  { "type": "string" },
-            "details":  { "type": "array" },
-            "required": [ "status","type" ]
-          }
+            "details":  { "type": "array" }
+          },
+          "required": [ "status","type" ]
         } 
 >>
 
