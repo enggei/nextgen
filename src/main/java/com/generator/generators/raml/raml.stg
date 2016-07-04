@@ -1,4 +1,4 @@
-/* uuid : d37292c3-0914-440b-95b0-7ac7ef2bbd0a */
+/* uuid : 13cd3c3b-dc6a-4479-85a2-f1aa7131c865 */
 delimiters "~", "~"
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
@@ -19,6 +19,13 @@ dateParam(defaultValue,description,example,name,pattern,required) ::= <<~name~:
   ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
 >>
 
+/** description,STRINGPROPERTY;responses,LISTPROPERTY; **/
+deleteAction(description,responses) ::= <<delete:
+  description: ~description~
+  responses:
+    ~responses:{it|~it~};separator="\n"~ 
+>>
+
 /** actions,LISTPROPERTY;uri,STRINGPROPERTY; **/
 endpoint(actions,uri) ::= <<~uri~:
   ~actions:{it|~it~};separator="\n"~ 
@@ -36,12 +43,8 @@ errorResponse(code,description) ::= <<~code~:
             "status":  { "type": "integer" },
             "type":  { "type": "string" },
             "message":  { "type": "string" },
-            "details":  {
-              "$schema": "http://json-schema.org/schema",
-              "type": "object",
-              "description": "Details will be left out in production"
-          	},
-          	"required": [ "status","type" ]
+            "details":  { "type": "array" },
+            "required": [ "status","type" ]
           }
         } 
 >>
@@ -117,6 +120,14 @@ numberParam(defaultValue,description,example,maximum,minimum,name,repeat,require
 
 /** body,STRINGPROPERTY;description,STRINGPROPERTY;responses,LISTPROPERTY; **/
 postAction(body,description,responses) ::= <<post:
+  description: ~description~
+  ~body~
+  responses:
+      ~responses:{it|~it~};separator="\n"~ 
+>>
+
+/** body,STRINGPROPERTY;description,STRINGPROPERTY;responses,LISTPROPERTY; **/
+putAction(body,description,responses) ::= <<put:
   description: ~description~
   ~body~
   responses:

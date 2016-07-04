@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
-import static java.lang.Integer.MIN_VALUE;
 
 /**
  * goe on 6/30/16.
@@ -47,7 +46,7 @@ public class APIGenerator {
 			addActionsValue(newPOST(
 				"receives APP version ID from client and returns whether it matches the current version.",
 				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("versionId").setDescription("APP version ID. To be determined. UUID?").setRequired(true).setMaxLength(40).setMinLength(MIN_VALUE).setExample(UUID.randomUUID())),
+					addFormParamsValue(group.newstringParam().setName("versionId").setDescription("APP version.").setRequired(true).setMaxLength(40).setMinLength(0).setExample("0.8")),
 				"400", "404", "500").
 				addResponsesValue(newjsonResponse("Version response",
 					newResponseProperty("success", "boolean", true)))));
@@ -56,49 +55,89 @@ public class APIGenerator {
 				setUri("/user").
 				addActionsValue(newPOST("create new user",
 					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(MIN_VALUE).setExample("theusername")).
+						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, B64encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("thepassword")).
-						addFormParamsValue(group.newstringParam().setName("userToken").setDescription("the user token").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("theToken")).
 						addFormParamsValue(group.newbooleanParam().setName("TempUser").setDescription("if user is temporary, no userinfo required").setRequired(true).setDefaultValue("true")).
 						addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
 						addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
-						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^(?:(?:31(\\/|-|\\.)(?:0?[13578]|1[02]))\\1|(?:(?:29|30)(\\/|-|\\.)(?:0?[1,3-9]|1[0-2])\\2))(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$|^(?:29(\\/|-|\\.)0?2\\3(?:(?:(?:1[6-9]|[2-9]\\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\\d|2[0-8])(\\/|-|\\.)(?:(?:0?[1-9])|(?:1[0-2]))\\4(?:(?:1[6-9]|[2-9]\\d)?\\d{2})$").setExample("01.11.2000")).
+						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)?$").setExample("2014-08-18")).
 						addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
 						addFormParamsValue(group.newstringParam().setName("options").setDescription("sex").setRequired(false).addEnumsValue("optionA").addEnumsValue("optionB").addEnumsValue("optionC").setExample("the@email.com")).
-						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(MIN_VALUE).setMaxLength(MAX_VALUE).setExample("thelocation")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(MIN_VALUE).setMaxLength(MAX_VALUE).setExample("thecountry")).
-						addFormParamsValue(group.newstringParam().setName("avatar").setDescription("user avatar").setRequired(false).setMinLength(MIN_VALUE).setMaxLength(MAX_VALUE).setExample("theavatar")).
-						addFormParamsValue(group.newstringParam().setName("FBSocialToken").setDescription("user FBSocialToken").setRequired(false).setMinLength(MIN_VALUE).setMaxLength(MAX_VALUE).setExample("theavatar")),
-					"400", "404", "500").
+						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
+						addFormParamsValue(group.newstringParam().setName("avatar").setDescription("user avatar").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("theavatar")).
+						addFormParamsValue(group.newstringParam().setName("FBSocialToken").setDescription("user FBSocialToken").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")),
+					"400", "404", "409", "500").
 					addResponsesValue(newjsonResponse("User confirmation",
-						newResponseProperty("userToken", "string", true)))).
+						newResponseProperty("userId", "string", false),
+						newResponseProperty("username", "string", true)))).
+				addActionsValue(newPUT("update user",
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
+						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, B64encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("thepassword")).
+						addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
+						addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
+						addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
+						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)?$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
+						addFormParamsValue(group.newstringParam().setName("options").setDescription("sex").setRequired(false).addEnumsValue("optionA").addEnumsValue("optionB").addEnumsValue("optionC").setExample("the@email.com")).
+						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
+						addFormParamsValue(group.newstringParam().setName("avatar").setDescription("user avatar").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("theavatar")).
+						addFormParamsValue(group.newstringParam().setName("FBSocialToken").setDescription("user FBSocialToken").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")),
+					"400", "404", "409", "500").
+					addResponsesValue(newjsonResponse("User confirmation",
+						newResponseProperty("userId", "string", true)))).
 				addActionsValue(group.newuriParameter().
-					setName("userToken").
-					addActionsValue(newGET("get user based on userToken",
-						"400", "404", "500").
+					setName("username").
+					addActionsValue(newDELETE("delete user",
+						"400", "404", "409", "500").
+						addResponsesValue(newjsonResponse("User delete confirmation",
+							newResponseProperty("username", "string", true))))).
+				addActionsValue(group.newuriParameter().
+					setName("userId").
+					addActionsValue(newGET("get user based on userId",
+						"400", "404", "409", "500").
 						addResponsesValue(newjsonResponse("User information",
-							newResponseProperty("userToken", "string", true)))))
+							newResponseProperty("userId", "string", true)))))
 		);
 
-		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		final RamlGroup.postActionST postActionST = group.newpostAction().
+		final RamlGroup.postActionST actionST = group.newpostAction().
 			setDescription(description).
 			setBody(body);
 		for (String errorCode : errorCodes)
-			postActionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return postActionST;
+			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
+		return actionST;
 	}
 
 	private RamlGroup.getActionST newGET(String description, String... errorCodes) {
-		final RamlGroup.getActionST getActionST = group.newgetAction().
+		final RamlGroup.getActionST actionST = group.newgetAction().
 			setDescription(description);
 		for (String errorCode : errorCodes)
-			getActionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return getActionST;
+			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
+		return actionST;
+	}
+
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.formBodyST body, String... errorCodes) {
+		final RamlGroup.putActionST actionST = group.newputAction().
+			setDescription(description).
+			setBody(body);
+		for (String errorCode : errorCodes)
+			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
+		return actionST;
+	}
+
+	private RamlGroup.deleteActionST newDELETE(String description, String... errorCodes) {
+		final RamlGroup.deleteActionST actionST = group.newdeleteAction().
+			setDescription(description);
+		for (String errorCode : errorCodes)
+			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
+		return actionST;
 	}
 
 	private RamlGroup.errorResponseST error(String code, String description) {
@@ -113,6 +152,10 @@ public class APIGenerator {
 				return "Bad Request";
 			case "404":
 				return "Not Found";
+			case "409":
+				return "Conflict";
+			case "422":
+				return "Unprocessable Entity";
 			case "500":
 				return "Internal Server Error";
 			default:

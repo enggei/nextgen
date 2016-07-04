@@ -61,6 +61,11 @@ public final class RamlGroup {
    } 
 
 
+   public deleteActionST newdeleteAction() {
+      return new deleteActionST(stGroup);
+   } 
+
+
    public endpointST newendpoint() {
       return new endpointST(stGroup);
    } 
@@ -108,6 +113,11 @@ public final class RamlGroup {
 
    public postActionST newpostAction() {
       return new postActionST(stGroup);
+   } 
+
+
+   public putActionST newputAction() {
+      return new putActionST(stGroup);
    } 
 
 
@@ -193,6 +203,31 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
       } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class deleteActionST {
+
+      private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private deleteActionST(STGroup group) {
+   		template = group.getInstanceOf("deleteAction");
+   	}
+
+       public deleteActionST setDescription(Object value) {
+      	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+      public deleteActionST addResponsesValue(Object value) {
+      	tryToSetListProperty(template, value, responsesIsSet, "responses");
+         return this;
+      }
 
       @Override
    	public String toString() {
@@ -531,6 +566,36 @@ public final class RamlGroup {
          return this;
       } 
       public postActionST addResponsesValue(Object value) {
+      	tryToSetListProperty(template, value, responsesIsSet, "responses");
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class putActionST {
+
+      private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private putActionST(STGroup group) {
+   		template = group.getInstanceOf("putAction");
+   	}
+
+       public putActionST setBody(Object value) {
+      	tryToSetStringProperty(template, value, bodyIsSet, "body");   
+         return this;
+      } 
+       public putActionST setDescription(Object value) {
+      	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+      public putActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
       }
