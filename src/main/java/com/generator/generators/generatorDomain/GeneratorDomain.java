@@ -1,20 +1,17 @@
 package com.generator.generators.generatorDomain;
 
-import com.generator.editors.domain.MetaDomain;
-import com.generator.editors.domain.MetaNode;
-import com.generator.editors.domain.MetaProperty;
 import com.generator.editors.domain.NeoModel;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
+import com.generator.editors.domain.*;
 
-import java.util.UUID;
+import org.neo4j.graphdb.*;
+
+import static com.generator.editors.domain.MetaRelation.Cardinality.*;
+import static com.generator.editors.domain.MetaRelation.Direction.*;
+
+import java.util.*;
 
 import static com.generator.generators.generatorDomain.GeneratorDomain.ENTITIES.*;
 import static com.generator.generators.generatorDomain.GeneratorDomain.RELATIONS.*;
-import static com.generator.editors.domain.MetaRelation.Cardinality.OneToMany;
-import static com.generator.editors.domain.MetaRelation.Cardinality.OneToOne;
-import static com.generator.editors.domain.MetaRelation.Direction.OneWay;
 
 /**
  * Meta-domain to describe meta-domain

@@ -1,8 +1,8 @@
-/* uuid : 6037b357-6330-4c73-bb14-04ff2fb712be */
+/* uuid : 2e9a0789-fcc8-474f-b6cc-3b8eb0667394 */
 delimiters "~", "~"
 
 /** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
-enum(comments,name,properties) ::= << /* uuid : bac3bf13-2219-44e4-8d68-fcf2d476a48c */
+enum(comments,name,properties) ::= <</* uuid : bac3bf13-2219-44e4-8d68-fcf2d476a48c */
 delimiters "~", "~"
 
 /** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/

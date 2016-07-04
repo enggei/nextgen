@@ -1,9 +1,8 @@
-/* uuid : 4066b287-2b45-4771-8852-d64706b67d89 */
+/* uuid : 48475d68-791f-4a02-8771-92a35235c782 */
 delimiters "~", "~"
 
 /** domain,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
-NeoGroupClassDeclaration(domain,name,packageName,statements) ::= <<
- ~if(packageName)~package ~packageName~;
+NeoGroupClassDeclaration(domain,name,packageName,statements) ::= <<~if(packageName)~package ~packageName~;
 
 import com.generator.editors.domain.NeoModel;
 import org.neo4j.graphdb.Node;
@@ -34,13 +33,11 @@ public final class ~name~Neo {
 >>
 
 /**  **/
-bugfix2() ::= <<
- } 
+bugfix2() ::= << } 
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
-declaration(groupName,name,properties) ::= <<
- public static final class ~name~Node {
+declaration(groupName,name,properties) ::= << public static final class ~name~Node {
 
    private final NeoModel model;
 	private final UUID uuid;
@@ -77,13 +74,11 @@ declaration(groupName,name,properties) ::= <<
 >>
 
 /**  **/
-endParens() ::= <<
- } 
+endParens() ::= << } 
 >>
 
 /** groupName,STRINGPROPERTY;kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
-keyValueListSetter(groupName,kvNames,propertyName,statementName) ::= <<
- // ~propertyName~
+keyValueListSetter(groupName,kvNames,propertyName,statementName) ::= << // ~propertyName~
 public ~statementName~Node add~propertyName;format="capitalize"~Value(~kvNames:{it|String ~it~_};separator=", "~) {
 	final Node newNode = model.newNode("~statementName~_~propertyName~", UUID.randomUUID());
 	getNode().createRelationshipTo(newNode, PARAMS.~propertyName;format="toUpper"~);
@@ -102,8 +97,7 @@ private ~statementName~Node fill~propertyName;format="capitalize"~(~groupName~Gr
 >>
 
 /** groupName,STRINGPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
-listSetter(groupName,propertyName,statementName) ::= <<
- // ~propertyName~
+listSetter(groupName,propertyName,statementName) ::= << // ~propertyName~
 public ~statementName~Node add~propertyName;format="capitalize"~Value(String value) {
 	if (value != null) {
 		final Node newNode = model.newNode("~statementName~_~propertyName~", UUID.randomUUID());
@@ -121,8 +115,7 @@ private ~statementName~Node fill~propertyName;format="capitalize"~(~groupName~Gr
 >>
 
 /** name,STRINGPROPERTY; **/
-newInstance(name) ::= <<
- public ~name~Node new~name~() {
+newInstance(name) ::= << public ~name~Node new~name~() {
 	return new ~name~Node(model, NeoModel.uuidOf(model.newNode("~name~", UUID.randomUUID())));
 }
 
@@ -132,8 +125,7 @@ public ~name~Node get~name~(UUID uuid) {
 >>
 
 /** groupName,STRINGPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
-stringSetter(groupName,propertyName,statementName) ::= <<
- // ~propertyName~
+stringSetter(groupName,propertyName,statementName) ::= << // ~propertyName~
 public ~statementName~Node set~propertyName;format="capitalize"~(String value) {
 	if (has(getNode(), "~propertyName~")) getNode().removeProperty("~propertyName~");
 	if (value!=null) getNode().setProperty("~propertyName~", value);

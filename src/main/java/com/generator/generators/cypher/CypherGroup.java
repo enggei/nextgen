@@ -1,7 +1,3 @@
-
-
-
-
 package com.generator.generators.cypher;
 
 import org.stringtemplate.v4.ST;
@@ -18,7 +14,20 @@ public final class CypherGroup {
    private final char delimiter;
 
 	public CypherGroup() {
-		this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "cypher" + java.io.File.separator + "cypher.stg"));
+
+		final String generatorPath = System.getProperty("generator.path");
+
+		if (generatorPath != null) {
+			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "cypher" + java.io.File.separator + "cypher.stg");
+			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+			this.delimiter = stGroup.delimiterStartChar;
+		} else {
+			this.stGroup = new org.stringtemplate.v4.STGroupFile(CypherGroup.class.getResource("/com/generator/generators/cypher/cypher.stg"), "UTF-8", '~', '~');
+			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+			this.delimiter = stGroup.delimiterStartChar;
+		}
+
+		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "cypher" + java.io.File.separator + "cypher.stg"));
    }
 
    public CypherGroup(STGroup stGroup) {
@@ -28,10 +37,10 @@ public final class CypherGroup {
    }
 
    public CypherGroup(java.io.File templateFile) {
-      this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
-      this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-      this.delimiter = stGroup.delimiterStartChar;
-   }
+   	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
+	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+	   this.delimiter = stGroup.delimiterStartChar;
+	}
 
    public STGroup getSTGroup() {
       return stGroup;
@@ -96,12 +105,10 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
       } 
-
       public createNodeST addLabelsValue(Object value) {
       	tryToSetListProperty(template, value, labelsIsSet, "labels");
          return this;
       }
-
       public createNodeST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
@@ -149,17 +156,14 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, dstIsSet, "dst");   
          return this;
       } 
-
       public createRelationshipST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
       }
-
        public createRelationshipST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
       } 
-
        public createRelationshipST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
@@ -205,7 +209,6 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
       } 
-
        public matchLabelST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
@@ -232,12 +235,10 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, matchIsSet, "match");   
          return this;
       } 
-
        public queryST setReturn(Object value) {
       	tryToSetStringProperty(template, value, returnIsSet, "return");   
          return this;
       } 
-
        public queryST setWhere(Object value) {
       	tryToSetStringProperty(template, value, whereIsSet, "where");   
          return this;
@@ -263,7 +264,6 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-
        public stringPropertyST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
@@ -289,7 +289,6 @@ public final class CypherGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-
        public valuePropertyST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
@@ -315,109 +314,117 @@ public final class CypherGroup {
 		return false;
 	}
 
+	private enum FormatCode {
+	      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
+	   }
 
+	   private final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
+	      @Override
+	      public String toString(Object o, String formatString, java.util.Locale locale) {
 
+	         final String text = o.toString();
 
- private enum FormatCode {
-      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
-   }
+	         if (formatString == null) return text;
 
-   private final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
+	         switch (FormatCode.valueOf(formatString)) {
+	            case capitalize:
+	               return capitalize(text);
+	            case toUpper:
+	               return toUpper(text);
+	            case lowFirst:
+	               return lowFirst(text);
+	            case toLower:
+	               return text.toLowerCase();
+	            case humpToCap:
+	               return humpToCap(text);
+	            case camelHump:
+	               return camelHump(text);
+	            case splitCamelHump:
+	               return splitCamelHump(text);
+	            case singlify:
+	               String s = toUpper(text).substring(0, 1) + text.substring(1);
+	               if (s.toLowerCase().endsWith("ies")) return s.substring(0, s.length() - 3) + "y";
+	               else if (s.toLowerCase().endsWith("es") || s.toLowerCase().endsWith("nts")) return s.substring(0, s.length() - 1);
+	               else if (s.toLowerCase().endsWith("ions") || s.toLowerCase().endsWith("mns"))
+	                  return s.substring(0, s.length() - 1);
+	               return s;
+	            case packageToPath:
+	               return packageToPath((text));
+	            default:
+	               return o.toString();
+	         }
+	      }
 
-      @Override
-      public String toString(Object o, String formatString, java.util.Locale locale) {
+	      private String capitalize(String string) {
+	         if (string == null || string.length() == 0) return "";
+	         return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+	      }
 
-         final String text = o.toString();
+	      private String lowFirst(String string) {
+	         if (string == null || string.length() == 0) return "";
+	         return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+	      }
 
-         if (formatString == null) return text;
+	      private String toUpper(String text) {
+	         return text.toUpperCase();
+	      }
 
-         switch (FormatCode.valueOf(formatString)) {
-            case capitalize:
-               return capitalize(text);
-            case toUpper:
-               return toUpper(text);
-            case lowFirst:
-               return lowFirst(text);
-            case toLower:
-               return text.toLowerCase();
-            case humpToCap:
-               return humpToCap(text);
-            case camelHump:
-               return camelHump(text);
-            case splitCamelHump:
-               return splitCamelHump(text);
-            case singlify:
-               String s = toUpper(text).substring(0, 1) + text.substring(1);
-               if (s.toLowerCase().endsWith("ies")) return s.substring(0, s.length() - 3) + "y";
-               else if (s.toLowerCase().endsWith("es") || s.toLowerCase().endsWith("nts")) return s.substring(0, s.length() - 1);
-               else if (s.toLowerCase().endsWith("ions") || s.toLowerCase().endsWith("mns"))
-                  return s.substring(0, s.length() - 1);
-               return s;
-            case packageToPath:
-               return packageToPath((text));
-            default:
-               return o.toString();
-         }
-      }
+	      private String humpToCap(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean first = true;
+	         for (int i = 0; i < chars.length; i++) {
+	            char aChar = chars[i];
+	            if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
+	               out.append("_");
+	            }
+	            first = false;
+	            out.append(Character.toUpperCase(aChar));
+	         }
+	         return out.toString();
+	      }
 
-      private String capitalize(String string) {
-         if (string == null || string.length() == 0) return "";
-         return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
-      }
+	      private String camelHump(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean capitalize = true;
+	         for (char aChar : chars) {
+	            if (Character.isWhitespace(aChar)) {
+	               capitalize = true;
+	               continue;
+	            }
+	            out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
+	            capitalize = false;
+	         }
+	         return out.toString();
+	      }
 
-      private String lowFirst(String string) {
-         if (string == null || string.length() == 0) return "";
-         return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
-      }
+	      private String splitCamelHump(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean first = true;
+	         for (char aChar : chars) {
+	            if (Character.isUpperCase(aChar)) out.append(" ");
+	            out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
+	            first = false;
+	         }
+	         return out.toString();
+	      }
 
-      private String toUpper(String text) {
-         return text.toUpperCase();
-      }
+	      private String packageToPath(String packageName) {
+	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
+	      }
+	   } 
 
-      private String humpToCap(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean first = true;
-         for (int i = 0; i < chars.length; i++) {
-            char aChar = chars[i];
-            if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
-               out.append("_");
-            }
-            first = false;
-            out.append(Character.toUpperCase(aChar));
-         }
-         return out.toString();
-      }
-
-      private String camelHump(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean capitalize = true;
-         for (char aChar : chars) {
-            if (Character.isWhitespace(aChar)) {
-               capitalize = true;
-               continue;
-            }
-            out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
-            capitalize = false;
-         }
-         return out.toString();
-      }
-
-      private String splitCamelHump(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean first = true;
-         for (char aChar : chars) {
-            if (Character.isUpperCase(aChar)) out.append(" ");
-            out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
-            first = false;
-         }
-         return out.toString();
-      }
-
-      private String packageToPath(String packageName) {
-          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
-      }
-   }     }       
+	public String list(String delimiter, Object... elements) {
+		final StringBuilder list = new StringBuilder();
+		boolean first = true;
+		for (Object element : elements) {
+			if (!first) list.append(delimiter);
+			list.append(element);
+			first = false;
+		}
+		return list.toString() + delimiter;
+	}
+} 

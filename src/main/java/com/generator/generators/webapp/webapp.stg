@@ -1,9 +1,8 @@
-/* uuid : 0d585734-4069-49c4-9b62-ae6334f6105f */
+/* uuid : 9f5664ba-308d-4941-9f66-3fdc3192fb6f */
 delimiters "~", "~"
 
 /** appname,STRINGPROPERTY; **/
-appHtml(appname) ::= <<
- <!DOCTYPE html>
+appHtml(appname) ::= <<<!DOCTYPE html>
 <html>
 <head>
 
@@ -56,8 +55,7 @@ appHtml(appname) ::= <<
 >>
 
 /** appname,STRINGPROPERTY;root,STRINGPROPERTY; **/
-appJs(appname,root) ::= <<
- requirejs.config({
+appJs(appname,root) ::= << requirejs.config({
     paths: {
         'durandal': '../lib/durandal/js',
         'bootstrap': '../lib/bootstrap/js/bootstrap',
@@ -103,8 +101,7 @@ define(function (require) {
 >>
 
 /**  **/
-shellHtml() ::= <<
- <div>
+shellHtml() ::= <<<div>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -145,8 +142,7 @@ shellHtml() ::= <<
 >>
 
 /**  **/
-shellJs() ::= <<
- define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
+shellJs() ::= << define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
 
     return {
 

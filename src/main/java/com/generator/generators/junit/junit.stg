@@ -1,9 +1,8 @@
-/* uuid : 60a94923-806d-4b9d-bf72-603202ae95b9 */
+/* uuid : 94e82ae7-62a0-4c12-bb44-e5d3ac377be5 */
 delimiters "~", "~"
 
 /**  **/
-mvn() ::= <<
- <dependency>
+mvn() ::= <<<dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
     <version>4.12</version>
@@ -12,8 +11,7 @@ mvn() ::= <<
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
-templateGroupTest(groupName,name) ::= <<
- @Test
+templateGroupTest(groupName,name) ::= << @Test
 public void test~name;format="capitalize"~Group() {
 
    System.setProperty("generator.path", "src/main/java/com/generator/generators");
@@ -26,8 +24,7 @@ public void test~name;format="capitalize"~Group() {
 >>
 
 /** dbPath,STRINGPROPERTY;name,STRINGPROPERTY; **/
-templateNeoTest(dbPath,name) ::= <<
- @Test
+templateNeoTest(dbPath,name) ::= << @Test
 public void test~name;format="capitalize"~Neo() {
 
 	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(~if(dbPath)~"~dbPath~"~else~"src/test/tests/db"~endif~);
@@ -47,16 +44,14 @@ public void test~name;format="capitalize"~Neo() {
 >>
 
 /** name,STRINGPROPERTY;statements,LISTPROPERTY; **/
-test(name,statements) ::= <<
- @Test
+test(name,statements) ::= << @Test
 public void ~name~() {
     ~statements:{it|~it~;}; separator="\n\n"~
 } 
 >>
 
 /** imports,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;tests,LISTPROPERTY; **/
-tests(imports,name,package,tests) ::= <<
- ~if(package)~package ~package~;
+tests(imports,name,package,tests) ::= << ~if(package)~package ~package~;
 ~endif~
 
 ~imports:{it | import ~it~;}; separator="\n\n"~

@@ -1,10 +1,10 @@
-/* uuid : e2da56a0-a49b-4674-8d53-2f5daf1a02b1 */
+/* uuid : 9e5e3fac-d57c-4779-876f-390531a9b794 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;properties,LISTPROPERTY; **/
 addEntity(name,properties) ::= <<public Node add~name;format="capitalize"~(UUID uuid~if(properties)~, ~properties:{it|String _~it~};separator=", "~~endif~) {
     return newNode(ENTITIES.~name;format="capitalize"~, uuid~if(properties)~, ~properties:{it|"~it~", (_~it~ == null || _~it~.trim().length()==0) ? "[]" : _~it~};separator=", "~~endif~);
-}
+} 
 >>
 
 /** domain,STRINGPROPERTY;dst,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY;src,STRINGPROPERTY; **/
@@ -237,8 +237,7 @@ entityDeclaration(name,properties) ::= <<addMetaNode(ENTITIES.~name;format="capi
 >>
 
 /** domain,STRINGPROPERTY;name,STRINGPROPERTY; **/
-entityEditorImplementation(domain,name) ::= <<
-public NodeEditor new~name~GraphEditor(MetaNode<~domain~.ENTITIES> metaNode, GraphNode2D<~domain~.ENTITIES> node, GraphEditor editor) {
+entityEditorImplementation(domain,name) ::= <<public NodeEditor new~name~GraphEditor(MetaNode<~domain~.ENTITIES> metaNode, GraphNode2D<~domain~.ENTITIES> node, GraphEditor editor) {
     return super.getNodeEditor(metaNode, node, editor);
 }
 >>
@@ -248,8 +247,7 @@ entityGraphNodeDeclaration(name) ::= <<new~name~GraphNode(metaNode, node, x, y);
 >>
 
 /** domain,STRINGPROPERTY;gBackground,STRINGPROPERTY;gLabelColor,STRINGPROPERTY;gSelBackground,STRINGPROPERTY;gSelLabelColor,STRINGPROPERTY;height,STRINGPROPERTY;name,STRINGPROPERTY;width,STRINGPROPERTY; **/
-entityGraphNodeImplementation(domain,gBackground,gLabelColor,gSelBackground,gSelLabelColor,height,name,width) ::= <<
-protected GraphNode2D<~domain~.ENTITIES> new~name~GraphNode(MetaNode<~domain~.ENTITIES> metaNode, Node node, int x, int y) {
+entityGraphNodeImplementation(domain,gBackground,gLabelColor,gSelBackground,gSelLabelColor,height,name,width) ::= <<protected GraphNode2D<~domain~.ENTITIES> new~name~GraphNode(MetaNode<~domain~.ENTITIES> metaNode, Node node, int x, int y) {
     return new GraphNode2D<>(node, metaNode, x, y, ~width~, ~height~, Color.decode("~gBackground~"), Color.decode("~gSelBackground~"), Color.decode("~gLabelColor~"), Color.decode("~gSelLabelColor~"), NeoModel.getNameOrLabelFrom(node), false);
 }
 >>
@@ -269,8 +267,7 @@ graphRelationDeclaration(name) ::= <<new~name;format="toUpper"~Relation(relation
 >>
 
 /** domain,STRINGPROPERTY;name,STRINGPROPERTY; **/
-graphRelationImpl(domain,name) ::= <<
-protected GraphRelation<GraphNode2D<~domain~.ENTITIES>, GraphNode2D<~domain~.ENTITIES>, ~domain~.ENTITIES> new~name;format="toUpper"~Relation(Relationship relationship, GraphNode2D<~domain~.ENTITIES> source, GraphNode2D<~domain~.ENTITIES> target) {
+graphRelationImpl(domain,name) ::= <<protected GraphRelation<GraphNode2D<~domain~.ENTITIES>, GraphNode2D<~domain~.ENTITIES>, ~domain~.ENTITIES> new~name;format="toUpper"~Relation(Relationship relationship, GraphNode2D<~domain~.ENTITIES> source, GraphNode2D<~domain~.ENTITIES> target) {
     return new com.generator.editors.graph.d2.ShortestPathGraphRelation(relationship, source, target);
 }
 >>
@@ -294,8 +291,7 @@ termCase(term) ::= <<case ~term;format="capitalize"~:
 >>
 
 /** term,STRINGPROPERTY; **/
-termImpl(term) ::= <<
-<T> T visit~term;format="capitalize"~(Node node) {
+termImpl(term) ::= <<<T> T visit~term;format="capitalize"~(Node node) {
     return null;
 }
 >>

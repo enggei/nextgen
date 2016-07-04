@@ -1,8 +1,8 @@
-/* uuid : ae342ccb-e9b5-43de-a79e-43f49341f695 */
+/* uuid : 6ff1781d-8319-42df-880a-e3b8549e5edc */
 delimiters "~", "~"
 
 /** elements,LISTPROPERTY; **/
-array(elements) ::= << [
+array(elements) ::= <<[
   ~elements:{it|~it~};separator=",\n"~
 ] 
 >>

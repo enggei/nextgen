@@ -1,5 +1,3 @@
-
-
 package com.generator.generators.easyFlow;
 
 import org.stringtemplate.v4.ST;
@@ -16,7 +14,20 @@ public final class EasyFlowConverterGroup {
    private final char delimiter;
 
 	public EasyFlowConverterGroup() {
-		this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "easyFlowConverter" + java.io.File.separator + "easyFlowConverter.stg"));
+
+		final String generatorPath = System.getProperty("generator.path");
+
+		if (generatorPath != null) {
+			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "easyFlowConverter" + java.io.File.separator + "EasyFlowConverter.stg");
+			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+			this.delimiter = stGroup.delimiterStartChar;
+		} else {
+			this.stGroup = new org.stringtemplate.v4.STGroupFile(EasyFlowConverterGroup.class.getResource("/com/generator/generators/easyFlowConverter/EasyFlowConverter.stg"), "UTF-8", '~', '~');
+			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+			this.delimiter = stGroup.delimiterStartChar;
+		}
+
+		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "easyFlowConverter" + java.io.File.separator + "EasyFlowConverter.stg"));
    }
 
    public EasyFlowConverterGroup(STGroup stGroup) {
@@ -26,10 +37,10 @@ public final class EasyFlowConverterGroup {
    }
 
    public EasyFlowConverterGroup(java.io.File templateFile) {
-      this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
-      this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-      this.delimiter = stGroup.delimiterStartChar;
-   }
+   	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
+	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+	   this.delimiter = stGroup.delimiterStartChar;
+	}
 
    public STGroup getSTGroup() {
       return stGroup;
@@ -112,32 +123,26 @@ public final class EasyFlowConverterGroup {
       	tryToSetStringProperty(template, value, contextIsSet, "context");   
          return this;
       } 
-
        public easyFlowST setContextName(Object value) {
       	tryToSetStringProperty(template, value, contextNameIsSet, "contextName");   
          return this;
       } 
-
        public easyFlowST setEvents(Object value) {
       	tryToSetStringProperty(template, value, eventsIsSet, "events");   
          return this;
       } 
-
        public easyFlowST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-
        public easyFlowST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
       } 
-
        public easyFlowST setStates(Object value) {
       	tryToSetStringProperty(template, value, statesIsSet, "states");   
          return this;
       } 
-
        public easyFlowST setTransit(Object value) {
       	tryToSetStringProperty(template, value, transitIsSet, "transit");   
          return this;
@@ -197,7 +202,6 @@ public final class EasyFlowConverterGroup {
       	tryToSetStringProperty(template, value, commentIsSet, "comment");   
          return this;
       } 
-
        public stateDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
@@ -223,7 +227,6 @@ public final class EasyFlowConverterGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-
       public statefulContextST addPropertiesValue(Object comment_, Object modifier_, Object name_, Object type_, Object value_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{comment, modifier, name, type, value}", ( (comment_==null || comment_.toString().length()==0) ? null : comment_), ( (modifier_==null || modifier_.toString().length()==0) ? null : modifier_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_), ( (value_==null || value_.toString().length()==0) ? null : value_));
@@ -273,22 +276,18 @@ public final class EasyFlowConverterGroup {
       	tryToSetStringProperty(template, value, eventIsSet, "event");   
          return this;
       } 
-
        public transitST setIsFinish(Object value) {
       	tryToSetStringProperty(template, value, isFinishIsSet, "isFinish");   
          return this;
       } 
-
        public transitST setIsInit(Object value) {
       	tryToSetStringProperty(template, value, isInitIsSet, "isInit");   
          return this;
       } 
-
        public transitST setState(Object value) {
       	tryToSetStringProperty(template, value, stateIsSet, "state");   
          return this;
       } 
-
       public transitST addTransitsValue(Object value) {
       	tryToSetListProperty(template, value, transitsIsSet, "transits");
          return this;
@@ -314,106 +313,117 @@ public final class EasyFlowConverterGroup {
 		return false;
 	}
 
-   private enum FormatCode {
-      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
-   }
+	private enum FormatCode {
+	      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
+	   }
 
-   private final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
+	   private final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
 
-      @Override
-      public String toString(Object o, String formatString, java.util.Locale locale) {
+	      @Override
+	      public String toString(Object o, String formatString, java.util.Locale locale) {
 
-         final String text = o.toString();
+	         final String text = o.toString();
 
-         if (formatString == null) return text;
+	         if (formatString == null) return text;
 
-         switch (FormatCode.valueOf(formatString)) {
-            case capitalize:
-               return capitalize(text);
-            case toUpper:
-               return toUpper(text);
-            case lowFirst:
-               return lowFirst(text);
-            case toLower:
-               return text.toLowerCase();
-            case humpToCap:
-               return humpToCap(text);
-            case camelHump:
-               return camelHump(text);
-            case splitCamelHump:
-               return splitCamelHump(text);
-            case singlify:
-               String s = toUpper(text).substring(0, 1) + text.substring(1);
-               if (s.toLowerCase().endsWith("ies")) return s.substring(0, s.length() - 3) + "y";
-               else if (s.toLowerCase().endsWith("es") || s.toLowerCase().endsWith("nts")) return s.substring(0, s.length() - 1);
-               else if (s.toLowerCase().endsWith("ions") || s.toLowerCase().endsWith("mns"))
-                  return s.substring(0, s.length() - 1);
-               return s;
-            case packageToPath:
-               return packageToPath((text));
-            default:
-               return o.toString();
-         }
-      }
+	         switch (FormatCode.valueOf(formatString)) {
+	            case capitalize:
+	               return capitalize(text);
+	            case toUpper:
+	               return toUpper(text);
+	            case lowFirst:
+	               return lowFirst(text);
+	            case toLower:
+	               return text.toLowerCase();
+	            case humpToCap:
+	               return humpToCap(text);
+	            case camelHump:
+	               return camelHump(text);
+	            case splitCamelHump:
+	               return splitCamelHump(text);
+	            case singlify:
+	               String s = toUpper(text).substring(0, 1) + text.substring(1);
+	               if (s.toLowerCase().endsWith("ies")) return s.substring(0, s.length() - 3) + "y";
+	               else if (s.toLowerCase().endsWith("es") || s.toLowerCase().endsWith("nts")) return s.substring(0, s.length() - 1);
+	               else if (s.toLowerCase().endsWith("ions") || s.toLowerCase().endsWith("mns"))
+	                  return s.substring(0, s.length() - 1);
+	               return s;
+	            case packageToPath:
+	               return packageToPath((text));
+	            default:
+	               return o.toString();
+	         }
+	      }
 
-      private String capitalize(String string) {
-         if (string == null || string.length() == 0) return "";
-         return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
-      }
+	      private String capitalize(String string) {
+	         if (string == null || string.length() == 0) return "";
+	         return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+	      }
 
-      private String lowFirst(String string) {
-         if (string == null || string.length() == 0) return "";
-         return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
-      }
+	      private String lowFirst(String string) {
+	         if (string == null || string.length() == 0) return "";
+	         return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+	      }
 
-      private String toUpper(String text) {
-         return text.toUpperCase();
-      }
+	      private String toUpper(String text) {
+	         return text.toUpperCase();
+	      }
 
-      private String humpToCap(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean first = true;
-         for (int i = 0; i < chars.length; i++) {
-            char aChar = chars[i];
-            if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
-               out.append("_");
-            }
-            first = false;
-            out.append(Character.toUpperCase(aChar));
-         }
-         return out.toString();
-      }
+	      private String humpToCap(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean first = true;
+	         for (int i = 0; i < chars.length; i++) {
+	            char aChar = chars[i];
+	            if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
+	               out.append("_");
+	            }
+	            first = false;
+	            out.append(Character.toUpperCase(aChar));
+	         }
+	         return out.toString();
+	      }
 
-      private String camelHump(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean capitalize = true;
-         for (char aChar : chars) {
-            if (Character.isWhitespace(aChar)) {
-               capitalize = true;
-               continue;
-            }
-            out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
-            capitalize = false;
-         }
-         return out.toString();
-      }
+	      private String camelHump(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean capitalize = true;
+	         for (char aChar : chars) {
+	            if (Character.isWhitespace(aChar)) {
+	               capitalize = true;
+	               continue;
+	            }
+	            out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
+	            capitalize = false;
+	         }
+	         return out.toString();
+	      }
 
-      private String splitCamelHump(String text) {
-         final char[] chars = text.toCharArray();
-         final StringBuilder out = new StringBuilder();
-         boolean first = true;
-         for (char aChar : chars) {
-            if (Character.isUpperCase(aChar)) out.append(" ");
-            out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
-            first = false;
-         }
-         return out.toString();
-      }
+	      private String splitCamelHump(String text) {
+	         final char[] chars = text.toCharArray();
+	         final StringBuilder out = new StringBuilder();
+	         boolean first = true;
+	         for (char aChar : chars) {
+	            if (Character.isUpperCase(aChar)) out.append(" ");
+	            out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
+	            first = false;
+	         }
+	         return out.toString();
+	      }
 
-      private String packageToPath(String packageName) {
-          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
-      }
-   }
-  }     
+	      private String packageToPath(String packageName) {
+	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
+	      }
+	   } 
+
+	public String list(String delimiter, Object... elements) {
+		final StringBuilder list = new StringBuilder();
+		boolean first = true;
+		for (Object element : elements) {
+			if (!first) list.append(delimiter);
+			list.append(element);
+			first = false;
+		}
+		return list.toString() + delimiter;
+	}
+} 

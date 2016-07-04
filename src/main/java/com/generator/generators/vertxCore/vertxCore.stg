@@ -1,9 +1,8 @@
-/* uuid : d1664336-9777-4cc9-9772-c3a974bcc4bb */
+/* uuid : a8e398a7-ed85-402e-aea5-6256e8d7112b */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY;statement,STRINGPROPERTY; **/
-MessageHandlerVerticle(name,packageName,statement) ::= <<
- package ~packageName~;
+MessageHandlerVerticle(name,packageName,statement) ::= <<package ~packageName~;
 
 import com.generator.util.VertxUtil;
 import io.vertx.core.AbstractVerticle;
@@ -24,8 +23,7 @@ public class ~name~ extends AbstractVerticle implements Handler<Message<Object~b
 >>
 
 /** result,STRINGPROPERTY;resultHandler,STRINGPROPERTY;statements,LISTPROPERTY; **/
-blockingCode(result,resultHandler,statements) ::= <<
- vertx.executeBlocking(future -> {
+blockingCode(result,resultHandler,statements) ::= << vertx.executeBlocking(future -> {
 
     ~statements:{it|~it~;};separator="\n"~
 
@@ -37,8 +35,7 @@ blockingCode(result,resultHandler,statements) ::= <<
 >>
 
 /** client,STRINGPROPERTY;content,STRINGPROPERTY;handleBody,STRINGPROPERTY;handleResponse,STRINGPROPERTY;headers,KEYVALUELISTPROPERTY,name,value;httpMethod,STRINGPROPERTY;uri,STRINGPROPERTY; **/
-clientRequest(client,content,handleBody,handleResponse,headers,httpMethod,uri) ::= <<
- final HttpClientRequest request = ~client~.request(HttpMethod.~httpMethod~, ~uri~, resp -> {
+clientRequest(client,content,handleBody,handleResponse,headers,httpMethod,uri) ::= << final HttpClientRequest request = ~client~.request(HttpMethod.~httpMethod~, ~uri~, resp -> {
 
     ~handleResponse~
 
@@ -53,8 +50,7 @@ request~headers:{it|.
 >>
 
 /** onFail,STRINGPROPERTY;onSuccess,STRINGPROPERTY;options,STRINGPROPERTY;reference,STRINGPROPERTY;type,STRINGPROPERTY; **/
-deployVerticleProgrammatically(onFail,onSuccess,options,reference,type) ::= <<
- Verticle ~reference~ = new ~type~();
+deployVerticleProgrammatically(onFail,onSuccess,options,reference,type) ::= << Verticle ~reference~ = new ~type~();
 vertx.deployVerticle(~reference~, ~options~, res -> {
     if (res.succeeded()) {
         ~onSuccess~
@@ -65,8 +61,7 @@ vertx.deployVerticle(~reference~, ~options~, res -> {
 >>
 
 /** config,STRINGPROPERTY;name,STRINGPROPERTY;onSuccess,STRINGPROPERTY; **/
-deployVerticleStart(config,name,onSuccess) ::= <<
- vertx.deployVerticle("~name~", new io.vertx.core.DeploymentOptions()~if(config)~.
+deployVerticleStart(config,name,onSuccess) ::= << vertx.deployVerticle("~name~", new io.vertx.core.DeploymentOptions()~if(config)~.
                                    setConfig(~config~)~endif~, res -> {
     if (res.succeeded()) {
         ~onSuccess~
@@ -78,42 +73,35 @@ deployVerticleStart(config,name,onSuccess) ::= <<
 >>
 
 /** address,STRINGPROPERTY;onMessage,STRINGPROPERTY; **/
-ebConsume(address,onMessage) ::= <<
- vertx.eventBus().consumer("~address~", message -> {
+ebConsume(address,onMessage) ::= << vertx.eventBus().consumer("~address~", message -> {
     ~onMessage~
 }); 
 >>
 
 /** address,STRINGPROPERTY;value,STRINGPROPERTY; **/
-ebPublish(address,value) ::= <<
- vertx.eventBus().publish("~address~", ~value~); 
+ebPublish(address,value) ::= << vertx.eventBus().publish("~address~", ~value~); 
 >>
 
 /** name,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-getInteger(name,reference) ::= <<
- ~reference~.getInteger("~name~")
+getInteger(name,reference) ::= << ~reference~.getInteger("~name~")
 // change template to getInteger 
 >>
 
 /** name,STRINGPROPERTY;reference,STRINGPROPERTY;type,STRINGPROPERTY; **/
-getJson(name,reference,type) ::= <<
- ~reference~.get~type~("~name~") 
+getJson(name,reference,type) ::= << ~reference~.get~type~("~name~") 
 >>
 
 /** name,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-getString(name,reference) ::= <<
- ~reference~.getString("~name~")
+getString(name,reference) ::= << ~reference~.getString("~name~")
 // change template to getString 
 >>
 
 /** clientOptions,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-httpClient(clientOptions,reference) ::= <<
- io.vertx.core.http.HttpClient ~reference~ = vertx.createHttpClient(~clientOptions~) 
+httpClient(clientOptions,reference) ::= << io.vertx.core.http.HttpClient ~reference~ = vertx.createHttpClient(~clientOptions~) 
 >>
 
 /** connectTimeout,STRINGPROPERTY;defaultHost,STRINGPROPERTY;defaultPort,STRINGPROPERTY;idleTimeout,STRINGPROPERTY;keepAlive,STRINGPROPERTY;keyStoreOptions,STRINGPROPERTY;maxPoolSize,STRINGPROPERTY;maxWebsocketFrameSize,STRINGPROPERTY;pemKeyCertOptions,STRINGPROPERTY;pemTrustOptions,STRINGPROPERTY;pfxKeycertOptions,STRINGPROPERTY;pfxTrustOptions,STRINGPROPERTY;pipelining,STRINGPROPERTY;protocolVersion,STRINGPROPERTY;receiveBufferSize,STRINGPROPERTY;reference,STRINGPROPERTY;reuseAddress,STRINGPROPERTY;sendBufferSize,STRINGPROPERTY;soLinger,STRINGPROPERTY;ssl,STRINGPROPERTY;tcpKeepAlive,STRINGPROPERTY;tcpNoDelay,STRINGPROPERTY;trafficClass,STRINGPROPERTY;trustAll,STRINGPROPERTY;trustStore,STRINGPROPERTY;tryUseCompression,STRINGPROPERTY;usePooledBuffers,STRINGPROPERTY;verifyHost,STRINGPROPERTY; **/
-httpClientOptions(connectTimeout,defaultHost,defaultPort,idleTimeout,keepAlive,keyStoreOptions,maxPoolSize,maxWebsocketFrameSize,pemKeyCertOptions,pemTrustOptions,pfxKeycertOptions,pfxTrustOptions,pipelining,protocolVersion,receiveBufferSize,reference,reuseAddress,sendBufferSize,soLinger,ssl,tcpKeepAlive,tcpNoDelay,trafficClass,trustAll,trustStore,tryUseCompression,usePooledBuffers,verifyHost) ::= <<
- ~if(reference)~io.vertx.core.http.HttpClientOptions options = ~endif~new io.vertx.core.http.HttpClientOptions()
+httpClientOptions(connectTimeout,defaultHost,defaultPort,idleTimeout,keepAlive,keyStoreOptions,maxPoolSize,maxWebsocketFrameSize,pemKeyCertOptions,pemTrustOptions,pfxKeycertOptions,pfxTrustOptions,pipelining,protocolVersion,receiveBufferSize,reference,reuseAddress,sendBufferSize,soLinger,ssl,tcpKeepAlive,tcpNoDelay,trafficClass,trustAll,trustStore,tryUseCompression,usePooledBuffers,verifyHost) ::= << ~if(reference)~io.vertx.core.http.HttpClientOptions options = ~endif~new io.vertx.core.http.HttpClientOptions()
     ~if(connectTimeout)~.setConnectTimeout(~connectTimeout~)/* Set the connect timeout */ ~endif~
     ~if(defaultHost)~.setDefaultHost(~defaultHost~)/* Set the default host name to be used by this client in requests if none is provided when making the request. */ ~endif~
     ~if(defaultPort)~.setDefaultPort(~defaultPort~)/* Set the default port to be used by this client in requests if none is provided when making the request. */ ~endif~
@@ -144,33 +132,28 @@ httpClientOptions(connectTimeout,defaultHost,defaultPort,idleTimeout,keepAlive,k
 >>
 
 /** reference,STRINGPROPERTY;values,KEYVALUELISTPROPERTY,key,value; **/
-json(reference,values) ::= <<
- ~if(reference)~final io.vertx.core.json.JsonObject ~reference~ = ~endif~new io.vertx.core.json.JsonObject()~values:{it|.
+json(reference,values) ::= << ~if(reference)~final io.vertx.core.json.JsonObject ~reference~ = ~endif~new io.vertx.core.json.JsonObject()~values:{it|.
     put("~it.key~",~it.value~)}~ 
 >>
 
 /** reference,STRINGPROPERTY;string,STRINGPROPERTY; **/
-jsonFromString(reference,string) ::= <<
- ~if(reference)~final io.vertx.core.json.JsonObject ~reference~ = ~endif~new io.vertx.core.json.JsonObject(~string~) 
+jsonFromString(reference,string) ::= << ~if(reference)~final io.vertx.core.json.JsonObject ~reference~ = ~endif~new io.vertx.core.json.JsonObject(~string~) 
 >>
 
 /** ms,STRINGPROPERTY;reference,STRINGPROPERTY;statements,LISTPROPERTY; **/
-periodicTimer(ms,reference,statements) ::= <<
- long ~reference~ = vertx.setPeriodic(~ms~, id -> {
+periodicTimer(ms,reference,statements) ::= << long ~reference~ = vertx.setPeriodic(~ms~, id -> {
   ~statements:{it|~it~;}; separator="\n\n"~
 }); 
 >>
 
 /** statements,LISTPROPERTY; **/
-runinContext(statements) ::= <<
- vertx.getOrCreateContext().runOnContext( (v) -> {
+runinContext(statements) ::= << vertx.getOrCreateContext().runOnContext( (v) -> {
     ~statements:{it|~it~;};separator="\n\n"~
 }); 
 >>
 
 /** fields,LISTPROPERTY;imports,LISTPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;startStatements,LISTPROPERTY;stopStatements,LISTPROPERTY;verticles,KEYVALUELISTPROPERTY,deploy; **/
-verticle(fields,imports,name,packageName,startStatements,stopStatements,verticles) ::= <<
- package ~packageName~;
+verticle(fields,imports,name,packageName,startStatements,stopStatements,verticles) ::= << package ~packageName~;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
@@ -204,13 +187,11 @@ public class ~name~ extends AbstractVerticle {
 >>
 
 /** options,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-vertx(options,reference) ::= <<
- Vertx ~reference~ = Vertx.vertx(~if(options)~~options~~endif~); 
+vertx(options,reference) ::= << Vertx ~reference~ = Vertx.vertx(~if(options)~~options~~endif~); 
 >>
 
 /** blockedThreadCheckInterval,STRINGPROPERTY;clusterHost,STRINGPROPERTY;clusterManager,STRINGPROPERTY;clusterPingInterval,STRINGPROPERTY;clusterPingReplyInterval,STRINGPROPERTY;clusterPort,STRINGPROPERTY;clusterPublicHost,STRINGPROPERTY;clusterPublicPort,STRINGPROPERTY;clustered,STRINGPROPERTY;eventLoopPoolSize,STRINGPROPERTY;haEnabled,STRINGPROPERTY;haGroup,STRINGPROPERTY;internalBlockingPoolSize,STRINGPROPERTY;maxEventLoopExecuteTime,STRINGPROPERTY;maxWorkerExecuteTime,STRINGPROPERTY;metrics,STRINGPROPERTY;quorumSize,STRINGPROPERTY;warningExceptionTime,STRINGPROPERTY;workerPoolSize,STRINGPROPERTY; **/
-vertxOptions(blockedThreadCheckInterval,clusterHost,clusterManager,clusterPingInterval,clusterPingReplyInterval,clusterPort,clusterPublicHost,clusterPublicPort,clustered,eventLoopPoolSize,haEnabled,haGroup,internalBlockingPoolSize,maxEventLoopExecuteTime,maxWorkerExecuteTime,metrics,quorumSize,warningExceptionTime,workerPoolSize) ::= <<
- new VertxOptions()
+vertxOptions(blockedThreadCheckInterval,clusterHost,clusterManager,clusterPingInterval,clusterPingReplyInterval,clusterPort,clusterPublicHost,clusterPublicPort,clustered,eventLoopPoolSize,haEnabled,haGroup,internalBlockingPoolSize,maxEventLoopExecuteTime,maxWorkerExecuteTime,metrics,quorumSize,warningExceptionTime,workerPoolSize) ::= << new VertxOptions()
     ~if(blockedThreadCheckInterval)~.setBlockedThreadCheckInterval(~blockedThreadCheckInterval~)  /* Sets the value of blocked thread check period, in ms. */ ~endif~
     ~if(clustered)~.setClustered(~clustered~) /* Set whether or not the Vert.x instance will be clustered. */ ~endif~
     ~if(clusterHost)~.setClusterHost(~clusterHost~) /* Set the hostname to be used for clustering. */ ~endif~

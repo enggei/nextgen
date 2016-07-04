@@ -1,42 +1,34 @@
-/* uuid : f365793f-5dfb-4004-8ab8-3ff1d9860b64 */
+/* uuid : bbf55b5f-02ff-4d5e-81c1-27c9cf846412 */
 delimiters "~", "~"
 
 /** id,STRINGPROPERTY;labels,LISTPROPERTY;properties,LISTPROPERTY; **/
-createNode(id,labels,properties) ::= <<
- (~if(id)~`~id~`~endif~~if(labels)~:~labels:{it|~it~};separator=":"~~endif~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~) 
+createNode(id,labels,properties) ::= <<(~if(id)~`~id~`~endif~~if(labels)~:~labels:{it|~it~};separator=":"~~endif~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~) 
 >>
 
 /** nodes,LISTPROPERTY; **/
-createNodes(nodes) ::= <<
- CREATE ~nodes:{it|~it~};separator=","~ 
+createNodes(nodes) ::= << CREATE ~nodes:{it|~it~};separator=","~ 
 >>
 
 /** dst,STRINGPROPERTY;properties,LISTPROPERTY;src,STRINGPROPERTY;type,STRINGPROPERTY; **/
-createRelationship(dst,properties,src,type) ::= <<
-(`~src~`)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~]->(`~dst~`)
+createRelationship(dst,properties,src,type) ::= <<(`~src~`)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~]->(`~dst~`)
 >>
 
 /** relationships,LISTPROPERTY; **/
-createRelationships(relationships) ::= <<
-CREATE ~relationships:{it|~it~};separator=",\n"~
+createRelationships(relationships) ::= <<CREATE ~relationships:{it|~it~};separator=",\n"~
 >>
 
 /** label,STRINGPROPERTY;name,STRINGPROPERTY; **/
-matchLabel(label,name) ::= <<
-(~name~:~label~)
+matchLabel(label,name) ::= <<(~name~:~label~)
 >>
 
 /** match,STRINGPROPERTY;return,STRINGPROPERTY;where,STRINGPROPERTY; **/
-query(match,return,where) ::= <<
-MATCH ~match~ WHERE ~where~ RETURN ~return~
+query(match,return,where) ::= <<MATCH ~match~ WHERE ~where~ RETURN ~return~
 >>
 
 /** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
-stringProperty(name,value) ::= <<
-~name~:'~value~'
+stringProperty(name,value) ::= <<~name~:'~value~'
 >>
 
 /** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
-valueProperty(name,value) ::= <<
-~name~:~value~
+valueProperty(name,value) ::= <<~name~:~value~
 >>

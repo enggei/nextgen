@@ -1,9 +1,8 @@
-/* uuid : bff652d2-3bda-4de1-a6bc-387eada58c2f */
+/* uuid : a6dbb131-e5a9-4711-b393-33674338984b */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name; **/
-AddMessage(name,parameters) ::= <<
- public static void sendAdd~name;format="capitalize"~(Vertx vertx, java.util.UUID id, Object content, ~if(parameters)~~parameters:{it|String ~it.name~};separator=", "~, ~endif~Handler<String> instanceHandler) {
+AddMessage(name,parameters) ::= <<public static void sendAdd~name;format="capitalize"~(Vertx vertx, java.util.UUID id, Object content, ~if(parameters)~~parameters:{it|String ~it.name~};separator=", "~, ~endif~Handler<String> instanceHandler) {
 
 	final JsonObject parameters = new JsonObject()~parameters:{it|
 		.put("~it.name~", ~it.name~)};separator="\n"~;
@@ -23,8 +22,7 @@ AddMessage(name,parameters) ::= <<
 >>
 
 /** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name; **/
-ConsumeKeyValueListMessage(name,parameters) ::= <<
- 
+ConsumeKeyValueListMessage(name,parameters) ::= << 
  
  
  // key-value list property ~name~
@@ -37,8 +35,7 @@ consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Me
 >>
 
 /** name,STRINGPROPERTY; **/
-ConsumeListMessage(name) ::= <<
- 
+ConsumeListMessage(name) ::= << 
  
  // list property ~name~
 consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
@@ -50,8 +47,7 @@ consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Me
 >>
 
 /** name,STRINGPROPERTY; **/
-ConsumeStringMessage(name) ::= <<
- 
+ConsumeStringMessage(name) ::= << 
  
  
  
@@ -66,8 +62,7 @@ consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Me
 >>
 
 /** groupName,STRINGPROPERTY;groupPackage,STRINGPROPERTY;messages,KEYVALUELISTPROPERTY,consumeMessage,sendToMessage;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
-GroupVerticle(groupName,groupPackage,messages,name,package) ::= <<
- 
+GroupVerticle(groupName,groupPackage,messages,name,package) ::= << 
  
  package ~package~;
 
@@ -158,8 +153,7 @@ public class ~name~Verticle extends AbstractVerticle {
 >>
 
 /** name,STRINGPROPERTY; **/
-SendMessage(name) ::= <<
- 
+SendMessage(name) ::= << 
  public static void send~name;format="capitalize"~Message(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
 	sendMessage(vertx, id + ".~name~", content, log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
 		@Override
@@ -176,6 +170,5 @@ SendMessage(name) ::= <<
 >>
 
 /**  **/
-bugfix() ::= <<
-  > 
+bugfix() ::= <<  > 
 >>

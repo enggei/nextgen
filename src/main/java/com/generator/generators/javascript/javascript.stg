@@ -1,92 +1,76 @@
-/* uuid : 1fb03b4e-b8c7-42a1-a007-305de3a0a2b4 */
+/* uuid : 72a961cb-0722-4596-a475-c940f959fa63 */
 delimiters "~", "~"
 
 /** elements,LISTPROPERTY; **/
-array(elements) ::= <<
- [~if(elements)~
+array(elements) ::= <<[~if(elements)~
     ~elements:{it|
         ~it~};separator=",\n"~~endif~] 
 >>
 
 /** elements,LISTPROPERTY; **/
-arrayLine(elements) ::= <<
-[~if(elements)~~elements:{it|~it~};separator=", "~~endif~]
+arrayLine(elements) ::= <<[~if(elements)~~elements:{it|~it~};separator=", "~~endif~]
 >>
 
 /** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-field(init,reference) ::= <<
-~reference~~if(init)~: ~init~~endif~
+field(init,reference) ::= <<~reference~~if(init)~: ~init~~endif~
 >>
 
 /** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name;statements,LISTPROPERTY; **/
-function(name,parameters,statements) ::= <<
- function ~name~(~parameters:{it|~it.name~};separator=", "~) {
+function(name,parameters,statements) ::= << function ~name~(~parameters:{it|~it.name~};separator=", "~) {
 		~statements:{it|~it~};separator="\n\n"~
 } 
 >>
 
 /** id,STRINGPROPERTY; **/
-getElementById(id) ::= <<
-document.getElementById('~id~')
+getElementById(id) ::= <<document.getElementById('~id~')
 >>
 
 /** condition,STRINGPROPERTY;scope,STRINGPROPERTY; **/
-ifStatement(condition,scope) ::= <<
-if(~condition~)~scope~
+ifStatement(condition,scope) ::= <<if(~condition~)~scope~
 >>
 
 /** statements,KEYVALUELISTPROPERTY,statement; **/
-list(statements) ::= <<
- {
+list(statements) ::= << {
     ~statements:{it|~it.statement~};separator=",\n"~
 } 
 >>
 
 /** entry,STRINGPROPERTY; **/
-log(entry) ::= <<
-console.log(~entry~)
+log(entry) ::= <<console.log(~entry~)
 >>
 
 /** string,STRINGPROPERTY; **/
-logString(string) ::= <<
-console.log("~string~")
+logString(string) ::= <<console.log("~string~")
 >>
 
 /** reference,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,statement; **/
-method(reference,statements) ::= <<
-~reference~: function () ~scope(statements)~
+method(reference,statements) ::= <<~reference~: function () ~scope(statements)~
 >>
 
 /** fields,LISTPROPERTY;reference,STRINGPROPERTY; **/
-object(fields,reference) ::= <<
-~if(reference)~var ~reference~ =~endif~ {
+object(fields,reference) ::= <<~if(reference)~var ~reference~ =~endif~ {
     ~fields:{it|~it~};separator=",\n"~
 }
 >>
 
 /** value,STRINGPROPERTY; **/
-quote(value) ::= <<
-'~value~'
+quote(value) ::= <<'~value~'
 >>
 
 /** value,STRINGPROPERTY; **/
-returnStatement(value) ::= <<
-return~if(value)~ ~value~~endif~
+returnStatement(value) ::= <<return~if(value)~ ~value~~endif~
 >>
 
 /** statements,KEYVALUELISTPROPERTY,statement; **/
-scope(statements) ::= <<
- {
+scope(statements) ::= << {
     ~statements:{it|~it.statement~;};separator="\n"~
 } 
 >>
 
 /** function,STRINGPROPERTY; **/
-then(function) ::= <<
-.then(~function~);
+then(function) ::= <<.then(~function~);
 >>
 
 /** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-var(init,reference) ::= <<
-var ~reference~~if(init)~ = ~init~~endif~
+var(init,reference) ::= <<var ~reference~~if(init)~ = ~init~~endif~
 >>

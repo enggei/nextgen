@@ -11,6 +11,7 @@ import java.awt.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
 import java.util.zip.*;
@@ -441,6 +442,14 @@ public final class FileUtil {
 			}
 		}
 		return f;
+	}
+
+	public static File tryToCreateTempFile(String prefix, String suffix) {
+		try {
+			return File.createTempFile(prefix, suffix);
+		} catch (IOException e) {
+			throw new RuntimeException("Could not create temp file: " + e.getMessage());
+		}
 	}
 
 	public static void writeString(String string, File file, String encoding) throws IOException {
@@ -968,8 +977,14 @@ public final class FileUtil {
 		return byReturn;
 	}
 
+	public static String removePostfix(File file) {
+		return removePostfix(file.getName());
+	}
+
+
 	public static String removePostfix(String filename) {
-		return filename.substring(0, filename.length() - 4);
+		int indx = filename.lastIndexOf(".");
+		return filename.substring(0, indx);
 	}
 
 	private static void recursiveFileSearch(File[] files) {

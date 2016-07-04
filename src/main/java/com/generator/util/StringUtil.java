@@ -70,6 +70,10 @@ public final class StringUtil {
 		return dest.toString();
 	}
 
+	public static boolean matchUUID(String content) {
+		return match("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", content, null).length == 1;
+	}
+
 	public static String[] match(String regexp, String content, Integer group) {
 		final Pattern pattern = Pattern.compile(regexp);
 		final Matcher matcher = pattern.matcher(content);

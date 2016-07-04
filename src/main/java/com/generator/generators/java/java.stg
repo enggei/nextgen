@@ -1,9 +1,8 @@
-/* uuid : 69dc2bab-dd29-4ffe-93a8-d5b6e6e58da8 */
-delimiters "$", "$"
+/* uuid : 72b69e50-3664-4276-bf92-96d1838f67ac */
+delimiters "~", "~"
 
 /** comments,STRINGPROPERTY;destination,STRINGPROPERTY;eqha,LISTPROPERTY;fields,KEYVALUELISTPROPERTY,comment,jsonName,name,type;imports,LISTPROPERTY;lexical,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;source,STRINGPROPERTY; **/
-Relation(comments,destination,eqha,fields,imports,lexical,name,package,source) ::= <<
-package $package$;
+Relation(comments,destination,eqha,fields,imports,lexical,name,package,source) ::= <<package $package$;
 
 $imports:{it|import ~it~;}$
 
@@ -63,36 +62,30 @@ $methodEnd()$};separator="\n"$
 >>
 
 /** properties,KEYVALUELISTPROPERTY,elementType,impl,isList,isMap,isSet,keyType,mutable,name,type,valueType; **/
-accessors(properties) ::= <<
-$properties: {it |$if(it.isMap)$$mapAccessors(type=it.type,name=it.name,impl=it.impl,keyType=it.keyType,valueType=it.valueType)$$elseif(it.isList)$$listAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$elseif(it.isSet)$$setAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$else$$setter(name=it.name,type=it.type,mutable=it.mutable)$
+accessors(properties) ::= <<$properties: {it |$if(it.isMap)$$mapAccessors(type=it.type,name=it.name,impl=it.impl,keyType=it.keyType,valueType=it.valueType)$$elseif(it.isList)$$listAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$elseif(it.isSet)$$setAccessors(type=it.type,elementType=it.elementType,name=it.name,impl=it.impl)$$else$$setter(name=it.name,type=it.type,mutable=it.mutable)$
 $getter(name=it.name,type=it.type,mutable=it.mutable)$$endif$}; separator="\n"$
 >>
 
 /** source,STRINGPROPERTY;target,STRINGPROPERTY; **/
-ass(source,target) ::= <<
- $target$=$source$; 
->>
-
-/** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
-assign(mutable,name,type) ::= <<
-$if(mutable)$  this.$name$ = new $type$($name$$mutableGetter.(type)$);$else$   this.$name$ = $name$;$endif$
+ass(source,target) ::= << $target$=$source$; 
 >>
 
 /**  **/
-bugfix() ::= <<
->
+assign() ::= <<$if(mutable)$  this.$name$ = new $type$($name$$mutableGetter.(type)$);$else$   this.$name$ = $name$;$endif$ 
+>>
+
+/**  **/
+bugfix() ::= <<>
 >>
 
 /** action,STRINGPROPERTY;finally,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
-ca(action,finally,predicate) ::= <<
- 
+ca(action,finally,predicate) ::= << 
  
  case$predicate$:$action$ $finally$;  
 >>
 
 /** abstract,STRINGPROPERTY;comment,STRINGPROPERTY;comparable,STRINGPROPERTY;equality,STRINGPROPERTY;extends,STRINGPROPERTY;final,STRINGPROPERTY;implement,LISTPROPERTY;imports,LISTPROPERTY;innerClasses,LISTPROPERTY;lexical,STRINGPROPERTY;methods,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,elementType,final,impl,isList,isMap,isSet,keyType,mutable,name,scope,type,valueType;scope,STRINGPROPERTY;test,STRINGPROPERTY; **/
-class(abstract,comment,comparable,equality,extends,final,implement,imports,innerClasses,lexical,methods,name,package,properties,scope,test) ::= <<
-$package(package)$
+class(abstract,comment,comparable,equality,extends,final,implement,imports,innerClasses,lexical,methods,name,package,properties,scope,test) ::= <<$package(package)$
 $imports(imports)$
 
 import java.util.*;
@@ -114,20 +107,17 @@ $classDeclaration(scope=scope,abstract=abstract,final=final,name=name,extends=ex
 >>
 
 /** text,STRINGPROPERTY; **/
-classComment(text) ::= <<
-$if(text)$/**
+classComment(text) ::= <<$if(text)$/**
  * $text$
  */$endif$
 >>
 
 /** abstract,STRINGPROPERTY;comparable,STRINGPROPERTY;extends,STRINGPROPERTY;final,STRINGPROPERTY;implement,LISTPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
-classDeclaration(abstract,comparable,extends,final,implement,name,scope) ::= <<
-$if(scope)$$scope$ $else$$endif$$if(final)$final $elseif(abstract)$abstract $endif$class $name$ $if(extends)$extends $extends$ $endif$$if(implement)$implements $implement:{it | $it$}; separator=","$ $if(comparable)$,Comparable<$name$>$endif$$else$$if(comparable)$implements Comparable<$name$>$endif$$endif$ {
+classDeclaration(abstract,comparable,extends,final,implement,name,scope) ::= <<$if(scope)$$scope$ $else$$endif$$if(final)$final $elseif(abstract)$abstract $endif$class $name$ $if(extends)$extends $extends$ $endif$$if(implement)$implements $implement:{it | $it$}; separator=","$ $if(comparable)$,Comparable<$name$>$endif$$else$$if(comparable)$implements Comparable<$name$>$endif$$endif$ {
 >>
 
 /** comparable,STRINGPROPERTY;property,STRINGPROPERTY;type,STRINGPROPERTY; **/
-comparable(comparable,property,type) ::= <<
-$if(comparable)$
+comparable(comparable,property,type) ::= <<$if(comparable)$
 @Override
 public int compareTo($type$ other) {
    if(this.$property$==null) return 1;
@@ -138,7 +128,6 @@ public int compareTo($type$ other) {
 
 /** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,mutable,name,type; **/
 constructor(name,properties) ::= <<
-
 
 public $name$() {
 }
@@ -151,25 +140,21 @@ $properties:{it | $assign(name=it.name,type=it.type,mutable=it.mutable)$}; separ
 >>
 
 /** immutable,STRINGPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY;type,STRINGPROPERTY; **/
-declare(immutable,name,scope,type) ::= <<
- $if(scope)$$scope$ $endif$$if(immutable)$final $endif$$type$ $name$
+declare(immutable,name,scope,type) ::= << $if(scope)$$scope$ $endif$$if(immutable)$final $endif$$type$ $name$
 >>
 
 /** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
-dw(action,predicate) ::= <<
- do $action$ while($predicate$);
+dw(action,predicate) ::= << do $action$ while($predicate$);
 >>
 
 /** name,STRINGPROPERTY; **/
 emptyconstructor(name) ::= <<
-
 public $name$() {
 }
 >>
 
 /** comment,STRINGPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;scope,STRINGPROPERTY;values,LISTPROPERTY; **/
-enum(comment,name,package,scope,values) ::= <<
-$package(package)$
+enum(comment,name,package,scope,values) ::= <<$package(package)$
 $comment$
 $if(scope)$$scope$ $else$$endif$enum $name$ {
     $values:{it | $it$}; separator=",\n"$
@@ -177,8 +162,7 @@ $if(scope)$$scope$ $else$$endif$enum $name$ {
 >>
 
 /** name,STRINGPROPERTY;properties,LISTPROPERTY; **/
-equality(name,properties) ::= <<
-$if(name)$$if(properties)$
+equality(name,properties) ::= <<$if(name)$$if(properties)$
 @Override
 public boolean equals(Object o) {
    if(this==o) return true;
@@ -196,25 +180,21 @@ public int hashCode() {
 >>
 
 /** init,STRINGPROPERTY;reference,STRINGPROPERTY; **/
-filearray(init,reference) ::= <<
-final java.io.File[] $reference$ = $init$
+filearray(init,reference) ::= <<final java.io.File[] $reference$ = $init$
 >>
 
 /** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
-fl(action,predicate) ::= <<
- for($predicate$) { $action$ } 
+fl(action,predicate) ::= << for($predicate$) { $action$ } 
 >>
 
 /** reference,STRINGPROPERTY;scope,STRINGPROPERTY;source,STRINGPROPERTY; **/
-forC(reference,scope,source) ::= <<
-for($reference$ : $source$) {
+forC(reference,scope,source) ::= <<for($reference$ : $source$) {
     $scope$
 }
 >>
 
 /** package,STRINGPROPERTY; **/
-formatUtil(package) ::= <<
-$package(package)$
+formatUtil(package) ::= <<$package(package)$
 
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -311,7 +291,6 @@ public class FormatUtil {
 /** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
 getter(mutable,name,type) ::= <<
 
-
 public $type$ $accessorTypeGetter.(type)$$name;format="capitalize"$() {
 $if(mutable)$   return new $type$($name$$mutableGetter.(type)$);$else$   return $name$;$endif$
 }
@@ -319,28 +298,23 @@ $if(mutable)$   return new $type$($name$$mutableGetter.(type)$);$else$   return 
 >>
 
 /** name,STRINGPROPERTY;type,STRINGPROPERTY; **/
-getterInterface(name,type) ::= <<
-public $type$ $accessorTypeGetter.(type)$$name;format="capitalize"$();
+getterInterface(name,type) ::= <<public $type$ $accessorTypeGetter.(type)$$name;format="capitalize"$();
 >>
 
 /** condition,STRINGPROPERTY;scope,STRINGPROPERTY; **/
-ifStatement(condition,scope) ::= <<
-if($condition$) $scope$
+ifStatement(condition,scope) ::= <<if($condition$) $scope$
 >>
 
 /** imports,LISTPROPERTY; **/
-imports(imports) ::= <<
-$imports:{it | import $it$;}; separator="\n"$
+imports(imports) ::= <<$imports:{it | import $it$;}; separator="\n"$
 >>
 
 /** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;type,STRINGPROPERTY; **/
-instantiate(params,type) ::= <<
- new $type$($if(params)$$methodParams(params=params)$$endif$); 
+instantiate(params,type) ::= << new $type$($if(params)$$methodParams(params=params)$$endif$); 
 >>
 
 /** comment,STRINGPROPERTY;extends,STRINGPROPERTY;imports,LISTPROPERTY;methods,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
-interface(comment,extends,imports,methods,name,package) ::= <<
-$package(package)$
+interface(comment,extends,imports,methods,name,package) ::= <<$package(package)$
 $imports(imports)$
 
 $classComment(text=comment)$
@@ -352,23 +326,19 @@ $methods:{it |    $it$;
 >>
 
 /** extends,STRINGPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
-interfaceDeclaration(extends,name,scope) ::= <<
-$if(scope)$$scope$ $endif$interface $name$ $if(extends)$extends $extends$ $endif${
+interfaceDeclaration(extends,name,scope) ::= <<$if(scope)$$scope$ $endif$interface $name$ $if(extends)$extends $extends$ $endif${
 >>
 
 /** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;scope,STRINGPROPERTY;type,STRINGPROPERTY; **/
-interfaceMethod(name,params,scope,type) ::= <<
-$if(scope)$$scope$$else$public $endif$$if(type)$$type$$else$void$endif$ $name$($methodParams(params=params)$)
+interfaceMethod(name,params,scope,type) ::= <<$if(scope)$$scope$$else$public $endif$$if(type)$$type$$else$void$endif$ $name$($methodParams(params=params)$)
 >>
 
 /** action,STRINGPROPERTY;iterator,STRINGPROPERTY; **/
-it(action,iterator) ::= <<
- while($iterator$.next()) { $action$ } 
+it(action,iterator) ::= << while($iterator$.next()) { $action$ } 
 >>
 
 /** properties,LISTPROPERTY; **/
-lexical(properties) ::= <<
-$if(properties)$
+lexical(properties) ::= <<$if(properties)$
 
 @Override
 public String toString() {
@@ -379,7 +349,6 @@ public String toString() {
 
 /** elementType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
 listAccessors(elementType,name,type) ::= <<
-
 public void add$name;format="singlify"$($elementType$ delegate) {
     this.$name$.add(delegate);
 }
@@ -399,25 +368,21 @@ public $type$<$elementType$> get$name;format="capitalize"$() {
 >>
 
 /** statement,STRINGPROPERTY; **/
-loginfo(statement) ::= <<
-log.info($statement$)
+loginfo(statement) ::= <<log.info($statement$)
 >>
 
 /** string,STRINGPROPERTY; **/
-loginfoString(string) ::= <<
-log.info("$string$")
+loginfoString(string) ::= <<log.info("$string$")
 >>
 
 /** statements,LISTPROPERTY; **/
-mainMethod(statements) ::= <<
-public static void main(String[] args) {
+mainMethod(statements) ::= <<public static void main(String[] args) {
     $statements:{it | $it$;}; separator="\r\n\r\n"$
 }
 >>
 
 /** keyType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY;valueType,STRINGPROPERTY; **/
 mapAccessors(keyType,name,type,valueType) ::= <<
-
 public void add$name;format="singlify"$($keyType$ key,$valueType$ value) {
     this.$name$.put(key,value);
 }
@@ -441,46 +406,38 @@ public $type$<$keyType$,$valueType$> get$name;format="capitalize"$() {
 >>
 
 /** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;returnVal,STRINGPROPERTY;scope,STRINGPROPERTY;statements,LISTPROPERTY; **/
-method(name,params,returnVal,scope,statements) ::= <<
- $scope$ $if(returnVal)$$returnVal$$else$void$endif$ $name$($methodParams(params=params)$) {
+method(name,params,returnVal,scope,statements) ::= << $scope$ $if(returnVal)$$returnVal$$else$void$endif$ $name$($methodParams(params=params)$) {
     $statements:{it |$it$};separator="\n"$
 }
 >>
 
 /**  **/
-methodEnd() ::= <<
-}
+methodEnd() ::= <<}
 >>
 
 /** name,STRINGPROPERTY;params,KEYVALUELISTPROPERTY,name,type;returnValue,STRINGPROPERTY; **/
-methodHeader(name,params,returnValue) ::= <<
-public $if(returnValue)$$returnValue$$else$void$endif$ $name$($params:{it | $it.type$ $it.name$}; separator=","$)
+methodHeader(name,params,returnValue) ::= <<public $if(returnValue)$$returnValue$$else$void$endif$ $name$($params:{it | $it.type$ $it.name$}; separator=","$)
 >>
 
 /** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType; **/
-methodParams(params) ::= <<
-$params:{it |$if(it.annotation)$$it.annotation$$endif$ $it.type$$if(it.isMap)$<$it.keyType$,$it.valueType$>$elseif(it.isList)$<$it.elementType$>$elseif(it.isSet)$<$it.elementType$>$endif$ $it.name$}; separator=", "$
+methodParams(params) ::= <<$params:{it |$if(it.annotation)$$it.annotation$$endif$ $it.type$$if(it.isMap)$<$it.keyType$,$it.valueType$>$elseif(it.isList)$<$it.elementType$>$elseif(it.isSet)$<$it.elementType$>$endif$ $it.name$}; separator=", "$
 >>
 
 /** methods,LISTPROPERTY; **/
-methods(methods) ::= <<
-$methods:{it | $it$}; separator="\n"$
+methods(methods) ::= <<$methods:{it | $it$}; separator="\n"$
 >>
 
 /** declaration,STRINGPROPERTY;instantiate,STRINGPROPERTY; **/
-newVariable(declaration,instantiate) ::= <<
- $assign(source=declaration,target=instantiate)$ 
+newVariable(declaration,instantiate) ::= << $assign(source=declaration,target=instantiate)$ 
 >>
 
 /** package,STRINGPROPERTY; **/
-package(package) ::= <<
-$if(package)$package $package$;$endif$
+package(package) ::= <<$if(package)$package $package$;$endif$
 
 >>
 
 /** comments,STRINGPROPERTY;eqha,LISTPROPERTY;fields,KEYVALUELISTPROPERTY,comment,jsonName,name,type;imports,LISTPROPERTY;lexical,LISTPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
-pojo(comments,eqha,fields,imports,lexical,name,package) ::= <<
-package $package$;
+pojo(comments,eqha,fields,imports,lexical,name,package) ::= <<package $package$;
 
 $imports:{it|import ~it~;}$
 
@@ -539,39 +496,33 @@ $methodEnd()$};separator="\n"$
 >>
 
 /** predicate,STRINGPROPERTY;values,STRINGPROPERTY; **/
-pr(predicate,values) ::= <<
- $predicate$.test($methodValues(params=values)$)
+pr(predicate,values) ::= << $predicate$.test($methodValues(params=values)$)
 >>
 
 /** properties,KEYVALUELISTPROPERTY,elementType,final,impl,isList,isMap,isSet,keyType,name,scope,type,valueType; **/
 propertiesDeclaration(properties) ::= <<
-
 $properties:{it|$if(it.scope)$$it.scope$ $else$$endif$$if(it.final)$final $endif$$it.type$ $if(it.isMap)$<$it.keyType$,$it.valueType$> $elseif(it.isList)$<$it.elementType$> $elseif(it.isSet)$<$it.elementType$> $endif$$it.name$$if(it.impl)$ = new $it.impl$$if(it.isMap)$<$it.keyType$,$it.valueType$>$elseif(it.isList)$<$it.elementType$>$elseif(it.isSet)$<$it.elementType$>$endif$()$endif$;}; separator="\n"$
 >>
 
 /** stringValue,STRINGPROPERTY;value,STRINGPROPERTY; **/
-return(stringValue,value) ::= <<
- return $if(value)$$value$$else$"$stringValue$"$endif$
+return(stringValue,value) ::= << return $if(value)$$value$$else$"$stringValue$"$endif$
 >>
 
 /** content,STRINGPROPERTY; **/
-runMethod(content) ::= <<
-@Override
+runMethod(content) ::= <<@Override
 public void run() {
 	$content$;           
 }
 >>
 
 /** statements,KEYVALUELISTPROPERTY,statement; **/
-scope(statements) ::= <<
-{
+scope(statements) ::= <<{
     $statements:{it|$it.statement$;};separator="\n"$
 }
 >>
 
 /** attachments,KEYVALUELISTPROPERTY,filename;from,STRINGPROPERTY;host,STRINGPROPERTY;messageBody,STRINGPROPERTY;recipients,KEYVALUELISTPROPERTY,email;subject,STRINGPROPERTY; **/
-sendEmail(attachments,from,host,messageBody,recipients,subject) ::= <<
-    final String from = "$from$";
+sendEmail(attachments,from,host,messageBody,recipients,subject) ::= <<    final String from = "$from$";
     final String host = "$host$";
 
     Properties properties = System.getProperties();
@@ -620,7 +571,6 @@ multipart.addBodyPart(messageBodyPart);
 
 /** elementType,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
 setAccessors(elementType,name,type) ::= <<
-
 public void add$name;format="singlify"$($elementType$ delegate) {
     this.$name$.add(delegate);
 }
@@ -640,8 +590,7 @@ public $type$<$elementType$> get$name;format="capitalize"$() {
 >>
 
 /** mutable,STRINGPROPERTY;name,STRINGPROPERTY;type,STRINGPROPERTY; **/
-setter(mutable,name,type) ::= <<
- $if(mutable)$
+setter(mutable,name,type) ::= << $if(mutable)$
 
 public void set$name;format="capitalize"$($type$ $name$) {
 $assign(name=name,type=type,mutable=mutable)$
@@ -650,53 +599,43 @@ $endif$
 >>
 
 /** statement,STRINGPROPERTY; **/
-statement(statement) ::= <<
- $if(statement)$$statement$;$endif$ 
+statement(statement) ::= << $if(statement)$$statement$;$endif$ 
 >>
 
 /** statements,KEYVALUELISTPROPERTY,statement; **/
-statements(statements) ::= <<
-$statements:{it|$it.statement$;};separator="\n"$
+statements(statements) ::= <<$statements:{it|$it.statement$;};separator="\n"$
 >>
 
 /** params,KEYVALUELISTPROPERTY,annotation,elementType,isList,isMap,isSet,keyType,name,type,valueType;type,STRINGPROPERTY; **/
-staticInstantiate(params,type) ::= <<
- $type$.new$type$($if(params)$$methodParams(params=params)$$endif$); 
+staticInstantiate(params,type) ::= << $type$.new$type$($if(params)$$methodParams(params=params)$$endif$); 
 >>
 
 /** value,STRINGPROPERTY; **/
-string(value) ::= <<
-"$value$"
+string(value) ::= <<"$value$"
 >>
 
 /** values,LISTPROPERTY; **/
-stringarray(values) ::= <<
-$values:{it|"$it$"};separator=", "$
+stringarray(values) ::= <<$values:{it|"$it$"};separator=", "$
 >>
 
 /** cases,KEYVALUELISTPROPERTY,case,stmt;state,STRINGPROPERTY; **/
-switch(cases,state) ::= <<
- switch($state$) $cases:{it | case $it.case$: $it.stmt$ break;}$ 
+switch(cases,state) ::= << switch($state$) $cases:{it | case $it.case$: $it.stmt$ break;}$ 
 >>
 
 /** statement,STRINGPROPERTY; **/
-systemPrintln(statement) ::= <<
-System.out.println($statement$)
+systemPrintln(statement) ::= <<System.out.println($statement$)
 >>
 
 /** string,STRINGPROPERTY; **/
-systemPrintlnString(string) ::= <<
-System.out.println("$string$");
+systemPrintlnString(string) ::= <<System.out.println("$string$");
 >>
 
 /** text,STRINGPROPERTY; **/
-todo(text) ::= <<
-// todo: $text$
+todo(text) ::= <<// todo: $text$
 >>
 
 /** handleException,STRINGPROPERTY;statements,LISTPROPERTY; **/
-tryCatch(handleException,statements) ::= <<
-try {
+tryCatch(handleException,statements) ::= <<try {
 
     $statements:{it|$it$;};separator="\n\n"$
 
@@ -706,11 +645,9 @@ try {
 >>
 
 /** init,STRINGPROPERTY;reference,STRINGPROPERTY;type,STRINGPROPERTY; **/
-var(init,reference,type) ::= <<
-$if(init)$final $endif$$type$ $reference$$if(init)$ = $init$$endif$
+var(init,reference,type) ::= <<$if(init)$final $endif$$type$ $reference$$if(init)$ = $init$$endif$
 >>
 
 /** action,STRINGPROPERTY;predicate,STRINGPROPERTY; **/
-wd(action,predicate) ::= <<
- while($predicate$) { $action$ } 
+wd(action,predicate) ::= << while($predicate$) { $action$ } 
 >>

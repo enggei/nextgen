@@ -1,9 +1,8 @@
-/* uuid : c0bc2a2e-129d-401f-9ea4-c34e176f1c15 */
+/* uuid : 24a61591-1a64-4e64-9c70-705775f91ca8 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,addGroupVerticleAction,groupClassDeclarationPanel; **/
-GroupPanel(name,packageName,verticles) ::= <<
- package ~packageName~;
+GroupPanel(name,packageName,verticles) ::= <<package ~packageName~;
 
 import ~packageName~.vertx.*;
 import com.generator.generators.templates.domain.GeneratedFile;
@@ -64,8 +63,7 @@ public final class ~name~ extends JPanel {
 >>
 
 /** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,stringPanel; **/
-TemplatePanel(name,properties) ::= <<
- private static final class Group~name~Panel extends JPanel {
+TemplatePanel(name,properties) ::= << private static final class Group~name~Panel extends JPanel {
 
 		public Group~name~Panel(Vertx vertx) {
 			super(new BorderLayout());
@@ -118,8 +116,7 @@ TemplatePanel(name,properties) ::= <<
 >>
 
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
-addVerticleAction(name,packageName) ::= <<
- add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
+addVerticleAction(name,packageName) ::= << add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
 	@Override
 	public void onSuccess(String result) {
 		SwingUtilities.invokeLater(() -> {
@@ -139,8 +136,7 @@ addVerticleAction(name,packageName) ::= <<
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
-stringPropertyEditor(groupName,name) ::= <<
- final JPanel ~name~Editor = new JPanel(new GridLayout(1,3));
+stringPropertyEditor(groupName,name) ::= << final JPanel ~name~Editor = new JPanel(new GridLayout(1,3));
 
 ~name~Editor.add(new JLabel("~name~ "));
 final JTextField txt~name~ = new JTextField(10);

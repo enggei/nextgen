@@ -1,26 +1,32 @@
-package com.generator.generators.json;
+package com.generator.generators.junit;
 
 import org.junit.Test;
 
-public class JsonTests {
+public class JunitTests {
 
-	@Test
-	public void testJsonGroup() {
-
-		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-		final JsonGroup group = new JsonGroup();
-
-		// todo add JsonGroup- tests here;
-
-		System.out.println(group.newdocument().
-			addContentValue(group.newobject().
-				addPairsValue("NAME", group.
-					newarray().addElementsValue(group.
-					newobject().addPairsValue("VAL", "1")))));
+	public static void main(String[] args) {
+		new JunitTests().testJunitGroup();
 	}
 
 	@Test
-	public void testJsonNeo() {
+	public void testJunitGroup() {
+
+		System.setProperty("generator.path", "src/main/java/com/generator/generators");
+		final JunitGroup group = new JunitGroup();
+
+		// todo add JunitGroup- tests here;
+		System.out.println(group.
+			newtests().
+			addTestsValue(group.newtest().
+				setName("TestONE").
+				addStatementsValue("System.out.println(\"TEST ONE\");")));
+
+	}
+
+	;
+
+	@Test
+	public void testJunitNeo() {
 
 		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
 		final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
