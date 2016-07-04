@@ -82,7 +82,6 @@ public class APIGenerator {
 		);
 
 		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
-		FileUtil.write(loopsi, new File("src/main/web/api/loopsi/loopsi.raml"));
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {

@@ -14,6 +14,29 @@
                      visitor="-visitor" listener="-listener"/>
     </target>
 
+    <target name="jar">
+        <delete>
+            <fileset dir=".">
+                <include name="nextgen.jar"/>
+            </fileset>
+        </delete>
+        <jar destfile="nextgen.jar">
+            <manifest>
+                <attribute name="Created-By" value="T1-88"/>
+                <attribute name="Implementation-Version" value="2.0"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Class-Path" value="antlr-4.5.3-complete.jar"/>
+                <attribute name="Main-Class" value="com.generator.generators.junit.JunitTests"/>
+            </manifest>
+            <fileset dir="target/production">
+                <include name="com/generator/**/*.class"/>
+            </fileset>
+            <fileset dir="src/main/java">
+                <include name="com/generator/generators/**/*.stg"/>
+            </fileset>
+        </jar>
+    </target>
+
     <target name="show.antlr.options">
         <java jar="antlr-4.5.3-complete.jar" fork="true" failonerror="true" maxmemory="128m"/>
     </target>
@@ -30,5 +53,35 @@
             </java>
         </sequential>
     </macrodef>
+
+    <tstamp>
+        <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
+    </tstamp>
+
+    <target name="jar-cvs">
+        <delete>
+            <fileset dir="target">
+                <include name="convert.jar"/>
+            </fileset>
+        </delete>
+        <jar destfile="target/convert.jar">
+            <manifest>
+                <attribute name="Created-By" value="UDC"/>
+                <attribute name="Implementation-Version" value="1.0"/>
+                <attribute name="Built-Date" value="${TODAY}"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Main-Class" value="xledger.CSVFixer"/>
+            </manifest>
+            <fileset dir="target/test">
+                <include name="xledger/**/*.class"/>
+            </fileset>
+            <fileset dir="target/production">
+                <include name="com/generator/util/FileUtil*.class"/>
+                <include name="com/generator/util/StringUtil*.class"/>
+            </fileset>
+        </jar>
+
+        <copy file="target/convert.jar" tofile="/home/goe/Downloads/xledger/convert.jar"/>
+    </target>
 
 </project>
