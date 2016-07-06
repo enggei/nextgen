@@ -1,4 +1,4 @@
-/* uuid : f6499a70-a459-47df-9ff2-e1389365922d */
+/* uuid : fbba3b70-e5ae-4f8f-b763-b10b4d934602 */
 delimiters "~", "~"
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
@@ -104,6 +104,13 @@ jsonResponse(properties,required,schemaDescription) ::= <<200:
           },
           "required": [ ~required:{it|"~it~"};separator=", "~ ]
         } 
+>>
+
+/** formParams,LISTPROPERTY; **/
+mulitpartFormBody(formParams) ::= <<body:
+  multipart/form-data:
+    formParameters:
+      ~formParams:{it|~it~};separator="\n"~ 
 >>
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;example,STRINGPROPERTY;maximum,STRINGPROPERTY;minimum,STRINGPROPERTY;name,STRINGPROPERTY;repeat,STRINGPROPERTY;required,STRINGPROPERTY; **/

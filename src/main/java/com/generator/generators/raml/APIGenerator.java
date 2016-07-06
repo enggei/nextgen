@@ -3,7 +3,6 @@ package com.generator.generators.raml;
 import com.generator.util.FileUtil;
 
 import java.io.File;
-import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
 
@@ -54,7 +53,7 @@ public class APIGenerator {
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/user").
 				addActionsValue(newPOST("create new user",
-					group.newformBody().
+					group.newmulitpartFormBody().
 						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, B64encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("thepassword")).
 						addFormParamsValue(group.newbooleanParam().setName("TempUser").setDescription("if user is temporary, no userinfo required").setRequired(true).setDefaultValue("true")).
@@ -66,7 +65,7 @@ public class APIGenerator {
 						addFormParamsValue(group.newstringParam().setName("options").setDescription("sex").setRequired(false).addEnumsValue("optionA").addEnumsValue("optionB").addEnumsValue("optionC").setExample("the@email.com")).
 						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
 						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-						addFormParamsValue(group.newstringParam().setName("avatar").setDescription("user avatar").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("theavatar")).
+						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
 						addFormParamsValue(group.newstringParam().setName("FBSocialToken").setDescription("user FBSocialToken").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")),
 					"400", "404", "409", "500").
 					addResponsesValue(newjsonResponse("User confirmation",
@@ -104,7 +103,7 @@ public class APIGenerator {
 		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
 	}
 
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
+	private RamlGroup.postActionST newPOST(Object description, Object body, String... errorCodes) {
 		final RamlGroup.postActionST actionST = group.newpostAction().
 			setDescription(description).
 			setBody(body);
