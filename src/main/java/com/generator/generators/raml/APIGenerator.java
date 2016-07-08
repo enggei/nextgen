@@ -53,7 +53,7 @@ public class APIGenerator {
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/user").
 				addActionsValue(newPOST("create new user",
-					group.newmulitpartFormBody().
+					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, B64encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("thepassword")).
 						addFormParamsValue(group.newbooleanParam().setName("TempUser").setDescription("if user is temporary, no userinfo required").setRequired(true).setDefaultValue("true")).

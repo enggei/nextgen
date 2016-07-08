@@ -106,11 +106,6 @@ public final class RamlGroup {
    } 
 
 
-   public mulitpartFormBodyST newmulitpartFormBody() {
-      return new mulitpartFormBodyST(stGroup);
-   } 
-
-
    public numberParamST newnumberParam() {
       return new numberParamST(stGroup);
    } 
@@ -489,26 +484,6 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, schemaDescriptionIsSet, "schemaDescription");   
          return this;
       } 
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class mulitpartFormBodyST {
-
-      private final AtomicBoolean formParamsIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private mulitpartFormBodyST(STGroup group) {
-   		template = group.getInstanceOf("mulitpartFormBody");
-   	}
-
-      public mulitpartFormBodyST addFormParamsValue(Object value) {
-      	tryToSetListProperty(template, value, formParamsIsSet, "formParams");
-         return this;
-      }
 
       @Override
    	public String toString() {
