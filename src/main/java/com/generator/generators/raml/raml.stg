@@ -1,4 +1,4 @@
-/* uuid : 597ff15c-c546-4e08-b935-e2d879a40e73 */
+/* uuid : 3dcad4d1-049b-4633-b306-ca5003df120f */
 delimiters "~", "~"
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
@@ -65,10 +65,9 @@ fileParam(description,name,required) ::= <<~name~:
   ~if(required)~required: true~else~# not required ~endif~ 
 >>
 
-/** formParams,LISTPROPERTY; **/
-formBody(formParams) ::= <<body:
-  multipart/form-data:
-  application/x-www-form-urlencoded:
+/** formParams,LISTPROPERTY;multipart,STRINGPROPERTY; **/
+formBody(formParams,multipart) ::= <<body:
+  ~if(multipart)~multipart/form-data~else~application/x-www-form-urlencoded~endif~:
     formParameters:
       ~formParams:{it|~it~};separator="\n"~ 
 >>

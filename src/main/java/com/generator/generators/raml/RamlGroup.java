@@ -363,6 +363,7 @@ public final class RamlGroup {
     public final class formBodyST {
 
       private final AtomicBoolean formParamsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean multipartIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private formBodyST(STGroup group) {
@@ -373,6 +374,10 @@ public final class RamlGroup {
       	tryToSetListProperty(template, value, formParamsIsSet, "formParams");
          return this;
       }
+       public formBodyST setMultipart(Object value) {
+      	tryToSetStringProperty(template, value, multipartIsSet, "multipart");   
+         return this;
+      } 
 
       @Override
    	public String toString() {
