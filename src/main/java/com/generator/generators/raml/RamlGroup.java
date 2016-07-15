@@ -213,6 +213,7 @@ public final class RamlGroup {
     public final class deleteActionST {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean queryParamsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -224,6 +225,10 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
       } 
+      public deleteActionST addQueryParamsValue(Object value) {
+      	tryToSetListProperty(template, value, queryParamsIsSet, "queryParams");
+         return this;
+      }
       public deleteActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
@@ -388,6 +393,7 @@ public final class RamlGroup {
     public final class getActionST {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean queryParamsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -399,6 +405,10 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
       } 
+      public getActionST addQueryParamsValue(Object value) {
+      	tryToSetListProperty(template, value, queryParamsIsSet, "queryParams");
+         return this;
+      }
       public getActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
@@ -555,6 +565,7 @@ public final class RamlGroup {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean queryParamsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -570,6 +581,10 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
       } 
+      public postActionST addQueryParamsValue(Object value) {
+      	tryToSetListProperty(template, value, queryParamsIsSet, "queryParams");
+         return this;
+      }
       public postActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
@@ -585,6 +600,7 @@ public final class RamlGroup {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean queryParamsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -600,6 +616,10 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
       } 
+      public putActionST addQueryParamsValue(Object value) {
+      	tryToSetListProperty(template, value, queryParamsIsSet, "queryParams");
+         return this;
+      }
       public putActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;

@@ -72,18 +72,15 @@ public class APIGenerator {
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
-//						addFormParamsValue(group.newbooleanParam().setName("tempUser").setDescription("if user is temporary, no userinfo required").setRequired(true).setDefaultValue("true")).
 						addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
 						addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
-						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)?$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
 						addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
-//						addFormParamsValue(group.newstringParam().setName("options").setDescription("sex").setRequired(false).addEnumsValue("optionA").addEnumsValue("optionB").addEnumsValue("optionC").setExample("the@email.com")).
 						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
 						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-//						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
 						addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
-						addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+						addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 					"400", "403", "404", "409", "500").
 					addResponsesValue(newjsonResponse("User confirmation",
 						newResponseProperty("userId", "string", false),
@@ -91,6 +88,7 @@ public class APIGenerator {
 
 				addActionsValue(newGET("register a temporary user",
 					"400").
+					addQueryParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)).
 					addResponsesValue(newjsonResponse("Temporary userId",
 						newResponseProperty("userId", "string", true)))).
 
@@ -116,16 +114,88 @@ public class APIGenerator {
 							addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
 							addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^([\\+-]?\\d{4}(?!\\d{2}\\b))((-?)((0[1-9]|1[0-2])(\\3([12]\\d|0[1-9]|3[01]))?|W([0-4]\\d|5[0-2])(-?[1-7])?|(00[1-9]|0[1-9]\\d|[12]\\d{2}|3([0-5]\\d|6[1-6])))?)?$").setExample("2014-08-18")).
 							addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
-//							addFormParamsValue(group.newstringParam().setName("options").setDescription("sex").setRequired(false).addEnumsValue("optionA").addEnumsValue("optionB").addEnumsValue("optionC").setExample("the@email.com")).
 							addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
 							addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-							addFormParamsValue(group.newstringParam().setName("avatar").setDescription("user avatar").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("theavatar")).
+							addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
 							addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
-							addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+							addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 						"400", "403", "404", "409", "500").
 						addResponsesValue(newjsonResponse("User confirmation",
 							newResponseProperty("userId", "string", true)))))
 		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/currency").
+
+			addActionsValue(newGET("returns user currency value.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Currency response",
+					newResponseProperty("currentValue", "integer", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/badges/earned").
+
+			addActionsValue(newGET("returns user badges earned.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Badges response",
+					newResponseProperty("badges", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/badges/available").
+
+			addActionsValue(newGET("returns user badges available.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Badges response",
+					newResponseProperty("badges", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/redemption").
+
+			addActionsValue(newGET("returns relevant redemption offers.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Redemptions response",
+					newResponseProperty("redemptions", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/engagement").
+
+			addActionsValue(newGET("returns user engagement activities.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Engagements response",
+					newResponseProperty("engagements", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/films/latest").
+
+			addActionsValue(newGET("returns film listings by cinema.",
+				"400", "404").
+				addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")).
+				addResponsesValue(newjsonResponse("Films response",
+					newResponseProperty("films", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/cinema/listing").
+
+			addActionsValue(newGET("returns cinema listing.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Cinemas response",
+					newResponseProperty("cinemas", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/trailers").
+
+			addActionsValue(newGET("returns trailers and ratings.",
+				"400", "404").
+				addResponsesValue(newjsonResponse("Trailers response",
+					newResponseProperty("trailers", "array", true),
+					newResponseProperty("dummy", "boolean", false)))));
 
 		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
 	}
