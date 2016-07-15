@@ -87,8 +87,9 @@ public class APIGenerator {
 						newResponseProperty("username", "string", true)))).
 
 				addActionsValue(newGET("register a temporary user",
+					group.newqueryParams().
+						addQueryParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
-					addQueryParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)).
 					addResponsesValue(newjsonResponse("Temporary userId",
 						newResponseProperty("userId", "string", true)))).
 
@@ -99,11 +100,6 @@ public class APIGenerator {
 						"400", "403", "404", "409", "500").
 						addResponsesValue(newjsonResponse("User delete confirmation",
 							newResponseProperty("userId", "string", true)))).
-
-//					addActionsValue(newGET("get user based on userId",
-//						"400", "403", "404", "409", "500").
-//						addResponsesValue(newjsonResponse("User information",
-//							newResponseProperty("userId", "string", true)))).
 
 					addActionsValue(newPUT("update user",
 						group.newformBody().setMultipart(true).
@@ -173,8 +169,9 @@ public class APIGenerator {
 			setUri("/films/latest").
 
 			addActionsValue(newGET("returns film listings by cinema.",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")),
 				"400", "404").
-				addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")).
 				addResponsesValue(newjsonResponse("Films response",
 					newResponseProperty("films", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
@@ -200,38 +197,58 @@ public class APIGenerator {
 		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
 	}
 
-	private RamlGroup.postActionST newPOST(Object description, Object body, String... errorCodes) {
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
 		final RamlGroup.postActionST actionST = group.newpostAction().
 			setDescription(description).
-			setBody(body);
+			setBody(body).
+			setQuery(query);
+		for (String errorCode : errorCodes)
+			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
+		return actionST;
+	}
+
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPOST(description, null, body, errorCodes);
+	}
+
+	private RamlGroup.getActionST newGET(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+		final RamlGroup.getActionST actionST = group.newgetAction().
+			setDescription(description).
+			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
 	}
 
 	private RamlGroup.getActionST newGET(String description, String... errorCodes) {
-		final RamlGroup.getActionST actionST = group.newgetAction().
-			setDescription(description);
+		return newGET(description, null, errorCodes);
+	}
+
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
+		final RamlGroup.putActionST actionST = group.newputAction().
+			setDescription(description).
+			setBody(body).
+			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
 	}
 
 	private RamlGroup.putActionST newPUT(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		final RamlGroup.putActionST actionST = group.newputAction().
+		return newPUT(description, null, body, errorCodes);
+	}
+
+	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+		final RamlGroup.deleteActionST actionST = group.newdeleteAction().
 			setDescription(description).
-			setBody(body);
+			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
 	}
 
 	private RamlGroup.deleteActionST newDELETE(String description, String... errorCodes) {
-		final RamlGroup.deleteActionST actionST = group.newdeleteAction().
-			setDescription(description);
-		for (String errorCode : errorCodes)
-			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return actionST;
+		return newDELETE(description, null, errorCodes);
 	}
 
 	private RamlGroup.errorResponseST error(String code, String description) {

@@ -1,4 +1,4 @@
-/* uuid : 58283e0a-394e-47d3-8c35-7be8cbe5b2cb */
+/* uuid : 1d68a845-245c-4796-aa39-cd3758558dda */
 delimiters "~", "~"
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
@@ -19,12 +19,10 @@ dateParam(defaultValue,description,example,name,pattern,required) ::= <<~name~:
   ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
 >>
 
-/** description,STRINGPROPERTY;queryParams,LISTPROPERTY;responses,LISTPROPERTY; **/
-deleteAction(description,queryParams,responses) ::= <<delete:
+/** description,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
+deleteAction(description,query,responses) ::= <<delete:
   description: ~description~
-  ~if(queryParams)~queryParameters:
-  ~queryParams:{it|~it~};separator="\n"~~endif~
-
+  ~query~
   responses:
     ~responses:{it|~it~};separator="\n"~ 
 >>
@@ -75,12 +73,10 @@ formBody(formParams,multipart) ::= <<body:
       ~formParams:{it|~it~};separator="\n"~ 
 >>
 
-/** description,STRINGPROPERTY;queryParams,LISTPROPERTY;responses,LISTPROPERTY; **/
-getAction(description,queryParams,responses) ::= <<get:
+/** description,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
+getAction(description,query,responses) ::= <<get:
   description: ~description~
-  ~if(queryParams)~queryParameters:
-  ~queryParams:{it|~it~};separator="\n"~~endif~
-
+  ~query~
   responses:
     ~responses:{it|~it~};separator="\n"~ 
 >>
@@ -124,26 +120,27 @@ numberParam(defaultValue,description,example,maximum,minimum,name,repeat,require
   ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
 >>
 
-/** body,STRINGPROPERTY;description,STRINGPROPERTY;queryParams,LISTPROPERTY;responses,LISTPROPERTY; **/
-postAction(body,description,queryParams,responses) ::= <<post:
+/** body,STRINGPROPERTY;description,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
+postAction(body,description,query,responses) ::= <<post:
   description: ~description~
-  ~if(queryParams)~queryParameters:
-  ~queryParams:{it|~it~};separator="\n"~~endif~
-
+  ~query~
   ~body~
   responses:
       ~responses:{it|~it~};separator="\n"~ 
 >>
 
-/** body,STRINGPROPERTY;description,STRINGPROPERTY;queryParams,LISTPROPERTY;responses,LISTPROPERTY; **/
-putAction(body,description,queryParams,responses) ::= <<put:
+/** body,STRINGPROPERTY;description,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
+putAction(body,description,query,responses) ::= <<put:
   description: ~description~
-  ~if(queryParams)~queryParameters:
-  ~queryParams:{it|~it~};separator="\n"~~endif~
-
+  ~query~
   ~body~
   responses:
       ~responses:{it|~it~};separator="\n"~ 
+>>
+
+/** queryParams,LISTPROPERTY; **/
+queryParams(queryParams) ::= <<queryParameters:
+  ~queryParams:{it|~it~};separator="\n"~ 
 >>
 
 /** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;enums,LISTPROPERTY;example,STRINGPROPERTY;maxLength,STRINGPROPERTY;minLength,STRINGPROPERTY;name,STRINGPROPERTY;pattern,STRINGPROPERTY;repeat,STRINGPROPERTY;required,STRINGPROPERTY; **/
