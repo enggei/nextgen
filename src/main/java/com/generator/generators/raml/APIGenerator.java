@@ -126,9 +126,17 @@ public class APIGenerator {
 				setUri("/admin/currency").
 
 				addActionsValue(newGET("list of virtual currency entries",
-					"400", "403", "404", "500").
+						"400", "403", "404", "500").
 						addResponsesValue(newjsonResponse("list of currency entries",
 							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove virtual currency entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Currency deletion confirmation",
+							newResponseProperty("currencyId", "string", true)))
 				).
 
 				addActionsValue(newPOST("add a virtual currency item",
@@ -151,18 +159,31 @@ public class APIGenerator {
 					newResponseProperty("currentValue", "integer", true),
 					newResponseProperty("dummy", "boolean", false)))).
 
-			addActionsValue(newPOST("add currency activity to user's ledger",
+				addActionsValue(newPOST("add currency activity to user's ledger",
 					group.newformBody().
 						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
 						addFormParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)).
 						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
-						addFormParamsValue(newUUIDParam().setName("redemtionId").setDescription("redemtion id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemtion id").setRequired(true)).
 						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(group.newintegerParam().setName("currencyEarned").setDescription("earned value").setRequired(true).setExample("250")).
+						addFormParamsValue(group.newintegerParam().setName("currencyRedeemed").setDescription("redeemed value").setRequired(true).setExample("250")).
 						addFormParamsValue(group.newstringParam().setName("latitude").setDescription("latitude").setRequired(false)).
 						addFormParamsValue(group.newstringParam().setName("longitude").setDescription("longitude").setRequired(false)),
 					"400", "403", "404", "500").
 					addResponsesValue(newjsonResponse("Added currency activity confirmation",
-						newResponseProperty("activityId", "string", true))))
+						newResponseProperty("currencyActivityId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/currency/ledger").
+
+				addActionsValue(newGET("returns user currency ledger.",
+					group.newqueryParams().
+						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
+				"400", "404").
+				addResponsesValue(newjsonResponse("Currency ledger (activities)",
+					newResponseProperty("list", "array", true))))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
