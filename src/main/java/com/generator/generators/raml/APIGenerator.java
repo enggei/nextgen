@@ -80,7 +80,7 @@ public class APIGenerator {
 						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
 						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
 						addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
-						addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+						addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 					"400", "403", "404", "409", "500").
 					addResponsesValue(newjsonResponse("User confirmation",
 						newResponseProperty("userId", "string", false),
@@ -88,7 +88,7 @@ public class APIGenerator {
 
 				addActionsValue(newGET("register a temporary user",
 					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
+						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
 					addResponsesValue(newjsonResponse("Temporary userId",
 						newResponseProperty("userId", "string", true)))).
@@ -114,7 +114,7 @@ public class APIGenerator {
 							addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
 							addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
 							addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
-							addFormParamsValue(group.newstringParam().setName("deviceID").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+							addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 						"400", "403", "404", "409", "500").
 						addResponsesValue(newjsonResponse("User confirmation",
 							newResponseProperty("userId", "string", true)))))
