@@ -11,6 +11,8 @@ import static java.lang.Integer.MAX_VALUE;
  */
 public class APIGenerator {
 
+	public static final String REGEX_UUID = "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$";
+
 	public static void main(String[] args) {
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
 		new APIGenerator().generateRamlFile();
@@ -121,13 +123,47 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/currency").
+
+				addActionsValue(newGET("list of virtual currency entries",
+					"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of currency entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newPOST("add a virtual currency item",
+					group.newformBody().
+						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("integer").setRequired(true).setExample("350")).
+						addFormParamsValue(group.newstringParam().setName("transactionType").setDescription("to be determined").setRequired(false).setExample("thetype")).
+						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("uuid").setRequired(true)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added currency confirmation",
+						newResponseProperty("currencyId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/currency").
 
 			addActionsValue(newGET("returns user currency value.",
 				"400", "404").
 				addResponsesValue(newjsonResponse("Currency response",
 					newResponseProperty("currentValue", "integer", true),
-					newResponseProperty("dummy", "boolean", false)))));
+					newResponseProperty("dummy", "boolean", false)))).
+
+			addActionsValue(newPOST("add currency activity to user's ledger",
+					group.newformBody().
+						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("redemtionId").setDescription("redemtion id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(group.newstringParam().setName("latitude").setDescription("latitude").setRequired(false)).
+						addFormParamsValue(group.newstringParam().setName("longitude").setDescription("longitude").setRequired(false)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added currency activity confirmation",
+						newResponseProperty("activityId", "string", true))))
+		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/badges/earned").
@@ -195,6 +231,14 @@ public class APIGenerator {
 					newResponseProperty("dummy", "boolean", false)))));
 
 		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+	}
+
+	private RamlGroup.stringParamST newUUIDParam() {
+		return group.newstringParam().
+			setMaxLength(36).
+			setMinLength(36).
+			setPattern(REGEX_UUID).
+			setExample("8aab2fa7-0280-4571-a410-15b7cd21dee7");
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
