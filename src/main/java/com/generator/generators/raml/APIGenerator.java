@@ -154,7 +154,7 @@ public class APIGenerator {
 			setUri("/currency").
 
 			addActionsValue(newGET("returns user currency value.",
-				"400", "404").
+				"400", "403", "404").
 				addResponsesValue(newjsonResponse("Currency response",
 					newResponseProperty("currentValue", "integer", true),
 					newResponseProperty("dummy", "boolean", false)))).
@@ -172,6 +172,14 @@ public class APIGenerator {
 						addFormParamsValue(group.newstringParam().setName("longitude").setDescription("longitude").setRequired(false)),
 					"400", "403", "404", "500").
 					addResponsesValue(newjsonResponse("Added currency activity confirmation",
+						newResponseProperty("currencyActivityId", "string", true)))).
+
+				addActionsValue(newDELETE("deletes a currency activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
+					group.newqueryParams().
+						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
+						addQueryParamsValue(newUUIDParam().setName("currencyActivityId").setDescription("currency activity id").setRequired(true)),
+					"400", "403", "404").
+					addResponsesValue(newjsonResponse("Deleted currency activity confirmation",
 						newResponseProperty("currencyActivityId", "string", true))))
 		);
 
@@ -181,7 +189,7 @@ public class APIGenerator {
 				addActionsValue(newGET("returns user currency ledger.",
 					group.newqueryParams().
 						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
-				"400", "404").
+				"400", "403", "404").
 				addResponsesValue(newjsonResponse("Currency ledger (activities)",
 					newResponseProperty("list", "array", true))))
 		);
@@ -205,6 +213,44 @@ public class APIGenerator {
 					newResponseProperty("dummy", "boolean", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/redemption").
+
+				addActionsValue(newGET("list of redemption entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of redemption entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove redemption entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Redemption deletion confirmation",
+							newResponseProperty("redemptionId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add an redemption item",
+					group.newformBody().setMultipart(true).
+						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true)).
+						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("type").setDescription("title").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newstringParam().setName("code").setDescription("code").setRequired(true).setExample("thecode")).
+						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
+						addFormParamsValue(group.newstringParam().setName("address").setDescription("address").setRequired(true).setExample("theaddress")).
+						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
+						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
+						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("currency value").setRequired(true).setExample("150")).
+						addFormParamsValue(group.newfileParam().setName("image").setDescription("image").setRequired(false)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added redemption confirmation",
+						newResponseProperty("redemptionId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
@@ -212,6 +258,37 @@ public class APIGenerator {
 				addResponsesValue(newjsonResponse("Redemptions response",
 					newResponseProperty("redemptions", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/engagement").
+
+				addActionsValue(newGET("list of engagement entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of engagement entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove engagement entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Engagement deletion confirmation",
+							newResponseProperty("engagementId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add an engagement item",
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
+						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
+						addFormParamsValue(group.newintegerParam().setName("currencyEarned").setDescription("currency earned").setRequired(true).setExample("200")).
+						addFormParamsValue(group.newstringParam().setName("type").setDescription("to be determined").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added engagement confirmation",
+						newResponseProperty("engagementId", "string", true))))
+		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/engagement").
