@@ -15,7 +15,7 @@ public class APIGenerator {
 
 	public static void main(String[] args) {
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-		new APIGenerator().generateRamlFile();
+		new APIGenerator().generateRamlFile(args[0]);
 		System.out.println("completed");
 		System.exit(0);
 	}
@@ -23,7 +23,7 @@ public class APIGenerator {
 	private final RamlGroup group = new RamlGroup();
 
 
-	public void generateRamlFile() {
+	public void generateRamlFile(String outputFile) {
 
 		// http://raml.org/developers/raml-100-tutorial#enter-uri-parameters
 		// https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md
@@ -478,7 +478,9 @@ public class APIGenerator {
 						newResponseProperty("supplierId", "string", true))))
 		);
 
-		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+//		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+//		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+		FileUtil.write(loopsi, new File(outputFile));
 	}
 
 	private RamlGroup.stringParamST newUUIDParam() {
