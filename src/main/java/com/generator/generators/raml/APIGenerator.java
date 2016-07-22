@@ -96,6 +96,16 @@ public class APIGenerator {
 					newResponseProperty("loginTokenExpiry", "integer", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/user/verifytoken").
+
+			addActionsValue(newPOST("verifies user login token",
+				group.newformBody().
+					addFormParamsValue(group.newstringParam().setName("loginToken").setDescription("access token").setRequired(true).setExample("266tm26k75g6q24ganv170k4bt")),
+				"400").
+				addResponsesValue(newjsonResponse("Access token verification",
+					newResponseProperty("verified", "boolean", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/user").
 
 				addActionsValue(newPOST("register new user",
@@ -372,7 +382,7 @@ public class APIGenerator {
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
 						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
-						addFormParamsValue(group.newintegerParam().setName("currencyEarned").setDescription("currency earned").setRequired(true).setExample("200")).
+						addFormParamsValue(group.newintegerParam().setName("value").setDescription("value").setRequired(true).setExample("250")).
 						addFormParamsValue(group.newstringParam().setName("type").setDescription("to be determined").setRequired(true).setExample("thetype")).
 						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
 						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
