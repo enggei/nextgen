@@ -53,7 +53,7 @@ public abstract class BaseDomainVisitor<E extends Enum<E>> {
 	}
 
 	public static boolean hasOutgoing(Node node, RelationshipType type) {
-		return node.hasRelationship(type, OUTGOING);
+		return node != null && node.hasRelationship(type, OUTGOING);
 	}
 
 	public static boolean hasLabel(Node node, String label) {
@@ -112,6 +112,7 @@ public abstract class BaseDomainVisitor<E extends Enum<E>> {
 		return node != null && type.name().equals(node.getLabels().iterator().next().name());
 	}
 
+	@SuppressWarnings("unchecked")
 	public static <T> T get(Node node, String property) {
 		return (T) (has(node, property) ? node.getProperty(property) : null);
 	}
@@ -124,7 +125,7 @@ public abstract class BaseDomainVisitor<E extends Enum<E>> {
 		return has(node, property) ? String.valueOf(node.getProperty(property)) : null;
 	}
 
-	public static Object getOtherProperty(Node node, Relationship relationship, String otherProperty) {
+	public static <T> T getOtherProperty(Node node, Relationship relationship, String otherProperty) {
 		return get(other(node, relationship), otherProperty);
 	}
 
