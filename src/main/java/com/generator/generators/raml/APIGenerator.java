@@ -299,6 +299,8 @@ public class APIGenerator {
 			setUri("/badge/earned").
 
 			addActionsValue(newGET("returns user badges earned.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Badges response",
 					newResponseProperty("badges", "array", true),
