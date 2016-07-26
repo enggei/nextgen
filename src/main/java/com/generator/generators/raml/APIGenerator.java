@@ -83,6 +83,23 @@ public class APIGenerator {
 					newResponseProperty("success", "boolean", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/user").
+
+				addActionsValue(newGET("list of user entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of user entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove user entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("User deletion confirmation",
+							newResponseProperty("userId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/login").
 
 			addActionsValue(newPOST("user login",
@@ -273,15 +290,15 @@ public class APIGenerator {
 						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
 					"400", "403", "404", "500").
 					addResponsesValue(newjsonResponse("Added badge activity confirmation",
-						newResponseProperty("badgeActivityId", "string", true)))).
+						newResponseProperty("userBadgeId", "string", true)))).
 
 				addActionsValue(newDELETE("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
 					group.newqueryParams().
 						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
-						addQueryParamsValue(newUUIDParam().setName("badgeActivityId").setDescription("badge activity id").setRequired(true)),
+						addQueryParamsValue(newUUIDParam().setName("userBadgeId").setDescription("badge activity id").setRequired(true)),
 					"400", "403", "404").
 					addResponsesValue(newjsonResponse("Deleted badge activity confirmation",
-						newResponseProperty("badgeActivityId", "string", true))))
+						newResponseProperty("userBadgeId", "string", true))))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
