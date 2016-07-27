@@ -113,6 +113,27 @@ public class APIGenerator {
 					newResponseProperty("loginTokenExpiry", "integer", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/user/forgotpassword").
+
+			addActionsValue(newPOST("user forgot password",
+				group.newformBody().
+					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
+					addFormParamsValue(group.newstringParam().setName("email").setDescription("the email").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("email@example.com")),
+				"400", "401").
+				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
+					newResponseProperty("success", "boolean", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/user/logout").
+
+			addActionsValue(newGET("user logout",
+				"400", "401").
+				addResponsesValue(newjsonResponse("User logout confirmation",
+					newResponseProperty("logout", "boolean", true),
+					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/verifytoken").
 
 			addActionsValue(newPOST("verifies user login token",
@@ -152,6 +173,11 @@ public class APIGenerator {
 
 				addActionsValue(group.newuriParameter().
 					setName("userId").
+
+					addActionsValue(newGET("get user object",
+						"400", "403", "404", "409", "500").
+						addResponsesValue(newjsonResponse("User object confirmation",
+							newResponseProperty("user", "object", true)))).
 
 					addActionsValue(newDELETE("delete user",
 						"400", "403", "404", "409", "500").
@@ -270,11 +296,10 @@ public class APIGenerator {
 				addActionsValue(newPOST("add a badge item",
 					group.newformBody().
 						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)).
 						addFormParamsValue(group.newstringParam().setName("achievementType").setDescription("to be determined").setRequired(true).setExample("thetype")).
 						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("to be determined").setRequired(true).setExample("theperiod")).
-						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
-						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("uuid").setRequired(true)),
+						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
 					"400", "403", "404", "500").
 					addResponsesValue(newjsonResponse("Added badge confirmation",
 						newResponseProperty("badgeId", "string", true))))
@@ -292,6 +317,15 @@ public class APIGenerator {
 					addResponsesValue(newjsonResponse("Added badge activity confirmation",
 						newResponseProperty("userBadgeId", "string", true)))).
 
+				addActionsValue(newPUT("update badge activity in user's ledger",
+					group.newformBody().
+						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("userBadgeId").setDescription("user badge id").setRequired(true)).
+						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Updated badge activity confirmation",
+						newResponseProperty("userBadgeId", "string", true)))).
+
 				addActionsValue(newDELETE("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
 					group.newqueryParams().
 						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
@@ -302,17 +336,6 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/badge/ledger").
-
-				addActionsValue(newGET("returns badge currency ledger.",
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
-					"400", "403", "404").
-					addResponsesValue(newjsonResponse("Badge ledger (activities)",
-						newResponseProperty("list", "array", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/badge/earned").
 
 			addActionsValue(newGET("returns user badges earned.",
@@ -320,17 +343,18 @@ public class APIGenerator {
 					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Badges response",
-					newResponseProperty("badges", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+					newResponseProperty("badges", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/badge/available").
 
-			addActionsValue(newGET("returns user badges available.",
+			addActionsValue(newGET("returns badges available.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)).
+					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Badges response",
-					newResponseProperty("badges", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+					newResponseProperty("badges", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/admin/redemption").
