@@ -65,6 +65,208 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/user").
+
+				addActionsValue(newGET("list of user entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of user entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove user entry",
+					group.newqueryParams().
+						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("User deletion confirmation",
+						newResponseProperty("userId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/currency").
+
+				addActionsValue(newGET("list of virtual currency entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of currency entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove virtual currency entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Currency deletion confirmation",
+							newResponseProperty("currencyId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add a virtual currency item",
+					group.newformBody().
+						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("integer").setRequired(true).setExample("350")).
+						addFormParamsValue(group.newstringParam().setName("transactionType").setDescription("to be determined").setRequired(false).setExample("thetype")).
+						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("uuid").setRequired(true)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added currency confirmation",
+						newResponseProperty("currencyId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/badge").
+
+				addActionsValue(newGET("list of badge entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of badge entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove badge entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Badge deletion confirmation",
+							newResponseProperty("badgeId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add a badge item",
+					group.newformBody().
+						setMultipart(true).
+						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)).
+						addFormParamsValue(group.newstringParam().setName("achievementType").setDescription("to be determined").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("to be determined").setRequired(true).setExample("theperiod")).
+						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added badge confirmation",
+						newResponseProperty("badgeId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/redemption").
+
+				addActionsValue(newGET("list of redemption entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of redemption entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove redemption entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Redemption deletion confirmation",
+							newResponseProperty("redemptionId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add an redemption item",
+					group.newformBody().
+						setMultipart(true).
+						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
+						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true)).
+						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("type").setDescription("title").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newstringParam().setName("code").setDescription("code").setRequired(true).setExample("thecode")).
+						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
+						addFormParamsValue(group.newstringParam().setName("address").setDescription("address").setRequired(true).setExample("theaddress")).
+						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
+						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
+						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("currency value").setRequired(true).setExample("150")).
+						addFormParamsValue(group.newfileParam().setName("image").setDescription("image").setRequired(false)),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added redemption confirmation",
+						newResponseProperty("redemptionId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/engagement").
+
+				addActionsValue(newGET("list of engagement entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of engagement entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove engagement entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Engagement deletion confirmation",
+							newResponseProperty("engagementId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add an engagement item",
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
+						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
+						addFormParamsValue(group.newintegerParam().setName("value").setDescription("value").setRequired(true).setExample("250")).
+						addFormParamsValue(group.newstringParam().setName("type").setDescription("to be determined").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
+						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added engagement confirmation",
+						newResponseProperty("engagementId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/game").
+
+				addActionsValue(newGET("list of game entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of game entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove game entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Game deletion confirmation",
+							newResponseProperty("gameId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add a game item",
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("startDate").setDescription("start date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
+						addFormParamsValue(group.newstringParam().setName("endDate").setDescription("end date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
+						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
+						addFormParamsValue(group.newintegerParam().setName("templateId").setDescription("template identifier").setRequired(true).setExample("1")),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added game confirmation",
+						newResponseProperty("gameId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/supplier").
+
+				addActionsValue(newGET("list of supplier entries",
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("list of supplier entries",
+							newResponseProperty("list", "array", true)))
+				).
+
+				addActionsValue(newDELETE("remove supplier entry",
+						group.newqueryParams().
+							addQueryParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true)),
+						"400", "403", "404", "500").
+						addResponsesValue(newjsonResponse("Supplier deletion confirmation",
+							newResponseProperty("supplierId", "string", true)))
+				).
+
+				addActionsValue(newPOST("add a supplier item",
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("name").setDescription("name").setRequired(true).setExample("thename")).
+						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
+						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
+						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
+						addFormParamsValue(group.newintegerParam().setName("category").setDescription("category identifier").setRequired(true).setExample("1")),
+					"400", "403", "404", "500").
+					addResponsesValue(newjsonResponse("Added supplier confirmation",
+						newResponseProperty("supplierId", "string", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/version").
 
 			addActionsValue(newGET("returns current APP version.",
@@ -81,23 +283,6 @@ public class APIGenerator {
 				"400", "404", "500").
 				addResponsesValue(newjsonResponse("Version response",
 					newResponseProperty("success", "boolean", true)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/user").
-
-				addActionsValue(newGET("list of user entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of user entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove user entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("User deletion confirmation",
-							newResponseProperty("userId", "string", true))))
-		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/login").
@@ -205,34 +390,6 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/currency").
-
-				addActionsValue(newGET("list of virtual currency entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of currency entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove virtual currency entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Currency deletion confirmation",
-							newResponseProperty("currencyId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a virtual currency item",
-					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
-						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("integer").setRequired(true).setExample("350")).
-						addFormParamsValue(group.newstringParam().setName("transactionType").setDescription("to be determined").setRequired(false).setExample("thetype")).
-						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("uuid").setRequired(true)),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added currency confirmation",
-						newResponseProperty("currencyId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/currency").
 
 			addActionsValue(newGET("returns user currency value.",
@@ -274,35 +431,6 @@ public class APIGenerator {
 				"400", "403", "404").
 				addResponsesValue(newjsonResponse("Currency ledger (activities)",
 					newResponseProperty("list", "array", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/badge").
-
-				addActionsValue(newGET("list of badge entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of badge entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove badge entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Badge deletion confirmation",
-							newResponseProperty("badgeId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a badge item",
-					group.newformBody().
-						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)).
-						addFormParamsValue(group.newstringParam().setName("achievementType").setDescription("to be determined").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("to be determined").setRequired(true).setExample("theperiod")).
-						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added badge confirmation",
-						newResponseProperty("badgeId", "string", true))))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
@@ -357,45 +485,6 @@ public class APIGenerator {
 					newResponseProperty("badges", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/redemption").
-
-				addActionsValue(newGET("list of redemption entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of redemption entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove redemption entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Redemption deletion confirmation",
-							newResponseProperty("redemptionId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add an redemption item",
-					group.newformBody().
-						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
-						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true)).
-						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("type").setDescription("title").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("code").setDescription("code").setRequired(true).setExample("thecode")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
-						addFormParamsValue(group.newstringParam().setName("address").setDescription("address").setRequired(true).setExample("theaddress")).
-						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
-						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
-						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("currency value").setRequired(true).setExample("150")).
-						addFormParamsValue(group.newfileParam().setName("image").setDescription("image").setRequired(false)),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added redemption confirmation",
-						newResponseProperty("redemptionId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
@@ -403,37 +492,6 @@ public class APIGenerator {
 				addResponsesValue(newjsonResponse("Redemptions response",
 					newResponseProperty("redemptions", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/engagement").
-
-				addActionsValue(newGET("list of engagement entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of engagement entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove engagement entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Engagement deletion confirmation",
-							newResponseProperty("engagementId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add an engagement item",
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
-						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
-						addFormParamsValue(group.newintegerParam().setName("value").setDescription("value").setRequired(true).setExample("250")).
-						addFormParamsValue(group.newstringParam().setName("type").setDescription("to be determined").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added engagement confirmation",
-						newResponseProperty("engagementId", "string", true))))
-		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/engagement").
@@ -472,64 +530,6 @@ public class APIGenerator {
 				addResponsesValue(newjsonResponse("Trailers response",
 					newResponseProperty("trailers", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/game").
-
-				addActionsValue(newGET("list of game entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of game entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove game entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Game deletion confirmation",
-							newResponseProperty("gameId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a game item",
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("startDate").setDescription("start date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("endDate").setDescription("end date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
-						addFormParamsValue(group.newintegerParam().setName("templateId").setDescription("template identifier").setRequired(true).setExample("1")),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added game confirmation",
-						newResponseProperty("gameId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/supplier").
-
-				addActionsValue(newGET("list of supplier entries",
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("list of supplier entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove supplier entry",
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true)),
-						"400", "403", "404", "500").
-						addResponsesValue(newjsonResponse("Supplier deletion confirmation",
-							newResponseProperty("supplierId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a supplier item",
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("name").setDescription("name").setRequired(true).setExample("thename")).
-						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
-						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
-						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
-						addFormParamsValue(group.newintegerParam().setName("category").setDescription("category identifier").setRequired(true).setExample("1")),
-					"400", "403", "404", "500").
-					addResponsesValue(newjsonResponse("Added supplier confirmation",
-						newResponseProperty("supplierId", "string", true))))
-		);
 
 //		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
 //		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
