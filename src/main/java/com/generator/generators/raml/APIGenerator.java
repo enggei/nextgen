@@ -131,7 +131,7 @@ public class APIGenerator {
 						setMultipart(true).
 						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true)).
 						addFormParamsValue(group.newstringParam().setName("achievementType").setDescription("to be determined").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("to be determined").setRequired(true).setExample("theperiod")).
+						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("expiration date").setRequired(true).setExample("2016-12-31")).
 						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
 					"400", "403", "404", "500").
 					addResponsesValue(newjsonResponse("Added badge confirmation",
@@ -497,6 +497,8 @@ public class APIGenerator {
 			setUri("/engagement").
 
 			addActionsValue(newGET("returns user engagement activities.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Engagements response",
 					newResponseProperty("engagements", "array", true),
