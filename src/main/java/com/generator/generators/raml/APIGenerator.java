@@ -288,6 +288,8 @@ public class APIGenerator {
 			setUri("/user/login").
 
 			addActionsValue(newPOST("user login",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials").setRequired(true).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
 					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")),
@@ -546,36 +548,55 @@ public class APIGenerator {
 			setExample("8aab2fa7-0280-4571-a410-15b7cd21dee7");
 	}
 
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
 		final RamlGroup.postActionST actionST = group.newpostAction().
 			setDescription(description).
+			setHeaders(headers).
 			setBody(body).
 			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
+	}
+
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPOST(description, null, query, body, errorCodes);
+	}
+
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPOST(description, headers, null, body, errorCodes);
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPOST(description, null, body, errorCodes);
+		return newPOST(description, null, null, body, errorCodes);
 	}
 
-	private RamlGroup.getActionST newGET(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+	private RamlGroup.getActionST newGET(String description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, String... errorCodes) {
 		final RamlGroup.getActionST actionST = group.newgetAction().
 			setDescription(description).
+			setHeaders(headers).
 			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
 	}
 
-	private RamlGroup.getActionST newGET(String description, String... errorCodes) {
-		return newGET(description, null, errorCodes);
+	private RamlGroup.getActionST newGET(String description, RamlGroup.headerParamsST headers, String... errorCodes) {
+		return newGET(description, headers, null, errorCodes);
 	}
 
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
+	private RamlGroup.getActionST newGET(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+		return newGET(description, null, query, errorCodes);
+	}
+
+	private RamlGroup.getActionST newGET(String description, String... errorCodes) {
+		return newGET(description, null, null, errorCodes);
+	}
+
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
 		final RamlGroup.putActionST actionST = group.newputAction().
 			setDescription(description).
+			setHeaders(headers).
 			setBody(body).
 			setQuery(query);
 		for (String errorCode : errorCodes)
@@ -583,21 +604,38 @@ public class APIGenerator {
 		return actionST;
 	}
 
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPUT(description, null, body, errorCodes);
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.headerParamsST headers, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPUT(description, headers, null, body, errorCodes);
 	}
 
-	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPUT(description, null, query, body, errorCodes);
+	}
+
+	private RamlGroup.putActionST newPUT(Object description, RamlGroup.formBodyST body, String... errorCodes) {
+		return newPUT(description, null, null, body, errorCodes);
+	}
+
+	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, String... errorCodes) {
 		final RamlGroup.deleteActionST actionST = group.newdeleteAction().
 			setDescription(description).
+			setHeaders(headers).
 			setQuery(query);
 		for (String errorCode : errorCodes)
 			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
 		return actionST;
 	}
 
+	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.headerParamsST headers, String... errorCodes) {
+		return newDELETE(description, headers, null, errorCodes);
+	}
+
+	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.queryParamsST query, String... errorCodes) {
+		return newDELETE(description, null, query, errorCodes);
+	}
+
 	private RamlGroup.deleteActionST newDELETE(String description, String... errorCodes) {
-		return newDELETE(description, null, errorCodes);
+		return newDELETE(description, null, null, errorCodes);
 	}
 
 	private RamlGroup.errorResponseST error(String code, String description) {
