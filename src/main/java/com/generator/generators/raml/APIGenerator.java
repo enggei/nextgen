@@ -267,6 +267,35 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/oauth2/login").
+
+			addActionsValue(newPOST("client login",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
+				group.newformBody().
+					addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("client_credentials")).
+					addFormParamsValue(group.newstringParam().setName("client_id").setDescription("OAuth2 client id - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0).setExample("l00ps1")).
+					addFormParamsValue(group.newstringParam().setName("client_secret").setDescription("OAuth2 client secret - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0).setExample("b39ae25ed90a297bffe339827a3b95c7")),
+				"400", "401").
+				addResponsesValue(newjsonResponse("OAuth2 token response",
+					newResponseProperty("access_token", "string", true),
+					newResponseProperty("expires_in", "integer", true),
+					newResponseProperty("token_type", "string", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/oauth2/verifytoken").
+
+			addActionsValue(newGET("verifies client access token",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
+				"400").
+				addResponsesValue(newjsonResponse("Access token verification",
+					newResponseProperty("verified", "boolean", true),
+					newResponseProperty("oa2clientId", "string", false),
+					newResponseProperty("client_id", "string", false),
+					newResponseProperty("expires_in", "integer", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/version").
 
 			addActionsValue(newGET("returns current APP version.",
@@ -289,20 +318,29 @@ public class APIGenerator {
 
 			addActionsValue(newPOST("user login",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials").setRequired(true).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
 				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")),
+					addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("password")).
+					addFormParamsValue(group.newstringParam().setName("client_id").setDescription("OAuth2 client id - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0).setExample("l00ps1")).
+					addFormParamsValue(group.newstringParam().setName("client_secret").setDescription("OAuth2 client secret - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0).setExample("b39ae25ed90a297bffe339827a3b95c7")).
+					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
+					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")),
 				"400", "401").
-				addResponsesValue(newjsonResponse("User logon confirmation",
-					newResponseProperty("loginToken", "string", true),
-					newResponseProperty("currencyTotal", "integer", true),
-					newResponseProperty("loginTokenExpiry", "integer", true)))));
+				addResponsesValue(newjsonResponse("OAuth2 token response",
+					newResponseProperty("access_token", "string", true),
+					newResponseProperty("expires_in", "integer", true),
+					newResponseProperty("token_type", "string", true),
+					newResponseProperty("refresh_token", "string", true),
+					newResponseProperty("currencyTotal", "integer", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/forgotpassword").
 
 			addActionsValue(newPOST("user forgot password",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
 					addFormParamsValue(group.newstringParam().setName("email").setDescription("the email").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("email@example.com")),
@@ -315,6 +353,8 @@ public class APIGenerator {
 			setUri("/user/logout").
 
 			addActionsValue(newGET("user logout",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
 				"400", "401").
 				addResponsesValue(newjsonResponse("User logout confirmation",
 					newResponseProperty("logout", "boolean", true),
@@ -323,17 +363,23 @@ public class APIGenerator {
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/verifytoken").
 
-			addActionsValue(newPOST("verifies user login token",
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("loginToken").setDescription("access token").setRequired(true).setExample("266tm26k75g6q24ganv170k4bt")),
+			addActionsValue(newGET("verifies user access token",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
 				"400").
 				addResponsesValue(newjsonResponse("Access token verification",
-					newResponseProperty("verified", "boolean", true)))));
+					newResponseProperty("verified", "boolean", true),
+					newResponseProperty("userId", "string", false),
+					newResponseProperty("expires_in", "integer", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/user").
 
 				addActionsValue(newPOST("register new user",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					group.newqueryParams().
+						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
@@ -352,44 +398,59 @@ public class APIGenerator {
 						newResponseProperty("username", "string", true)))).
 
 				addActionsValue(newGET("register a temporary user",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
+						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)).
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
 					addResponsesValue(newjsonResponse("Temporary userId",
-						newResponseProperty("userId", "string", true)))).
-
-				addActionsValue(group.newuriParameter().
-					setName("userId").
-
-					addActionsValue(newGET("get user object",
-						"400", "403", "404", "409", "500").
-						addResponsesValue(newjsonResponse("User object confirmation",
-							newResponseProperty("user", "object", true)))).
-
-					addActionsValue(newDELETE("delete user",
-						"400", "403", "404", "409", "500").
-						addResponsesValue(newjsonResponse("User delete confirmation",
-							newResponseProperty("userId", "string", true)))).
-
-					addActionsValue(newPUT("update user",
-						group.newformBody().
-							setMultipart(true).
-							addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-							addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
-							addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
-							addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
-							addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
-							addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-							addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
-							addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
-							addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-							addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
-							addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
-							addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
-						"400", "403", "404", "409", "500").
-						addResponsesValue(newjsonResponse("User confirmation",
-							newResponseProperty("userId", "string", true)))))
+						newResponseProperty("userId", "string", true))))
 		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/user/profile").
+
+			addActionsValue(newGET("get user object",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
+				"400", "403", "404", "409", "500").
+				addResponsesValue(newjsonResponse("User object confirmation",
+					newResponseProperty("user", "object", true)))).
+
+			addActionsValue(newDELETE("delete user",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
+				"400", "403", "404", "409", "500").
+				addResponsesValue(newjsonResponse("User delete confirmation",
+					newResponseProperty("userId", "string", true)))).
+
+			addActionsValue(newPUT("update user",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
+				group.newformBody().
+					setMultipart(true).
+					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
+					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
+					addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
+					addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
+					addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
+					addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
+					addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
+					addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
+					addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
+					addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
+					addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("user facebook token").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thesocialtoken")).
+					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+				"400", "403", "404", "409", "500").
+				addResponsesValue(newjsonResponse("User confirmation",
+					newResponseProperty("userId", "string", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/currency").
