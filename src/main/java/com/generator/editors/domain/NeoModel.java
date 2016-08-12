@@ -58,6 +58,7 @@ public class NeoModel {
 
 	public void doInTransaction(Committer committer) {
 		try (Transaction tx = beginTx()) {
+			System.out.println("start tx");
 			try {
 				committer.doAction(tx);
 				tx.success();
@@ -65,6 +66,7 @@ public class NeoModel {
 				committer.exception(throwable);
 				tx.failure();
 			}
+			System.out.println("end tx");
 		}
 	}
 

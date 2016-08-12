@@ -1,6 +1,5 @@
 package com.generator.editors.graph.d2;
 
-import com.generator.generators.generatorDomain.GeneratorDomain;
 import com.generator.editors.domain.BaseDomainVisitor;
 import com.generator.editors.domain.MetaDomain;
 import com.generator.editors.domain.MetaNode;
@@ -78,10 +77,13 @@ public class GraphEditor2D<E extends Enum<E>, R extends Enum<R>, G extends Graph
 			g2.drawLine(x, 0, x, getHeight());
 
 		g2.setColor(Color.DARK_GRAY);
+		final AtomicLong relations = new AtomicLong(0);
 		for (GraphNode2D<E> node : visibleNodes()) {
 			final boolean selected = isSelected(node.uuid());
-			for (GraphRelation relation : node.getOutgoing())
+			for (GraphRelation relation : node.getOutgoing()) {
 				relation.paint(g2, selected);
+				relations.incrementAndGet();
+			}
 		}
 
 		for (GraphNode2D<E> node : visibleNodes())
@@ -95,8 +97,10 @@ public class GraphEditor2D<E extends Enum<E>, R extends Enum<R>, G extends Graph
 			}
 		}
 
-		//g.setColor(Color.BLACK);
-		//g.drawString("frame #" + (frameCount.incrementAndGet()), 20, 20);
+		g.setColor(Color.BLACK);
+		g.drawString("frame #" + (repaints.incrementAndGet()), 20, 20);
+		g.drawString("nodes " + (visibleNodes().size()), 20, 40);
+		g.drawString("relations " + (relations.get()), 20, 60);
 	}
 
 	protected void handleKeyPressed(JComponent editor,  KeyEvent e, boolean ctrlPressed, MouseEvent last) {
