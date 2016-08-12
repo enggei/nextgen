@@ -96,6 +96,16 @@ public final class RamlGroup {
    } 
 
 
+   public headerST newheader() {
+      return new headerST(stGroup);
+   } 
+
+
+   public headerParamsST newheaderParams() {
+      return new headerParamsST(stGroup);
+   } 
+
+
    public integerParamST newintegerParam() {
       return new integerParamST(stGroup);
    } 
@@ -218,6 +228,7 @@ public final class RamlGroup {
     public final class deleteActionST {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
       private final AtomicBoolean queryIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -228,6 +239,10 @@ public final class RamlGroup {
 
        public deleteActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+       public deleteActionST setHeaders(Object value) {
+      	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
       } 
        public deleteActionST setQuery(Object value) {
@@ -398,6 +413,7 @@ public final class RamlGroup {
     public final class getActionST {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
       private final AtomicBoolean queryIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -410,12 +426,76 @@ public final class RamlGroup {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
       } 
+       public getActionST setHeaders(Object value) {
+      	tryToSetStringProperty(template, value, headersIsSet, "headers");   
+         return this;
+      } 
        public getActionST setQuery(Object value) {
       	tryToSetStringProperty(template, value, queryIsSet, "query");   
          return this;
       } 
       public getActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class headerST {
+
+      private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean enumsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean exampleIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean requiredIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private headerST(STGroup group) {
+   		template = group.getInstanceOf("header");
+   	}
+
+       public headerST setDescription(Object value) {
+      	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+      public headerST addEnumsValue(Object value) {
+      	tryToSetListProperty(template, value, enumsIsSet, "enums");
+         return this;
+      }
+       public headerST setExample(Object value) {
+      	tryToSetStringProperty(template, value, exampleIsSet, "example");   
+         return this;
+      } 
+       public headerST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public headerST setRequired(Object value) {
+      	tryToSetStringProperty(template, value, requiredIsSet, "required");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class headerParamsST {
+
+      private final AtomicBoolean headerParamsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private headerParamsST(STGroup group) {
+   		template = group.getInstanceOf("headerParams");
+   	}
+
+      public headerParamsST addHeaderParamsValue(Object value) {
+      	tryToSetListProperty(template, value, headerParamsIsSet, "headerParams");
          return this;
       }
 
@@ -570,6 +650,7 @@ public final class RamlGroup {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
       private final AtomicBoolean queryIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -584,6 +665,10 @@ public final class RamlGroup {
       } 
        public postActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+       public postActionST setHeaders(Object value) {
+      	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
       } 
        public postActionST setQuery(Object value) {
@@ -605,6 +690,7 @@ public final class RamlGroup {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
       private final AtomicBoolean queryIsSet = new AtomicBoolean(false);
       private final AtomicBoolean responsesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -619,6 +705,10 @@ public final class RamlGroup {
       } 
        public putActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
+         return this;
+      } 
+       public putActionST setHeaders(Object value) {
+      	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
       } 
        public putActionST setQuery(Object value) {
