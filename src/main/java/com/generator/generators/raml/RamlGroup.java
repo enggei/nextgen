@@ -51,6 +51,11 @@ public final class RamlGroup {
    }
 
 
+   public binaryResponseST newbinaryResponse() {
+      return new binaryResponseST(stGroup);
+   } 
+
+
    public booleanParamST newbooleanParam() {
       return new booleanParamST(stGroup);
    } 
@@ -143,6 +148,26 @@ public final class RamlGroup {
 
    public uriParameterST newuriParameter() {
       return new uriParameterST(stGroup);
+   } 
+
+    public final class binaryResponseST {
+
+      private final AtomicBoolean contentTypeIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private binaryResponseST(STGroup group) {
+   		template = group.getInstanceOf("binaryResponse");
+   	}
+
+       public binaryResponseST setContentType(Object value) {
+      	tryToSetStringProperty(template, value, contentTypeIsSet, "contentType");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    } 
 
     public final class booleanParamST {

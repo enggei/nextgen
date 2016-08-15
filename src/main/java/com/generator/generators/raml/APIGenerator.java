@@ -340,7 +340,8 @@ public class APIGenerator {
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)).
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
 					addFormParamsValue(group.newstringParam().setName("email").setDescription("the email").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("email@example.com")),
@@ -361,25 +362,25 @@ public class APIGenerator {
 					newResponseProperty("dummy", "boolean", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/token").
+				setUri("/user/token").
 
-			addActionsValue(newGET("verifies user access token",
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
-				"400", "401").
-				addResponsesValue(newjsonResponse("Access token verification",
-					newResponseProperty("verified", "boolean", true),
-					newResponseProperty("userId", "string", false),
-					newResponseProperty("expires_in", "integer", false)))).
+				addActionsValue(newGET("verifies user access token",
+					group.newqueryParams().
+						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
+					"400", "401").
+					addResponsesValue(newjsonResponse("Access token verification",
+						newResponseProperty("verified", "boolean", true),
+						newResponseProperty("userId", "string", false),
+						newResponseProperty("expires_in", "integer", false)))).
 
-			addActionsValue(newPOST("refresh user access token",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("refresh_token")).
-					addFormParamsValue(group.newstringParam().setName("refresh_token").setDescription("refresh token").setRequired(true).setExample("")),
-				"400", "401"
-			))
+				addActionsValue(newPOST("refresh user access token",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
+					group.newformBody().
+						addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("refresh_token")).
+						addFormParamsValue(group.newstringParam().setName("refresh_token").setDescription("refresh token").setRequired(true).setExample("")),
+					"400", "401"
+				))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
@@ -465,13 +466,13 @@ public class APIGenerator {
 					newResponseProperty("userId", "string", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/currency").
+				setUri("/currency").
 
-			addActionsValue(newGET("returns user currency value.",
-				"400", "401", "404").
-				addResponsesValue(newjsonResponse("Currency response",
-					newResponseProperty("currentValue", "integer", true),
-					newResponseProperty("dummy", "boolean", false)))).
+				addActionsValue(newGET("returns user currency value.",
+					"400", "401", "404").
+					addResponsesValue(newjsonResponse("Currency response",
+						newResponseProperty("currentValue", "integer", true),
+						newResponseProperty("dummy", "boolean", false)))).
 
 				addActionsValue(newPOST("add currency activity to user's ledger",
 					group.newformBody().
@@ -503,9 +504,9 @@ public class APIGenerator {
 				addActionsValue(newGET("returns user currency ledger.",
 					group.newqueryParams().
 						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true)),
-				"400", "401", "404").
-				addResponsesValue(newjsonResponse("Currency ledger (activities)",
-					newResponseProperty("list", "array", true))))
+					"400", "401", "404").
+					addResponsesValue(newjsonResponse("Currency ledger (activities)",
+						newResponseProperty("list", "array", true))))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
@@ -608,8 +609,33 @@ public class APIGenerator {
 					newResponseProperty("trailers", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
 
-//		FileUtil.write(loopsi, new File("/home/sogern/projects/unique/loopsi/src/main/web/api/loopsi/loopsi.raml"));
-//		FileUtil.write(loopsi, new File("/media/storage/ucs/loopsi/src/main/web/api/loopsi/loopsi.raml"));
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/images/films/").
+
+			addActionsValue(newGET("returns images for films",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("imageId").setDescription("image id").setRequired(true)),
+				"400", "404").
+				addResponsesValue(group.newbinaryResponse().setContentType("image/png"))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/images/trailers/").
+
+			addActionsValue(newGET("returns images for films",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("imageId").setDescription("image id").setRequired(true)),
+				"400", "404").
+				addResponsesValue(group.newbinaryResponse().setContentType("image/png"))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/images/badges/").
+
+			addActionsValue(newGET("returns images for films",
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("imageId").setDescription("image id").setRequired(true)),
+				"400", "404").
+				addResponsesValue(group.newbinaryResponse().setContentType("image/png"))));
+
 		FileUtil.write(loopsi, new File(outputFile));
 	}
 
