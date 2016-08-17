@@ -336,19 +336,33 @@ public class APIGenerator {
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/forgotpassword").
 
-			addActionsValue(newPOST("user forgot password",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)).
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+			addActionsValue(newPOST("send email to reset password for user",
 				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("email").setDescription("the email").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("email@example.com")),
+					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401").
 				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
 					newResponseProperty("success", "boolean", true),
 					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/user/forgotPasswordForm").
+
+			addActionsValue(newPOST("process user forgot password",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				group.newformBody().
+					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
+					addFormParamsValue(group.newstringParam().setName("confirmPassword").setDescription("the confirm password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("confirmPassword")).
+					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "401").
+				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
+					newResponseProperty("success", "boolean", true),
+					newResponseProperty("dummy", "boolean", false)))).
+			addActionsValue(newGET("get user forgot password form",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400").
+				addResponsesValue(group.newbinaryResponse().setContentType("text/html"))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/logout").
