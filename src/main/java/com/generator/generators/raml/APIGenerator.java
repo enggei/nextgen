@@ -331,7 +331,23 @@ public class APIGenerator {
 					newResponseProperty("expires_in", "integer", true),
 					newResponseProperty("token_type", "string", true),
 					newResponseProperty("refresh_token", "string", true),
-					newResponseProperty("currencyTotal", "integer", true)))));
+					newResponseProperty("currencyTotal", "integer", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/user/login/fb").addActionsValue(newPOST("register facebook user",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
+				group.newformBody().
+					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
+					addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("facebook access_token").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(1)),
+				"400", "401", "404", "409", "500").
+				addResponsesValue(newjsonResponse("OAuth2 token response",
+					newResponseProperty("access_token", "string", true),
+					newResponseProperty("expires_in", "integer", true),
+					newResponseProperty("token_type", "string", true),
+					newResponseProperty("refresh_token", "string", true),
+					newResponseProperty("currencyTotal", "integer", false))))
+		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/forgotpassword").
