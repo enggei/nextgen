@@ -606,7 +606,20 @@ public class APIGenerator {
 				"400", "404").
 				addResponsesValue(newjsonResponse("Engagements response",
 					newResponseProperty("engagements", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+					newResponseProperty("dummy", "boolean", false)))).
+
+			addActionsValue(newPOST("POST Did Engagement Activities",
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("789e96b5-6f81-4125-b213-ef5700e8c09d")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Post engagement balance",
+					newResponseProperty("engagementCategory", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("id", "long", true),
+					newResponseProperty("latitude", "long", true),
+					newResponseProperty("longitude", "long", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/films/latest").
