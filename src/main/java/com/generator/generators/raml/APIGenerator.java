@@ -353,6 +353,10 @@ public class APIGenerator {
 			setUri("/user/forgotpassword").
 
 			addActionsValue(newPOST("send email to reset password for user",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401").
