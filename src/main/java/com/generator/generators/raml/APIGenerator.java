@@ -355,8 +355,6 @@ public class APIGenerator {
 			addActionsValue(newPOST("send email to reset password for user",
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401").
@@ -422,9 +420,7 @@ public class APIGenerator {
 
 				addActionsValue(newPOST("register new user",
 					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
 						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
@@ -438,15 +434,17 @@ public class APIGenerator {
 						addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
 						addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 					"400", "401", "404", "409", "500").
-					addResponsesValue(newjsonResponse("User confirmation",
-						newResponseProperty("userId", "string", false),
-						newResponseProperty("username", "string", true)))).
+					addResponsesValue(newjsonResponse("OAuth2 token response",
+						newResponseProperty("access_token", "string", true),
+						newResponseProperty("expires_in", "integer", true),
+						newResponseProperty("token_type", "string", true),
+						newResponseProperty("refresh_token", "string", true),
+						newResponseProperty("currencyTotal", "integer", false)))).
 
 				addActionsValue(newGET("register a temporary user",
 					group.newheaderParams().
 						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)).
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
 					addResponsesValue(newjsonResponse("Temporary userId",
@@ -459,8 +457,6 @@ public class APIGenerator {
 			addActionsValue(newGET("get user object",
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User object confirmation",
 					newResponseProperty("user", "object", true)))).
@@ -468,8 +464,6 @@ public class APIGenerator {
 			addActionsValue(newDELETE("delete user",
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User delete confirmation",
 					newResponseProperty("userId", "string", true)))).
@@ -477,8 +471,6 @@ public class APIGenerator {
 			addActionsValue(newPUT("update user",
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(false)),
 				group.newformBody().
 					setMultipart(true).
 					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
