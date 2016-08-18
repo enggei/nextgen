@@ -364,19 +364,18 @@ public class APIGenerator {
 			setUri("/user/forgotPasswordForm").
 
 			addActionsValue(newPOST("process user forgot password",
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
-					addFormParamsValue(group.newstringParam().setName("confirmPassword").setDescription("the confirm password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("confirmPassword")).
-					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addFormParamsValue(group.newstringParam().setName("confirmPassword").setDescription("the confirm password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
+					addFormParamsValue(group.newstringParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1F43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401").
 				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
 					newResponseProperty("success", "boolean", true),
 					newResponseProperty("dummy", "boolean", false)))).
+
 			addActionsValue(newGET("get user forgot password form",
 				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addQueryParamsValue(newUUIDParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setExample("1F43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400").
 				addResponsesValue(group.newbinaryResponse().setContentType("text/html"))));
 
@@ -497,10 +496,11 @@ public class APIGenerator {
 				setUri("/currency").
 
 				addActionsValue(newGET("returns user currency value.",
+					group.newqueryParams().
+						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 					"400", "401", "404").
 					addResponsesValue(newjsonResponse("Currency response",
-						newResponseProperty("currentValue", "integer", true),
-						newResponseProperty("dummy", "boolean", false)))).
+						newResponseProperty("currentValue", "integer", true)))).
 
 				addActionsValue(newPOST("add currency activity to user's ledger",
 					group.newformBody().
@@ -610,7 +610,7 @@ public class APIGenerator {
 
 			addActionsValue(newPOST("POST Did Engagement Activities",
 				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("789e96b5-6f81-4125-b213-ef5700e8c09d")).
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
 					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")),
 				"400", "401", "404", "500").
