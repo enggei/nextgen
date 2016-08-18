@@ -452,6 +452,21 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/user/query").
+
+				addActionsValue(newGET("query if a username, email or deviceId is registered",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					group.newqueryParams().
+						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(false).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
+						addQueryParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
+						addQueryParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")),
+					"400").
+					addResponsesValue(newjsonResponse("Query response",
+						newResponseProperty("found", "boolean", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/user/profile").
 
 			addActionsValue(newGET("get user object",
