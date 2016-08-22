@@ -14,6 +14,8 @@ import com.generator.generators.vertxWeb.vertxWebEditor;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.factory.GraphDatabaseFactory;
+import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
@@ -199,7 +201,12 @@ public class EditorDesktop extends JFrame {
 
 				FileUtil.tryToCreateDirIfNotExists(selectedDir);
 				state.setCurrentDir(selectedDir.getAbsolutePath());
-				state.model = new NeoModel(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(selectedDir.getAbsolutePath()));
+
+				// https://neo4j.com/docs/operations-manual/current/reference/
+				state.model = new NeoModel(new GraphDatabaseFactory()
+					.newEmbeddedDatabaseBuilder( new java.io.File(selectedDir.getAbsolutePath()) )
+					.setConfig( GraphDatabaseSettings.allow_store_upgrade, "true" )
+					.newGraphDatabase());
 			});
 		}
 	}

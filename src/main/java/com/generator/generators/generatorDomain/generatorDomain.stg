@@ -217,7 +217,7 @@ case ~it.name;format="capitalize"~:
 
     public static void main(String[] args) {
 
-        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(args[0]);
+        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File(args[0]));
         final ~name~ domain = new ~name~(new NeoModel(db));
         final ~name~Editor editor = new ~name~Editor(domain);
 

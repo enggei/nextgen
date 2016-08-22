@@ -19,6 +19,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 /**
  * 
@@ -314,7 +315,7 @@ public class ProtobufDomainEditor extends GraphEditor2D<ProtobufDomain.ENTITIES,
 
     public static void main(String[] args) {
 
-        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(args[0]);
+        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new File(args[0]));
         final ProtobufDomain domain = new ProtobufDomain(new NeoModel(db));
         final ProtobufDomainEditor editor = new ProtobufDomainEditor(domain);
 

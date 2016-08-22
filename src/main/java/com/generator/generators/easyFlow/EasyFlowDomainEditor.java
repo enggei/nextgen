@@ -93,7 +93,7 @@ public class EasyFlowDomainEditor extends GraphEditor2D<EasyFlowDomain.ENTITIES,
 
     public static void main(String[] args) {
 
-        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(args[0]);
+        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File(args[0]));
         final EasyFlowDomain domain = new EasyFlowDomain(new NeoModel(db));
         SwingUtil.setLookAndFeel_Nimbus();
         final JFrame frame = new JFrame("EasyFlowDomain");

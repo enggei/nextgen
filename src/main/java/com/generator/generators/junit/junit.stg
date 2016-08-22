@@ -27,7 +27,7 @@ public void test~name;format="capitalize"~Group() {
 templateNeoTest(dbPath,name) ::= << @Test
 public void test~name;format="capitalize"~Neo() {
 
-	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(~if(dbPath)~"~dbPath~"~else~"src/test/tests/db"~endif~);
+	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File(~if(dbPath)~"~dbPath~"~else~"src/test/tests/db"~endif~));
 	final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
 
 	model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {

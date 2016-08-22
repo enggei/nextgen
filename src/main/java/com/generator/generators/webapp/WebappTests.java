@@ -21,7 +21,7 @@ public class WebappTests {
     @Test
    public void testWebappNeo() {
 
-   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
+   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File("src/test/tests/db"));
    	final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
 
    	model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {

@@ -1,28 +1,33 @@
- package com.generator.generators.templatesNeo;
+package com.generator.generators.templatesNeo;
+
 import org.junit.Test;
+
+import java.io.File;
 
 public class TemplatesNeoTests {
 
 	static {
-      System.setProperty("generator.path", "src/main/java/com/generator/generators");
-   }
+		System.setProperty("generator.path", "src/main/java/com/generator/generators");
+	}
 
-   final TemplatesNeoGroup group = new TemplatesNeoGroup();
+	final TemplatesNeoGroup group = new TemplatesNeoGroup();
 
-    @Test
-   public void testTemplatesNeoGroup() {
-   	// todo add TemplatesNeoGroup- tests here;
-   } ;
+	@Test
+	public void testTemplatesNeoGroup() {
+		// todo add TemplatesNeoGroup- tests here;
+	}
 
-    @Test
-   public void testTemplatesNeoNeo() {
+	;
 
-   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
-   	final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
+	@Test
+	public void testTemplatesNeoNeo() {
 
-   	model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {
-   		@Override
-   		public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
+		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
+		final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
+
+		model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {
+			@Override
+			public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
 
 
 				final TemplatesNeoNeo neoTemplateDomain = new TemplatesNeoNeo(model);
@@ -64,12 +69,14 @@ public class TemplatesNeoTests {
 
 				System.out.println(neoGroupClassDeclarationST);
 
-   		}
+			}
 
-   		@Override
-   		public void exception(Throwable throwable) {
-   			throw new RuntimeException(throwable);
-   		}
-   	});
-   } ;
+			@Override
+			public void exception(Throwable throwable) {
+				throw new RuntimeException(throwable);
+			}
+		});
+	}
+
+	;
 } 

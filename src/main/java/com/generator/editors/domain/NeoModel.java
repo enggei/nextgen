@@ -1,13 +1,10 @@
 package com.generator.editors.domain;
 
-import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.traversal.TraversalDescription;
-import org.neo4j.helpers.collection.IteratorUtil;
-import org.neo4j.kernel.impl.util.StringLogger;
+import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
 import java.util.Iterator;
@@ -24,12 +21,10 @@ public class NeoModel {
 	public static final String TAG_UUID = "_uuid";
 
 	private final GraphDatabaseService graphDb;
-	private final ExecutionEngine engine;
 	private final Index<Node> uuids;
 
 	public NeoModel(final GraphDatabaseService graphDb) {
 		this.graphDb = graphDb;
-		this.engine = new ExecutionEngine(graphDb, StringLogger.SYSTEM);
 
 		try (Transaction tx = graphDb.beginTx()) {
 			this.uuids = graphDb.index().forNodes(TAG_UUID);
@@ -104,11 +99,11 @@ public class NeoModel {
 		if (label != null && label.length() != 0)
 			cypher.add("label", label);
 
-		final ExecutionResult res = query(cypher.render());
+		final Result res = query(cypher.render());
 		final Iterator<Node> n_column = res.columnAs("entity");
 		final Set<Node> result = new LinkedHashSet<>();
 		try {
-			for (Node node : IteratorUtil.asIterable(n_column))
+			for (Node node : Iterators.asIterable(n_column))
 				result.add(node);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -122,10 +117,10 @@ public class NeoModel {
 		final ST cypher = new ST("MATCH (entity) ~if(property)~WHERE entity.~property~ = '~value~'~endif~ RETURN entity", '~', '~');
 		cypher.add("property", property);
 		cypher.add("value", value);
-		final ExecutionResult res = query(cypher.render());
+		final Result res = query(cypher.render());
 		final Iterator<Node> n_column = res.columnAs("entity");
 		final Set<Node> result = new LinkedHashSet<>();
-		for (Node node : IteratorUtil.asIterable(n_column))
+		for (Node node : Iterators.asIterable(n_column))
 			result.add(node);
 		return result;
 	}
@@ -135,10 +130,10 @@ public class NeoModel {
 		cypher.add("label", label);
 		cypher.add("property", property);
 		cypher.add("value", value);
-		final ExecutionResult res = query(cypher.render());
+		final Result res = query(cypher.render());
 		final Iterator<Node> n_column = res.columnAs("entity");
 		final Set<Node> result = new LinkedHashSet<>();
-		for (Node node : IteratorUtil.asIterable(n_column))
+		for (Node node : Iterators.asIterable(n_column))
 			result.add(node);
 		return result;
 	}
@@ -148,9 +143,9 @@ public class NeoModel {
 		return indexHits.size() == 0 ? null : indexHits.getSingle();
 	}
 
-	public ExecutionResult query(String query) {
+	public Result query(String query) {
 		System.out.println(query);
-		return engine.execute(query);
+		return graphDb.execute(query);
 	}
 
 	public Transaction beginTx() {

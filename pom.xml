@@ -39,38 +39,46 @@
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-core</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-web</artifactId>
-            <version>3.2.0</version>
+            <version>3.3.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-dropwizard-metrics</artifactId>
+            <version>3.3.0</version>
+        </dependency>
+
+        <!-- UNIT  -->
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
             <version>3.0.0</version>
-            <scope>test</scope>
         </dependency>
-
-        <!--JUNIT-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.12</version>
         </dependency>
 
         <!--NEO4J-->
-        <!--todo: upgrade to neo 3-->
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-kernel</artifactId>
-            <version>2.0.0</version>
+            <artifactId>neo4j</artifactId>
+            <version>3.1.0-M03</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-cypher</artifactId>
-            <version>2.0.0</version>
+            <version>3.1.0-M03</version>
         </dependency>
 
         <!-- ANTLR / Stringtemplate -->
@@ -87,19 +95,13 @@
             <version>1.3</version>
         </dependency>
 
-        <!--COMMONS MATH (FOURER)-->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.2</version>
-        </dependency>
-
         <!--COMBINATORICS (PERMUTATIONS)-->
         <dependency>
             <groupId>com.github.dpaukov</groupId>
             <artifactId>combinatoricslib3</artifactId>
             <version>3.0.0</version>
         </dependency>
+
     </dependencies>
 
     <repositories>

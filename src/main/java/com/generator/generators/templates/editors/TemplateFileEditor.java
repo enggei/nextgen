@@ -4,6 +4,7 @@ import com.generator.domain.BaseEntity;
 import com.generator.editors.domain.NeoModel;
 import com.generator.generators.junit.JunitGroup;
 import com.generator.generators.templateGroup.TemplateGroupGenerator;
+import com.generator.generators.templatesNeo.TemplateNeoGenerator;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.FileUtil;
@@ -544,9 +545,8 @@ public class TemplateFileEditor extends JPanel {
 			new TemplateGroupGenerator().writeGroupClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
 			createGroupTestIfNotExists(builderPackage);
 
-			if (chkCreateNeoDomain.isSelected()) {
-				new TemplateGroupGenerator().writeNeoClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
-			}
+			if (chkCreateNeoDomain.isSelected())
+				new TemplateNeoGenerator().writeNeoClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
 
 			if (chkCreateVerticles.isSelected()) {
 				new TemplateGroupGenerator().createGroupVerticle(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());

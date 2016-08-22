@@ -34,7 +34,7 @@ public class Tests {
 
 	public static void main(String[] args) {
 
-		final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
+		final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
 		final JavaDomain domain = new JavaDomain(new NeoModel(db));
 
 		domain.commit(new MetaDomain.Committer() {
@@ -89,7 +89,7 @@ public class Tests {
 
 		// clean db for each run:
 		FileUtil.removeFilesUnder("src/test/tests/db");
-		final NeoModel db = new NeoModel(new GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db"));
+		final NeoModel db = new NeoModel(new GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db")));
 
 		for (File file : files) {
 

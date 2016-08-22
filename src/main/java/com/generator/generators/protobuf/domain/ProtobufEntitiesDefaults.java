@@ -138,7 +138,7 @@ public class ProtobufEntitiesDefaults extends ProtobufEntitiesModel {
    public static void main(String[] args) {
 
       final String MATRIX_DB = "src/com/generator/domain/protobuf/neo/db/protobuf-test";
-      final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(MATRIX_DB);
+      final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File(MATRIX_DB));
       final ProtobufEntitiesDefaults model = new ProtobufEntitiesDefaults(db, "TEST-1");
 
 //      final ProtobufPackage aPackage = model.newProtobufPackage();

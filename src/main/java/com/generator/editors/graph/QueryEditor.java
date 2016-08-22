@@ -3,10 +3,10 @@ package com.generator.editors.graph;
 import com.generator.editors.domain.MetaDomain;
 import com.generator.editors.domain.MetaNode;
 import com.generator.editors.domain.MetaRelation;
-import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.helpers.collection.IteratorUtil;
+import org.neo4j.helpers.collection.Iterators;
 
 import javax.swing.*;
 import java.awt.*;
@@ -82,21 +82,21 @@ public class QueryEditor<E extends Enum<E>, R extends Enum<R>> extends JFrame {
 
 					try (Transaction tx = editor.getModel().beginTx()) {
 
-						final ExecutionResult res = editor.getModel().query(txtQuery.getText().trim());
+						final Result res = editor.getModel().query(txtQuery.getText().trim());
 						if (res.columns().contains("n")) {
 							final Iterator<Node> n_column = res.columnAs("n");
-							for (Node node : IteratorUtil.asIterable(n_column))
+							for (Node node : Iterators.asIterable(n_column))
 								editor.getOrAdd(node);
 						} else if (res.columns().contains("s") && res.columns().contains("t")) {
 
 							final Iterator<Node> source = res.columnAs("s");
-							for (Node node : IteratorUtil.asIterable(source)) editor.getOrAdd(node);
+							for (Node node : Iterators.asIterable(source)) editor.getOrAdd(node);
 
 							final Iterator<Node> target = res.columnAs("t");
-							for (Node node : IteratorUtil.asIterable(target)) editor.getOrAdd(node);
+							for (Node node : Iterators.asIterable(target)) editor.getOrAdd(node);
 
 						} else {
-							txtResult.setText(res.dumpToString());
+							txtResult.setText(res.resultAsString());
 						}
 
 						tx.success();

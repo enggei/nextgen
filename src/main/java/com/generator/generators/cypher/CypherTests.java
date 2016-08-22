@@ -3,14 +3,14 @@ import com.generator.editors.domain.NeoModel;
 import com.generator.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Result;
 import org.neo4j.graphdb.Transaction;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
  public class CypherTests {
 
@@ -247,7 +247,7 @@ import java.util.Map;
 			 " (`Mary`)-[:HAS_ACCOUNT]->(`account12`)");
 		 cypherCommands.add(employeeAccountRelations.toString());
 
-		 final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(System.getProperty("generator.db"));
+		 final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File(System.getProperty("generator.db")));
 		 NeoModel model = new NeoModel(db);
 
 		 // run once in clean db:
@@ -341,10 +341,10 @@ import java.util.Map;
 
 	 private String query(NeoModel model, String query) {
 		 final StringBuilder out = new StringBuilder();
-		 final ExecutionResult result = model.query(query);
+		 final Result result = model.query(query);
 		 out.append(StringUtil.list(result.columns())).append("\n");
-		 for (Map<String, Object> aResult : result)
-			 out.append(StringUtil.list(result.columns(), aResult)).append("\n");
+		 while(result.hasNext())
+			 out.append(StringUtil.list(result.columns(), result.next())).append("\n");
 		 final String res = out.toString().trim();
 		 System.out.println(res);
 		 return res;

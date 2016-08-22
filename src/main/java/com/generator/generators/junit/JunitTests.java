@@ -2,6 +2,8 @@ package com.generator.generators.junit;
 
 import org.junit.Test;
 
+import java.io.File;
+
 public class JunitTests {
 
 	public static void main(String[] args) {
@@ -28,7 +30,7 @@ public class JunitTests {
 	@Test
 	public void testJunitNeo() {
 
-		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
+		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
 		final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
 
 		model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {

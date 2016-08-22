@@ -198,7 +198,7 @@ public class vertxWebEditor extends GraphEditor2D<vertxWeb.ENTITIES, vertxWeb.RE
 
     public static void main(String[] args) {
 
-        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(args[0]);
+        final GraphDatabaseService db = new GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File(args[0]));
         final vertxWeb domain = new vertxWeb(new NeoModel(db));
         final vertxWebEditor editor = new vertxWebEditor(domain);
 

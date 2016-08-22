@@ -1,7 +1,9 @@
  package com.generator.generators.generatorDomain;
 import org.junit.Test;
 
-public class GeneratorDomainTests {
+import java.io.File;
+
+ public class GeneratorDomainTests {
 
     @Test
    public void testGeneratorDomainGroup() {
@@ -17,7 +19,7 @@ public class GeneratorDomainTests {
     @Test
    public void testGeneratorDomainNeo() {
 
-   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase("src/test/tests/db");
+   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
    	final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
 
    	model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {
