@@ -158,12 +158,12 @@ public class APIGenerator {
 				addActionsValue(newPOST("add an redemption item",
 					group.newformBody().
 						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("")).
 						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true).setExample("")).
 						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
 						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
 						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("type").setDescription("title").setRequired(true).setExample("thetype")).
+						addFormParamsValue(group.newintegerParam().setName("limit").setDescription("limit").setRequired(true).setExample("10")).
+						addFormParamsValue(group.newstringParam().setName("type").setDescription("type").setRequired(true).setExample("thetype")).
 						addFormParamsValue(group.newstringParam().setName("code").setDescription("code").setRequired(true).setExample("thecode")).
 						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
 						addFormParamsValue(group.newstringParam().setName("address").setDescription("address").setRequired(true).setExample("theaddress")).
@@ -603,10 +603,34 @@ public class APIGenerator {
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Redemptions response",
-					newResponseProperty("redemptions", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+					newResponseProperty("redemptions", "array", true)))).
+
+			addActionsValue(newPOST("Redeem redemption",
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("a4fce7b1-1226-4466-994d-84a89d05df85")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Redeemed redemption confirmation",
+					newResponseProperty("redemptionActivityId", "string", true),
+					newResponseProperty("redemptionId", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("description", "string", true),
+					newResponseProperty("value", "integer", true),
+					newResponseProperty("newBalance", "long", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/redemption/ledger").
+
+			addActionsValue(newGET("returns user redemption ledger.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "404").
+				addResponsesValue(newjsonResponse("Redemption ledger (activities)",
+					newResponseProperty("redemptions", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/engagement").
