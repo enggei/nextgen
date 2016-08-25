@@ -647,6 +647,9 @@ public class APIGenerator {
 				group.newformBody().
 					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
 					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("optional trailer id").setRequired(false).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
+					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("optional film id").setRequired(false).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("optional game id").setRequired(false).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
 					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("Post engagement balance",
