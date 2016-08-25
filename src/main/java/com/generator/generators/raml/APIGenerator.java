@@ -498,7 +498,7 @@ public class APIGenerator {
 					addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
 					addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
 					addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
-					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(false).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User confirmation",
 					newResponseProperty("userId", "string", true)))));

@@ -1,4 +1,4 @@
-/* uuid : a6dbb131-e5a9-4711-b393-33674338984b */
+/* uuid : 8601cc26-1d44-45e5-ba60-532fa8438257 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name; **/
@@ -21,53 +21,41 @@ AddMessage(name,parameters) ::= <<public static void sendAdd~name;format="capita
 } 
 >>
 
-/** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name; **/
-ConsumeKeyValueListMessage(name,parameters) ::= << 
- 
- 
- // key-value list property ~name~
-consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Message<JsonObject~bugfix()~>() {
+/** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name;statement,STRINGPROPERTY; **/
+ConsumeKeyValueListMessage(name,parameters,statement) ::= <<// key-value list property ~name~
+consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<JsonObject~bugfix()~>() {
 	@Override
 	public void handle(Message<JsonObject> message) {
 		template.add~name;format="capitalize"~Value(~parameters:{it|message.body().getString("~it.name~")};separator=","~);
 	}
-});    
+}); 
 >>
 
-/** name,STRINGPROPERTY; **/
-ConsumeListMessage(name) ::= << 
- 
- // list property ~name~
-consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
+/** name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
+ConsumeListMessage(name,statement) ::= <<// list property ~name~
+consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
 	@Override
 	public void handle(Message<String> message) {
 		template.add~name;format="capitalize"~Value(message.body());
 	}
-});   
+}); 
 >>
 
-/** name,STRINGPROPERTY; **/
-ConsumeStringMessage(name) ::= << 
- 
- 
- 
- // string property ~name~
-consume(vertx, deploymentID(), idMessage.body() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
+/** name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
+ConsumeStringMessage(name,statement) ::= <<// string property ~name~
+consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
 	@Override
 	public void handle(Message<String> message) {
 		template.set~name;format="capitalize"~(message.body());
 		message.reply(message.body());
 	}
-});     
+}); 
 >>
 
-/** groupName,STRINGPROPERTY;groupPackage,STRINGPROPERTY;messages,KEYVALUELISTPROPERTY,consumeMessage,sendToMessage;name,STRINGPROPERTY;package,STRINGPROPERTY; **/
-GroupVerticle(groupName,groupPackage,messages,name,package) ::= << 
- 
- package ~package~;
+/** groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,declaration,name,newInstance; **/
+GroupVerticleFactory(groupName,packageName,verticles) ::= <<package ~packageName~;
 
 import com.generator.util.VertxUtil;
-import ~groupPackage~;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -78,78 +66,56 @@ import io.vertx.core.json.JsonObject;
 import static com.generator.util.VertxUtil.*;
 
 /**
- * goe on 5/20/16.
+ * Facade for creating verticles (currently supports generator verticles, but will add neo-verticles.
  */
-public class ~name~Verticle extends AbstractVerticle {
+public class ~groupName~Verticles {
 
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~Verticle.class);
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~groupName~Verticles.class);
 
-	public static void sendInstanceMessage(Vertx vertx, java.util.UUID instanceId, Handler<String> instanceHandler) {
-		sendMessage(vertx, "new.~groupName~.~name~", instanceId.toString(), log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
-			@Override
-			public void onSuccess(Message<String> result) {
-				instanceHandler.handle(result.body());
-			}
+	private final Vertx vertx;
 
-			@Override
-			public void onFail(Throwable t) {
-				log.error("send~name~Message failed");
-			}
-		});
+	public ~groupName~Verticles(Vertx vertx) {
+		this.vertx = vertx;
 	}
 
-	public static void sendToStringMessage(Vertx vertx, java.util.UUID id, Handler<String> instanceHandler) {
-		sendMessage(vertx, id + ".toString", id.toString(), log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
+	~verticles:{it|~it.newInstance~};separator="\r\n\r\n"~
+
+	~verticles:{it|~it.declaration~};separator="\r\n\r\n"~
+
+	public static void main(String[] args) {
+		System.setProperty("generator.path", "src/main/java/com/generator/generators");
+		Vertx vertx = Vertx.vertx();
+
+		final ~groupName~Verticles verticles = new ~groupName~Verticles(vertx);
+		~verticles:{it|verticles.new~it.name;format="capitalize"~Verticle(loggingHandler(vertx));};separator="\n"~		
+	}
+
+	private static VertxUtil.SuccessHandler<String> loggingHandler(Vertx vertx) {
+		return new VertxUtil.SuccessHandler<String>() {
 			@Override
-			public void onSuccess(Message<String> result) {
-				instanceHandler.handle(result.body());
-			}
+			public void onSuccess(String id) {
+				log.info(" deployed " + id);
 
-			@Override
-			public void onFail(Throwable t) {
-				log.error("sendToStringMessage " + id + ".toString failed", t);
-			}
-	});
-}      
-
-	~messages:{it|~it.sendToMessage~};separator="\n"~
-
-	@Override
-	public void start(Future<Void> startFuture) throws Exception {
-
-		final ~groupName~ templateGroup = new ~groupName~();
-
-		consume(vertx, deploymentID(), "new.~groupName~.~name~", log, new Handler<Message<String~bugfix()~>() {
-			@Override
-			public void handle(Message<String> idMessage) {
-
-				// new instance of template
-				final ~groupName~.~name~ST template = templateGroup.new~name~();
-
-				~messages:{it|~it.consumeMessage~};separator="\n"~
-
-				// toString
-				consume(vertx, deploymentID(), idMessage.body() + ".toString", log, new Handler<Message<String~bugfix()~>() {
+				sendMessage(vertx, id + ".toString", id, log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
 					@Override
-					public void handle(Message<String> message) {
-						message.reply(template.toString());
+					public void onSuccess(Message<String> result) {
+						log.info("sendToStringMessage " + id + ".toString: " + result.body());
+					}
+
+					@Override
+					public void onFail(Throwable t) {
+						log.error("sendToStringMessage " + id + ".toString failed", t);
 					}
 				});
-
-				// other convenience methods here
-
-				idMessage.reply(idMessage.body());
 			}
-		});
 
-		startFuture.complete();
+			@Override
+			public void onFail(Throwable t) {
+				log.error(" not deployed: " + t.getMessage(), t);
+			}
+		};
 	}
-
-	@Override
-	public void stop(Future<Void> stopFuture) throws Exception {
-		super.stop(stopFuture);
-	}
-}   
+} 
 >>
 
 /** name,STRINGPROPERTY; **/
@@ -171,4 +137,70 @@ SendMessage(name) ::= <<
 
 /**  **/
 bugfix() ::= <<  > 
+>>
+
+/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
+deployVerticle(name,packageName) ::= <<public static void deploy~name;format="capitalize"~Verticle(Vertx vertx) {
+	VertxUtil.deploy(vertx, "~packageName~.~name~Verticle", log, new VertxUtil.SuccessHandler<String>() {
+		@Override
+		public void onSuccess(String result) {
+			System.out.println("~packageName~.~name~Verticle: " + result);
+		}
+
+		@Override
+		public void onFail(Throwable t) {
+
+		}
+	});
+} 
+>>
+
+/** name,STRINGPROPERTY; **/
+newVerticleInstance(name) ::= <<public void new~name;format="capitalize"~Verticle(VertxUtil.SuccessHandler<String> handler) {
+	deploy(vertx, ~name;format="capitalize"~Verticle.class.getName(), log, handler);
+} 
+>>
+
+/** groupName,STRINGPROPERTY;messages,KEYVALUELISTPROPERTY,consume,send;name,STRINGPROPERTY; **/
+verticleDeclaration(groupName,messages,name) ::= <<public static final class ~name;format="capitalize"~Verticle extends AbstractVerticle {
+
+	private final ~groupName~Group templateGroup = new ~groupName~Group();
+
+	@Override
+	public void start(Future<Void> startFuture) throws Exception {
+
+		// todo: make dependent of any arbitrary object, so one can instantiate any object parsed from java ...
+
+		// new instance of template
+		final ~groupName~Group.~name~ST template = templateGroup.new~name~();
+
+		~messages:{it|~it.consume~};separator="\n"~
+
+		// toString method. todo: add all Object methods, for convenience...
+		consume(vertx, deploymentID(), deploymentID() + ".toString", log, new Handler<Message<String~bugfix()~>() {
+			@Override
+			public void handle(Message<String> message) {
+				message.reply(template.toString());
+			}
+		});
+
+		startFuture.complete();
+	}
+
+	~messages:{it|~it.send~};separator="\n"~
+
+	public static void sendToStringMessage(Vertx vertx, java.util.UUID id, Handler<String> instanceHandler) {
+		sendMessage(vertx, id + ".toString", id.toString(), log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
+			@Override
+			public void onSuccess(Message<String> result) {
+				instanceHandler.handle(result.body());
+			}
+
+			@Override
+			public void onFail(Throwable t) {
+				log.error("sendToStringMessage " + id + ".toString failed", t);
+			}
+		});
+	}
+} 
 >>

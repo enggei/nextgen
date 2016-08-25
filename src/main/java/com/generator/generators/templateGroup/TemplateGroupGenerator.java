@@ -3,8 +3,6 @@ package com.generator.generators.templateGroup;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
-import com.generator.generators.templatesSwing.TemplatesSwingGroup;
-import com.generator.generators.templatesVertx.TemplatesVertxGroup;
 import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 
@@ -68,134 +66,7 @@ public class TemplateGroupGenerator {
 		return groupClassDeclaration;
 	}
 
-	public void createGroupVerticle(File groupTemplateFile, String packageName, String root) {
-
-		final TemplatesVertxGroup group = new TemplatesVertxGroup();
-
-		final List<TemplateStatement> statements = new TemplateFileParser().parse(groupTemplateFile).getStatements();
-		final String groupName = getGroupName(groupTemplateFile);
-
-		for (TemplateStatement statement : statements) {
-			final String name = statement.getName();
-
-			final TemplatesVertxGroup.GroupVerticleST groupVerticleST = group.newGroupVerticle().
-				setName(name).
-				setGroupPackage(packageName + "." + groupName + "Group").
-				setPackage(packageName + ".vertx").
-				setGroupName(groupName + "Group");
-
-			for (TemplateParameter templateParameter : statement.getParameters()) {
-				switch (templateParameter.getDomainEntityType()) {
-
-					case LISTPROPERTY: {
-
-						final TemplatesVertxGroup.AddMessageST sendToMessage_ = group.newAddMessage().
-							setName(templateParameter.getPropertyName());
-
-						final TemplatesVertxGroup.ConsumeListMessageST consumeMessage_ = group.newConsumeListMessage().
-							setName(templateParameter.getPropertyName());
-
-						for (String kvName : templateParameter.getKvNames())
-							sendToMessage_.addParametersValue(kvName);
-
-						groupVerticleST.addMessagesValue(consumeMessage_, sendToMessage_);
-					}
-					break;
-
-					case KEYVALUELISTPROPERTY: {
-
-						final TemplatesVertxGroup.AddMessageST sendToMessage_ = group.newAddMessage().
-							setName(templateParameter.getPropertyName());
-
-						final TemplatesVertxGroup.ConsumeKeyValueListMessageST consumeMessage_ = group.newConsumeKeyValueListMessage().
-							setName(templateParameter.getPropertyName());
-
-						for (String kvName : templateParameter.getKvNames()) {
-							consumeMessage_.addParametersValue(kvName);
-							sendToMessage_.addParametersValue(kvName);
-						}
-
-						groupVerticleST.addMessagesValue(consumeMessage_, sendToMessage_);
-					}
-					break;
-
-					case BOOLEANPROPERTY:
-					case STATEMENTPROPERTY:
-					case STRINGPROPERTY: {
-
-						final TemplatesVertxGroup.SendMessageST sendToMessage_ = group.newSendMessage().
-							setName(templateParameter.getPropertyName());
-
-						final TemplatesVertxGroup.ConsumeStringMessageST consumeMessage_ = group.newConsumeStringMessage().
-							setName(templateParameter.getPropertyName());
-
-						groupVerticleST.addMessagesValue(consumeMessage_, sendToMessage_);
-					}
-					break;
-				}
-			}
-
-			// todo remove single-file write here and move into single file below
-			FileUtil.write(groupVerticleST, new File(root, packageToPath(packageName + ".vertx", name + "Verticle.java")));
-		}
-
-		// todo: move verticle into factory and write here
-//		FileUtil.write(groupVerticleST, new File(root, GeneratedFile.packageToPath(packageName + ".vertx", name + "Verticle.java")));
-	}
-
-	public void createGroupPanel(File groupTemplateFile, String packageName, String root) {
-
-		final TemplatesSwingGroup group = new TemplatesSwingGroup();
-
-		final String groupName = getGroupName(groupTemplateFile);
-
-		final TemplatesSwingGroup.GroupPanelST groupPanelST = group.newGroupPanel().
-			setName(groupName + "GroupPanel").
-			setPackageName(packageName);
-
-		for (TemplateStatement templateStatement : (new TemplateFileParser().parse(groupTemplateFile).getStatements())) {
-
-			final TemplatesSwingGroup.addVerticleActionST addVerticleActionST = group.newaddVerticleAction().
-				setPackageName(packageName + ".vertx").
-				setName(templateStatement.getName());
-
-			final TemplatesSwingGroup.TemplatePanelST templatePanelST = group.newTemplatePanel().
-				setName(templateStatement.getName());
-
-			for (TemplateParameter templateParameter : templateStatement.getParameters()) {
-
-				final String propertyName = templateParameter.getPropertyName();
-
-				switch (templateParameter.getDomainEntityType()) {
-
-					case STRINGPROPERTY:
-						templatePanelST.addPropertiesValue(group.newstringPropertyEditor().
-							setName(propertyName).
-							setGroupName(templateStatement.getName()));
-						break;
-
-					case LISTPROPERTY:
-						// todo
-						break;
-
-					case KEYVALUELISTPROPERTY:
-						// todo
-						break;
-
-					case STATEMENTPROPERTY:
-						// todo
-
-						break;
-				}
-			}
-
-			groupPanelST.addVerticlesValue(addVerticleActionST, templatePanelST);
-		}
-
-		FileUtil.write(groupPanelST, new File(root, packageToPath(packageName, getGroupName(groupTemplateFile) + "GroupPanel.java")));
-	}
-
-	public static String getGroupName(File groupTemplateFile) {
+	private static String getGroupName(File groupTemplateFile) {
 		return StringUtil.capitalize(groupTemplateFile.getName().substring(0, groupTemplateFile.getName().length() - 4));
 	}
 }

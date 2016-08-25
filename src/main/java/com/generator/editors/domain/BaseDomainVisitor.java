@@ -3,7 +3,10 @@ package com.generator.editors.domain;
 import com.generator.editors.graph.GraphEditor;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 
 import java.awt.*;
 import java.io.File;
@@ -50,6 +53,17 @@ public abstract class BaseDomainVisitor<E extends Enum<E>> {
 
 	public static UUID uuidOf(Node node) {
 		return NeoModel.uuidOf(node);
+	}
+
+	public static void tryToDeleteNode(Node node) {
+		if (!node.hasRelationship(Direction.INCOMING)) {
+			for (Relationship nodeRelationship : node.getRelationships(Direction.OUTGOING)) {
+				final Node other = other(node, nodeRelationship);
+				nodeRelationship.delete();
+				tryToDeleteNode(other);
+			}
+			node.delete();
+		}
 	}
 
 	public static boolean hasOutgoing(Node node, RelationshipType type) {
@@ -123,6 +137,10 @@ public abstract class BaseDomainVisitor<E extends Enum<E>> {
 
 	public static String getString(Node node, String property) {
 		return has(node, property) ? String.valueOf(node.getProperty(property)) : null;
+	}
+
+	public static String getString(Relationship relationship, String property) {
+		return has(relationship, property) ? String.valueOf(relationship.getProperty(property)) : null;
 	}
 
 	public static <T> T getOtherProperty(Node node, Relationship relationship, String otherProperty) {

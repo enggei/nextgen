@@ -1,4 +1,4 @@
-/* uuid : 24a61591-1a64-4e64-9c70-705775f91ca8 */
+/* uuid : 44878caa-6dfd-472a-a483-fc8094032da4 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,addGroupVerticleAction,groupClassDeclarationPanel; **/
@@ -115,16 +115,93 @@ TemplatePanel(name,properties) ::= << private static final class Group~name~Pane
 	} 
 >>
 
+/** groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name,newAction; **/
+TemplatesSwing(groupName,packageName,statements) ::= <<package ~packageName~;
+
+import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+/**
+ * Swing methods for ~groupName~ (Swing UI for neo, group and vertx)
+ */
+public class ~groupName~Swing {
+
+	private final ~groupName~Neo db;
+
+	public TemplatesNeoSwing(GraphDatabaseService db) {
+		this.db = new ~groupName~Neo(db);
+	}
+
+	public static abstract class ~groupName~NeoListener {
+
+~statements:{it|
+		public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
+			System.out.println("new~it.name;format="capitalize"~Node : " + node.getUuid());
+		~bugfix()~
+};separator="\n"~
+		public void onException(String action, Throwable throwable) {
+			System.out.println("Could not " + action + " : " + throwable.getMessage());
+			throwable.printStackTrace();
+		}
+	}
+
+	public JPanel newNewInstancesPanel(~groupName~NeoListener delegate) {
+		return new NewInstancesPanel(this, delegate);
+	}
+
+	~statements:{it|
+~it.newAction~
+	};separator="\n"~
+
+	public static void main(String[] args) {
+		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
+		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(db);
+
+		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener() {
+			@Override
+			public void newNeoGroupClassDeclaration(~groupName~Neo.NeoGroupClassDeclarationNode node) {
+				super.newNeoGroupClassDeclaration(node);
+			}
+		}));
+	}
+
+	private final class NewInstancesPanel extends SwingUtil.DebugFormPanel {
+
+		public NewInstancesPanel(TemplatesNeoSwing neoSwing, ~groupName~NeoListener delegate) {
+			super("150dlu, 4dlu, 150dlu:grow, 4dlu, 50dlu", "pref, 4dlu, pref");
+
+			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+			int row = 1;
+			this.addSeparator("New instances", 1, row, 5, 1);
+
+			row += 2;
+			this.addLabel("New NeoGroupClassDeclaration", 1, row);
+			this.add(newJButton(neoSwing.newNeoGroupClassDeclarationAction(delegate)), 3, row);
+		}
+
+		private JButton newJButton(Action action) {
+			final JButton button = new JButton(action);
+			button.setMargin(new Insets(1,1,1,1));
+			button.setFocusPainted(false);
+			return button;
+		}
+	}
+} 
+>>
+
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
-addVerticleAction(name,packageName) ::= << add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
+addVerticleAction(name,packageName) ::= <<add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
 	@Override
 	public void onSuccess(String result) {
 		SwingUtilities.invokeLater(() -> {
-			final UUID instanceID = UUID.randomUUID();
-			~name~Verticle.sendInstanceMessage(vertx, instanceID, s ->
-				SwingUtilities.invokeLater(() -> {
-					declarationsPanel.add("~name~Instance", new Group~name~Panel(vertx));
-				}));
+			declarationsPanel.add("~name~Instance", new Group~name~Panel(vertx));
 		});
 	}
 
@@ -132,7 +209,34 @@ addVerticleAction(name,packageName) ::= << add(deployVerticleAction(vertx, txtRo
 	public void onFail(Throwable t) {
 
 	}
-}));  
+})); 
+>>
+
+/**  **/
+bugfix() ::= <<} 
+>>
+
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
+newAction(groupName,name) ::= <<public Action new~name;format="capitalize"~Action(~groupName~NeoListener listener) {
+	return new AbstractAction("new ~name;format="capitalize"~") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SwingUtilities.invokeLater(() -> {
+				db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+					@Override
+					public void doAction(Transaction tx) throws Throwable {
+						listener.new~name;format="capitalize"~(db.new~name~());
+					}
+
+					@Override
+					public void exception(Throwable throwable) {
+						listener.onException("new~name~", throwable);
+					}
+				});
+			});
+		}
+	};
+} 
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/

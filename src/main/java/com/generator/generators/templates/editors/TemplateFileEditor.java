@@ -7,6 +7,8 @@ import com.generator.generators.templateGroup.TemplateGroupGenerator;
 import com.generator.generators.templatesNeo.TemplateNeoGenerator;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
+import com.generator.generators.templatesSwing.TemplateSwingGenerator;
+import com.generator.generators.templatesVertx.TemplatesVertxGenerator;
 import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
@@ -37,9 +39,13 @@ public class TemplateFileEditor extends JPanel {
 
 	private final JTree tree = new JTree(new DefaultMutableTreeNode(""));
 	private final JTextArea txtEditor = new JTextArea();
+
+	// todo always generate all classes, remove options :
 	private final JCheckBox chkCreateGroup = new JCheckBox("Generate Group", true);
 	private final JCheckBox chkCreateVerticles = new JCheckBox("Generate Verticles", false);
+	private final JCheckBox chkCreateSwing = new JCheckBox("Generate Swing UI", false);
 	private final JCheckBox chkCreateNeoDomain = new JCheckBox("Generate Neo", false);
+
 	private final JTextField txtRoot = new JTextField(System.getProperty("generator.root"));
 	private final TemplateRenderer templateRenderer = new TemplateRenderer();
 
@@ -456,6 +462,7 @@ public class TemplateFileEditor extends JPanel {
 				txtRoot.setEditable(chkCreateGroup.isSelected());
 				chkCreateNeoDomain.setEnabled(chkCreateGroup.isSelected());
 				chkCreateVerticles.setEnabled(chkCreateGroup.isSelected());
+				chkCreateSwing.setEnabled(chkCreateGroup.isSelected());
 			}
 		});
 
@@ -471,6 +478,7 @@ public class TemplateFileEditor extends JPanel {
 		commandPanel.add(txtRoot);
 		commandPanel.add(chkCreateNeoDomain);
 		commandPanel.add(chkCreateVerticles);
+		commandPanel.add(chkCreateSwing);
 
 		final JScrollPane treeScroller = new JScrollPane(tree);
 		final JScrollPane editorScroller = new JScrollPane(txtEditor);
@@ -548,10 +556,11 @@ public class TemplateFileEditor extends JPanel {
 			if (chkCreateNeoDomain.isSelected())
 				new TemplateNeoGenerator().writeNeoClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
 
-			if (chkCreateVerticles.isSelected()) {
-				new TemplateGroupGenerator().createGroupVerticle(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
-				new TemplateGroupGenerator().createGroupPanel(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
-			}
+			if (chkCreateVerticles.isSelected())
+				new TemplatesVertxGenerator().createGroupVerticle(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
+
+			if (chkCreateSwing.isSelected())
+				new TemplateSwingGenerator().createGroupPanel(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
 		}
 	}
 

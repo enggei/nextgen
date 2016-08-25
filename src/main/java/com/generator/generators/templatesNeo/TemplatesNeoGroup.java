@@ -66,8 +66,8 @@ public final class TemplatesNeoGroup {
    } 
 
 
-   public endParensST newendParens() {
-      return new endParensST(stGroup);
+   public defaultNodeTypesST newdefaultNodeTypes() {
+      return new defaultNodeTypesST(stGroup);
    } 
 
 
@@ -92,7 +92,7 @@ public final class TemplatesNeoGroup {
 
     public final class NeoGroupClassDeclarationST {
 
-      private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
@@ -102,10 +102,10 @@ public final class TemplatesNeoGroup {
    		template = group.getInstanceOf("NeoGroupClassDeclaration");
    	}
 
-       public NeoGroupClassDeclarationST setDomain(Object value) {
-      	tryToSetStringProperty(template, value, domainIsSet, "domain");   
+      public NeoGroupClassDeclarationST addCommentsValue(Object value) {
+      	tryToSetListProperty(template, value, commentsIsSet, "comments");
          return this;
-      } 
+      }
        public NeoGroupClassDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
@@ -114,9 +114,9 @@ public final class TemplatesNeoGroup {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
       } 
-      public NeoGroupClassDeclarationST addStatementsValue(Object declaration_, Object newInstance_) {
+      public NeoGroupClassDeclarationST addStatementsValue(Object declaration_, Object name_, Object newInstance_) {
          statementsIsSet.set(true);
-         template.addAggr("statements.{declaration, newInstance}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_));
+         template.addAggr("statements.{declaration, name, newInstance}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_));
          return this;
       }
 
@@ -171,13 +171,19 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class endParensST {
+    public final class defaultNodeTypesST {
 
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private endParensST(STGroup group) {
-   		template = group.getInstanceOf("endParens");
+      private defaultNodeTypesST(STGroup group) {
+   		template = group.getInstanceOf("defaultNodeTypes");
    	}
+
+       public defaultNodeTypesST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
 
       @Override
    	public String toString() {
@@ -187,7 +193,6 @@ public final class TemplatesNeoGroup {
 
     public final class keyValueListSetterST {
 
-      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean kvNamesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
@@ -197,10 +202,6 @@ public final class TemplatesNeoGroup {
    		template = group.getInstanceOf("keyValueListSetter");
    	}
 
-       public keyValueListSetterST setGroupName(Object value) {
-      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
-         return this;
-      } 
       public keyValueListSetterST addKvNamesValue(Object value) {
       	tryToSetListProperty(template, value, kvNamesIsSet, "kvNames");
          return this;
@@ -222,7 +223,6 @@ public final class TemplatesNeoGroup {
 
     public final class listSetterST {
 
-      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -231,10 +231,6 @@ public final class TemplatesNeoGroup {
    		template = group.getInstanceOf("listSetter");
    	}
 
-       public listSetterST setGroupName(Object value) {
-      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
-         return this;
-      } 
        public listSetterST setPropertyName(Object value) {
       	tryToSetStringProperty(template, value, propertyNameIsSet, "propertyName");   
          return this;
@@ -252,6 +248,7 @@ public final class TemplatesNeoGroup {
 
     public final class newInstanceST {
 
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -259,6 +256,10 @@ public final class TemplatesNeoGroup {
    		template = group.getInstanceOf("newInstance");
    	}
 
+       public newInstanceST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
        public newInstanceST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
@@ -272,7 +273,6 @@ public final class TemplatesNeoGroup {
 
     public final class stringSetterST {
 
-      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -281,10 +281,6 @@ public final class TemplatesNeoGroup {
    		template = group.getInstanceOf("stringSetter");
    	}
 
-       public stringSetterST setGroupName(Object value) {
-      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
-         return this;
-      } 
        public stringSetterST setPropertyName(Object value) {
       	tryToSetStringProperty(template, value, propertyNameIsSet, "propertyName");   
          return this;
@@ -314,7 +310,7 @@ public final class TemplatesNeoGroup {
 		return false;
 	}
 
-	 private enum FormatCode {
+	private enum FormatCode {
 	      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
 	   }
 

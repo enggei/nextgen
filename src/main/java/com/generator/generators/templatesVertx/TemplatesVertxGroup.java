@@ -71,8 +71,8 @@ public final class TemplatesVertxGroup {
    } 
 
 
-   public GroupVerticleST newGroupVerticle() {
-      return new GroupVerticleST(stGroup);
+   public GroupVerticleFactoryST newGroupVerticleFactory() {
+      return new GroupVerticleFactoryST(stGroup);
    } 
 
 
@@ -83,6 +83,21 @@ public final class TemplatesVertxGroup {
 
    public bugfixST newbugfix() {
       return new bugfixST(stGroup);
+   } 
+
+
+   public deployVerticleST newdeployVerticle() {
+      return new deployVerticleST(stGroup);
+   } 
+
+
+   public newVerticleInstanceST newnewVerticleInstance() {
+      return new newVerticleInstanceST(stGroup);
+   } 
+
+
+   public verticleDeclarationST newverticleDeclaration() {
+      return new verticleDeclarationST(stGroup);
    } 
 
     public final class AddMessageST {
@@ -115,6 +130,7 @@ public final class TemplatesVertxGroup {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean parametersIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private ConsumeKeyValueListMessageST(STGroup group) {
@@ -130,6 +146,10 @@ public final class TemplatesVertxGroup {
          template.addAggr("parameters.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
+       public ConsumeKeyValueListMessageST setStatement(Object value) {
+      	tryToSetStringProperty(template, value, statementIsSet, "statement");   
+         return this;
+      } 
 
       @Override
    	public String toString() {
@@ -140,6 +160,7 @@ public final class TemplatesVertxGroup {
     public final class ConsumeListMessageST {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private ConsumeListMessageST(STGroup group) {
@@ -148,6 +169,10 @@ public final class TemplatesVertxGroup {
 
        public ConsumeListMessageST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public ConsumeListMessageST setStatement(Object value) {
+      	tryToSetStringProperty(template, value, statementIsSet, "statement");   
          return this;
       } 
 
@@ -160,6 +185,7 @@ public final class TemplatesVertxGroup {
     public final class ConsumeStringMessageST {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private ConsumeStringMessageST(STGroup group) {
@@ -170,6 +196,10 @@ public final class TemplatesVertxGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
+       public ConsumeStringMessageST setStatement(Object value) {
+      	tryToSetStringProperty(template, value, statementIsSet, "statement");   
+         return this;
+      } 
 
       @Override
    	public String toString() {
@@ -177,40 +207,30 @@ public final class TemplatesVertxGroup {
    	}
    } 
 
-    public final class GroupVerticleST {
+    public final class GroupVerticleFactoryST {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean groupPackageIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean messagesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean verticlesIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private GroupVerticleST(STGroup group) {
-   		template = group.getInstanceOf("GroupVerticle");
+      private GroupVerticleFactoryST(STGroup group) {
+   		template = group.getInstanceOf("GroupVerticleFactory");
    	}
 
-       public GroupVerticleST setGroupName(Object value) {
+       public GroupVerticleFactoryST setGroupName(Object value) {
       	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
          return this;
       } 
-       public GroupVerticleST setGroupPackage(Object value) {
-      	tryToSetStringProperty(template, value, groupPackageIsSet, "groupPackage");   
+       public GroupVerticleFactoryST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
       } 
-      public GroupVerticleST addMessagesValue(Object consumeMessage_, Object sendToMessage_) {
-         messagesIsSet.set(true);
-         template.addAggr("messages.{consumeMessage, sendToMessage}", ( (consumeMessage_==null || consumeMessage_.toString().length()==0) ? null : consumeMessage_), ( (sendToMessage_==null || sendToMessage_.toString().length()==0) ? null : sendToMessage_));
+      public GroupVerticleFactoryST addVerticlesValue(Object declaration_, Object name_, Object newInstance_) {
+         verticlesIsSet.set(true);
+         template.addAggr("verticles.{declaration, name, newInstance}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_));
          return this;
       }
-       public GroupVerticleST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-       public GroupVerticleST setPackage(Object value) {
-      	tryToSetStringProperty(template, value, packageIsSet, "package");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
@@ -252,6 +272,82 @@ public final class TemplatesVertxGroup {
    	}
    } 
 
+    public final class deployVerticleST {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private deployVerticleST(STGroup group) {
+   		template = group.getInstanceOf("deployVerticle");
+   	}
+
+       public deployVerticleST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public deployVerticleST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class newVerticleInstanceST {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private newVerticleInstanceST(STGroup group) {
+   		template = group.getInstanceOf("newVerticleInstance");
+   	}
+
+       public newVerticleInstanceST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class verticleDeclarationST {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean messagesIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private verticleDeclarationST(STGroup group) {
+   		template = group.getInstanceOf("verticleDeclaration");
+   	}
+
+       public verticleDeclarationST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+      public verticleDeclarationST addMessagesValue(Object consume_, Object send_) {
+         messagesIsSet.set(true);
+         template.addAggr("messages.{consume, send}", ( (consume_==null || consume_.toString().length()==0) ? null : consume_), ( (send_==null || send_.toString().length()==0) ? null : send_));
+         return this;
+      }
+       public verticleDeclarationST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
 		if (value == null || value.toString().length() == 0) return;
@@ -266,7 +362,7 @@ public final class TemplatesVertxGroup {
 		return false;
 	}
 
-	 private enum FormatCode {
+	private enum FormatCode {
 	      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
 	   }
 

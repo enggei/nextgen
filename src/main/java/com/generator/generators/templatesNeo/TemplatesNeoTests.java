@@ -1,8 +1,12 @@
 package com.generator.generators.templatesNeo;
 
 import org.junit.Test;
+import org.neo4j.graphdb.Node;
 
 import java.io.File;
+import java.util.function.Consumer;
+
+import static com.generator.generators.templatesNeo.TemplatesNeoNeo.*;
 
 public class TemplatesNeoTests {
 
@@ -29,46 +33,70 @@ public class TemplatesNeoTests {
 			@Override
 			public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
 
+				final TemplatesNeoNeo neoTemplateDomain = new TemplatesNeoNeo(db);
 
-				final TemplatesNeoNeo neoTemplateDomain = new TemplatesNeoNeo(model);
-				final TemplatesNeoGroup templatesNeoGroup = new TemplatesNeoGroup();
+				final NeoGroupClassDeclarationNode neoGroupClassDeclarationNode = neoTemplateDomain.newNeoGroupClassDeclaration();
 
-// add group
-				final TemplatesNeoNeo.NeoGroupClassDeclarationNode neoGroupClassDeclarationNode = neoTemplateDomain.newNeoGroupClassDeclaration().
-					setDomain("DOMAIN").
-					setName("NAME").
-					setPackageName("PACKAGE");
+				neoGroupClassDeclarationNode.
+					setName(neoTemplateDomain.newStringNode("Simple")).	// string-node
+					setPackageName(neoTemplateDomain.newStringNode("com.generator.simple"));
 
-				final TemplatesNeoGroup.declarationST declaration_ = templatesNeoGroup.newdeclaration().
-					setName("DECLARATION").
-					addPropertiesValue("PROP", neoTemplateDomain.newstringSetter().
-						setPropertyName("PROP").
-						setStatementName("STMTNAME").toString());
+				// key-value node
+				neoGroupClassDeclarationNode.addStatementsValue(
+					neoTemplateDomain.newDeclaration().                             	// statement-node
+						setGroupName(neoTemplateDomain.newStringNode("GroupName")).
+						setName(neoTemplateDomain.newStringNode("Name")).node(),
+					neoTemplateDomain.newStringNode("targetName"),							// string-node
+					neoTemplateDomain.newNewInstance().											// value-node
+						setGroupName(neoTemplateDomain.newStringNode("GroupName")).
+						setName(neoTemplateDomain.newStringNode("Name")).node());
 
-				final TemplatesNeoNeo.newInstanceNode newInstance_ = neoTemplateDomain.newnewInstance().
-					setName("INSTANCE");
+				// list node
+				neoGroupClassDeclarationNode.
+					addCommentsValue(neoTemplateDomain.newStringNode("StringComment")).
+					addCommentsValue(neoTemplateDomain.newBugfix2().node());               // statement element
 
-				neoGroupClassDeclarationNode.addStatementsValue(declaration_.toString(), newInstance_.toString());
+				neoTemplateDomain.forEachNeoGroupClassDeclarationNodes(neoGroupClassDeclarationNode1 -> {
 
-				final TemplatesNeoNeo.keyValueListSetterNode keyValueListSetterNode = neoTemplateDomain.newkeyValueListSetter().
-					setGroupName("GROUP").
-					setPropertyName("PROPERTY").
-					setStatementName("STATEMENT").
-					addKvNamesValue("VALONE").
-					addKvNamesValue("VALTWO");
+					if(neoGroupClassDeclarationNode1.getPackageName()==null || neoGroupClassDeclarationNode1.getName()==null) {
+						neoGroupClassDeclarationNode1.removeName();
 
-				final TemplatesNeoGroup.keyValueListSetterST keyValueListSetterST = group.newkeyValueListSetter();
-				keyValueListSetterNode.fill(keyValueListSetterST);
-				System.out.println(keyValueListSetterST);
+						neoGroupClassDeclarationNode1.delete();
+						return;
+					}
 
-				// get group class declaration from database:
-				final TemplatesNeoNeo.NeoGroupClassDeclarationNode neoGroupClassDeclaration = neoTemplateDomain.getNeoGroupClassDeclaration(neoGroupClassDeclarationNode.getUUID());
+					// stringvalues
+					System.out.println(newStringNode(neoGroupClassDeclarationNode1.getName())+ " package name : " + newStringNode(neoGroupClassDeclarationNode1.getPackageName()));
 
-				final TemplatesNeoGroup.NeoGroupClassDeclarationST neoGroupClassDeclarationST = templatesNeoGroup.newNeoGroupClassDeclaration();
-				neoGroupClassDeclarationNode.fill(neoGroupClassDeclarationST);
+					neoGroupClassDeclarationNode1.removePackageName();
 
-				System.out.println(neoGroupClassDeclarationST);
+					// list values
+					neoGroupClassDeclarationNode1.forEachComments(node -> {
 
+						if (isStringNode(node))
+							System.out.println("String node: " + newStringNode(node).getValue());
+						else if (isBugfix2(node))
+							System.out.println("bugfix2: " + neoTemplateDomain.newBugfix2(node).getUuid());
+						else
+							System.out.println("other: " + newStringNode(node).getValue());
+					});
+
+					// key-value list
+
+					neoGroupClassDeclarationNode1.forEachStatementsValue(new Consumer<NeoGroupClassDeclarationNode.StatementsKeyValue>() {
+						@Override
+						public void accept(NeoGroupClassDeclarationNode.StatementsKeyValue statementsKeyValue) {
+							final Node declarationValue = statementsKeyValue.getDeclarationValue();
+							if(isDeclaration(declarationValue)) {
+								final Node declarationName = neoTemplateDomain.newDeclaration(declarationValue).getName();
+								if(isStringNode(declarationName)) System.out.println("Declaration.name stringvalue: " + newStringNode(declarationName));
+								else System.out.println("Declaration.name other: " + declarationName.getLabels());
+							}
+						}
+					});
+				});
+
+				//neoTemplateDomain.forEachNeoGroupClassDeclarationNodes(node -> System.out.println(node + " : " + node.getPackageName() + " " + " " + node.getName()));
 			}
 
 			@Override
@@ -78,5 +106,5 @@ public class TemplatesNeoTests {
 		});
 	}
 
-	;
-} 
+
+}

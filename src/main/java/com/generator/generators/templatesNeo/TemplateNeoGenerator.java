@@ -4,7 +4,6 @@ import com.generator.generators.generatorDomain.GeneratorDomainGroup;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
-import com.generator.generators.templatesNeo.TemplatesNeoGroup;
 import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 
@@ -30,8 +29,7 @@ public class TemplateNeoGenerator {
 		final List<TemplateStatement> statements = new TemplateFileParser().parse(groupTemplateFile).getStatements();
 
 		final TemplatesNeoGroup.NeoGroupClassDeclarationST groupClassDeclaration = group.newNeoGroupClassDeclaration().
-			setName(getGroupName(groupTemplateFile)).
-			setDomain(getGroupName(groupTemplateFile));
+			setName(getGroupName(groupTemplateFile));
 
 		final GeneratorDomainGroup.visitorST visitorST = domainGroup.newvisitor().
 			setDomain(getGroupName(groupTemplateFile)).
@@ -57,9 +55,8 @@ public class TemplateNeoGenerator {
 
 						final TemplatesNeoGroup.keyValueListSetterST kvSetter = group.newkeyValueListSetter().
 							setPropertyName(templateParameter.getPropertyName()).
-							setStatementName(statement.getName()).
-							setGroupName(getGroupName(groupTemplateFile));
-						for (String kvName : templateParameter.getKvNames()) kvSetter.addKvNamesValue(kvName);
+							setStatementName(statement.getName());
+						templateParameter.getKvNames().forEach(kvSetter::addKvNamesValue);
 						setter = kvSetter;
 						break;
 
@@ -67,29 +64,26 @@ public class TemplateNeoGenerator {
 					case BOOLEANPROPERTY:
 						setter = group.newstringSetter().
 							setPropertyName(templateParameter.getPropertyName()).
-							setStatementName(statement.getName()).
-							setGroupName(getGroupName(groupTemplateFile));
+							setStatementName(statement.getName());
 						break;
-
+					                          //todo: remove groupNames
 					case STATEMENTPROPERTY:
 						setter = group.newstringSetter().
 							setPropertyName(templateParameter.getPropertyName()).
-							setStatementName(statement.getName()).
-							setGroupName(getGroupName(groupTemplateFile));
+							setStatementName(statement.getName());
 						break;
 
 					case LISTPROPERTY:
 						setter = group.newlistSetter().
 							setPropertyName(templateParameter.getPropertyName()).
-							setStatementName(statement.getName()).
-							setGroupName(getGroupName(groupTemplateFile));
+							setStatementName(statement.getName());
 						break;
 				}
 
 				declarationST.addPropertiesValue(templateParameter.getPropertyName(), setter);
 			}
 
-			groupClassDeclaration.addStatementsValue(declarationST.setName(statement.getName()), group.newnewInstance().setName(statement.getName()));
+			groupClassDeclaration.addStatementsValue(declarationST.setName(statement.getName()), statement.getName(), group.newnewInstance().setName(statement.getName()).setGroupName(getGroupName(groupTemplateFile)));
 		}
 
 		return groupClassDeclaration;

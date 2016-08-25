@@ -61,8 +61,23 @@ public final class TemplatesSwingGroup {
    } 
 
 
+   public TemplatesSwingST newTemplatesSwing() {
+      return new TemplatesSwingST(stGroup);
+   } 
+
+
    public addVerticleActionST newaddVerticleAction() {
       return new addVerticleActionST(stGroup);
+   } 
+
+
+   public bugfixST newbugfix() {
+      return new bugfixST(stGroup);
+   } 
+
+
+   public newActionST newnewAction() {
+      return new newActionST(stGroup);
    } 
 
 
@@ -127,6 +142,37 @@ public final class TemplatesSwingGroup {
    	}
    } 
 
+    public final class TemplatesSwingST {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private TemplatesSwingST(STGroup group) {
+   		template = group.getInstanceOf("TemplatesSwing");
+   	}
+
+       public TemplatesSwingST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public TemplatesSwingST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+      public TemplatesSwingST addStatementsValue(Object name_, Object newAction_) {
+         statementsIsSet.set(true);
+         template.addAggr("statements.{name, newAction}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (newAction_==null || newAction_.toString().length()==0) ? null : newAction_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
     public final class addVerticleActionST {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -143,6 +189,45 @@ public final class TemplatesSwingGroup {
       } 
        public addVerticleActionST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class bugfixST {
+
+      private final ST template;
+
+      private bugfixST(STGroup group) {
+   		template = group.getInstanceOf("bugfix");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class newActionST {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private newActionST(STGroup group) {
+   		template = group.getInstanceOf("newAction");
+   	}
+
+       public newActionST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public newActionST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
 
@@ -191,7 +276,7 @@ public final class TemplatesSwingGroup {
 		return false;
 	}
 
-	 private enum FormatCode {
+	private enum FormatCode {
 	      capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
 	   }
 
