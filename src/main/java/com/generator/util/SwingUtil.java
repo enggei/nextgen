@@ -5,6 +5,9 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.theme.SkyBlue;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -91,7 +94,9 @@ public class SwingUtil {
 	}
 
 	public static void showPanel(final JComponent component, Dimension size) {
-		SwingUtil.setLookAndFeel_Nimbus();
+//		SwingUtil.setLookAndFeel_Nimbus();
+		SwingUtil.setLookAndFeel_Plastic3DLookAndFeel();
+
 		final JFrame frame = new JFrame();
 		frame.getContentPane().add(component, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -402,6 +407,15 @@ public class SwingUtil {
 
 	public static void setLookAndFeel_Nimbus() {
 		setLookAndFeel("Nimbus");
+	}
+
+	public static void setLookAndFeel_Plastic3DLookAndFeel() {
+		try {
+			PlasticLookAndFeel.setPlasticTheme(new com.jgoodies.looks.plastic.theme.ExperienceBlue());
+			UIManager.setLookAndFeel(new Plastic3DLookAndFeel());
+		} catch (UnsupportedLookAndFeelException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void setLookAndFeel(String name) {
