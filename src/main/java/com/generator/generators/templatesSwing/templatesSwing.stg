@@ -1,4 +1,4 @@
-/* uuid : 44878caa-6dfd-472a-a483-fc8094032da4 */
+/* uuid : 996304da-d183-4ce8-ba25-23b45fd70282 */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,addGroupVerticleAction,groupClassDeclarationPanel; **/
@@ -134,7 +134,7 @@ public class ~groupName~Swing {
 
 	private final ~groupName~Neo db;
 
-	public TemplatesNeoSwing(GraphDatabaseService db) {
+	public ~groupName~Swing(GraphDatabaseService db) {
 		this.db = new ~groupName~Neo(db);
 	}
 
@@ -164,26 +164,30 @@ public class ~groupName~Swing {
 		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(db);
 
 		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener() {
+~statements:{it|
 			@Override
-			public void newNeoGroupClassDeclaration(~groupName~Neo.NeoGroupClassDeclarationNode node) {
-				super.newNeoGroupClassDeclaration(node);
-			}
+			public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
+				super.new~it.name;format="capitalize"~(node);
+			~bugfix()~
+};separator="\n"~
 		}));
 	}
 
-	private final class NewInstancesPanel extends SwingUtil.DebugFormPanel {
+	private final class NewInstancesPanel extends SwingUtil.FormPanel {
 
-		public NewInstancesPanel(TemplatesNeoSwing neoSwing, ~groupName~NeoListener delegate) {
-			super("150dlu, 4dlu, 150dlu:grow, 4dlu, 50dlu", "pref, 4dlu, pref");
+		public NewInstancesPanel(~groupName~Swing neoSwing, ~groupName~NeoListener delegate) {
+			super("150dlu, 4dlu, 150dlu:grow", "pref, 4dlu~statements:{it|, pref};separator=", 4dlu"~");
 
 			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 			int row = 1;
-			this.addSeparator("New instances", 1, row, 5, 1);
+			this.addSeparator("New instances", 1, row, 3, 1);
 
+~statements:{it|
 			row += 2;
-			this.addLabel("New NeoGroupClassDeclaration", 1, row);
-			this.add(newJButton(neoSwing.newNeoGroupClassDeclarationAction(delegate)), 3, row);
+			this.addLabel("New ~it.name;format="capitalize"~", 1, row);
+			this.add(newJButton(neoSwing.new~it.name;format="capitalize"~Action(delegate)), 3, row);
+};separator="\n"~
 		}
 
 		private JButton newJButton(Action action) {
@@ -225,7 +229,7 @@ newAction(groupName,name) ::= <<public Action new~name;format="capitalize"~Actio
 				db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
 					@Override
 					public void doAction(Transaction tx) throws Throwable {
-						listener.new~name;format="capitalize"~(db.new~name~());
+						listener.new~name;format="capitalize"~(db.new~name;format="capitalize"~());
 					}
 
 					@Override
