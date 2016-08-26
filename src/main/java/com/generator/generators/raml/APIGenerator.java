@@ -674,6 +674,10 @@ public class APIGenerator {
 			setUri("/cinema/listing").
 
 			addActionsValue(newGET("returns cinema listing.",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id")).
+					addQueryParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addQueryParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Cinemas response",
 					newResponseProperty("cinemas", "array", true),
@@ -723,6 +727,18 @@ public class APIGenerator {
 			setMaxLength(36).
 			setMinLength(36).
 			setPattern(REGEX_UUID);
+	}
+
+	private RamlGroup.numberParamST newLatitudeParam() {
+		return group.newnumberParam().
+			setMaximum(90).
+			setMinimum(-90);
+	}
+
+	private RamlGroup.numberParamST newLongitudeParam() {
+		return group.newnumberParam().
+			setMaximum(180).
+			setMinimum(-180);
 	}
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
@@ -858,6 +874,14 @@ public class APIGenerator {
 			setDescription(description).
 			setMinimum(minimum == Integer.MIN_VALUE ? null : minimum).
 			setMaximum(maximum == Integer.MAX_VALUE ? null : maximum);
+	}
+
+	private RamlGroup.numberParamST newNumberParam(String name, String description, double minimum, double maximum) {
+		return group.newnumberParam().
+			setName(name).
+			setDescription(description).
+			setMinimum(minimum == Double.MIN_VALUE ? null : minimum).
+			setMaximum(maximum == Double.MAX_VALUE ? null : maximum);
 	}
 
 	private RamlGroup.booleanParamST newbooleanParam(String name, String description, boolean required) {
