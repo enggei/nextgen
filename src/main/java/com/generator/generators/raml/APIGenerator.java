@@ -600,6 +600,36 @@ public class APIGenerator {
 					newResponseProperty("badges", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/leaderboard/gamescoresfb").
+
+			addActionsValue(newGET("returns fb friends gamescores for game",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
+				"400", "404").
+				addResponsesValue(newjsonResponse("scores",
+					newResponseProperty("scores", "array", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/leaderboard/gamescores").
+
+			addActionsValue(newPOST("post gamescore",
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
+					addFormParamsValue(newIntegerParam("score", "game score", 0, Integer.MAX_VALUE).setRequired(true).setExample("2500")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("game score posted",
+					newResponseProperty("success", "boolean", true)))).
+
+			addActionsValue(newGET("returns global gamescores for game",
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
+				"400", "404").
+				addResponsesValue(newjsonResponse("scores",
+					newResponseProperty("scores", "array", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
