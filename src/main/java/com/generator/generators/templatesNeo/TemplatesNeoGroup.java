@@ -26,8 +26,6 @@ public final class TemplatesNeoGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "templatesNeo" + java.io.File.separator + "templatesNeo.stg"));
    }
 
    public TemplatesNeoGroup(STGroup stGroup) {
@@ -73,6 +71,11 @@ public final class TemplatesNeoGroup {
 
    public keyValueListSetterST newkeyValueListSetter() {
       return new keyValueListSetterST(stGroup);
+   } 
+
+
+   public keyValueRelationshipsST newkeyValueRelationships() {
+      return new keyValueRelationshipsST(stGroup);
    } 
 
 
@@ -159,9 +162,9 @@ public final class TemplatesNeoGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-      public declarationST addPropertiesValue(Object name_, Object setter_) {
+      public declarationST addPropertiesValue(Object name_, Object relationships_, Object setter_) {
          propertiesIsSet.set(true);
-         template.addAggr("properties.{name, setter}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (setter_==null || setter_.toString().length()==0) ? null : setter_));
+         template.addAggr("properties.{name, relationships, setter}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (relationships_==null || relationships_.toString().length()==0) ? null : relationships_), ( (setter_==null || setter_.toString().length()==0) ? null : setter_));
          return this;
       }
 
@@ -173,17 +176,11 @@ public final class TemplatesNeoGroup {
 
     public final class defaultNodeTypesST {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private defaultNodeTypesST(STGroup group) {
    		template = group.getInstanceOf("defaultNodeTypes");
    	}
-
-       public defaultNodeTypesST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
@@ -214,6 +211,31 @@ public final class TemplatesNeoGroup {
       	tryToSetStringProperty(template, value, statementNameIsSet, "statementName");   
          return this;
       } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+    public final class keyValueRelationshipsST {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean typesIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private keyValueRelationshipsST(STGroup group) {
+   		template = group.getInstanceOf("keyValueRelationships");
+   	}
+
+       public keyValueRelationshipsST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+      public keyValueRelationshipsST addTypesValue(Object value) {
+      	tryToSetListProperty(template, value, typesIsSet, "types");
+         return this;
+      }
 
       @Override
    	public String toString() {

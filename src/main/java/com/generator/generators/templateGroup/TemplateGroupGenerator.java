@@ -1,13 +1,12 @@
 package com.generator.generators.templateGroup;
 
+import com.generator.generators.templates.TemplateVisitor;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
-import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 
 import java.io.File;
-import java.util.List;
 
 import static com.generator.generators.templates.domain.GeneratedFile.packageToPath;
 
@@ -15,58 +14,90 @@ import static com.generator.generators.templates.domain.GeneratedFile.packageToP
  * User: goe
  * Date: 05.07.13
  */
-public class TemplateGroupGenerator {
+public class TemplateGroupGenerator implements TemplateVisitor {
 
-	public void writeGroupClassFile(File groupTemplateFile, String packageName, String root) {
-		FileUtil.write(getGroupClassDeclarationST(groupTemplateFile, packageName), new File(root, packageToPath(packageName) + getGroupName(groupTemplateFile) + "Group" + ".java"));
+	private final String root;
+	private final String packageName;
+	private final TemplateGroupGroup group = new TemplateGroupGroup();
+
+	private File groupTemplateFile;
+	private TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration;
+	private TemplateGroupGroup.NewStatementDeclarationST declarationST;
+	private Object setter;
+
+	public TemplateGroupGenerator(String root, String packageName) {
+		this.root = root;
+		this.packageName = packageName;
 	}
 
-	public TemplateGroupGroup.GroupClassDeclarationST getGroupClassDeclarationST(File groupTemplateFile, String packageName) {
+	@Override
+	public void onStartGroupTemplateFile(File groupTemplateFile) {
 
-		final TemplateGroupGroup group = new TemplateGroupGroup();
+		this.groupTemplateFile = groupTemplateFile;
 
-		final List<TemplateStatement> statements = new TemplateFileParser().parse(groupTemplateFile).getStatements();
-
-		final TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration = group.newGroupClassDeclaration().
-			setName(getGroupName(groupTemplateFile) + "Group").
-			setDomain(groupTemplateFile.getName().substring(0, groupTemplateFile.getName().length() - 4));
-
-		if (packageName != null)
-			groupClassDeclaration.setPackageName(packageName);   // only add package (and imports) if packageName is set
-
-		for (TemplateStatement statement : statements) {
-			final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration();
-
-			for (TemplateParameter templateParameter : statement.getParameters()) {
-				Object setter = null;
-				switch (templateParameter.getDomainEntityType()) {
-					case KEYVALUELISTPROPERTY:
-
-						final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().setPropertyName(templateParameter.getPropertyName()).setStatementName(statement.getName());
-						for (String kvName : templateParameter.getKvNames()) kvSetter.addKvNamesValue(kvName);
-						setter = kvSetter;
-						break;
-
-					case STRINGPROPERTY:
-					case BOOLEANPROPERTY:
-					case STATEMENTPROPERTY:
-						setter = group.newStatementStringPropertySetter().setPropertyName(templateParameter.getPropertyName()).setStatementName(statement.getName());
-						break;
-
-					case LISTPROPERTY:
-						setter = group.newStatementListPropertySetter().setPropertyName(templateParameter.getPropertyName()).setStatementName(statement.getName());
-						break;
-				}
-
-				declarationST.addPropertiesValue(templateParameter.getPropertyName(), setter);
-			}
-
-			groupClassDeclaration.addStatementsValue(declarationST.setName(statement.getName()), group.newNewStatementInstance().setName(statement.getName()));
-		}
-		return groupClassDeclaration;
+		groupClassDeclaration = group.newGroupClassDeclaration().
+			setName(getGroupName()).
+			setDomain(groupTemplateFile.getName().substring(0, groupTemplateFile.getName().length() - 4)).
+			setPackageName(packageName);
 	}
 
-	private static String getGroupName(File groupTemplateFile) {
-		return StringUtil.capitalize(groupTemplateFile.getName().substring(0, groupTemplateFile.getName().length() - 4));
+	@Override
+	public void onStartStatement(TemplateStatement statement) {
+		declarationST = group.newNewStatementDeclaration();
+	}
+
+	@Override
+	public void onStartTemplateParameter(TemplateParameter parameter, TemplateStatement statement) {
+		setter = null;
+	}
+
+	@Override
+	public void onKeyValueTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+
+		final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
+			setPropertyName(templateParameter.getPropertyName()).
+			setStatementName(statement.getName());
+		templateParameter.getKvNames().forEach(kvSetter::addKvNamesValue);
+
+		setter = kvSetter;
+	}
+
+	@Override
+	public void onStringTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+		setter = group.newStatementStringPropertySetter().setPropertyName(templateParameter.getPropertyName()).setStatementName(statement.getName());
+	}
+
+	@Override
+	public void onBooleanTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+		onStringTemplateParameter(templateParameter, statement);
+	}
+
+	@Override
+	public void onStatementTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+		onStringTemplateParameter(templateParameter, statement);
+	}
+
+	@Override
+	public void onListTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+		setter = group.newStatementListPropertySetter().setPropertyName(templateParameter.getPropertyName()).setStatementName(statement.getName());
+	}
+
+	@Override
+	public void onEndTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
+		declarationST.addPropertiesValue(templateParameter.getPropertyName(), setter);
+	}
+
+	@Override
+	public void onEndStatement(TemplateStatement statement) {
+		groupClassDeclaration.addStatementsValue(declarationST.setName(statement.getName()), group.newNewStatementInstance().setName(statement.getName()));
+	}
+
+	@Override
+	public void onEndGroupTemplateFile(File groupTemplateFile) {
+		FileUtil.write(groupClassDeclaration, new File(root, packageToPath(packageName) + getGroupName() + ".java"));
+	}
+
+	private String getGroupName() {
+		return StringUtil.capitalize(groupTemplateFile.getName().substring(0, groupTemplateFile.getName().length() - 4) + "Group");
 	}
 }

@@ -1,17 +1,24 @@
 goal:
 
+# create cypher- queries (and cypher-query-builder
+https://neo4j.com/docs/cypher-refcard/current/
 
-# Clean GUI which embedds NeoGenerator, and wraps simple actions around methods.
-# view templates in various layouts (flow-left-to-right, flow-top-down, circular etc)
-# Allow to attach nodes to properties (string,list,keyValues)
-# test Neo on other groups (Protobuf, EasyFlow)
+use jgoodies for Forms(FormPanel)
+http://manual.openestate.org/extern/forms-1.2.1/tutorial/introduction.html
 
-use jgoodies for Forms
-http://nd4j.org/getstarted.html
+use graphstream for graph-editor
 http://graphstream-project.org/doc/
 
+// for use in browser (graph-editor)
+http://bl.ocks.org/rkirsling/5001347 and http://rkirsling.github.io/modallogic/
+https://github.com/jimmywarting/StreamSaver.js
 
 DONE:
+
+# changed all dynamic labels and relationships into property Label and RelationshipType
+
+# refactor StringValue and create KeyValues using interfaces
+
 # clean facade over GraphDatabaseService
 # only provide thinnest layer with nodes + Labels + relations
 # allow to create new template-nodes

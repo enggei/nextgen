@@ -38,18 +38,23 @@ public class TemplatesNeoTests {
 				final NeoGroupClassDeclarationNode neoGroupClassDeclarationNode = neoTemplateDomain.newNeoGroupClassDeclaration();
 
 				neoGroupClassDeclarationNode.
-					setName(neoTemplateDomain.newStringNode("Simple")).	// string-node
+					setName(neoTemplateDomain.newStringNode("Simple")).   // string-node
 					setPackageName(neoTemplateDomain.newStringNode("com.generator.simple"));
 
+				// todo: then apply pattern on TemplateGroup, NeoSwing, (Verticles?) and then continue on StreamGraph
+
 				// key-value node
-				neoGroupClassDeclarationNode.addStatementsValue(
-					neoTemplateDomain.newDeclaration().                             	// statement-node
-						setGroupName(neoTemplateDomain.newStringNode("GroupName")).
-						setName(neoTemplateDomain.newStringNode("Name")).node(),
-					neoTemplateDomain.newStringNode("targetName"),							// string-node
-					neoTemplateDomain.newNewInstance().											// value-node
-						setGroupName(neoTemplateDomain.newStringNode("GroupName")).
-						setName(neoTemplateDomain.newStringNode("Name")).node());
+				neoGroupClassDeclarationNode.addStatementsValue(neoGroupClassDeclarationNode.newStatementsKeyValue().
+					setDeclarationValue(
+						neoTemplateDomain.newDeclaration().                              // statement-node
+							setGroupName(neoTemplateDomain.newStringNode("GroupName")).
+							setName(neoTemplateDomain.newStringNode("Name")).node()).
+					setNameValue(
+						neoTemplateDomain.newStringNode("targetName")).
+					setNewInstanceValue(                     // string-node
+						neoTemplateDomain.newNewInstance().                                 // value-node
+							setGroupName(neoTemplateDomain.newStringNode("GroupName")).
+							setName(neoTemplateDomain.newStringNode("Name")).node()));
 
 				// list node
 				neoGroupClassDeclarationNode.
@@ -58,15 +63,14 @@ public class TemplatesNeoTests {
 
 				neoTemplateDomain.forEachNeoGroupClassDeclarationNodes(neoGroupClassDeclarationNode1 -> {
 
-					if(neoGroupClassDeclarationNode1.getPackageName()==null || neoGroupClassDeclarationNode1.getName()==null) {
+					if (neoGroupClassDeclarationNode1.getPackageName() == null || neoGroupClassDeclarationNode1.getName() == null) {
 						neoGroupClassDeclarationNode1.removeName();
-
 						neoGroupClassDeclarationNode1.delete();
 						return;
 					}
 
 					// stringvalues
-					System.out.println(newStringNode(neoGroupClassDeclarationNode1.getName())+ " package name : " + newStringNode(neoGroupClassDeclarationNode1.getPackageName()));
+					System.out.println(newStringNode(neoGroupClassDeclarationNode1.getName()) + " package name : " + newStringNode(neoGroupClassDeclarationNode1.getPackageName()));
 
 					neoGroupClassDeclarationNode1.removePackageName();
 
@@ -87,9 +91,10 @@ public class TemplatesNeoTests {
 						@Override
 						public void accept(NeoGroupClassDeclarationNode.StatementsKeyValue statementsKeyValue) {
 							final Node declarationValue = statementsKeyValue.getDeclarationValue();
-							if(isDeclaration(declarationValue)) {
+							if (isDeclaration(declarationValue)) {
 								final Node declarationName = neoTemplateDomain.newDeclaration(declarationValue).getName();
-								if(isStringNode(declarationName)) System.out.println("Declaration.name stringvalue: " + newStringNode(declarationName));
+								if (isStringNode(declarationName))
+									System.out.println("Declaration.name stringvalue: " + newStringNode(declarationName));
 								else System.out.println("Declaration.name other: " + declarationName.getLabels());
 							}
 						}

@@ -1,4 +1,4 @@
-/* uuid : 695a27df-51fa-4336-afe0-e83ab748ead5 */
+/* uuid : ea0108e2-7836-4e1e-9a47-42824d4155ec */
 delimiters "~", "~"
 
 /**  **/
@@ -135,8 +135,6 @@ public final class ~name~ {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "~domain;format="lowFirst"~" + java.io.File.separator + "~domain~.stg"));
    }
 
    public ~name~(STGroup stGroup) {

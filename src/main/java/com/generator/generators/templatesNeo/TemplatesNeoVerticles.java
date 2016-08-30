@@ -43,6 +43,10 @@ public class TemplatesNeoVerticles {
 		deploy(vertx, KeyValueListSetterVerticle.class.getName(), log, handler);
 	} 
 
+	public void newKeyValueRelationshipsVerticle(VertxUtil.SuccessHandler<String> handler) {
+		deploy(vertx, KeyValueRelationshipsVerticle.class.getName(), log, handler);
+	} 
+
 	public void newListSetterVerticle(VertxUtil.SuccessHandler<String> handler) {
 		deploy(vertx, ListSetterVerticle.class.getName(), log, handler);
 	} 
@@ -259,7 +263,7 @@ public class TemplatesNeoVerticles {
 			consume(vertx, "declaration_" + deploymentID(), deploymentID() + ".properties", log, new Handler<Message<JsonObject> >() {
 				@Override
 				public void handle(Message<JsonObject> message) {
-					template.addPropertiesValue(message.body().getString("name"),message.body().getString("setter"));
+					template.addPropertiesValue(message.body().getString("name"),message.body().getString("relationships"),message.body().getString("setter"));
 				}
 			}); 
 
@@ -302,9 +306,10 @@ public class TemplatesNeoVerticles {
 				}
 			});
 		}  
-		public static void sendAddProperties(Vertx vertx, java.util.UUID id, Object content, String name, String setter, Handler<String> instanceHandler) {
+		public static void sendAddProperties(Vertx vertx, java.util.UUID id, Object content, String name, String relationships, String setter, Handler<String> instanceHandler) {
 
 			final JsonObject parameters = new JsonObject().put("name", name)
+				.put("relationships", relationships)
 				.put("setter", setter);
 
 			sendMessage(vertx, id + ".properties", parameters, log, new VertxUtil.SuccessHandler<Message<String> >() {
@@ -347,14 +352,6 @@ public class TemplatesNeoVerticles {
 			// new instance of template
 			final TemplatesNeoGroup.defaultNodeTypesST template = templateGroup.newdefaultNodeTypes();
 
-			// string property name
-			consume(vertx, "defaultNodeTypes_" + deploymentID(), deploymentID() + ".name", log, new Handler<Message<String> >() {
-				@Override
-				public void handle(Message<String> message) {
-					template.setName(message.body());
-					message.reply(message.body());
-				}
-			}); 
 
 			// toString method. todo: add all Object methods, for convenience...
 			consume(vertx, deploymentID(), deploymentID() + ".toString", log, new Handler<Message<String> >() {
@@ -367,20 +364,6 @@ public class TemplatesNeoVerticles {
 			startFuture.complete();
 		}
 
-
-		 public static void sendNameMessage(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
-			sendMessage(vertx, id + ".name", content, log, new VertxUtil.SuccessHandler<Message<String> >() {
-				@Override
-				public void onSuccess(Message<String> result) {
-					instanceHandler.handle(result.body());
-				}
-
-				@Override
-				public void onFail(Throwable t) {
-					log.error("sendNameMessage " + id + ".name failed", t);
-				}
-			});
-		}  
 
 		public static void sendToStringMessage(Vertx vertx, java.util.UUID id, Handler<String> instanceHandler) {
 			sendMessage(vertx, id + ".toString", id.toString(), log, new VertxUtil.SuccessHandler<Message<String> >() {
@@ -488,6 +471,91 @@ public class TemplatesNeoVerticles {
 				}
 			});
 		}  
+
+		public static void sendToStringMessage(Vertx vertx, java.util.UUID id, Handler<String> instanceHandler) {
+			sendMessage(vertx, id + ".toString", id.toString(), log, new VertxUtil.SuccessHandler<Message<String> >() {
+				@Override
+				public void onSuccess(Message<String> result) {
+					instanceHandler.handle(result.body());
+				}
+
+				@Override
+				public void onFail(Throwable t) {
+					log.error("sendToStringMessage " + id + ".toString failed", t);
+				}
+			});
+		}
+	} 
+
+	public static final class KeyValueRelationshipsVerticle extends AbstractVerticle {
+
+		private final TemplatesNeoGroup templateGroup = new TemplatesNeoGroup();
+
+		@Override
+		public void start(Future<Void> startFuture) throws Exception {
+
+			// todo: make dependent of any arbitrary object, so one can instantiate any object parsed from java ...
+
+			// new instance of template
+			final TemplatesNeoGroup.keyValueRelationshipsST template = templateGroup.newkeyValueRelationships();
+
+			// string property name
+			consume(vertx, "keyValueRelationships_" + deploymentID(), deploymentID() + ".name", log, new Handler<Message<String> >() {
+				@Override
+				public void handle(Message<String> message) {
+					template.setName(message.body());
+					message.reply(message.body());
+				}
+			}); 
+			// list property types
+			consume(vertx, "keyValueRelationships_" + deploymentID(), deploymentID() + ".types", log, new Handler<Message<String> >() {
+				@Override
+				public void handle(Message<String> message) {
+					template.addTypesValue(message.body());
+				}
+			}); 
+
+			// toString method. todo: add all Object methods, for convenience...
+			consume(vertx, deploymentID(), deploymentID() + ".toString", log, new Handler<Message<String> >() {
+				@Override
+				public void handle(Message<String> message) {
+					message.reply(template.toString());
+				}
+			});
+
+			startFuture.complete();
+		}
+
+
+		 public static void sendNameMessage(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
+			sendMessage(vertx, id + ".name", content, log, new VertxUtil.SuccessHandler<Message<String> >() {
+				@Override
+				public void onSuccess(Message<String> result) {
+					instanceHandler.handle(result.body());
+				}
+
+				@Override
+				public void onFail(Throwable t) {
+					log.error("sendNameMessage " + id + ".name failed", t);
+				}
+			});
+		}  
+		public static void sendAddTypes(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
+
+			final JsonObject parameters = new JsonObject();
+
+			sendMessage(vertx, id + ".types", parameters, log, new VertxUtil.SuccessHandler<Message<String> >() {
+				@Override
+				public void onSuccess(Message<String> result) {
+					instanceHandler.handle(result.body());
+				}
+
+				@Override
+				public void onFail(Throwable t) {
+					log.error("sendTypesMessage " + id + ".types " + parameters.encode() + " failed", t);
+				}
+			});
+		} 
 
 		public static void sendToStringMessage(Vertx vertx, java.util.UUID id, Handler<String> instanceHandler) {
 			sendMessage(vertx, id + ".toString", id.toString(), log, new VertxUtil.SuccessHandler<Message<String> >() {
@@ -766,6 +834,7 @@ public class TemplatesNeoVerticles {
 		verticles.newDeclarationVerticle(loggingHandler(vertx));
 		verticles.newDefaultNodeTypesVerticle(loggingHandler(vertx));
 		verticles.newKeyValueListSetterVerticle(loggingHandler(vertx));
+		verticles.newKeyValueRelationshipsVerticle(loggingHandler(vertx));
 		verticles.newListSetterVerticle(loggingHandler(vertx));
 		verticles.newNewInstanceVerticle(loggingHandler(vertx));
 		verticles.newStringSetterVerticle(loggingHandler(vertx));		

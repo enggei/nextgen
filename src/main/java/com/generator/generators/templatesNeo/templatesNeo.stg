@@ -1,4 +1,4 @@
-/* uuid : a618e877-82c1-4d0a-ab7d-87075f70cad9 */
+/* uuid : e3e93e2e-8cd2-456e-b26c-8c554866e9ea */
 delimiters "~", "~"
 
 /** comments,LISTPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,name,newInstance; **/
@@ -8,9 +8,9 @@ import org.neo4j.graphdb.*;
 
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static ~packageName~.~name~Neo.~name~Labels.*;
 
 ~endif~
 /**
@@ -22,7 +22,9 @@ public final class ~name~Neo {
 	private final GraphDatabaseService graph;
 
 	public enum ~name~Labels implements Label {
-   	~statements:{it|~name~_~it.name~};separator=", "~, ~name~, StringNode
+		~name~,   	
+		~statements:{it|~name~_~it.name~};separator=",\n"~, 
+		StringNode
 	}
 
    public ~name~Neo(final GraphDatabaseService graph) {
@@ -52,15 +54,15 @@ public final class ~name~Neo {
 
 	~statements:{it|~it.declaration~};separator="\r\n\r\n"~
 
-	~defaultNodeTypes(name)~
+	~defaultNodeTypes()~
 } 
 >>
 
 /**  **/
-bugfix2() ::= << } 
+bugfix2() ::= <<} 
 >>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,relationships,setter; **/
 declaration(groupName,name,properties) ::= <<public static final class ~name~Node {
 
 	private final GraphDatabaseService graph;
@@ -71,10 +73,17 @@ declaration(groupName,name,properties) ::= <<public static final class ~name~Nod
 		~properties:{it|~it.name~_param};separator=", "~
 	}
 
+	~properties:{it|~if(it.relationships)~
+~it.relationships~~endif~}~
+
+	private enum KeyValueLabels implements Label {
+		~properties:{it|~if(it.relationships)~~it.name;format="capitalize"~, ~endif~}~
+	}
+
 ~endif~
 	private ~name~Node(final GraphDatabaseService graph) {
 		this.graph = graph;
-		this.node = graph.createNode(~groupName~Labels.~groupName~_~name~);
+		this.node = graph.createNode(~groupName~_~name~);
 		this.node.setProperty("uuid", UUID.randomUUID().toString());
 		this.uuid = UUID.fromString(getString(node, "uuid"));
 	}
@@ -87,7 +96,7 @@ declaration(groupName,name,properties) ::= <<public static final class ~name~Nod
 
 	public void delete() throws IllegalStateException {
 		if (node.hasRelationship(Direction.INCOMING))
-			throw new IllegalStateException("~name~Node " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 		tryToDeleteNode(node);
 	}	
 
@@ -114,126 +123,172 @@ declaration(groupName,name,properties) ::= <<public static final class ~name~Nod
 
 	@Override
 	public String toString() {
-		return "~groupName~_~name~ " + uuid;
+		return getClass().getName() + "  " + uuid;
 	}
 
    ~properties:{it|~it.setter~};separator="\n\n"~
 } 
 >>
 
-/** name,STRINGPROPERTY; **/
-defaultNodeTypes(name) ::= <<public static boolean isStringNode(Node node) {
-	return node != null && node.hasLabel(~name~Labels.StringNode);
+/**  **/
+defaultNodeTypes() ::= <<public static boolean isStringNode(Node node) {
+	return node != null && node.hasLabel(StringNode);
 }
 
+// convenience-method for instantiating a new StringNode, and setting the value
 public Node newStringNode(String value) {
 	if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
-	return new StringNode(graph).setValue(value).node();
+	
+	final Node node = graph.createNode(StringNode);
+	node.setProperty("uuid", UUID.randomUUID().toString());
+	return newStringNode(node).setValue(value).node();
 }
 
 public static StringNode newStringNode(Node node) {
-	if (node == null) return null;
-	return new StringNode(node);
+	if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+	
+	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+	return new StringNode() {
+		@Override
+		public StringNode setValue(String value) {
+			node.setProperty("value", value);
+			return this;
+		}
+
+		@Override
+		public String getValue() {
+			return getString(node, "value");
+		}
+
+		@Override
+		public Node node() {
+			return node;
+		}
+
+		@Override
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			StringNode that = (StringNode) o;
+			return uuid.equals(that.getUuid());
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getValue();
+		}	
+	};
 }
 
-// todo turn this into an interface, like KeyValues ?
-public static final class StringNode {
+public interface StringNode {
 
-	private final Node node;
-	private final UUID uuid;
+	public StringNode setValue(String value);
 
-	public StringNode(final GraphDatabaseService graph) {
-		this.node = graph.createNode(~name~Labels.StringNode);
-		this.node.setProperty("uuid", UUID.randomUUID().toString());
-		this.uuid = UUID.fromString(getString(node, "uuid"));
-	}
+	public String getValue();
 
-	public StringNode(final Node node) {
-		this.node = node;
-		this.uuid = UUID.fromString(getString(node, "uuid"));
-	}
+	public Node node();
 
-	public Node node() {
-		return node;
-	}
-
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		StringNode that = (StringNode) o;
-		return uuid.equals(that.uuid);
-	}
-
-	@Override
-	public int hashCode() {
-		return uuid.hashCode();
-	}
-
-	@Override
-	public String toString() {
-		return getValue();
-	}
-
-	// propertyName
-	public StringNode setValue(String value) {
-		if (node == null) return this;
-		node.setProperty("value", value);
-		return this;
-	}
-
-	public String getValue() {
-		return getString(node, "value");
-	}
+	public UUID getUuid();
 } 
 >>
 
 /** kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
-keyValueListSetter(kvNames,propertyName,statementName) ::= <<// ~propertyName~
-public ~statementName~Node add~propertyName;format="capitalize"~Value(~kvNames:{it|Node ~it~Target};separator=", "~) {
+keyValueListSetter(kvNames,propertyName,statementName) ::= <<public interface ~propertyName;format="capitalize"~KeyValue {
 
-	final Node keyValueNode = graph.createNode(Label.label("KeyValue"));
-	keyValueNode.setProperty("uuid", UUID.randomUUID().toString());
+	~kvNames:{it|public Node get~it;format="capitalize"~Value();};separator="\n\n"~
 
-~kvNames:{it|
-	if (~it~Target != null) 
-		keyValueNode.createRelationshipTo(~it~Target, RelationshipType.withName("~it~"));
-};separator="\n"~   
-	node.createRelationshipTo(keyValueNode, Parameters.~propertyName~_param);
+	~kvNames:{it|public ~propertyName;format="capitalize"~KeyValue set~it;format="capitalize"~Value(Node value);};separator="\n\n"~
+
+	public Node node();
+
+	public UUID getUuid();
+}
+
+public ~statementName~Node add~propertyName;format="capitalize"~Value(~propertyName;format="capitalize"~KeyValue value) {
+	this.node.createRelationshipTo(value.node(), Parameters.~propertyName~_param);
+   return this;
+}
+
+public ~propertyName;format="capitalize"~KeyValue new~propertyName;format="capitalize"~KeyValue() {
+	final Node node = graph.createNode(KeyValueLabels.~propertyName;format="capitalize"~);
+	node.setProperty("uuid", UUID.randomUUID().toString());
+	return new~propertyName;format="capitalize"~KeyValue(node);
+}
+
+public static ~propertyName;format="capitalize"~KeyValue new~propertyName;format="capitalize"~KeyValue(Node node) {
+	if (node==null) throw new IllegalArgumentException("node for new~propertyName;format="capitalize"~KeyValue cannot be null");
+	
+	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+	return new ~propertyName;format="capitalize"~KeyValue() {
+		
+		~kvNames:{it|@Override
+public Node get~it;format="capitalize"~Value() {
+	if (!hasOutgoing(node, ~propertyName;format="capitalize"~Relationships.~it~)) return null;
+	return other(node, singleOutgoing(node, ~propertyName;format="capitalize"~Relationships.~it~));
+~bugfix2()~
+
+@Override
+public ~propertyName;format="capitalize"~KeyValue set~it;format="capitalize"~Value(Node value) {
+	if (hasOutgoing(node, ~propertyName;format="capitalize"~Relationships.~it~)) {
+		final Relationship outgoing = singleOutgoing(node, ~propertyName;format="capitalize"~Relationships.~it~);
+		final Node other = other(node, outgoing);
+		outgoing.delete();
+		tryToDeleteNode(other);
+	~bugfix2()~
+
+	if (value != null)
+		node.createRelationshipTo(value, ~propertyName;format="capitalize"~Relationships.~it~);
+
 	return this;
-}
+~bugfix2()~
+ 		};separator="\n"~
+		@Override
+		public Node node() {
+			return node;
+		}
 
-public ~statementName~Node add~propertyName;format="capitalize"~Value(~propertyName;format="capitalize"~KeyValue keyValue) {
-   return add~propertyName;format="capitalize"~Value(~kvNames:{it|keyValue.get~it;format="capitalize"~Value()};separator=", "~);
-}
+		@Override
+		public UUID getUuid() {
+			return uuid;
+		}
 
-public interface ~propertyName;format="capitalize"~KeyValue {
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			StringNode that = (StringNode) o;
+			return uuid.equals(that.getUuid());
+		}
 
-	~kvNames:{it|public Node get~it;format="capitalize"~Value();};separator="\n\n"~   
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+	};
 }
 
 public void forEach~propertyName;format="capitalize"~Value(Consumer<~propertyName;format="capitalize"~KeyValue> consumer) {
 	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.~propertyName~_param)) {
-		final Node kvNode = other(node, relationship);
-		consumer.accept(new ~propertyName;format="capitalize"~KeyValue() {
-			
-			~kvNames:{it|
-@Override
-public Node get~it;format="capitalize"~Value() {
-	if (!hasOutgoing(kvNode, RelationshipType.withName("~it~"))) return null;
-	return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("~it~")));
-~bugfix2()~
-};separator="\n"~
-				@Override
-				public String toString() {
-					return "~statementName~_~propertyName~_KeyValue " + get(kvNode, "uuid");
-				}
-		});
+		consumer.accept(new~propertyName;format="capitalize"~KeyValue(other(node, relationship)));
 	}
+} 
+>>
+
+/** name,STRINGPROPERTY;types,LISTPROPERTY; **/
+keyValueRelationships(name,types) ::= <<private enum ~name;format="capitalize"~Relationships implements RelationshipType {
+	~types:{it|~it~};separator=", "~
 } 
 >>
 
@@ -253,7 +308,7 @@ public void forEach~propertyName;format="capitalize"~(Consumer<Node> consumer) {
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
 newInstance(groupName,name) ::= <<public static boolean is~name;format="capitalize"~(Node node) {
-	return node != null && node.hasLabel(~groupName~Labels.~groupName~_~name~);
+	return node != null && node.hasLabel(~groupName~_~name~);
 }
 
 public ~name~Node new~name;format="capitalize"~() {
@@ -265,7 +320,7 @@ public ~name~Node new~name;format="capitalize"~(Node node) {
 }
 
 public void forEach~name;format="capitalize"~Nodes(Consumer<~name~Node> consumer) {
-	graph.findNodes(~groupName~Labels.~groupName~_~name~).
+	graph.findNodes(~groupName~_~name~).
 		forEachRemaining(new Consumer<Node>() {
 			@Override
 			public void accept(Node node) {
@@ -275,7 +330,7 @@ public void forEach~name;format="capitalize"~Nodes(Consumer<~name~Node> consumer
 }
 
 public void visit~name;format="capitalize"~Nodes(Consumer<Node> consumer) {
-	graph.findNodes(~groupName~Labels.~groupName~_~name~).
+	graph.findNodes(~groupName~_~name~).
 		forEachRemaining(consumer);
 } 
 >>

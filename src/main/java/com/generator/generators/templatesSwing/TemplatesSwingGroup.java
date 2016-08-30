@@ -26,8 +26,6 @@ public final class TemplatesSwingGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "templatesSwing" + java.io.File.separator + "templatesSwing.stg"));
    }
 
    public TemplatesSwingGroup(STGroup stGroup) {
@@ -49,16 +47,6 @@ public final class TemplatesSwingGroup {
    public char getDelimiter() {
       return delimiter;
    }
-
-
-   public GroupPanelST newGroupPanel() {
-      return new GroupPanelST(stGroup);
-   } 
-
-
-   public TemplatePanelST newTemplatePanel() {
-      return new TemplatePanelST(stGroup);
-   } 
 
 
    public TemplatesSwingST newTemplatesSwing() {
@@ -83,63 +71,6 @@ public final class TemplatesSwingGroup {
 
    public stringPropertyEditorST newstringPropertyEditor() {
       return new stringPropertyEditorST(stGroup);
-   } 
-
-    public final class GroupPanelST {
-
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean verticlesIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private GroupPanelST(STGroup group) {
-   		template = group.getInstanceOf("GroupPanel");
-   	}
-
-       public GroupPanelST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-       public GroupPanelST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
-      public GroupPanelST addVerticlesValue(Object addGroupVerticleAction_, Object groupClassDeclarationPanel_) {
-         verticlesIsSet.set(true);
-         template.addAggr("verticles.{addGroupVerticleAction, groupClassDeclarationPanel}", ( (addGroupVerticleAction_==null || addGroupVerticleAction_.toString().length()==0) ? null : addGroupVerticleAction_), ( (groupClassDeclarationPanel_==null || groupClassDeclarationPanel_.toString().length()==0) ? null : groupClassDeclarationPanel_));
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class TemplatePanelST {
-
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private TemplatePanelST(STGroup group) {
-   		template = group.getInstanceOf("TemplatePanel");
-   	}
-
-       public TemplatePanelST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-      public TemplatePanelST addPropertiesValue(Object stringPanel_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{stringPanel}", ( (stringPanel_==null || stringPanel_.toString().length()==0) ? null : stringPanel_));
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
    } 
 
     public final class TemplatesSwingST {

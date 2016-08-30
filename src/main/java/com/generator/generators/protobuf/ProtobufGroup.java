@@ -26,8 +26,6 @@ public final class ProtobufGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "protobuf" + java.io.File.separator + "Protobuf.stg"));
    }
 
    public ProtobufGroup(STGroup stGroup) {

@@ -1,4 +1,6 @@
 
+# create an editor-form which allows to create GraphStream-styles from Statements
+
 # create an Editor, which is runnable on itself. (or added as a panel into JFrame with many other editors)
 
 # always generate all classes, remove options in DesktopEditor!

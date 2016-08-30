@@ -4,9 +4,9 @@ import org.neo4j.graphdb.*;
 
 import java.util.UUID;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static com.generator.generators.templatesSwing.TemplatesSwingNeo.TemplatesSwingLabels.*;
 
 /**
  * Wraps Neo4j methods based on 'TemplatesSwing.stg' file <br/>
@@ -17,7 +17,13 @@ public final class TemplatesSwingNeo {
 	private final GraphDatabaseService graph;
 
 	public enum TemplatesSwingLabels implements Label {
-   	TemplatesSwing_GroupPanel, TemplatesSwing_TemplatePanel, TemplatesSwing_TemplatesSwing, TemplatesSwing_addVerticleAction, TemplatesSwing_bugfix, TemplatesSwing_newAction, TemplatesSwing_stringPropertyEditor, TemplatesSwing, StringNode
+		TemplatesSwing,   	
+		TemplatesSwing_TemplatesSwing,
+		TemplatesSwing_addVerticleAction,
+		TemplatesSwing_bugfix,
+		TemplatesSwing_newAction,
+		TemplatesSwing_stringPropertyEditor, 
+		StringNode
 	}
 
    public TemplatesSwingNeo(final GraphDatabaseService graph) {
@@ -43,62 +49,8 @@ public final class TemplatesSwingNeo {
 		}
 	}
 
-   public static boolean isGroupPanel(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_GroupPanel);
-   }
-
-   public GroupPanelNode newGroupPanel() {
-   	return new GroupPanelNode(graph);
-   }
-
-   public GroupPanelNode newGroupPanel(Node node) {
-   	return new GroupPanelNode(graph, node);
-   }
-
-   public void forEachGroupPanelNodes(Consumer<GroupPanelNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_GroupPanel).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new GroupPanelNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitGroupPanelNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_GroupPanel).
-   		forEachRemaining(consumer);
-   } 
-
-   public static boolean isTemplatePanel(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_TemplatePanel);
-   }
-
-   public TemplatePanelNode newTemplatePanel() {
-   	return new TemplatePanelNode(graph);
-   }
-
-   public TemplatePanelNode newTemplatePanel(Node node) {
-   	return new TemplatePanelNode(graph, node);
-   }
-
-   public void forEachTemplatePanelNodes(Consumer<TemplatePanelNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_TemplatePanel).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new TemplatePanelNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitTemplatePanelNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_TemplatePanel).
-   		forEachRemaining(consumer);
-   } 
-
    public static boolean isTemplatesSwing(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_TemplatesSwing);
+   	return node != null && node.hasLabel(TemplatesSwing_TemplatesSwing);
    }
 
    public TemplatesSwingNode newTemplatesSwing() {
@@ -110,7 +62,7 @@ public final class TemplatesSwingNeo {
    }
 
    public void forEachTemplatesSwingNodes(Consumer<TemplatesSwingNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_TemplatesSwing).
+   	graph.findNodes(TemplatesSwing_TemplatesSwing).
    		forEachRemaining(new Consumer<Node>() {
    			@Override
    			public void accept(Node node) {
@@ -120,12 +72,12 @@ public final class TemplatesSwingNeo {
    }
 
    public void visitTemplatesSwingNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_TemplatesSwing).
+   	graph.findNodes(TemplatesSwing_TemplatesSwing).
    		forEachRemaining(consumer);
    } 
 
    public static boolean isAddVerticleAction(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_addVerticleAction);
+   	return node != null && node.hasLabel(TemplatesSwing_addVerticleAction);
    }
 
    public addVerticleActionNode newAddVerticleAction() {
@@ -137,7 +89,7 @@ public final class TemplatesSwingNeo {
    }
 
    public void forEachAddVerticleActionNodes(Consumer<addVerticleActionNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_addVerticleAction).
+   	graph.findNodes(TemplatesSwing_addVerticleAction).
    		forEachRemaining(new Consumer<Node>() {
    			@Override
    			public void accept(Node node) {
@@ -147,12 +99,12 @@ public final class TemplatesSwingNeo {
    }
 
    public void visitAddVerticleActionNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_addVerticleAction).
+   	graph.findNodes(TemplatesSwing_addVerticleAction).
    		forEachRemaining(consumer);
    } 
 
    public static boolean isBugfix(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_bugfix);
+   	return node != null && node.hasLabel(TemplatesSwing_bugfix);
    }
 
    public bugfixNode newBugfix() {
@@ -164,7 +116,7 @@ public final class TemplatesSwingNeo {
    }
 
    public void forEachBugfixNodes(Consumer<bugfixNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_bugfix).
+   	graph.findNodes(TemplatesSwing_bugfix).
    		forEachRemaining(new Consumer<Node>() {
    			@Override
    			public void accept(Node node) {
@@ -174,12 +126,12 @@ public final class TemplatesSwingNeo {
    }
 
    public void visitBugfixNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_bugfix).
+   	graph.findNodes(TemplatesSwing_bugfix).
    		forEachRemaining(consumer);
    } 
 
    public static boolean isNewAction(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_newAction);
+   	return node != null && node.hasLabel(TemplatesSwing_newAction);
    }
 
    public newActionNode newNewAction() {
@@ -191,7 +143,7 @@ public final class TemplatesSwingNeo {
    }
 
    public void forEachNewActionNodes(Consumer<newActionNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_newAction).
+   	graph.findNodes(TemplatesSwing_newAction).
    		forEachRemaining(new Consumer<Node>() {
    			@Override
    			public void accept(Node node) {
@@ -201,12 +153,12 @@ public final class TemplatesSwingNeo {
    }
 
    public void visitNewActionNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_newAction).
+   	graph.findNodes(TemplatesSwing_newAction).
    		forEachRemaining(consumer);
    } 
 
    public static boolean isStringPropertyEditor(Node node) {
-   	return node != null && node.hasLabel(TemplatesSwingLabels.TemplatesSwing_stringPropertyEditor);
+   	return node != null && node.hasLabel(TemplatesSwing_stringPropertyEditor);
    }
 
    public stringPropertyEditorNode newStringPropertyEditor() {
@@ -218,7 +170,7 @@ public final class TemplatesSwingNeo {
    }
 
    public void forEachStringPropertyEditorNodes(Consumer<stringPropertyEditorNode> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_stringPropertyEditor).
+   	graph.findNodes(TemplatesSwing_stringPropertyEditor).
    		forEachRemaining(new Consumer<Node>() {
    			@Override
    			public void accept(Node node) {
@@ -228,283 +180,9 @@ public final class TemplatesSwingNeo {
    }
 
    public void visitStringPropertyEditorNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesSwingLabels.TemplatesSwing_stringPropertyEditor).
+   	graph.findNodes(TemplatesSwing_stringPropertyEditor).
    		forEachRemaining(consumer);
    } 
-
-	public static final class GroupPanelNode {
-
-		private final GraphDatabaseService graph;
-	   private final Node node;
-		private final UUID uuid;
-
-		private enum Parameters implements RelationshipType {
-			name_param, packageName_param, verticles_param
-		}
-
-		private GroupPanelNode(final GraphDatabaseService graph) {
-			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_GroupPanel);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
-
-		private GroupPanelNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
-			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
-
-		public void delete() throws IllegalStateException {
-			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("GroupPanelNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
-			tryToDeleteNode(node);
-		}	
-
-		public Node node() {
-			return node;
-		}
-
-		public UUID getUuid() {
-			return uuid;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			GroupPanelNode that = (GroupPanelNode) o;
-			return uuid.equals(that.uuid);
-		}
-
-		@Override
-		public int hashCode() {
-			return uuid.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return "TemplatesSwing_GroupPanel " + uuid;
-		}
-
-	   // name
-	   public GroupPanelNode setName(Node target) {
-	   	if (node == null) return this;
-	   	if (hasOutgoing(node, Parameters.name_param))
-	   		singleOutgoing(node, Parameters.name_param).delete();
-	   	node.createRelationshipTo(target, Parameters.name_param);
-	      return this;
-	   }
-
-	   public Node getName() {
-	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
-	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
-	   	return other(node, relationship);
-	   }
-
-	   public void removeName() {
-	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
-	   	if (outgoing == null) return;
-	   	final Node other = other(node, outgoing);
-	   	outgoing.delete();
-	   	tryToDeleteNode(other);
-	   } 
-
-	   // packageName
-	   public GroupPanelNode setPackageName(Node target) {
-	   	if (node == null) return this;
-	   	if (hasOutgoing(node, Parameters.packageName_param))
-	   		singleOutgoing(node, Parameters.packageName_param).delete();
-	   	node.createRelationshipTo(target, Parameters.packageName_param);
-	      return this;
-	   }
-
-	   public Node getPackageName() {
-	   	if (!hasOutgoing(node, Parameters.packageName_param)) return null;
-	   	final Relationship relationship = singleOutgoing(node, Parameters.packageName_param);
-	   	return other(node, relationship);
-	   }
-
-	   public void removePackageName() {
-	   	final Relationship outgoing = singleOutgoing(node, Parameters.packageName_param);
-	   	if (outgoing == null) return;
-	   	final Node other = other(node, outgoing);
-	   	outgoing.delete();
-	   	tryToDeleteNode(other);
-	   } 
-
-	   // verticles
-	   public GroupPanelNode addVerticlesValue(Node addGroupVerticleActionTarget, Node groupClassDeclarationPanelTarget) {
-
-	   	final Node keyValueNode = graph.createNode(Label.label("KeyValue"));
-	   	keyValueNode.setProperty("uuid", UUID.randomUUID().toString());
-
-	   	if (addGroupVerticleActionTarget != null) 
-	   		keyValueNode.createRelationshipTo(addGroupVerticleActionTarget, RelationshipType.withName("addGroupVerticleAction"));
-
-	   	if (groupClassDeclarationPanelTarget != null) 
-	   		keyValueNode.createRelationshipTo(groupClassDeclarationPanelTarget, RelationshipType.withName("groupClassDeclarationPanel"));
-	      
-	   	node.createRelationshipTo(keyValueNode, Parameters.verticles_param);
-	   	return this;
-	   }
-
-	   public GroupPanelNode addVerticlesValue(VerticlesKeyValue keyValue) {
-	      return addVerticlesValue(keyValue.getAddGroupVerticleActionValue(), keyValue.getGroupClassDeclarationPanelValue());
-	   }
-
-	   public interface VerticlesKeyValue {
-
-	   	public Node getAddGroupVerticleActionValue();
-
-	   	public Node getGroupClassDeclarationPanelValue();   
-	   }
-
-	   public void forEachVerticlesValue(Consumer<VerticlesKeyValue> consumer) {
-	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.verticles_param)) {
-	   		final Node kvNode = other(node, relationship);
-	   		consumer.accept(new VerticlesKeyValue() {
-
-	   			@Override
-	   			public Node getAddGroupVerticleActionValue() {
-	   				if (!hasOutgoing(kvNode, RelationshipType.withName("addGroupVerticleAction"))) return null;
-	   				return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("addGroupVerticleAction")));
-	   			 } 
-
-	   			@Override
-	   			public Node getGroupClassDeclarationPanelValue() {
-	   				if (!hasOutgoing(kvNode, RelationshipType.withName("groupClassDeclarationPanel"))) return null;
-	   				return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("groupClassDeclarationPanel")));
-	   			 } 
-
-	   				@Override
-	   				public String toString() {
-	   					return "GroupPanel_verticles_KeyValue " + get(kvNode, "uuid");
-	   				}
-	   		});
-	   	}
-	   } 
-	} 
-
-	public static final class TemplatePanelNode {
-
-		private final GraphDatabaseService graph;
-	   private final Node node;
-		private final UUID uuid;
-
-		private enum Parameters implements RelationshipType {
-			name_param, properties_param
-		}
-
-		private TemplatePanelNode(final GraphDatabaseService graph) {
-			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_TemplatePanel);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
-
-		private TemplatePanelNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
-			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
-
-		public void delete() throws IllegalStateException {
-			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("TemplatePanelNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
-			tryToDeleteNode(node);
-		}	
-
-		public Node node() {
-			return node;
-		}
-
-		public UUID getUuid() {
-			return uuid;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			TemplatePanelNode that = (TemplatePanelNode) o;
-			return uuid.equals(that.uuid);
-		}
-
-		@Override
-		public int hashCode() {
-			return uuid.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return "TemplatesSwing_TemplatePanel " + uuid;
-		}
-
-	   // name
-	   public TemplatePanelNode setName(Node target) {
-	   	if (node == null) return this;
-	   	if (hasOutgoing(node, Parameters.name_param))
-	   		singleOutgoing(node, Parameters.name_param).delete();
-	   	node.createRelationshipTo(target, Parameters.name_param);
-	      return this;
-	   }
-
-	   public Node getName() {
-	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
-	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
-	   	return other(node, relationship);
-	   }
-
-	   public void removeName() {
-	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
-	   	if (outgoing == null) return;
-	   	final Node other = other(node, outgoing);
-	   	outgoing.delete();
-	   	tryToDeleteNode(other);
-	   } 
-
-	   // properties
-	   public TemplatePanelNode addPropertiesValue(Node stringPanelTarget) {
-
-	   	final Node keyValueNode = graph.createNode(Label.label("KeyValue"));
-	   	keyValueNode.setProperty("uuid", UUID.randomUUID().toString());
-
-	   	if (stringPanelTarget != null) 
-	   		keyValueNode.createRelationshipTo(stringPanelTarget, RelationshipType.withName("stringPanel"));
-	      
-	   	node.createRelationshipTo(keyValueNode, Parameters.properties_param);
-	   	return this;
-	   }
-
-	   public TemplatePanelNode addPropertiesValue(PropertiesKeyValue keyValue) {
-	      return addPropertiesValue(keyValue.getStringPanelValue());
-	   }
-
-	   public interface PropertiesKeyValue {
-
-	   	public Node getStringPanelValue();   
-	   }
-
-	   public void forEachPropertiesValue(Consumer<PropertiesKeyValue> consumer) {
-	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param)) {
-	   		final Node kvNode = other(node, relationship);
-	   		consumer.accept(new PropertiesKeyValue() {
-
-	   			@Override
-	   			public Node getStringPanelValue() {
-	   				if (!hasOutgoing(kvNode, RelationshipType.withName("stringPanel"))) return null;
-	   				return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("stringPanel")));
-	   			 } 
-
-	   				@Override
-	   				public String toString() {
-	   					return "TemplatePanel_properties_KeyValue " + get(kvNode, "uuid");
-	   				}
-	   		});
-	   	}
-	   } 
-	} 
 
 	public static final class TemplatesSwingNode {
 
@@ -516,9 +194,17 @@ public final class TemplatesSwingNeo {
 			groupName_param, packageName_param, statements_param
 		}
 
+		private enum StatementsRelationships implements RelationshipType {
+			name, newAction
+		} 
+
+		private enum KeyValueLabels implements Label {
+			Statements, 
+		}
+
 		private TemplatesSwingNode(final GraphDatabaseService graph) {
 			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_TemplatesSwing);
+			this.node = graph.createNode(TemplatesSwing_TemplatesSwing);
 			this.node.setProperty("uuid", UUID.randomUUID().toString());
 			this.uuid = UUID.fromString(getString(node, "uuid"));
 		}
@@ -531,7 +217,7 @@ public final class TemplatesSwingNeo {
 
 		public void delete() throws IllegalStateException {
 			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("TemplatesSwingNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 			tryToDeleteNode(node);
 		}	
 
@@ -558,7 +244,7 @@ public final class TemplatesSwingNeo {
 
 		@Override
 		public String toString() {
-			return "TemplatesSwing_TemplatesSwing " + uuid;
+			return getClass().getName() + "  " + uuid;
 		}
 
 	   // groupName
@@ -607,55 +293,109 @@ public final class TemplatesSwingNeo {
 	   	tryToDeleteNode(other);
 	   } 
 
-	   // statements
-	   public TemplatesSwingNode addStatementsValue(Node nameTarget, Node newActionTarget) {
-
-	   	final Node keyValueNode = graph.createNode(Label.label("KeyValue"));
-	   	keyValueNode.setProperty("uuid", UUID.randomUUID().toString());
-
-	   	if (nameTarget != null) 
-	   		keyValueNode.createRelationshipTo(nameTarget, RelationshipType.withName("name"));
-
-	   	if (newActionTarget != null) 
-	   		keyValueNode.createRelationshipTo(newActionTarget, RelationshipType.withName("newAction"));
-	      
-	   	node.createRelationshipTo(keyValueNode, Parameters.statements_param);
-	   	return this;
-	   }
-
-	   public TemplatesSwingNode addStatementsValue(StatementsKeyValue keyValue) {
-	      return addStatementsValue(keyValue.getNameValue(), keyValue.getNewActionValue());
-	   }
-
 	   public interface StatementsKeyValue {
 
 	   	public Node getNameValue();
 
-	   	public Node getNewActionValue();   
+	   	public Node getNewActionValue();
+
+	   	public StatementsKeyValue setNameValue(Node value);
+
+	   	public StatementsKeyValue setNewActionValue(Node value);
+
+	   	public Node node();
+
+	   	public UUID getUuid();
+	   }
+
+	   public TemplatesSwingNode addStatementsValue(StatementsKeyValue value) {
+	   	this.node.createRelationshipTo(value.node(), Parameters.statements_param);
+	      return this;
+	   }
+
+	   public StatementsKeyValue newStatementsKeyValue() {
+	   	final Node node = graph.createNode(KeyValueLabels.Statements);
+	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	return newStatementsKeyValue(node);
+	   }
+
+	   public static StatementsKeyValue newStatementsKeyValue(Node node) {
+	   	if (node==null) throw new IllegalArgumentException("node for newStatementsKeyValue cannot be null");
+
+	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+	   	return new StatementsKeyValue() {
+
+	   		@Override
+	   		public Node getNameValue() {
+	   			if (!hasOutgoing(node, StatementsRelationships.name)) return null;
+	   			return other(node, singleOutgoing(node, StatementsRelationships.name));
+	   		} 
+
+	   		@Override
+	   		public StatementsKeyValue setNameValue(Node value) {
+	   			if (hasOutgoing(node, StatementsRelationships.name)) {
+	   				final Relationship outgoing = singleOutgoing(node, StatementsRelationships.name);
+	   				final Node other = other(node, outgoing);
+	   				outgoing.delete();
+	   				tryToDeleteNode(other);
+	   			} 
+
+	   			if (value != null)
+	   				node.createRelationshipTo(value, StatementsRelationships.name);
+
+	   			return this;
+	   		} 
+
+	   		@Override
+	   		public Node getNewActionValue() {
+	   			if (!hasOutgoing(node, StatementsRelationships.newAction)) return null;
+	   			return other(node, singleOutgoing(node, StatementsRelationships.newAction));
+	   		} 
+
+	   		@Override
+	   		public StatementsKeyValue setNewActionValue(Node value) {
+	   			if (hasOutgoing(node, StatementsRelationships.newAction)) {
+	   				final Relationship outgoing = singleOutgoing(node, StatementsRelationships.newAction);
+	   				final Node other = other(node, outgoing);
+	   				outgoing.delete();
+	   				tryToDeleteNode(other);
+	   			} 
+
+	   			if (value != null)
+	   				node.createRelationshipTo(value, StatementsRelationships.newAction);
+
+	   			return this;
+	   		} 
+
+	   		@Override
+	   		public Node node() {
+	   			return node;
+	   		}
+
+	   		@Override
+	   		public UUID getUuid() {
+	   			return uuid;
+	   		}
+
+	   		@Override
+	   		public boolean equals(Object o) {
+	   			if (this == o) return true;
+	   			if (o == null || getClass() != o.getClass()) return false;
+	   			StringNode that = (StringNode) o;
+	   			return uuid.equals(that.getUuid());
+	   		}
+
+	   		@Override
+	   		public int hashCode() {
+	   			return uuid.hashCode();
+	   		}
+	   	};
 	   }
 
 	   public void forEachStatementsValue(Consumer<StatementsKeyValue> consumer) {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.statements_param)) {
-	   		final Node kvNode = other(node, relationship);
-	   		consumer.accept(new StatementsKeyValue() {
-
-	   			@Override
-	   			public Node getNameValue() {
-	   				if (!hasOutgoing(kvNode, RelationshipType.withName("name"))) return null;
-	   				return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("name")));
-	   			 } 
-
-	   			@Override
-	   			public Node getNewActionValue() {
-	   				if (!hasOutgoing(kvNode, RelationshipType.withName("newAction"))) return null;
-	   				return other(kvNode, singleOutgoing(kvNode, RelationshipType.withName("newAction")));
-	   			 } 
-
-	   				@Override
-	   				public String toString() {
-	   					return "TemplatesSwing_statements_KeyValue " + get(kvNode, "uuid");
-	   				}
-	   		});
+	   		consumer.accept(newStatementsKeyValue(other(node, relationship)));
 	   	}
 	   } 
 	} 
@@ -670,9 +410,13 @@ public final class TemplatesSwingNeo {
 			name_param, packageName_param
 		}
 
+
+		private enum KeyValueLabels implements Label {
+		}
+
 		private addVerticleActionNode(final GraphDatabaseService graph) {
 			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_addVerticleAction);
+			this.node = graph.createNode(TemplatesSwing_addVerticleAction);
 			this.node.setProperty("uuid", UUID.randomUUID().toString());
 			this.uuid = UUID.fromString(getString(node, "uuid"));
 		}
@@ -685,7 +429,7 @@ public final class TemplatesSwingNeo {
 
 		public void delete() throws IllegalStateException {
 			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("addVerticleActionNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 			tryToDeleteNode(node);
 		}	
 
@@ -712,7 +456,7 @@ public final class TemplatesSwingNeo {
 
 		@Override
 		public String toString() {
-			return "TemplatesSwing_addVerticleAction " + uuid;
+			return getClass().getName() + "  " + uuid;
 		}
 
 	   // name
@@ -770,7 +514,7 @@ public final class TemplatesSwingNeo {
 
 		private bugfixNode(final GraphDatabaseService graph) {
 			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_bugfix);
+			this.node = graph.createNode(TemplatesSwing_bugfix);
 			this.node.setProperty("uuid", UUID.randomUUID().toString());
 			this.uuid = UUID.fromString(getString(node, "uuid"));
 		}
@@ -783,7 +527,7 @@ public final class TemplatesSwingNeo {
 
 		public void delete() throws IllegalStateException {
 			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("bugfixNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 			tryToDeleteNode(node);
 		}	
 
@@ -810,7 +554,7 @@ public final class TemplatesSwingNeo {
 
 		@Override
 		public String toString() {
-			return "TemplatesSwing_bugfix " + uuid;
+			return getClass().getName() + "  " + uuid;
 		}
 
 	} 
@@ -825,9 +569,13 @@ public final class TemplatesSwingNeo {
 			groupName_param, name_param
 		}
 
+
+		private enum KeyValueLabels implements Label {
+		}
+
 		private newActionNode(final GraphDatabaseService graph) {
 			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_newAction);
+			this.node = graph.createNode(TemplatesSwing_newAction);
 			this.node.setProperty("uuid", UUID.randomUUID().toString());
 			this.uuid = UUID.fromString(getString(node, "uuid"));
 		}
@@ -840,7 +588,7 @@ public final class TemplatesSwingNeo {
 
 		public void delete() throws IllegalStateException {
 			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("newActionNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 			tryToDeleteNode(node);
 		}	
 
@@ -867,7 +615,7 @@ public final class TemplatesSwingNeo {
 
 		@Override
 		public String toString() {
-			return "TemplatesSwing_newAction " + uuid;
+			return getClass().getName() + "  " + uuid;
 		}
 
 	   // groupName
@@ -927,9 +675,13 @@ public final class TemplatesSwingNeo {
 			groupName_param, name_param
 		}
 
+
+		private enum KeyValueLabels implements Label {
+		}
+
 		private stringPropertyEditorNode(final GraphDatabaseService graph) {
 			this.graph = graph;
-			this.node = graph.createNode(TemplatesSwingLabels.TemplatesSwing_stringPropertyEditor);
+			this.node = graph.createNode(TemplatesSwing_stringPropertyEditor);
 			this.node.setProperty("uuid", UUID.randomUUID().toString());
 			this.uuid = UUID.fromString(getString(node, "uuid"));
 		}
@@ -942,7 +694,7 @@ public final class TemplatesSwingNeo {
 
 		public void delete() throws IllegalStateException {
 			if (node.hasRelationship(Direction.INCOMING))
-				throw new IllegalStateException("stringPropertyEditorNode " + uuid + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
 			tryToDeleteNode(node);
 		}	
 
@@ -969,7 +721,7 @@ public final class TemplatesSwingNeo {
 
 		@Override
 		public String toString() {
-			return "TemplatesSwing_stringPropertyEditor " + uuid;
+			return getClass().getName() + "  " + uuid;
 		}
 
 	   // groupName
@@ -1020,71 +772,73 @@ public final class TemplatesSwingNeo {
 	} 
 
 	public static boolean isStringNode(Node node) {
-		return node != null && node.hasLabel(TemplatesSwingLabels.StringNode);
+		return node != null && node.hasLabel(StringNode);
 	}
 
+	// convenience-method for instantiating a new StringNode, and setting the value
 	public Node newStringNode(String value) {
 		if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
-		return new StringNode(graph).setValue(value).node();
+
+		final Node node = graph.createNode(StringNode);
+		node.setProperty("uuid", UUID.randomUUID().toString());
+		return newStringNode(node).setValue(value).node();
 	}
 
 	public static StringNode newStringNode(Node node) {
-		if (node == null) return null;
-		return new StringNode(node);
+		if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+
+		final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+		return new StringNode() {
+			@Override
+			public StringNode setValue(String value) {
+				node.setProperty("value", value);
+				return this;
+			}
+
+			@Override
+			public String getValue() {
+				return getString(node, "value");
+			}
+
+			@Override
+			public Node node() {
+				return node;
+			}
+
+			@Override
+			public UUID getUuid() {
+				return uuid;
+			}
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				StringNode that = (StringNode) o;
+				return uuid.equals(that.getUuid());
+			}
+
+			@Override
+			public int hashCode() {
+				return uuid.hashCode();
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
+			}	
+		};
 	}
 
-	// todo turn this into an interface, like KeyValues ?
-	public static final class StringNode {
+	public interface StringNode {
 
-		private final Node node;
-		private final UUID uuid;
+		public StringNode setValue(String value);
 
-		public StringNode(final GraphDatabaseService graph) {
-			this.node = graph.createNode(TemplatesSwingLabels.StringNode);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
+		public String getValue();
 
-		public StringNode(final Node node) {
-			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
-		}
+		public Node node();
 
-		public Node node() {
-			return node;
-		}
-
-		public UUID getUuid() {
-			return uuid;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			StringNode that = (StringNode) o;
-			return uuid.equals(that.uuid);
-		}
-
-		@Override
-		public int hashCode() {
-			return uuid.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return getValue();
-		}
-
-		// propertyName
-		public StringNode setValue(String value) {
-			if (node == null) return this;
-			node.setProperty("value", value);
-			return this;
-		}
-
-		public String getValue() {
-			return getString(node, "value");
-		}
+		public UUID getUuid();
 	} 
 } 

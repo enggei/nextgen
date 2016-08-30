@@ -22,14 +22,6 @@ public class TemplatesSwingSwing {
 
 	public static abstract class TemplatesSwingNeoListener {
 
-		public void newGroupPanel(TemplatesSwingNeo.GroupPanelNode node) {
-			System.out.println("newGroupPanelNode : " + node.getUuid());
-		} 
-
-		public void newTemplatePanel(TemplatesSwingNeo.TemplatePanelNode node) {
-			System.out.println("newTemplatePanelNode : " + node.getUuid());
-		} 
-
 		public void newTemplatesSwing(TemplatesSwingNeo.TemplatesSwingNode node) {
 			System.out.println("newTemplatesSwingNode : " + node.getUuid());
 		} 
@@ -60,27 +52,6 @@ public class TemplatesSwingSwing {
 		return new NewInstancesPanel(this, delegate);
 	}
 
-	public Action newGroupPanelAction(TemplatesSwingNeoListener listener) {
-		return new AbstractAction("new GroupPanel") {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(() -> {
-					db.doInTransaction(new TemplatesSwingNeo.TemplatesSwingNeoAction() {
-						@Override
-						public void doAction(Transaction tx) throws Throwable {
-							listener.newGroupPanel(db.newGroupPanel());
-						}
-
-						@Override
-						public void exception(Throwable throwable) {
-							listener.onException("newGroupPanel", throwable);
-						}
-					});
-				});
-			}
-		};
-	} 
-
 	public Action newTemplatePanelAction(TemplatesSwingNeoListener listener) {
 		return new AbstractAction("new TemplatePanel") {
 			@Override
@@ -89,7 +60,7 @@ public class TemplatesSwingSwing {
 					db.doInTransaction(new TemplatesSwingNeo.TemplatesSwingNeoAction() {
 						@Override
 						public void doAction(Transaction tx) throws Throwable {
-							listener.newTemplatePanel(db.newTemplatePanel());
+							//listener.newTemplatePanel(db.newTemplatePanel());
 						}
 
 						@Override
@@ -208,62 +179,15 @@ public class TemplatesSwingSwing {
 	} 
 
 
-	public static void main(String[] args) {
-		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
-		final TemplatesSwingSwing templatesNeoSwing = new TemplatesSwingSwing(db);
-
-		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new TemplatesSwingNeoListener() {
-			@Override
-			public void newGroupPanel(TemplatesSwingNeo.GroupPanelNode node) {
-				super.newGroupPanel(node);
-			} 
-
-			@Override
-			public void newTemplatePanel(TemplatesSwingNeo.TemplatePanelNode node) {
-				super.newTemplatePanel(node);
-			} 
-
-			@Override
-			public void newTemplatesSwing(TemplatesSwingNeo.TemplatesSwingNode node) {
-				super.newTemplatesSwing(node);
-			} 
-
-			@Override
-			public void newAddVerticleAction(TemplatesSwingNeo.addVerticleActionNode node) {
-				super.newAddVerticleAction(node);
-			} 
-
-			@Override
-			public void newBugfix(TemplatesSwingNeo.bugfixNode node) {
-				super.newBugfix(node);
-			} 
-
-			@Override
-			public void newNewAction(TemplatesSwingNeo.newActionNode node) {
-				super.newNewAction(node);
-			} 
-
-			@Override
-			public void newStringPropertyEditor(TemplatesSwingNeo.stringPropertyEditorNode node) {
-				super.newStringPropertyEditor(node);
-			} 
-
-		}));
-	}
-
 	private final class NewInstancesPanel extends SwingUtil.FormPanel {
 
 		public NewInstancesPanel(TemplatesSwingSwing neoSwing, TemplatesSwingNeoListener delegate) {
-			super("150dlu, 4dlu, 150dlu:grow", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
+			super("150dlu, 4dlu, 150dlu:grow", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
 
 			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 			int row = 1;
 			this.addSeparator("New instances", 1, row, 3, 1);
-
-			row += 2;
-			this.addLabel("New GroupPanel", 1, row);
-			this.add(newJButton(neoSwing.newGroupPanelAction(delegate)), 3, row);
 
 			row += 2;
 			this.addLabel("New TemplatePanel", 1, row);
@@ -297,5 +221,38 @@ public class TemplatesSwingSwing {
 			button.setFocusPainted(false);
 			return button;
 		}
+	}
+
+	public static void main(String[] args) {
+		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
+		final TemplatesSwingSwing templatesNeoSwing = new TemplatesSwingSwing(db);
+
+		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new TemplatesSwingNeoListener() {
+			@Override
+			public void newTemplatesSwing(TemplatesSwingNeo.TemplatesSwingNode node) {
+				super.newTemplatesSwing(node);
+			} 
+
+			@Override
+			public void newAddVerticleAction(TemplatesSwingNeo.addVerticleActionNode node) {
+				super.newAddVerticleAction(node);
+			} 
+
+			@Override
+			public void newBugfix(TemplatesSwingNeo.bugfixNode node) {
+				super.newBugfix(node);
+			} 
+
+			@Override
+			public void newNewAction(TemplatesSwingNeo.newActionNode node) {
+				super.newNewAction(node);
+			} 
+
+			@Override
+			public void newStringPropertyEditor(TemplatesSwingNeo.stringPropertyEditorNode node) {
+				super.newStringPropertyEditor(node);
+			} 
+
+		}));
 	}
 } 

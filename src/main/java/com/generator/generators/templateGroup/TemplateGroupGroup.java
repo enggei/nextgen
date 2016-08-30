@@ -26,8 +26,6 @@ public final class TemplateGroupGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "templateGroup" + java.io.File.separator + "TemplateGroup.stg"));
    }
 
    public TemplateGroupGroup(STGroup stGroup) {

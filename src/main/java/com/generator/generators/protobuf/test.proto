@@ -1,7 +1,8 @@
-package com.generator.name;
+package com.generator.generators.protobuf;
+
+// AUTO-GENERATED - edit 'Protobuf.stg' to make output-changes
 
 option optimize_for = SPEED;
-
 import "test2.proto";
 
 message MessageOne {
@@ -10,6 +11,7 @@ message MessageOne {
    required int64 id = 3;
    required int32 localtime = 4;
    optional bytes data = 5;
+   optional ImportedMessage imported = 6;
    message Result {
       required string url = 1;
       optional string title = 2;

@@ -1,637 +1,1402 @@
- package com.generator.generators.protobuf;
+package com.generator.generators.protobuf;
 
- import com.generator.editors.domain.NeoModel;
- import org.neo4j.graphdb.Node;
- import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.*;
 
- import java.util.UUID;
+import java.util.UUID;
+import java.util.function.Consumer;
 
- import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static com.generator.generators.protobuf.ProtobufNeo.ProtobufLabels.*;
 
 /**
- * Wraps Neo4j methods based on 'Protobuf.stg' file <br/>	Protobuf
+ * Wraps Neo4j methods based on 'Protobuf.stg' file <br/>
+ * 
  */
 public final class ProtobufNeo {
 
-	private static final ProtobufGroup group = new ProtobufGroup();
+	private final GraphDatabaseService graph;
 
-	private final NeoModel model;
-
-   public ProtobufNeo(final NeoModel model) {
- 		this.model = model;
+	public enum ProtobufLabels implements Label {
+		Protobuf,   	
+		Protobuf_enum,
+		Protobuf_extend,
+		Protobuf_extensions,
+		Protobuf_groupMessagesModel,
+		Protobuf_message,
+		Protobuf_messageField,
+		Protobuf_protobufPackage, 
+		StringNode
 	}
 
-    public enumNode newenum() {
-   	return new enumNode(model, NeoModel.uuidOf(model.newNode("enum", UUID.randomUUID())));
+   public ProtobufNeo(final GraphDatabaseService graph) {
+ 		this.graph = graph;
+	}
+
+	public interface ProtobufNeoAction {
+
+		void doAction(Transaction tx) throws Throwable;
+
+		void exception(Throwable throwable);
+	}
+
+	public void doInTransaction(ProtobufNeoAction committer) {
+		try (Transaction tx = graph.beginTx()) {
+			try {
+				committer.doAction(tx);
+				tx.success();
+			} catch (Throwable throwable) {
+				committer.exception(throwable);
+				tx.failure();
+			}
+		}
+	}
+
+   public static boolean isEnum(Node node) {
+   	return node != null && node.hasLabel(Protobuf_enum);
    }
 
-   public enumNode getenum(UUID uuid) {
-   	return new enumNode(model, uuid);
-   } 
-
-    public extendNode newextend() {
-   	return new extendNode(model, NeoModel.uuidOf(model.newNode("extend", UUID.randomUUID())));
+   public enumNode newEnum() {
+   	return new enumNode(graph);
    }
 
-   public extendNode getextend(UUID uuid) {
-   	return new extendNode(model, uuid);
-   } 
-
-    public extensionsNode newextensions() {
-   	return new extensionsNode(model, NeoModel.uuidOf(model.newNode("extensions", UUID.randomUUID())));
+   public enumNode newEnum(Node node) {
+   	return new enumNode(graph, node);
    }
 
-   public extensionsNode getextensions(UUID uuid) {
-   	return new extensionsNode(model, uuid);
-   } 
-
-    public groupMessagesModelNode newgroupMessagesModel() {
-   	return new groupMessagesModelNode(model, NeoModel.uuidOf(model.newNode("groupMessagesModel", UUID.randomUUID())));
+   public void forEachEnumNodes(Consumer<enumNode> consumer) {
+   	graph.findNodes(Protobuf_enum).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new enumNode(graph, node));
+   			}
+   		});
    }
 
-   public groupMessagesModelNode getgroupMessagesModel(UUID uuid) {
-   	return new groupMessagesModelNode(model, uuid);
+   public void visitEnumNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_enum).
+   		forEachRemaining(consumer);
    } 
 
-    public messageNode newmessage() {
-   	return new messageNode(model, NeoModel.uuidOf(model.newNode("message", UUID.randomUUID())));
+   public static boolean isExtend(Node node) {
+   	return node != null && node.hasLabel(Protobuf_extend);
    }
 
-   public messageNode getmessage(UUID uuid) {
-   	return new messageNode(model, uuid);
-   } 
-
-    public messageFieldNode newmessageField() {
-   	return new messageFieldNode(model, NeoModel.uuidOf(model.newNode("messageField", UUID.randomUUID())));
+   public extendNode newExtend() {
+   	return new extendNode(graph);
    }
 
-   public messageFieldNode getmessageField(UUID uuid) {
-   	return new messageFieldNode(model, uuid);
-   } 
-
-    public protobufPackageNode newprotobufPackage() {
-   	return new protobufPackageNode(model, NeoModel.uuidOf(model.newNode("protobufPackage", UUID.randomUUID())));
+   public extendNode newExtend(Node node) {
+   	return new extendNode(graph, node);
    }
 
-   public protobufPackageNode getprotobufPackage(UUID uuid) {
-   	return new protobufPackageNode(model, uuid);
+   public void forEachExtendNodes(Consumer<extendNode> consumer) {
+   	graph.findNodes(Protobuf_extend).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new extendNode(graph, node));
+   			}
+   		});
+   }
+
+   public void visitExtendNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_extend).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class enumNode {
+   public static boolean isExtensions(Node node) {
+   	return node != null && node.hasLabel(Protobuf_extensions);
+   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+   public extensionsNode newExtensions() {
+   	return new extensionsNode(graph);
+   }
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   COMMENTS, NAME, PROPERTIES
-   	}
+   public extensionsNode newExtensions(Node node) {
+   	return new extensionsNode(graph, node);
+   }
 
-      private enumNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+   public void forEachExtensionsNodes(Consumer<extensionsNode> consumer) {
+   	graph.findNodes(Protobuf_extensions).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new extensionsNode(graph, node));
+   			}
+   		});
+   }
 
-   	public ProtobufGroup.enumST fill(ProtobufGroup.enumST statement) {
-   		fillComments(statement);
-   		fillName(statement);
-   		fillProperties(statement);
-   		return statement;
-   	}
-
-   	@Override
-   	public String toString() {
-   		return fill(group.newenum()).toString();
-   	}
-       // comments
-      public enumNode setComments(String value) {
-      	if (has(getNode(), "comments")) getNode().removeProperty("comments");
-      	if (value!=null) getNode().setProperty("comments", value);
-         return this;
-      }
-
-      private enumNode fillComments(ProtobufGroup.enumST statement) {
-      	if (has(getNode(), "comments")) statement.setComments(get(getNode(), "comments"));
-      	return this;
-      } 
-
-       // name
-      public enumNode setName(String value) {
-      	if (has(getNode(), "name")) getNode().removeProperty("name");
-      	if (value!=null) getNode().setProperty("name", value);
-         return this;
-      }
-
-      private enumNode fillName(ProtobufGroup.enumST statement) {
-      	if (has(getNode(), "name")) statement.setName(get(getNode(), "name"));
-      	return this;
-      } 
-
-       // properties
-      public enumNode addPropertiesValue(String value) {
-      	if (value != null) {
-      		final Node newNode = model.newNode("enum_properties", UUID.randomUUID());
-      		newNode.setProperty("value", value);
-      		getNode().createRelationshipTo(newNode, PARAMS.PROPERTIES);
-      	}
-         return this;
-      }
-
-      private enumNode fillProperties(ProtobufGroup.enumST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.PROPERTIES))
-      		statement.addPropertiesValue(getOtherProperty(getNode(), relationship, "value"));
-      	return this;
-      } 
-
-   	public UUID getUUID() {
-   		return uuid;
-   	}
-
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
+   public void visitExtensionsNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_extensions).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class extendNode {
+   public static boolean isGroupMessagesModel(Node node) {
+   	return node != null && node.hasLabel(Protobuf_groupMessagesModel);
+   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+   public groupMessagesModelNode newGroupMessagesModel() {
+   	return new groupMessagesModelNode(graph);
+   }
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   COMMENTS, NAME, PROPERTIES
-   	}
+   public groupMessagesModelNode newGroupMessagesModel(Node node) {
+   	return new groupMessagesModelNode(graph, node);
+   }
 
-      private extendNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+   public void forEachGroupMessagesModelNodes(Consumer<groupMessagesModelNode> consumer) {
+   	graph.findNodes(Protobuf_groupMessagesModel).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new groupMessagesModelNode(graph, node));
+   			}
+   		});
+   }
 
-   	public ProtobufGroup.extendST fill(ProtobufGroup.extendST statement) {
-   		fillComments(statement);
-   		fillName(statement);
-   		fillProperties(statement);
-   		return statement;
-   	}
-
-   	@Override
-   	public String toString() {
-   		return fill(group.newextend()).toString();
-   	}
-       // comments
-      public extendNode setComments(String value) {
-      	if (has(getNode(), "comments")) getNode().removeProperty("comments");
-      	if (value!=null) getNode().setProperty("comments", value);
-         return this;
-      }
-
-      private extendNode fillComments(ProtobufGroup.extendST statement) {
-      	if (has(getNode(), "comments")) statement.setComments(get(getNode(), "comments"));
-      	return this;
-      } 
-
-       // name
-      public extendNode setName(String value) {
-      	if (has(getNode(), "name")) getNode().removeProperty("name");
-      	if (value!=null) getNode().setProperty("name", value);
-         return this;
-      }
-
-      private extendNode fillName(ProtobufGroup.extendST statement) {
-      	if (has(getNode(), "name")) statement.setName(get(getNode(), "name"));
-      	return this;
-      } 
-
-       // properties
-      public extendNode addPropertiesValue(String value) {
-      	if (value != null) {
-      		final Node newNode = model.newNode("extend_properties", UUID.randomUUID());
-      		newNode.setProperty("value", value);
-      		getNode().createRelationshipTo(newNode, PARAMS.PROPERTIES);
-      	}
-         return this;
-      }
-
-      private extendNode fillProperties(ProtobufGroup.extendST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.PROPERTIES))
-      		statement.addPropertiesValue(getOtherProperty(getNode(), relationship, "value"));
-      	return this;
-      } 
-
-   	public UUID getUUID() {
-   		return uuid;
-   	}
-
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
+   public void visitGroupMessagesModelNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_groupMessagesModel).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class extensionsNode {
+   public static boolean isMessage(Node node) {
+   	return node != null && node.hasLabel(Protobuf_message);
+   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+   public messageNode newMessage() {
+   	return new messageNode(graph);
+   }
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   MAX, MIN
-   	}
+   public messageNode newMessage(Node node) {
+   	return new messageNode(graph, node);
+   }
 
-      private extensionsNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+   public void forEachMessageNodes(Consumer<messageNode> consumer) {
+   	graph.findNodes(Protobuf_message).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new messageNode(graph, node));
+   			}
+   		});
+   }
 
-   	public ProtobufGroup.extensionsST fill(ProtobufGroup.extensionsST statement) {
-   		fillMax(statement);
-   		fillMin(statement);
-   		return statement;
-   	}
-
-   	@Override
-   	public String toString() {
-   		return fill(group.newextensions()).toString();
-   	}
-       // max
-      public extensionsNode setMax(String value) {
-      	if (has(getNode(), "max")) getNode().removeProperty("max");
-      	if (value!=null) getNode().setProperty("max", value);
-         return this;
-      }
-
-      private extensionsNode fillMax(ProtobufGroup.extensionsST statement) {
-      	if (has(getNode(), "max")) statement.setMax(get(getNode(), "max"));
-      	return this;
-      } 
-
-       // min
-      public extensionsNode setMin(String value) {
-      	if (has(getNode(), "min")) getNode().removeProperty("min");
-      	if (value!=null) getNode().setProperty("min", value);
-         return this;
-      }
-
-      private extensionsNode fillMin(ProtobufGroup.extensionsST statement) {
-      	if (has(getNode(), "min")) statement.setMin(get(getNode(), "min"));
-      	return this;
-      } 
-
-   	public UUID getUUID() {
-   		return uuid;
-   	}
-
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
+   public void visitMessageNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_message).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class groupMessagesModelNode {
+   public static boolean isMessageField(Node node) {
+   	return node != null && node.hasLabel(Protobuf_messageField);
+   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+   public messageFieldNode newMessageField() {
+   	return new messageFieldNode(graph);
+   }
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   GROUPNAME, MESSAGES, PACKAGENAME
-   	}
+   public messageFieldNode newMessageField(Node node) {
+   	return new messageFieldNode(graph, node);
+   }
 
-      private groupMessagesModelNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+   public void forEachMessageFieldNodes(Consumer<messageFieldNode> consumer) {
+   	graph.findNodes(Protobuf_messageField).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new messageFieldNode(graph, node));
+   			}
+   		});
+   }
 
-   	public ProtobufGroup.groupMessagesModelST fill(ProtobufGroup.groupMessagesModelST statement) {
-   		fillGroupName(statement);
-   		fillMessages(statement);
-   		fillPackageName(statement);
-   		return statement;
-   	}
-
-   	@Override
-   	public String toString() {
-   		return fill(group.newgroupMessagesModel()).toString();
-   	}
-       // groupName
-      public groupMessagesModelNode setGroupName(String value) {
-      	if (has(getNode(), "groupName")) getNode().removeProperty("groupName");
-      	if (value!=null) getNode().setProperty("groupName", value);
-         return this;
-      }
-
-      private groupMessagesModelNode fillGroupName(ProtobufGroup.groupMessagesModelST statement) {
-      	if (has(getNode(), "groupName")) statement.setGroupName(get(getNode(), "groupName"));
-      	return this;
-      } 
-
-       // messages
-      public groupMessagesModelNode addMessagesValue(String name_) {
-      	final Node newNode = model.newNode("groupMessagesModel_messages", UUID.randomUUID());
-      	getNode().createRelationshipTo(newNode, PARAMS.MESSAGES);
-      	if (name_ != null) newNode.setProperty("name", name_);    
-      	return this;
-      }
-
-      private groupMessagesModelNode fillMessages(ProtobufGroup.groupMessagesModelST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.MESSAGES)) {
-      		final Node node = other(getNode(), relationship);
-      		statement.addMessagesValue(node.hasProperty("name") ? node.getProperty("name") : null);
-      	}
-      	return this;
-      } 
-
-       // packageName
-      public groupMessagesModelNode setPackageName(String value) {
-      	if (has(getNode(), "packageName")) getNode().removeProperty("packageName");
-      	if (value!=null) getNode().setProperty("packageName", value);
-         return this;
-      }
-
-      private groupMessagesModelNode fillPackageName(ProtobufGroup.groupMessagesModelST statement) {
-      	if (has(getNode(), "packageName")) statement.setPackageName(get(getNode(), "packageName"));
-      	return this;
-      } 
-
-   	public UUID getUUID() {
-   		return uuid;
-   	}
-
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
+   public void visitMessageFieldNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_messageField).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class messageNode {
+   public static boolean isProtobufPackage(Node node) {
+   	return node != null && node.hasLabel(Protobuf_protobufPackage);
+   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+   public protobufPackageNode newProtobufPackage() {
+   	return new protobufPackageNode(graph);
+   }
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   COMMENTS, NAME, PROPERTIES
-   	}
+   public protobufPackageNode newProtobufPackage(Node node) {
+   	return new protobufPackageNode(graph, node);
+   }
 
-      private messageNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+   public void forEachProtobufPackageNodes(Consumer<protobufPackageNode> consumer) {
+   	graph.findNodes(Protobuf_protobufPackage).
+   		forEachRemaining(new Consumer<Node>() {
+   			@Override
+   			public void accept(Node node) {
+   				consumer.accept(new protobufPackageNode(graph, node));
+   			}
+   		});
+   }
 
-   	public ProtobufGroup.messageST fill(ProtobufGroup.messageST statement) {
-   		fillComments(statement);
-   		fillName(statement);
-   		fillProperties(statement);
-   		return statement;
-   	}
-
-   	@Override
-   	public String toString() {
-   		return fill(group.newmessage()).toString();
-   	}
-       // comments
-      public messageNode setComments(String value) {
-      	if (has(getNode(), "comments")) getNode().removeProperty("comments");
-      	if (value!=null) getNode().setProperty("comments", value);
-         return this;
-      }
-
-      private messageNode fillComments(ProtobufGroup.messageST statement) {
-      	if (has(getNode(), "comments")) statement.setComments(get(getNode(), "comments"));
-      	return this;
-      } 
-
-       // name
-      public messageNode setName(String value) {
-      	if (has(getNode(), "name")) getNode().removeProperty("name");
-      	if (value!=null) getNode().setProperty("name", value);
-         return this;
-      }
-
-      private messageNode fillName(ProtobufGroup.messageST statement) {
-      	if (has(getNode(), "name")) statement.setName(get(getNode(), "name"));
-      	return this;
-      } 
-
-       // properties
-      public messageNode addPropertiesValue(String value) {
-      	if (value != null) {
-      		final Node newNode = model.newNode("message_properties", UUID.randomUUID());
-      		newNode.setProperty("value", value);
-      		getNode().createRelationshipTo(newNode, PARAMS.PROPERTIES);
-      	}
-         return this;
-      }
-
-      private messageNode fillProperties(ProtobufGroup.messageST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.PROPERTIES))
-      		statement.addPropertiesValue(getOtherProperty(getNode(), relationship, "value"));
-      	return this;
-      } 
-
-   	public UUID getUUID() {
-   		return uuid;
-   	}
-
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
+   public void visitProtobufPackageNodes(Consumer<Node> consumer) {
+   	graph.findNodes(Protobuf_protobufPackage).
+   		forEachRemaining(consumer);
    } 
 
-    public static final class messageFieldNode {
+	public static final class enumNode {
 
-      private final NeoModel model;
-   	private final UUID uuid;
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   COMMENTS, DEFAULTVALUE, FIELDCONSTRAINT, NAME, ORDINAL, TYPE
-   	}
+		private enum Parameters implements RelationshipType {
+			comments_param, name_param, properties_param
+		}
 
-      private messageFieldNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
 
-   	public ProtobufGroup.messageFieldST fill(ProtobufGroup.messageFieldST statement) {
-   		fillComments(statement);
-   		fillDefaultValue(statement);
-   		fillFieldConstraint(statement);
-   		fillName(statement);
-   		fillOrdinal(statement);
-   		fillType(statement);
-   		return statement;
-   	}
+		private enum KeyValueLabels implements Label {
+		}
 
-   	@Override
-   	public String toString() {
-   		return fill(group.newmessageField()).toString();
-   	}
-       // comments
-      public messageFieldNode setComments(String value) {
-      	if (has(getNode(), "comments")) getNode().removeProperty("comments");
-      	if (value!=null) getNode().setProperty("comments", value);
-         return this;
-      }
+		private enumNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_enum);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
 
-      private messageFieldNode fillComments(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "comments")) statement.setComments(get(getNode(), "comments"));
-      	return this;
-      } 
+		private enumNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
 
-       // defaultValue
-      public messageFieldNode setDefaultValue(String value) {
-      	if (has(getNode(), "defaultValue")) getNode().removeProperty("defaultValue");
-      	if (value!=null) getNode().setProperty("defaultValue", value);
-         return this;
-      }
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
 
-      private messageFieldNode fillDefaultValue(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "defaultValue")) statement.setDefaultValue(get(getNode(), "defaultValue"));
-      	return this;
-      } 
+		public Node node() {
+			return node;
+		}
 
-       // fieldConstraint
-      public messageFieldNode setFieldConstraint(String value) {
-      	if (has(getNode(), "fieldConstraint")) getNode().removeProperty("fieldConstraint");
-      	if (value!=null) getNode().setProperty("fieldConstraint", value);
-         return this;
-      }
+		public UUID getUuid() {
+			return uuid;
+		}
 
-      private messageFieldNode fillFieldConstraint(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "fieldConstraint")) statement.setFieldConstraint(get(getNode(), "fieldConstraint"));
-      	return this;
-      } 
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			enumNode that = (enumNode) o;
+			return uuid.equals(that.uuid);
+		}
 
-       // name
-      public messageFieldNode setName(String value) {
-      	if (has(getNode(), "name")) getNode().removeProperty("name");
-      	if (value!=null) getNode().setProperty("name", value);
-         return this;
-      }
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
 
-      private messageFieldNode fillName(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "name")) statement.setName(get(getNode(), "name"));
-      	return this;
-      } 
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
 
-       // ordinal
-      public messageFieldNode setOrdinal(String value) {
-      	if (has(getNode(), "ordinal")) getNode().removeProperty("ordinal");
-      	if (value!=null) getNode().setProperty("ordinal", value);
-         return this;
-      }
+	   // comments
+	   public enumNode setComments(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.comments_param))
+	   		singleOutgoing(node, Parameters.comments_param).delete();
+	   	node.createRelationshipTo(target, Parameters.comments_param);
+	      return this;
+	   }
 
-      private messageFieldNode fillOrdinal(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "ordinal")) statement.setOrdinal(get(getNode(), "ordinal"));
-      	return this;
-      } 
+	   public Node getComments() {
+	   	if (!hasOutgoing(node, Parameters.comments_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.comments_param);
+	   	return other(node, relationship);
+	   }
 
-       // type
-      public messageFieldNode setType(String value) {
-      	if (has(getNode(), "type")) getNode().removeProperty("type");
-      	if (value!=null) getNode().setProperty("type", value);
-         return this;
-      }
+	   public void removeComments() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.comments_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
 
-      private messageFieldNode fillType(ProtobufGroup.messageFieldST statement) {
-      	if (has(getNode(), "type")) statement.setType(get(getNode(), "type"));
-      	return this;
-      } 
+	   // name
+	   public enumNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
 
-   	public UUID getUUID() {
-   		return uuid;
-   	}
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
 
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
-   } 
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
 
-    public static final class protobufPackageNode {
+	   // properties
+	   public enumNode addPropertiesValue(Node target) {
+	   	if (node == null) return this;
+	   	node.createRelationshipTo(target, Parameters.properties_param);
+	      return this;
+	   }
 
-      private final NeoModel model;
-   	private final UUID uuid;
+	   public void forEachProperties(Consumer<Node> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
+	   		consumer.accept(other(node, relationship));
+	   } 
+	} 
 
-   	private enum PARAMS implements org.neo4j.graphdb.RelationshipType {
-   	   DELIVERABLES, IMPORTS, OPTIONS, PACKAGE
-   	}
+	public static final class extendNode {
 
-      private protobufPackageNode(final NeoModel model, UUID uuid) {
-   		this.model = model;
-   		this.uuid = uuid;
-   	}
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
 
-   	public ProtobufGroup.protobufPackageST fill(ProtobufGroup.protobufPackageST statement) {
-   		fillDeliverables(statement);
-   		fillImports(statement);
-   		fillOptions(statement);
-   		fillPackage(statement);
-   		return statement;
-   	}
+		private enum Parameters implements RelationshipType {
+			comments_param, name_param, properties_param
+		}
 
-   	@Override
-   	public String toString() {
-   		return fill(group.newprotobufPackage()).toString();
-   	}
-       // deliverables
-      public protobufPackageNode addDeliverablesValue(String value) {
-      	if (value != null) {
-      		final Node newNode = model.newNode("protobufPackage_deliverables", UUID.randomUUID());
-      		newNode.setProperty("value", value);
-      		getNode().createRelationshipTo(newNode, PARAMS.DELIVERABLES);
-      	}
-         return this;
-      }
 
-      private protobufPackageNode fillDeliverables(ProtobufGroup.protobufPackageST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.DELIVERABLES))
-      		statement.addDeliverablesValue(getOtherProperty(getNode(), relationship, "value"));
-      	return this;
-      } 
+		private enum KeyValueLabels implements Label {
+		}
 
-       // imports
-      public protobufPackageNode addImportsValue(String value) {
-      	if (value != null) {
-      		final Node newNode = model.newNode("protobufPackage_imports", UUID.randomUUID());
-      		newNode.setProperty("value", value);
-      		getNode().createRelationshipTo(newNode, PARAMS.IMPORTS);
-      	}
-         return this;
-      }
+		private extendNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_extend);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
 
-      private protobufPackageNode fillImports(ProtobufGroup.protobufPackageST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.IMPORTS))
-      		statement.addImportsValue(getOtherProperty(getNode(), relationship, "value"));
-      	return this;
-      } 
+		private extendNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
 
-       // options
-      public protobufPackageNode addOptionsValue(String name_, String value_) {
-      	final Node newNode = model.newNode("protobufPackage_options", UUID.randomUUID());
-      	getNode().createRelationshipTo(newNode, PARAMS.OPTIONS);
-      	if (name_ != null) newNode.setProperty("name", name_); 
-      	if (value_ != null) newNode.setProperty("value", value_);    
-      	return this;
-      }
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
 
-      private protobufPackageNode fillOptions(ProtobufGroup.protobufPackageST statement) {
-      	for (Relationship relationship : outgoing(getNode(), PARAMS.OPTIONS)) {
-      		final Node node = other(getNode(), relationship);
-      		statement.addOptionsValue(node.hasProperty("name") ? node.getProperty("name") : null, node.hasProperty("value") ? node.getProperty("value") : null);
-      	}
-      	return this;
-      } 
+		public Node node() {
+			return node;
+		}
 
-       // package
-      public protobufPackageNode setPackage(String value) {
-      	if (has(getNode(), "package")) getNode().removeProperty("package");
-      	if (value!=null) getNode().setProperty("package", value);
-         return this;
-      }
+		public UUID getUuid() {
+			return uuid;
+		}
 
-      private protobufPackageNode fillPackage(ProtobufGroup.protobufPackageST statement) {
-      	if (has(getNode(), "package")) statement.setPackage(get(getNode(), "package"));
-      	return this;
-      } 
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			extendNode that = (extendNode) o;
+			return uuid.equals(that.uuid);
+		}
 
-   	public UUID getUUID() {
-   		return uuid;
-   	}
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
 
-   	public Node getNode() {
-   		return model.getNode(uuid);
-   	}
-   } 
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // comments
+	   public extendNode setComments(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.comments_param))
+	   		singleOutgoing(node, Parameters.comments_param).delete();
+	   	node.createRelationshipTo(target, Parameters.comments_param);
+	      return this;
+	   }
+
+	   public Node getComments() {
+	   	if (!hasOutgoing(node, Parameters.comments_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.comments_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeComments() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.comments_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // name
+	   public extendNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // properties
+	   public extendNode addPropertiesValue(Node target) {
+	   	if (node == null) return this;
+	   	node.createRelationshipTo(target, Parameters.properties_param);
+	      return this;
+	   }
+
+	   public void forEachProperties(Consumer<Node> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
+	   		consumer.accept(other(node, relationship));
+	   } 
+	} 
+
+	public static final class extensionsNode {
+
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
+
+		private enum Parameters implements RelationshipType {
+			max_param, min_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private extensionsNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_extensions);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		private extensionsNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			extensionsNode that = (extensionsNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // max
+	   public extensionsNode setMax(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.max_param))
+	   		singleOutgoing(node, Parameters.max_param).delete();
+	   	node.createRelationshipTo(target, Parameters.max_param);
+	      return this;
+	   }
+
+	   public Node getMax() {
+	   	if (!hasOutgoing(node, Parameters.max_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.max_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeMax() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.max_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // min
+	   public extensionsNode setMin(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.min_param))
+	   		singleOutgoing(node, Parameters.min_param).delete();
+	   	node.createRelationshipTo(target, Parameters.min_param);
+	      return this;
+	   }
+
+	   public Node getMin() {
+	   	if (!hasOutgoing(node, Parameters.min_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.min_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeMin() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.min_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+	} 
+
+	public static final class groupMessagesModelNode {
+
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
+
+		private enum Parameters implements RelationshipType {
+			groupName_param, messages_param, packageName_param
+		}
+
+		private enum MessagesRelationships implements RelationshipType {
+			name
+		} 
+
+		private enum KeyValueLabels implements Label {
+			Messages, 
+		}
+
+		private groupMessagesModelNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_groupMessagesModel);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		private groupMessagesModelNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			groupMessagesModelNode that = (groupMessagesModelNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // groupName
+	   public groupMessagesModelNode setGroupName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.groupName_param))
+	   		singleOutgoing(node, Parameters.groupName_param).delete();
+	   	node.createRelationshipTo(target, Parameters.groupName_param);
+	      return this;
+	   }
+
+	   public Node getGroupName() {
+	   	if (!hasOutgoing(node, Parameters.groupName_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.groupName_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeGroupName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.groupName_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   public interface MessagesKeyValue {
+
+	   	public Node getNameValue();
+
+	   	public MessagesKeyValue setNameValue(Node value);
+
+	   	public Node node();
+
+	   	public UUID getUuid();
+	   }
+
+	   public groupMessagesModelNode addMessagesValue(MessagesKeyValue value) {
+	   	this.node.createRelationshipTo(value.node(), Parameters.messages_param);
+	      return this;
+	   }
+
+	   public MessagesKeyValue newMessagesKeyValue() {
+	   	final Node node = graph.createNode(KeyValueLabels.Messages);
+	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	return newMessagesKeyValue(node);
+	   }
+
+	   public static MessagesKeyValue newMessagesKeyValue(Node node) {
+	   	if (node==null) throw new IllegalArgumentException("node for newMessagesKeyValue cannot be null");
+
+	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+	   	return new MessagesKeyValue() {
+
+	   		@Override
+	   		public Node getNameValue() {
+	   			if (!hasOutgoing(node, MessagesRelationships.name)) return null;
+	   			return other(node, singleOutgoing(node, MessagesRelationships.name));
+	   		} 
+
+	   		@Override
+	   		public MessagesKeyValue setNameValue(Node value) {
+	   			if (hasOutgoing(node, MessagesRelationships.name)) {
+	   				final Relationship outgoing = singleOutgoing(node, MessagesRelationships.name);
+	   				final Node other = other(node, outgoing);
+	   				outgoing.delete();
+	   				tryToDeleteNode(other);
+	   			} 
+
+	   			if (value != null)
+	   				node.createRelationshipTo(value, MessagesRelationships.name);
+
+	   			return this;
+	   		} 
+
+	   		@Override
+	   		public Node node() {
+	   			return node;
+	   		}
+
+	   		@Override
+	   		public UUID getUuid() {
+	   			return uuid;
+	   		}
+
+	   		@Override
+	   		public boolean equals(Object o) {
+	   			if (this == o) return true;
+	   			if (o == null || getClass() != o.getClass()) return false;
+	   			StringNode that = (StringNode) o;
+	   			return uuid.equals(that.getUuid());
+	   		}
+
+	   		@Override
+	   		public int hashCode() {
+	   			return uuid.hashCode();
+	   		}
+	   	};
+	   }
+
+	   public void forEachMessagesValue(Consumer<MessagesKeyValue> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.messages_param)) {
+	   		consumer.accept(newMessagesKeyValue(other(node, relationship)));
+	   	}
+	   } 
+
+	   // packageName
+	   public groupMessagesModelNode setPackageName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.packageName_param))
+	   		singleOutgoing(node, Parameters.packageName_param).delete();
+	   	node.createRelationshipTo(target, Parameters.packageName_param);
+	      return this;
+	   }
+
+	   public Node getPackageName() {
+	   	if (!hasOutgoing(node, Parameters.packageName_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.packageName_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removePackageName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.packageName_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+	} 
+
+	public static final class messageNode {
+
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
+
+		private enum Parameters implements RelationshipType {
+			comments_param, name_param, properties_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private messageNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_message);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		private messageNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			messageNode that = (messageNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // comments
+	   public messageNode setComments(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.comments_param))
+	   		singleOutgoing(node, Parameters.comments_param).delete();
+	   	node.createRelationshipTo(target, Parameters.comments_param);
+	      return this;
+	   }
+
+	   public Node getComments() {
+	   	if (!hasOutgoing(node, Parameters.comments_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.comments_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeComments() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.comments_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // name
+	   public messageNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // properties
+	   public messageNode addPropertiesValue(Node target) {
+	   	if (node == null) return this;
+	   	node.createRelationshipTo(target, Parameters.properties_param);
+	      return this;
+	   }
+
+	   public void forEachProperties(Consumer<Node> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
+	   		consumer.accept(other(node, relationship));
+	   } 
+	} 
+
+	public static final class messageFieldNode {
+
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
+
+		private enum Parameters implements RelationshipType {
+			comments_param, defaultValue_param, fieldConstraint_param, name_param, ordinal_param, packedValue_param, type_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private messageFieldNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_messageField);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		private messageFieldNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			messageFieldNode that = (messageFieldNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // comments
+	   public messageFieldNode setComments(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.comments_param))
+	   		singleOutgoing(node, Parameters.comments_param).delete();
+	   	node.createRelationshipTo(target, Parameters.comments_param);
+	      return this;
+	   }
+
+	   public Node getComments() {
+	   	if (!hasOutgoing(node, Parameters.comments_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.comments_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeComments() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.comments_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // defaultValue
+	   public messageFieldNode setDefaultValue(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.defaultValue_param))
+	   		singleOutgoing(node, Parameters.defaultValue_param).delete();
+	   	node.createRelationshipTo(target, Parameters.defaultValue_param);
+	      return this;
+	   }
+
+	   public Node getDefaultValue() {
+	   	if (!hasOutgoing(node, Parameters.defaultValue_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.defaultValue_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeDefaultValue() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.defaultValue_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // fieldConstraint
+	   public messageFieldNode setFieldConstraint(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.fieldConstraint_param))
+	   		singleOutgoing(node, Parameters.fieldConstraint_param).delete();
+	   	node.createRelationshipTo(target, Parameters.fieldConstraint_param);
+	      return this;
+	   }
+
+	   public Node getFieldConstraint() {
+	   	if (!hasOutgoing(node, Parameters.fieldConstraint_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.fieldConstraint_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeFieldConstraint() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.fieldConstraint_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // name
+	   public messageFieldNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // ordinal
+	   public messageFieldNode setOrdinal(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.ordinal_param))
+	   		singleOutgoing(node, Parameters.ordinal_param).delete();
+	   	node.createRelationshipTo(target, Parameters.ordinal_param);
+	      return this;
+	   }
+
+	   public Node getOrdinal() {
+	   	if (!hasOutgoing(node, Parameters.ordinal_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.ordinal_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeOrdinal() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.ordinal_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // packedValue
+	   public messageFieldNode setPackedValue(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.packedValue_param))
+	   		singleOutgoing(node, Parameters.packedValue_param).delete();
+	   	node.createRelationshipTo(target, Parameters.packedValue_param);
+	      return this;
+	   }
+
+	   public Node getPackedValue() {
+	   	if (!hasOutgoing(node, Parameters.packedValue_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.packedValue_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removePackedValue() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.packedValue_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+	   // type
+	   public messageFieldNode setType(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.type_param))
+	   		singleOutgoing(node, Parameters.type_param).delete();
+	   	node.createRelationshipTo(target, Parameters.type_param);
+	      return this;
+	   }
+
+	   public Node getType() {
+	   	if (!hasOutgoing(node, Parameters.type_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.type_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removeType() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.type_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+	} 
+
+	public static final class protobufPackageNode {
+
+		private final GraphDatabaseService graph;
+	   private final Node node;
+		private final UUID uuid;
+
+		private enum Parameters implements RelationshipType {
+			deliverables_param, imports_param, options_param, package_param
+		}
+
+		private enum OptionsRelationships implements RelationshipType {
+			name, value
+		} 
+
+		private enum KeyValueLabels implements Label {
+			Options, 
+		}
+
+		private protobufPackageNode(final GraphDatabaseService graph) {
+			this.graph = graph;
+			this.node = graph.createNode(Protobuf_protobufPackage);
+			this.node.setProperty("uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		private protobufPackageNode(final GraphDatabaseService graph, final Node node) {
+			this.graph = graph;
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			protobufPackageNode that = (protobufPackageNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // deliverables
+	   public protobufPackageNode addDeliverablesValue(Node target) {
+	   	if (node == null) return this;
+	   	node.createRelationshipTo(target, Parameters.deliverables_param);
+	      return this;
+	   }
+
+	   public void forEachDeliverables(Consumer<Node> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.deliverables_param))
+	   		consumer.accept(other(node, relationship));
+	   } 
+
+	   // imports
+	   public protobufPackageNode addImportsValue(Node target) {
+	   	if (node == null) return this;
+	   	node.createRelationshipTo(target, Parameters.imports_param);
+	      return this;
+	   }
+
+	   public void forEachImports(Consumer<Node> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.imports_param))
+	   		consumer.accept(other(node, relationship));
+	   } 
+
+	   public interface OptionsKeyValue {
+
+	   	public Node getNameValue();
+
+	   	public Node getValueValue();
+
+	   	public OptionsKeyValue setNameValue(Node value);
+
+	   	public OptionsKeyValue setValueValue(Node value);
+
+	   	public Node node();
+
+	   	public UUID getUuid();
+	   }
+
+	   public protobufPackageNode addOptionsValue(OptionsKeyValue value) {
+	   	this.node.createRelationshipTo(value.node(), Parameters.options_param);
+	      return this;
+	   }
+
+	   public OptionsKeyValue newOptionsKeyValue() {
+	   	final Node node = graph.createNode(KeyValueLabels.Options);
+	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	return newOptionsKeyValue(node);
+	   }
+
+	   public static OptionsKeyValue newOptionsKeyValue(Node node) {
+	   	if (node==null) throw new IllegalArgumentException("node for newOptionsKeyValue cannot be null");
+
+	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+	   	return new OptionsKeyValue() {
+
+	   		@Override
+	   		public Node getNameValue() {
+	   			if (!hasOutgoing(node, OptionsRelationships.name)) return null;
+	   			return other(node, singleOutgoing(node, OptionsRelationships.name));
+	   		} 
+
+	   		@Override
+	   		public OptionsKeyValue setNameValue(Node value) {
+	   			if (hasOutgoing(node, OptionsRelationships.name)) {
+	   				final Relationship outgoing = singleOutgoing(node, OptionsRelationships.name);
+	   				final Node other = other(node, outgoing);
+	   				outgoing.delete();
+	   				tryToDeleteNode(other);
+	   			} 
+
+	   			if (value != null)
+	   				node.createRelationshipTo(value, OptionsRelationships.name);
+
+	   			return this;
+	   		} 
+
+	   		@Override
+	   		public Node getValueValue() {
+	   			if (!hasOutgoing(node, OptionsRelationships.value)) return null;
+	   			return other(node, singleOutgoing(node, OptionsRelationships.value));
+	   		} 
+
+	   		@Override
+	   		public OptionsKeyValue setValueValue(Node value) {
+	   			if (hasOutgoing(node, OptionsRelationships.value)) {
+	   				final Relationship outgoing = singleOutgoing(node, OptionsRelationships.value);
+	   				final Node other = other(node, outgoing);
+	   				outgoing.delete();
+	   				tryToDeleteNode(other);
+	   			} 
+
+	   			if (value != null)
+	   				node.createRelationshipTo(value, OptionsRelationships.value);
+
+	   			return this;
+	   		} 
+
+	   		@Override
+	   		public Node node() {
+	   			return node;
+	   		}
+
+	   		@Override
+	   		public UUID getUuid() {
+	   			return uuid;
+	   		}
+
+	   		@Override
+	   		public boolean equals(Object o) {
+	   			if (this == o) return true;
+	   			if (o == null || getClass() != o.getClass()) return false;
+	   			StringNode that = (StringNode) o;
+	   			return uuid.equals(that.getUuid());
+	   		}
+
+	   		@Override
+	   		public int hashCode() {
+	   			return uuid.hashCode();
+	   		}
+	   	};
+	   }
+
+	   public void forEachOptionsValue(Consumer<OptionsKeyValue> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.options_param)) {
+	   		consumer.accept(newOptionsKeyValue(other(node, relationship)));
+	   	}
+	   } 
+
+	   // package
+	   public protobufPackageNode setPackage(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.package_param))
+	   		singleOutgoing(node, Parameters.package_param).delete();
+	   	node.createRelationshipTo(target, Parameters.package_param);
+	      return this;
+	   }
+
+	   public Node getPackage() {
+	   	if (!hasOutgoing(node, Parameters.package_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.package_param);
+	   	return other(node, relationship);
+	   }
+
+	   public void removePackage() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.package_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+	} 
+
+	public static boolean isStringNode(Node node) {
+		return node != null && node.hasLabel(StringNode);
+	}
+
+	// convenience-method for instantiating a new StringNode, and setting the value
+	public Node newStringNode(String value) {
+		if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
+
+		final Node node = graph.createNode(StringNode);
+		node.setProperty("uuid", UUID.randomUUID().toString());
+		return newStringNode(node).setValue(value).node();
+	}
+
+	public static StringNode newStringNode(Node node) {
+		if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+
+		final UUID uuid = UUID.fromString(getString(node, "uuid"));
+
+		return new StringNode() {
+			@Override
+			public StringNode setValue(String value) {
+				node.setProperty("value", value);
+				return this;
+			}
+
+			@Override
+			public String getValue() {
+				return getString(node, "value");
+			}
+
+			@Override
+			public Node node() {
+				return node;
+			}
+
+			@Override
+			public UUID getUuid() {
+				return uuid;
+			}
+
+			@Override
+			public boolean equals(Object o) {
+				if (this == o) return true;
+				if (o == null || getClass() != o.getClass()) return false;
+				StringNode that = (StringNode) o;
+				return uuid.equals(that.getUuid());
+			}
+
+			@Override
+			public int hashCode() {
+				return uuid.hashCode();
+			}
+
+			@Override
+			public String toString() {
+				return getValue();
+			}	
+		};
+	}
+
+	public interface StringNode {
+
+		public StringNode setValue(String value);
+
+		public String getValue();
+
+		public Node node();
+
+		public UUID getUuid();
+	} 
 } 

@@ -1,119 +1,5 @@
-/* uuid : 996304da-d183-4ce8-ba25-23b45fd70282 */
+/* uuid : 413d652e-413a-4342-9a68-e70c4c053df0 */
 delimiters "~", "~"
-
-/** name,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,addGroupVerticleAction,groupClassDeclarationPanel; **/
-GroupPanel(name,packageName,verticles) ::= <<package ~packageName~;
-
-import ~packageName~.vertx.*;
-import com.generator.generators.templates.domain.GeneratedFile;
-import com.generator.util.CompileUtil;
-import com.generator.util.SwingUtil;
-import com.generator.util.FileUtil;
-import com.generator.util.VertxUtil;
-import io.vertx.core.Verticle;
-import io.vertx.core.Vertx;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.UUID;
-
-/**
- * from wrapped STGroupFile
- */
-public final class ~name~ extends JPanel {
-
-	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);
-
-	public static void main(String[] args) {
-		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-		final Vertx vertx = Vertx.vertx();
-		final JPanel owner = new JPanel(new BorderLayout());
-		final JTabbedPane declarationsPanel = new JTabbedPane();
-		owner.add(new ~name~(vertx, declarationsPanel, new JTextField("/media/storage/nextgen/src/main/java")), BorderLayout.NORTH);
-		owner.add(declarationsPanel, BorderLayout.CENTER);
-		SwingUtil.showPanel(owner);
-	}
-
-	public ~name~(Vertx vertx, final JTabbedPane declarationsPanel, final JTextField txtRoot) {
-		super(new com.generator.util.WrapLayout());
-		~verticles:{it|~it.addGroupVerticleAction~};separator="\n"~
-	}
-
-	private static JButton deployVerticleAction(final Vertx vertx, final JTextField txtRoot, final String packageName, final String name, final VertxUtil.SuccessHandler<String> handler) {
-		return new JButton(new AbstractAction("new " + name) {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SwingUtilities.invokeLater(() -> {
-					final File file = new File(txtRoot.getText(), GeneratedFile.packageToPath(packageName, name + ".java"));
-					log.info("deploying from file " + file.getAbsolutePath() + "");
-					try {
-						VertxUtil.deploy(vertx, (Verticle) CompileUtil.compileAndLoad(packageName + "." + name, FileUtil.readIntact(file)), log, handler);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				});
-			}
-		});
-	}
-
-	~verticles:{it|~it.groupClassDeclarationPanel~};separator="\n"~
-} 
->>
-
-/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,stringPanel; **/
-TemplatePanel(name,properties) ::= << private static final class Group~name~Panel extends JPanel {
-
-		public Group~name~Panel(Vertx vertx) {
-			super(new BorderLayout());
-
-			final JTabbedPane instancesPanel = new JTabbedPane();
-
-			final JButton btnDeploy = new JButton(new AbstractAction("newInstance") {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					final UUID instanceID = UUID.randomUUID();
-					~name~Verticle.sendInstanceMessage(vertx, instanceID, s -> {
-						instancesPanel.add(instanceID.toString(), actionPanel(vertx, instanceID));
-					});
-				}
-			});
-			add(btnDeploy, BorderLayout.NORTH);
-			add(instancesPanel, BorderLayout.CENTER);
-		}
-
-		private JPanel actionPanel(Vertx vertx, UUID instanceID) {
-
-			final JPanel actionPanel = new JPanel(new com.generator.util.WrapLayout());
-
-			actionPanel.add(new JLabel("Group~name~Instance "));
-			actionPanel.add(new JLabel(instanceID.toString()));
-			actionPanel.add(new JLabel());
-
-			// todo all properties here, with their proper ui
-			~properties:{it|~it.stringPanel~};separator="\n"~
-
-			final JPanel container = new JPanel(new BorderLayout());
-			container.add(actionPanel, BorderLayout.NORTH);			
-
-			actionPanel.add(new JLabel("Output "));
-			final JTextArea txtToString = new JTextArea(10, 50);
-			actionPanel.add(txtToString);
-			actionPanel.add(new JButton(new AbstractAction("toString") {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					~name~Verticle.sendToStringMessage(vertx, instanceID, s -> SwingUtilities.invokeLater(() -> {
-						txtToString.setText(s);
-					}));
-				}
-			}));
-			container.add(new JScrollPane(txtToString), BorderLayout.CENTER);
-			
-			return container;
-		}
-	} 
->>
 
 /** groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name,newAction; **/
 TemplatesSwing(groupName,packageName,statements) ::= <<package ~packageName~;
@@ -159,20 +45,6 @@ public class ~groupName~Swing {
 ~it.newAction~
 	};separator="\n"~
 
-	public static void main(String[] args) {
-		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
-		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(db);
-
-		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener() {
-~statements:{it|
-			@Override
-			public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
-				super.new~it.name;format="capitalize"~(node);
-			~bugfix()~
-};separator="\n"~
-		}));
-	}
-
 	private final class NewInstancesPanel extends SwingUtil.FormPanel {
 
 		public NewInstancesPanel(~groupName~Swing neoSwing, ~groupName~NeoListener delegate) {
@@ -196,6 +68,20 @@ public class ~groupName~Swing {
 			button.setFocusPainted(false);
 			return button;
 		}
+	}
+
+	public static void main(String[] args) {
+		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
+		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(db);
+
+		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener() {
+~statements:{it|
+			@Override
+			public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
+				super.new~it.name;format="capitalize"~(node);
+			~bugfix()~
+};separator="\n"~
+		}));
 	}
 } 
 >>

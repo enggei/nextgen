@@ -4,9 +4,11 @@ import com.generator.domain.BaseEntity;
 import com.generator.editors.domain.NeoModel;
 import com.generator.generators.junit.JunitGroup;
 import com.generator.generators.templateGroup.TemplateGroupGenerator;
-import com.generator.generators.templatesNeo.TemplateNeoGenerator;
+import com.generator.generators.templates.TemplateVisitor;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
+import com.generator.generators.templatesGraphStream.GraphStreamGenerator;
+import com.generator.generators.templatesNeo.TemplateNeoGenerator;
 import com.generator.generators.templatesSwing.TemplateSwingGenerator;
 import com.generator.generators.templatesVertx.TemplatesVertxGenerator;
 import com.generator.util.FileUtil;
@@ -550,17 +552,19 @@ public class TemplateFileEditor extends JPanel {
 			final String subPath = currentTemplateFile.getFile().getAbsolutePath().substring(new File(txtRoot.getText()).getAbsolutePath().length() + 1);
 			final String builderPackage = pathToPackage(subPath.substring(0, subPath.lastIndexOf("/")));
 
-			new TemplateGroupGenerator().writeGroupClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
+			TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplateGroupGenerator(txtRoot.getText(), builderPackage));
 			createGroupTestIfNotExists(builderPackage);
 
-			if (chkCreateNeoDomain.isSelected())
-				new TemplateNeoGenerator().writeNeoClassFile(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
+			if (chkCreateNeoDomain.isSelected()) {
+				TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplateNeoGenerator(txtRoot.getText(), builderPackage));
+				TemplateVisitor.visit(currentTemplateFile.getFile(), new GraphStreamGenerator(txtRoot.getText(), builderPackage));
+			}
 
 			if (chkCreateVerticles.isSelected())
-				new TemplatesVertxGenerator().createGroupVerticle(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
+				TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplatesVertxGenerator(txtRoot.getText(), builderPackage));
 
 			if (chkCreateSwing.isSelected())
-				new TemplateSwingGenerator().createGroupPanel(currentTemplateFile.getFile(), builderPackage, txtRoot.getText());
+				TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplateSwingGenerator(txtRoot.getText(), builderPackage));
 		}
 	}
 

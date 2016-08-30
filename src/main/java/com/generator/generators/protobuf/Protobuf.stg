@@ -1,19 +1,8 @@
-/* uuid : 2e9a0789-fcc8-474f-b6cc-3b8eb0667394 */
+/* uuid : 774f4c3e-fa10-47e0-9816-b52787f0cd04 */
 delimiters "~", "~"
 
 /** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
-enum(comments,name,properties) ::= <</* uuid : bac3bf13-2219-44e4-8d68-fcf2d476a48c */
-delimiters "~", "~"
-
-/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
-enum(comments,name,properties) ::= <<
- /* uuid : 502e84f6-4cfe-4549-a012-0b6163d62afc */
-delimiters "~", "~"
-
-/** comments,STRINGPROPERTY;name,STRINGPROPERTY;properties,LISTPROPERTY; **/
-enum(comments,name,properties) ::= <<
- 
- ~if(comments)~
+enum(comments,name,properties) ::= <<~if(comments)~
 //~comments~
 ~endif~
 enum ~name~ {
@@ -71,9 +60,8 @@ protobufPackage(deliverables,imports,options,package) ::= <<package ~package~;
 ~options:{it|option ~it.name~ = ~it.value~;};separator="\n"~~endif~
 
 ~if(imports)~
+~imports:{it|import "~it~.proto";};separator="\n"~~endif~
 
-~imports:{it|import "~it~";};separator="\n"~~endif~
 
-
-~deliverables:{it|~it~}; separator="\n\n"~
+~deliverables:{it|~it~}; separator="\n\n"~ 
 >>
