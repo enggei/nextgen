@@ -647,17 +647,57 @@ public class APIGenerator {
 				group.newformBody().
 					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
 					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
-					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("optional trailer id").setRequired(false).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
-					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("optional film id").setRequired(false).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
 					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("optional game id").setRequired(false).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")),
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("Post engagement balance",
 					newResponseProperty("engagementCategory", "string", true),
 					newResponseProperty("type", "string", true),
-					newResponseProperty("id", "long", true),
-					newResponseProperty("latitude", "long", true),
-					newResponseProperty("longitude", "long", true)))));
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/engagement/rate/film").
+
+			addActionsValue(newPOST("POST Rate a film",
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("7589c235-c9e1-46ba-8169-3d9df44229ee")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
+					addFormParamsValue(newIntegerParam("rating", "film rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Post engagement balance",
+					newResponseProperty("engagementCategory", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/engagement/rate/trailer").
+
+			addActionsValue(newPOST("POST Rate a trailer",
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("trailer id").setRequired(true).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
+					addFormParamsValue(newIntegerParam("rating", "trailer rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Post engagement balance",
+					newResponseProperty("engagementCategory", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/films/latest").
@@ -676,12 +716,24 @@ public class APIGenerator {
 			addActionsValue(newGET("returns cinema listing.",
 				group.newqueryParams().
 					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id")).
-					addQueryParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
-					addQueryParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
+					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
+					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Cinemas response",
 					newResponseProperty("cinemas", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/cinema/nearby").
+
+			addActionsValue(newGET("returns nearby cinemas.",
+				group.newqueryParams().
+					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
+					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)).
+					addQueryParamsValue(newIntegerParam("radius", "radius", 0, 3185000).setName("radius").setExample(5000)),
+				"400", "404").
+				addResponsesValue(newjsonResponse("Cinemas response",
+					newResponseProperty("cinemas", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/trailers").
