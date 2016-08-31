@@ -40,12 +40,16 @@ public class APIGenerator {
 				setUri("/admin/version").
 
 				addActionsValue(newGET("list of version entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of version entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove version entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("versionId").setDescription("version id").setRequired(true).setExample("84711675-af11-477b-abef-70556ae130dc")),
 						"400", "401", "404", "500").
@@ -54,6 +58,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add a version item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("releaseDate").setDescription("release date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
 						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
@@ -68,12 +74,16 @@ public class APIGenerator {
 				setUri("/admin/user").
 
 				addActionsValue(newGET("list of user entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of user entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove user entry",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
 						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 					"400", "401", "404", "500").
@@ -85,12 +95,16 @@ public class APIGenerator {
 				setUri("/admin/currency").
 
 				addActionsValue(newGET("list of virtual currency entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of currency entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove virtual currency entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true).setExample("")),
 						"400", "401", "404", "500").
@@ -99,6 +113,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add a virtual currency item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("")).
 						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("integer").setRequired(true).setExample("350")).
@@ -113,12 +129,16 @@ public class APIGenerator {
 				setUri("/admin/badge").
 
 				addActionsValue(newGET("list of badge entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of badge entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove badge entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true).setExample("f04ddca4-05e0-49b7-9093-a14ae5c95e51")),
 						"400", "401", "404", "500").
@@ -127,6 +147,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add a badge item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						setMultipart(true).
 						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
@@ -142,12 +164,16 @@ public class APIGenerator {
 				setUri("/admin/redemption").
 
 				addActionsValue(newGET("list of redemption entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of redemption entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove redemption entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("")),
 						"400", "401", "404", "500").
@@ -156,6 +182,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add an redemption item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						setMultipart(true).
 						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true).setExample("")).
@@ -181,12 +209,16 @@ public class APIGenerator {
 				setUri("/admin/engagement").
 
 				addActionsValue(newGET("list of engagement entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of engagement entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove engagement entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("")),
 						"400", "401", "404", "500").
@@ -195,6 +227,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add an engagement item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
 						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
@@ -212,12 +246,16 @@ public class APIGenerator {
 				setUri("/admin/game").
 
 				addActionsValue(newGET("list of game entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of game entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove game entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
 						"400", "401", "404", "500").
@@ -226,6 +264,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add a game item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("startDate").setDescription("start date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
 						addFormParamsValue(group.newstringParam().setName("endDate").setDescription("end date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
@@ -240,12 +280,16 @@ public class APIGenerator {
 				setUri("/admin/supplier").
 
 				addActionsValue(newGET("list of supplier entries",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of supplier entries",
 							newResponseProperty("list", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove supplier entry",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						group.newqueryParams().
 							addQueryParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true).setExample("")),
 						"400", "401", "404", "500").
@@ -254,6 +298,8 @@ public class APIGenerator {
 				).
 
 				addActionsValue(newPOST("add a supplier item",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
 						addFormParamsValue(group.newstringParam().setName("name").setDescription("name").setRequired(true).setExample("thename")).
 						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
@@ -287,7 +333,7 @@ public class APIGenerator {
 
 			addActionsValue(newGET("verifies client access token",
 				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
+					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("client access token").setRequired(true)),
 				"400", "401").
 				addResponsesValue(newjsonResponse("Access token verification",
 					newResponseProperty("verified", "boolean", true),
@@ -299,6 +345,8 @@ public class APIGenerator {
 			setUri("/version").
 
 			addActionsValue(newGET("returns current APP version.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Versions response",
 					newResponseProperty("version", "string", true),
@@ -307,6 +355,8 @@ public class APIGenerator {
 
 			addActionsValue(newPOST(
 				"receives APP version from client and returns whether it matches the current version.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("version").setDescription("APP version.").setRequired(true).setMaxLength(40).setMinLength(0).setExample("0.8")),
 				"400", "404", "500").
@@ -354,9 +404,10 @@ public class APIGenerator {
 
 			addActionsValue(newPOST("send email to reset password for user",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("userid").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addFormParamsValue(group.newstringParam().setName("userId").setDescription("the user id").setRequired(false).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
+					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")),
 				"400", "401").
 				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
 					newResponseProperty("success", "boolean", true),
@@ -366,18 +417,22 @@ public class APIGenerator {
 			setUri("/user/forgotPasswordForm").
 
 			addActionsValue(newPOST("process user forgot password",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
 					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
 					addFormParamsValue(group.newstringParam().setName("confirmPassword").setDescription("the confirm password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
-					addFormParamsValue(group.newstringParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1F43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addFormParamsValue(group.newstringParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1f43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401").
 				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
 					newResponseProperty("success", "boolean", true),
 					newResponseProperty("dummy", "boolean", false)))).
 
 			addActionsValue(newGET("get user forgot password form",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setExample("1F43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addQueryParamsValue(newUUIDParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setExample("1f43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400").
 				addResponsesValue(group.newbinaryResponse().setContentType("text/html"))));
 
@@ -442,7 +497,7 @@ public class APIGenerator {
 
 				addActionsValue(newGET("register a temporary user",
 					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
@@ -455,7 +510,7 @@ public class APIGenerator {
 
 				addActionsValue(newGET("query if a username, email or deviceId is registered",
 					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(false).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
 						addQueryParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
@@ -470,21 +525,21 @@ public class APIGenerator {
 
 			addActionsValue(newGET("get user object",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User object confirmation",
 					newResponseProperty("user", "object", true)))).
 
 			addActionsValue(newDELETE("delete user",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User delete confirmation",
 					newResponseProperty("userId", "string", true)))).
 
 			addActionsValue(newPUT("update user",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token - REQUIRED if not using access_token parameter").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
 					setMultipart(true).
 					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
@@ -507,15 +562,16 @@ public class APIGenerator {
 				setUri("/currency").
 
 				addActionsValue(newGET("returns user currency value.",
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					"400", "401", "404").
 					addResponsesValue(newjsonResponse("Currency response",
 						newResponseProperty("currentValue", "integer", true)))).
 
 				addActionsValue(newPOST("add currency activity to user's ledger",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 						addFormParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)).
 						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
 						addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemtion id").setRequired(true)).
@@ -529,8 +585,9 @@ public class APIGenerator {
 						newResponseProperty("currencyActivityId", "string", true)))).
 
 				addActionsValue(newDELETE("deletes a currency activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 						addQueryParamsValue(newUUIDParam().setName("currencyActivityId").setDescription("currency activity id").setRequired(true)),
 					"400", "401", "404").
 					addResponsesValue(newjsonResponse("Deleted currency activity confirmation",
@@ -541,8 +598,8 @@ public class APIGenerator {
 				setUri("/currency/ledger").
 
 				addActionsValue(newGET("returns user currency ledger.",
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					"400", "401", "404").
 					addResponsesValue(newjsonResponse("Currency ledger (activities)",
 						newResponseProperty("list", "array", true))))
@@ -552,8 +609,9 @@ public class APIGenerator {
 				setUri("/badge").
 
 				addActionsValue(newPOST("add badge activity to user's ledger",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 						addFormParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true).setExample("f04ddca4-05e0-49b7-9093-a14ae5c95e51")).
 						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
 					"400", "401", "404", "500").
@@ -561,8 +619,9 @@ public class APIGenerator {
 						newResponseProperty("userBadgeId", "string", true)))).
 
 				addActionsValue(newPUT("update badge activity in user's ledger",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 						addFormParamsValue(newUUIDParam().setName("userBadgeId").setDescription("user badge id").setRequired(true)).
 						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
 					"400", "401", "404", "500").
@@ -570,8 +629,9 @@ public class APIGenerator {
 						newResponseProperty("userBadgeId", "string", true)))).
 
 				addActionsValue(newDELETE("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("")).
 						addQueryParamsValue(newUUIDParam().setName("userBadgeId").setDescription("badge activity id").setRequired(true)),
 					"400", "401", "404").
 					addResponsesValue(newjsonResponse("Deleted badge activity confirmation",
@@ -582,8 +642,8 @@ public class APIGenerator {
 			setUri("/badge/earned").
 
 			addActionsValue(newGET("returns user badges earned.",
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Badges response",
 					newResponseProperty("badges", "array", true)))));
@@ -592,8 +652,9 @@ public class APIGenerator {
 			setUri("/badge/available").
 
 			addActionsValue(newGET("returns badges available.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Badges response",
@@ -633,16 +694,17 @@ public class APIGenerator {
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Redemptions response",
 					newResponseProperty("redemptions", "array", true)))).
 
 			addActionsValue(newPOST("Redeem redemption",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("a4fce7b1-1226-4466-994d-84a89d05df85")).
-					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+					addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("a4fce7b1-1226-4466-994d-84a89d05df85")),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("Redeemed redemption confirmation",
 					newResponseProperty("redemptionActivityId", "string", true),
@@ -656,8 +718,8 @@ public class APIGenerator {
 			setUri("/redemption/ledger").
 
 			addActionsValue(newGET("returns user redemption ledger.",
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Redemption ledger (activities)",
 					newResponseProperty("redemptions", "array", true)))));
@@ -666,33 +728,78 @@ public class APIGenerator {
 			setUri("/engagement").
 
 			addActionsValue(newGET("returns user engagement activities.",
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Engagements response",
 					newResponseProperty("engagements", "array", true),
 					newResponseProperty("dummy", "boolean", false)))).
 
 			addActionsValue(newPOST("POST Did Engagement Activities",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
 					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
-					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
-					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("optional trailer id").setRequired(false).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
-					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("optional film id").setRequired(false).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
 					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("optional game id").setRequired(false).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")),
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("Post engagement balance",
 					newResponseProperty("engagementCategory", "string", true),
 					newResponseProperty("type", "string", true),
-					newResponseProperty("id", "long", true),
-					newResponseProperty("latitude", "long", true),
-					newResponseProperty("longitude", "long", true)))));
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/engagement/rate/film").
+
+			addActionsValue(newPOST("POST Rate a film",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("7589c235-c9e1-46ba-8169-3d9df44229ee")).
+					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
+					addFormParamsValue(newIntegerParam("rating", "film rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Post engagement balance",
+					newResponseProperty("engagementCategory", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/engagement/rate/trailer").
+
+			addActionsValue(newPOST("POST Rate a trailer",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
+					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("trailer id").setRequired(true).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
+					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
+					addFormParamsValue(newIntegerParam("rating", "trailer rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("Post engagement balance",
+					newResponseProperty("engagementCategory", "string", true),
+					newResponseProperty("type", "string", true),
+					newResponseProperty("id", "string", true),
+					newResponseProperty("latitude", "long", false),
+					newResponseProperty("longitude", "long", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/films/latest").
 
 			addActionsValue(newGET("returns film listings by cinema.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
 					addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")),
 				"400", "404").
@@ -704,19 +811,37 @@ public class APIGenerator {
 			setUri("/cinema/listing").
 
 			addActionsValue(newGET("returns cinema listing.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
 					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id")).
-					addQueryParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
-					addQueryParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
+					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
+					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Cinemas response",
 					newResponseProperty("cinemas", "array", true),
 					newResponseProperty("dummy", "boolean", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/cinema/nearby").
+
+			addActionsValue(newGET("returns nearby cinemas.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
+					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)).
+					addQueryParamsValue(newIntegerParam("radius", "radius", 0, 3185000).setName("radius").setExample(5000)),
+				"400", "404").
+				addResponsesValue(newjsonResponse("Cinemas response",
+					newResponseProperty("cinemas", "array", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/trailers").
 
 			addActionsValue(newGET("returns trailers and ratings.",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Trailers response",
 					newResponseProperty("trailers", "array", true),
@@ -728,6 +853,8 @@ public class APIGenerator {
 			addActionsValue(group.newuriParameter().
 				setName("imageId").
 				addActionsValue(newGET("returns images for films",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					"400", "404").
 					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
@@ -737,6 +864,8 @@ public class APIGenerator {
 			addActionsValue(group.newuriParameter().
 				setName("imageId").
 				addActionsValue(newGET("returns images for films",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					"400", "404").
 					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
@@ -746,6 +875,8 @@ public class APIGenerator {
 			addActionsValue(group.newuriParameter().
 				setName("imageId").
 				addActionsValue(newGET("returns images for films",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 					"400", "404").
 					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
