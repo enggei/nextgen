@@ -678,6 +678,8 @@ public class APIGenerator {
 				group.newformBody().
 					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
 					addFormParamsValue(newIntegerParam("score", "game score", 0, Integer.MAX_VALUE).setRequired(true).setExample("2500")).
+					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d).setRequired(false)).
+					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d).setRequired(false)).
 					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("game score posted",
