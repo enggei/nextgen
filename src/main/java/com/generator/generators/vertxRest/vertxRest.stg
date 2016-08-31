@@ -1,0 +1,91 @@
+/* uuid : 0df5f237-e326-45aa-a547-96caafac7e6a */
+delimiters "~", "~"
+
+/** comments,STRINGPROPERTY;endpoints,LISTPROPERTY;entities,KEYVALUELISTPROPERTY,name;name,STRINGPROPERTY;packageName,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name;visitors,KEYVALUELISTPROPERTY,impl,name; **/
+API(comments,endpoints,entities,name,packageName,properties,visitors) ::= <<package ~packageName~;
+
+import com.udc.loopsi.db.BaseDomainVisitor;
+import com.udc.loopsi.db.NeoModel;
+import com.udc.loopsi.db.NeoVisitor;
+import com.udc.loopsi.db.VisitorFactory;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.RoutingContext;
+import org.neo4j.graphdb.RelationshipType;
+
+import static com.udc.loopsi.api.~name~.VISITORS.*;
+import static com.udc.loopsi.api.~name~.PROPERTIES.*;
+import static com.udc.loopsi.util.JsonUtil.KEYS.*;
+import static com.udc.loopsi.util.JsonUtil.*;
+import static com.udc.loopsi.util.VertxWebUtil.*;
+
+/**
+ * ~comments~
+ */
+public class ~name~ {
+
+	private final static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(~name~.class);
+
+	public enum ENTITIES {
+		~entities:{it|~it.name~};separator=", "~
+	}
+
+	public enum VISITORS {
+		~visitors:{it|~it.name~};separator=", "~
+	}
+
+	public enum PROPERTIES {
+		~properties:{it|~it.name~};separator=", "~
+		// badgeId, createdTime, lastUpdateTime, description, bannerImage
+	}
+
+	public enum RELATIONS implements RelationshipType {
+		UserBadge               // User -> Badge
+	}
+
+	public static void attach(Router router, Vertx vertx, JsonObject config) {
+
+		~endpoints:{it|~it~};separator="\n"~
+
+		// todo create a statement for each Routing-handlers
+	}
+
+	public static VisitorFactory newVisitorFactory() {
+		return (parameters, model, tx) -> {
+			switch (VISITORS.valueOf(parameters.getString(VISITOR.name()))) {
+				~visitors:{it|case ~it.name~:
+	return ~it.name~(parameters.getJsonObject(PARAMS.name()), model);};separator="\n"~
+				default:
+					throw new IllegalArgumentException("unknown ~name~.VISITOR: '" + parameters.getString(VISITOR.name()) + "' " + PARAMS.name() + ": '" + parameters.getJsonObject(PARAMS.name()).encode() + "'");
+			}
+		};
+	}
+
+~visitors:{it|
+	private static NeoVisitor ~it.name~(final JsonObject parameters, final NeoModel model) {
+		return new BaseDomainVisitor() {
+			@Override
+			public void visit(JsonObject result) throws Throwable {
+				~it.impl~
+			~endMethodFix()~
+		~endMethodFix()~;
+	~endMethodFix()~
+};separator="\n"~
+} 
+>>
+
+/**  **/
+endMethodFix() ::= <<} 
+>>
+
+/** action,STRINGPROPERTY;apiName,STRINGPROPERTY;uri,STRINGPROPERTY;validations,KEYVALUELISTPROPERTY,property,validationType;visitor,STRINGPROPERTY; **/
+validatingNeoHandler(action,apiName,uri,validations,visitor) ::= <<router.~action~("~uri~").handler(new APIVisitorFactory.BaseRoutingHandler<VISITORS>(vertx, log, ~apiName~.class, ~visitor~) {
+	@Override
+	protected void handleRequest(JsonObject data, JsonArray errors, RoutingContext routingContext) {
+		// validate parameters
+		~validations:{it|~it.validationType~(data, ~it.property~.name(), routingContext, errors);};separator="\n"~
+	}
+}); 
+>>
