@@ -664,6 +664,8 @@ public class APIGenerator {
 			setUri("/leaderboard/gamescoresfb").
 
 			addActionsValue(newGET("returns fb friends gamescores for game",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
 					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
 					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
@@ -675,6 +677,8 @@ public class APIGenerator {
 			setUri("/leaderboard/gamescores").
 
 			addActionsValue(newPOST("post gamescore",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newformBody().
 					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
 					addFormParamsValue(newIntegerParam("score", "game score", 0, Integer.MAX_VALUE).setRequired(true).setExample("2500")).
@@ -686,6 +690,8 @@ public class APIGenerator {
 					newResponseProperty("success", "boolean", true)))).
 
 			addActionsValue(newGET("returns global gamescores for game",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
 					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
 				"400", "404").
