@@ -878,6 +878,17 @@ public class APIGenerator {
 					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/images/redemptions/").
+
+			addActionsValue(group.newuriParameter().
+				setName("imageId").
+				addActionsValue(newGET("returns images for redemptions",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					"400", "404").
+					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/images/badges/").
 
 			addActionsValue(group.newuriParameter().
