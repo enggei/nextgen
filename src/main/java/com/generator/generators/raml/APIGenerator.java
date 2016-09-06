@@ -381,6 +381,7 @@ public class APIGenerator {
 					newResponseProperty("expires_in", "integer", true),
 					newResponseProperty("token_type", "string", true),
 					newResponseProperty("refresh_token", "string", true),
+					newResponseProperty("userId", "string", false),
 					newResponseProperty("currencyTotal", "integer", false)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
@@ -396,6 +397,7 @@ public class APIGenerator {
 					newResponseProperty("expires_in", "integer", true),
 					newResponseProperty("token_type", "string", true),
 					newResponseProperty("refresh_token", "string", true),
+					newResponseProperty("userId", "string", false),
 					newResponseProperty("currencyTotal", "integer", false))))
 		);
 
@@ -493,16 +495,22 @@ public class APIGenerator {
 						newResponseProperty("expires_in", "integer", true),
 						newResponseProperty("token_type", "string", true),
 						newResponseProperty("refresh_token", "string", true),
-						newResponseProperty("currencyTotal", "integer", false)))).
+						newResponseProperty("userId", "string", false),
+						newResponseProperty("currency", "integer", false)))).
 
-				addActionsValue(newGET("register a temporary user",
+				addActionsValue(newGET("register and log in a temporary user",
 					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
 					group.newqueryParams().
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
 					"400").
-					addResponsesValue(newjsonResponse("Temporary userId",
-						newResponseProperty("userId", "string", true))))
+					addResponsesValue(newjsonResponse("OAuth2 token response",
+						newResponseProperty("access_token", "string", true),
+						newResponseProperty("expires_in", "integer", true),
+						newResponseProperty("token_type", "string", true),
+						newResponseProperty("refresh_token", "string", true),
+						newResponseProperty("userId", "string", false),
+						newResponseProperty("currency", "integer", false))))
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
@@ -750,54 +758,16 @@ public class APIGenerator {
 					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
 					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("optional game id").setRequired(false).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
 					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
+					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(false).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("trailer id").setRequired(false).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
+					addFormParamsValue(newIntegerParam("rating", "film/trailer rating", 0, Integer.MAX_VALUE).setRequired(false).setExample("5")).
 					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
 					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
 				"400", "401", "404", "500").
 				addResponsesValue(newjsonResponse("Post engagement balance",
 					newResponseProperty("engagementCategory", "string", true),
 					newResponseProperty("type", "string", true),
-					newResponseProperty("id", "string", true),
-					newResponseProperty("latitude", "long", false),
-					newResponseProperty("longitude", "long", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/engagement/rate/film").
-
-			addActionsValue(newPOST("POST Rate a film",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("7589c235-c9e1-46ba-8169-3d9df44229ee")).
-					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
-					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
-					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
-					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
-					addFormParamsValue(newIntegerParam("rating", "film rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("Post engagement balance",
-					newResponseProperty("engagementCategory", "string", true),
-					newResponseProperty("type", "string", true),
-					newResponseProperty("id", "string", true),
-					newResponseProperty("latitude", "long", false),
-					newResponseProperty("longitude", "long", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/engagement/rate/trailer").
-
-			addActionsValue(newPOST("POST Rate a trailer",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
-					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("trailer id").setRequired(true).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
-					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
-					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
-					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)).
-					addFormParamsValue(newIntegerParam("rating", "trailer rating", 0, Integer.MAX_VALUE).setRequired(true).setExample("5")),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("Post engagement balance",
-					newResponseProperty("engagementCategory", "string", true),
-					newResponseProperty("type", "string", true),
+					newResponseProperty("currency", "integer", true),
 					newResponseProperty("id", "string", true),
 					newResponseProperty("latitude", "long", false),
 					newResponseProperty("longitude", "long", false)))));
