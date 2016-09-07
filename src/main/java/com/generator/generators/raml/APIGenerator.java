@@ -152,8 +152,8 @@ public class APIGenerator {
 					group.newformBody().
 						setMultipart(true).
 						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-						addFormParamsValue(group.newstringParam().setName("achievementType").setDescription("to be determined").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("achievementPeriod").setDescription("expiration date").setRequired(true).setExample("2016-12-31")).
+						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("badge title")).
+						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("badge description")).
 						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
 					"400", "401", "404", "500").
 					addResponsesValue(newjsonResponse("Added badge confirmation",
