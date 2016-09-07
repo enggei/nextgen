@@ -12,6 +12,8 @@ import static java.lang.Integer.MAX_VALUE;
 public class APIGenerator {
 
 	public static final String REGEX_UUID = "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$";
+	public static final String REGEX_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+	public static final String REGEX_DATE = "^\\d{4}-\\d{2}-\\d{2}$";
 
 	public static void main(String[] args) {
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
@@ -72,6 +74,28 @@ public class APIGenerator {
 
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/admin/user").
+
+				addActionsValue(newPOST("update user data",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+						group.newformBody().
+							addFormParamsValue(newUUIDParam().setName("userId").setRequired(true)).
+							addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0)).
+							addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8)).
+							addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30)).
+							addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30)).
+							addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false)).
+							addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(false)).
+							addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female")).
+							addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE)).
+							addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE)).
+							addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
+							addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
+							addFormParamsValue(newIntegerParam("balance", "user currency", 0, Integer.MAX_VALUE).setRequired(false)),
+						"400", "401", "404", "500").
+						addResponsesValue(newjsonResponse("the updated user object",
+							newResponseProperty("user", "object", true)))
+				).
 
 				addActionsValue(newGET("list of user entries",
 						group.newheaderParams().
@@ -489,16 +513,16 @@ public class APIGenerator {
 					group.newheaderParams().
 						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
 					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
-						addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
-						addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
-						addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
-						addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
+						addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
+						addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
+						addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(true).setMinLength(2).setMaxLength(30).setExample("theusername")).
+						addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(true).setMinLength(2).setMaxLength(30).setExample("thelastname")).
+						addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(true).setExample("the@email.com")).
+						addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(true)).
+						addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(true).addEnumsValue("male").addEnumsValue("female")).
 						addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-						addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
+						addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(true).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
+						addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(true).setDefaultValue(false)).
 						addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
 					"400", "401", "404", "409", "500").
 					addResponsesValue(newjsonResponse("OAuth2 token response",
@@ -533,7 +557,7 @@ public class APIGenerator {
 					group.newqueryParams().
 						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(false).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
 						addQueryParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-						addQueryParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")),
+						addQueryParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false).setExample("the@email.com")),
 					"400").
 					addResponsesValue(newjsonResponse("Query response",
 						newResponseProperty("found", "boolean", true))))
@@ -565,14 +589,13 @@ public class APIGenerator {
 					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
 					addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
 					addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
-					addFormParamsValue(group.newstringParam().setName("email").setDescription("user email").setRequired(false).setMinLength(5).setMaxLength(254).setExample("the@email.com")).
-					addFormParamsValue(group.newstringParam().setName("dob").setDescription("user date of birth").setRequired(false).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-					addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female").setExample("the@email.com")).
+					addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false).setExample("the@email.com")).
+					addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(false)).
+					addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female")).
 					addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
 					addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
 					addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
-					addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
-					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
+					addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)),
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User confirmation",
 					newResponseProperty("userId", "string", true)))));
@@ -762,7 +785,7 @@ public class APIGenerator {
 					newResponseProperty("type", "string", true),
 					newResponseProperty("description", "string", true),
 					newResponseProperty("value", "integer", true),
-					newResponseProperty("newBalance", "long", true)))));
+					newResponseProperty("currency", "long", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption/ledger").
@@ -911,6 +934,20 @@ public class APIGenerator {
 			setMaxLength(36).
 			setMinLength(36).
 			setPattern(REGEX_UUID);
+	}
+
+	private RamlGroup.stringParamST newEmailParam() {
+		return group.newstringParam().
+			setMaxLength(100).
+			setMinLength(6).
+			setPattern(REGEX_EMAIL);
+	}
+
+	private RamlGroup.stringParamST newDateParam() {
+		return group.newstringParam().
+			setMaxLength(10).
+			setMinLength(10).
+			setPattern(REGEX_DATE);
 	}
 
 	private RamlGroup.numberParamST newLatitudeParam() {
