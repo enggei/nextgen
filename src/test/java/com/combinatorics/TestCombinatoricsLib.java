@@ -13,6 +13,9 @@ public class TestCombinatoricsLib {
 
 	//todo http://www.sousites.com/www.bt.no
 
+	//todo: give generator text, and let it learn which is allowed and not
+	//todo: evolve generators, by simple rules and input
+
 	@Test
 	public void testSimpleCombinations() {
 		List<List<String>> combinations = Generator.combination("red", "black", "white", "green", "blue")
