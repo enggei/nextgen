@@ -313,6 +313,17 @@ public class APIGenerator {
 		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/admin/import/intshowtimes").
+
+				addActionsValue(newPOST("force import international showtimes",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					"400", "401", "404", "500").
+					addResponsesValue(newjsonResponse("Import job start confirmation",
+						newResponseProperty("jobstart", "boolean", true))))
+		);
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/oauth2/login").
 
 			addActionsValue(newPOST("client login",
@@ -912,6 +923,14 @@ public class APIGenerator {
 
 	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
 		return newPOST(description, null, null, body, errorCodes);
+	}
+
+	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, String... errorCodes) {
+		return newPOST(description, headers, null, null, errorCodes);
+	}
+
+	private RamlGroup.postActionST newPOST(Object description, String... errorCodes) {
+		return newPOST(description, null, null, null, errorCodes);
 	}
 
 	private RamlGroup.getActionST newGET(String description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, String... errorCodes) {
