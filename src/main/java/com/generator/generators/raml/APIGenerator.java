@@ -718,6 +718,29 @@ public class APIGenerator {
 					newResponseProperty("scores", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/films/watchlist").
+
+			addActionsValue(newPOST("add film to watchlist",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newformBody().
+					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "401", "404", "500").
+				addResponsesValue(newjsonResponse("film added to watchlist",
+					newResponseProperty("success", "boolean", true)))).
+
+			addActionsValue(newGET("get watchlist for friends",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
+					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
+				"400", "404").
+				addResponsesValue(newjsonResponse("watchlist of friends",
+					newResponseProperty("watchlist", "array", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
