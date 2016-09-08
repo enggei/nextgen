@@ -765,7 +765,7 @@ public class APIGenerator {
 
 			addActionsValue(newGET("get watchlist for friends",
 				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				group.newqueryParams().
 					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")),
 				"400", "404").
