@@ -773,6 +773,19 @@ public class APIGenerator {
 					newResponseProperty("watchlist", "array", true)))));
 
 		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/showtimes").
+
+			addActionsValue(newGET("get showtimes for film or cinema",
+				group.newheaderParams().
+					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+				group.newqueryParams().
+					addQueryParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(false)).
+					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(false)),
+				"400", "404").
+				addResponsesValue(newjsonResponse("showtimes",
+					newResponseProperty("showtimes", "object", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
 			setUri("/redemption").
 
 			addActionsValue(newGET("returns relevant redemption offers.",
