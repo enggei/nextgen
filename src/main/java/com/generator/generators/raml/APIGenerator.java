@@ -827,8 +827,8 @@ public class APIGenerator {
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Engagements response",
-					newResponseProperty("engagements", "array", true),
-					newResponseProperty("dummy", "boolean", false)))).
+					newResponseProperty("available", "array", true),
+					newResponseProperty("lastEngagements", "array", false)))).
 
 			addActionsValue(newPOST("POST Did Engagement Activities",
 				group.newheaderParams().
