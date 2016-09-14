@@ -269,12 +269,12 @@ public class APIGenerator {
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/admin/game").
 
-				addActionsValue(newGET("list of game entries",
+				addActionsValue(newGET("list games",
 						group.newheaderParams().
 							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
 						"400", "401", "404", "500").
 						addResponsesValue(newjsonResponse("list of game entries",
-							newResponseProperty("list", "array", true)))
+							newResponseProperty("games", "array", true)))
 				).
 
 				addActionsValue(newDELETE("remove game entry",
@@ -610,6 +610,18 @@ public class APIGenerator {
 				"400", "401", "404", "409", "500").
 				addResponsesValue(newjsonResponse("User confirmation",
 					newResponseProperty("userId", "string", true)))));
+
+		loopsi.addEndpointsValue(group.newendpoint().
+				setUri("/game").
+
+				addActionsValue(newGET("list games",
+						group.newheaderParams().
+							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+						"400", "401", "404", "500").
+						addResponsesValue(newjsonResponse("list of game entries",
+							newResponseProperty("games", "array", true)))
+				)
+		);
 
 		loopsi.addEndpointsValue(group.newendpoint().
 				setUri("/currency").
