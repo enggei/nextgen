@@ -869,8 +869,6 @@ public class APIGenerator {
 			addActionsValue(newGET("returns film listings by cinema.",
 				group.newheaderParams().
 					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")),
 				"400", "404").
 				addResponsesValue(newjsonResponse("Films response",
 					newResponseProperty("films", "array", true),
