@@ -958,6 +958,17 @@ public class APIGenerator {
 					"400", "404").
 					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
+		loopsi.addEndpointsValue(group.newendpoint().
+			setUri("/images/games/").
+
+			addActionsValue(group.newuriParameter().
+				setName("gameId").
+				addActionsValue(newGET("returns images for games",
+					group.newheaderParams().
+						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
+					"400", "404").
+					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
+
 		FileUtil.write(loopsi, new File(outputFile));
 	}
 
