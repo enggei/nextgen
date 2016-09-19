@@ -551,9 +551,9 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/game").
-			addAction(new GetAction("list of game entries", true).
+			addAction(new GetAction("list games", true).
 				addResponseValue(new JsonResponse("list of game entries",
-					new JsonResponseProperty("list", "array", true)))).
+					new JsonResponseProperty("games", "array", true)))).
 			addAction(new DeleteAction("remove game entry", true).
 				addQueryParam(new UUIDParam("gameId", "game id", true)).
 				addResponseValue(new JsonResponse("Game deletion confirmation",
@@ -565,6 +565,13 @@ public class APIGenerator extends Domain {
 				addFormParam(new IntegerParam("templateId", "template identifier", true)).
 				addResponseValue(new JsonResponse("Added game confirmation",
 					new JsonResponseProperty("gameId", "string", true))))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/game").
+				addAction(new GetAction("list games", true).
+					addResponseValue(new JsonResponse("list of game entries",
+						new JsonResponseProperty("games", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/supplier").
@@ -921,9 +928,10 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/engagement").
 			addAction(new GetAction("returns user engagement activities.", true).
+				setErrorCodes("400", "404").
 				addResponseValue(new JsonResponse("Engagements response",
-					new JsonResponseProperty("engagements", "array", true),
-					new JsonResponseProperty("dummy", "boolean", false)))).
+					new JsonResponseProperty("available", "array", true),
+					new JsonResponseProperty("lastEngagements", "array", true)))).
 
 			addAction(new PostAction("POST Did Engagement Activities", true).
 				addFormParam(new UUIDParam("engagementId", "engagement id", true)).
@@ -945,7 +953,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/films/latest").
 			addAction(new GetAction("returns film listings by cinema.", true).
-				addQueryParam(new UUIDParam("cinemaId", "the cinema ", true)).
+				setErrorCodes("400", "404").
 				addResponseValue(new JsonResponse("Films response",
 					new JsonResponseProperty("films", "array", true),
 					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
@@ -1002,6 +1010,14 @@ public class APIGenerator extends Domain {
 				addAction(new URIParameterAction("imageId", "the badge image id").
 					addAction(new GetAction("returns images for films", true).
 						addResponseValue(new ImageResponse("badge image"))).
+					setErrorCodes("400", "404"))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("gameImageAPI").
+			addEndpoint(new Endpoint("/images/games/").
+				addAction(new URIParameterAction("gameId", "the game image id").
+					addAction(new GetAction("returns images for games", true).
+						addResponseValue(new ImageResponse("game image"))).
 					setErrorCodes("400", "404"))).addToRAML(loopsi);
 
 		FileUtil.write(loopsi, new File(outputFile));
