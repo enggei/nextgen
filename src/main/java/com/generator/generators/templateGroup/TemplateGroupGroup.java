@@ -48,6 +48,10 @@ public final class TemplateGroupGroup {
       return delimiter;
    }
 
+	public interface TemplateGroupGroupTemplate {
+
+	}
+
 
    public AttributeRendererDeclarationST newAttributeRendererDeclaration() {
       return new AttributeRendererDeclarationST(stGroup);
@@ -93,7 +97,7 @@ public final class TemplateGroupGroup {
       return new bugfixST(stGroup);
    } 
 
-    public final class AttributeRendererDeclarationST {
+   public final class AttributeRendererDeclarationST implements TemplateGroupGroupTemplate {
 
       private final ST template;
 
@@ -107,7 +111,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class GroupClassDeclarationST {
+   public final class GroupClassDeclarationST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -143,7 +147,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class NewGroupInstanceST {
+   public final class NewGroupInstanceST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean filenameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -168,8 +172,9 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class NewStatementDeclarationST {
+   public final class NewStatementDeclarationST implements TemplateGroupGroupTemplate {
 
+      private final AtomicBoolean groupnameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -178,6 +183,10 @@ public final class TemplateGroupGroup {
    		template = group.getInstanceOf("NewStatementDeclaration");
    	}
 
+       public NewStatementDeclarationST setGroupname(Object value) {
+      	tryToSetStringProperty(template, value, groupnameIsSet, "groupname");   
+         return this;
+      } 
        public NewStatementDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
@@ -194,7 +203,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class NewStatementInstanceST {
+   public final class NewStatementInstanceST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -214,7 +223,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class StatementKeyValueListPropertySetterST {
+   public final class StatementKeyValueListPropertySetterST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean kvNamesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
@@ -244,7 +253,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class StatementListPropertySetterST {
+   public final class StatementListPropertySetterST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
@@ -269,7 +278,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class StatementStringPropertySetterST {
+   public final class StatementStringPropertySetterST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
@@ -294,7 +303,7 @@ public final class TemplateGroupGroup {
    	}
    } 
 
-    public final class bugfixST {
+   public final class bugfixST implements TemplateGroupGroupTemplate {
 
       private final ST template;
 

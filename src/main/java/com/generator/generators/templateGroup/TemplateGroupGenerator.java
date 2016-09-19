@@ -43,7 +43,7 @@ public class TemplateGroupGenerator implements TemplateVisitor {
 
 	@Override
 	public void onStartStatement(TemplateStatement statement) {
-		declarationST = group.newNewStatementDeclaration();
+		declarationST = group.newNewStatementDeclaration().setGroupname(getGroupName());
 	}
 
 	@Override

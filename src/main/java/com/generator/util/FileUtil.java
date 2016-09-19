@@ -132,6 +132,21 @@ public final class FileUtil {
 		}
 	}
 
+	public static boolean removeFilesUnderIncluding(String path) {
+		final File file = new File(path);
+
+		if (!file.exists()) return true;
+
+		if (file.isDirectory()) {
+			final File[] files = file.listFiles();
+			if (files != null)
+				for (File subDir : files)
+					if (!removeFilesUnderIncluding(subDir.getAbsolutePath())) return false;
+		}
+
+		return file.delete();
+	}
+
 	public static void removeAllFoldersNamed(String name, String path) {
 		final File file = new File(path);
 

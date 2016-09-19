@@ -96,7 +96,7 @@ public class SwingUtil {
 		final JFrame frame = new JFrame();
 		frame.getContentPane().add(component, BorderLayout.CENTER);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		if(size!=null) {
+		if (size != null) {
 			component.setPreferredSize(size);
 			component.setSize(size);
 		}
@@ -335,14 +335,43 @@ public class SwingUtil {
 		showDialog(dialog, owner);
 	}
 
-	public static void showDialog(final JDialog dialog, final Component owner) {
-		SwingUtilities.invokeLater(new Runnable() {
+	public static void showApplyCloseDialog(final Component content, final Component owner, String title, final OnSave onSave) {
+		final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, true);
+		dialog.add(content, BorderLayout.CENTER);
+		final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+
+		JButton defaultButton;
+
+		commandPanel.add(defaultButton = new JButton(new AbstractAction("Apply") {
 			@Override
-			public void run() {
-				dialog.pack();
-				dialog.setLocationRelativeTo(owner);
-				dialog.setVisible(true);
+			public void actionPerformed(ActionEvent e) {
+				try {
+					onSave.verifyAndSave();
+				} catch (Exception e1) {
+					SwingUtil.showException(e1, content);
+				}
 			}
+		}));
+
+		dialog.getRootPane().setDefaultButton(defaultButton);
+
+		commandPanel.add(new JButton(new AbstractAction("Close") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(() -> dialog.dispose());
+			}
+		}));
+		dialog.add(commandPanel, BorderLayout.SOUTH);
+
+		showDialog(dialog, owner);
+	}
+
+	public static void showDialog(final JDialog dialog, final Component owner) {
+		SwingUtilities.invokeLater(() -> {
+			dialog.pack();
+			dialog.setLocationRelativeTo(owner);
+			dialog.setVisible(true);
 		});
 	}
 
@@ -771,6 +800,10 @@ public class SwingUtil {
 
 		public void addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
 			this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);
+		}
+
+		public void addLabel(String text, int column, int row, int colSpan, int rowSpan) {
+			this.add(new JLabel(text), column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
 		}
 
 		public void addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {

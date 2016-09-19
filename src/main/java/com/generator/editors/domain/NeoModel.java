@@ -3,6 +3,7 @@ package com.generator.editors.domain;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
@@ -22,12 +23,24 @@ public class NeoModel {
 
 	private final GraphDatabaseService graphDb;
 	private final Index<Node> uuids;
+	private final RelationshipIndex relUuids;
+
+	public interface NeoModelListener {
+
+		void closed(NeoModel model);
+	}
 
 	public NeoModel(final GraphDatabaseService graphDb) {
+		this(graphDb, null);
+	}
+
+	public NeoModel(final GraphDatabaseService graphDb, NeoModelListener listener) {
+
 		this.graphDb = graphDb;
 
 		try (Transaction tx = graphDb.beginTx()) {
 			this.uuids = graphDb.index().forNodes(TAG_UUID);
+			this.relUuids = graphDb.index().forRelationships(TAG_UUID);
 			tx.success();
 		}
 
@@ -35,7 +48,7 @@ public class NeoModel {
 			@Override
 			public void run() {
 				close();
-				System.out.println("db shutdown");
+				if (listener != null) listener.closed(NeoModel.this);
 			}
 		});
 	}

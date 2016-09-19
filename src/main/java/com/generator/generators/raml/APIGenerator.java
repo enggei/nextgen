@@ -1,1160 +1,1009 @@
 package com.generator.generators.raml;
 
+import com.generator.generators.loopsi.LoopsiGroup;
+import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.FileUtil;
+import com.generator.util.StringUtil;
 
 import java.io.File;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static java.lang.Integer.MAX_VALUE;
 
 /**
  * goe on 6/30/16.
  */
-public class APIGenerator {
+public class APIGenerator extends Domain {
 
-	public static final String REGEX_UUID = "^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$";
-	public static final String REGEX_EMAIL = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-	public static final String REGEX_DATE = "^\\d{4}-\\d{2}-\\d{2}$";
-
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-		new APIGenerator().generateRamlFile(args[0]);
-		System.out.println("completed");
-		System.exit(0);
+		new APIGenerator().generateRamlFile(args[0] + "/web/api/loopsi/loopsi.raml");
+		new APIGenerator().generateAdminUI(args[0]);
 	}
 
-	private final RamlGroup group = new RamlGroup();
+	final class APIEntity {
+
+		final String title;
+		final String label;
+		final String plural;
+		final Map<String, ItemProperty> properties = new LinkedHashMap<>();
+
+		APIEntity(String label, String plural, String title) {
+			this.label = label;
+			this.plural = plural;
+			this.title = title;
+		}
+
+		String plural() {
+			return plural;
+		}
+
+		APIEntity addProperty(ItemProperty property) {
+			this.properties.put(property.name, property);
+			return this;
+		}
+
+		Object asGridEditorHtml() {
+
+			final LoopsiGroup.GridEditorHtmlST editorHtmlST = loopsiGroup.newGridEditorHtml().
+				setTitle(title);
+
+			for (String key : properties.keySet()) {
+				final ItemProperty itemProperty = properties.get(key).asHtml(editorHtmlST);
+
+			}
+
+			return editorHtmlST;
+		}
+
+		Object asGridEditorJS() {
+
+			final LoopsiGroup.GridEditorST editorST = loopsiGroup.newGridEditor().
+				setName(plural()).
+				setLabel(label);
+
+			for (String key : properties.keySet()) {
+				final ItemProperty itemProperty = properties.get(key);
+
+				editorST.addPropertiesValue(itemProperty.defaultValue, key);
+
+				if (itemProperty instanceof EnumProperty) {
+					editorST.addEnumDeclarationsValue(((EnumProperty) itemProperty).asJSDeclaration());
+					//;
+				}
+
+			}
+
+			return editorST;
+		}
+	}
+
+	class ItemProperty {
+
+		final String name;
+		final String type;
+		String defaultValue;
+
+		ItemProperty(String name, String type) {
+			this.name = name;
+			this.type = type;
+		}
+
+		public Object asHtmlComponent() {
+			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+
+		public ItemProperty asHtml(LoopsiGroup.GridEditorHtmlST editorHtmlST) {
+			editorHtmlST.addPropertiesValue(asHtmlComponent(), name);
+			return this;
+		}
+	}
+
+	class StringProperty extends ItemProperty {
+
+		StringProperty(String name) {
+			super(name, "String");
+		}
+
+		public Object asHtmlComponent() {
+			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+	}
+
+	class BooleanProperty extends ItemProperty {
+
+		BooleanProperty(String name) {
+			super(name, "Boolean");
+		}
+
+		public Object asHtmlComponent() {
+			return "<input class='form-control' type=\"checkbox\" data-bind='checked: " + name + "' />";
+		}
+	}
+
+	class LatitudeProperty extends ItemProperty {
+
+		LatitudeProperty(String name) {
+			super(name, "Latitude");
+		}
+
+		public Object asHtmlComponent() {
+			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+	}
+
+	class LongitudeProperty extends ItemProperty {
+
+		LongitudeProperty(String name) {
+			super(name, "Longitude");
+		}
+
+		public Object asHtmlComponent() {
+			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+	}
+
+	class IntegerProperty extends ItemProperty {
+
+		IntegerProperty(String name) {
+			super(name, "Integer");
+		}
+
+		public Object asHtmlComponent() {
+			// todo: create input-verification
+			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+	}
+
+	class EnumProperty extends ItemProperty {
+
+		final String[] values;
+
+		EnumProperty(String name, String... values) {
+			super(name, "Enum");
+			this.values = values;
+			this.defaultValue = values[0];
+		}
+
+		@Override
+		public Object asHtmlComponent() {
+			return "<select class=\"form-control\" data-bind='options: $root." + name + "Options, value: " + name + "'></select>";
+		}
+
+		public Object asJSDeclaration() {
+			final StringBuilder out = new StringBuilder();
+			boolean first = true;
+			for (String item : values) {
+				if (!first) out.append(", ");
+				first = false;
+				out.append("\"").append(item).append("\"");
+			}
+
+			return "self." + name + "Options =[" + out + "];";
+		}
+	}
+
+	class DateProperty extends ItemProperty {
+
+		DateProperty(String name) {
+			super(name, "Enum");
+			this.defaultValue = LocalDate.now().toString();
+		}
+	}
+
+
+	public void generateAdminUI(String root) throws IOException {
+
+		// todo: turn this into a visitor
+		String webRoot = new File(root, "/web/admin/app/").getAbsolutePath();
+		String srcRoot = new File(root, "/java/").getAbsolutePath();
+
+		final LoopsiGroup.apiST newapi = loopsiGroup.newapi().
+			setName("AdminAPI").
+			setPackageName("com.udc.loopsi.api").
+			addMessagesValue(getAllLabels(), "GetAllLabels").
+			addMessagesValue(GetAllRelationships(), "GetAllRelationships").
+			addMessagesValue(GetNodesByLabel(), "GetNodesByLabel").
+			addMessagesValue(FindNodesWithProperties(), "FindNodesWithProperties").
+			addMessagesValue(SaveNode(), "SaveNode").
+			addMessagesValue(DeleteNode(), "DeleteNode").
+			addMessagesValue(AddRelationship(), "AddRelationship").
+			addMessagesValue(RemoveRelationship(), "RemoveRelationship");
+
+		FileUtil.writeFile(newapi, GeneratedFile.newJavaFile(srcRoot, "com.udc.loopsi.api", "AdminAPI").getFile());
+
+		final APIEntity[] apiEntities = new APIEntity[]{
+
+			new APIEntity("Badge", "Badges", "Badges").
+				addProperty(new StringProperty("title")).
+				addProperty(new StringProperty("description")),
+
+			new APIEntity("CinemaGroup", "CinemaGroups", "Cinema Groups").
+				addProperty(new StringProperty("cinemaGroupName")),
+
+			new APIEntity("Cinema", "Cinemas", "Cinemas").
+				addProperty(new StringProperty("name")).
+				addProperty(new StringProperty("location")).
+				addProperty(new StringProperty("address")).
+				addProperty(new StringProperty("country")).
+				addProperty(new LatitudeProperty("latitude")).
+				addProperty(new LongitudeProperty("longitude")).
+				addProperty(new StringProperty("country")),
+
+			//todo currency - analyse
+
+
+			// filmId, title, releaseDate, studio, certification, country, language, description, bannerImage, directors, actors, filmExtId, imdbId,
+			new APIEntity("Film", "Films", "Films").
+				addProperty(new StringProperty("title")).
+				addProperty(new DateProperty("releaseDate")).
+				addProperty(new StringProperty("studio")).
+				addProperty(new StringProperty("certification")).
+				addProperty(new StringProperty("country")).
+				addProperty(new StringProperty("language")).
+				addProperty(new StringProperty("des")).
+				addProperty(new StringProperty("username")),
+
+			new APIEntity("EngagementCategory", "EngagementCategories", "Engagement Categories").
+				addProperty(new EnumProperty("achievementRule", "ONCE", "ONCE_PER_DAY", "ONCE_PER_ENTITY", "UNLIMITED")).
+				addProperty(new StringProperty("title")).
+				addProperty(new IntegerProperty("value")).
+				addProperty(new EnumProperty("activityType", "NA", "FILM", "TRAILER", "GAME")),
+
+			new APIEntity("Game", "Games", "Games").
+				addProperty(new DateProperty("startDate")).
+				addProperty(new DateProperty("endDate")).
+				addProperty(new StringProperty("description")).
+				addProperty(new StringProperty("templateId")),
+
+			new APIEntity("Redemption", "Redemptions", "Redemptions").
+				addProperty(new DateProperty("expiryDate")).
+				addProperty(new IntegerProperty("currency")).
+				addProperty(new IntegerProperty("available")).
+				addProperty(new StringProperty("type")).
+				addProperty(new StringProperty("description")).
+				addProperty(new StringProperty("supplier")),   // TODO. define relation to this entity
+
+			new APIEntity("Supplier", "Suppliers", "Suppliers").
+				addProperty(new StringProperty("name")).
+				addProperty(new StringProperty("town")).
+				addProperty(new StringProperty("city")).
+				addProperty(new StringProperty("country")).
+				addProperty(new StringProperty("category")),
+
+			new APIEntity("User", "Users", "Users").
+				addProperty(new StringProperty("deviceId")).
+				addProperty(new StringProperty("username")).
+				addProperty(new StringProperty("password")).
+				addProperty(new StringProperty("firstName")).
+				addProperty(new StringProperty("lastName")).
+				addProperty(new StringProperty("email")).
+				addProperty(new DateProperty("dob")).
+				addProperty(new EnumProperty("sex", "male", "female")).
+				addProperty(new StringProperty("location")).
+				addProperty(new StringProperty("country")).
+				addProperty(new BooleanProperty("optInMarketing")).
+				addProperty(new StringProperty("username")),
+
+			new APIEntity("Version", "Versions", "Versions").
+				addProperty(new StringProperty("name")).
+				addProperty(new DateProperty("releaseDate")).
+				addProperty(new StringProperty("name")).
+				addProperty(new StringProperty("version"))
+		};
+
+		final LoopsiGroup.shellST shellST = loopsiGroup.newshell().
+			addRoutesValue("api/nodesMenu", "true", "'', 'login'", "Nodes").
+			addRoutesValue("api/relationsMenu", "true", "'relations'", "Relations");
+
+		final LoopsiGroup.mainMenuST nodesMenu = loopsiGroup.newmainMenu();
+		final LoopsiGroup.mainMenuST relationsMenu = loopsiGroup.newmainMenu();
+
+		for (APIEntity entity : apiEntities) {
+			final String routingName = StringUtil.lowFirst(entity.plural());
+			FileUtil.writeFile(entity.asGridEditorHtml(), new File(webRoot, "api/" + routingName + ".html"));
+			FileUtil.writeFile(entity.asGridEditorJS(), new File(webRoot, "api/" + routingName + ".js"));
+
+			shellST.addRoutesValue("api/" + routingName, null, "'" + routingName + "'", entity.title);
+			nodesMenu.addItemsValue("Manage " + entity.title, entity.title, routingName);
+		}
+
+		FileUtil.writeFile(shellST, new File(webRoot, "shell.js"));
+
+		FileUtil.writeFile(nodesMenu, new File(webRoot, "api/nodesMenu.js"));
+		FileUtil.writeFile(loopsiGroup.newmainMenuHtml(), new File(webRoot, "api/nodesMenu.html"));
+
+		FileUtil.writeFile(relationsMenu, new File(webRoot, "api/relationsMenu.js"));
+		FileUtil.writeFile(loopsiGroup.newmainMenuHtml(), new File(webRoot, "api/relationsMenu.html"));
+
+		// todo: test-cases
+		// todo: routing ?
+	}
+
+	private Object getAllLabels() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final JsonArray list = new JsonArray();\n" +
+				"for (Label item : model.getAllLabels())\n" +
+				"\tlist.add(newJsonObject(\"name\", item.name()));\n" +
+				"success(result, newJsonObject(\"list\",list));");
+	}
+
+	// getAllRelationshipTypes
+
+	private Object GetAllRelationships() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final JsonArray list = new JsonArray();\n" +
+				"for (RelationshipType item : model.getAllRelationshipTypes())\n" +
+				"\tlist.add(newJsonObject(\"name\", item.name()));\n" +
+				"success(result, newJsonObject(\"list\",list));");
+	}
+
+	private Object GetNodesByLabel() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final JsonArray list = new JsonArray();\n" +
+				"for (Node item : model.allByLabel(parameters.getString(\"label\"))) {\n" +
+				"\tfinal JsonObject jsonNode = newJsonObject();\n" +
+				"\tfor (String property : item.getPropertyKeys())\n" +
+				"\t\tnodeToParams(item, jsonNode, property);\n" +
+				"\tlist.add(jsonNode);\n" +
+				"}\n" +
+				"success(result, newJsonObject(\"list\", list));");
+	}
+
+	private Object FindNodesWithProperties() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl(loopsiGroup.newconvertProperties() +
+				"\n" +
+				"final JsonArray list = new JsonArray();\n" +
+				"for (Node item : model.matchNodesByProperties(parameters.getString(\"label\"), properties)) {\n" +
+				"\tfinal JsonObject jsonNode = newJsonObject();\n" +
+				"\tfor (String property : item.getPropertyKeys())\n" +
+				"\t\tnodeToParams(item, jsonNode, property);\n" +
+				"\tlist.add(jsonNode);\n" +
+				"}\n" +
+				"success(result, newJsonObject(\"list\", list));");
+	}
+
+	private Object SaveNode() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final String uuid = parameters.getString(\"uuid\");\n" +
+				"final Node node = uuid.length() == 0 ? model.newNode(parameters.getString(\"label\")) : model.getNode(parameters.getString(\"label\"), UUID.fromString(uuid));\n" +
+				"if (uuid.length() == 0) node.setProperty(\"createdTime\", LocalDateTime.now().toString());\n" +
+				"node.setProperty(\"lastUpdateTime\", LocalDateTime.now().toString());\n" +
+				"final JsonObject properties = parameters.getJsonObject(\"properties\");\n" +
+				"for (String key : properties.fieldNames())\n" +
+				"\tparamsToNode(properties, node, key);\n" +
+				"success(result, newJsonObject(\"uuid\", NeoModel.uuidOf(node)));");
+	}
+
+	private Object DeleteNode() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("model.remove(UUID.fromString(parameters.getString(\"uuid\")));\n" +
+				"success(result, newJsonObject(\"uuid\", parameters.getString(\"uuid\")));");
+	}
+
+	private Object AddRelationship() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final Node source = model.getNode(parameters.getString(\"srcLabel\"), UUID.fromString(parameters.getString(\"srcUuid\")));\n" +
+				"final Node destination = model.getNode(parameters.getString(\"dstLabel\"), UUID.fromString(parameters.getString(\"dstUuid\")));\n" +
+				"\n" +
+				"final Relationship relationship = source.createRelationshipTo(destination, RelationshipType.withName(parameters.getString(\"relationship\")));\n" +
+				"for (Object k : parameters.getJsonArray(\"properties\")) {\n" +
+				"\tfinal String key = (String) k;\n" +
+				"\tparamsToRelationship(parameters.getJsonObject(key), relationship, key);\n" +
+				"}\n" +
+				"\n" +
+				"success(result, newJsonObject());");
+	}
+
+	private Object RemoveRelationship() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final Node source = model.getNode(parameters.getString(\"srcLabel\"), UUID.fromString(parameters.getString(\"srcUuid\")));\n" +
+				"final Node destination = model.getNode(parameters.getString(\"dstLabel\"), UUID.fromString(parameters.getString(\"dstUuid\")));\n" +
+				"\n" +
+				"for (Relationship relationship : outgoing(source, RelationshipType.withName(parameters.getString(\"relationship\")))) {\n" +
+				"\tif (other(source, relationship).equals(destination))\n" +
+				"\t\trelationship.delete();\n" +
+				"}\n" +
+				"\n" +
+				"success(result, newJsonObject());");
+	}
 
 
 	public void generateRamlFile(String outputFile) {
 
-		// http://raml.org/developers/raml-100-tutorial#enter-uri-parameters
-		// https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md
-		// http://www.baeldung.com/raml-restful-api-modeling-language-tutorial  see 6. RAML tools
-
-		final RamlGroup.fileST loopsi = group.newfile().
-			setTitle("Loopsi REST API").
-			setBaseUri("https://localhost:8080/api").
-			setHttp(false).
-			setHttps(true).
-			setVersion("v1");
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/version").
-
-				addActionsValue(newGET("list of version entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of version entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove version entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("versionId").setDescription("version id").setRequired(true).setExample("84711675-af11-477b-abef-70556ae130dc")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Version deletion confirmation",
-							newResponseProperty("versionId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a version item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("releaseDate").setDescription("release date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
-						addFormParamsValue(group.newstringParam().setName("version").setDescription("version").setRequired(true).setExample("0.8")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added version confirmation",
-						newResponseProperty("versionId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/user").
-
-				addActionsValue(newPOST("update user data",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newformBody().
-							addFormParamsValue(newUUIDParam().setName("userId").setRequired(true)).
-							addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0)).
-							addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8)).
-							addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30)).
-							addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30)).
-							addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false)).
-							addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(false)).
-							addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female")).
-							addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE)).
-							addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE)).
-							addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
-							addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)).
-							addFormParamsValue(newIntegerParam("balance", "user currency", 0, Integer.MAX_VALUE).setRequired(false)),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("the updated user object",
-							newResponseProperty("user", "object", true)))
-				).
-
-				addActionsValue(newGET("list of user entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of user entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove user entry",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("User deletion confirmation",
-						newResponseProperty("userId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/currency").
-
-				addActionsValue(newGET("list of virtual currency entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of currency entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove virtual currency entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true).setExample("")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Currency deletion confirmation",
-							newResponseProperty("currencyId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a virtual currency item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("")).
-						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("integer").setRequired(true).setExample("350")).
-						addFormParamsValue(group.newstringParam().setName("transactionType").setDescription("to be determined").setRequired(false).setExample("thetype")).
-						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("uuid").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added currency confirmation",
-						newResponseProperty("currencyId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/badge").
-
-				addActionsValue(newGET("list of badge entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of badge entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove badge entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true).setExample("f04ddca4-05e0-49b7-9093-a14ae5c95e51")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Badge deletion confirmation",
-							newResponseProperty("badgeId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a badge item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("badge title")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("badge description")).
-						addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added badge confirmation",
-						newResponseProperty("badgeId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/redemption").
-
-				addActionsValue(newGET("list of redemption entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of redemption entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove redemption entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Redemption deletion confirmation",
-							newResponseProperty("redemptionId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add an redemption item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						setMultipart(true).
-						addFormParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true).setExample("")).
-						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newintegerParam().setName("limit").setDescription("limit").setRequired(true).setExample("10")).
-						addFormParamsValue(group.newstringParam().setName("type").setDescription("type").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("code").setDescription("code").setRequired(true).setExample("thecode")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
-						addFormParamsValue(group.newstringParam().setName("address").setDescription("address").setRequired(true).setExample("theaddress")).
-						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
-						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
-						addFormParamsValue(group.newintegerParam().setName("currencyValue").setDescription("currency value").setRequired(true).setExample("150")).
-						addFormParamsValue(group.newfileParam().setName("image").setDescription("image").setRequired(false)),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added redemption confirmation",
-						newResponseProperty("redemptionId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/engagement").
-
-				addActionsValue(newGET("list of engagement entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of engagement entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove engagement entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Engagement deletion confirmation",
-							newResponseProperty("engagementId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add an engagement item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("title").setDescription("title").setRequired(true).setExample("thetitle")).
-						addFormParamsValue(group.newstringParam().setName("logic").setDescription("to be determined").setRequired(true).setExample("thelogic")).
-						addFormParamsValue(group.newintegerParam().setName("value").setDescription("value").setRequired(true).setExample("250")).
-						addFormParamsValue(group.newstringParam().setName("type").setDescription("to be determined").setRequired(true).setExample("thetype")).
-						addFormParamsValue(group.newstringParam().setName("earnedFrom").setDescription("earned from date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("earnedTo").setDescription("earned to date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")).
-						addFormParamsValue(group.newstringParam().setName("expiryDate").setDescription("expiry date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$").setExample("2014-08-18")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added engagement confirmation",
-						newResponseProperty("engagementId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/game").
-
-				addActionsValue(newGET("list of game entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of game entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove game entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Game deletion confirmation",
-							newResponseProperty("gameId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a game item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("startDate").setDescription("start date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("endDate").setDescription("end date").setRequired(true).setMinLength(10).setMaxLength(10).setPattern("^\\d{4}-\\d{2}-\\d{2}$")).
-						addFormParamsValue(group.newstringParam().setName("description").setDescription("description").setRequired(true).setExample("thedescription")).
-						addFormParamsValue(group.newintegerParam().setName("templateId").setDescription("template identifier").setRequired(true).setExample("1")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added game confirmation",
-						newResponseProperty("gameId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/supplier").
-
-				addActionsValue(newGET("list of supplier entries",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("list of supplier entries",
-							newResponseProperty("list", "array", true)))
-				).
-
-				addActionsValue(newDELETE("remove supplier entry",
-						group.newheaderParams().
-							addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-						group.newqueryParams().
-							addQueryParamsValue(newUUIDParam().setName("supplierId").setDescription("supplier id").setRequired(true).setExample("")),
-						"400", "401", "404", "500").
-						addResponsesValue(newjsonResponse("Supplier deletion confirmation",
-							newResponseProperty("supplierId", "string", true)))
-				).
-
-				addActionsValue(newPOST("add a supplier item",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("name").setDescription("name").setRequired(true).setExample("thename")).
-						addFormParamsValue(group.newstringParam().setName("town").setDescription("town").setRequired(true).setExample("thetown")).
-						addFormParamsValue(group.newstringParam().setName("city").setDescription("city").setRequired(true).setExample("thecity")).
-						addFormParamsValue(group.newstringParam().setName("country").setDescription("country").setRequired(true).setExample("United Kingdom")).
-						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true).setExample("")).
-						addFormParamsValue(group.newintegerParam().setName("category").setDescription("category identifier").setRequired(true).setExample("1")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added supplier confirmation",
-						newResponseProperty("supplierId", "string", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/import/intshowtimes").
-
-				addActionsValue(newPOST("force import international showtimes",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Import job start confirmation",
-						newResponseProperty("jobstart", "boolean", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/admin/film/statistics").
-
-				addActionsValue(newGET("film data statistics",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Film data statistics",
-						newResponseProperty("statistics", "object", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/oauth2/login").
-
-			addActionsValue(newPOST("client login",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("client_credentials")).
-					addFormParamsValue(group.newstringParam().setName("client_id").setDescription("OAuth2 client id - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0)).
-					addFormParamsValue(group.newstringParam().setName("client_secret").setDescription("OAuth2 client secret - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0)),
-				"400", "401").
-				addResponsesValue(newjsonResponse("OAuth2 token response",
-					newResponseProperty("access_token", "string", true),
-					newResponseProperty("expires_in", "integer", true),
-					newResponseProperty("token_type", "string", true)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/oauth2/token").
-
-			addActionsValue(newGET("verifies client access token",
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("client access token").setRequired(true)),
-				"400", "401").
-				addResponsesValue(newjsonResponse("Access token verification",
-					newResponseProperty("verified", "boolean", true),
-					newResponseProperty("oa2clientId", "string", false),
-					newResponseProperty("client_id", "string", false),
-					newResponseProperty("expires_in", "integer", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/version").
-
-			addActionsValue(newGET("returns current APP version.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Versions response",
-					newResponseProperty("version", "string", true),
-					newResponseProperty("description", "string", true),
-					newResponseProperty("releaseDate", "string", true)))).
-
-			addActionsValue(newPOST(
-				"receives APP version from client and returns whether it matches the current version.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("version").setDescription("APP version.").setRequired(true).setMaxLength(40).setMinLength(0).setExample("0.8")),
-				"400", "404", "500").
-				addResponsesValue(newjsonResponse("Version response",
-					newResponseProperty("success", "boolean", true)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/login").
-
-			addActionsValue(newPOST("user login",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("password")).
-					addFormParamsValue(group.newstringParam().setName("client_id").setDescription("OAuth2 client id - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0)).
-					addFormParamsValue(group.newstringParam().setName("client_secret").setDescription("OAuth2 client secret - REQUIRED if not using Authorization header").setRequired(false).setMaxLength(254).setMinLength(0)).
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")),
-				"400", "401").
-				addResponsesValue(newjsonResponse("OAuth2 token response",
-					newResponseProperty("access_token", "string", true),
-					newResponseProperty("expires_in", "integer", true),
-					newResponseProperty("token_type", "string", true),
-					newResponseProperty("refresh_token", "string", true),
-					newResponseProperty("userId", "string", false),
-					newResponseProperty("currencyTotal", "integer", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/user/login/fb").addActionsValue(newPOST("register facebook user",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
-					addFormParamsValue(group.newstringParam().setName("fbToken").setDescription("facebook access_token").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(1)),
-				"400", "401", "404", "409", "500").
-				addResponsesValue(newjsonResponse("OAuth2 token response",
-					newResponseProperty("access_token", "string", true),
-					newResponseProperty("expires_in", "integer", true),
-					newResponseProperty("token_type", "string", true),
-					newResponseProperty("refresh_token", "string", true),
-					newResponseProperty("userId", "string", false),
-					newResponseProperty("currencyTotal", "integer", false))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/forgotpassword").
-
-			addActionsValue(newPOST("send email to reset password for user",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("userId").setDescription("the user id").setRequired(false).setMaxLength(254).setMinLength(0).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")),
-				"400", "401").
-				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
-					newResponseProperty("success", "boolean", true),
-					newResponseProperty("dummy", "boolean", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/forgotPasswordForm").
-
-			addActionsValue(newPOST("process user forgot password",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
-					addFormParamsValue(group.newstringParam().setName("confirmPassword").setDescription("the confirm password").setRequired(true).setMaxLength(254).setMinLength(0).setExample("newpassword")).
-					addFormParamsValue(group.newstringParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setMaxLength(254).setMinLength(0).setExample("1f43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
-				"400", "401").
-				addResponsesValue(newjsonResponse("User forgot password email sent confirmation",
-					newResponseProperty("success", "boolean", true),
-					newResponseProperty("dummy", "boolean", false)))).
-
-			addActionsValue(newGET("get user forgot password form",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("forgotPasswordToken").setDescription("the reset-token").setRequired(true).setExample("1f43b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
-				"400").
-				addResponsesValue(group.newbinaryResponse().setContentType("text/html"))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/logout").
-
-			addActionsValue(newGET("user logout",
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
-				"400").
-				addResponsesValue(newjsonResponse("User logout confirmation",
-					newResponseProperty("logout", "boolean", true),
-					newResponseProperty("dummy", "boolean", false)))));
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/user/token").
-
-				addActionsValue(newGET("verifies user access token",
-					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("access_token").setDescription("access token").setRequired(true)),
-					"400", "401").
-					addResponsesValue(newjsonResponse("Access token verification",
-						newResponseProperty("verified", "boolean", true),
-						newResponseProperty("userId", "string", false),
-						newResponseProperty("expires_in", "integer", false)))).
-
-				addActionsValue(newPOST("refresh user access token",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-					group.newformBody().
-						addFormParamsValue(group.newstringParam().setName("grant_type").setDescription("OAuth2 grant type").setRequired(true).setMaxLength(254).setMinLength(0).setExample("refresh_token")).
-						addFormParamsValue(group.newstringParam().setName("refresh_token").setDescription("refresh token").setRequired(true).setExample("")),
-					"400", "401"
-				))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/user").
-
-				addActionsValue(newGET("register and log in a temporary user",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE)),
-					"400").
-					addResponsesValue(newjsonResponse("OAuth2 token response",
-						newResponseProperty("access_token", "string", true),
-						newResponseProperty("expires_in", "integer", true),
-						newResponseProperty("token_type", "string", true),
-						newResponseProperty("refresh_token", "string", true),
-						newResponseProperty("userId", "string", false),
-						newResponseProperty("currency", "integer", false))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/user/query").
-
-				addActionsValue(newGET("query if a username, email or deviceId is registered",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newqueryParams().
-						addQueryParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(false).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")).
-						addQueryParamsValue(group.newstringParam().setName("username").setDescription("the username").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-						addQueryParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false).setExample("the@email.com")),
-					"400").
-					addResponsesValue(newjsonResponse("Query response",
-						newResponseProperty("found", "boolean", true))))
-		);
-
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/user/profile").
-
-			addActionsValue(newGET("get user object",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "401", "404", "409", "500").
-				addResponsesValue(newjsonResponse("User object confirmation",
-					newResponseProperty("user", "object", true)))).
-
-			addActionsValue(newPOST("register new user",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters").setRequired(false).setExample("Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")),
-				group.newformBody().
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(true).setMaxLength(254).setMinLength(0).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(true).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
-					addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(true).setMinLength(2).setMaxLength(30).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(true).setMinLength(2).setMaxLength(30).setExample("thelastname")).
-					addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(true).setExample("the@email.com")).
-					addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(true)).
-					addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(true).addEnumsValue("male").addEnumsValue("female")).
-					addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
-					addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(true).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-					addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(true).setDefaultValue(false)).
-					addFormParamsValue(group.newstringParam().setName("deviceId").setDescription("user device id").setRequired(true).setMinLength(1).setMaxLength(MAX_VALUE).setExample("thedeviceid")),
-				"400", "401", "404", "409", "500").
-				addResponsesValue(newjsonResponse("OAuth2 token response",
-					newResponseProperty("access_token", "string", true),
-					newResponseProperty("expires_in", "integer", true),
-					newResponseProperty("token_type", "string", true),
-					newResponseProperty("refresh_token", "string", true),
-					newResponseProperty("userId", "string", false),
-					newResponseProperty("currency", "integer", false)))).
-
-			addActionsValue(newDELETE("delete user",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "401", "404", "409", "500").
-				addResponsesValue(newjsonResponse("User delete confirmation",
-					newResponseProperty("userId", "string", true)))).
-
-			addActionsValue(newPUT("update user",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
+		final RamlGroup.fileST loopsi = newRamlTemplate();
+
+		new APIBuilder().
+			setName("VersionAPI").
+			addEndpoint(new Endpoint("/admin/version").
+				addAction(new GetAction("list of version entries", true).
+					addResponseValue(new JsonResponse("list of version entries",
+						new JsonResponseProperty("list", "array", true)))).
+				addAction(new DeleteAction("remove version entry", true).
+					addQueryParam(new UUIDParam("versionId", "version id", true, UUID.fromString("84711675-af11-477b-abef-70556ae130dc"))).
+					addResponseValue(new JsonResponse("Version deletion confirmation",
+						new JsonResponseProperty("versionId", "string", true)))).
+				addAction(new PostAction("add a version item", true).
+					addFormParam(new DateParam("releaseDate", "release date", true)).
+					addFormParam(new StringParam("title", "title", true, "thetitle")).
+					addFormParam(new StringParam("description", "description", true, "thedescription")).
+					addFormParam(new StringParam("version", "version", true, "0.8")).
+					addResponseValue(new JsonResponse("Added version confirmation",
+						new JsonResponseProperty("versionId", "string", true))))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("UserAPI").
+			addEndpoint(new Endpoint("/admin/user").
+				addAction(new PostAction("update user data", true).
+					addFormParam(new UserIdParam(true)).
+					addFormParam(new StringParam("username", "the username, either facebook-username or custom", false, "username", 0, 254)).
+					addFormParam(new StringParam("password", "the password, MD5 encoded", false).setMaxLength(MAX_VALUE).setMinLength(8)).
+					addFormParam(new StringParam("firstName", "user first name", false).setMinLength(2).setMaxLength(30)).
+					addFormParam(new StringParam("lastName", "user last name", false).setMinLength(2).setMaxLength(30)).
+					addFormParam(new EmailParam("email", "user email", false)).
+					addFormParam(new DateParam("dob", "user date of birth", false)).
+					addFormParam(new EnumParam("sex", "sex", false, "male", "female")).
+					addFormParam(new StringParam("location", "user location", false).setMinLength(0).setMaxLength(MAX_VALUE)).
+					addFormParam(new StringParam("country", "user country", false).setMinLength(0).setMaxLength(MAX_VALUE)).
+					addFormParam(new FileParam("avatar", "user avatar", false)).
+					addFormParam(new BooleanParam("optInMarketing", "user opt in for marketing", false, false)).
+					addFormParam(new IntegerParam("balance", "user currency", 0, Integer.MAX_VALUE, false)).
+					addResponseValue(new JsonResponse("the updated user object",
+						new JsonResponseProperty("user", "object", true)))).
+				addAction(new GetAction("list of user entries", true).addResponseValue(new JsonResponse("list of user entries",
+					new JsonResponseProperty("list", "array", true)))).
+				addAction(new DeleteAction("remove user entry", true).addQueryParam(new UserIdParam(true)).addResponseValue(new JsonResponse("User deletion confirmation",
+					new JsonResponseProperty("userId", "string", true))))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("CurrencyAPI").
+			addEndpoint(new Endpoint("/admin/currency").
+				addAction(new GetAction("list of virtual currency entries", true).
+					addResponseValue(new JsonResponse("list of currency entries",
+						new JsonResponseProperty("list", "array", true)))).
+				addAction(new DeleteAction("remove virtual currency entry", true).
+					addQueryParam(new UUIDParam("currencyId", "currency id", true)).
+					addResponseValue(new JsonResponse("Currency deletion confirmation",
+						new JsonResponseProperty("currencyId", "string", true)))).
+				addAction(new PostAction("add a virtual currency item", true).
+					addFormParam(new UUIDParam("engagementId", "engagement id", true)).
+					addFormParam(new IntegerParam("currencyValue", "integer", true)).
+					addFormParam(new StringParam("transactionType", "to be determined", false, "thetype")).
+					addFormParam(new UUIDParam("gameId", "game id", true, UUID.fromString("ab121aec-cf92-4f59-a154-ee924db700af"))).
+					addResponseValue(new JsonResponse("Added currency confirmation",
+						new JsonResponseProperty("currencyId", "string", true))))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("BadgeAPI").
+			addEndpoint(new Endpoint("/admin/badge").
+				addAction(new GetAction("list of badge entries", true).
+					addResponseValue(new JsonResponse("list of badge entries",
+						new JsonResponseProperty("list", "array", true)))).
+				addAction(new DeleteAction("remove badge entry", true).
+					addQueryParam(new UUIDParam("badgeId", "badge id", true)).
+					addResponseValue(new JsonResponse("Badge deletion confirmation",
+						new JsonResponseProperty("badgeId", "string", true)))).
+				addAction(new PostAction("add a badge item", true).
 					setMultipart(true).
-					addFormParamsValue(group.newstringParam().setName("username").setDescription("the username, either facebook-username or custom").setRequired(false).setMaxLength(254).setMinLength(0).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("password").setDescription("the password, MD5 encoded").setRequired(false).setMaxLength(MAX_VALUE).setMinLength(8).setExample("b25bc8c9efabdd0837bb7d9deace1308")).
-					addFormParamsValue(group.newstringParam().setName("firstName").setDescription("user first name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("theusername")).
-					addFormParamsValue(group.newstringParam().setName("lastName").setDescription("user last name").setRequired(false).setMinLength(2).setMaxLength(30).setExample("thelastname")).
-					addFormParamsValue(newEmailParam().setName("email").setDescription("user email").setRequired(false).setExample("the@email.com")).
-					addFormParamsValue(newDateParam().setName("dob").setDescription("user date of birth").setRequired(false)).
-					addFormParamsValue(group.newstringParam().setName("sex").setDescription("sex").setRequired(false).addEnumsValue("male").addEnumsValue("female")).
-					addFormParamsValue(group.newstringParam().setName("location").setDescription("user location").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thelocation")).
-					addFormParamsValue(group.newstringParam().setName("country").setDescription("user country").setRequired(false).setMinLength(0).setMaxLength(MAX_VALUE).setExample("thecountry")).
-					addFormParamsValue(group.newfileParam().setName("avatar").setDescription("user avatar").setRequired(false)).
-					addFormParamsValue(group.newbooleanParam().setName("optInMarketing").setDescription("user opt in for marketing").setRequired(false).setDefaultValue(false)),
-				"400", "401", "404", "409", "500").
-				addResponsesValue(newjsonResponse("User confirmation",
-					newResponseProperty("userId", "string", true)))));
+					addFormParam(new UUIDParam("gameId", "game id", true)).
+					addFormParam(new StringParam("title", "title", true, "badge title")).
+					addFormParam(new StringParam("description", "description", true, "badge description")).
+					addFormParam(new FileParam("avatar", "user avatar", false)).
+					addResponseValue(new JsonResponse("Added badge confirmation",
+						new JsonResponseProperty("badgeId", "string", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/currency").
 
-				addActionsValue(newGET("returns user currency value.",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "401", "404").
-					addResponsesValue(newjsonResponse("Currency response",
-						newResponseProperty("currentValue", "integer", true)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/redemption").
 
-				addActionsValue(newPOST("add currency activity to user's ledger",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("currencyId").setDescription("currency id").setRequired(true)).
-						addFormParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(true)).
-						addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemtion id").setRequired(true)).
-						addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true)).
-						addFormParamsValue(group.newintegerParam().setName("currencyEarned").setDescription("earned value").setRequired(true).setExample("250")).
-						addFormParamsValue(group.newintegerParam().setName("currencyRedeemed").setDescription("redeemed value").setRequired(true).setExample("250")).
-						addFormParamsValue(group.newstringParam().setName("latitude").setDescription("latitude").setRequired(false)).
-						addFormParamsValue(group.newstringParam().setName("longitude").setDescription("longitude").setRequired(false)),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added currency activity confirmation",
-						newResponseProperty("currencyActivityId", "string", true)))).
+			addAction(new GetAction("list of redemption entries", true).
+				addResponseValue(new JsonResponse("list of redemption entries",
+					new JsonResponseProperty("list", "array", true)))).
 
-				addActionsValue(newDELETE("deletes a currency activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("currencyActivityId").setDescription("currency activity id").setRequired(true)),
-					"400", "401", "404").
-					addResponsesValue(newjsonResponse("Deleted currency activity confirmation",
-						newResponseProperty("currencyActivityId", "string", true))))
-		);
+			addAction(new DeleteAction("remove redemption entry", true).
+				addQueryParam(new UUIDParam("redemptionId", "redemption id", true)).
+				addResponseValue(new JsonResponse("Redemption deletion confirmation",
+					new JsonResponseProperty("redemptionId", "string", true)))).
 
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/currency/ledger").
+			addAction(new PostAction("add an redemption item", true).
+				setMultipart(true).
+				addFormParam(new UUIDParam("supplierId", "supplier id", true)).
+				addFormParam(new DateParam("earnedFrom", "earned from date", true)).
+				addFormParam(new DateParam("earnedTo", "earned to date", true)).
+				addFormParam(new DateParam("expiryDate", "expiry date", true)).
+				addFormParam(new IntegerParam("limit", "limit", true)).
+				addFormParam(new StringParam("type", "type", true, "thetype")).
+				addFormParam(new StringParam("code", "code", true, "thecode")).
+				addFormParam(new StringParam("description", "description", true, "thedescription")).
+				addFormParam(new StringParam("address", "address", true, "theaddress")).
+				addFormParam(new StringParam("town", "town", true, "thetown")).
+				addFormParam(new StringParam("city", "city", true, "thecity")).
+				addFormParam(new StringParam("country", "country", true, "United Kingdom")).
+				addFormParam(new IntegerParam("currencyValue", "currency value", true)).
+				addFormParam(new FileParam("image", "image", false)).
+				addResponseValue(new JsonResponse("Added redemption confirmation",
+					new JsonResponseProperty("redemptionId", "string", true))))).addToRAML(loopsi);
 
-				addActionsValue(newGET("returns user currency ledger.",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "401", "404").
-					addResponsesValue(newjsonResponse("Currency ledger (activities)",
-						newResponseProperty("list", "array", true))))
-		);
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/engagement").
+			addAction(new GetAction("list of engagement entries", true).
+				addResponseValue(new JsonResponse("list of engagement entries",
+					new JsonResponseProperty("list", "array", true)))).
+			addAction(new DeleteAction("remove engagement entry", true).
+				addQueryParam(new UUIDParam("engagementId", "engagement id", true)).
+				addResponseValue(new JsonResponse("Engagement deletion confirmation",
+					new JsonResponseProperty("engagementId", "string", true)))).
+			addAction(new PostAction("add an engagement item", true).
+				addFormParam(new StringParam("title", "title", true, "thetitle")).
+				addFormParam(new StringParam("logic", "to be determined", true, "thelogic")).
+				addFormParam(new IntegerParam("value", "value", true)).
+				addFormParam(new StringParam("type", "to be determined", true, "thetype")).
+				addFormParam(new DateParam("earnedFrom", "earned from date", true)).
+				addFormParam(new DateParam("earnedTo", "earned to date", true)).
+				addFormParam(new DateParam("expiryDate", "expiry date", true)).
+				addResponseValue(new JsonResponse("Added engagement confirmation",
+					new JsonResponseProperty("engagementId", "string", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-				setUri("/badge").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/game").
+			addAction(new GetAction("list of game entries", true).
+				addResponseValue(new JsonResponse("list of game entries",
+					new JsonResponseProperty("list", "array", true)))).
+			addAction(new DeleteAction("remove game entry", true).
+				addQueryParam(new UUIDParam("gameId", "game id", true)).
+				addResponseValue(new JsonResponse("Game deletion confirmation",
+					new JsonResponseProperty("gameId", "string", true)))).
+			addAction(new PostAction("add a game item", true).
+				addFormParam(new DateParam("startDate", "start date", true)).
+				addFormParam(new DateParam("endDate", "end date", true)).
+				addFormParam(new StringParam("description", "description", true, "thedescription")).
+				addFormParam(new IntegerParam("templateId", "template identifier", true)).
+				addResponseValue(new JsonResponse("Added game confirmation",
+					new JsonResponseProperty("gameId", "string", true))))).addToRAML(loopsi);
 
-				addActionsValue(newPOST("add badge activity to user's ledger",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("badgeId").setDescription("badge id").setRequired(true).setExample("f04ddca4-05e0-49b7-9093-a14ae5c95e51")).
-						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Added badge activity confirmation",
-						newResponseProperty("userBadgeId", "string", true)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/supplier").
+			addAction(new GetAction("list of supplier entries", true).
+				addResponseValue(new JsonResponse("list of supplier entries",
+					new JsonResponseProperty("list", "array", true)))).
+			addAction(new DeleteAction("remove supplier entry", true).
+				addQueryParam(new UUIDParam("supplierId", "supplier id", true)).
+				addResponseValue(new JsonResponse("Supplier deletion confirmation",
+					new JsonResponseProperty("supplierId", "string", true)))).
+			addAction(new PostAction("add a supplier item", true).
+				addFormParam(new StringParam("name", "name", true, "thename")).
+				addFormParam(new StringParam("town", "town", true, "thetown")).
+				addFormParam(new StringParam("city", "city", true, "thecity")).
+				addFormParam(new StringParam("country", "country", true, "United Kingdom")).
+				addFormParam(new UUIDParam("cinemaId", "cinema id", true)).
+				addFormParam(new IntegerParam("category", "category identifier", true)).
+				addResponseValue(new JsonResponse("Added supplier confirmation",
+					new JsonResponseProperty("supplierId", "string", true))))).addToRAML(loopsi);
 
-				addActionsValue(newPUT("update badge activity in user's ledger",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newformBody().
-						addFormParamsValue(newUUIDParam().setName("userBadgeId").setDescription("user badge id").setRequired(true)).
-						addFormParamsValue(group.newintegerParam().setName("completionPercent").setDescription("competion percentage").setRequired(true).setExample("42")),
-					"400", "401", "404", "500").
-					addResponsesValue(newjsonResponse("Updated badge activity confirmation",
-						newResponseProperty("userBadgeId", "string", true)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/import/intshowtimes").
+			addAction(new PostAction("force import international showtimes", true).
+				addResponseValue(new JsonResponse("Import job start confirmation",
+					new JsonResponseProperty("jobstart", "boolean", true))))).addToRAML(loopsi);
 
-				addActionsValue(newDELETE("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					group.newqueryParams().
-						addQueryParamsValue(newUUIDParam().setName("userBadgeId").setDescription("badge activity id").setRequired(true)),
-					"400", "401", "404").
-					addResponsesValue(newjsonResponse("Deleted badge activity confirmation",
-						newResponseProperty("userBadgeId", "string", true))))
-		);
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/admin/film/statistics").
+			addAction(new GetAction("film data statistics", true).
+				addResponseValue(new JsonResponse("Film data statistics",
+					new JsonResponseProperty("statistics", "object", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/badge/earned").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/oauth2/login").
+			addAction(new PostAction("client login", true).
+				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "", 0, 254)).
+				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, 0, 254)).
+				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, 0, 254)).
+				setErrorCodes("400", "401").
+				addResponseValue(new JsonResponse("OAuth2 token response",
+					new JsonResponseProperty("access_token", "string", true),
+					new JsonResponseProperty("expires_in", "integer", true),
+					new JsonResponseProperty("token_type", "string", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns user badges earned.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Badges response",
-					newResponseProperty("badges", "array", true)))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/oauth2/token").
+			addAction(new GetAction("verifies client access token", false).
+				addQueryParam(new StringParam("access_token", "client access token", true)).
+				addResponseValue(new JsonResponse("Access token verification",
+					new JsonResponseProperty("verified", "boolean", true),
+					new JsonResponseProperty("oa2clientId", "string", false),
+					new JsonResponseProperty("client_id", "string", false),
+					new JsonResponseProperty("expires_in", "integer", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/badge/available").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/version").
+			addAction(new GetAction("returns current APP version.", true).
+				addResponseValue(new JsonResponse("Versions response",
+					new JsonResponseProperty("version", "string", true),
+					new JsonResponseProperty("description", "string", true),
+					new JsonResponseProperty("releaseDate", "string", true)))).
+			addAction(new PostAction("receives APP version from client and returns whether it matches the current version.", true).
+				addFormParam(new StringParam("version", "APP version.", true, "0.8.1", 5, 8)).
+				addResponseValue(new JsonResponse("Version response",
+					new JsonResponseProperty("success", "boolean", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns badges available.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Badges response",
-					newResponseProperty("badges", "array", true)))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/user/login").
+			addAction(new PostAction("user login", false).
+				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "password", 0, 254)).
+				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, 0, 254)).
+				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, 0, 254)).
+				addFormParam(new StringParam("username", "the username", true, "theusername", 3, 10)).
+				addFormParam(new StringParam("password", "the password, MD5 encoded", true, "b25bc8c9efabdd0837bb7d9deace1308", 8, Integer.MAX_VALUE)).
+				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
+				addResponseValue(new JsonResponse("OAuth2 token response",
+					new JsonResponseProperty("access_token", "string", true),
+					new JsonResponseProperty("expires_in", "integer", true),
+					new JsonResponseProperty("token_type", "string", true),
+					new JsonResponseProperty("refresh_token", "string", true),
+					new JsonResponseProperty("userId", "string", false),
+					new JsonResponseProperty("currencyTotal", "integer", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/leaderboard/gamescoresfb").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/login/fb").
+				addAction(new PostAction("register facebook user", false).
+					addFormParam(new StringParam("deviceId", "user device id", true, "thedeviceid", 1, Integer.MAX_VALUE)).
+					addFormParam(new StringParam("fbToken", "facebook access_token", true, 1, Integer.MAX_VALUE)).
+					addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
+					addErrorCode("409").
+					addResponseValue(new JsonResponse("OAuth2 token response",
+						new JsonResponseProperty("access_token", "string", true),
+						new JsonResponseProperty("expires_in", "integer", true),
+						new JsonResponseProperty("token_type", "string", true),
+						new JsonResponseProperty("refresh_token", "string", true),
+						new JsonResponseProperty("userId", "string", false),
+						new JsonResponseProperty("currencyTotal", "integer", false))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns fb friends gamescores for game",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")).
-					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("scores",
-					newResponseProperty("scores", "array", true)))));
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/forgotpassword").
+				addAction(new PostAction("send email to reset password for user", false).
+					addFormParam(new UUIDParam("userId", "the user id", false)).
+					addFormParam(new StringParam("username", "the username", false, "theusername", 0, 254)).
+					setErrorCodes("400", "401").
+					addResponseValue(new JsonResponse("User forgot password email sent confirmation",
+						new JsonResponseProperty("success", "boolean", true),
+						new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/leaderboard/gamescores").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/forgotPasswordForm").
+				addAction(new PostAction("process user forgot password", false).
+					addFormParam(new StringParam("password", "the password", true, "newpassword", 0, 254)).
+					addFormParam(new StringParam("confirmPassword", "the confirm password", true, "newpassword", 0, 254)).
+					addFormParam(new UUIDParam("forgotPasswordToken", "the reset-token", true)).
+					setErrorCodes("400", "401").
+					addResponseValue(new JsonResponse("User forgot password email sent confirmation",
+						new JsonResponseProperty("success", "boolean", true),
+						new JsonResponseProperty("dummy", "boolean", false)))).
 
-			addActionsValue(newPOST("post gamescore",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-					addFormParamsValue(newIntegerParam("score", "game score", 0, Integer.MAX_VALUE).setRequired(true).setExample("2500")).
-					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d).setRequired(false)).
-					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d).setRequired(false)).
-					addFormParamsValue(newUUIDParam().setName("userId").setDescription("user id").setRequired(true).setExample("1143b1b2-c06e-4d4b-8bb6-4403b7ad1ea6")),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("game score posted",
-					newResponseProperty("success", "boolean", true)))).
+				addAction(new GetAction("get user forgot password form", false).
+					addQueryParam(new UUIDParam("forgotPasswordToken", "the reset-token", true)).
+					setErrorCodes("400").
+					addResponseValue(new HtmlResponse("form for resetting password")))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns global gamescores for game",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("gameId").setDescription("game id").setRequired(true).setExample("ab121aec-cf92-4f59-a154-ee924db700af")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("scores",
-					newResponseProperty("scores", "array", true)))));
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/logout").
+				addAction(new GetAction("user logout", true).
+					addQueryParam(new StringParam("access_token", "access token", true)).
+					setErrorCodes("400").
+					addResponseValue(new JsonResponse("User logout confirmation",
+						new JsonResponseProperty("logout", "boolean", true),
+						new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/films/watchlist").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/token").
+				addAction(new GetAction("verifies user access token", true).
+					addQueryParam(new StringParam("access_token", "access token", true)).
+					setErrorCodes("400", "401").
+					addResponseValue(new JsonResponse("Access token verification",
+						new JsonResponseProperty("verified", "boolean", true),
+						new JsonResponseProperty("userId", "string", false),
+						new JsonResponseProperty("expires_in", "integer", false)))).
+				addAction(new PostAction("refresh user access token", true).
+					addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "refresh_token", 0, 254)).
+					addFormParam(new StringParam("refresh_token", "refresh token", true, 0, 254)).
+					setErrorCodes("400", "401"))).addToRAML(loopsi);
 
-			addActionsValue(newPOST("add film to watchlist",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("film added to watchlist",
-					newResponseProperty("success", "boolean", true)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/user").
+			addAction(new GetAction("register and log in a temporary user", false).
+				addQueryParam(new StringParam("deviceId", "user device id", true, 1, MAX_VALUE)).
+				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
+				setErrorCodes("400").
+				addResponseValue(new JsonResponse("OAuth2 token response",
+					new JsonResponseProperty("access_token", "string", true),
+					new JsonResponseProperty("expires_in", "integer", true),
+					new JsonResponseProperty("token_type", "string", true),
+					new JsonResponseProperty("refresh_token", "string", true),
+					new JsonResponseProperty("userId", "string", false),
+					new JsonResponseProperty("currency", "integer", false))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("get watchlist for friends",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(true).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("watchlist of friends",
-					newResponseProperty("watchlist", "array", true)))));
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/user/query").
+				addAction(new GetAction("query if a username, email or deviceId is registered", true).
+					addQueryParam(new StringParam("deviceId", "user device id", false, 1, MAX_VALUE)).
+					addQueryParam(new StringParam("username", "the username", false, "theusername", 0, 254)).
+					addQueryParam(new EmailParam("email", "user email", false)).
+					setErrorCodes("400").
+					addResponseValue(new JsonResponse("Query response",
+						new JsonResponseProperty("found", "boolean", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/showtimes").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/user/profile").
+			addAction(new GetAction("get user object", true).
+				addResponseValue(new JsonResponse("User object confirmation", new JsonResponseProperty("user", "object", true)))).
+			addAction(new PostAction("register new user", false).
+				addFormParam(new StringParam("username", "the username, either facebook-username or custom", true, "theusername", 0, 254)).
+				addFormParam(new StringParam("password", "the password, MD5 encoded", true, 8, MAX_VALUE, "b25bc8c9efabdd0837bb7d9deace1308")).
+				addFormParam(new StringParam("firstName", "user first name", true, 2, 30, "theusername")).
+				addFormParam(new StringParam("lastName", "user last name", true, 2, 30, "thelastname")).
+				addFormParam(new EmailParam("email", "user email", true)).
+				addFormParam(new DateParam("dob", "user date of birth", true)).
+				addFormParam(new EnumParam("sex", "sex", true, "male", "female")).
+				addFormParam(new StringParam("location", "user location", false, 0, MAX_VALUE, "thelocation")).
+				addFormParam(new StringParam("country", "user country", true, 0, MAX_VALUE, "thecountry")).
+				addFormParam(new BooleanParam("optInMarketing", "user opt in for marketing", true, false)).
+				addFormParam(new StringParam("deviceId", "user device id", true, 1, MAX_VALUE, "thedeviceid")).
+				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
+				addErrorCode("409").
+				addResponseValue(new JsonResponse("OAuth2 token response",
+					new JsonResponseProperty("access_token", "string", true),
+					new JsonResponseProperty("expires_in", "integer", true),
+					new JsonResponseProperty("token_type", "string", true),
+					new JsonResponseProperty("refresh_token", "string", true),
+					new JsonResponseProperty("userId", "string", false),
+					new JsonResponseProperty("currency", "integer", false)))).
 
-			addActionsValue(newGET("get showtimes for film or cinema",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("cinemaId").setDescription("cinema id").setRequired(false)).
-					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(false)),
-				"400", "404").
-				addResponsesValue(newjsonResponse("showtimes",
-					newResponseProperty("showtimes", "object", true)))));
+			addAction(new DeleteAction("delete user", true).
+				addErrorCode("409").
+				addResponseValue(new JsonResponse("User delete confirmation",
+					new JsonResponseProperty("userId", "string", true)))).
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/redemption").
+			addAction(new PutAction("update user", true).
+				setMultipart(true).
+				addFormParam(new StringParam("username", "the username, either facebook-username or custom", false, "theusername", 0, 254)).
+				addFormParam(new StringParam("password", "the password, MD5 encoded", false, 8, MAX_VALUE, "b25bc8c9efabdd0837bb7d9deace1308")).
+				addFormParam(new StringParam("firstName", "user first name", false, 2, 30, "theusername")).
+				addFormParam(new StringParam("lastName", "user last name", false, 2, 30, "thelastname")).
+				addFormParam(new EmailParam("email", "user email", false)).
+				addFormParam(new DateParam("dob", "user date of birth", false)).
+				addFormParam(new EnumParam("sex", "sex", false, "male", "female")).
+				addFormParam(new StringParam("location", "user location", false, 0, MAX_VALUE, "thelocation")).
+				addFormParam(new StringParam("country", "user country", false, 0, MAX_VALUE, "thecountry")).
+				addFormParam(new FileParam("avatar", "user avatar", false)).
+				addFormParam(new BooleanParam("optInMarketing", "user opt in for marketing", false, false)).
+				addErrorCode("409").
+				addResponseValue(new JsonResponse("User confirmation",
+					new JsonResponseProperty("userId", "string", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns relevant redemption offers.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Redemptions response",
-					newResponseProperty("redemptions", "array", true)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/currency").
+			addAction(new GetAction("returns user currency value.", true).
+				setErrorCodes("400", "401", "404").
+				addResponseValue(new JsonResponse("Currency response",
+					new JsonResponseProperty("currentValue", "integer", true)))).
+			addAction(new PostAction("add currency activity to user's ledger", true).
+				addFormParam(new UUIDParam("currencyId", "currency id", true)).
+				addFormParam(new UUIDParam("cinemaId", "cinema id", true)).
+				addFormParam(new UUIDParam("redemptionId", "redemtion id", true)).
+				addFormParam(new UUIDParam("engagementId", "engagement id", true)).
+				addFormParam(new IntegerParam("currencyEarned", "earned value", true, 250)).
+				addFormParam(new IntegerParam("currencyRedeemed", "redeemed value", true, 500)).
+				addFormParam(new LatitudeParam(false)).
+				addFormParam(new LongitudeParam(false)).
+				addResponseValue(new JsonResponse("Added currency activity confirmation",
+					new JsonResponseProperty("currencyActivityId", "string", true)))).
 
-			addActionsValue(newPOST("Redeem redemption",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("redemptionId").setDescription("redemption id").setRequired(true).setExample("a4fce7b1-1226-4466-994d-84a89d05df85")),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("Redeemed redemption confirmation",
-					newResponseProperty("redemptionActivityId", "string", true),
-					newResponseProperty("redemptionId", "string", true),
-					newResponseProperty("type", "string", true),
-					newResponseProperty("description", "string", true),
-					newResponseProperty("value", "integer", true),
-					newResponseProperty("currency", "long", true)))));
+			addAction(new DeleteAction("deletes a currency activity entry. *FOR MAINTENANCE/TESTING PURPOSES*", true).
+				addQueryParam(new UUIDParam("currencyActivityId", "currency activity id", true)).
+				setErrorCodes("400", "401", "404").
+				addResponseValue(new JsonResponse("Deleted currency activity confirmation",
+					new JsonResponseProperty("currencyActivityId", "string", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/redemption/ledger").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/currency/ledger").
+				addAction(new GetAction("returns user currency ledger.", true).setErrorCodes("400", "401", "404").
+					addResponseValue(new JsonResponse("Currency ledger (activities)",
+						new JsonResponseProperty("list", "array", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns user redemption ledger.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Redemption ledger (activities)",
-					newResponseProperty("redemptions", "array", true)))));
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/badge").
+				addAction(new PostAction("add badge activity to user's ledger", true).
+					addFormParam(new UUIDParam("badgeId", "badge id", true)).
+					addFormParam(new IntegerParam("completionPercent", "competion percentage", true, 42)).
+					addResponseValue(new JsonResponse("Added badge activity confirmation",
+						new JsonResponseProperty("userBadgeId", "string", true)))).
+				addAction(new PutAction("update badge activity in user's ledger", true).
+					addFormParam(new UUIDParam("userBadgeId", "user badge id", true)).
+					addFormParam(new IntegerParam("completionPercent", "competion percentage", true, 42)).
+					addResponseValue(new JsonResponse("Updated badge activity confirmation",
+						new JsonResponseProperty("userBadgeId", "string", true)))).
+				addAction(new DeleteAction("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*", true).
+					addQueryParam(new UUIDParam("userBadgeId", "badge activity id", true)).
+					setErrorCodes("400", "401", "404").
+					addResponseValue(new JsonResponse("Deleted badge activity confirmation",
+						new JsonResponseProperty("userBadgeId", "string", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/engagement").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/badge/earned").
+			addAction(new GetAction("returns user badges earned.", true).
+				addResponseValue(new JsonResponse("Badges response",
+					new JsonResponseProperty("badges", "array", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns user engagement activities.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Engagements response",
-					newResponseProperty("engagements", "array", true),
-					newResponseProperty("dummy", "boolean", false)))).
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/badge/available").
+			addAction(new GetAction("returns badges available.", true).
+				addQueryParam(new UUIDParam("gameId", "game id", true)).
+				addResponseValue(new JsonResponse("Badges response",
+					new JsonResponseProperty("badges", "array", true))))).addToRAML(loopsi);
 
-			addActionsValue(newPOST("POST Did Engagement Activities",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 USER access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newformBody().
-					addFormParamsValue(newUUIDParam().setName("engagementId").setDescription("engagement id").setRequired(true).setExample("58a41ad8-7b0a-441f-9187-a573c5ee90ea")).
-					addFormParamsValue(newUUIDParam().setName("gameId").setDescription("optional game id").setRequired(false).setExample("ab121aec-cf92-4f59-a154-ee924db700af")).
-					addFormParamsValue(group.newstringParam().setName("engagementdatetime").setDescription("date and time").setRequired(true).setExample("2016-12-31 18:05:00")).
-					addFormParamsValue(newUUIDParam().setName("filmId").setDescription("film id").setRequired(false).setExample("24cefca8-5877-4409-9145-d3648cdee2a2")).
-					addFormParamsValue(newUUIDParam().setName("trailerId").setDescription("trailer id").setRequired(false).setExample("ded96320-3a05-4a16-bb3b-2ce1ba9e6a69")).
-					addFormParamsValue(newIntegerParam("rating", "film/trailer rating", 0, Integer.MAX_VALUE).setRequired(false).setExample("5")).
-					addFormParamsValue(newLatitudeParam().setName("latitude").setExample(53.482133d)).
-					addFormParamsValue(newLongitudeParam().setName("longitude").setExample(-2.242445d)),
-				"400", "401", "404", "500").
-				addResponsesValue(newjsonResponse("Post engagement balance",
-					newResponseProperty("engagementCategory", "string", true),
-					newResponseProperty("type", "string", true),
-					newResponseProperty("currency", "integer", true),
-					newResponseProperty("id", "string", true),
-					newResponseProperty("latitude", "long", false),
-					newResponseProperty("longitude", "long", false)))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/leaderboard/gamescoresfb").
+			addAction(new GetAction("returns fb friends gamescores for game", true).
+				addQueryParam(new UUIDParam("userId", "user id", true)).
+				addQueryParam(new UUIDParam("gameId", "game id", true)).
+				addResponseValue(new JsonResponse("scores",
+					new JsonResponseProperty("scores", "array", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/films/latest").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/leaderboard/gamescores").
+				addAction(new PostAction("post gamescore",
+					true).
+					addFormParam(new UUIDParam("gameId", "game id", true)).
+					addFormParam(new IntegerParam("score", "game score", 0, Integer.MAX_VALUE, true)).
+					addFormParam(new LatitudeParam(false)).
+					addFormParam(new LongitudeParam(false)).
+					addFormParam(new UUIDParam("userId", "user id", true)).
+					addResponseValue(new JsonResponse("game score posted",
+						new JsonResponseProperty("success", "boolean", true)))).
 
-			addActionsValue(newGET("returns film listings by cinema.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(group.newstringParam().setName("cinemaId").setRequired(true).setDescription("UUID").setExample("55b4e376-9bf7-429c-92b9-5b5db922ea25")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Films response",
-					newResponseProperty("films", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+				addAction(new GetAction("returns global gamescores for game", true).
+					addQueryParam(new UUIDParam("gameId", "game id", true)).
+					addResponseValue(new JsonResponse("scores",
+						new JsonResponseProperty("scores", "array", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/cinema/listing").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/films/watchlist").
+			addAction(new PostAction("add film to watchlist", true).
+				addFormParam(new UUIDParam("filmId", "film id", true)).
+				addResponseValue(new JsonResponse("film added to watchlist",
+					new JsonResponseProperty("success", "boolean", true)))).
+			addAction(new GetAction("get watchlist for friends", true).
+				addQueryParam(new UUIDParam("filmId", "film id", true)).
+				addResponseValue(new JsonResponse("watchlist of friends",
+					new JsonResponseProperty("watchlist", "array", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns cinema listing.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newUUIDParam().setName("filmId").setDescription("film id")).
-					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
-					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Cinemas response",
-					newResponseProperty("cinemas", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/showtimes").
+			addAction(new GetAction("get showtimes for film or cinema", true).
+				addQueryParam(new UUIDParam("cinemaId", "cinema id", false)).
+				addQueryParam(new UUIDParam("filmId", "film id", false)).
+				addResponseValue(new JsonResponse("showtimes",
+					new JsonResponseProperty("showtimes", "object", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/cinema/nearby").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/redemption").
+			addAction(new GetAction("returns relevant redemption offers.", true).
+				addResponseValue(new JsonResponse("Redemptions response", new JsonResponseProperty("redemptions", "array", true)))).
+			addAction(new PostAction("Redeem redemption", true).
+				addFormParam(new UUIDParam("redemptionId", "redemption id", true)).
+				addResponseValue(new JsonResponse("Redeemed redemption confirmation",
+					new JsonResponseProperty("redemptionActivityId", "string", true),
+					new JsonResponseProperty("redemptionId", "string", true),
+					new JsonResponseProperty("type", "string", true),
+					new JsonResponseProperty("description", "string", true),
+					new JsonResponseProperty("value", "integer", true),
+					new JsonResponseProperty("currency", "long", true))))).addToRAML(loopsi);
 
-			addActionsValue(newGET("returns nearby cinemas.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				group.newqueryParams().
-					addQueryParamsValue(newLatitudeParam().setName("latitude").setRequired(true).setExample(53.482133d)).
-					addQueryParamsValue(newLongitudeParam().setName("longitude").setRequired(true).setExample(-2.242445d)).
-					addQueryParamsValue(newIntegerParam("radius", "radius", 0, 3185000).setName("radius").setExample(5000)),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Cinemas response",
-					newResponseProperty("cinemas", "array", true)))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/redemption/ledger").
+			addAction(new GetAction("returns user redemption ledger.", true).
+				addResponseValue(new JsonResponse("Redemption ledger (activities)",
+					new JsonResponseProperty("redemptions", "array", true))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/trailers").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/engagement").
+			addAction(new GetAction("returns user engagement activities.", true).
+				addResponseValue(new JsonResponse("Engagements response",
+					new JsonResponseProperty("engagements", "array", true),
+					new JsonResponseProperty("dummy", "boolean", false)))).
 
-			addActionsValue(newGET("returns trailers and ratings.",
-				group.newheaderParams().
-					addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-				"400", "404").
-				addResponsesValue(newjsonResponse("Trailers response",
-					newResponseProperty("trailers", "array", true),
-					newResponseProperty("dummy", "boolean", false)))));
+			addAction(new PostAction("POST Did Engagement Activities", true).
+				addFormParam(new UUIDParam("engagementId", "engagement id", true)).
+				addFormParam(new UUIDParam("gameId", "optional game id", false)).
+				addFormParam(new StringParam("engagementdatetime", "date and time", true, "2016-12-31 18:05:00")).
+				addFormParam(new UUIDParam("filmId", "film id", false)).
+				addFormParam(new UUIDParam("trailerId", "trailer id", false)).
+				addFormParam(new IntegerParam("rating", "film/trailer rating", 0, 10, false)).
+				addFormParam(new LatitudeParam(false)).
+				addFormParam(new LongitudeParam(false)).
+				addResponseValue(new JsonResponse("Post engagement balance",
+					new JsonResponseProperty("engagementCategory", "string", true),
+					new JsonResponseProperty("type", "string", true),
+					new JsonResponseProperty("currency", "integer", true),
+					new JsonResponseProperty("id", "string", true),
+					new JsonResponseProperty("latitude", "long", false),
+					new JsonResponseProperty("longitude", "long", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/images/films/").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/films/latest").
+			addAction(new GetAction("returns film listings by cinema.", true).
+				addQueryParam(new UUIDParam("cinemaId", "the cinema ", true)).
+				addResponseValue(new JsonResponse("Films response",
+					new JsonResponseProperty("films", "array", true),
+					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
 
-			addActionsValue(group.newuriParameter().
-				setName("imageId").
-				addActionsValue(newGET("returns images for films",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "404").
-					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/cinema/listing").
+			addAction(new GetAction("returns cinema listing.", true).
+				addQueryParam(new UUIDParam("filmId", "film id", false)).
+				addQueryParam(new LatitudeParam(true)).
+				addQueryParam(new LongitudeParam(true)).
+				addResponseValue(new JsonResponse("Cinemas response",
+					new JsonResponseProperty("cinemas", "array", true),
+					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/images/trailers/").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/cinema/nearby").
+			addAction(new GetAction("returns nearby cinemas.", true).
+				addQueryParam(new LatitudeParam(true)).
+				addQueryParam(new LongitudeParam(true)).
+				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, true)).
+				addResponseValue(new JsonResponse("Cinemas response",
+					new JsonResponseProperty("cinemas", "array", true))))).addToRAML(loopsi);
 
-			addActionsValue(group.newuriParameter().
-				setName("imageId").
-				addActionsValue(newGET("returns images for films",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "404").
-					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/trailers").
+			addAction(new GetAction("returns trailers and ratings.", true).
+				addResponseValue(new JsonResponse("Trailers response",
+					new JsonResponseProperty("trailers", "array", true),
+					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/images/redemptions/").
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/images/films/").
+			addAction(new URIParameterAction("imageId", "the film image id").
+				addAction(new GetAction("returns images for films", true)).
+				addResponseValue(new ImageResponse("the image")))).addToRAML(loopsi);
 
-			addActionsValue(group.newuriParameter().
-				setName("imageId").
-				addActionsValue(newGET("returns images for redemptions",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "404").
-					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
 
-		loopsi.addEndpointsValue(group.newendpoint().
-			setUri("/images/badges/").
+		new APIBuilder().
+			setName("").
+			addEndpoint(new Endpoint("/images/trailers/").
+				addAction(new URIParameterAction("imageId", "the trailer image id").
+					addAction(new GetAction("returns images for trailers", true)).
+					addResponseValue(new ImageResponse("the image")))).addToRAML(loopsi);
 
-			addActionsValue(group.newuriParameter().
-				setName("imageId").
-				addActionsValue(newGET("returns images for films",
-					group.newheaderParams().
-						addHeaderParamsValue(group.newheader().setName("Authorization").setDescription("OAuth2 CLIENT access_token").setRequired(false).setExample("Bearer 4oe2Xr+yyLegIb4aubmQzu")),
-					"400", "404").
-					addResponsesValue(group.newbinaryResponse().setContentType("image/png")))));
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/images/redemptions/").
+			addAction(new URIParameterAction("imageId", "the redemption image id").
+				addAction(new GetAction("returns images for redemptions", true)).
+				addResponseValue(new ImageResponse("the redemption image")))).addToRAML(loopsi);
+
+		new APIBuilder().
+			setName("badgeImageAPI").
+			addEndpoint(new Endpoint("/images/badges/").
+				addAction(new URIParameterAction("imageId", "the badge image id").
+					addAction(new GetAction("returns images for films", true).
+						addResponseValue(new ImageResponse("badge image"))).
+					setErrorCodes("400", "404"))).addToRAML(loopsi);
 
 		FileUtil.write(loopsi, new File(outputFile));
-	}
-
-	private RamlGroup.stringParamST newUUIDParam() {
-		return group.newstringParam().
-			setMaxLength(36).
-			setMinLength(36).
-			setPattern(REGEX_UUID);
-	}
-
-	private RamlGroup.stringParamST newEmailParam() {
-		return group.newstringParam().
-			setMaxLength(100).
-			setMinLength(6).
-			setPattern(REGEX_EMAIL);
-	}
-
-	private RamlGroup.stringParamST newDateParam() {
-		return group.newstringParam().
-			setMaxLength(10).
-			setMinLength(10).
-			setPattern(REGEX_DATE);
-	}
-
-	private RamlGroup.numberParamST newLatitudeParam() {
-		return group.newnumberParam().
-			setMaximum(90).
-			setMinimum(-90);
-	}
-
-	private RamlGroup.numberParamST newLongitudeParam() {
-		return group.newnumberParam().
-			setMaximum(180).
-			setMinimum(-180);
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
-		final RamlGroup.postActionST actionST = group.newpostAction().
-			setDescription(description).
-			setHeaders(headers).
-			setBody(body).
-			setQuery(query);
-		for (String errorCode : errorCodes)
-			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return actionST;
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPOST(description, null, query, body, errorCodes);
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPOST(description, headers, null, body, errorCodes);
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPOST(description, null, null, body, errorCodes);
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, RamlGroup.headerParamsST headers, String... errorCodes) {
-		return newPOST(description, headers, null, null, errorCodes);
-	}
-
-	private RamlGroup.postActionST newPOST(Object description, String... errorCodes) {
-		return newPOST(description, null, null, null, errorCodes);
-	}
-
-	private RamlGroup.getActionST newGET(String description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, String... errorCodes) {
-		final RamlGroup.getActionST actionST = group.newgetAction().
-			setDescription(description).
-			setHeaders(headers).
-			setQuery(query);
-		for (String errorCode : errorCodes)
-			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return actionST;
-	}
-
-	private RamlGroup.getActionST newGET(String description, RamlGroup.headerParamsST headers, String... errorCodes) {
-		return newGET(description, headers, null, errorCodes);
-	}
-
-	private RamlGroup.getActionST newGET(String description, RamlGroup.queryParamsST query, String... errorCodes) {
-		return newGET(description, null, query, errorCodes);
-	}
-
-	private RamlGroup.getActionST newGET(String description, String... errorCodes) {
-		return newGET(description, null, null, errorCodes);
-	}
-
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
-		final RamlGroup.putActionST actionST = group.newputAction().
-			setDescription(description).
-			setHeaders(headers).
-			setBody(body).
-			setQuery(query);
-		for (String errorCode : errorCodes)
-			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return actionST;
-	}
-
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.headerParamsST headers, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPUT(description, headers, null, body, errorCodes);
-	}
-
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.queryParamsST query, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPUT(description, null, query, body, errorCodes);
-	}
-
-	private RamlGroup.putActionST newPUT(Object description, RamlGroup.formBodyST body, String... errorCodes) {
-		return newPUT(description, null, null, body, errorCodes);
-	}
-
-	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.headerParamsST headers, RamlGroup.queryParamsST query, String... errorCodes) {
-		final RamlGroup.deleteActionST actionST = group.newdeleteAction().
-			setDescription(description).
-			setHeaders(headers).
-			setQuery(query);
-		for (String errorCode : errorCodes)
-			actionST.addResponsesValue(error(errorCode, getErrorDescription(errorCode)));
-		return actionST;
-	}
-
-	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.headerParamsST headers, String... errorCodes) {
-		return newDELETE(description, headers, null, errorCodes);
-	}
-
-	private RamlGroup.deleteActionST newDELETE(String description, RamlGroup.queryParamsST query, String... errorCodes) {
-		return newDELETE(description, null, query, errorCodes);
-	}
-
-	private RamlGroup.deleteActionST newDELETE(String description, String... errorCodes) {
-		return newDELETE(description, null, null, errorCodes);
-	}
-
-	private RamlGroup.errorResponseST error(String code, String description) {
-		return group.newerrorResponse().
-			setCode(code).
-			setDescription(description);
-	}
-
-	private String getErrorDescription(String errorCode) {
-		switch (errorCode) {
-			case "400":
-				return "Bad Request";
-			case "401":
-				return "Unauthorized";
-			case "403":
-				return "Forbidden";
-			case "404":
-				return "Not Found";
-			case "409":
-				return "Conflict";
-			case "422":
-				return "Unprocessable Entity";
-			case "500":
-				return "Internal Server Error";
-			default:
-				throw new IllegalArgumentException("unsupported error code: " + errorCode);
-		}
-	}
-
-	private RamlGroup.jsonResponseST newjsonResponse(String schemaDescription, ResponseProperty... properties) {
-		final RamlGroup.jsonResponseST jsonResponseST = group.newjsonResponse().
-			setSchemaDescription(schemaDescription);
-		for (ResponseProperty property : properties) {
-			jsonResponseST.addPropertiesValue(property.name, property.type);
-			if (property.required) jsonResponseST.addRequiredValue(property.name);
-		}
-		return jsonResponseST;
-	}
-
-	private RamlGroup.integerParamST newIntegerParam(String name, String description, int minimum, int maximum) {
-		return group.newintegerParam().
-			setName(name).
-			setDescription(description).
-			setMinimum(minimum == Integer.MIN_VALUE ? null : minimum).
-			setMaximum(maximum == Integer.MAX_VALUE ? null : maximum);
-	}
-
-	private RamlGroup.numberParamST newNumberParam(String name, String description, double minimum, double maximum) {
-		return group.newnumberParam().
-			setName(name).
-			setDescription(description).
-			setMinimum(minimum == Double.MIN_VALUE ? null : minimum).
-			setMaximum(maximum == Double.MAX_VALUE ? null : maximum);
-	}
-
-	private RamlGroup.booleanParamST newbooleanParam(String name, String description, boolean required) {
-		return group.newbooleanParam().
-			setName(name).
-			setDescription(description).
-			setRequired(required);
-	}
-
-	private ResponseProperty newResponseProperty(String name, String type, boolean required) {
-		return new ResponseProperty(name, type, required);
-	}
-
-	private final class ResponseProperty {
-		final String name;
-		final String type;
-		final boolean required;
-
-		ResponseProperty(String name, String type, boolean required) {
-			this.name = name;
-			this.type = type;
-			this.required = required;
-		}
 	}
 }

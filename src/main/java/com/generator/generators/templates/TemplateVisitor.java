@@ -55,7 +55,6 @@ public interface TemplateVisitor {
 	}
 
 
-
 	void onStartGroupTemplateFile(File groupTemplateFile);
 
 	void onStartStatement(TemplateStatement statement);

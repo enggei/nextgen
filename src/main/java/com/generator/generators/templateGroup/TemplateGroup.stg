@@ -1,4 +1,4 @@
-/* uuid : ea0108e2-7836-4e1e-9a47-42824d4155ec */
+/* uuid : 3a88fc43-3f89-4a9d-ab83-254f93e4ecfd */
 delimiters "~", "~"
 
 /**  **/
@@ -157,6 +157,10 @@ public final class ~name~ {
       return delimiter;
    }
 
+	public interface ~name~Template {
+		
+	}
+
    ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
 
    ~statements:{it|~it.declaration~};separator="\r\n\r\n"~
@@ -197,8 +201,8 @@ public ~name~ new~name~() {
 } 
 >>
 
-/** name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
-NewStatementDeclaration(name,properties) ::= << public final class ~name~ST {
+/** groupname,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
+NewStatementDeclaration(groupname,name,properties) ::= <<public final class ~name~ST implements ~groupname~Template {
 
    ~properties:{it|private final AtomicBoolean ~it.name~IsSet = new AtomicBoolean(false);};separator="\n"~
    private final ST template;

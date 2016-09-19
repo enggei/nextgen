@@ -26,8 +26,6 @@ public final class RamlGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "raml" + java.io.File.separator + "raml.stg"));
    }
 
    public RamlGroup(STGroup stGroup) {
@@ -49,6 +47,10 @@ public final class RamlGroup {
    public char getDelimiter() {
       return delimiter;
    }
+
+	public interface RamlGroupTemplate {
+
+	}
 
 
    public binaryResponseST newbinaryResponse() {
@@ -150,7 +152,7 @@ public final class RamlGroup {
       return new uriParameterST(stGroup);
    } 
 
-    public final class binaryResponseST {
+   public final class binaryResponseST implements RamlGroupTemplate {
 
       private final AtomicBoolean contentTypeIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -170,7 +172,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class booleanParamST {
+   public final class booleanParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -205,7 +207,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class dateParamST {
+   public final class dateParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -250,7 +252,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class deleteActionST {
+   public final class deleteActionST implements RamlGroupTemplate {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
       private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
@@ -285,7 +287,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class endpointST {
+   public final class endpointST implements RamlGroupTemplate {
 
       private final AtomicBoolean actionsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean uriIsSet = new AtomicBoolean(false);
@@ -310,7 +312,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class errorResponseST {
+   public final class errorResponseST implements RamlGroupTemplate {
 
       private final AtomicBoolean codeIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -335,7 +337,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class fileST {
+   public final class fileST implements RamlGroupTemplate {
 
       private final AtomicBoolean baseUriIsSet = new AtomicBoolean(false);
       private final AtomicBoolean endpointsIsSet = new AtomicBoolean(false);
@@ -380,7 +382,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class fileParamST {
+   public final class fileParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -410,7 +412,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class formBodyST {
+   public final class formBodyST implements RamlGroupTemplate {
 
       private final AtomicBoolean formParamsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean multipartIsSet = new AtomicBoolean(false);
@@ -435,7 +437,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class getActionST {
+   public final class getActionST implements RamlGroupTemplate {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
       private final AtomicBoolean headersIsSet = new AtomicBoolean(false);
@@ -470,7 +472,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class headerST {
+   public final class headerST implements RamlGroupTemplate {
 
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
       private final AtomicBoolean enumsIsSet = new AtomicBoolean(false);
@@ -510,7 +512,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class headerParamsST {
+   public final class headerParamsST implements RamlGroupTemplate {
 
       private final AtomicBoolean headerParamsIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -530,7 +532,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class integerParamST {
+   public final class integerParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -585,7 +587,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class jsonResponseST {
+   public final class jsonResponseST implements RamlGroupTemplate {
 
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean requiredIsSet = new AtomicBoolean(false);
@@ -616,7 +618,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class numberParamST {
+   public final class numberParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -671,7 +673,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class postActionST {
+   public final class postActionST implements RamlGroupTemplate {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -711,7 +713,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class putActionST {
+   public final class putActionST implements RamlGroupTemplate {
 
       private final AtomicBoolean bodyIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -751,7 +753,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class queryParamsST {
+   public final class queryParamsST implements RamlGroupTemplate {
 
       private final AtomicBoolean queryParamsIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -771,7 +773,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class stringParamST {
+   public final class stringParamST implements RamlGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean descriptionIsSet = new AtomicBoolean(false);
@@ -836,7 +838,7 @@ public final class RamlGroup {
    	}
    } 
 
-    public final class uriParameterST {
+   public final class uriParameterST implements RamlGroupTemplate {
 
       private final AtomicBoolean actionsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
