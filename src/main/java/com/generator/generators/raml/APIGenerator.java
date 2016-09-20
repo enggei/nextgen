@@ -264,7 +264,7 @@ public class APIGenerator extends Domain {
 				addProperty(new DateProperty("expiryDate")).
 				addProperty(new IntegerProperty("currency")).
 				addProperty(new IntegerProperty("available")).
-				addProperty(new StringProperty("type")).
+				addProperty(new StringProperty("title")).
 				addProperty(new StringProperty("description")).
 				addProperty(new StringProperty("supplier")),   // TODO. define relation to this entity
 
@@ -516,7 +516,7 @@ public class APIGenerator extends Domain {
 				addFormParam(new DateParam("earnedTo", "earned to date", true)).
 				addFormParam(new DateParam("expiryDate", "expiry date", true)).
 				addFormParam(new IntegerParam("limit", "limit", true)).
-				addFormParam(new StringParam("type", "type", true, "thetype")).
+				addFormParam(new StringParam("title", "title", true, "thetitle")).
 				addFormParam(new StringParam("code", "code", true, "thecode")).
 				addFormParam(new StringParam("description", "description", true, "thedescription")).
 				addFormParam(new StringParam("address", "address", true, "theaddress")).
@@ -605,10 +605,11 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/oauth2/login").
-			addAction(new PostAction("client login", true).
-				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "", 0, 254)).
+			addAction(new PostAction("client login", false).
+				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "client_credentials", 0, 254)).
 				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, 0, 254)).
 				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, 0, 254)).
+				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 				setErrorCodes("400", "401").
 				addResponseValue(new JsonResponse("OAuth2 token response",
 					new JsonResponseProperty("access_token", "string", true),
@@ -910,11 +911,13 @@ public class APIGenerator extends Domain {
 				addResponseValue(new JsonResponse("Redemptions response", new JsonResponseProperty("redemptions", "array", true)))).
 			addAction(new PostAction("Redeem redemption", true).
 				addFormParam(new UUIDParam("redemptionId", "redemption id", true)).
+				addFormParam(new StringParam("code", "redemption code", true, 1, Integer.MAX_VALUE, "Code-1")).
 				addResponseValue(new JsonResponse("Redeemed redemption confirmation",
 					new JsonResponseProperty("redemptionActivityId", "string", true),
 					new JsonResponseProperty("redemptionId", "string", true),
-					new JsonResponseProperty("type", "string", true),
+					new JsonResponseProperty("title", "string", true),
 					new JsonResponseProperty("description", "string", true),
+					new JsonResponseProperty("code", "string", true),
 					new JsonResponseProperty("value", "integer", true),
 					new JsonResponseProperty("currency", "long", true))))).addToRAML(loopsi);
 
