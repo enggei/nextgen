@@ -460,24 +460,6 @@ public class APIGenerator extends Domain {
 					new JsonResponseProperty("userId", "string", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
-			setName("CurrencyAPI").
-			addEndpoint(new Endpoint("/admin/currency").
-				addAction(new GetAction("list of virtual currency entries", true).
-					addResponseValue(new JsonResponse("list of currency entries",
-						new JsonResponseProperty("list", "array", true)))).
-				addAction(new DeleteAction("remove virtual currency entry", true).
-					addQueryParam(new UUIDParam("currencyId", "currency id", true)).
-					addResponseValue(new JsonResponse("Currency deletion confirmation",
-						new JsonResponseProperty("currencyId", "string", true)))).
-				addAction(new PostAction("add a virtual currency item", true).
-					addFormParam(new UUIDParam("engagementId", "engagement id", true)).
-					addFormParam(new IntegerParam("currencyValue", "integer", true)).
-					addFormParam(new StringParam("transactionType", "to be determined", false, "thetype")).
-					addFormParam(new UUIDParam("gameId", "game id", true, UUID.fromString("ab121aec-cf92-4f59-a154-ee924db700af"))).
-					addResponseValue(new JsonResponse("Added currency confirmation",
-						new JsonResponseProperty("currencyId", "string", true))))).addToRAML(loopsi);
-
-		new APIBuilder().
 			setName("BadgeAPI").
 			addEndpoint(new Endpoint("/admin/badge").
 				addAction(new GetAction("list of badge entries", true).
@@ -560,6 +542,7 @@ public class APIGenerator extends Domain {
 			addAction(new PostAction("add a game item", true).
 				addFormParam(new DateParam("startDate", "start date", true)).
 				addFormParam(new DateParam("endDate", "end date", true)).
+				addFormParam(new StringParam("title", "title", true, "thetitle")).
 				addFormParam(new StringParam("description", "description", true, "thedescription")).
 				addFormParam(new IntegerParam("templateId", "template identifier", true)).
 				addResponseValue(new JsonResponse("Added game confirmation",
@@ -719,9 +702,10 @@ public class APIGenerator extends Domain {
 						new JsonResponseProperty("verified", "boolean", true),
 						new JsonResponseProperty("userId", "string", false),
 						new JsonResponseProperty("expires_in", "integer", false)))).
-				addAction(new PostAction("refresh user access token", true).
+				addAction(new PostAction("refresh user access token", false).
 					addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "refresh_token", 0, 254)).
 					addFormParam(new StringParam("refresh_token", "refresh token", true, 0, 254)).
+					addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 					setErrorCodes("400", "401"))).addToRAML(loopsi);
 
 		new APIBuilder().
@@ -798,37 +782,6 @@ public class APIGenerator extends Domain {
 					new JsonResponseProperty("userId", "string", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
-			setName("").addEndpoint(new Endpoint("/currency").
-			addAction(new GetAction("returns user currency value.", true).
-				setErrorCodes("400", "401", "404").
-				addResponseValue(new JsonResponse("Currency response",
-					new JsonResponseProperty("currentValue", "integer", true)))).
-			addAction(new PostAction("add currency activity to user's ledger", true).
-				addFormParam(new UUIDParam("currencyId", "currency id", true)).
-				addFormParam(new UUIDParam("cinemaId", "cinema id", true)).
-				addFormParam(new UUIDParam("redemptionId", "redemtion id", true)).
-				addFormParam(new UUIDParam("engagementId", "engagement id", true)).
-				addFormParam(new IntegerParam("currencyEarned", "earned value", true, 250)).
-				addFormParam(new IntegerParam("currencyRedeemed", "redeemed value", true, 500)).
-				addFormParam(new LatitudeParam(false)).
-				addFormParam(new LongitudeParam(false)).
-				addResponseValue(new JsonResponse("Added currency activity confirmation",
-					new JsonResponseProperty("currencyActivityId", "string", true)))).
-
-			addAction(new DeleteAction("deletes a currency activity entry. *FOR MAINTENANCE/TESTING PURPOSES*", true).
-				addQueryParam(new UUIDParam("currencyActivityId", "currency activity id", true)).
-				setErrorCodes("400", "401", "404").
-				addResponseValue(new JsonResponse("Deleted currency activity confirmation",
-					new JsonResponseProperty("currencyActivityId", "string", true))))).addToRAML(loopsi);
-
-		new APIBuilder().
-			setName("").
-			addEndpoint(new Endpoint("/currency/ledger").
-				addAction(new GetAction("returns user currency ledger.", true).setErrorCodes("400", "401", "404").
-					addResponseValue(new JsonResponse("Currency ledger (activities)",
-						new JsonResponseProperty("list", "array", true))))).addToRAML(loopsi);
-
-		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/badge").
 				addAction(new PostAction("add badge activity to user's ledger", true).
@@ -856,7 +809,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/badge/available").
 			addAction(new GetAction("returns badges available.", true).
-				addQueryParam(new UUIDParam("gameId", "game id", true)).
+				addQueryParam(new UUIDParam("gameId", "game id", false)).
 				addResponseValue(new JsonResponse("Badges response",
 					new JsonResponseProperty("badges", "array", true))))).addToRAML(loopsi);
 
