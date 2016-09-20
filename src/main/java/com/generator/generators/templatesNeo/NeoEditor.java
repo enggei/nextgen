@@ -1,29 +1,27 @@
-package com.generator.generators.loopsi;
+package com.generator.generators.templatesNeo;
 
 import com.generator.editors.domain.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import com.jgoodies.forms.layout.CellConstraints;
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragEventHandler;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.nodes.PComposite;
 import org.piccolo2d.extras.pswing.PSwingCanvas;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
-import org.piccolo2d.util.PPaintContext;
+import org.piccolo2d.util.PBounds;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
@@ -34,11 +32,11 @@ import java.util.List;
 /**
  * goe on 9/12/16.
  */
-public class LoopsiEditor extends JPanel {
+public class NeoEditor extends JPanel {
 
 	private static final Random random = new Random();
 
-	public LoopsiEditor(Dimension preferredSize) {
+	public NeoEditor(Dimension preferredSize) {
 		super(new BorderLayout(), true);
 
 		final NeoCanvas canvas = new NeoCanvas(preferredSize);
@@ -99,12 +97,8 @@ public class LoopsiEditor extends JPanel {
 		public GraphDatabaseNode(GraphDatabaseService graphDatabaseService, NeoCanvas canvas) {
 			super();
 
-
-
-
-
-			setBounds(0, 0, 100, 80);
-			setPaint(Color.black);
+			setBounds(canvas.getWidth() / 2, canvas.getHeight() / 2, 100, 80);
+			setPaint(Color.RED);
 
 			addInputEventListener(new BaseNodeInputHandler(this, canvas) {
 				@Override
@@ -124,7 +118,7 @@ public class LoopsiEditor extends JPanel {
 								doInTransaction(new SwingCommitter(canvas) {
 									@Override
 									public void doAction(Transaction tx) throws Throwable {
-										canvas.nodeLayer.addChild(new GraphNode(graphDatabaseService, canvas, label, graphDatabaseService.createNode(Label.label(label))));
+										canvas.nodeLayer.addChild(newGraphNode(graphDatabaseService.createNode(Label.label(label)), canvas, GraphDatabaseNode.this));
 									}
 								}, graphDatabaseService);
 							});
@@ -136,52 +130,58 @@ public class LoopsiEditor extends JPanel {
 						public void doAction(Transaction tx) throws Throwable {
 							for (Label label : graphDatabaseService.getAllLabels()) {
 								// there is no state here, so labels will be attached multiple times. Avoid this by wrapping a method in canvas (which tracks some nodes by maps etc.)
-								canvas.nodeLayer.addChild(new LabelNode(label));
+								canvas.nodeLayer.addChild(new PText(label.name()));
 							}
 						}
 					});
 				}
-			});
-		}
-	}
 
-	private final class LabelNode extends PText {
+				private PComposite newGraphNode(Node neoNode, NeoCanvas canvas, PNode parent) {
 
-		public LabelNode(org.neo4j.graphdb.Label label) {
-			super();
+					final PComposite graphNode = new PComposite();
+					graphNode.addAttribute("neo.node", neoNode);
 
-			setText(label.name());
-			setBounds(0, 0, 10, 10);
-		}
-	}
+					final PBounds nodeBounds = parent.getBounds();
+					final PNode rectangle = PPath.createRectangle(nodeBounds.x - 40, nodeBounds.y - 40, 50, 50);
+					graphNode.addChild(rectangle);
+					for (Label label : neoNode.getLabels()) {
+						final PNode text = new PText(label.name());
+						text.setBounds(rectangle.getBounds());
+						graphNode.addChild(text);
+					}
 
-	private final class GraphNode extends PPath.Float {
-
-		public GraphNode(GraphDatabaseService graphDatabaseService, NeoCanvas canvas, String name, Node node) {
-			super(PPath.createEllipse(10,10,10,10).getStroke());
-
-			//setBounds(x, y, 10, 10);
-			setPaint(Color.BLUE);
-
-			addInputEventListener(new BaseNodeInputHandler(this, canvas) {
-				@Override
-				protected void addPopupActions(JPopupMenu pop) {
-					pop.add(new GraphTransactionAction(graphDatabaseService, canvas, "Edit") {
-
+					graphNode.addInputEventListener(new BaseNodeInputHandler(graphNode, canvas) {
 						@Override
-						public void doAction(Transaction tx) throws Throwable {
-							final EditNodePanel addNodePanel = new EditNodePanel(node);
-							SwingUtil.showApplyCloseDialog(addNodePanel, canvas, "Edit Node", () -> {
-								doInTransaction(new SwingCommitter(canvas) {
-									@Override
-									public void doAction(Transaction tx) throws Throwable {
-										addNodePanel.commit(node);
-										invalidatePaint();   // invalidate node, and re-render
+						protected void addPopupActions(JPopupMenu pop) {
+							pop.add(new GraphTransactionAction(graphDatabaseService, canvas, "Edit") {
+
+								@Override
+								public void doAction(Transaction tx) throws Throwable {
+									final EditNodePanel addNodePanel = new EditNodePanel(neoNode);
+									SwingUtil.showApplyCloseDialog(addNodePanel, canvas, "Edit Node", () -> {
+										doInTransaction(new SwingCommitter(canvas) {
+											@Override
+											public void doAction(Transaction tx) throws Throwable {
+												addNodePanel.commit(neoNode);
+												invalidatePaint();   // invalidate node, and re-render
+											}
+										}, graphDatabaseService);
+									});
+								}
+							});
+
+							pop.add(new GraphTransactionAction(graphDatabaseService, canvas, "Expand All") {
+								@Override
+								public void doAction(Transaction tx) throws Throwable {
+
+									for (Relationship relationship : neoNode.getRelationships(Direction.OUTGOING)) {
+
 									}
-								}, graphDatabaseService);
+								}
 							});
 						}
 					});
+					return graphNode;
 				}
 			});
 		}
@@ -530,6 +530,6 @@ public class LoopsiEditor extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		SwingUtil.showPanel(new LoopsiEditor(new Dimension(1024, 768)));
+		SwingUtil.showPanel(new NeoEditor(new Dimension(1024, 768)));
 	}
 }

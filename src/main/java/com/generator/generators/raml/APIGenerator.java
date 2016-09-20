@@ -286,8 +286,7 @@ public class APIGenerator extends Domain {
 				addProperty(new EnumProperty("sex", "male", "female")).
 				addProperty(new StringProperty("location")).
 				addProperty(new StringProperty("country")).
-				addProperty(new BooleanProperty("optInMarketing")).
-				addProperty(new StringProperty("username")),
+				addProperty(new BooleanProperty("optInMarketing")),
 
 			new APIEntity("Version", "Versions", "Versions").
 				addProperty(new StringProperty("name")).

@@ -7,7 +7,6 @@ import com.generator.generators.templateGroup.TemplateGroupGenerator;
 import com.generator.generators.templates.TemplateVisitor;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
-import com.generator.generators.templatesGraphStream.GraphStreamGenerator;
 import com.generator.generators.templatesNeo.TemplateNeoGenerator;
 import com.generator.generators.templatesSwing.TemplateSwingGenerator;
 import com.generator.generators.templatesVertx.TemplatesVertxGenerator;
@@ -555,10 +554,8 @@ public class TemplateFileEditor extends JPanel {
 			TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplateGroupGenerator(txtRoot.getText(), builderPackage));
 			createGroupTestIfNotExists(builderPackage);
 
-			if (chkCreateNeoDomain.isSelected()) {
+			if (chkCreateNeoDomain.isSelected())
 				TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplateNeoGenerator(txtRoot.getText(), builderPackage));
-				TemplateVisitor.visit(currentTemplateFile.getFile(), new GraphStreamGenerator(txtRoot.getText(), builderPackage));
-			}
 
 			if (chkCreateVerticles.isSelected())
 				TemplateVisitor.visit(currentTemplateFile.getFile(), new TemplatesVertxGenerator(txtRoot.getText(), builderPackage));

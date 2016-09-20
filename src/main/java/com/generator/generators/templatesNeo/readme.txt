@@ -1,13 +1,19 @@
 goal:
 
+
+Finish NeoEditor:
+
+# create pattern from notes in JavaparserTests, line 61 onwards (using Neo-editor and custom actions)
+
+# Use composition for nodes, (Node and Relationship)
+# Add Popupactions for all possible manipulations of nodes (edit properties, add relation, remove relation, find all.. etc.) (port all functions from editor)
+# Create visitors/ traversers, similar to TemplateVisitors (for traversing StringTemplate), BaseClassVisitor (for traversing a java-class using reflection), create node-visitor, and javap.
+
 # create cypher- queries (and cypher-query-builder
 https://neo4j.com/docs/cypher-refcard/current/
 
 use jgoodies for Forms(FormPanel)
 http://manual.openestate.org/extern/forms-1.2.1/tutorial/introduction.html
-
-use graphstream for graph-editor
-http://graphstream-project.org/doc/
 
 // for use in browser (graph-editor)
 http://bl.ocks.org/rkirsling/5001347 and http://rkirsling.github.io/modallogic/
