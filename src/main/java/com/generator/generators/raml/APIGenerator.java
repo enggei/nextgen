@@ -521,11 +521,7 @@ public class APIGenerator extends Domain {
 					new JsonResponseProperty("engagementId", "string", true)))).
 			addAction(new PostAction("add an engagement item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addFormParam(new StringParam("title", "title", true, "thetitle")).
-				addFormParam(new StringParam("logic", "to be determined", true, "thelogic")).
 				addFormParam(new IntegerParam("value", "value", true)).
-				addFormParam(new StringParam("type", "to be determined", true, "thetype")).
-				addFormParam(new DateParam("earnedFrom", "earned from date", true)).
-				addFormParam(new DateParam("earnedTo", "earned to date", true)).
 				addFormParam(new DateParam("expiryDate", "expiry date", true)).
 				addResponseValue(new JsonResponse("Added engagement confirmation",
 					new JsonResponseProperty("engagementId", "string", true))))).addToRAML(loopsi);
@@ -706,7 +702,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/user").
-			addAction(new GetAction("register and log in a temporary user", AuthType.OAUTH2_USER_ACCESS_TOKEN).
+			addAction(new GetAction("register and log in a temporary user", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 				addQueryParam(new StringParam("deviceId", "user device id", true, 1, MAX_VALUE)).
 				setErrorCodes("400").
 				addResponseValue(new JsonResponse("OAuth2 token response",
