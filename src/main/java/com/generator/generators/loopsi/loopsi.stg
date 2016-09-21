@@ -1,4 +1,4 @@
-/* uuid : 0b0029d5-f16a-4912-9627-7bb2187489df */
+/* uuid : 9ecaf730-a76d-47a2-9d63-3edf5bd6ffc4 */
 delimiters "~", "~"
 
 /** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name; **/
@@ -21,9 +21,9 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
          	console.log("Eventbus opened");
 
           	utils.send(self.eb,
-            'GetNodesByLabel',
-            {
-						"label": "~label~"
+            	'GetNodesByLabel',
+            	{
+					"label": "~label~"
 				},
                 function (content) {
                     self.elements.removeAll();
@@ -38,22 +38,22 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
 
         self.addElement = function () {
             self.elements.push(new Element({
-					~properties:{it|~it.name~: "~it.defaultValue~"};separator=",\n"~,
-					uuid: ""
+				~properties:{it|~it.name~: "~it.defaultValue~"};separator=",\n"~,
+				uuid: ""
             }));
         };
 
         self.deleteElement = function (element) {
-				console.log("delete " + element);
+			console.log("delete " + element);
 			utils.send(self.eb,
                 'DeleteNode',
                 {
-                    "uuid": element.uuid
+                    "uuid": element.uuid()
                 },
                 function (content) {
 
                     var found = ko.utils.arrayFirst(self.elements(), function (item) {
-                        return item.uuid == content.uuid;
+                        return item.uuid() == content.uuid;
                     });
 
                     if (found) {
@@ -61,7 +61,7 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
                     }
                 },
                 function (cause) {
-                    console.error("could save ~label~: " + cause);
+                    console.error("could delete ~label~: " + cause);
                 });
         };
 

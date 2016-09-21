@@ -1,6 +1,10 @@
 package com.generator.generators.templatesNeo;
 
 import com.generator.editors.domain.NeoModel;
+import com.generator.generators.templates.TemplateVisitor;
+import com.generator.generators.templates.domain.TemplateFile;
+import com.generator.generators.templates.domain.TemplateStatement;
+import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -22,7 +26,10 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +42,8 @@ import java.util.List;
 public class NeoEditor extends JPanel {
 
 	private static final Random random = new Random();
+
+	private final JTextField txtRoot = new JTextField(System.getProperty("generator.root"), 30);
 
 	public NeoEditor(Dimension preferredSize) {
 		super(new BorderLayout(), true);
@@ -89,7 +98,125 @@ public class NeoEditor extends JPanel {
 			}
 		}));
 
+		final List<File> currentFiles = new ArrayList<>();
+
+		commandPanel.add(txtRoot);
+
+		commandPanel.add(new JButton(new AbstractAction("New Statement") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				SwingUtilities.invokeLater(() -> {
+
+					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+					currentFiles.clear();
+					currentFiles.addAll(FileUtil.findAllFilesWhichEndsWith(txtRoot.getText(), ".stg"));
+
+					Collections.sort(currentFiles, new Comparator<File>() {
+						@Override
+						public int compare(File o1, File o2) {
+							final int nameComp = o1.getName().compareToIgnoreCase(o2.getName());
+							return nameComp != 0 ? nameComp : o1.getAbsolutePath().compareTo(o2.getAbsolutePath());
+						}
+					});
+
+					SwingUtilities.invokeLater(() -> {
+
+						for (File file : currentFiles) {
+							TemplateFile templateFile = new TemplateFileParser().parse(file);
+							if (templateFile == null) {
+								System.err.println(file.getAbsolutePath() + " is unparseable");
+								continue;
+							}
+
+							canvas.nodeLayer.addChild(new TemplateFileNode(templateFile, canvas));
+						}
+
+						setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+					});
+				});
+			}
+		}));
+
 		return commandPanel;
+	}
+
+	private class TemplateFileNode extends PComposite {
+
+		public TemplateFileNode(TemplateFile file, NeoCanvas canvas) {
+			super();
+
+			final Rectangle nodeBounds = canvas.getBounds();
+
+			// todo: create bounding rect ?
+			final PNode rectangle = PPath.createRectangle(nodeBounds.x + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), nodeBounds.y + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), random.nextInt(100) + 10, random.nextInt(100) + 10);
+			addChild(rectangle);
+
+			final PNode text = new PText(file.getName());
+			text.setBounds(rectangle.getBounds());
+			addChild(text);
+
+
+			addInputEventListener(new BaseNodeInputHandler(this, canvas) {
+				@Override
+				protected void addPopupActions(JPopupMenu pop) {
+					for (TemplateStatement templateStatement : file.getStatements()) {
+						pop.add(new AbstractAction("New " + templateStatement.getName()) {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								SwingUtilities.invokeLater(() -> {
+									final PComposite graphNode = new TemplateStatementNode(templateStatement, TemplateFileNode.this, canvas);
+									canvas.nodeLayer.addChild(graphNode);
+									addLink(canvas, TemplateFileNode.this, graphNode);
+								});
+							}
+						});
+
+
+					}
+				}
+			});
+		}
+
+		private class TemplateStatementNode extends PComposite {
+
+			public TemplateStatementNode(TemplateStatement statement, PNode parent, NeoCanvas canvas) {
+				final PBounds nodeBounds = parent.getBounds();
+
+				// todo: create bounding rect ?
+				final PNode rectangle = PPath.createRectangle(nodeBounds.x + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), nodeBounds.y + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), random.nextInt(100) + 10, random.nextInt(100) + 10);
+				addChild(rectangle);
+
+				final PNode text = new PText(statement.getName());
+				text.setBounds(rectangle.getBounds());
+				addChild(text);
+
+
+				addInputEventListener(new BaseNodeInputHandler(this, canvas) {
+					@Override
+					protected void addPopupActions(JPopupMenu pop) {
+						pop.add(new AbstractAction("Generate to file") {
+							@Override
+							public void actionPerformed(ActionEvent e) {
+
+							}
+						});
+					}
+				});
+
+			}
+		}
+	}
+
+	private void addLink(NeoCanvas canvas, PNode parent, PComposite graphNode) {
+
+		final PPath link = PPath.createLine(50, 50, 50, 50);
+		link.setPickable(false);
+		canvas.edgeLayer.addChild(link);
+
+		parent.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, arg0 -> updateLink(parent, graphNode, link));
+		graphNode.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, arg0 -> updateLink(parent, graphNode, link));
 	}
 
 	private final class GraphDatabaseNode extends PNode {
@@ -118,7 +245,9 @@ public class NeoEditor extends JPanel {
 								doInTransaction(new SwingCommitter(canvas) {
 									@Override
 									public void doAction(Transaction tx) throws Throwable {
-										canvas.nodeLayer.addChild(newGraphNode(graphDatabaseService.createNode(Label.label(label)), canvas, GraphDatabaseNode.this));
+
+										for (int i = 0; i < 5; i++)
+											canvas.nodeLayer.addChild(newGraphNode(graphDatabaseService.createNode(Label.label(label)), canvas, GraphDatabaseNode.this));
 									}
 								}, graphDatabaseService);
 							});
@@ -142,7 +271,7 @@ public class NeoEditor extends JPanel {
 					graphNode.addAttribute("neo.node", neoNode);
 
 					final PBounds nodeBounds = parent.getBounds();
-					final PNode rectangle = PPath.createRectangle(nodeBounds.x - 40, nodeBounds.y - 40, 50, 50);
+					final PNode rectangle = PPath.createRectangle(nodeBounds.x + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), nodeBounds.y + ((random.nextBoolean() ? 1 : -1) * (random.nextInt(200))), random.nextInt(100) + 10, random.nextInt(100) + 10);
 					graphNode.addChild(rectangle);
 					for (Label label : neoNode.getLabels()) {
 						final PNode text = new PText(label.name());
@@ -157,7 +286,7 @@ public class NeoEditor extends JPanel {
 
 								@Override
 								public void doAction(Transaction tx) throws Throwable {
-									final EditNodePanel addNodePanel = new EditNodePanel(neoNode);
+									final EditNodePanel addNodePanel = new EditNodePanel(neoNode, graphDatabaseService);
 									SwingUtil.showApplyCloseDialog(addNodePanel, canvas, "Edit Node", () -> {
 										doInTransaction(new SwingCommitter(canvas) {
 											@Override
@@ -181,10 +310,38 @@ public class NeoEditor extends JPanel {
 							});
 						}
 					});
+
+
+					PPath link = PPath.createLine(50, 50, 50, 50);
+					link.setPickable(false);
+					canvas.edgeLayer.addChild(link);
+
+
+					parent.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
+						public void propertyChange(final PropertyChangeEvent arg0) {
+							updateLink(parent, graphNode, link);
+						}
+					});
+
+					graphNode.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
+						public void propertyChange(final PropertyChangeEvent arg0) {
+							updateLink(parent, graphNode, link);
+						}
+					});
+
 					return graphNode;
 				}
 			});
 		}
+	}
+
+	public void updateLink(PNode node1, PComposite node2, PPath link) {
+		final Point2D p1 = node1.getFullBoundsReference().getCenter2D();
+		final Point2D p2 = node2.getFullBoundsReference().getCenter2D();
+		final Line2D line = new Line2D.Double(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		link.reset();
+		link.append(line, false);
+		link.closePath();
 	}
 
 	// add node panel:
@@ -208,8 +365,11 @@ public class NeoEditor extends JPanel {
 		final JTable tblProperties = new JTable();
 		final List<String> keys = new ArrayList<>();
 		final Map<String, Object> values = new LinkedHashMap<>();
+		final GraphDatabaseService db;
 
-		EditNodePanel(Node node) {
+		Node node;
+
+		EditNodePanel(Node node, GraphDatabaseService db) {
 			super("100dlu, 4dlu, 20dlu, 4dlu, 20dlu, 4dlu, 100dlu:grow", "pref, 4dlu, pref, 4dlu, 150dlu:grow");
 			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -224,6 +384,8 @@ public class NeoEditor extends JPanel {
 
 			row += 2;
 			addScrollPane(tblProperties, 1, row, 7, 1);
+
+			this.db = db;
 
 			setNode(node);
 		}
@@ -252,8 +414,17 @@ public class NeoEditor extends JPanel {
 						if (selectedRow == -1) return;
 
 						final AbstractTableModel tableModel = (AbstractTableModel) tblProperties.getModel();
-						values.remove(keys.remove(selectedRow));
-						tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
+						final String remove = keys.get(selectedRow);
+
+						doInTransaction(new SwingCommitter(tblProperties) {
+							@Override
+							public void doAction(Transaction tx) throws Throwable {
+								node.removeProperty(remove);
+								keys.remove(remove);
+								values.remove(remove);
+								tableModel.fireTableRowsDeleted(selectedRow, selectedRow);
+							}
+						}, db);
 					});
 				}
 			});
@@ -268,6 +439,8 @@ public class NeoEditor extends JPanel {
 		}
 
 		private void setNode(Node node) {
+
+			this.node = node;
 
 			// update models
 			keys.clear();
@@ -303,9 +476,9 @@ public class NeoEditor extends JPanel {
 				public Object getValueAt(int rowIndex, int columnIndex) {
 					switch (columnIndex) {
 						case 0:
-							return keys.get(0);
+							return keys.get(rowIndex);
 						case 1:
-							return values.get(keys.get(0));
+							return values.get(keys.get(rowIndex));
 					}
 					throw new IllegalArgumentException("Illegal column: " + columnIndex);
 				}
@@ -352,8 +525,10 @@ public class NeoEditor extends JPanel {
 			for (String lbl : txtLabels.getText().trim().split(","))
 				node.addLabel(Label.label(lbl));
 
-			for (String key : keys)
+			for (String key : keys) {
+				if (key.length() == 0 || values.get(key) == null || values.get(key).toString().length() == 0) continue;
 				node.setProperty(key, values.get(key));
+			}
 		}
 	}
 
@@ -388,13 +563,11 @@ public class NeoEditor extends JPanel {
 		@Override
 		public void keyTyped(PInputEvent event) {
 			super.keyTyped(event);
-			System.out.println("keytyped");
 		}
 
 		@Override
 		public void mouseClicked(PInputEvent event) {
 			super.mouseClicked(event);
-			System.out.println("clicked");
 		}
 
 		@Override
@@ -427,13 +600,11 @@ public class NeoEditor extends JPanel {
 		@Override
 		public void mouseEntered(PInputEvent event) {
 			super.mouseEntered(event);
-			System.out.println("entered");
 		}
 
 		@Override
 		public void mouseExited(PInputEvent event) {
 			super.mouseExited(event);
-			System.out.println("exited");
 		}
 
 		@Override
@@ -444,7 +615,6 @@ public class NeoEditor extends JPanel {
 		@Override
 		public void mouseReleased(PInputEvent event) {
 			super.mouseReleased(event);
-			System.out.println("released");
 		}
 
 		@Override
@@ -530,6 +700,7 @@ public class NeoEditor extends JPanel {
 	}
 
 	public static void main(String[] args) {
+		System.setProperty("generator.root", "src/main/java/com/generator/generators");
 		SwingUtil.showPanel(new NeoEditor(new Dimension(1024, 768)));
 	}
 }

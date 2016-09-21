@@ -3,11 +3,15 @@ goal:
 
 Finish NeoEditor:
 
+# Clean and thin layer of visual nodes above neo-nodes:
+
 # create pattern from notes in JavaparserTests, line 61 onwards (using Neo-editor and custom actions)
 
+# Create a generic Graph-node visitor, which traversers the nodes and generates file.
 # Use composition for nodes, (Node and Relationship)
 # Add Popupactions for all possible manipulations of nodes (edit properties, add relation, remove relation, find all.. etc.) (port all functions from editor)
 # Create visitors/ traversers, similar to TemplateVisitors (for traversing StringTemplate), BaseClassVisitor (for traversing a java-class using reflection), create node-visitor, and javap.
+
 
 # create cypher- queries (and cypher-query-builder
 https://neo4j.com/docs/cypher-refcard/current/
