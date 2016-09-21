@@ -83,6 +83,11 @@ public final class LoopsiGroup {
    } 
 
 
+   public getReferenceNodesST newgetReferenceNodes() {
+      return new getReferenceNodesST(stGroup);
+   } 
+
+
    public mainMenuST newmainMenu() {
       return new mainMenuST(stGroup);
    } 
@@ -103,6 +108,7 @@ public final class LoopsiGroup {
       private final AtomicBoolean labelIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean referenceDeclarationsIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private GridEditorST(STGroup group) {
@@ -122,9 +128,14 @@ public final class LoopsiGroup {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-      public GridEditorST addPropertiesValue(Object defaultValue_, Object name_) {
+      public GridEditorST addPropertiesValue(Object defaultValue_, Object name_, Object reference_) {
          propertiesIsSet.set(true);
-         template.addAggr("properties.{defaultValue, name}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_));
+         template.addAggr("properties.{defaultValue, name, reference}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
+         return this;
+      }
+      public GridEditorST addReferenceDeclarationsValue(Object getNodes_, Object name_, Object outgoing_) {
+         referenceDeclarationsIsSet.set(true);
+         template.addAggr("referenceDeclarations.{getNodes, name, outgoing}", ( (getNodes_==null || getNodes_.toString().length()==0) ? null : getNodes_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (outgoing_==null || outgoing_.toString().length()==0) ? null : outgoing_));
          return this;
       }
 
@@ -237,6 +248,36 @@ public final class LoopsiGroup {
       private convertPropertiesST(STGroup group) {
    		template = group.getInstanceOf("convertProperties");
    	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class getReferenceNodesST implements LoopsiGroupTemplate {
+
+      private final AtomicBoolean labelIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean optionTextIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private getReferenceNodesST(STGroup group) {
+   		template = group.getInstanceOf("getReferenceNodes");
+   	}
+
+       public getReferenceNodesST setLabel(Object value) {
+      	tryToSetStringProperty(template, value, labelIsSet, "label");   
+         return this;
+      } 
+       public getReferenceNodesST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public getReferenceNodesST setOptionText(Object value) {
+      	tryToSetStringProperty(template, value, optionTextIsSet, "optionText");   
+         return this;
+      } 
 
       @Override
    	public String toString() {

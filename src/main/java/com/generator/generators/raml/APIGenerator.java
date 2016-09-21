@@ -65,15 +65,7 @@ public class APIGenerator extends Domain {
 				setLabel(label);
 
 			for (String key : properties.keySet()) {
-				final ItemProperty itemProperty = properties.get(key);
-
-				editorST.addPropertiesValue(itemProperty.defaultValue, key);
-
-				if (itemProperty instanceof EnumProperty) {
-					editorST.addEnumDeclarationsValue(((EnumProperty) itemProperty).asJSDeclaration());
-					//;
-				}
-
+				properties.get(key).addJSDeclaration(editorST);
 			}
 
 			return editorST;
@@ -84,7 +76,7 @@ public class APIGenerator extends Domain {
 
 		final String name;
 		final String type;
-		String defaultValue;
+		String defaultValue = "\"\"";
 
 		ItemProperty(String name, String type) {
 			this.name = name;
@@ -99,6 +91,10 @@ public class APIGenerator extends Domain {
 			editorHtmlST.addPropertiesValue(asHtmlComponent(), name);
 			return this;
 		}
+
+		public void addJSDeclaration(LoopsiGroup.GridEditorST editorST) {
+			editorST.addPropertiesValue(defaultValue, name, name);
+		}
 	}
 
 	class StringProperty extends ItemProperty {
@@ -109,6 +105,32 @@ public class APIGenerator extends Domain {
 
 		public Object asHtmlComponent() {
 			return "<input class='form-control' data-bind='value: " + name + "' />";
+		}
+	}
+
+	class SingleReferenceProperty extends ItemProperty {
+
+		private final String referenceLabel;
+		private final String optionsText;
+
+		SingleReferenceProperty(String name, String referenceLabel, String optionsText) {
+			super(name, "SingleReference");
+			this.referenceLabel = referenceLabel;
+			this.optionsText = optionsText;
+		}
+
+		public Object asHtmlComponent() {
+			return "<select class=\"form-control\" data-bind='options: $root." + name + "Options, value: " + name + ", optionsValue: \"uuid\", optionsText: \"" + optionsText + "\"'></select>";
+		}
+
+		@Override
+		public void addJSDeclaration(LoopsiGroup.GridEditorST editorST) {
+			editorST.addPropertiesValue("self." + name + "Options()[0]", name, name + ".uuid");
+
+			editorST.addReferenceDeclarationsValue(
+				loopsiGroup.newgetReferenceNodes().setLabel(referenceLabel).setName(name).setOptionText(optionsText),
+				name,
+				"\"type\": \"" + name + "\", \"otherProperties\": [ \"uuid\" ]");
 		}
 	}
 
@@ -172,7 +194,10 @@ public class APIGenerator extends Domain {
 			return "<select class=\"form-control\" data-bind='options: $root." + name + "Options, value: " + name + "'></select>";
 		}
 
-		public Object asJSDeclaration() {
+		@Override
+		public void addJSDeclaration(LoopsiGroup.GridEditorST editorST) {
+			super.addJSDeclaration(editorST);
+
 			final StringBuilder out = new StringBuilder();
 			boolean first = true;
 			for (String item : values) {
@@ -181,7 +206,7 @@ public class APIGenerator extends Domain {
 				out.append("\"").append(item).append("\"");
 			}
 
-			return "self." + name + "Options =[" + out + "];";
+			editorST.addEnumDeclarationsValue("self." + name + "Options =[" + out + "];");
 		}
 	}
 
@@ -189,7 +214,7 @@ public class APIGenerator extends Domain {
 
 		DateProperty(String name) {
 			super(name, "Enum");
-			this.defaultValue = LocalDate.now().toString();
+			this.defaultValue = "\"" + LocalDate.now().toString() + "\"";
 		}
 	}
 
@@ -203,12 +228,10 @@ public class APIGenerator extends Domain {
 		final LoopsiGroup.apiST newapi = loopsiGroup.newapi().
 			setName("AdminAPI").
 			setPackageName("com.udc.loopsi.api").
-			addMessagesValue(getAllLabels(), "GetAllLabels").
-			addMessagesValue(GetAllRelationships(), "GetAllRelationships").
 			addMessagesValue(GetNodesByLabel(), "GetNodesByLabel").
-			addMessagesValue(FindNodesWithProperties(), "FindNodesWithProperties").
 			addMessagesValue(SaveNode(), "SaveNode").
 			addMessagesValue(DeleteNode(), "DeleteNode").
+			addMessagesValue(RelationsFromNode(), "RelationsFromNode").
 			addMessagesValue(AddRelationship(), "AddRelationship").
 			addMessagesValue(RemoveRelationship(), "RemoveRelationship");
 
@@ -264,7 +287,7 @@ public class APIGenerator extends Domain {
 				addProperty(new IntegerProperty("available")).
 				addProperty(new StringProperty("title")).
 				addProperty(new StringProperty("description")).
-				addProperty(new StringProperty("supplier")),   // TODO. define relation to this entity
+				addProperty(new SingleReferenceProperty("supplier", "Supplier", "name")),   // TODO. define relation to this entity
 
 			new APIEntity("Supplier", "Suppliers", "Suppliers").
 				addProperty(new StringProperty("name")).
@@ -321,45 +344,44 @@ public class APIGenerator extends Domain {
 		// todo: routing ?
 	}
 
-	private Object getAllLabels() {
-		return loopsiGroup.newbaseDomainVisitor().
-			setImpl("final JsonArray list = new JsonArray();\n" +
-				"for (Label item : model.getAllLabels())\n" +
-				"\tlist.add(newJsonObject(\"name\", item.name()));\n" +
-				"success(result, newJsonObject(\"list\",list));");
-	}
-
-	// getAllRelationshipTypes
-
-	private Object GetAllRelationships() {
-		return loopsiGroup.newbaseDomainVisitor().
-			setImpl("final JsonArray list = new JsonArray();\n" +
-				"for (RelationshipType item : model.getAllRelationshipTypes())\n" +
-				"\tlist.add(newJsonObject(\"name\", item.name()));\n" +
-				"success(result, newJsonObject(\"list\",list));");
-	}
-
 	private Object GetNodesByLabel() {
 		return loopsiGroup.newbaseDomainVisitor().
-			setImpl("final JsonArray list = new JsonArray();\n" +
-				"for (Node item : model.allByLabel(parameters.getString(\"label\"))) {\n" +
-				"\tfinal JsonObject jsonNode = newJsonObject();\n" +
-				"\tfor (String property : item.getPropertyKeys())\n" +
-				"\t\tnodeToParams(item, jsonNode, property);\n" +
-				"\tlist.add(jsonNode);\n" +
-				"}\n" +
-				"success(result, newJsonObject(\"list\", list));");
-	}
-
-	private Object FindNodesWithProperties() {
-		return loopsiGroup.newbaseDomainVisitor().
-			setImpl(loopsiGroup.newconvertProperties() +
+			setImpl("final JsonArray properties = parameters.getJsonArray(\"properties\");\n" +
+				"final Set<String> propertyNames = new LinkedHashSet<>(properties == null ? 0 : properties.size());\n" +
+				"if (properties != null) for (Object kv : properties) propertyNames.add(kv.toString());\n" +
 				"\n" +
+				"final JsonArray outgoing = parameters.getJsonArray(\"outgoing\");\n" +
 				"final JsonArray list = new JsonArray();\n" +
-				"for (Node item : model.matchNodesByProperties(parameters.getString(\"label\"), properties)) {\n" +
+				"\n" +
+				"final Integer offset = parameters.getInteger(\"offset\") == null ? 0 : parameters.getInteger(\"offset\");\n" +
+				"final Integer length = parameters.getInteger(\"length\") == null ? (Integer.MAX_VALUE - offset) : parameters.getInteger(\"length\");\n" +
+				"Integer counter = -1;\n" +
+				"for (Node item : model.allByLabel(parameters.getString(\"label\"))) {\n" +
+				"\tcounter++;\n" +
+				"\tif (counter < offset) continue;\n" +
+				"\tif (counter >= (offset + length)) break;\n" +
+				"\n" +
 				"\tfinal JsonObject jsonNode = newJsonObject();\n" +
-				"\tfor (String property : item.getPropertyKeys())\n" +
+				"\n" +
+				"\tfinal Iterable<String> propertyKeys = propertyNames.isEmpty() ? item.getPropertyKeys() : propertyNames;\n" +
+				"\tfor (String property : propertyKeys)\n" +
 				"\t\tnodeToParams(item, jsonNode, property);\n" +
+				"\n" +
+				"\tif (outgoing != null) {\n" +
+				"\t\tfor (Object out : outgoing) {\n" +
+				"\t\t\tfinal JsonObject outgoingParam = (JsonObject) out;\n" +
+				"\t\t\tfor (Relationship relationship : outgoing(item, RelationshipType.withName(outgoingParam.getString(\"type\")))) {\n" +
+				"\t\t\t\tfinal Node other = other(item, relationship);\n" +
+				"\t\t\t\tfinal JsonObject otherJson = new JsonObject();\n" +
+				"\n" +
+				"\t\t\t\tfinal JsonArray otherProperties = outgoingParam.getJsonArray(\"otherProperties\");\n" +
+				"\t\t\t\tfor (Object otherProperty : otherProperties)\n" +
+				"\t\t\t\t\tnodeToParams(other, otherJson, (String) otherProperty);\n" +
+				"\t\t\t\tjsonNode.put(outgoingParam.getString(\"type\"), otherJson);\n" +
+				"\t\t\t}\n" +
+				"\t\t}\n" +
+				"\t}\n" +
+				"\n" +
 				"\tlist.add(jsonNode);\n" +
 				"}\n" +
 				"success(result, newJsonObject(\"list\", list));");
@@ -374,6 +396,19 @@ public class APIGenerator extends Domain {
 				"final JsonObject properties = parameters.getJsonObject(\"properties\");\n" +
 				"for (String key : properties.fieldNames())\n" +
 				"\tparamsToNode(properties, node, key);\n" +
+				"\n" +
+				"final JsonArray outgoing = parameters.getJsonArray(\"outgoing\");\n" +
+				"if (outgoing != null) {\n" +
+				"\tfor (Object o : outgoing) {\n" +
+				"\t\tfinal JsonObject reference = (JsonObject) o;\n" +
+				"\t\tfor (Relationship relationship : outgoing(node, RelationshipType.withName(reference.getString(\"type\")))) {\n" +
+				"\t\t\tfinal Node otherNode = other(node, relationship);\n" +
+				"\t\t\tlog.warn(\"deleting \" + parameters.getString(\"label\") + \"(\" + NeoModel.uuidOf(node) + \") -> [\" + relationship.getType() + \"] -> \" + NeoModel.printLabelsFor(otherNode) + \" (\" + NeoModel.uuidOf(otherNode) + \")\");\n" +
+				"\t\t\trelationship.delete();\n" +
+				"\t\t}\n" +
+				"\t\tnode.createRelationshipTo(model.getNode(UUID.fromString(reference.getString(\"reference\"))), RelationshipType.withName(reference.getString(\"type\")));\n" +
+				"\t}\n" +
+				"}\n" +
 				"success(result, newJsonObject(\"uuid\", NeoModel.uuidOf(node)));");
 	}
 
@@ -381,6 +416,40 @@ public class APIGenerator extends Domain {
 		return loopsiGroup.newbaseDomainVisitor().
 			setImpl("model.remove(UUID.fromString(parameters.getString(\"uuid\")));\n" +
 				"success(result, newJsonObject(\"uuid\", parameters.getString(\"uuid\")));");
+	}
+
+	private Object RelationsFromNode() {
+		return loopsiGroup.newbaseDomainVisitor().
+			setImpl("final String uuid = parameters.getString(\"uuid\");\n" +
+				"final Node node = model.getNode(UUID.fromString(uuid));\n" +
+				"\n" +
+				"final Direction direction = Direction.valueOf(parameters.getString(\"direction\"));\n" +
+				"\n" +
+				"final String type = parameters.getString(\"type\");\n" +
+				"final Iterable<Relationship> relationships = type == null ? node.getRelationships(direction) : node.getRelationships(direction, RelationshipType.withName(type));\n" +
+				"\n" +
+				"final JsonArray properties = parameters.getJsonArray(\"properties\");\n" +
+				"final Set<String> propertyNames = new LinkedHashSet<>(properties == null ? 0 : properties.size());\n" +
+				"if (properties != null) for (Object kv : properties) propertyNames.add(kv.toString());\n" +
+				"\n" +
+				"final JsonArray list = new JsonArray();\n" +
+				"for (Relationship relationship : relationships) {\n" +
+				"\tfinal JsonObject relationJson = new JsonObject();\n" +
+				"\n" +
+				"\tfinal Iterable<String> propertyKeys = properties == null ? relationship.getPropertyKeys() : propertyNames;\n" +
+				"\tfor (String key : propertyKeys) relationshipToParams(relationship, relationJson, key);\n" +
+				"\n" +
+				"\tfinal Node other = other(node, relationship);\n" +
+				"\tfinal JsonObject otherJson = new JsonObject();\n" +
+				"\tfinal JsonArray otherProperties = parameters.getJsonArray(\"otherProperties\");\n" +
+				"\tfor (Object otherProperty : otherProperties)\n" +
+				"\t\tnodeToParams(other, otherJson, (String) otherProperty);\n" +
+				"\trelationJson.put(\"other\", otherJson);\n" +
+				"\n" +
+				"\tlist.add(relationJson);\n" +
+				"}\n" +
+				"\n" +
+				"success(result, newJsonObject(\"list\", list));");
 	}
 
 	private Object AddRelationship() {

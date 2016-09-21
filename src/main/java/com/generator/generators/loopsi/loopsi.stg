@@ -1,12 +1,12 @@
-/* uuid : 9ecaf730-a76d-47a2-9d63-3edf5bd6ffc4 */
+/* uuid : 3652f524-0acc-4349-a5b4-6dbb0aea2c87 */
 delimiters "~", "~"
 
-/** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name; **/
-GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'plugins/router', 'durandal/app', 'knockout', 'knockoutMapping', 'utils'], function (EventBus, r, app, ko, mapping, utils) {
+/** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name,reference;referenceDeclarations,KEYVALUELISTPROPERTY,getNodes,name,outgoing; **/
+GridEditor(enumDeclarations,label,name,properties,referenceDeclarations) ::= <<define(['eventbus', 'plugins/router', 'durandal/app', 'knockout', 'knockoutMapping', 'utils', 'authentication', 'vertxutils'], function (EventBus, r, app, ko, mapping, utils, auth, vertxutils) {
 
 	var Element = function (element) {
         var self = this;
-        ~properties:{it|self.~it.name~ = ko.observable(element.~it.name~);};separator="\n"~
+        ~properties:{it|self.~it.name~ = ko.observable(element.~it.reference~);};separator="\n"~
 		self.uuid = ko.observable(element.uuid);
     };
 
@@ -14,16 +14,23 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
         var self = this;
         self.elements = ko.observableArray();
 		self.eb = new EventBus(utils.getHost("eventbus/"), null, {debug: true});
+		//self.eb = (auth.isAuthenticated()) ? vertxutils.getEventBus(auth.getAccessToken()) : null;
 
 		~enumDeclarations:{it|~it.declaration~};separator="\n"~
+		~referenceDeclarations:{it|self.~it.name~Options = ko.observableArray();};separator="\n"~
 
 		self.eb.onopen = function () {
          	console.log("Eventbus opened");
 
+			~referenceDeclarations:{it|~it.getNodes~};separator="\n"~
+
           	utils.send(self.eb,
             	'GetNodesByLabel',
             	{
-					"label": "~label~"
+					"label": "~label~"~if(referenceDeclarations)~,
+					"outgoing": [
+						~referenceDeclarations:{it|{ ~it.outgoing~ ~bugfix()~};separator=",\n"~
+					]~endif~
 				},
                 function (content) {
                     self.elements.removeAll();
@@ -38,7 +45,7 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
 
         self.addElement = function () {
             self.elements.push(new Element({
-				~properties:{it|~it.name~: "~it.defaultValue~"};separator=",\n"~,
+				~properties:{it|~it.name~: ~it.defaultValue~};separator=",\n"~,
 				uuid: ""
             }));
         };
@@ -61,7 +68,7 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
                     }
                 },
                 function (cause) {
-                    console.error("could delete ~label~: " + cause);
+                    console.error("could not delete ~label~: " + cause);
                 });
         };
 
@@ -74,13 +81,17 @@ GridEditor(enumDeclarations,label,name,properties) ::= <<define(['eventbus', 'pl
 					"uuid": element.uuid(),
 					"properties": {
                     	~properties:{it|"~it.name~": element.~it.name~()};separator=",\n"~
-					}
+					}~if(referenceDeclarations)~,
+					"outgoing": [
+						~referenceDeclarations:{it|{ "~it.name~": element.~it.name~() ~bugfix()~};separator=",\n"~
+					]
+~endif~
                 },
                 function (content) {
-                    element.uuid = content.uuid
+                    element.uuid(content.uuid);
                 },
                 function (cause) {
-                    console.error("could save ~label~: " + cause);
+                    console.error("could not save ~label~: " + cause);
                 });
         };
 
@@ -157,30 +168,18 @@ import com.udc.loopsi.db.NeoVisitor;
 import com.udc.loopsi.db.VisitorFactory;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Router;
-import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.*;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.UUID;
+import java.util.*;
 
-import static com.udc.loopsi.api.APIVisitorFactory.dispatchVisitorRequest;
-import static com.udc.loopsi.db.NeoModel.uuidOf;
-import static com.udc.loopsi.util.APIUtil.verifyNode;
 import static com.udc.loopsi.util.JsonUtil.KEYS.PARAMS;
 import static com.udc.loopsi.util.JsonUtil.KEYS.VISITOR;
 import static com.udc.loopsi.util.JsonUtil.newJsonObject;
 import static com.udc.loopsi.util.JsonUtil.success;
-import static com.udc.loopsi.util.VertxWebUtil.*;
-import static java.util.UUID.fromString;
 
 /**
  * ~description~
@@ -240,6 +239,24 @@ for (Object kv : jsonArray) {
 	properties[index++] = keyValue.getString("key");
 	properties[index++] = keyValue.getString("value");
 } 
+>>
+
+/** label,STRINGPROPERTY;name,STRINGPROPERTY;optionText,STRINGPROPERTY; **/
+getReferenceNodes(label,name,optionText) ::= <<utils.send(self.eb,
+	'GetNodesByLabel',
+   {
+		"label": "~label~",
+		"properties": ["uuid", "~optionText~"]
+	},
+   function (content) {
+   	self.~name~Options.removeAll();
+      for (var i = 0; i < content.list.length; i++) {
+      	self.~name~Options.push(content.list[i]);
+		}
+	},
+   function (cause) {
+   	console.error("could not get ~name~Options: " + cause);
+}); 
 >>
 
 /** items,KEYVALUELISTPROPERTY,description,name,route; **/
