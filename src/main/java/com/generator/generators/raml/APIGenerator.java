@@ -52,10 +52,8 @@ public class APIGenerator extends Domain {
 			final LoopsiGroup.GridEditorHtmlST editorHtmlST = loopsiGroup.newGridEditorHtml().
 				setTitle(title);
 
-			for (String key : properties.keySet()) {
-				final ItemProperty itemProperty = properties.get(key).asHtml(editorHtmlST);
-
-			}
+			for (String key : properties.keySet())
+				properties.get(key).asHtml(editorHtmlST);
 
 			return editorHtmlST;
 		}
