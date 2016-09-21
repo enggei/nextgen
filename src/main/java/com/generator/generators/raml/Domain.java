@@ -198,7 +198,7 @@ public class Domain {
 		}
 
 		StringParam(String name, String description, boolean isRequired, Integer minLength, Integer maxLength) {
-			super(name, isRequired, description, minLength + "");
+			super(name, isRequired, description, "exampleValue");
 			this.minLength = minLength;
 			this.maxLength = maxLength;
 		}
@@ -456,7 +456,7 @@ public class Domain {
 		final Set<HttpAction> actions = new LinkedHashSet<>();
 
 		URIParameterAction(String name, String description) {
-			super(description, false);
+			super(description);
 			this.name = name;
 		}
 
@@ -478,7 +478,13 @@ public class Domain {
 		}
 	}
 
+	enum AuthType {
+		NO_AUTHORIZATION, OAUTH2_CLIENT_CREDENTIALS, OAUTH2_CLIENT_ACCESS_TOKEN, OAUTH2_USER_ACCESS_TOKEN
+	}
+
 	abstract class HttpAction {
+
+		public static final String AUTHORIZATION = "Authorization";
 
 		final String description;
 		final Set<String> errorCodes = new LinkedHashSet<String>() {{
@@ -487,14 +493,31 @@ public class Domain {
 			add("404");
 			add("500");
 		}};
+
 		final Set<Response> responseValues = new LinkedHashSet<>();
 		final Set<HttpHeader> headerValues = new LinkedHashSet<>();
 		final Set<Param> params = new LinkedHashSet<>();
 
-		HttpAction(String description, boolean authRequired) {
+		HttpAction(String description) {
+			this(description, AuthType.NO_AUTHORIZATION);
+		}
+
+		HttpAction(String description, AuthType authType) {
 			this.description = description;
-			if (authRequired)
-				headerValues.add(new HttpHeader("Authorization", "OAuth2 CLIENT access_token", true, "Bearer 4oe2Xr+yyLegIb4aubmQzu"));
+
+			switch (authType) {
+				case OAUTH2_CLIENT_CREDENTIALS:
+					headerValues.add(new HttpHeader(AUTHORIZATION, "OAuth2 client credentials", true, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3"));
+					break;
+				case OAUTH2_CLIENT_ACCESS_TOKEN:
+					headerValues.add(new HttpHeader(AUTHORIZATION, "OAuth2 CLIENT access_token", true, "Bearer 4oe2Xr+yyLegIb4aubmQzu"));
+					break;
+				case OAUTH2_USER_ACCESS_TOKEN:
+					headerValues.add(new HttpHeader(AUTHORIZATION, "OAuth2 USER access_token", true, "Bearer GtDkhank!OLQoep2ThB857"));
+					break;
+				default:
+					break;
+			}
 		}
 
 		HttpAction addErrorCode(String errorCode) {
@@ -551,8 +574,12 @@ public class Domain {
 
 	class GetAction extends HttpAction {
 
-		GetAction(String description, boolean authRequired) {
-			super(description, authRequired);
+		GetAction(String description) {
+			super(description, AuthType.NO_AUTHORIZATION);
+		}
+
+		GetAction(String description, AuthType authType) {
+			super(description, authType);
 		}
 
 		@Override
@@ -568,8 +595,12 @@ public class Domain {
 
 	class DeleteAction extends HttpAction {
 
-		DeleteAction(String description, boolean authRequired) {
-			super(description, authRequired);
+		DeleteAction(String description) {
+			super(description, AuthType.NO_AUTHORIZATION);
+		}
+
+		DeleteAction(String description, AuthType authType) {
+			super(description, authType);
 		}
 
 		@Override
@@ -585,8 +616,12 @@ public class Domain {
 
 	class PutAction extends PostAction {
 
-		PutAction(String description, boolean authRequired) {
-			super(description, authRequired);
+		PutAction(String description) {
+			super(description, AuthType.NO_AUTHORIZATION);
+		}
+
+		PutAction(String description, AuthType authType) {
+			super(description, authType);
 		}
 
 		@Override
@@ -606,8 +641,12 @@ public class Domain {
 		final Set<Param> formParam = new LinkedHashSet<>();
 		boolean isMultipart = false;
 
-		PostAction(String description, boolean standardAuthRequired) {
-			super(description, standardAuthRequired);
+		PostAction(String description) {
+			super(description, AuthType.NO_AUTHORIZATION);
+		}
+
+		PostAction(String description, AuthType authType) {
+			super(description, authType);
 		}
 
 		PostAction addFormParam(Param param) {
