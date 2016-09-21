@@ -487,14 +487,14 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("VersionAPI").
 			addEndpoint(new Endpoint("/admin/version").
-				addAction(new GetAction("list of version entries", true).
+				addAction(new GetAction("list of version entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addResponseValue(new JsonResponse("list of version entries",
 						new JsonResponseProperty("list", "array", true)))).
-				addAction(new DeleteAction("remove version entry", true).
+				addAction(new DeleteAction("remove version entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("versionId", "version id", true, UUID.fromString("84711675-af11-477b-abef-70556ae130dc"))).
 					addResponseValue(new JsonResponse("Version deletion confirmation",
 						new JsonResponseProperty("versionId", "string", true)))).
-				addAction(new PostAction("add a version item", true).
+				addAction(new PostAction("add a version item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addFormParam(new DateParam("releaseDate", "release date", true)).
 					addFormParam(new StringParam("title", "title", true, "thetitle")).
 					addFormParam(new StringParam("description", "description", true, "thedescription")).
@@ -505,7 +505,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("UserAPI").
 			addEndpoint(new Endpoint("/admin/user").
-				addAction(new PostAction("update user data", true).
+				addAction(new PostAction("update user data", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addFormParam(new UserIdParam(true)).
 					addFormParam(new StringParam("username", "the username, either facebook-username or custom", false, "username", 0, 254)).
 					addFormParam(new StringParam("password", "the password, MD5 encoded", false).setMaxLength(MAX_VALUE).setMinLength(8)).
@@ -521,22 +521,22 @@ public class APIGenerator extends Domain {
 					addFormParam(new IntegerParam("balance", "user currency", 0, Integer.MAX_VALUE, false)).
 					addResponseValue(new JsonResponse("the updated user object",
 						new JsonResponseProperty("user", "object", true)))).
-				addAction(new GetAction("list of user entries", true).addResponseValue(new JsonResponse("list of user entries",
+				addAction(new GetAction("list of user entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).addResponseValue(new JsonResponse("list of user entries",
 					new JsonResponseProperty("list", "array", true)))).
-				addAction(new DeleteAction("remove user entry", true).addQueryParam(new UserIdParam(true)).addResponseValue(new JsonResponse("User deletion confirmation",
+				addAction(new DeleteAction("remove user entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).addQueryParam(new UserIdParam(true)).addResponseValue(new JsonResponse("User deletion confirmation",
 					new JsonResponseProperty("userId", "string", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("BadgeAPI").
 			addEndpoint(new Endpoint("/admin/badge").
-				addAction(new GetAction("list of badge entries", true).
+				addAction(new GetAction("list of badge entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addResponseValue(new JsonResponse("list of badge entries",
 						new JsonResponseProperty("list", "array", true)))).
-				addAction(new DeleteAction("remove badge entry", true).
+				addAction(new DeleteAction("remove badge entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("badgeId", "badge id", true)).
 					addResponseValue(new JsonResponse("Badge deletion confirmation",
 						new JsonResponseProperty("badgeId", "string", true)))).
-				addAction(new PostAction("add a badge item", true).
+				addAction(new PostAction("add a badge item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					setMultipart(true).
 					addFormParam(new UUIDParam("gameId", "game id", true)).
 					addFormParam(new StringParam("title", "title", true, "badge title")).
@@ -549,16 +549,16 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/redemption").
 
-			addAction(new GetAction("list of redemption entries", true).
+			addAction(new GetAction("list of redemption entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("list of redemption entries",
 					new JsonResponseProperty("list", "array", true)))).
 
-			addAction(new DeleteAction("remove redemption entry", true).
+			addAction(new DeleteAction("remove redemption entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("redemptionId", "redemption id", true)).
 				addResponseValue(new JsonResponse("Redemption deletion confirmation",
 					new JsonResponseProperty("redemptionId", "string", true)))).
 
-			addAction(new PostAction("add an redemption item", true).
+			addAction(new PostAction("add an redemption item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				setMultipart(true).
 				addFormParam(new UUIDParam("supplierId", "supplier id", true)).
 				addFormParam(new DateParam("earnedFrom", "earned from date", true)).
@@ -579,34 +579,30 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/engagement").
-			addAction(new GetAction("list of engagement entries", true).
+			addAction(new GetAction("list of engagement entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("list of engagement entries",
 					new JsonResponseProperty("list", "array", true)))).
-			addAction(new DeleteAction("remove engagement entry", true).
+			addAction(new DeleteAction("remove engagement entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("engagementId", "engagement id", true)).
 				addResponseValue(new JsonResponse("Engagement deletion confirmation",
 					new JsonResponseProperty("engagementId", "string", true)))).
-			addAction(new PostAction("add an engagement item", true).
+			addAction(new PostAction("add an engagement item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addFormParam(new StringParam("title", "title", true, "thetitle")).
-				addFormParam(new StringParam("logic", "to be determined", true, "thelogic")).
 				addFormParam(new IntegerParam("value", "value", true)).
-				addFormParam(new StringParam("type", "to be determined", true, "thetype")).
-				addFormParam(new DateParam("earnedFrom", "earned from date", true)).
-				addFormParam(new DateParam("earnedTo", "earned to date", true)).
 				addFormParam(new DateParam("expiryDate", "expiry date", true)).
 				addResponseValue(new JsonResponse("Added engagement confirmation",
 					new JsonResponseProperty("engagementId", "string", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/game").
-			addAction(new GetAction("list games", true).
+			addAction(new GetAction("list games", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("list of game entries",
 					new JsonResponseProperty("games", "array", true)))).
-			addAction(new DeleteAction("remove game entry", true).
+			addAction(new DeleteAction("remove game entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("gameId", "game id", true)).
 				addResponseValue(new JsonResponse("Game deletion confirmation",
 					new JsonResponseProperty("gameId", "string", true)))).
-			addAction(new PostAction("add a game item", true).
+			addAction(new PostAction("add a game item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addFormParam(new DateParam("startDate", "start date", true)).
 				addFormParam(new DateParam("endDate", "end date", true)).
 				addFormParam(new StringParam("title", "title", true, "thetitle")).
@@ -618,20 +614,20 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/game").
-				addAction(new GetAction("list games", true).
+				addAction(new GetAction("list games", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addResponseValue(new JsonResponse("list of game entries",
 						new JsonResponseProperty("games", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/supplier").
-			addAction(new GetAction("list of supplier entries", true).
+			addAction(new GetAction("list of supplier entries", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("list of supplier entries",
 					new JsonResponseProperty("list", "array", true)))).
-			addAction(new DeleteAction("remove supplier entry", true).
+			addAction(new DeleteAction("remove supplier entry", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("supplierId", "supplier id", true)).
 				addResponseValue(new JsonResponse("Supplier deletion confirmation",
 					new JsonResponseProperty("supplierId", "string", true)))).
-			addAction(new PostAction("add a supplier item", true).
+			addAction(new PostAction("add a supplier item", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addFormParam(new StringParam("name", "name", true, "thename")).
 				addFormParam(new StringParam("town", "town", true, "thetown")).
 				addFormParam(new StringParam("city", "city", true, "thecity")).
@@ -643,23 +639,22 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/import/intshowtimes").
-			addAction(new PostAction("force import international showtimes", true).
+			addAction(new PostAction("force import international showtimes", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Import job start confirmation",
 					new JsonResponseProperty("jobstart", "boolean", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/admin/film/statistics").
-			addAction(new GetAction("film data statistics", true).
+			addAction(new GetAction("film data statistics", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Film data statistics",
 					new JsonResponseProperty("statistics", "object", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/oauth2/login").
-			addAction(new PostAction("client login", false).
+			addAction(new PostAction("client login", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "client_credentials", 0, 254)).
-				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, 0, 254)).
-				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, 0, 254)).
-				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
+				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, "l00ps1", 0, 254)).
+				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, "b39ae25ed90a297bffe339827a3b95c7", 0, 254)).
 				setErrorCodes("400", "401").
 				addResponseValue(new JsonResponse("OAuth2 token response",
 					new JsonResponseProperty("access_token", "string", true),
@@ -668,7 +663,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/oauth2/token").
-			addAction(new GetAction("verifies client access token", false).
+			addAction(new GetAction("verifies client access token").
 				addQueryParam(new StringParam("access_token", "client access token", true)).
 				addResponseValue(new JsonResponse("Access token verification",
 					new JsonResponseProperty("verified", "boolean", true),
@@ -678,25 +673,24 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/version").
-			addAction(new GetAction("returns current APP version.", true).
+			addAction(new GetAction("returns current APP version.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Versions response",
 					new JsonResponseProperty("version", "string", true),
 					new JsonResponseProperty("description", "string", true),
 					new JsonResponseProperty("releaseDate", "string", true)))).
-			addAction(new PostAction("receives APP version from client and returns whether it matches the current version.", true).
+			addAction(new PostAction("receives APP version from client and returns whether it matches the current version.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addFormParam(new StringParam("version", "APP version.", true, "0.8.1", 5, 8)).
 				addResponseValue(new JsonResponse("Version response",
 					new JsonResponseProperty("success", "boolean", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/user/login").
-			addAction(new PostAction("user login", false).
+			addAction(new PostAction("user login", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 				addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "password", 0, 254)).
 				addFormParam(new StringParam("client_id", "OAuth2 client id - REQUIRED if not using Authorization header", false, 0, 254)).
 				addFormParam(new StringParam("client_secret", "OAuth2 client secret - REQUIRED if not using Authorization header", false, 0, 254)).
 				addFormParam(new StringParam("username", "the username", true, "theusername", 3, 10)).
 				addFormParam(new StringParam("password", "the password, MD5 encoded", true, "b25bc8c9efabdd0837bb7d9deace1308", 8, Integer.MAX_VALUE)).
-				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 				addResponseValue(new JsonResponse("OAuth2 token response",
 					new JsonResponseProperty("access_token", "string", true),
 					new JsonResponseProperty("expires_in", "integer", true),
@@ -708,10 +702,9 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/login/fb").
-				addAction(new PostAction("register facebook user", false).
+				addAction(new PostAction("register facebook user", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 					addFormParam(new StringParam("deviceId", "user device id", true, "thedeviceid", 1, Integer.MAX_VALUE)).
 					addFormParam(new StringParam("fbToken", "facebook access_token", true, 1, Integer.MAX_VALUE)).
-					addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 					addErrorCode("409").
 					addResponseValue(new JsonResponse("OAuth2 token response",
 						new JsonResponseProperty("access_token", "string", true),
@@ -724,7 +717,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/forgotpassword").
-				addAction(new PostAction("send email to reset password for user", false).
+				addAction(new PostAction("send email to reset password for user", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addFormParam(new UUIDParam("userId", "the user id", false)).
 					addFormParam(new StringParam("username", "the username", false, "theusername", 0, 254)).
 					setErrorCodes("400", "401").
@@ -735,7 +728,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/forgotPasswordForm").
-				addAction(new PostAction("process user forgot password", false).
+				addAction(new PostAction("process user forgot password", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addFormParam(new StringParam("password", "the password", true, "newpassword", 0, 254)).
 					addFormParam(new StringParam("confirmPassword", "the confirm password", true, "newpassword", 0, 254)).
 					addFormParam(new UUIDParam("forgotPasswordToken", "the reset-token", true)).
@@ -744,7 +737,7 @@ public class APIGenerator extends Domain {
 						new JsonResponseProperty("success", "boolean", true),
 						new JsonResponseProperty("dummy", "boolean", false)))).
 
-				addAction(new GetAction("get user forgot password form", false).
+				addAction(new GetAction("get user forgot password form", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("forgotPasswordToken", "the reset-token", true)).
 					setErrorCodes("400").
 					addResponseValue(new HtmlResponse("form for resetting password")))).addToRAML(loopsi);
@@ -752,7 +745,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/logout").
-				addAction(new GetAction("user logout", true).
+				addAction(new GetAction("user logout").
 					addQueryParam(new StringParam("access_token", "access token", true)).
 					setErrorCodes("400").
 					addResponseValue(new JsonResponse("User logout confirmation",
@@ -762,24 +755,22 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/token").
-				addAction(new GetAction("verifies user access token", true).
+				addAction(new GetAction("verifies user access token").
 					addQueryParam(new StringParam("access_token", "access token", true)).
 					setErrorCodes("400", "401").
 					addResponseValue(new JsonResponse("Access token verification",
 						new JsonResponseProperty("verified", "boolean", true),
 						new JsonResponseProperty("userId", "string", false),
 						new JsonResponseProperty("expires_in", "integer", false)))).
-				addAction(new PostAction("refresh user access token", false).
+				addAction(new PostAction("refresh user access token").
 					addFormParam(new StringParam("grant_type", "OAuth2 grant type", true, "refresh_token", 0, 254)).
 					addFormParam(new StringParam("refresh_token", "refresh token", true, 0, 254)).
-					addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 					setErrorCodes("400", "401"))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/user").
-			addAction(new GetAction("register and log in a temporary user", false).
+			addAction(new GetAction("register and log in a temporary user", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 				addQueryParam(new StringParam("deviceId", "user device id", true, 1, MAX_VALUE)).
-				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 				setErrorCodes("400").
 				addResponseValue(new JsonResponse("OAuth2 token response",
 					new JsonResponseProperty("access_token", "string", true),
@@ -792,7 +783,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/user/query").
-				addAction(new GetAction("query if a username, email or deviceId is registered", true).
+				addAction(new GetAction("query if a username, email or deviceId is registered", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new StringParam("deviceId", "user device id", false, 1, MAX_VALUE)).
 					addQueryParam(new StringParam("username", "the username", false, "theusername", 0, 254)).
 					addQueryParam(new EmailParam("email", "user email", false)).
@@ -802,9 +793,9 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/user/profile").
-			addAction(new GetAction("get user object", true).
+			addAction(new GetAction("get user object", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("User object confirmation", new JsonResponseProperty("user", "object", true)))).
-			addAction(new PostAction("register new user", false).
+			addAction(new PostAction("register new user", AuthType.OAUTH2_CLIENT_CREDENTIALS).
 				addFormParam(new StringParam("username", "the username, either facebook-username or custom", true, "theusername", 0, 254)).
 				addFormParam(new StringParam("password", "the password, MD5 encoded", true, 8, MAX_VALUE, "b25bc8c9efabdd0837bb7d9deace1308")).
 				addFormParam(new StringParam("firstName", "user first name", true, 2, 30, "theusername")).
@@ -816,7 +807,6 @@ public class APIGenerator extends Domain {
 				addFormParam(new StringParam("country", "user country", true, 0, MAX_VALUE, "thecountry")).
 				addFormParam(new BooleanParam("optInMarketing", "user opt in for marketing", true, false)).
 				addFormParam(new StringParam("deviceId", "user device id", true, 1, MAX_VALUE, "thedeviceid")).
-				addHeaderValue(new HttpHeader("Authorization", "OAuth2 client credentials - REQUIRED if not using client_id and client_secret parameters", false, "Basic bDAwcHMxOmIzOWFlMjVlZDkwYTI5N2JmZmUzMzk4MjdhM2I5NWM3")).
 				addErrorCode("409").
 				addResponseValue(new JsonResponse("OAuth2 token response",
 					new JsonResponseProperty("access_token", "string", true),
@@ -826,12 +816,12 @@ public class APIGenerator extends Domain {
 					new JsonResponseProperty("userId", "string", false),
 					new JsonResponseProperty("currency", "integer", false)))).
 
-			addAction(new DeleteAction("delete user", true).
+			addAction(new DeleteAction("delete user", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addErrorCode("409").
 				addResponseValue(new JsonResponse("User delete confirmation",
 					new JsonResponseProperty("userId", "string", true)))).
 
-			addAction(new PutAction("update user", true).
+			addAction(new PutAction("update user", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				setMultipart(true).
 				addFormParam(new StringParam("username", "the username, either facebook-username or custom", false, "theusername", 0, 254)).
 				addFormParam(new StringParam("password", "the password, MD5 encoded", false, 8, MAX_VALUE, "b25bc8c9efabdd0837bb7d9deace1308")).
@@ -851,17 +841,17 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/badge").
-				addAction(new PostAction("add badge activity to user's ledger", true).
+				addAction(new PostAction("add badge activity to user's ledger", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 					addFormParam(new UUIDParam("badgeId", "badge id", true)).
 					addFormParam(new IntegerParam("completionPercent", "competion percentage", true, 42)).
 					addResponseValue(new JsonResponse("Added badge activity confirmation",
 						new JsonResponseProperty("userBadgeId", "string", true)))).
-				addAction(new PutAction("update badge activity in user's ledger", true).
+				addAction(new PutAction("update badge activity in user's ledger", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 					addFormParam(new UUIDParam("userBadgeId", "user badge id", true)).
 					addFormParam(new IntegerParam("completionPercent", "competion percentage", true, 42)).
 					addResponseValue(new JsonResponse("Updated badge activity confirmation",
 						new JsonResponseProperty("userBadgeId", "string", true)))).
-				addAction(new DeleteAction("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*", true).
+				addAction(new DeleteAction("deletes a badge activity entry. *FOR MAINTENANCE/TESTING PURPOSES*", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("userBadgeId", "badge activity id", true)).
 					setErrorCodes("400", "401", "404").
 					addResponseValue(new JsonResponse("Deleted badge activity confirmation",
@@ -869,20 +859,20 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/badge/earned").
-			addAction(new GetAction("returns user badges earned.", true).
+			addAction(new GetAction("returns user badges earned.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Badges response",
 					new JsonResponseProperty("badges", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/badge/available").
-			addAction(new GetAction("returns badges available.", true).
+			addAction(new GetAction("returns badges available.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("gameId", "game id", false)).
 				addResponseValue(new JsonResponse("Badges response",
 					new JsonResponseProperty("badges", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/leaderboard/gamescoresfb").
-			addAction(new GetAction("returns fb friends gamescores for game", true).
+			addAction(new GetAction("returns fb friends gamescores for game", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("userId", "user id", true)).
 				addQueryParam(new UUIDParam("gameId", "game id", true)).
 				addResponseValue(new JsonResponse("scores",
@@ -891,8 +881,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/leaderboard/gamescores").
-				addAction(new PostAction("post gamescore",
-					true).
+				addAction(new PostAction("post gamescore", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 					addFormParam(new UUIDParam("gameId", "game id", true)).
 					addFormParam(new IntegerParam("score", "game score", 0, Integer.MAX_VALUE, true)).
 					addFormParam(new LatitudeParam(false)).
@@ -901,25 +890,25 @@ public class APIGenerator extends Domain {
 					addResponseValue(new JsonResponse("game score posted",
 						new JsonResponseProperty("success", "boolean", true)))).
 
-				addAction(new GetAction("returns global gamescores for game", true).
+				addAction(new GetAction("returns global gamescores for game", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("gameId", "game id", true)).
 					addResponseValue(new JsonResponse("scores",
 						new JsonResponseProperty("scores", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/films/watchlist").
-			addAction(new PostAction("add film to watchlist", true).
+			addAction(new PostAction("add film to watchlist", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addFormParam(new UUIDParam("filmId", "film id", true)).
 				addResponseValue(new JsonResponse("film added to watchlist",
 					new JsonResponseProperty("success", "boolean", true)))).
-			addAction(new GetAction("get watchlist for friends", true).
+			addAction(new GetAction("get watchlist for friends", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("filmId", "film id", true)).
 				addResponseValue(new JsonResponse("watchlist of friends",
 					new JsonResponseProperty("watchlist", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/showtimes").
-			addAction(new GetAction("get showtimes for film or cinema", true).
+			addAction(new GetAction("get showtimes for film or cinema", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("cinemaId", "cinema id", false)).
 				addQueryParam(new UUIDParam("filmId", "film id", false)).
 				addResponseValue(new JsonResponse("showtimes",
@@ -927,9 +916,9 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/redemption").
-			addAction(new GetAction("returns relevant redemption offers.", true).
+			addAction(new GetAction("returns relevant redemption offers.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Redemptions response", new JsonResponseProperty("redemptions", "array", true)))).
-			addAction(new PostAction("Redeem redemption", true).
+			addAction(new PostAction("Redeem redemption", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addFormParam(new UUIDParam("redemptionId", "redemption id", true)).
 				addFormParam(new StringParam("code", "redemption code", true, 1, Integer.MAX_VALUE, "Code-1")).
 				addResponseValue(new JsonResponse("Redeemed redemption confirmation",
@@ -943,19 +932,19 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/redemption/ledger").
-			addAction(new GetAction("returns user redemption ledger.", true).
+			addAction(new GetAction("returns user redemption ledger.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Redemption ledger (activities)",
 					new JsonResponseProperty("redemptions", "array", true))))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/engagement").
-			addAction(new GetAction("returns user engagement activities.", true).
+			addAction(new GetAction("returns user engagement activities.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				setErrorCodes("400", "404").
 				addResponseValue(new JsonResponse("Engagements response",
 					new JsonResponseProperty("available", "array", true),
 					new JsonResponseProperty("lastEngagements", "array", true)))).
 
-			addAction(new PostAction("POST Did Engagement Activities", true).
+			addAction(new PostAction("POST Did Engagement Activities", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addFormParam(new UUIDParam("engagementId", "engagement id", true)).
 				addFormParam(new UUIDParam("gameId", "optional game id", false)).
 				addFormParam(new StringParam("engagementdatetime", "date and time", true, "2016-12-31 18:05:00")).
@@ -974,7 +963,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/films/latest").
-			addAction(new GetAction("returns film listings by cinema.", true).
+			addAction(new GetAction("returns film listings by cinema.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				setErrorCodes("400", "404").
 				addResponseValue(new JsonResponse("Films response",
 					new JsonResponseProperty("films", "array", true),
@@ -982,7 +971,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/cinema/listing").
-			addAction(new GetAction("returns cinema listing.", true).
+			addAction(new GetAction("returns cinema listing.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("filmId", "film id", false)).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
@@ -992,7 +981,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/cinema/nearby").
-			addAction(new GetAction("returns nearby cinemas.", true).
+			addAction(new GetAction("returns nearby cinemas.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
 				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, true)).
@@ -1001,7 +990,7 @@ public class APIGenerator extends Domain {
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/trailers").
-			addAction(new GetAction("returns trailers and ratings.", true).
+			addAction(new GetAction("returns trailers and ratings.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addResponseValue(new JsonResponse("Trailers response",
 					new JsonResponseProperty("trailers", "array", true),
 					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
@@ -1009,7 +998,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/images/films/").
 			addAction(new URIParameterAction("imageId", "the film image id").
-				addAction(new GetAction("returns images for films", true)).
+				addAction(new GetAction("returns images for films", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN)).
 				addResponseValue(new ImageResponse("the image")))).addToRAML(loopsi);
 
 
@@ -1017,20 +1006,20 @@ public class APIGenerator extends Domain {
 			setName("").
 			addEndpoint(new Endpoint("/images/trailers/").
 				addAction(new URIParameterAction("imageId", "the trailer image id").
-					addAction(new GetAction("returns images for trailers", true)).
+					addAction(new GetAction("returns images for trailers", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN)).
 					addResponseValue(new ImageResponse("the image")))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/images/redemptions/").
 			addAction(new URIParameterAction("imageId", "the redemption image id").
-				addAction(new GetAction("returns images for redemptions", true)).
+				addAction(new GetAction("returns images for redemptions", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN)).
 				addResponseValue(new ImageResponse("the redemption image")))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("badgeImageAPI").
 			addEndpoint(new Endpoint("/images/badges/").
 				addAction(new URIParameterAction("imageId", "the badge image id").
-					addAction(new GetAction("returns images for films", true).
+					addAction(new GetAction("returns images for films", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 						addResponseValue(new ImageResponse("badge image"))).
 					setErrorCodes("400", "404"))).addToRAML(loopsi);
 
@@ -1038,7 +1027,7 @@ public class APIGenerator extends Domain {
 			setName("gameImageAPI").
 			addEndpoint(new Endpoint("/images/games/").
 				addAction(new URIParameterAction("gameId", "the game image id").
-					addAction(new GetAction("returns images for games", true).
+					addAction(new GetAction("returns images for games", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 						addResponseValue(new ImageResponse("game image"))).
 					setErrorCodes("400", "404"))).addToRAML(loopsi);
 
