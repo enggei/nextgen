@@ -218,7 +218,6 @@ public class APIGenerator extends Domain {
 		}
 	}
 
-
 	public void generateAdminUI(String root) throws IOException {
 
 		// todo: turn this into a visitor
@@ -317,7 +316,8 @@ public class APIGenerator extends Domain {
 		};
 
 		final LoopsiGroup.shellST shellST = loopsiGroup.newshell().
-			addRoutesValue("api/nodesMenu", "true", "'', 'login'", "Nodes").
+			addRoutesValue("api/login", "false", "'', 'login'", "Login").
+			addRoutesValue("api/nodesMenu", "true", "'nodes'", "Nodes").
 			addRoutesValue("api/relationsMenu", "true", "'relations'", "Relations");
 
 		final LoopsiGroup.mainMenuST nodesMenu = loopsiGroup.newmainMenu();
@@ -482,7 +482,7 @@ public class APIGenerator extends Domain {
 
 	public void generateRamlFile(String outputFile) {
 
-		final RamlGroup.fileST loopsi = newRamlTemplate();
+		final RamlGroup.fileST loopsi = newRamlTemplate("Loopsi REST API", "https://localhost:8080/api", true, "v1");
 
 		new APIBuilder().
 			setName("VersionAPI").

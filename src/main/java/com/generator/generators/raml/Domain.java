@@ -22,15 +22,13 @@ public class Domain {
 	protected final RamlGroup ramlGroup = new RamlGroup();
 	protected final LoopsiGroup loopsiGroup = new LoopsiGroup();
 
-
-
-	RamlGroup.fileST newRamlTemplate() {
+	RamlGroup.fileST newRamlTemplate(String title, String baseURI, boolean isHttps, String version) {
 		return ramlGroup.newfile().
-			setTitle("Loopsi REST API").
-			setBaseUri("https://localhost:8080/api").
-			setHttp(false).
-			setHttps(true).
-			setVersion("v1");
+			setTitle(title).
+			setBaseUri(baseURI).
+			setHttp(!isHttps).
+			setHttps(isHttps).
+			setVersion(version);
 	}
 
 	abstract class Param {
@@ -536,11 +534,6 @@ public class Domain {
 			return this;
 		}
 
-		HttpAction addHeaderValue(HttpHeader httpHeader) {
-			headerValues.add(httpHeader);
-			return this;
-		}
-
 		HttpAction addQueryParam(Param param) {
 			this.params.add(param);
 			return this;
@@ -716,7 +709,7 @@ public class Domain {
 		abstract RamlGroup.RamlGroupTemplate asRaml();
 	}
 
-	class HtmlResponse extends Response {
+	final class HtmlResponse extends Response {
 
 		HtmlResponse(String description) {
 			super(description);
@@ -729,7 +722,7 @@ public class Domain {
 		}
 	}
 
-	class ImageResponse extends Response {
+	final class ImageResponse extends Response {
 
 		ImageResponse(String description) {
 			super(description);
@@ -742,7 +735,7 @@ public class Domain {
 		}
 	}
 
-	class JsonResponse extends Response {
+	final class JsonResponse extends Response {
 
 		final Set<JsonResponseProperty> responseProperties = new LinkedHashSet<>();
 
