@@ -922,7 +922,6 @@ public class APIGenerator extends Domain {
 				addResponseValue(new JsonResponse("Redemptions response", new JsonResponseProperty("redemptions", "array", true)))).
 			addAction(new PostAction("Redeem redemption", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addFormParam(new UUIDParam("redemptionId", "redemption id", true)).
-				addFormParam(new StringParam("code", "redemption code", true, 1, Integer.MAX_VALUE, "Code-1")).
 				addResponseValue(new JsonResponse("Redeemed redemption confirmation",
 					new JsonResponseProperty("redemptionActivityId", "string", true),
 					new JsonResponseProperty("redemptionId", "string", true),
