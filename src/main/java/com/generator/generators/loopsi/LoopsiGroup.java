@@ -133,9 +133,9 @@ public final class LoopsiGroup {
          template.addAggr("properties.{defaultValue, name, reference}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
          return this;
       }
-      public GridEditorST addReferenceDeclarationsValue(Object getNodes_, Object name_, Object outgoing_) {
+      public GridEditorST addReferenceDeclarationsValue(Object getNodes_, Object name_, Object outgoing_, Object type_) {
          referenceDeclarationsIsSet.set(true);
-         template.addAggr("referenceDeclarations.{getNodes, name, outgoing}", ( (getNodes_==null || getNodes_.toString().length()==0) ? null : getNodes_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (outgoing_==null || outgoing_.toString().length()==0) ? null : outgoing_));
+         template.addAggr("referenceDeclarations.{getNodes, name, outgoing, type}", ( (getNodes_==null || getNodes_.toString().length()==0) ? null : getNodes_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (outgoing_==null || outgoing_.toString().length()==0) ? null : outgoing_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
       }
 

@@ -130,7 +130,7 @@ public class APIGenerator extends Domain {
 			editorST.addReferenceDeclarationsValue(
 				loopsiGroup.newgetReferenceNodes().setLabel(referenceLabel).setName(name).setOptionText(optionsText),
 				name,
-				"\"type\": \"" + name + "\", \"otherProperties\": [ \"uuid\" ]");
+				"\"type\": \"" + name + "\", \"otherProperties\": [ \"uuid\" ]", referenceLabel);
 		}
 	}
 
@@ -406,7 +406,9 @@ public class APIGenerator extends Domain {
 				"\t\t\tlog.warn(\"deleting \" + parameters.getString(\"label\") + \"(\" + NeoModel.uuidOf(node) + \") -> [\" + relationship.getType() + \"] -> \" + NeoModel.printLabelsFor(otherNode) + \" (\" + NeoModel.uuidOf(otherNode) + \")\");\n" +
 				"\t\t\trelationship.delete();\n" +
 				"\t\t}\n" +
-				"\t\tnode.createRelationshipTo(model.getNode(UUID.fromString(reference.getString(\"reference\"))), RelationshipType.withName(reference.getString(\"type\")));\n" +
+				"\t\tfinal Node otherNode = model.getNode(UUID.fromString(reference.getString(\"reference\")));\n" +
+				"\t\tnode.createRelationshipTo(otherNode, RelationshipType.withName(reference.getString(\"type\")));\n" +
+				"\t\tlog.warn(\"creating \" + parameters.getString(\"label\") + \"(\" + NeoModel.uuidOf(node) + \") -> [\" + reference.getString(\"type\") + \"] -> \" + NeoModel.printLabelsFor(otherNode) + \" (\" + NeoModel.uuidOf(otherNode) + \")\");\n" +
 				"\t}\n" +
 				"}\n" +
 				"success(result, newJsonObject(\"uuid\", NeoModel.uuidOf(node)));");

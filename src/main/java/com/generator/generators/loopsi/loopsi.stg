@@ -1,7 +1,7 @@
-/* uuid : 3652f524-0acc-4349-a5b4-6dbb0aea2c87 */
+/* uuid : e97b6463-5f2b-4733-808e-e9930f7d89d5 */
 delimiters "~", "~"
 
-/** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name,reference;referenceDeclarations,KEYVALUELISTPROPERTY,getNodes,name,outgoing; **/
+/** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name,reference;referenceDeclarations,KEYVALUELISTPROPERTY,getNodes,name,outgoing,type; **/
 GridEditor(enumDeclarations,label,name,properties,referenceDeclarations) ::= <<define(['eventbus', 'plugins/router', 'durandal/app', 'knockout', 'knockoutMapping', 'utils', 'authentication', 'vertxutils'], function (EventBus, r, app, ko, mapping, utils, auth, vertxutils) {
 
 	var Element = function (element) {
@@ -83,7 +83,7 @@ GridEditor(enumDeclarations,label,name,properties,referenceDeclarations) ::= <<d
                     	~properties:{it|"~it.name~": element.~it.name~()};separator=",\n"~
 					}~if(referenceDeclarations)~,
 					"outgoing": [
-						~referenceDeclarations:{it|{ "~it.name~": element.~it.name~() ~bugfix()~};separator=",\n"~
+						~referenceDeclarations:{it|{ "type": "~it.type;format="lowFirst"~",  "reference": element.~it.name~() ~bugfix()~};separator=",\n"~
 					]
 ~endif~
                 },
@@ -279,7 +279,7 @@ mainMenuHtml() ::= <<<section>
 >>
 
 /** routes,KEYVALUELISTPROPERTY,moduleId,nav,route,title; **/
-shell(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
+shell(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout', 'authentication', 'vertxutils'], function (router, app, material, ko, auth, vertxutils) {
 
     var currentTime = ko.observable();
 
@@ -312,6 +312,12 @@ shell(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knock
             $.material.init();
 
             startTime();
+
+				router.guardRoute = function(routeInfo, params, instance) {
+					if (params.fragment == 'login') return true;
+               		if (auth.isAuthenticated()) return true;
+               		return 'login/';
+				};
 
             return router.map([                
 					~routes:{it|{route: [~it.route~], moduleId: '~it.moduleId~', title: '~it.title~'~if(it.nav)~, nav: ~it.nav~~endif~~bugfix()~};separator=",\n"~
