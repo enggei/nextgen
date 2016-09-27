@@ -480,6 +480,8 @@ public class Domain {
 		NO_AUTHORIZATION, OAUTH2_CLIENT_CREDENTIALS, OAUTH2_CLIENT_ACCESS_TOKEN, OAUTH2_USER_ACCESS_TOKEN
 	}
 
+
+
 	abstract class HttpAction {
 
 		public static final String AUTHORIZATION = "Authorization";
@@ -526,6 +528,17 @@ public class Domain {
 		HttpAction setErrorCodes(String... errorCodes) {
 			this.errorCodes.clear();
 			this.errorCodes.addAll(Arrays.asList(errorCodes));
+			return this;
+		}
+
+		HttpAction addHeader(HttpHeader header) {
+			this.headerValues.add(header);
+			return this;
+		}
+
+		HttpAction setHeaders(HttpHeader... headers) {
+			this.headerValues.clear();
+			this.headerValues.addAll(Arrays.asList(headers));
 			return this;
 		}
 
@@ -695,6 +708,13 @@ public class Domain {
 				setDescription(description).
 				setRequired(required).
 				setExample(example);
+		}
+	}
+
+	class HttpHeaderIfModifiedSince extends HttpHeader {
+
+		HttpHeaderIfModifiedSince() {
+			super("If-Modified-Since", "Last modification time from local cache", false, "");
 		}
 	}
 
