@@ -1,8 +1,10 @@
 package com.generator.generators.templates.domain;
 
 import com.generator.domain.BaseEntity;
+import com.generator.util.FileUtil;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.generator.generators.templates.domain.TemplateEntities.GENERATEDFILE;
 
@@ -43,5 +45,10 @@ public class GeneratedFile extends BaseEntity<TemplateEntities> {
 
 	public static String pathToPackage(String path) {
 		return (path == null ? "" : (path.replaceAll("/", ".")));
+	}
+
+	public GeneratedFile write(String text) throws IOException {
+		FileUtil.writeFile(text, getFile());
+		return this;
 	}
 }

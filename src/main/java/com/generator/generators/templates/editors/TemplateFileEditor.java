@@ -15,10 +15,7 @@ import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
-import javax.swing.text.Highlighter;
-import javax.swing.text.JTextComponent;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -26,8 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.generator.generators.templates.domain.GeneratedFile.pathToPackage;
 import static com.generator.util.FileUtil.readIntact;
@@ -111,7 +106,7 @@ public class TemplateFileEditor extends JPanel {
 			}
 		});
 
-		txtEditor.setFont(new Font("Courier New", Font.PLAIN, 12));
+		txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
 		txtEditor.setTabSize(3);
 		txtEditor.setEditable(false);
 		txtEditor.addKeyListener(new KeyAdapter() {
@@ -159,7 +154,7 @@ public class TemplateFileEditor extends JPanel {
 
 				final String replacement = currentTemplateFile.getDelimiter() + propertyName + currentTemplateFile.getDelimiter();
 				txtEditor.setText(txtEditor.getText().replaceAll(selected, (currentTemplateFile.getDelimiter() == '$' ? replacement.replaceAll("\\$", "\\\\\\$") : replacement)));
-				tryToHighlight(Arrays.asList(replacement), new ParamsHighlighter());
+				SwingUtil.tryToHighlight(txtEditor, Arrays.asList(replacement), new ParamsHighlighter());
 			}
 
 			private void insertSimpleProperty() {
@@ -438,7 +433,7 @@ public class TemplateFileEditor extends JPanel {
 							final String methodCall = currentTemplateFile.getDelimiter() + name + "(";
 							final String methodParam = "=" + name;
 							final String ifName = currentTemplateFile.getDelimiter() + "if(" + name + ")" + currentTemplateFile.getDelimiter();
-							tryToHighlight(Arrays.asList(name, simple, formatted, list, methodCall, methodParam, ifName), new ParamsHighlighter());
+							SwingUtil.tryToHighlight(txtEditor, Arrays.asList(name, simple, formatted, list, methodCall, methodParam, ifName), new ParamsHighlighter());
 							break;
 
 						case TEMPLATEFILE:
@@ -689,47 +684,6 @@ public class TemplateFileEditor extends JPanel {
 		return null;
 	}
 
-
-	private void tryToHighlight(final List<String> selectedText, final Highlighter.HighlightPainter highlightPainter) {
-		SwingUtilities.invokeLater(() -> highLight(txtEditor, selectedText, highlightPainter));
-	}
-
-	public void highLight(JTextComponent textComp, Iterable<String> pattern, Highlighter.HighlightPainter highlightPainter) {
-
-		removeHighlights(textComp);
-
-		try {
-
-			// escape '$' if its used in patterns:
-			final StringBuilder out = new StringBuilder();
-			boolean first = true;
-			for (String item : pattern) {
-				if (!first) out.append("|");
-				first = false;
-				out.append(item.replaceAll("\\$", "\\\\\\$").replaceAll("\\(", "\\\\\\(").replaceAll("\\)", "\\\\\\)"));
-			}
-
-			final Pattern r = Pattern.compile(out.toString());
-			final Matcher matcher = r.matcher(textComp.getText());
-			final Highlighter highlighter = textComp.getHighlighter();
-			while (matcher.find()) {
-				highlighter.addHighlight(matcher.start(), matcher.end(), highlightPainter);
-			}
-
-		} catch (BadLocationException ignored) {
-			ignored.printStackTrace();
-		}
-	}
-
-	public void removeHighlights(JTextComponent textComp) {
-		final Highlighter highlighter = textComp.getHighlighter();
-		final Highlighter.Highlight[] highlights = highlighter.getHighlights();
-		for (Highlighter.Highlight highlight : highlights) {
-			if (highlight.getPainter() instanceof ParamsHighlighter) {
-				highlighter.removeHighlight(highlight);
-			}
-		}
-	}
 
 	private class ParamsHighlighter extends DefaultHighlighter.DefaultHighlightPainter {
 		public ParamsHighlighter() {

@@ -202,6 +202,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
 				if (value != null && value)
 					template.add(property.getPropertyName(), value);
 			}
+			// todo: use
 		}
 
 		return template.render();

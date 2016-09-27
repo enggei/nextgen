@@ -1,4 +1,4 @@
-/* uuid : e97b6463-5f2b-4733-808e-e9930f7d89d5 */
+/* uuid : 658a2d6b-168a-4feb-ad92-13e08ade5539 */
 delimiters "~", "~"
 
 /** enumDeclarations,KEYVALUELISTPROPERTY,declaration;label,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,defaultValue,name,reference;referenceDeclarations,KEYVALUELISTPROPERTY,getNodes,name,outgoing,type; **/
@@ -13,6 +13,26 @@ GridEditor(enumDeclarations,label,name,properties,referenceDeclarations) ::= <<d
 	var ~name~ = function () {
         var self = this;
         self.elements = ko.observableArray();
+		
+		// sorting:
+        self.sortColumn = ko.observable("id");
+        self.isSortAsc = ko.observable(true);
+        self.sortFunction = function (data, event) {
+
+            if (self.sortColumn() === event.target.id)
+                self.isSortAsc(!self.isSortAsc());
+            else {
+                self.sortColumn(event.target.id);
+                self.isSortAsc(true);
+            }
+
+            self.elements.sort(function (a, b) {
+                var left = a[self.sortColumn()]();
+                var right = b[self.sortColumn()]();
+                return left == right ? 0 : (left < right ? (self.isSortAsc() ? -1 : 1) : (self.isSortAsc() ? 1 : -1));
+            });
+        };
+
 		self.eb = new EventBus(utils.getHost("eventbus/"), null, {debug: true});
 		//self.eb = (auth.isAuthenticated()) ? vertxutils.getEventBus(auth.getAccessToken()) : null;
 
@@ -72,6 +92,12 @@ GridEditor(enumDeclarations,label,name,properties,referenceDeclarations) ::= <<d
                 });
         };
 
+		  self.saveAll = function () {
+            for (var i = 0; i < self.elements().length; i++) {
+                self.saveElement(self.elements()[i]);
+            }
+        };
+
         self.saveElement = function (element) {
             console.info("saving " + element); 
 			utils.send(self.eb,
@@ -125,23 +151,22 @@ GridEditorHtml(properties,title) ::= <<<section>
     <div>
 			<form>
             <p><span data-bind='text: elements().length'>&nbsp;</span> ~title;format="capitalize"~(s).</p>
-				<button class="btn btn-default" data-bind='click: addElement'>Add</button>            
+				<button class="btn btn-default" data-bind='click: addElement'>
+					<span class="glyphicon glyphicon-plus"></span>
+            </button>
+				<button class="btn btn-primary" data-bind='click: $root.saveAll'>
+            	<span class="glyphicon glyphicon-floppy-save"></span>
+            </button>
 				<table class="table table-condensed" data-bind='visible: elements().length > 0'>
                 <thead>
-                    <tr>
-                        <th>Save</th>
+                    <tr data-bind="click: sortFunction">
                         <th>Delete</th>
-                        ~properties:{it|<th>~it.name;format="capitalize"~</th>};separator="\n"~
+                        ~properties:{it|<th id="~it.name~">~it.name;format="capitalize"~</th>};separator="\n"~
                     </tr>
                 </thead>
                 <tbody data-bind='foreach: elements'>
                     <tr>
-							<td>
-                     	<button class="btn btn-primary" data-bind='click: $root.saveElement'>
-                        	<span class="glyphicon glyphicon-floppy-save"></span>
-                        </button>
-                     </td>
-                     <td>
+                    	<td>
                      	<button class="btn btn-danger" data-bind='click: $root.deleteElement'>
                         	<span class="fa fa-trash-o"></span>
                         </button>

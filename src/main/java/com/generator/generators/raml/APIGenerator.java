@@ -256,7 +256,6 @@ public class APIGenerator extends Domain {
 
 			//todo currency - analyse
 
-
 			// filmId, title, releaseDate, studio, certification, country, language, description, bannerImage, directors, actors, filmExtId, imdbId,
 			new APIEntity("Film", "Films", "Films").
 				addProperty(new StringProperty("title")).
@@ -267,6 +266,7 @@ public class APIGenerator extends Domain {
 				addProperty(new StringProperty("language")).
 				addProperty(new StringProperty("des")).
 				addProperty(new StringProperty("username")),
+
 
 			new APIEntity("EngagementCategory", "EngagementCategories", "Engagement Categories").
 				addProperty(new EnumProperty("achievementRule", "ONCE", "ONCE_PER_DAY", "ONCE_PER_ENTITY", "UNLIMITED")).
@@ -282,11 +282,23 @@ public class APIGenerator extends Domain {
 
 			new APIEntity("Redemption", "Redemptions", "Redemptions").
 				addProperty(new DateProperty("expiryDate")).
+				addProperty(new DateProperty("earnedFrom")).
+				addProperty(new DateProperty("earnedTo")).
 				addProperty(new IntegerProperty("currency")).
 				addProperty(new IntegerProperty("available")).
 				addProperty(new StringProperty("title")).
 				addProperty(new StringProperty("description")).
-				addProperty(new SingleReferenceProperty("supplier", "Supplier", "name")),   // TODO. define relation to this entity
+				addProperty(new StringProperty("address")).
+				addProperty(new StringProperty("town")).
+				addProperty(new StringProperty("city")).
+				addProperty(new StringProperty("country")).
+				addProperty(new StringProperty("currency")).
+				addProperty(new SingleReferenceProperty("supplier", "Supplier", "name")),
+
+			new APIEntity("RedeemableCode", "RedeemableCodes", "Redemption Codes").
+				addProperty(new StringProperty("code")).
+				addProperty(new BooleanProperty("redeemed")).
+				addProperty(new SingleReferenceProperty("Redeemable", "Redemption", "title")),
 
 			new APIEntity("Supplier", "Suppliers", "Suppliers").
 				addProperty(new StringProperty("name")).

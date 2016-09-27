@@ -8,6 +8,8 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -20,6 +22,9 @@ import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SwingUtil {
 
@@ -888,6 +893,47 @@ public class SwingUtil {
 
 		protected void setTitledBorder(String title) {
 			this.setBorder(BorderFactory.createTitledBorder(" " + title + " "));
+		}
+	}
+
+	public static void tryToHighlight(JTextComponent txtEditor,  final List<String> selectedText, final Highlighter.HighlightPainter highlightPainter) {
+		SwingUtilities.invokeLater(() -> highLight(txtEditor, selectedText, highlightPainter));
+	}
+
+	public static void highLight(JTextComponent textComp, Iterable<String> pattern, Highlighter.HighlightPainter highlightPainter) {
+
+		removeHighlights(textComp);
+
+		try {
+
+			// escape '$' if its used in patterns:
+			final StringBuilder out = new StringBuilder();
+			boolean first = true;
+			for (String item : pattern) {
+				if (!first) out.append("|");
+				first = false;
+				out.append(item.replaceAll("\\$", "\\\\\\$").replaceAll("\\(", "\\\\\\(").replaceAll("\\)", "\\\\\\)"));
+			}
+
+			final Pattern r = Pattern.compile(out.toString());
+			final Matcher matcher = r.matcher(textComp.getText());
+			final Highlighter highlighter = textComp.getHighlighter();
+			while (matcher.find()) {
+				highlighter.addHighlight(matcher.start(), matcher.end(), highlightPainter);
+			}
+
+		} catch (BadLocationException ignored) {
+			ignored.printStackTrace();
+		}
+	}
+
+	public static void removeHighlights(JTextComponent textComp) {
+		final Highlighter highlighter = textComp.getHighlighter();
+		final Highlighter.Highlight[] highlights = highlighter.getHighlights();
+		for (Highlighter.Highlight highlight : highlights) {
+			if (highlight.getPainter() instanceof DefaultHighlighter.DefaultHighlightPainter) {
+				highlighter.removeHighlight(highlight);
+			}
 		}
 	}
 }
