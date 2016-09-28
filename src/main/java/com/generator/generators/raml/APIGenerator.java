@@ -988,6 +988,7 @@ public class APIGenerator extends Domain {
 				addQueryParam(new UUIDParam("filmId", "film id", false)).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
+				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, false)).
 				addResponseValue(new JsonResponse("Cinemas response",
 					new JsonResponseProperty("cinemas", "array", true),
 					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
@@ -997,7 +998,7 @@ public class APIGenerator extends Domain {
 			addAction(new GetAction("returns nearby cinemas.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
-				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, true)).
+				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, false)).
 				addResponseValue(new JsonResponse("Cinemas response",
 					new JsonResponseProperty("cinemas", "array", true))))).addToRAML(loopsi);
 
@@ -1014,9 +1015,7 @@ public class APIGenerator extends Domain {
 				addAction(new GetAction("returns images for films", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addHeader(new HttpHeaderIfModifiedSince()).
 					addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-width", "crop width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-height", "crop height", 1, Integer.MAX_VALUE, false))).
+					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false))).
 				addResponseValue(new ImageResponse("the image")).
 				setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
 
@@ -1024,15 +1023,13 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").
 			addEndpoint(new Endpoint("/images/trailers/").
-			addAction(new URIParameterAction("imageId", "the trailer image id").
-				addAction(new GetAction("returns images for trailers", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
-					addHeader(new HttpHeaderIfModifiedSince()).
-					addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-width", "crop width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-height", "crop height", 1, Integer.MAX_VALUE, false))).
-				addResponseValue(new ImageResponse("the image")).
-				setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
+				addAction(new URIParameterAction("imageId", "the trailer image id").
+					addAction(new GetAction("returns images for trailers", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
+						addHeader(new HttpHeaderIfModifiedSince()).
+						addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
+						addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false))).
+					addResponseValue(new ImageResponse("the image")).
+					setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/images/redemptions/").
@@ -1040,37 +1037,31 @@ public class APIGenerator extends Domain {
 				addAction(new GetAction("returns images for redemptions", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addHeader(new HttpHeaderIfModifiedSince()).
 					addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-width", "crop width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-height", "crop height", 1, Integer.MAX_VALUE, false))).
+					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false))).
 				addResponseValue(new ImageResponse("the redemption image")).
 				setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("badgeImageAPI").
 			addEndpoint(new Endpoint("/images/badges/").
-			addAction(new URIParameterAction("imageId", "the badge image id").
-				addAction(new GetAction("returns images for films", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
-					addHeader(new HttpHeaderIfModifiedSince()).
-					addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-width", "crop width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-height", "crop height", 1, Integer.MAX_VALUE, false))).
-				addResponseValue(new ImageResponse("badge image")).
-				setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
+				addAction(new URIParameterAction("imageId", "the badge image id").
+					addAction(new GetAction("returns images for films", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
+						addHeader(new HttpHeaderIfModifiedSince()).
+						addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
+						addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false))).
+					addResponseValue(new ImageResponse("badge image")).
+					setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
 
 		new APIBuilder().
 			setName("gameImageAPI").
 			addEndpoint(new Endpoint("/images/games/").
 				addAction(new URIParameterAction("gameId", "the game image id").
 					addAction(new GetAction("returns images for games", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
-					addHeader(new HttpHeaderIfModifiedSince()).
-					addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-width", "crop width", 1, Integer.MAX_VALUE, false)).
-					addQueryParam(new IntegerParam("crop-height", "crop height", 1, Integer.MAX_VALUE, false))).
-				addResponseValue(new ImageResponse("game image")).
-				setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
+						addHeader(new HttpHeaderIfModifiedSince()).
+						addQueryParam(new IntegerParam("width", "resize width", 1, Integer.MAX_VALUE, false)).
+						addQueryParam(new IntegerParam("height", "resize height", 1, Integer.MAX_VALUE, false))).
+					addResponseValue(new ImageResponse("game image")).
+					setErrorCodes("400", "401", "404"))).addToRAML(loopsi);
 
 		FileUtil.write(loopsi, new File(outputFile));
 	}
