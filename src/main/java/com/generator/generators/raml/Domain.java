@@ -232,6 +232,12 @@ public class Domain {
 		Integer minimum = MIN_VALUE;
 		Integer maximum = MAX_VALUE;
 
+		IntegerParam(String name, String description, Integer minimum, Integer maximum, boolean isRequired, Integer exampleValue) {
+			super(name, isRequired, description, exampleValue + "");
+			this.minimum = minimum;
+			this.maximum = maximum;
+		}
+
 		IntegerParam(String name, String description, Integer minimum, Integer maximum, boolean isRequired) {
 			super(name, isRequired, description, minimum + "");
 			this.minimum = minimum;

@@ -988,7 +988,7 @@ public class APIGenerator extends Domain {
 				addQueryParam(new UUIDParam("filmId", "film id", false)).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
-				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, false)).
+				addQueryParam(new IntegerParam("radius", "radius in metres", 1, 3185000, false, 5000)).
 				addResponseValue(new JsonResponse("Cinemas response",
 					new JsonResponseProperty("cinemas", "array", true),
 					new JsonResponseProperty("dummy", "boolean", false))))).addToRAML(loopsi);
@@ -998,7 +998,7 @@ public class APIGenerator extends Domain {
 			addAction(new GetAction("returns nearby cinemas.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new LatitudeParam(true)).
 				addQueryParam(new LongitudeParam(true)).
-				addQueryParam(new IntegerParam("radius", "radius", 0, 3185000, false)).
+				addQueryParam(new IntegerParam("radius", "radius in metres", 1, 3185000, false, 5000)).
 				addResponseValue(new JsonResponse("Cinemas response",
 					new JsonResponseProperty("cinemas", "array", true))))).addToRAML(loopsi);
 
