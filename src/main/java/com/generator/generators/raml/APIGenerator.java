@@ -925,6 +925,8 @@ public class APIGenerator extends Domain {
 			addAction(new GetAction("get showtimes for film or cinema", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("cinemaId", "cinema id", false)).
 				addQueryParam(new UUIDParam("filmId", "film id", false)).
+				addQueryParam(new DateParam("fromDate", "filter by dates", false)).
+				addQueryParam(new DateParam("toDate", "filter by dates - not needed if filtering a single date", false)).
 				addResponseValue(new JsonResponse("showtimes",
 					new JsonResponseProperty("showtimes", "object", true))))).addToRAML(loopsi);
 

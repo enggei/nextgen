@@ -2,6 +2,7 @@ package com.generator.generators.raml;
 
 import com.generator.generators.loopsi.LoopsiGroup;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -132,7 +133,7 @@ public class Domain {
 		}
 
 		DateParam(String name, String description, boolean isRequired) {
-			this(name, description, isRequired, "2016-09-05");
+			this(name, description, isRequired, LocalDate.now().toString());
 		}
 
 		@Override
