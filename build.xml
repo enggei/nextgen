@@ -12,6 +12,15 @@
         <buildParser grammarFile="src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4"
                      packageName="com.generator.generators.protobuf.parser"
                      visitor="-visitor" listener="-listener"/>
+        <!-- XML -->
+        <buildParser grammarFile="src/main/java/com/generator/generators/xml/parser/XMLLexer.g4"
+                     packageName="com.generator.generators.xml.parser"
+                     lib="src/main/java/com/generator/generators/xml/parser"/>
+
+        <buildParser grammarFile="src/main/java/com/generator/generators/xml/parser/XMLParser.g4"
+                     packageName="com.generator.generators.xml.parser"
+                     lib="src/main/java/com/generator/generators/xml/parser"
+                     visitor="-visitor" listener="-listener"/>
     </target>
 
     <target name="jar">
