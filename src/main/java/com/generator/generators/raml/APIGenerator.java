@@ -889,6 +889,7 @@ public class APIGenerator extends Domain {
 			addAction(new GetAction("returns fb friends gamescores for game", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("userId", "user id", true)).
 				addQueryParam(new UUIDParam("gameId", "game id", true)).
+				addQueryParam(new IntegerParam("top", "top results", 1, Integer.MAX_VALUE, false)).
 				addResponseValue(new JsonResponse("scores",
 					new JsonResponseProperty("scores", "array", true))))).addToRAML(loopsi);
 
@@ -906,6 +907,7 @@ public class APIGenerator extends Domain {
 
 				addAction(new GetAction("returns global gamescores for game", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 					addQueryParam(new UUIDParam("gameId", "game id", true)).
+					addQueryParam(new IntegerParam("top", "top results", 1, Integer.MAX_VALUE, false)).
 					addResponseValue(new JsonResponse("scores",
 						new JsonResponseProperty("scores", "array", true))))).addToRAML(loopsi);
 

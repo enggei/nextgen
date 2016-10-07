@@ -58,6 +58,11 @@ public final class XmlGroup {
    } 
 
 
+   public cdataST newcdata() {
+      return new cdataST(stGroup);
+   } 
+
+
    public fileST newfile() {
       return new fileST(stGroup);
    } 
@@ -92,10 +97,31 @@ public final class XmlGroup {
    	}
    } 
 
+   public final class cdataST implements XmlGroupTemplate {
+
+      private final AtomicBoolean contentsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private cdataST(STGroup group) {
+   		template = group.getInstanceOf("cdata");
+   	}
+
+       public cdataST setContents(Object value) {
+      	tryToSetStringProperty(template, value, contentsIsSet, "contents");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
    public final class fileST implements XmlGroupTemplate {
 
       private final AtomicBoolean encodingIsSet = new AtomicBoolean(false);
       private final AtomicBoolean rootIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean standaloneIsSet = new AtomicBoolean(false);
       private final AtomicBoolean versionIsSet = new AtomicBoolean(false);
       private final ST template;
 
@@ -109,6 +135,10 @@ public final class XmlGroup {
       } 
        public fileST setRoot(Object value) {
       	tryToSetStringProperty(template, value, rootIsSet, "root");   
+         return this;
+      } 
+       public fileST setStandalone(Object value) {
+      	tryToSetStringProperty(template, value, standaloneIsSet, "standalone");   
          return this;
       } 
        public fileST setVersion(Object value) {

@@ -28,11 +28,14 @@ public class XmlTests {
 	public void testXmlGroup() {
 
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
+
 		final XmlGroup group = new XmlGroup();
 
-		final XmlGroup.fileST fileST = group.newfile().
+/*
+		final XmlGroup.fileST volindex = group.newfile().
 			setEncoding("UTF-8").
 			setVersion("1.0").
+			setStandalone("yes").
 			setRoot(
 				group.newtag().
 					setName("VolumeIndex").
@@ -47,7 +50,28 @@ public class XmlTests {
 				)
 			);
 
-		write(fileST, new File("src/main/java/com/generator/generators/xml/" + File.separator + "test.xml"));
+		write(volindex, new File("src/main/java/com/generator/generators/xml/" + File.separator + "volindex.xml"));
+*/
+
+		final XmlGroup.fileST test = group.newfile().
+			setEncoding("UTF-8").
+			setRoot(
+				group.newtag().
+					setName("Root").
+					addAttributesValue(
+						group.newattribute().
+							setName("someAttribute").
+							setValue("someValue")
+					).addElementsValue(
+						group.newtag().
+							setName("Tag").
+							setContents(
+								group.newcdata().setContents("Raw text containing markup charachters like < and >")
+							)
+				)
+			);
+
+		write(test, new File("src/main/java/com/generator/generators/xml/" + File.separator + "test.xml"));
 	}
 
 	@Test

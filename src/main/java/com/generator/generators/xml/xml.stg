@@ -1,17 +1,21 @@
-/* uuid : 2ec40e4a-9735-4749-a41a-f12a7d5d699f */
+/* uuid : b5d1b50f-f7ef-4fed-911f-2ba44ad67b2f */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
-attribute(name,value) ::= <<~name~="~value~"  
+attribute(name,value) ::= <<~name~="~value~"
 >>
 
-/** encoding,STRINGPROPERTY;root,STRINGPROPERTY;version,STRINGPROPERTY; **/
-file(encoding,root,version) ::= <<<?xml~if(version)~ version="~version~"~endif~~if(encoding)~ encoding="~encoding~"~endif~?>
-~root~ 
+/** contents,STRINGPROPERTY; **/
+cdata(contents) ::= <<<![CDATA[~contents~]]>
+>>
+
+/** encoding,STRINGPROPERTY;root,STRINGPROPERTY;standalone,STRINGPROPERTY;version,STRINGPROPERTY; **/
+file(encoding,root,standalone,version) ::= <<<?xml~if(version)~ version="~version~"~endif~~if(encoding)~ encoding="~encoding~"~endif~~if(standalone)~ standalone="~standalone~"~endif~?>
+~root~
 >>
 
 /** attributes,LISTPROPERTY;contents,STRINGPROPERTY;elements,LISTPROPERTY;name,STRINGPROPERTY; **/
-tag(attributes,contents,elements,name) ::= <<<~name~~if(attributes)~ ~attributes:{it| ~it~};separator=""~~endif~>~if(contents)~~contents~~else~
-   ~elements:{it|~it~};separator="\n"~~endif~</~name~>
- 
+tag(attributes,contents,elements,name) ::= <<<~name~~if(attributes)~ ~attributes:{it|~it~}~~endif~>~if(contents)~~contents~</~name~>~else~
+  ~elements:{it|~it~};separator="\n"~
+</~name~>~endif~
 >>
