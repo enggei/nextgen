@@ -915,10 +915,20 @@ public class APIGenerator extends Domain {
 			setName("").addEndpoint(new Endpoint("/films/watchlist").
 			addAction(new PostAction("add film to watchlist", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addFormParam(new UUIDParam("filmId", "film id", true)).
-				addResponseValue(new JsonResponse("film added to watchlist",
+				addResponseValue(new JsonResponse("confirmation of added to watchlist",
 					new JsonResponseProperty("success", "boolean", true)))).
-			addAction(new GetAction("get watchlist for friends", AuthType.OAUTH2_USER_ACCESS_TOKEN).
+			addAction(new DeleteAction("remove film from watchlist", AuthType.OAUTH2_USER_ACCESS_TOKEN).
 				addQueryParam(new UUIDParam("filmId", "film id", true)).
+				addResponseValue(new JsonResponse("users edited watchlist",
+					new JsonResponseProperty("watchlist", "array", true)))).
+			addAction(new GetAction("current watchlist for user", AuthType.OAUTH2_USER_ACCESS_TOKEN).
+				addResponseValue(new JsonResponse("watchlist",
+					new JsonResponseProperty("watchlist", "array", true))))).addToRAML(loopsi);
+		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/films/watchlist/friends").
+			addAction(new GetAction("get friends who has this film on their watchlist", AuthType.OAUTH2_USER_ACCESS_TOKEN).
+				addQueryParam(new UUIDParam("filmId", "film id", true)).
+				addQueryParam(new IntegerParam("count", "no elements", true, 10)).
 				addResponseValue(new JsonResponse("watchlist of friends",
 					new JsonResponseProperty("watchlist", "array", true))))).addToRAML(loopsi);
 
@@ -981,6 +991,7 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/films/latest").
 			addAction(new GetAction("returns film listings by cinema.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
+				addQueryParam(new UserIdParam(false)).
 				setErrorCodes("400", "404").
 				addResponseValue(new JsonResponse("Films response",
 					new JsonResponseProperty("films", "array", true),
