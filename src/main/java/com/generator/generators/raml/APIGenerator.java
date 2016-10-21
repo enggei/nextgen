@@ -887,7 +887,6 @@ public class APIGenerator extends Domain {
 		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/leaderboard/gamescoresfb").
 			addAction(new GetAction("returns fb friends gamescores for game", AuthType.OAUTH2_USER_ACCESS_TOKEN).
-				addQueryParam(new UUIDParam("userId", "user id", true)).
 				addQueryParam(new UUIDParam("gameId", "game id", true)).
 				addQueryParam(new IntegerParam("top", "top results", 1, Integer.MAX_VALUE, false)).
 				addResponseValue(new JsonResponse("scores",
@@ -901,7 +900,6 @@ public class APIGenerator extends Domain {
 					addFormParam(new IntegerParam("score", "game score", 0, Integer.MAX_VALUE, true)).
 					addFormParam(new LatitudeParam(false)).
 					addFormParam(new LongitudeParam(false)).
-					addFormParam(new UUIDParam("userId", "user id", true)).
 					addResponseValue(new JsonResponse("game score posted",
 						new JsonResponseProperty("success", "boolean", true)))).
 

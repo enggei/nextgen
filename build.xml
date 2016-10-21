@@ -21,6 +21,11 @@
                      packageName="com.generator.generators.xml.parser"
                      lib="src/main/java/com/generator/generators/xml/parser"
                      visitor="-visitor" listener="-listener"/>
+        <!-- Lua -->
+        <buildParser grammarFile="src/main/java/com/generator/generators/lua/parser/Lua.g4"
+                     packageName="com.generator.generators.lua.parser"
+                     lib="src/main/java/com/generator/generators/lua/parser"
+                     visitor="-visitor" listener="-listener"/>
     </target>
 
     <target name="jar">
