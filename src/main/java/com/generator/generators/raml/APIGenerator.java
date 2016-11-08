@@ -977,6 +977,12 @@ public class APIGenerator extends Domain {
 					new JsonResponseProperty("longitude", "long", false))))).addToRAML(loopsi);
 
 		new APIBuilder().
+			setName("").addEndpoint(new Endpoint("/engagement/ledger").
+			addAction(new GetAction("returns user engagement ledger.", AuthType.OAUTH2_USER_ACCESS_TOKEN).
+				addResponseValue(new JsonResponse("Engagement ledger (activities)",
+					new JsonResponseProperty("engagements", "array", true))))).addToRAML(loopsi);
+
+		new APIBuilder().
 			setName("").addEndpoint(new Endpoint("/films/latest").
 			addAction(new GetAction("returns film listings by cinema.", AuthType.OAUTH2_CLIENT_ACCESS_TOKEN).
 				setErrorCodes("400", "404").
