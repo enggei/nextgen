@@ -614,7 +614,10 @@ stringarray(values) ::= <<~values:{it|"~it~"};separator=", "~
 >>
 
 /** cases,KEYVALUELISTPROPERTY,case,stmt;state,STRINGPROPERTY; **/
-switch(cases,state) ::= << switch(~state~) ~cases:{it | case ~it.case~: ~it.stmt~ break;}~ 
+switch(cases,state) ::= << switch(~state~) { ~cases:{it |
+
+case ~it.case~: ~it.stmt~ break;}~
+}
 >>
 
 /** statement,STRINGPROPERTY; **/

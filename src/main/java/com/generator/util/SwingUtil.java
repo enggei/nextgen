@@ -5,6 +5,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -231,6 +232,8 @@ public class SwingUtil {
 		showDialog(content, owner, title, null);
 	}
 
+	// todo: combine showDialog and showDialogNoDefaultButton
+
 	public static void showDialog(final Component content, final Component owner, String title, final OnSave onSave) {
 		final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, true);
 		dialog.add(content, BorderLayout.CENTER);
@@ -250,6 +253,44 @@ public class SwingUtil {
 				}
 			}));
 			dialog.getRootPane().setDefaultButton(btnSave);
+		}
+
+		commandPanel.add(new JButton(new AbstractAction(onSave == null ? "Close" : "Cancel") {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						dialog.dispose();
+					}
+				});
+			}
+		}));
+		dialog.add(commandPanel, BorderLayout.SOUTH);
+
+
+		showDialog(dialog, owner);
+	}
+
+	public static void showDialogNoDefaultButton(final Component content, final Component owner, String title, final OnSave onSave) {
+		final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, true);
+		dialog.add(content, BorderLayout.CENTER);
+		final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+		if (onSave != null) {
+			JButton btnSave;
+			commandPanel.add(btnSave = new JButton(new AbstractAction("Save") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+						onSave.verifyAndSave();
+						dialog.dispose();
+					} catch (Exception e1) {
+						SwingUtil.showException(e1, content);
+					}
+				}
+			}));
+//			dialog.getRootPane().setDefaultButton(btnSave);
 		}
 
 		commandPanel.add(new JButton(new AbstractAction(onSave == null ? "Close" : "Cancel") {
@@ -867,16 +908,18 @@ public class SwingUtil {
 			this.add(component, column, row, colSpan, rowSpan, this.colAlign, this.rowAlign);
 		}
 
-		public void addLabel(String text, int column, int row) {
-			this.addLabel(text, column, row, this.colAlign, this.rowAlign);
+		public JLabel addLabel(String text, int column, int row) {
+			return this.addLabel(text, column, row, this.colAlign, this.rowAlign);
 		}
 
-		public void addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
-			this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);
+		public JLabel addLabel(String text, int column, int row, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			return this.addLabel(text, column, row, 1, 1, colAlign, rowAlign);
 		}
 
-		public void addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
-			this.add(new JLabel(text), column, row, colSpan, rowSpan, colAlign, rowAlign);
+		public JLabel addLabel(String text, int column, int row, int colSpan, int rowSpan, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
+			final JLabel label = new JLabel(text);
+			this.add(label, column, row, colSpan, rowSpan, colAlign, rowAlign);
+			return label;
 		}
 
 		public void addScrollPane(Component component, int column, int row, int colSpan, int rowSpan) {

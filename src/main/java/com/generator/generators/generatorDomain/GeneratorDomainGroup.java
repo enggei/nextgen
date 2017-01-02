@@ -26,8 +26,6 @@ public final class GeneratorDomainGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "generatorDomain" + java.io.File.separator + "generatorDomain.stg"));
    }
 
    public GeneratorDomainGroup(STGroup stGroup) {
@@ -49,6 +47,10 @@ public final class GeneratorDomainGroup {
    public char getDelimiter() {
       return delimiter;
    }
+
+	public interface GeneratorDomainGroupTemplate {
+
+	}
 
 
    public addEntityST newaddEntity() {
@@ -160,7 +162,7 @@ public final class GeneratorDomainGroup {
       return new visitorST(stGroup);
    } 
 
-    public final class addEntityST {
+   public final class addEntityST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
@@ -185,7 +187,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class addRelationST {
+   public final class addRelationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean dstIsSet = new AtomicBoolean(false);
@@ -225,7 +227,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class bugfixST {
+   public final class bugfixST implements GeneratorDomainGroupTemplate {
 
       private final ST template;
 
@@ -239,7 +241,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class defaultValueInitializationST {
+   public final class defaultValueInitializationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean keyValuesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -275,7 +277,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class defaultValuesST {
+   public final class defaultValuesST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean valuesIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -295,7 +297,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class defaultValuesAccessorST {
+   public final class defaultValuesAccessorST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -315,7 +317,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class domainST {
+   public final class domainST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean entitiesIsSet = new AtomicBoolean(false);
@@ -362,7 +364,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class editorST {
+   public final class editorST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean entitiesIsSet = new AtomicBoolean(false);
@@ -404,7 +406,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class entityDeclarationST {
+   public final class entityDeclarationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
@@ -430,7 +432,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class entityEditorImplementationST {
+   public final class entityEditorImplementationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -455,7 +457,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class entityGraphNodeDeclarationST {
+   public final class entityGraphNodeDeclarationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -475,7 +477,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class entityGraphNodeImplementationST {
+   public final class entityGraphNodeImplementationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean gBackgroundIsSet = new AtomicBoolean(false);
@@ -530,7 +532,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class entityRightClickST {
+   public final class entityRightClickST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -555,7 +557,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class graphEditorDeclarationST {
+   public final class graphEditorDeclarationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -575,7 +577,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class graphRelationDeclarationST {
+   public final class graphRelationDeclarationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -595,7 +597,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class graphRelationImplST {
+   public final class graphRelationImplST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -620,7 +622,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class propertyInstantiationST {
+   public final class propertyInstantiationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -650,7 +652,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class propertyInstantiationLegalValuesST {
+   public final class propertyInstantiationLegalValuesST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean legalValuesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -680,7 +682,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class relationDeclarationST {
+   public final class relationDeclarationST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean cardinalityIsSet = new AtomicBoolean(false);
       private final AtomicBoolean destinationIsSet = new AtomicBoolean(false);
@@ -726,7 +728,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class termCaseST {
+   public final class termCaseST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean termIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -746,7 +748,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class termImplST {
+   public final class termImplST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean termIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -766,7 +768,7 @@ public final class GeneratorDomainGroup {
    	}
    } 
 
-    public final class visitorST {
+   public final class visitorST implements GeneratorDomainGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageIsSet = new AtomicBoolean(false);

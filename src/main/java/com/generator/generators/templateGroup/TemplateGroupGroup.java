@@ -1,5 +1,6 @@
 package com.generator.generators.templateGroup;
 
+
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
@@ -9,12 +10,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Wraps STGroup-methods based on 'TemplateGroupGroup.stg' file<br/>
  */
 public final class TemplateGroupGroup {
-
+   // old TemplateGroup
    private final STGroup stGroup;
    private final char delimiter;
 
 	public TemplateGroupGroup() {
-
 		final String generatorPath = System.getProperty("generator.path");
 
 		if (generatorPath != null) {
@@ -22,7 +22,7 @@ public final class TemplateGroupGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(TemplateGroupGroup.class.getResource("/com/generator/generators/templateGroup/TemplateGroup.stg"), "UTF-8", '~', '~');
+			this.stGroup = new org.stringtemplate.v4.STGroupFile(TemplateGroupGroup.class.getResource("/com/generator/generators/project/project.stg"), "UTF-8", '~', '~');
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
@@ -114,6 +114,7 @@ public final class TemplateGroupGroup {
    public final class GroupClassDeclarationST implements TemplateGroupGroupTemplate {
 
       private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean groupStringIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
@@ -125,6 +126,10 @@ public final class TemplateGroupGroup {
 
        public GroupClassDeclarationST setDomain(Object value) {
       	tryToSetStringProperty(template, value, domainIsSet, "domain");   
+         return this;
+      } 
+       public GroupClassDeclarationST setGroupString(Object value) {
+      	tryToSetStringProperty(template, value, groupStringIsSet, "groupString");   
          return this;
       } 
        public GroupClassDeclarationST setName(Object value) {
@@ -444,4 +449,114 @@ public final class TemplateGroupGroup {
 		}
 		return list.toString() + delimiter;
 	}
+
+	public static final STGroup groupString = new org.stringtemplate.v4.STGroupString("easyFlow", "/* easyFlow aa407cd5-7e0c-4b25-9d63-52815c1d03f2*/\n" +
+		"delimiters \"~\", \"~\"\n" +
+		"\n" +
+		"bugfix() ::= <<} >>\n" +
+		"\n" +
+		"declaration(name,state) ::= <<.whenEnter(~state~, new ContextHandler<~name~Context>() {\n" +
+		"    @Override\n" +
+		"    public void call(final ~name~Context context) throws Exception {\n" +
+		"        //log.debug(\"~state;format=\"humpToCap\"~\");\n" +
+		"        if (listener != null) listener.onEnter(\"~state~\", context);\n" +
+		"        ~state;format=\"toLower\"~(context);\n" +
+		"    }\n" +
+		"}) >>\n" +
+		"\n" +
+		"easyFlow(extends,name,package,startState,superParams,events,transitions,properties,states) ::= <<~if(package)~package ~package~;\n" +
+		"\n" +
+		"~endif~import au.com.ds.ef.*;\n" +
+		"import au.com.ds.ef.call.ContextHandler;\n" +
+		"import au.com.ds.ef.call.ExecutionErrorHandler;\n" +
+		"import au.com.ds.ef.err.ExecutionError;\n" +
+		"\n" +
+		"import org.slf4j.Logger;\n" +
+		"import org.slf4j.LoggerFactory;\n" +
+		"\n" +
+		"import static au.com.ds.ef.FlowBuilder.*;\n" +
+		"import static ~package~.~name~.States.*;\n" +
+		"import static ~package~.~name~.Events.*;\n" +
+		"\n" +
+		"/**\n" +
+		" * http://datasymphony.com.au/open-source/easyflow/\n" +
+		" */\n" +
+		"public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{\n" +
+		"\n" +
+		"   protected static final Logger log = LoggerFactory.getLogger(~name~.class);\n" +
+		"\n" +
+		"   static class ~name~Context extends StatefulContext {\n" +
+		"\t\t~properties:{it|~if(it.modifier)~~it.modifier~ ~endif~~it.type~ ~it.name~~if(it.value)~ = ~it.value~~endif~;~if(it.comment)~ //~it.comment~~endif~};separator=\"\\n\"~\n" +
+		"\t}\n" +
+		"\n" +
+		"   enum States implements StateEnum {\n" +
+		"   \t~states:{it|~it.name~};separator=\",\\n\"~\n" +
+		"\t}\n" +
+		"\n" +
+		"\tenum Events implements EventEnum {\n" +
+		"   \t~events:{it|~it.name~};separator=\",\\n\"~\n" +
+		"\t}\n" +
+		"\n" +
+		"    /** ~name~Listener  **/\n" +
+		"    public interface ~name~Listener {\n" +
+		"        void onEnter(String state, ~name~Context context);\n" +
+		"        void onError(ExecutionError error, StatefulContext context);\n" +
+		"    }\n" +
+		"\n" +
+		"    private final EasyFlow<~name~Context> fsm;\n" +
+		"    protected ~name~Listener listener;\n" +
+		"\n" +
+		"    public ~name~(~superParams:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" +
+		"        super(~superParams:{it|~it.name~};separator=\", \"~);\n" +
+		"\n" +
+		"        // states and transitions:\n" +
+		"        this.fsm = from(~startState~).transit(~transitions:{it|~it~};separator=\"\\n\"~);\n" +
+		"\n" +
+		"        // binding:\n" +
+		"        this.fsm\n" +
+		"            .executor(new SyncExecutor())\n" +
+		"\t\t\t~states:{it|\n" +
+		"\t.whenEnter(~it.name~, new ContextHandler<~name~Context>() {\n" +
+		"   \t@Override\n" +
+		"\t\tpublic void call(final ~name~Context context) throws Exception {\n" +
+		"      \t//log.debug(\"~it.name;format=\"humpToCap\"~\");\n" +
+		"      \tif (listener != null) listener.onEnter(\"~it.name~\", context);\n" +
+		"        \thandle~it.name;format=\"capitalize\"~(context);\n" +
+		"    \t~bugfix()~\n" +
+		"\t~bugfix()~)};separator=\"\\n\"~\n" +
+		"            .whenError(new ExecutionErrorHandler<StatefulContext>() {\n" +
+		"                @Override\n" +
+		"                public void call(ExecutionError error, StatefulContext context) {\n" +
+		"                    log.info(\"ERROR\");\n" +
+		"                    if (listener != null) listener.onError(error, context);\n" +
+		"                    onERROR(error,context);\n" +
+		"                    }\n" +
+		"                });\n" +
+		"    }\n" +
+		"\n" +
+		"    public void start(final ~name~Context context) {\n" +
+		"        this.fsm.start(context);\n" +
+		"    }\n" +
+		"\n" +
+		"    public void start(final ~name~Context context, ~name~Listener listener) {\n" +
+		"        this.listener = listener;\n" +
+		"        this.fsm.start(context);\n" +
+		"    }\n" +
+		"\n" +
+		"    ~states:{it|protected abstract void handle~it.name;format=\"capitalize\"~(final ~name~Context context) throws Exception;};separator=\"\\n\"~\n" +
+		"\n" +
+		"    protected abstract void onERROR(final ExecutionError error, final StatefulContext context);\n" +
+		"}>>\n" +
+		"\n" +
+		"dependency() ::= <<<dependency>\n" +
+		"\t<groupId>au.com.datasymphony</groupId>\n" +
+		"   <artifactId>EasyFlow</artifactId>\n" +
+		"   <version>1.3</version>\n" +
+		"</dependency> >>\n" +
+		"\n" +
+		"impl(name,state) ::= <<protected abstract void ~state;format=\"toLower\"~(final ~name~Context context) throws Exception;>>\n" +
+		"\n" +
+		"transit(event,state,transits,finalState) ::= <<on(~event~).~if(finalState)~finish~else~to~endif~(~state~)~if(transits)~.\n" +
+		"\ttransit(~transits:{it|~it~};separator=\",\\n\"~\n" +
+		"\t)~endif~>>", '~', '~');
 } 

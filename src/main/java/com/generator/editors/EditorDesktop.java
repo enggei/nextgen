@@ -1,19 +1,7 @@
 package com.generator.editors;
 
-import com.generator.editors.domain.MetaDomain;
-import com.generator.editors.domain.NeoModel;
-import com.generator.editors.graph.d2.GraphNode2D;
-import com.generator.generators.easyFlow.*;
-import com.generator.generators.generatorDomain.Generator;
-import com.generator.generators.generatorDomain.GeneratorDomain;
-import com.generator.generators.protobuf.Protobuf;
-import com.generator.generators.protobuf.ProtobufDomain;
-import com.generator.generators.templates.editors.TemplateFileEditor;
-import com.generator.generators.vertxWeb.vertxWeb;
-import com.generator.generators.vertxWeb.vertxWebEditor;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
@@ -57,70 +45,8 @@ public class EditorDesktop extends JFrame {
 		mainMenu.add(databaseMenu);
 
 		final JMenu domainMenu = new JMenu("Domains");
-		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "Domain") {
-			@Override
-			JComponent newDomainEditor() {
-				// external
-				return Generator.newGeneratorDomainEditor(new GeneratorDomain(state.model));
-			}
-		}));
 
-		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "Protobuf") {
-			@Override
-			JComponent newDomainEditor() {
-				// external
-				return Protobuf.newProtobufDomainEditor(new ProtobufDomain(state.model));
-			}
-		}));
 
-		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "EasyFlow") {
-			@Override
-			JComponent newDomainEditor() {
-				// anonymous
-				return new EasyFlowDomainEditor(new EasyFlowDomain(state.model)) {
-					@Override
-					public void rightClickNoSelect(MouseEvent e, JPopupMenu popupMenu) {
-						super.rightClickNoSelect(e, popupMenu);
-						popupMenu.add(new ParseEasyFlowFileAction(this));
-					}
-
-					@Override
-					protected void rightClickFlow(MouseEvent mouseEvent, JPopupMenu popupMenu, GraphNode2D targetNode) {
-
-						popupMenu.add(new AbstractAction("Set root") {
-							@Override
-							public void actionPerformed(ActionEvent e) {
-
-								final String root = SwingUtil.showInputDialog("Set root", popupMenu, System.getProperty("generator.root"));
-								if (root == null || root.length() == 0) return;
-
-								domain.commit(new MetaDomain.Committer() {
-									@Override
-									public void doAction(Transaction tx) throws Throwable {
-										targetNode.node().setProperty("root", root);
-									}
-
-									@Override
-									public void exception(Throwable throwable) {
-										SwingUtil.showException(popupMenu, throwable);
-									}
-								});
-							}
-						});
-
-						addVisitor(popupMenu, targetNode, new EasyFlowJavaGenerator(this));
-						addVisitor(popupMenu, targetNode, new EasyFlowTemplateGenerator(this));
-					}
-				};
-			}
-		}));
-
-		domainMenu.add(new JMenuItem(new AddFrameAction(desktop, "VertxWeb") {
-			@Override
-			JComponent newDomainEditor() {
-				return new vertxWebEditor(new vertxWeb(state.model));
-			}
-		}));
 
 		domainMenu.setEnabled(state.model != null);
 		mainMenu.add(domainMenu);
@@ -129,7 +55,7 @@ public class EditorDesktop extends JFrame {
 		toolsMenu.add(new JMenuItem(new AddFrameAction(desktop, "TemplateEditor") {
 			@Override
 			JComponent newDomainEditor() {
-				return new TemplateFileEditor(state.model);
+				return new TemplateFileEditor();
 			}
 		}));
 		mainMenu.add(toolsMenu);
@@ -232,7 +158,6 @@ public class EditorDesktop extends JFrame {
 					return;
 				}
 			}
-
 
 			final JComponent editor = newDomainEditor();
 

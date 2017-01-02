@@ -141,7 +141,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
 	}
 
 	public String getText() {
-		return text;
+		return text.trim();
 	}
 
 	public Set<String> getParameterNames() {

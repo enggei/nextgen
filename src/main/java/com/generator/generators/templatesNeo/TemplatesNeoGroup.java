@@ -48,6 +48,10 @@ public final class TemplatesNeoGroup {
       return delimiter;
    }
 
+	public interface TemplatesNeoGroupTemplate {
+
+	}
+
 
    public NeoGroupClassDeclarationST newNeoGroupClassDeclaration() {
       return new NeoGroupClassDeclarationST(stGroup);
@@ -69,6 +73,11 @@ public final class TemplatesNeoGroup {
    } 
 
 
+   public keyValueListInterfaceDeclST newkeyValueListInterfaceDecl() {
+      return new keyValueListInterfaceDeclST(stGroup);
+   } 
+
+
    public keyValueListSetterST newkeyValueListSetter() {
       return new keyValueListSetterST(stGroup);
    } 
@@ -79,8 +88,23 @@ public final class TemplatesNeoGroup {
    } 
 
 
+   public keyValueVisitorST newkeyValueVisitor() {
+      return new keyValueVisitorST(stGroup);
+   } 
+
+
+   public listInterfaceDeclST newlistInterfaceDecl() {
+      return new listInterfaceDeclST(stGroup);
+   } 
+
+
    public listSetterST newlistSetter() {
       return new listSetterST(stGroup);
+   } 
+
+
+   public listVisitorST newlistVisitor() {
+      return new listVisitorST(stGroup);
    } 
 
 
@@ -89,11 +113,21 @@ public final class TemplatesNeoGroup {
    } 
 
 
+   public stringInterfaceDeclST newstringInterfaceDecl() {
+      return new stringInterfaceDeclST(stGroup);
+   } 
+
+
    public stringSetterST newstringSetter() {
       return new stringSetterST(stGroup);
    } 
 
-    public final class NeoGroupClassDeclarationST {
+
+   public stringVisitorST newstringVisitor() {
+      return new stringVisitorST(stGroup);
+   } 
+
+   public final class NeoGroupClassDeclarationST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -129,7 +163,7 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class bugfix2ST {
+   public final class bugfix2ST implements TemplatesNeoGroupTemplate {
 
       private final ST template;
 
@@ -143,7 +177,7 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class declarationST {
+   public final class declarationST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -174,7 +208,7 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class defaultNodeTypesST {
+   public final class defaultNodeTypesST implements TemplatesNeoGroupTemplate {
 
       private final ST template;
 
@@ -188,7 +222,27 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class keyValueListSetterST {
+   public final class keyValueListInterfaceDeclST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private keyValueListInterfaceDeclST(STGroup group) {
+   		template = group.getInstanceOf("keyValueListInterfaceDecl");
+   	}
+
+       public keyValueListInterfaceDeclST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class keyValueListSetterST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean kvNamesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
@@ -218,7 +272,7 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class keyValueRelationshipsST {
+   public final class keyValueRelationshipsST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typesIsSet = new AtomicBoolean(false);
@@ -243,7 +297,47 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class listSetterST {
+   public final class keyValueVisitorST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private keyValueVisitorST(STGroup group) {
+   		template = group.getInstanceOf("keyValueVisitor");
+   	}
+
+       public keyValueVisitorST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class listInterfaceDeclST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private listInterfaceDeclST(STGroup group) {
+   		template = group.getInstanceOf("listInterfaceDecl");
+   	}
+
+       public listInterfaceDeclST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class listSetterST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
@@ -268,7 +362,27 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class newInstanceST {
+   public final class listVisitorST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private listVisitorST(STGroup group) {
+   		template = group.getInstanceOf("listVisitor");
+   	}
+
+       public listVisitorST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class newInstanceST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -293,7 +407,27 @@ public final class TemplatesNeoGroup {
    	}
    } 
 
-    public final class stringSetterST {
+   public final class stringInterfaceDeclST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private stringInterfaceDeclST(STGroup group) {
+   		template = group.getInstanceOf("stringInterfaceDecl");
+   	}
+
+       public stringInterfaceDeclST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class stringSetterST implements TemplatesNeoGroupTemplate {
 
       private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
@@ -309,6 +443,26 @@ public final class TemplatesNeoGroup {
       } 
        public stringSetterST setStatementName(Object value) {
       	tryToSetStringProperty(template, value, statementNameIsSet, "statementName");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class stringVisitorST implements TemplatesNeoGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private stringVisitorST(STGroup group) {
+   		template = group.getInstanceOf("stringVisitor");
+   	}
+
+       public stringVisitorST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
 

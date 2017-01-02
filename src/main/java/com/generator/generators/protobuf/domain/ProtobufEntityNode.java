@@ -19,7 +19,7 @@ abstract class ProtobufEntityNode implements ProtobufEntity {
       this.graphDb = graphDb;
 
       try (Transaction tx = graphDb.beginTx()) {
-         this.uuid = java.util.UUID.fromString((String) node.getProperty("uuid"));
+         this.uuid = java.util.UUID.fromString((String) node.getProperty("_uuid"));
          this.domainType = ProtobufEntities.valueOf((String) node.getProperty(ProtobufEntities.class.getName()));
          tx.success();
       }

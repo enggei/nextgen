@@ -48,6 +48,10 @@ public final class ProtobufGroup {
       return delimiter;
    }
 
+	public interface ProtobufGroupTemplate {
+
+	}
+
 
    public enumST newenum() {
       return new enumST(stGroup);
@@ -83,7 +87,7 @@ public final class ProtobufGroup {
       return new protobufPackageST(stGroup);
    } 
 
-    public final class enumST {
+   public final class enumST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -113,7 +117,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class extendST {
+   public final class extendST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -143,7 +147,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class extensionsST {
+   public final class extensionsST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean maxIsSet = new AtomicBoolean(false);
       private final AtomicBoolean minIsSet = new AtomicBoolean(false);
@@ -168,7 +172,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class groupMessagesModelST {
+   public final class groupMessagesModelST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean messagesIsSet = new AtomicBoolean(false);
@@ -199,7 +203,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class messageST {
+   public final class messageST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -229,7 +233,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class messageFieldST {
+   public final class messageFieldST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
@@ -279,7 +283,7 @@ public final class ProtobufGroup {
    	}
    } 
 
-    public final class protobufPackageST {
+   public final class protobufPackageST implements ProtobufGroupTemplate {
 
       private final AtomicBoolean deliverablesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean importsIsSet = new AtomicBoolean(false);

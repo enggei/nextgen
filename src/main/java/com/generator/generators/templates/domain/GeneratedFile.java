@@ -47,8 +47,9 @@ public class GeneratedFile extends BaseEntity<TemplateEntities> {
 		return (path == null ? "" : (path.replaceAll("/", ".")));
 	}
 
-	public GeneratedFile write(String text) throws IOException {
-		FileUtil.writeFile(text, getFile());
+	public GeneratedFile write(Object content) throws IOException {
+		System.out.println("writing to file " + getFile().getAbsolutePath());
+		FileUtil.writeFile(content, getFile());
 		return this;
 	}
 }

@@ -26,6 +26,8 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 	private GeneratorDomainGroup.visitorST visitorST;
 	private TemplatesNeoGroup.declarationST declarationST;
 	private Object setter;
+	private Object interfaceDecl;
+	private Object visitor;
 	private Object relationships;
 
 	public TemplateNeoGenerator(String root, String packageName) {
@@ -63,6 +65,7 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 	@Override
 	public void onStartTemplateParameter(TemplateParameter parameter, TemplateStatement statement) {
 		setter = null;
+		interfaceDecl = null;
 		relationships = null;
 	}
 
@@ -76,6 +79,10 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 
 		setter = kvSetter;
 
+		interfaceDecl = group.newkeyValueListInterfaceDecl().setName(templateParameter.getPropertyName());
+
+		visitor = group.newkeyValueVisitor().setName(templateParameter.getPropertyName());
+
 		final TemplatesNeoGroup.keyValueRelationshipsST relationshipsST = group.newkeyValueRelationships().setName(templateParameter.getPropertyName());
 		templateParameter.getKvNames().forEach(relationshipsST::addTypesValue);
 
@@ -87,6 +94,11 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 		setter = group.newstringSetter().
 			setPropertyName(templateParameter.getPropertyName()).
 			setStatementName(statement.getName());
+
+		interfaceDecl = group.newstringInterfaceDecl().
+			setName(templateParameter.getPropertyName());
+
+		visitor = group.newstringVisitor().setName(templateParameter.getPropertyName());
 	}
 
 	@Override
@@ -104,6 +116,11 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 		setter = group.newlistSetter().
 			setPropertyName(templateParameter.getPropertyName()).
 			setStatementName(statement.getName());
+
+		interfaceDecl = group.newlistInterfaceDecl().
+			setName(templateParameter.getPropertyName());
+
+		visitor = group.newlistVisitor().setName(templateParameter.getPropertyName());
 	}
 
 	@Override

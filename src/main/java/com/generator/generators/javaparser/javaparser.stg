@@ -1,0 +1,78 @@
+/* uuid : 451971c5-4c30-4adf-9f60-26bf7e91d92c */
+delimiters "~", "~"
+
+/** name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,LISTPROPERTY; **/
+JavaParserBuilder(name,packageName,statements) ::= <<~if(packageName)~package ~packageName~;
+~endif~
+import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.util.FileUtil;
+import com.github.javaparser.*;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.expr.*;
+import com.github.javaparser.ast.stmt.*;
+
+public class ~name~ {
+
+	private final CompilationUnit cu = new CompilationUnit();
+
+	public ~name~() {
+		~statements:{it|~it~;};separator="\n\n"~
+	}
+
+	@Override
+	public String toString() {
+		return cu.toString();
+	}
+
+	public static void main(String[] args) {
+		System.out.println(new GeneratedClassBuilder());
+	}
+} 
+>>
+
+/**  **/
+blockStmt() ::= <<new BlockStmt() 
+>>
+
+/** classname,STRINGPROPERTY;isInterface,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+classOrInterfaceDeclaration(classname,isInterface,scope) ::= <<new ClassOrInterfaceDeclaration(ModifierSet.~scope~, ~isInterface~, ~classname~) 
+>>
+
+/** name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+constructorDeclaration(name,scope) ::= <<new ConstructorDeclaration(~if(scope)~ModifierSet.~scope~~else~0~endif~, "~name~"); 
+>>
+
+/** name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+fieldAccessExpr(name,scope) ::= <<new FieldAccessExpr(~scope~, "~name~") 
+>>
+
+/** name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+methodCallExpr(name,scope) ::= <<new MethodCallExpr(~scope~, "~name~"); 
+>>
+
+/** blockStmt,STRINGPROPERTY;name,STRINGPROPERTY;scope,STRINGPROPERTY;type,STRINGPROPERTY; **/
+methodDeclaration(blockStmt,name,scope,type) ::= <<MethodDeclaration method = new MethodDeclaration(~if(scope)~ModifierSet.~scope~~else~0~endif~, ~type~, "~name~");
+method.setBlock(~blockStmt~); 
+>>
+
+/** name,STRINGPROPERTY; **/
+nameExpr(name) ::= <<new NameExpr("~name~") 
+>>
+
+/** nameExpr,STRINGPROPERTY; **/
+packageDeclaration(nameExpr) ::= <<new PackageDeclaration(~nameExpr~) 
+>>
+
+/** isVarArgs,STRINGPROPERTY;name,STRINGPROPERTY;ordinal,STRINGPROPERTY;type,STRINGPROPERTY; **/
+parameter(isVarArgs,name,ordinal,type) ::= <<ASTHelper.createParameter(ASTHelper.createReferenceType("~type~", ~ordinal~), "~name~");
+//~name~.setVarArgs(~if(isVarArgs)~true~else~false~endif~); 
+>>
+
+/** name,STRINGPROPERTY;scope,STRINGPROPERTY; **/
+qualifiedNameExpr(name,scope) ::= <<new QualifiedNameExpr(~scope~, "~name~") 
+>>
+
+/** value,STRINGPROPERTY; **/
+stringLiteralExpr(value) ::= <<new StringLiteralExpr("~value~") 
+>>

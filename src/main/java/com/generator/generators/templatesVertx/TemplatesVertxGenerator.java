@@ -102,8 +102,6 @@ public class TemplatesVertxGenerator implements TemplateVisitor {
 			setStatement(statementName).
 			setName(templateParameter.getPropertyName());
 
-		templateParameter.getKvNames().forEach(sendToMessage_::addParametersValue);
-
 		verticleDeclarationST.addMessagesValue(consumeMessage_, sendToMessage_);
 	}
 

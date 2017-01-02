@@ -13,7 +13,7 @@ public class CompileUtil {
 		String str = "package com.test;"
 			+ "\n" + "public class Test {"
 			+ "\npublic static void test() {"
-			+ "\nSystem.out.println(\"Comiler API Test\")-;" + ""
+			+ "\nSystem.out.println(\"Comiler API Test\");" + ""
 			+ "\n}" + "\n}";
 
 		SimpleJavaFileObject fileObject = new CharSequenceJavaFileObject("com.test.Test", str);

@@ -1,5 +1,5 @@
  package com.generator.generators.cypher;
-import com.generator.editors.domain.NeoModel;
+import com.generator.editors.NeoModel;
 import com.generator.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;

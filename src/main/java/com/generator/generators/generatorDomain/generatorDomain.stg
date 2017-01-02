@@ -1,4 +1,4 @@
-/* uuid : 9e5e3fac-d57c-4779-876f-390531a9b794 */
+/* uuid : f7a615e9-dec8-41d7-91e1-e18d39fcd60d */
 delimiters "~", "~"
 
 /** name,STRINGPROPERTY;properties,LISTPROPERTY; **/
@@ -18,7 +18,7 @@ public ~domain~ relate~src;format="capitalize"~_~name;format="capitalize"~_~dst;
 >>
 
 /**  **/
-bugfix() ::= <<>
+bugfix() ::= <<> 
 >>
 
 /** keyValues,KEYVALUELISTPROPERTY,name,value;type,STRINGPROPERTY;uuid,STRINGPROPERTY;valueKey,STRINGPROPERTY; **/

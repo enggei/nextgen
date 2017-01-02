@@ -119,6 +119,14 @@ public class TemplateGroupVerticles {
 					message.reply(message.body());
 				}
 			}); 
+			// string property groupString
+			consume(vertx, "GroupClassDeclaration_" + deploymentID(), deploymentID() + ".groupString", log, new Handler<Message<String> >() {
+				@Override
+				public void handle(Message<String> message) {
+					template.setGroupString(message.body());
+					message.reply(message.body());
+				}
+			}); 
 			// string property name
 			consume(vertx, "GroupClassDeclaration_" + deploymentID(), deploymentID() + ".name", log, new Handler<Message<String> >() {
 				@Override
@@ -165,6 +173,20 @@ public class TemplateGroupVerticles {
 				@Override
 				public void onFail(Throwable t) {
 					log.error("sendDomainMessage " + id + ".domain failed", t);
+				}
+			});
+		}  
+
+		 public static void sendGroupStringMessage(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
+			sendMessage(vertx, id + ".groupString", content, log, new VertxUtil.SuccessHandler<Message<String> >() {
+				@Override
+				public void onSuccess(Message<String> result) {
+					instanceHandler.handle(result.body());
+				}
+
+				@Override
+				public void onFail(Throwable t) {
+					log.error("sendGroupStringMessage " + id + ".groupString failed", t);
 				}
 			});
 		}  
@@ -325,6 +347,14 @@ public class TemplateGroupVerticles {
 			// new instance of template
 			final TemplateGroupGroup.NewStatementDeclarationST template = templateGroup.newNewStatementDeclaration();
 
+			// string property groupname
+			consume(vertx, "NewStatementDeclaration_" + deploymentID(), deploymentID() + ".groupname", log, new Handler<Message<String> >() {
+				@Override
+				public void handle(Message<String> message) {
+					template.setGroupname(message.body());
+					message.reply(message.body());
+				}
+			}); 
 			// string property name
 			consume(vertx, "NewStatementDeclaration_" + deploymentID(), deploymentID() + ".name", log, new Handler<Message<String> >() {
 				@Override
@@ -352,6 +382,20 @@ public class TemplateGroupVerticles {
 			startFuture.complete();
 		}
 
+
+		 public static void sendGroupnameMessage(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
+			sendMessage(vertx, id + ".groupname", content, log, new VertxUtil.SuccessHandler<Message<String> >() {
+				@Override
+				public void onSuccess(Message<String> result) {
+					instanceHandler.handle(result.body());
+				}
+
+				@Override
+				public void onFail(Throwable t) {
+					log.error("sendGroupnameMessage " + id + ".groupname failed", t);
+				}
+			});
+		}  
 
 		 public static void sendNameMessage(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
 			sendMessage(vertx, id + ".name", content, log, new VertxUtil.SuccessHandler<Message<String> >() {

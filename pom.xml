@@ -103,11 +103,11 @@
         </dependency>
 
         <!--&lt;!&ndash;COMBINATORICS (PERMUTATIONS)&ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.github.dpaukov</groupId>-->
-            <!--<artifactId>combinatoricslib3</artifactId>-->
-            <!--<version>3.0.0</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.dpaukov</groupId>
+            <artifactId>combinatoricslib3</artifactId>
+            <version>3.1.1</version>
+        </dependency>
 
         <!-- JGOODIES-->
         <!--http://manual.openestate.org/extern/forms-1.2.1/tutorial/introduction.html-->
@@ -129,6 +129,17 @@
             <version>3.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.sf.expectit</groupId>
+            <artifactId>expectit-core</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.54</version>
+        </dependency>
 
     </dependencies>
 

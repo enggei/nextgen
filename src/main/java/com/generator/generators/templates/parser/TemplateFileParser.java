@@ -32,7 +32,6 @@ public class TemplateFileParser {
     public TemplateStatement parse(String delimiters, String name, String content, boolean debug) throws IOException {
         this.debug = debug;
         final File tempFile = File.createTempFile("name", ".stg");
-		 // todo: remove spaces between << and >>
         FileUtil.write("delimiters \"" + delimiters + "\", \"" + delimiters + "\"\n\n" + name + "() ::= <<" + content + " >>", tempFile);
         return parse(tempFile).getTemplateStatement(name);
     }
@@ -117,7 +116,7 @@ public class TemplateFileParser {
             statements.put(parameterBuilder.getName(), parameterBuilder.processMethodCalls(builderMap, imports).toStatement());
         }
 
-        return new TemplateFile(UUID.randomUUID(), file, importNames, statements);
+        return new TemplateFile(UUID.randomUUID(), group.delimiterStartChar, file, importNames, statements);
     }
 
     private void parse(Tree ast, Expression.ParameterBuilder parameterBuilder) {

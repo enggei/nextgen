@@ -48,9 +48,43 @@ public final class TemplatesSwingGroup {
       return delimiter;
    }
 
+	public interface TemplatesSwingGroupTemplate {
+
+	}
+
+
+   public CanvasActionStringPropertyST newCanvasActionStringProperty() {
+      return new CanvasActionStringPropertyST(stGroup);
+   } 
+
+
+   public CanvasListenerST newCanvasListener() {
+      return new CanvasListenerST(stGroup);
+   } 
+
+
+   public PNodeST newPNode() {
+      return new PNodeST(stGroup);
+   } 
+
+
+   public TemplateCanvasST newTemplateCanvas() {
+      return new TemplateCanvasST(stGroup);
+   } 
+
+
+   public TemplateGroupActionsST newTemplateGroupActions() {
+      return new TemplateGroupActionsST(stGroup);
+   } 
+
 
    public TemplatesSwingST newTemplatesSwing() {
       return new TemplatesSwingST(stGroup);
+   } 
+
+
+   public addListActionST newaddListAction() {
+      return new addListActionST(stGroup);
    } 
 
 
@@ -64,8 +98,23 @@ public final class TemplatesSwingGroup {
    } 
 
 
+   public genericFixST newgenericFix() {
+      return new genericFixST(stGroup);
+   } 
+
+
    public newActionST newnewAction() {
       return new newActionST(stGroup);
+   } 
+
+
+   public setStringActionST newsetStringAction() {
+      return new setStringActionST(stGroup);
+   } 
+
+
+   public statementActionsST newstatementActions() {
+      return new statementActionsST(stGroup);
    } 
 
 
@@ -73,8 +122,141 @@ public final class TemplatesSwingGroup {
       return new stringPropertyEditorST(stGroup);
    } 
 
-    public final class TemplatesSwingST {
+   public final class CanvasActionStringPropertyST implements TemplatesSwingGroupTemplate {
 
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private CanvasActionStringPropertyST(STGroup group) {
+   		template = group.getInstanceOf("CanvasActionStringProperty");
+   	}
+
+       public CanvasActionStringPropertyST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public CanvasActionStringPropertyST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class CanvasListenerST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private CanvasListenerST(STGroup group) {
+   		template = group.getInstanceOf("CanvasListener");
+   	}
+
+       public CanvasListenerST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+      public CanvasListenerST addStatementsValue(Object canvasActions_) {
+         statementsIsSet.set(true);
+         template.addAggr("statements.{canvasActions}", ( (canvasActions_==null || canvasActions_.toString().length()==0) ? null : canvasActions_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class PNodeST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private PNodeST(STGroup group) {
+   		template = group.getInstanceOf("PNode");
+   	}
+
+       public PNodeST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class TemplateCanvasST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private TemplateCanvasST(STGroup group) {
+   		template = group.getInstanceOf("TemplateCanvas");
+   	}
+
+       public TemplateCanvasST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public TemplateCanvasST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public TemplateCanvasST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+      public TemplateCanvasST addStatementsValue(Object name_) {
+         statementsIsSet.set(true);
+         template.addAggr("statements.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class TemplateGroupActionsST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private TemplateGroupActionsST(STGroup group) {
+   		template = group.getInstanceOf("TemplateGroupActions");
+   	}
+
+       public TemplateGroupActionsST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public TemplateGroupActionsST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class TemplatesSwingST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean canvasListenerIsSet = new AtomicBoolean(false);
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
@@ -84,6 +266,10 @@ public final class TemplatesSwingGroup {
    		template = group.getInstanceOf("TemplatesSwing");
    	}
 
+       public TemplatesSwingST setCanvasListener(Object value) {
+      	tryToSetStringProperty(template, value, canvasListenerIsSet, "canvasListener");   
+         return this;
+      } 
        public TemplatesSwingST setGroupName(Object value) {
       	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
          return this;
@@ -104,7 +290,37 @@ public final class TemplatesSwingGroup {
    	}
    } 
 
-    public final class addVerticleActionST {
+   public final class addListActionST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private addListActionST(STGroup group) {
+   		template = group.getInstanceOf("addListAction");
+   	}
+
+       public addListActionST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public addListActionST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public addListActionST setStatement(Object value) {
+      	tryToSetStringProperty(template, value, statementIsSet, "statement");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class addVerticleActionST implements TemplatesSwingGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
@@ -129,7 +345,7 @@ public final class TemplatesSwingGroup {
    	}
    } 
 
-    public final class bugfixST {
+   public final class bugfixST implements TemplatesSwingGroupTemplate {
 
       private final ST template;
 
@@ -143,7 +359,21 @@ public final class TemplatesSwingGroup {
    	}
    } 
 
-    public final class newActionST {
+   public final class genericFixST implements TemplatesSwingGroupTemplate {
+
+      private final ST template;
+
+      private genericFixST(STGroup group) {
+   		template = group.getInstanceOf("genericFix");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class newActionST implements TemplatesSwingGroupTemplate {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -168,7 +398,67 @@ public final class TemplatesSwingGroup {
    	}
    } 
 
-    public final class stringPropertyEditorST {
+   public final class setStringActionST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private setStringActionST(STGroup group) {
+   		template = group.getInstanceOf("setStringAction");
+   	}
+
+       public setStringActionST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public setStringActionST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+       public setStringActionST setStatement(Object value) {
+      	tryToSetStringProperty(template, value, statementIsSet, "statement");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class statementActionsST implements TemplatesSwingGroupTemplate {
+
+      private final AtomicBoolean actionsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private statementActionsST(STGroup group) {
+   		template = group.getInstanceOf("statementActions");
+   	}
+
+      public statementActionsST addActionsValue(Object value) {
+      	tryToSetListProperty(template, value, actionsIsSet, "actions");
+         return this;
+      }
+       public statementActionsST setGroupName(Object value) {
+      	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
+         return this;
+      } 
+       public statementActionsST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class stringPropertyEditorST implements TemplatesSwingGroupTemplate {
 
       private final AtomicBoolean groupNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);

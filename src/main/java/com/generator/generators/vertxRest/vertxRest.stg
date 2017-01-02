@@ -1,4 +1,4 @@
-/* uuid : 0df5f237-e326-45aa-a547-96caafac7e6a */
+/* uuid : 7ec8b39a-39bc-45e4-a35b-53b87f2c6659 */
 delimiters "~", "~"
 
 /** comments,STRINGPROPERTY;endpoints,LISTPROPERTY;entities,KEYVALUELISTPROPERTY,name;name,STRINGPROPERTY;packageName,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name;visitors,KEYVALUELISTPROPERTY,impl,name; **/

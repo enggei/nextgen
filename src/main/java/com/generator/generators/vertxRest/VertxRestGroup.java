@@ -26,8 +26,6 @@ public final class VertxRestGroup {
 			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 			this.delimiter = stGroup.delimiterStartChar;
 		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "vertxRest" + java.io.File.separator + "vertxRest.stg"));
    }
 
    public VertxRestGroup(STGroup stGroup) {
@@ -50,6 +48,10 @@ public final class VertxRestGroup {
       return delimiter;
    }
 
+	public interface VertxRestGroupTemplate {
+
+	}
+
 
    public APIST newAPI() {
       return new APIST(stGroup);
@@ -65,7 +67,7 @@ public final class VertxRestGroup {
       return new validatingNeoHandlerST(stGroup);
    } 
 
-    public final class APIST {
+   public final class APIST implements VertxRestGroupTemplate {
 
       private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean endpointsIsSet = new AtomicBoolean(false);
@@ -118,7 +120,7 @@ public final class VertxRestGroup {
    	}
    } 
 
-    public final class endMethodFixST {
+   public final class endMethodFixST implements VertxRestGroupTemplate {
 
       private final ST template;
 
@@ -132,7 +134,7 @@ public final class VertxRestGroup {
    	}
    } 
 
-    public final class validatingNeoHandlerST {
+   public final class validatingNeoHandlerST implements VertxRestGroupTemplate {
 
       private final AtomicBoolean actionIsSet = new AtomicBoolean(false);
       private final AtomicBoolean apiNameIsSet = new AtomicBoolean(false);

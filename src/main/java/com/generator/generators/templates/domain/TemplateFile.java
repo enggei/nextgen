@@ -1,8 +1,12 @@
 package com.generator.generators.templates.domain;
 
 import com.generator.domain.BaseEntity;
-import com.generator.generators.STGenerator;
 import com.generator.util.FileUtil;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STErrorListener;
+import org.stringtemplate.v4.STGroupFile;
+import org.stringtemplate.v4.misc.ErrorType;
+import org.stringtemplate.v4.misc.STMessage;
 
 import java.io.File;
 import java.util.*;
@@ -20,6 +24,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 	private File file;
 	private final Map<String, TemplateImport> imports = new TreeMap<>();
 	private final Map<String, TemplateStatement> statements = new TreeMap<>();
+	private String delimiter = "~";
 
 	public TemplateFile(File file) {
 		super(TEMPLATEFILE);
@@ -31,6 +36,14 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 		this.file = file;
 		this.imports.putAll(imports);
 		this.statements.putAll(statements);
+	}
+
+	public TemplateFile(UUID uuid, char delimiterStartChar, File file, Map<String, TemplateImport> imports, Map<String, TemplateStatement> statements) {
+		super(uuid, TEMPLATEFILE);
+		this.file = file;
+		this.imports.putAll(imports);
+		this.statements.putAll(statements);
+		this.delimiter = delimiterStartChar + "";
 	}
 
 	/**
@@ -111,7 +124,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 
 		//if (domainEntity.getDelimiter() != STGenerator.DEFAULT_DELIMITER)
 		// todo: hardcoded delimiter :
-		content.append("delimiters \"").append("~").append("\", \"").append("~").append("\"\n");
+		content.append("delimiters \"").append(delimiter).append("\", \"").append(delimiter).append("\"\n");
 
 		for (TemplateImport templateImport : getImports())
 			content.append("import \"").append(templateImport).append("\"\n");
@@ -139,7 +152,246 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 	}
 
 	public char getDelimiter() {
-		// todo: hardcoded delimiter (default)
-		return '~';
+		return delimiter.charAt(0);
+	}
+
+	public static final class STGenerator<T extends Statement> {
+
+		private static final DefaultAttributeRenderer defaultAttributeRenderer = new DefaultAttributeRenderer();
+
+		private final STGroupFile groupFile;
+		private final STErrorListener errorListener;
+
+		public STGenerator(STGroupFile groupFile) {
+			this.groupFile = groupFile;
+			this.errorListener = null;
+			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
+		}
+
+		public STGenerator(STGroupFile groupFile, STErrorListener errorListener) {
+			this.groupFile = groupFile;
+			this.groupFile.setListener(this.errorListener = errorListener);
+			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
+		}
+
+		public STGenerator(String groupFile) {
+			this(getTemplateGroup(groupFile));
+		}
+
+		public STGenerator(File templateFile) {
+			this(templateFile.getAbsolutePath());
+		}
+
+		public static STGroupFile getTemplateGroup(String template) {
+			final STGroupFile groupFile = new STGroupFile(template);
+			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
+			return groupFile;
+		}
+
+		public String generate(T statement) {
+			return render(statement);
+		}
+
+		private String render(Statement statement) {
+			final ST template = createSTFrom(statement);
+			return template == null ? "" : template.render();
+		}
+
+		private ST createSTFrom(Statement statement) {
+			return createSTFrom(statement, groupFile);
+		}
+
+		public ST createSTFrom(Statement statement, STGroupFile groupFile) {
+			final ST template = groupFile.getInstanceOf(statement.getStatementName());
+			if (template == null) {
+				final IllegalArgumentException cause = new IllegalArgumentException("template '" + statement.getStatementName() + "' is not found in " + groupFile.fileName);
+				if (errorListener != null) {
+					errorListener.IOError(new STMessage(ErrorType.INVALID_TEMPLATE_NAME, null, cause, statement.getStatementName()));
+					return null;
+				} else {
+					throw cause;
+				}
+			}
+			fill(template, statement.getProperties(), null, groupFile);
+			return template;
+		}
+
+		public void fill(ST template, List<Property> properties, String propertyName, STGroupFile groupFile) {
+
+			if (properties == null) return;
+			for (Property property : properties) {
+				try {
+					if (property instanceof StringProperty) {
+						template.add(property.getPropertyName() == null ? propertyName : property.getPropertyName(), ((StringProperty) property).getValue());
+					} else if (property instanceof BooleanProperty) {
+						final Boolean value = ((BooleanProperty) property).getValue();
+						if (value != null && value)
+							template.add(property.getPropertyName() == null ? propertyName : property.getPropertyName(), true);
+					} else if (property instanceof StatementProperty) {
+						template.add(property.getPropertyName() == null ? propertyName : property.getPropertyName(), createSTFrom(((StatementProperty) property).getStatement(), groupFile).render());
+					} else if (property instanceof ListProperty) {
+						fill(template, ((ListProperty) property).getElements(), property.getPropertyName(), groupFile);
+					} else if (property instanceof KeyValueListProperty) {
+						for (List<Property> kvProperty : ((KeyValueListProperty) property).getElements()) {
+							final KeyedValue aggregate = new KeyedValue(property.getPropertyName());
+							fill(aggregate, kvProperty, groupFile);
+							aggregate.addToTemplate(template);
+						}
+					}
+				} catch (Exception e) {
+					if (e.getMessage().contains("no such attribute:")) {
+						System.out.print(e.getMessage() + " in template '" + template.getName() + "'. ignoring\n");
+					} else
+						throw new IllegalArgumentException(" '" + template.getName() + "' : " + e.getMessage());
+				}
+			}
+		}
+
+		private void fill(KeyedValue aggregate, List<Property> properties, STGroupFile groupFile) {
+			for (Property property : properties) {
+				if (property instanceof StringProperty) {
+					aggregate.add(property.getPropertyName(), ((StringProperty) property).getValue());
+				} else if (property instanceof BooleanProperty) {
+					final Boolean value = ((BooleanProperty) property).getValue();
+					if (value != null && value)
+						aggregate.add(property.getPropertyName(), true);
+				} else if (property instanceof StatementProperty) {
+					aggregate.add(property.getPropertyName(), createSTFrom(((StatementProperty) property).getStatement(), groupFile).render());
+				} else {
+					System.out.println("ignoring " + aggregate.getName() + ".'" + property.getPropertyName() + "': cannot have a list of values in StringTemplate-output. Only one value can be assigned to a key in a key/value list in StringTemplate.");
+				}
+			}
+		}
+
+		public static final class KeyedValue {
+
+			private final String name;
+			private final List<Map<String, String>> values = new LinkedList<>();
+			private int index = 0;
+
+			public KeyedValue(String name) {
+				this.name = name;
+			}
+
+			public String getName() {
+				return name;
+			}
+
+			public void add(String key, Object value) {
+				if (value == null || value.toString().length() == 0) return;
+				if (values.size() < (index + 1)) values.add(new HashMap<>());
+				values.get(index).put(key, value.toString());
+			}
+
+			public void addToTemplate(ST template) {
+				for (Map<String, String> value : values) {
+					boolean first = true;
+					final StringBuilder keyName = new StringBuilder(name + ".{");
+
+					final List<String> keys = new ArrayList<>(value.keySet());
+					for (String key : keys) {
+						if (!first) keyName.append(",");
+						keyName.append(key);
+						first = false;
+					}
+					keyName.append("}");
+
+					final Object[] values = new Object[keys.size()];
+					for (int i = 0; i < keys.size(); i++)
+						values[i] = value.get(keys.get(i));
+					template.addAggr(keyName.toString(), values);
+				}
+			}
+		}
+
+		private static final class DefaultAttributeRenderer implements org.stringtemplate.v4.AttributeRenderer {
+
+			private enum FormatCode {
+				capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump
+			}
+
+			@Override
+			public String toString(Object o, String formatString, java.util.Locale locale) {
+
+				final String text = o.toString();
+
+				if (formatString == null) return text;
+
+				switch (FormatCode.valueOf(formatString)) {
+					case capitalize:
+						return capitalize(text);
+					case toUpper:
+						return toUpper(text);
+					case lowFirst:
+						return lowFirst(text);
+					case toLower:
+						return text.toLowerCase();
+					case humpToCap:
+						return humpToCap(text);
+					case camelHump:
+						return camelHump(text);
+					case splitCamelHump:
+						return splitCamelHump(text);
+					default:
+						return o.toString();
+				}
+			}
+
+			public String capitalize(String string) {
+				if (string == null || string.length() == 0) return "";
+				return Character.toUpperCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+			}
+
+			public String lowFirst(String string) {
+				if (string == null || string.length() == 0) return "";
+				return Character.toLowerCase(string.charAt(0)) + (string.length() > 1 ? string.substring(1) : "");
+			}
+
+			public String toUpper(String text) {
+				return text.toUpperCase();
+			}
+
+			public String humpToCap(String text) {
+				final char[] chars = text.toCharArray();
+				final StringBuilder out = new StringBuilder();
+				boolean first = true;
+				for (int i = 0; i < chars.length; i++) {
+					char aChar = chars[i];
+					if (!first && Character.isUpperCase(aChar) && (i < chars.length - 2 && Character.isLowerCase(chars[i + 1]))) {
+						out.append("_");
+					}
+					first = false;
+					out.append(Character.toUpperCase(aChar));
+				}
+				return out.toString();
+			}
+
+			public String camelHump(String text) {
+				final char[] chars = text.toCharArray();
+				final StringBuilder out = new StringBuilder();
+				boolean capitalize = true;
+				for (char aChar : chars) {
+					if (Character.isWhitespace(aChar)) {
+						capitalize = true;
+						continue;
+					}
+					out.append(capitalize ? Character.toUpperCase(aChar) : aChar);
+					capitalize = false;
+				}
+				return out.toString();
+			}
+
+			public String splitCamelHump(String text) {
+				final char[] chars = text.toCharArray();
+				final StringBuilder out = new StringBuilder();
+				boolean first = true;
+				for (char aChar : chars) {
+					if (Character.isUpperCase(aChar)) out.append(" ");
+					out.append(first ? Character.toUpperCase(aChar) : Character.toLowerCase(aChar));
+					first = false;
+				}
+				return out.toString();
+			}
+		}
 	}
 }

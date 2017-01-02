@@ -1,9 +1,9 @@
 package com.generator.generators.templates;
 
+import com.generator.generators.templateGroup.TemplateGroupGenerator;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
-import com.generator.generators.templatesNeo.TemplateNeoGenerator;
 
 import java.io.File;
 
@@ -12,48 +12,52 @@ import java.io.File;
  */
 public interface TemplateVisitor {
 
-	public static void visit(File groupTemplateFile, TemplateVisitor visitor) {
+	public static void visit(File groupTemplateFile, TemplateVisitor... visitors) {
 
-		visitor.onStartGroupTemplateFile(groupTemplateFile);
+		for (TemplateVisitor visitor : visitors) visitor.onStartGroupTemplateFile(groupTemplateFile);
 
 		for (TemplateStatement statement : new TemplateFileParser().parse(groupTemplateFile).getStatements()) {
 
-			visitor.onStartStatement(statement);
+			for (TemplateVisitor visitor : visitors) visitor.onStartStatement(statement);
 			for (TemplateParameter templateParameter : statement.getParameters()) {
 
-				visitor.onStartTemplateParameter(templateParameter, statement);
+				for (TemplateVisitor visitor : visitors) visitor.onStartTemplateParameter(templateParameter, statement);
 				switch (templateParameter.getDomainEntityType()) {
 					case KEYVALUELISTPROPERTY:
 
-						visitor.onKeyValueTemplateParameter(templateParameter, statement);
+						for (TemplateVisitor visitor : visitors)
+							visitor.onKeyValueTemplateParameter(templateParameter, statement);
 						break;
 					case STRINGPROPERTY:
 
-						visitor.onStringTemplateParameter(templateParameter, statement);
+						for (TemplateVisitor visitor : visitors)
+							visitor.onStringTemplateParameter(templateParameter, statement);
 						break;
 					case BOOLEANPROPERTY:
 
-						visitor.onBooleanTemplateParameter(templateParameter, statement);
+						for (TemplateVisitor visitor : visitors)
+							visitor.onBooleanTemplateParameter(templateParameter, statement);
 						break;
 					case STATEMENTPROPERTY:
 
-						visitor.onStatementTemplateParameter(templateParameter, statement);
+						for (TemplateVisitor visitor : visitors)
+							visitor.onStatementTemplateParameter(templateParameter, statement);
 						break;
 					case LISTPROPERTY:
 
-						visitor.onListTemplateParameter(templateParameter, statement);
+						for (TemplateVisitor visitor : visitors)
+							visitor.onListTemplateParameter(templateParameter, statement);
 						break;
 				}
 
-				visitor.onEndTemplateParameter(templateParameter, statement);
+				for (TemplateVisitor visitor : visitors) visitor.onEndTemplateParameter(templateParameter, statement);
 			}
 
-			visitor.onEndStatement(statement);
+			for (TemplateVisitor visitor : visitors) visitor.onEndStatement(statement);
 		}
 
-		visitor.onEndGroupTemplateFile(groupTemplateFile);
+		for (TemplateVisitor visitor : visitors) visitor.onEndGroupTemplateFile(groupTemplateFile);
 	}
-
 
 	void onStartGroupTemplateFile(File groupTemplateFile);
 
@@ -82,10 +86,10 @@ public interface TemplateVisitor {
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
 
 		// a dynamic visitor for use in generators (traverses a StringTemplate
-		final File groupTemplateFile = new File("/media/storage/nextgen/src/main/java/com/generator/generators/templatesNeo/templatesNeo.stg");
+		final File groupTemplateFile = new File("/media/storage/nextgen/src/main/java/com/generator/generators/templatesSwing/templatesSwing.stg");
 		final String root = "src/main/java/";
-		final String packageName = "com.generator.generators.templatesNeo";
+		final String packageName = "com.generator.generators.templatesSwing";
 
-		TemplateVisitor.visit(groupTemplateFile, new TemplateNeoGenerator(root, packageName));
+		TemplateVisitor.visit(groupTemplateFile, new TemplateGroupGenerator(root, packageName));
 	}
 }

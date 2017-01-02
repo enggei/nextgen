@@ -1,4 +1,4 @@
-/* uuid : 3a88fc43-3f89-4a9d-ab83-254f93e4ecfd */
+/* uuid : c476f4bc-d406-44cf-9e72-ca27a3cd643a */
 delimiters "~", "~"
 
 /**  **/
@@ -106,8 +106,8 @@ AttributeRendererDeclaration() ::= <<private enum FormatCode {
    } 
 >>
 
-/** domain,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
-GroupClassDeclaration(domain,name,packageName,statements) ::= <<package ~packageName~;
+/** domain,STRINGPROPERTY;groupString,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
+GroupClassDeclaration(domain,groupString,name,packageName,statements) ::= <<package ~packageName~;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -115,35 +115,34 @@ import org.stringtemplate.v4.STGroup;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on '~name~.stg' file<br/>
+ * Wraps STGroup-methods based on '~domain~.stg' file<br/>
  */
-public final class ~name~ {
-
+public final class ~name;format="capitalize"~ {
+   // old ~domain~
    private final STGroup stGroup;
    private final char delimiter;
 
-	public ~name~() {
-
+	public ~name;format="capitalize"~() {
 		final String generatorPath = System.getProperty("generator.path");
 
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "~domain;format="lowFirst"~" + java.io.File.separator + "~domain~.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(~name~.class.getResource("/com/generator/generators/~domain;format="lowFirst"~/~domain~.stg"), "UTF-8", '\~', '\~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
+        if (generatorPath != null) {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "~domain~" + java.io.File.separator + "~domain~.stg");
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        } else {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(~name;format="capitalize"~.class.getResource("/com/generator/generators/~domain~/~domain~.stg"), "UTF-8", '\~', '\~');
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        }
    }
 
-   public ~name~(STGroup stGroup) {
+   public ~name;format="capitalize"~(STGroup stGroup) {
       this.stGroup = stGroup;
       this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
       this.delimiter = stGroup.delimiterStartChar;
    }
 
-   public ~name~(java.io.File templateFile) {
+   public ~name;format="capitalize"~(java.io.File templateFile) {
    	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
 	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 	   this.delimiter = stGroup.delimiterStartChar;
@@ -158,7 +157,7 @@ public final class ~name~ {
    }
 
 	public interface ~name~Template {
-		
+
 	}
 
    ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
@@ -191,7 +190,7 @@ public final class ~name~ {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+}
 >>
 
 /** filename,STRINGPROPERTY;name,STRINGPROPERTY; **/
@@ -253,5 +252,5 @@ StatementStringPropertySetter(propertyName,statementName) ::= << public ~stateme
 >>
 
 /**  **/
-bugfix() ::= << > 
+bugfix() ::= <<> 
 >>

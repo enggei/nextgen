@@ -1,4 +1,4 @@
-/* uuid : e3e93e2e-8cd2-456e-b26c-8c554866e9ea */
+/* uuid : 07ef5df3-c897-469a-b47c-0a2990655c7a */
 delimiters "~", "~"
 
 /** comments,LISTPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,name,newInstance; **/
@@ -16,6 +16,7 @@ import static ~packageName~.~name~Neo.~name~Labels.*;
 /**
  * Wraps Neo4j methods based on '~name~.stg' file <br/>
  * ~comments:{it|~it~};separator="\n *"~
+ * todo: refactor to static methods (no need for node-encapsulation, just let clients get the NeoNodes, but static treatment of each node as a specific type
  */
 public final class ~name~Neo {
 
@@ -30,6 +31,10 @@ public final class ~name~Neo {
    public ~name~Neo(final GraphDatabaseService graph) {
  		this.graph = graph;
 	}
+
+   ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
+
+	~statements:{it|~it.declaration~};separator="\r\n\r\n"~
 
 	public interface ~name~NeoAction {
 
@@ -50,10 +55,6 @@ public final class ~name~Neo {
 		}
 	}
 
-   ~statements:{it|~it.newInstance~};separator="\r\n\r\n"~
-
-	~statements:{it|~it.declaration~};separator="\r\n\r\n"~
-
 	~defaultNodeTypes()~
 } 
 >>
@@ -65,11 +66,11 @@ bugfix2() ::= <<}
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,relationships,setter; **/
 declaration(groupName,name,properties) ::= <<public static final class ~name~Node {
 
-	private final GraphDatabaseService graph;
+	// ~groupName~
    private final Node node;
 	private final UUID uuid;
 
-~if(properties)~	private enum Parameters implements RelationshipType {
+~if(properties)~	public enum Parameters implements RelationshipType {
 		~properties:{it|~it.name~_param};separator=", "~
 	}
 
@@ -82,16 +83,15 @@ declaration(groupName,name,properties) ::= <<public static final class ~name~Nod
 
 ~endif~
 	private ~name~Node(final GraphDatabaseService graph) {
-		this.graph = graph;
 		this.node = graph.createNode(~groupName~_~name~);
-		this.node.setProperty("uuid", UUID.randomUUID().toString());
-		this.uuid = UUID.fromString(getString(node, "uuid"));
+		this.node.setProperty("_uuid", UUID.randomUUID().toString());
+		this.uuid = UUID.fromString(getString(node, "_uuid"));
 	}
 
-	private ~name~Node(final GraphDatabaseService graph, final Node node) {
-		this.graph = graph;
+	private ~name~Node(final Node node) {
+		// assuming node has label ~groupName~_~name~
 		this.node = node;
-		this.uuid = UUID.fromString(getString(node, "uuid"));
+		this.uuid = UUID.fromString(getString(node, "_uuid"));
 	}
 
 	public void delete() throws IllegalStateException {
@@ -127,6 +127,16 @@ declaration(groupName,name,properties) ::= <<public static final class ~name~Nod
 	}
 
    ~properties:{it|~it.setter~};separator="\n\n"~
+
+	public interface ~name~NodeVisitor<T> {
+
+		T visit(~name~Node node);	
+
+	}
+
+	public <T> T visit(~name~NodeVisitor<T> visitor) {
+		return visitor.visit(this);
+	}
 } 
 >>
 
@@ -140,14 +150,16 @@ public Node newStringNode(String value) {
 	if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
 	
 	final Node node = graph.createNode(StringNode);
-	node.setProperty("uuid", UUID.randomUUID().toString());
+	node.setProperty("_uuid", UUID.randomUUID().toString());
 	return newStringNode(node).setValue(value).node();
 }
 
 public static StringNode newStringNode(Node node) {
-	if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+
+	//if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+	if (node==null) return null;
 	
-	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	return new StringNode() {
 		@Override
@@ -203,6 +215,10 @@ public interface StringNode {
 } 
 >>
 
+/** name,STRINGPROPERTY; **/
+keyValueListInterfaceDecl(name) ::= <<void visit~name;format="capitalize"~(~name;format="capitalize"~KeyValue node); 
+>>
+
 /** kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
 keyValueListSetter(kvNames,propertyName,statementName) ::= <<public interface ~propertyName;format="capitalize"~KeyValue {
 
@@ -220,16 +236,16 @@ public ~statementName~Node add~propertyName;format="capitalize"~Value(~propertyN
    return this;
 }
 
-public ~propertyName;format="capitalize"~KeyValue new~propertyName;format="capitalize"~KeyValue() {
+public ~propertyName;format="capitalize"~KeyValue new~propertyName;format="capitalize"~KeyValue(GraphDatabaseService graph) {
 	final Node node = graph.createNode(KeyValueLabels.~propertyName;format="capitalize"~);
-	node.setProperty("uuid", UUID.randomUUID().toString());
+	node.setProperty("_uuid", UUID.randomUUID().toString());
 	return new~propertyName;format="capitalize"~KeyValue(node);
 }
 
 public static ~propertyName;format="capitalize"~KeyValue new~propertyName;format="capitalize"~KeyValue(Node node) {
 	if (node==null) throw new IllegalArgumentException("node for new~propertyName;format="capitalize"~KeyValue cannot be null");
 	
-	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	return new ~propertyName;format="capitalize"~KeyValue() {
 		
@@ -292,10 +308,20 @@ keyValueRelationships(name,types) ::= <<private enum ~name;format="capitalize"~R
 } 
 >>
 
+/** name,STRINGPROPERTY; **/
+keyValueVisitor(name) ::= <<for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.~name~_param)) 
+	visitor.visit~name;format="capitalize"~(new~name;format="capitalize"~KeyValue(other(node, relationship))); 
+>>
+
+/** name,STRINGPROPERTY; **/
+listInterfaceDecl(name) ::= <<void visit~name;format="capitalize"~(Node node); 
+>>
+
 /** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
 listSetter(propertyName,statementName) ::= <<// ~propertyName~
 public ~statementName~Node add~propertyName;format="capitalize"~Value(Node target) {
 	if (node == null) return this;
+	if (isAlreadyRelated(node, target, Parameters.~propertyName~_param)) return this;
 	node.createRelationshipTo(target, Parameters.~propertyName~_param);
    return this;
 }
@@ -303,7 +329,17 @@ public ~statementName~Node add~propertyName;format="capitalize"~Value(Node targe
 public void forEach~propertyName;format="capitalize"~(Consumer<Node> consumer) {
 	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.~propertyName~_param))
 		consumer.accept(other(node, relationship));
+}
+
+public void forEach~propertyName;format="capitalize"~Relation(Consumer<Relationship> consumer) {
+	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.~propertyName~_param))
+		consumer.accept(relationship);
 } 
+>>
+
+/** name,STRINGPROPERTY; **/
+listVisitor(name) ::= <<for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.~name~_param)) 
+	visitor.visit~name;format="capitalize"~(other(node, relationship)); 
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
@@ -311,28 +347,21 @@ newInstance(groupName,name) ::= <<public static boolean is~name;format="capitali
 	return node != null && node.hasLabel(~groupName~_~name~);
 }
 
+public static ~name~Node new~name;format="capitalize"~(Node node) {
+	return new ~name~Node(node);
+}
+
 public ~name~Node new~name;format="capitalize"~() {
 	return new ~name~Node(graph);
 }
 
-public ~name~Node new~name;format="capitalize"~(Node node) {
-	return new ~name~Node(graph, node);
-}
-
-public void forEach~name;format="capitalize"~Nodes(Consumer<~name~Node> consumer) {
-	graph.findNodes(~groupName~_~name~).
-		forEachRemaining(new Consumer<Node>() {
-			@Override
-			public void accept(Node node) {
-				consumer.accept(new ~name~Node(graph, node));
-			}
-		});
-}
-
-public void visit~name;format="capitalize"~Nodes(Consumer<Node> consumer) {
-	graph.findNodes(~groupName~_~name~).
-		forEachRemaining(consumer);
+public ResourceIterator<~name~Node> findAll~name;format="capitalize"~() { 
+	return graph.findNodes(~groupName~_~name~).map(~groupName~Neo::new~name;format="capitalize"~);
 } 
+>>
+
+/** name,STRINGPROPERTY; **/
+stringInterfaceDecl(name) ::= <<void visit~name;format="capitalize"~(Node node); 
 >>
 
 /** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
@@ -351,6 +380,11 @@ public Node get~propertyName;format="capitalize"~() {
 	return other(node, relationship);
 }
 
+public Relationship get~propertyName;format="capitalize"~Relation() {
+	if (!hasOutgoing(node, Parameters.~propertyName~_param)) return null;
+	return singleOutgoing(node, Parameters.~propertyName~_param);
+}
+
 public void remove~propertyName;format="capitalize"~() {
 	final Relationship outgoing = singleOutgoing(node, Parameters.~propertyName~_param);
 	if (outgoing == null) return;
@@ -358,4 +392,9 @@ public void remove~propertyName;format="capitalize"~() {
 	outgoing.delete();
 	tryToDeleteNode(other);
 } 
+>>
+
+/** name,STRINGPROPERTY; **/
+stringVisitor(name) ::= <<if (hasOutgoing(node, Parameters.~name~_param))
+	visitor.visit~name;format="capitalize"~(other(node, singleOutgoing(node, Parameters.~name~_param))); 
 >>

@@ -1,5 +1,6 @@
 package com.generator.generators.xml;
 
+import com.generator.editors.NeoModel;
 import com.generator.generators.xml.parser.XMLLexer;
 import com.generator.generators.xml.parser.XMLParser;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -78,9 +79,9 @@ public class XmlTests {
 	public void testXmlNeo() {
 
 		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File("src/test/tests/db"));
-		final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
+		final NeoModel model = new NeoModel(db);
 
-		model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {
+		model.doInTransaction(new NeoModel.Committer() {
 			@Override
 			public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
 			}

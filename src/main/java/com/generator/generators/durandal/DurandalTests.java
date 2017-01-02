@@ -1,5 +1,6 @@
 package com.generator.generators.durandal;
 
+import com.generator.editors.NeoModel;
 import com.generator.generators.html5.Html5Group;
 import com.generator.generators.javascript.JavascriptGroup;
 import com.generator.generators.json.JsonGroup;
@@ -222,9 +223,9 @@ public class DurandalTests {
 	public void testDurandalNeo() {
 
 		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
-		final com.generator.editors.domain.NeoModel model = new com.generator.editors.domain.NeoModel(db);
+		final NeoModel model = new NeoModel(db);
 
-		model.doInTransaction(new com.generator.editors.domain.NeoModel.Committer() {
+		model.doInTransaction(new NeoModel.Committer() {
 			@Override
 			public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
 			}

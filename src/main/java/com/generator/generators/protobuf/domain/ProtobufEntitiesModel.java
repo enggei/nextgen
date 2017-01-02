@@ -24,7 +24,7 @@ public class ProtobufEntitiesModel {
       this.graphDb = graphDb;
 
       try (Transaction tx = graphDb.beginTx()) {
-         this.uuids = graphDb.index().forNodes("uuid");
+         this.uuids = graphDb.index().forNodes("_uuid");
          tx.success();
       }
    }
@@ -64,7 +64,7 @@ public class ProtobufEntitiesModel {
 
    public ProtobufEnum getProtobufEnumNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufEnum.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufEnum.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufEnumNode result = (it.hasNext()) ? new ProtobufEnumNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -91,7 +91,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufEnumValue getProtobufEnumValueNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufEnumValue.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufEnumValue.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufEnumValueNode result = (it.hasNext()) ? new ProtobufEnumValueNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -117,7 +117,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufFieldConstraint getProtobufFieldConstraintNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufFieldConstraint.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufFieldConstraint.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufFieldConstraintNode result = (it.hasNext()) ? new ProtobufFieldConstraintNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -143,7 +143,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufFieldType getProtobufFieldTypeNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufFieldType.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufFieldType.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufFieldTypeNode result = (it.hasNext()) ? new ProtobufFieldTypeNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -169,7 +169,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufMessage getProtobufMessageNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufMessage.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufMessage.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufMessageNode result = (it.hasNext()) ? new ProtobufMessageNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -195,7 +195,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufMessageField getProtobufMessageFieldNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufMessageField.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufMessageField.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufMessageFieldNode result = (it.hasNext()) ? new ProtobufMessageFieldNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -221,7 +221,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufPackage getProtobufPackageNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufPackage.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufPackage.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufPackageNode result = (it.hasNext()) ? new ProtobufPackageNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -247,7 +247,7 @@ public class ProtobufEntitiesModel {
 
 //   public ProtobufPackageOption getProtobufPackageOptionNode(final UUID uuid) {
 //      try (Transaction tx = graphDb.beginTx()) {
-//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufPackageOption.name()), "uuid", uuid.toString()).iterator();
+//         final ResourceIterator<Node> it = graphDb.findNodesByLabelAndProperty(DynamicLabel.label(ProtobufEntities.ProtobufPackageOption.name()), "_uuid", uuid.toString()).iterator();
 //         final ProtobufPackageOptionNode result = (it.hasNext()) ? new ProtobufPackageOptionNode(it.next(), graphDb) : null;
 //         it.close();
 //         tx.success();
@@ -283,7 +283,7 @@ public class ProtobufEntitiesModel {
    protected Node newNode(final String domain, final UUID uuid, final String domainType) {
       try (Transaction tx = graphDb.beginTx()) {
          final Node newNode = graphDb.createNode(DynamicLabel.label(domain), DynamicLabel.label(domainType));
-         newNode.setProperty("uuid", uuid.toString());
+         newNode.setProperty("_uuid", uuid.toString());
          newNode.setProperty(domain, domainType);
          uuids.add(newNode, ProtobufEntities.class.getName(), uuid.toString());
          tx.success();

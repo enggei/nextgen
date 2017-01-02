@@ -1,17 +1,524 @@
-/* uuid : 413d652e-413a-4342-9a68-e70c4c053df0 */
+/* uuid : 5ceb66f0-d08f-40d1-a9e7-8d7f81c469cd */
 delimiters "~", "~"
 
-/** groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name,newAction; **/
-TemplatesSwing(groupName,packageName,statements) ::= <<package ~packageName~;
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
+CanvasActionStringProperty(groupName,name) ::= <<pop.add(new TransactionAction("Set ~name~", graph, canvas) {
+	@Override
+	public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+		final Node ~name~ = domainNode.get~name;format="capitalize"~();
+		final String defaultValue = ~groupName~Neo.isStringNode(~name~) ? ~groupName~Neo.newStringNode(~name~).getValue() : "";
+		final String value = SwingUtil.showInputDialog("~name~", canvas, defaultValue);
+		if(value==null || value.equals(defaultValue)) return;
+		domainNode.set~name;format="capitalize"~(~groupName~Neo.newStringNode(~name~).node());
+	}
+}); 
+>>
+
+/** groupName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,canvasActions; **/
+CanvasListener(groupName,statements) ::= <<public static abstract class ~groupName~CanvasListener extends ~groupName~NeoListener {
+
+	protected final ~groupName~Neo db;
+	
+	protected final PSwingCanvas canvas;
+	protected final PLayer nodeLayer;
+	protected final PLayer edgeLayer;
+	protected final Map<UUID, PNode> layerNodes = new LinkedHashMap<>();
+
+	protected final Set<UUID> selectedNodes = new LinkedHashSet<>();
+	protected final AtomicBoolean ctrlPressed = new AtomicBoolean(false);
+	
+	public ~groupName~CanvasListener(~groupName~Neo db, PSwingCanvas canvas) {
+		this.db = db;
+
+		this.canvas = canvas;
+		this.nodeLayer = canvas.getLayer();
+		this.edgeLayer = new PLayer();
+		this.canvas.getCamera().addLayer(0, edgeLayer);
+
+		// Key handling
+		final KeyListener keyAdapter = getKeyAdapter();
+		canvas.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				canvas.addKeyListener(keyAdapter);
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+				canvas.removeKeyListener(keyAdapter);
+			}
+		});
+	}
+
+	protected abstract KeyListener getKeyAdapter();
+
+	~statements:{it|~it.canvasActions~};separator="\n\n"~
+	
+	@Override
+	public void onException(String action, Throwable throwable) {
+		System.out.println("Could not " + action + " : " + throwable.getMessage());
+		throwable.printStackTrace();
+	}
+
+	protected abstract class ~groupName~CanvasInputEventListener extends PBasicInputEventHandler {
+		@Override
+		public void mousePressed(PInputEvent event) {
+
+			if (event.isRightMouseButton()) {
+				SwingUtilities.invokeLater(() -> {
+
+					canvas.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+					final JPopupMenu pop = new JPopupMenu();
+
+					db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+						@Override
+						public void doAction(Transaction tx) throws Throwable {
+							addActionsTo(pop);
+						}
+
+						@Override
+						public void exception(Throwable throwable) {
+							SwingUtil.showException(canvas, throwable);
+						}
+					});
+
+					final Point2D canvasPosition = event.getCanvasPosition();
+					pop.show(canvas, (int) canvasPosition.getX(), (int) canvasPosition.getY());
+
+					canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+				});
+
+			} else if (event.isLeftMouseButton()) {
+				
+				SwingUtilities.invokeLater(() -> db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+					@Override
+					public void doAction(Transaction tx) throws Throwable {
+						leftClick();
+					}
+
+					@Override
+					public void exception(Throwable throwable) {
+						SwingUtil.showException(canvas, throwable);
+					}
+				}));
+			}
+		}
+
+		protected abstract void leftClick();
+
+		protected abstract void addActionsTo(JPopupMenu pop);
+	}
+
+	private static void layoutCircle(Collection<PNode> pNodes, Point2D centerPoint, double radius) {
+
+		double currentArc = Math.PI;
+		double childRadians = (Math.PI * 2 / pNodes.size());
+
+		for (PNode pNode : pNodes) {
+			final double sin = Math.sin(currentArc + (childRadians / 2));
+			final double cos = Math.cos(currentArc + (childRadians / 2));
+			pNode.setOffset(new Point2D.Double(centerPoint.getX() + (radius * sin), centerPoint.getY() + (radius * cos)));
+			currentArc += childRadians;
+		}
+	}
+
+	private PNode addNodeToCanvas(UUID uuid, PNode instanceNode) {
+		final Point2D.Double canvasCenterPoint = new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d);
+		instanceNode.setOffset(canvasCenterPoint);
+		layerNodes.put(uuid, instanceNode);
+		nodeLayer.addChild(instanceNode);
+		return instanceNode;
+	}
+
+	private void addLink(PNode parent, PNode child) {
+	
+		final PPath link = PPath.createLine(parent.getX(), parent.getY(), child.getX(), child.getY());
+		link.setPickable(false);
+		edgeLayer.addChild(link);
+	
+		parent.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, arg0 -> updateLink(parent, child, link));
+		child.addPropertyChangeListener(PNode.PROPERTY_FULL_BOUNDS, arg0 -> updateLink(parent, child, link));
+
+		// todo: make the coordinates correct (this is not drawing them properly)
+		updateLink(parent, child, link);
+	}
+	
+	private void updateLink(PNode node1, PNode node2, PPath link) {
+		final Point2D p1 = node1.getFullBoundsReference().getCenter2D();
+		final Point2D p2 = node2.getFullBoundsReference().getCenter2D();
+		final Line2D line = new Line2D.Double(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		link.reset();
+		link.append(line, false);
+		link.closePath();
+	}
+} 
+>>
+
+/** name,STRINGPROPERTY; **/
+PNode(name) ::= <<private class ~name~ extends DomainNode {
+
+		final TemplateParameter parameter;
+		final Set<TemplateStatementNode> validInputs = new LinkedHashSet<>();
+
+		public ~name~(TemplateParameter parameter) {
+			super(parameter.getUuid(), new PText(parameter.getPropertyName()), canvas);
+			this.parameter = parameter;
+		}
+
+		@Override
+		public void expand() {
+
+		}
+
+		@Override
+		public void onSelect() {
+			pNode.setTextPaint(Color.RED);
+		}
+
+		@Override
+		public void onUnselect() {
+			pNode.setTextPaint(getTextPaint());
+		}
+
+		private Paint getTextPaint() {
+
+			switch (parameter.getDomainEntityType()) {
+				case STRINGPROPERTY:
+					return new Color(252, 141, 98);
+				case BOOLEANPROPERTY:
+					return new Color(141, 160, 203);
+				case ENUMPROPERTY:
+					return new Color(231, 138, 195);
+				case KEYVALUELISTPROPERTY:
+					return new Color(166, 216, 84);
+				case LISTPROPERTY:
+					return new Color(255, 217, 47);
+				case STATEMENTPROPERTY:
+					return new Color(229, 196, 148);
+			}
+
+			return null;
+		}
+
+		@Override
+		public void onStartHighlight() {
+			pNode.setTextPaint(Color.ORANGE);
+		}
+
+		@Override
+		public void onEndHighlight() {
+			pNode.setTextPaint(selected.get() ? Color.RED : (getTextPaint()));
+		}
+
+		@Override
+		public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+
+		}
+
+		@Override
+		public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+		}
+
+		public void addInput(TemplateStatementNode templateStatementNode) {
+			this.validInputs.add(templateStatementNode);
+			canvas.addRelationToCanvas(new TemplateParameterInput(this, templateStatementNode));
+		}
+	} 
+>>
+
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name; **/
+TemplateCanvas(groupName,name,packageName,statements) ::= <<package ~packageName~;
+
+import com.generator.editors.canvas.NeoEditor;
+import com.generator.editors.canvas.NeoPNode;
+import com.generator.editors.canvas.NeoPTextNode;
+import com.generator.editors.domain.NeoModel;
+import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PInputEvent;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.UUID;
+
+/**
+ * ~groupName~ canvas
+ */
+public class ~name~Canvas<T extends NeoPNode<? extends PNode~genericFix()~> extends NeoEditor<T> {
+
+	private ~name~Neo domainGraph;
+
+	@Override
+	public void setGraph(NeoModel graph) {
+		super.setGraph(graph);
+		this.domainGraph = new ~name~Neo(graph.getGraphDb());
+	}
+
+	@Override
+	public T newNode(Node node, String nodetype) {
+
+		if (nodetype == null) return super.newNode(node, nodetype);
+
+		switch (~name~Neo.~name~Labels.valueOf(nodetype)) {
+			~statements:{it|case ~name~_~it.name~: return (T) new ~it.name~Node(node, ~name~Canvas.this);};separator="\n"~
+		}
+
+		return super.newNode(node, nodetype);
+	}
+
+	@Override
+	protected void addToMenu(JPopupMenu pop, PInputEvent event) {
+
+		final JMenu showMenu = new JMenu("Show");
+~statements:{it|		
+		showMenu.add(showAllNodesByLabel(~name~Neo.~name~Labels.~name~_~it.name~));}~
+		addSubMenu(pop, showMenu);
+
+		final JMenu newMenu = new JMenu("New");
+~statements:{it|		
+		newMenu.add(new NeoEditor.TransactionAction("~it.name~", graph, canvas) {
+			@Override
+			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+				// todo: use ~name~Neo.new~it.name;format="capitalize"~ here:
+				centerAddAndSelect((T) new ~it.name~Node(graph.newNode(~name~Neo.~name~Labels.~name~_~it.name~.name(), UUID.randomUUID()), ~name~Canvas.this));
+			~bugfix()~
+		~bugfix()~);
+};separator="\n"~
+		addSubMenu(pop, newMenu);
+	}
+
+	~statements:{it|
+public class ~it.name~Node extends NeoPTextNode {
+
+	protected final ~name~Neo.~it.name~Node domainNode;
+
+	public ~it.name~Node(Node node, ~name~Canvas<T> editor) {
+		super(node, editor);
+		this.domainNode = ~name~Neo.new~it.name;format="capitalize"~(node);
+	~bugfix()~
+
+	public String render() {
+		return "~it.name~Node";
+		~bugfix()~
+
+	@Override
+	public void expand() {
+	~bugfix()~
+
+	@Override
+	public void updateView() {
+	~bugfix()~
+
+	@Override
+	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+		// todo add neo-methods (StringNode etc. to all properties
+
+	~bugfix()~
+
+	@Override
+	public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+		final JMenu newRelationshipMenu = new JMenu("Relate");
+		pop.add(newRelationshipMenu);
+	~bugfix()~
+~bugfix()~
+};separator="\n"~
+} 
+>>
+
+/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
+TemplateGroupActions(name,packageName) ::= <<package ~packageName~;
 
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+public class ~name~ {
+
+	public static Set<Action> onTemplateGroup(TemplatesNeo.TemplateGroupNode templateGroupNode, TemplatesNeo db, TemplateGroupNodeActionListener listener) {
+
+		return new LinkedHashSet<Action>() {{
+
+			add(new TransactionalAction("Set Name", db, listener) {
+				@Override
+				void action(ActionEvent event, Transaction tx) {
+
+					final String name = SwingUtil.showInputDialog("Name", listener.owner());
+					if (name == null) return;
+
+					final Node stringNode = db.newStringNode(name);
+					templateGroupNode.setName(stringNode);
+
+					listener.setName(templateGroupNode, stringNode);
+				}
+			});
+
+			add(new TransactionalAction("New Statement", db, listener) {
+				@Override
+				void action(ActionEvent event, Transaction tx) {
+					final TemplatesNeo.TemplateStatementNode templateStatementNode = db.newTemplateStatement();
+					templateGroupNode.addStatementsValue(templateStatementNode.node());
+					listener.addStatement(templateGroupNode, templateStatementNode);
+				}
+			});
+
+			add(new TransactionalAction("Delete", db, listener) {
+				@Override
+				void action(ActionEvent event, Transaction tx) {
+					System.out.println("todo");
+				}
+			});
+
+		}};
+	}
+
+	protected Set<Action> onTemplateStatement(TemplatesNeo.TemplateStatementNode statementNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+			add(new TransactionalAction("Delete", db, listener) {
+				@Override
+				void action(ActionEvent event, Transaction tx) {
+					System.out.println("todo");
+				}
+			});
+
+			add(new TransactionalAction("Delete", db, listener) {
+				@Override
+				void action(ActionEvent event, Transaction tx) {
+					System.out.println("todo");
+				}
+			});
+
+		}};
+	}
+
+
+	protected Set<Action> onStringTemplateParameter(TemplatesNeo.StringTemplateParameterNode stringTemplateParameterNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+		}};
+	}
+
+
+	protected Set<Action> onBooleanTemplateParameter(TemplatesNeo.BooleanTemplateParameterNode booleanTemplateParameterNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+		}};
+	}
+
+
+	protected Set<Action> onListTemplateParameter(TemplatesNeo.ListTemplateParameterNode listTemplateParameterNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+		}};
+	}
+
+
+	protected Set<Action> onKeyValueListTemplateParameter(TemplatesNeo.KeyValueListTemplateParameterNode keyValueListTemplateParameterNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+		}};
+	}
+
+
+	protected Set<Action> onStatementTemplateParameter(TemplatesNeo.StatementTemplateParameterNode statementTemplateParameterNode, TemplatesNeo db, ~name~Listener listener) {
+		return new LinkedHashSet<Action>() {{
+
+		}};
+	}
+
+	static abstract class TransactionalAction extends AbstractAction {
+
+		final TemplatesNeo db;
+		private final ~name~Listener listener;
+
+		private TransactionalAction(String name, TemplatesNeo db, ~name~Listener listener) {
+			super(name);
+			this.db = db;
+			this.listener = listener;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SwingUtilities.invokeLater(() -> db.doInTransaction(new TemplatesNeo.TemplatesNeoAction() {
+
+				public void doAction(Transaction tx) throws Throwable {
+					action(e, tx);
+				}
+
+
+				public void exception(Throwable throwable) {
+					SwingUtil.showExceptionNoStack(listener.owner(), throwable);
+				}
+			}));
+		}
+
+		abstract void action(ActionEvent event, Transaction tx);
+	}
+
+	abstract static class ~name~Listener {
+
+		private final Component owner;
+
+		protected ~name~Listener(Component owner) {
+			this.owner = owner;
+		}
+
+		public Component owner() {
+			return owner;
+		}
+	}
+
+	abstract static class TemplateGroupNodeActionListener extends ~name~Listener {
+
+		TemplateGroupNodeActionListener(Component owner) {
+			super(owner);
+		}
+
+		public abstract void setName(TemplatesNeo.TemplateGroupNode templateGroupNode, Node name);
+
+		public abstract void addImport(TemplatesNeo.TemplateGroupNode templateGroupNode, TemplatesNeo.TemplateImportNode templateImportNode);
+
+		public abstract void addStatement(TemplatesNeo.TemplateGroupNode templateGroupNode, TemplatesNeo.TemplateStatementNode templateStatementNode);
+
+	}
+} 
+>>
+
+/** canvasListener,STRINGPROPERTY;groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name,newAction; **/
+TemplatesSwing(canvasListener,groupName,packageName,statements) ::= <<package ~packageName~;
+
+import com.generator.util.FileUtil;
+import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.Transaction;
+import org.piccolo2d.PLayer;
+import org.piccolo2d.PNode;
+import org.piccolo2d.event.PBasicInputEventHandler;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.extras.pswing.PSwingCanvas;
+import org.piccolo2d.nodes.PPath;
+import org.piccolo2d.nodes.PText;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Swing methods for ~groupName~ (Swing UI for neo, group and vertx)
@@ -20,15 +527,22 @@ public class ~groupName~Swing {
 
 	private final ~groupName~Neo db;
 
-	public ~groupName~Swing(GraphDatabaseService db) {
-		this.db = new ~groupName~Neo(db);
+	public ~groupName~Swing(~groupName~Neo db) {
+		this.db = db;
 	}
 
-	public static abstract class ~groupName~NeoListener {
+	~canvasListener~
+
+	public static class ~groupName~NeoListener {
 
 ~statements:{it|
-		public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
+		public PNode new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
 			System.out.println("new~it.name;format="capitalize"~Node : " + node.getUuid());
+			return new PText("~it.name~");
+		~bugfix()~
+
+		public void all~it.name;format="capitalize"~(ResourceIterator<~groupName~Neo.~it.name~Node> nodes) {
+			while(nodes.hasNext()) System.out.println(nodes.next().getUuid());
 		~bugfix()~
 };separator="\n"~
 		public void onException(String action, Throwable throwable) {
@@ -41,24 +555,23 @@ public class ~groupName~Swing {
 		return new NewInstancesPanel(this, delegate);
 	}
 
-	~statements:{it|
-~it.newAction~
-	};separator="\n"~
+   ~statements:{it|~it.newAction~};separator="\n\n"~
 
 	private final class NewInstancesPanel extends SwingUtil.FormPanel {
 
 		public NewInstancesPanel(~groupName~Swing neoSwing, ~groupName~NeoListener delegate) {
-			super("150dlu, 4dlu, 150dlu:grow", "pref, 4dlu~statements:{it|, pref};separator=", 4dlu"~");
+			super("150dlu, 4dlu, 150dlu:grow, 4dlu, 150dlu:grow", "pref, 4dlu~statements:{it|, pref};separator=", 4dlu"~");
 
 			setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 			int row = 1;
-			this.addSeparator("New instances", 1, row, 3, 1);
+			this.addSeparator("New instances", 1, row, 5, 1);
 
 ~statements:{it|
 			row += 2;
-			this.addLabel("New ~it.name;format="capitalize"~", 1, row);
+			this.addLabel("~it.name;format="capitalize"~", 1, row);
 			this.add(newJButton(neoSwing.new~it.name;format="capitalize"~Action(delegate)), 3, row);
+			this.add(newJButton(neoSwing.all~it.name;format="capitalize"~Action(delegate)), 5, row);
 };separator="\n"~
 		}
 
@@ -71,17 +584,62 @@ public class ~groupName~Swing {
 	}
 
 	public static void main(String[] args) {
-		final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"));
-		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(db);
+		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(new ~groupName~Neo(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"))));
+		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener()));
+	}
+} 
+>>
 
-		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener() {
-~statements:{it|
-			@Override
-			public void new~it.name;format="capitalize"~(~groupName~Neo.~it.name~Node node) {
-				super.new~it.name;format="capitalize"~(node);
-			~bugfix()~
-};separator="\n"~
-		}));
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
+addListAction(groupName,name,statement) ::= <<new AbstractAction("Add ~name;format="capitalize"~") {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		SwingUtilities.invokeLater(() ->
+			db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+				@Override
+				public void doAction(Transaction tx) throws Throwable {
+
+					// ~statement~
+
+					SwingUtilities.invokeLater(() -> {
+
+						db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+							@Override
+							public void doAction(Transaction tx) throws Throwable {
+								//final ResourceIterator<~groupName~Neo.writeFileNode> allWriteFile = db.findAllWriteFile();
+								//while (allWriteFile.hasNext()) {
+									//final ~groupName~Neo.writeFileNode next = allWriteFile.next();
+									//node.addTasksValue(next.node());
+									//addLink(instanceNode, layerNodes.get(next.getUuid()));
+								//}
+							}
+
+							@Override
+							public void exception(Throwable throwable) {
+								SwingUtil.showException(canvas, throwable);
+							}
+						});
+
+						db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+							@Override
+							public void doAction(Transaction tx) throws Throwable {
+								//txtOutput.setText(node.visit(new~statement;format="capitalize"~NodeVisitor()).toString());
+								//txtOutput.setCaretPosition(0);
+							}
+
+							@Override
+							public void exception(Throwable throwable) {
+								SwingUtil.showException(canvas, throwable);
+							}
+						});
+					});
+				}
+
+				@Override
+				public void exception(Throwable throwable) {
+					SwingUtil.showException(canvas, throwable);
+				}
+			}));
 	}
 } 
 >>
@@ -106,6 +664,10 @@ addVerticleAction(name,packageName) ::= <<add(deployVerticleAction(vertx, txtRoo
 bugfix() ::= <<} 
 >>
 
+/**  **/
+genericFix() ::= <<> 
+>>
+
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
 newAction(groupName,name) ::= <<public Action new~name;format="capitalize"~Action(~groupName~NeoListener listener) {
 	return new AbstractAction("new ~name;format="capitalize"~") {
@@ -126,7 +688,141 @@ newAction(groupName,name) ::= <<public Action new~name;format="capitalize"~Actio
 			});
 		}
 	};
+}
+
+public Action all~name;format="capitalize"~Action(~groupName~NeoListener listener) {
+	return new AbstractAction("all ~name;format="capitalize"~") {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SwingUtilities.invokeLater(() -> {
+				db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+					@Override
+					public void doAction(Transaction tx) throws Throwable {
+						listener.all~name;format="capitalize"~(db.findAll~name;format="capitalize"~());
+					}
+
+					@Override
+					public void exception(Throwable throwable) {
+						listener.onException("new~name~", throwable);
+					}
+				});
+			});
+		}
+	};
 } 
+>>
+
+/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
+setStringAction(groupName,name,statement) ::= <<new AbstractAction("Set ~name;format="capitalize"~") {
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		final String value = SwingUtil.showInputDialog("~name;format="capitalize"~", canvas);
+		if (value == null) return;
+
+		SwingUtilities.invokeLater(() ->
+			db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+				@Override
+				public void doAction(Transaction tx) throws Throwable {
+					node.set~name;format="capitalize"~(db.newStringNode(value)).
+						visit(new~statement;format="capitalize"~NodeVisitor());
+				}
+
+				@Override
+				public void exception(Throwable throwable) {
+					SwingUtil.showException(canvas, throwable);
+				}
+			}));
+	}
+} 
+>>
+
+/** actions,LISTPROPERTY;groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
+statementActions(actions,groupName,name) ::= <<@Override
+public PNode new~name;format="capitalize"~(~groupName~Neo.~name~Node node){
+
+	if (layerNodes.containsKey(node.getUuid())) return layerNodes.get(node.getUuid());
+
+	final UUID uuid = node.getUuid();
+
+	final PNode instanceNode = new PText("~name~");
+	instanceNode.addInputEventListener(new ~groupName ~CanvasInputEventListener() {
+
+		@Override
+		protected void leftClick() {
+			instanceNode.invalidatePaint();
+
+			node.visit(new~name;format="capitalize"~NodeVisitor());
+
+			if (!ctrlPressed.get())
+				selectedNodes.clear();
+			selectedNodes.add(uuid);
+		}
+
+		@Override
+		protected void addActionsTo(JPopupMenu pop) {
+
+			pop.add(new AbstractAction("Write to File") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					SwingUtilities.invokeLater(() ->
+						db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+							@Override
+							public void doAction(Transaction tx) throws Throwable {
+								if (!node.node().hasProperty("file")) {
+									final File file = SwingUtil.showSaveFile(canvas, node.node().hasProperty("file") ? (new File(node.node().getProperty("file").toString()).getParent()) : System.getProperty("user.home"));
+										if (file == null) return;
+										node.node().setProperty("file", file.getAbsolutePath());
+								}
+
+								FileUtil.write(node.visit(new~name;format="capitalize"~NodeVisitor()), new File(node.node().getProperty("file").toString()));
+							}
+	
+							@Override
+							public void exception(Throwable throwable) {
+								SwingUtil.showException(canvas, throwable);
+							}
+						}));
+				}
+			});
+	
+			pop.add(new AbstractAction("Set File") {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					SwingUtilities.invokeLater(() ->
+						db.doInTransaction(new ~groupName~Neo.~groupName~NeoAction() {
+							@Override
+							public void doAction(Transaction tx) throws Throwable {
+	
+								final File file = SwingUtil.showSaveFile(canvas, node.node().hasProperty("file") ? (new File(node.node().getProperty("file").toString()).getParent()) : System.getProperty("user.home"));
+								if (file == null) return;
+	
+								node.node().setProperty("file", file.getAbsolutePath());
+							}
+	
+							@Override
+							public void exception(Throwable throwable) {
+								SwingUtil.showException(canvas, throwable);
+							}
+						}));
+				}
+			});
+
+			~actions:{it|pop.add(~it~);};separator="\n"~
+		}
+	});
+
+	return addNodeToCanvas(uuid, instanceNode);
+}
+
+@Override
+public void all~name;format="capitalize"~(ResourceIterator<~groupName~Neo.~name~Node> nodes){
+	final Collection<PNode> pNodes = new ArrayList<>();
+	while (nodes.hasNext()) pNodes.add(new~name;format="capitalize"~(nodes.next()));
+	layoutCircle(pNodes, new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d), 100);
+}
+
+protected abstract ~groupName ~Neo.~name~Node.~name~NodeVisitor new~name;format="capitalize"~NodeVisitor(); 
 >>
 
 /** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/

@@ -5,12 +5,13 @@ import org.neo4j.graphdb.*;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.generators.protobuf.ProtobufNeo.ProtobufLabels.*;
 
 /**
  * Wraps Neo4j methods based on 'Protobuf.stg' file <br/>
  * 
+ * todo: refactor to static methods (no need for node-encapsulation, just let clients get the NeoNodes, but static treatment of each node as a specific type
  */
 public final class ProtobufNeo {
 
@@ -32,217 +33,107 @@ public final class ProtobufNeo {
  		this.graph = graph;
 	}
 
-	public interface ProtobufNeoAction {
-
-		void doAction(Transaction tx) throws Throwable;
-
-		void exception(Throwable throwable);
-	}
-
-	public void doInTransaction(ProtobufNeoAction committer) {
-		try (Transaction tx = graph.beginTx()) {
-			try {
-				committer.doAction(tx);
-				tx.success();
-			} catch (Throwable throwable) {
-				committer.exception(throwable);
-				tx.failure();
-			}
-		}
-	}
-
    public static boolean isEnum(Node node) {
    	return node != null && node.hasLabel(Protobuf_enum);
+   }
+
+   public static enumNode newEnum(Node node) {
+   	return new enumNode(node);
    }
 
    public enumNode newEnum() {
    	return new enumNode(graph);
    }
 
-   public enumNode newEnum(Node node) {
-   	return new enumNode(graph, node);
-   }
-
-   public void forEachEnumNodes(Consumer<enumNode> consumer) {
-   	graph.findNodes(Protobuf_enum).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new enumNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitEnumNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_enum).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllEnum() { return graph.findNodes(Protobuf_enum); } 
 
    public static boolean isExtend(Node node) {
    	return node != null && node.hasLabel(Protobuf_extend);
+   }
+
+   public static extendNode newExtend(Node node) {
+   	return new extendNode(node);
    }
 
    public extendNode newExtend() {
    	return new extendNode(graph);
    }
 
-   public extendNode newExtend(Node node) {
-   	return new extendNode(graph, node);
-   }
-
-   public void forEachExtendNodes(Consumer<extendNode> consumer) {
-   	graph.findNodes(Protobuf_extend).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new extendNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitExtendNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_extend).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllExtend() { return graph.findNodes(Protobuf_extend); } 
 
    public static boolean isExtensions(Node node) {
    	return node != null && node.hasLabel(Protobuf_extensions);
+   }
+
+   public static extensionsNode newExtensions(Node node) {
+   	return new extensionsNode(node);
    }
 
    public extensionsNode newExtensions() {
    	return new extensionsNode(graph);
    }
 
-   public extensionsNode newExtensions(Node node) {
-   	return new extensionsNode(graph, node);
-   }
-
-   public void forEachExtensionsNodes(Consumer<extensionsNode> consumer) {
-   	graph.findNodes(Protobuf_extensions).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new extensionsNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitExtensionsNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_extensions).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllExtensions() { return graph.findNodes(Protobuf_extensions); } 
 
    public static boolean isGroupMessagesModel(Node node) {
    	return node != null && node.hasLabel(Protobuf_groupMessagesModel);
+   }
+
+   public static groupMessagesModelNode newGroupMessagesModel(Node node) {
+   	return new groupMessagesModelNode(node);
    }
 
    public groupMessagesModelNode newGroupMessagesModel() {
    	return new groupMessagesModelNode(graph);
    }
 
-   public groupMessagesModelNode newGroupMessagesModel(Node node) {
-   	return new groupMessagesModelNode(graph, node);
-   }
-
-   public void forEachGroupMessagesModelNodes(Consumer<groupMessagesModelNode> consumer) {
-   	graph.findNodes(Protobuf_groupMessagesModel).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new groupMessagesModelNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitGroupMessagesModelNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_groupMessagesModel).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllGroupMessagesModel() { return graph.findNodes(Protobuf_groupMessagesModel); } 
 
    public static boolean isMessage(Node node) {
    	return node != null && node.hasLabel(Protobuf_message);
+   }
+
+   public static messageNode newMessage(Node node) {
+   	return new messageNode(node);
    }
 
    public messageNode newMessage() {
    	return new messageNode(graph);
    }
 
-   public messageNode newMessage(Node node) {
-   	return new messageNode(graph, node);
-   }
-
-   public void forEachMessageNodes(Consumer<messageNode> consumer) {
-   	graph.findNodes(Protobuf_message).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new messageNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitMessageNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_message).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllMessage() { return graph.findNodes(Protobuf_message); } 
 
    public static boolean isMessageField(Node node) {
    	return node != null && node.hasLabel(Protobuf_messageField);
+   }
+
+   public static messageFieldNode newMessageField(Node node) {
+   	return new messageFieldNode(node);
    }
 
    public messageFieldNode newMessageField() {
    	return new messageFieldNode(graph);
    }
 
-   public messageFieldNode newMessageField(Node node) {
-   	return new messageFieldNode(graph, node);
-   }
-
-   public void forEachMessageFieldNodes(Consumer<messageFieldNode> consumer) {
-   	graph.findNodes(Protobuf_messageField).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new messageFieldNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitMessageFieldNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_messageField).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllMessageField() { return graph.findNodes(Protobuf_messageField); } 
 
    public static boolean isProtobufPackage(Node node) {
    	return node != null && node.hasLabel(Protobuf_protobufPackage);
+   }
+
+   public static protobufPackageNode newProtobufPackage(Node node) {
+   	return new protobufPackageNode(node);
    }
 
    public protobufPackageNode newProtobufPackage() {
    	return new protobufPackageNode(graph);
    }
 
-   public protobufPackageNode newProtobufPackage(Node node) {
-   	return new protobufPackageNode(graph, node);
-   }
-
-   public void forEachProtobufPackageNodes(Consumer<protobufPackageNode> consumer) {
-   	graph.findNodes(Protobuf_protobufPackage).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new protobufPackageNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitProtobufPackageNodes(Consumer<Node> consumer) {
-   	graph.findNodes(Protobuf_protobufPackage).
-   		forEachRemaining(consumer);
-   } 
+   public ResourceIterator<Node> findAllProtobufPackage() { return graph.findNodes(Protobuf_protobufPackage); } 
 
 	public static final class enumNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -255,16 +146,15 @@ public final class ProtobufNeo {
 		}
 
 		private enumNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_enum);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private enumNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private enumNode(final Node node) {
+			// assuming node has label Protobuf_enum
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -348,6 +238,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public enumNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -356,11 +247,38 @@ public final class ProtobufNeo {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
 	   		consumer.accept(other(node, relationship));
 	   } 
+
+		public interface enumNodeVisitor<T> {
+
+			void visitComments(Node node); 
+
+			void visitName(Node node); 
+
+			void visitProperties(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(enumNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.comments_param))
+				visitor.visitComments(other(node, singleOutgoing(node, Parameters.comments_param))); 
+
+			if (hasOutgoing(node, Parameters.name_param))
+				visitor.visitName(other(node, singleOutgoing(node, Parameters.name_param))); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param)) 
+				visitor.visitProperties(other(node, relationship)); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class extendNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -373,16 +291,15 @@ public final class ProtobufNeo {
 		}
 
 		private extendNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_extend);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private extendNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private extendNode(final Node node) {
+			// assuming node has label Protobuf_extend
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -466,6 +383,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public extendNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -474,11 +392,38 @@ public final class ProtobufNeo {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
 	   		consumer.accept(other(node, relationship));
 	   } 
+
+		public interface extendNodeVisitor<T> {
+
+			void visitComments(Node node); 
+
+			void visitName(Node node); 
+
+			void visitProperties(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(extendNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.comments_param))
+				visitor.visitComments(other(node, singleOutgoing(node, Parameters.comments_param))); 
+
+			if (hasOutgoing(node, Parameters.name_param))
+				visitor.visitName(other(node, singleOutgoing(node, Parameters.name_param))); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param)) 
+				visitor.visitProperties(other(node, relationship)); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class extensionsNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -491,16 +436,15 @@ public final class ProtobufNeo {
 		}
 
 		private extensionsNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_extensions);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private extensionsNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private extensionsNode(final Node node) {
+			// assuming node has label Protobuf_extensions
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -580,11 +524,33 @@ public final class ProtobufNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface extensionsNodeVisitor<T> {
+
+			void visitMax(Node node); 
+
+			void visitMin(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(extensionsNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.max_param))
+				visitor.visitMax(other(node, singleOutgoing(node, Parameters.max_param))); 
+
+			if (hasOutgoing(node, Parameters.min_param))
+				visitor.visitMin(other(node, singleOutgoing(node, Parameters.min_param))); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class groupMessagesModelNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -601,16 +567,15 @@ public final class ProtobufNeo {
 		}
 
 		private groupMessagesModelNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_groupMessagesModel);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private groupMessagesModelNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private groupMessagesModelNode(final Node node) {
+			// assuming node has label Protobuf_groupMessagesModel
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -684,16 +649,16 @@ public final class ProtobufNeo {
 	      return this;
 	   }
 
-	   public MessagesKeyValue newMessagesKeyValue() {
+	   public MessagesKeyValue newMessagesKeyValue(GraphDatabaseService graph) {
 	   	final Node node = graph.createNode(KeyValueLabels.Messages);
-	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	node.setProperty("_uuid", UUID.randomUUID().toString());
 	   	return newMessagesKeyValue(node);
 	   }
 
 	   public static MessagesKeyValue newMessagesKeyValue(Node node) {
 	   	if (node==null) throw new IllegalArgumentException("node for newMessagesKeyValue cannot be null");
 
-	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	   	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	   	return new MessagesKeyValue() {
 
@@ -771,11 +736,38 @@ public final class ProtobufNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface groupMessagesModelNodeVisitor<T> {
+
+			void visitGroupName(Node node); 
+
+			void visitMessages(MessagesKeyValue node); 
+
+			void visitPackageName(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(groupMessagesModelNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.groupName_param))
+				visitor.visitGroupName(other(node, singleOutgoing(node, Parameters.groupName_param))); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.messages_param)) 
+				visitor.visitMessages(newMessagesKeyValue(other(node, relationship))); 
+
+			if (hasOutgoing(node, Parameters.packageName_param))
+				visitor.visitPackageName(other(node, singleOutgoing(node, Parameters.packageName_param))); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class messageNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -788,16 +780,15 @@ public final class ProtobufNeo {
 		}
 
 		private messageNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_message);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private messageNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private messageNode(final Node node) {
+			// assuming node has label Protobuf_message
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -881,6 +872,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public messageNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -889,11 +881,38 @@ public final class ProtobufNeo {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param))
 	   		consumer.accept(other(node, relationship));
 	   } 
+
+		public interface messageNodeVisitor<T> {
+
+			void visitComments(Node node); 
+
+			void visitName(Node node); 
+
+			void visitProperties(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(messageNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.comments_param))
+				visitor.visitComments(other(node, singleOutgoing(node, Parameters.comments_param))); 
+
+			if (hasOutgoing(node, Parameters.name_param))
+				visitor.visitName(other(node, singleOutgoing(node, Parameters.name_param))); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.properties_param)) 
+				visitor.visitProperties(other(node, relationship)); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class messageFieldNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -906,16 +925,15 @@ public final class ProtobufNeo {
 		}
 
 		private messageFieldNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_messageField);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private messageFieldNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private messageFieldNode(final Node node) {
+			// assuming node has label Protobuf_messageField
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1110,11 +1128,58 @@ public final class ProtobufNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface messageFieldNodeVisitor<T> {
+
+			void visitComments(Node node); 
+
+			void visitDefaultValue(Node node); 
+
+			void visitFieldConstraint(Node node); 
+
+			void visitName(Node node); 
+
+			void visitOrdinal(Node node); 
+
+			void visitPackedValue(Node node); 
+
+			void visitType(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(messageFieldNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			if (hasOutgoing(node, Parameters.comments_param))
+				visitor.visitComments(other(node, singleOutgoing(node, Parameters.comments_param))); 
+
+			if (hasOutgoing(node, Parameters.defaultValue_param))
+				visitor.visitDefaultValue(other(node, singleOutgoing(node, Parameters.defaultValue_param))); 
+
+			if (hasOutgoing(node, Parameters.fieldConstraint_param))
+				visitor.visitFieldConstraint(other(node, singleOutgoing(node, Parameters.fieldConstraint_param))); 
+
+			if (hasOutgoing(node, Parameters.name_param))
+				visitor.visitName(other(node, singleOutgoing(node, Parameters.name_param))); 
+
+			if (hasOutgoing(node, Parameters.ordinal_param))
+				visitor.visitOrdinal(other(node, singleOutgoing(node, Parameters.ordinal_param))); 
+
+			if (hasOutgoing(node, Parameters.packedValue_param))
+				visitor.visitPackedValue(other(node, singleOutgoing(node, Parameters.packedValue_param))); 
+
+			if (hasOutgoing(node, Parameters.type_param))
+				visitor.visitType(other(node, singleOutgoing(node, Parameters.type_param))); 
+
+			return visitor.done();
+		}
 	} 
 
 	public static final class protobufPackageNode {
 
-		private final GraphDatabaseService graph;
+		// Protobuf
 	   private final Node node;
 		private final UUID uuid;
 
@@ -1131,16 +1196,15 @@ public final class ProtobufNeo {
 		}
 
 		private protobufPackageNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(Protobuf_protobufPackage);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private protobufPackageNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private protobufPackageNode(final Node node) {
+			// assuming node has label Protobuf_protobufPackage
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1178,6 +1242,7 @@ public final class ProtobufNeo {
 	   // deliverables
 	   public protobufPackageNode addDeliverablesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.deliverables_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.deliverables_param);
 	      return this;
 	   }
@@ -1190,6 +1255,7 @@ public final class ProtobufNeo {
 	   // imports
 	   public protobufPackageNode addImportsValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.imports_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.imports_param);
 	      return this;
 	   }
@@ -1219,16 +1285,16 @@ public final class ProtobufNeo {
 	      return this;
 	   }
 
-	   public OptionsKeyValue newOptionsKeyValue() {
+	   public OptionsKeyValue newOptionsKeyValue(GraphDatabaseService graph) {
 	   	final Node node = graph.createNode(KeyValueLabels.Options);
-	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	node.setProperty("_uuid", UUID.randomUUID().toString());
 	   	return newOptionsKeyValue(node);
 	   }
 
 	   public static OptionsKeyValue newOptionsKeyValue(Node node) {
 	   	if (node==null) throw new IllegalArgumentException("node for newOptionsKeyValue cannot be null");
 
-	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	   	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	   	return new OptionsKeyValue() {
 
@@ -1327,7 +1393,58 @@ public final class ProtobufNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface protobufPackageNodeVisitor<T> {
+
+			void visitDeliverables(Node node); 
+
+			void visitImports(Node node); 
+
+			void visitOptions(OptionsKeyValue node); 
+
+			void visitPackage(Node node); 	
+
+			T done();	
+		}
+
+		public <T> T visit(protobufPackageNodeVisitor<T> visitor) {
+
+			// consider adding relationship as parameter, to query the node ?
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.deliverables_param)) 
+				visitor.visitDeliverables(other(node, relationship)); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.imports_param)) 
+				visitor.visitImports(other(node, relationship)); 
+
+			for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.options_param)) 
+				visitor.visitOptions(newOptionsKeyValue(other(node, relationship))); 
+
+			if (hasOutgoing(node, Parameters.package_param))
+				visitor.visitPackage(other(node, singleOutgoing(node, Parameters.package_param))); 
+
+			return visitor.done();
+		}
 	} 
+
+	public interface ProtobufNeoAction {
+
+		void doAction(Transaction tx) throws Throwable;
+
+		void exception(Throwable throwable);
+	}
+
+	public void doInTransaction(ProtobufNeoAction committer) {
+		try (Transaction tx = graph.beginTx()) {
+			try {
+				committer.doAction(tx);
+				tx.success();
+			} catch (Throwable throwable) {
+				committer.exception(throwable);
+				tx.failure();
+			}
+		}
+	}
 
 	public static boolean isStringNode(Node node) {
 		return node != null && node.hasLabel(StringNode);
@@ -1338,14 +1455,14 @@ public final class ProtobufNeo {
 		if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
 
 		final Node node = graph.createNode(StringNode);
-		node.setProperty("uuid", UUID.randomUUID().toString());
+		node.setProperty("_uuid", UUID.randomUUID().toString());
 		return newStringNode(node).setValue(value).node();
 	}
 
 	public static StringNode newStringNode(Node node) {
 		if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
 
-		final UUID uuid = UUID.fromString(getString(node, "uuid"));
+		final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 		return new StringNode() {
 			@Override

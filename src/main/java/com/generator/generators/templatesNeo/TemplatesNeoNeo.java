@@ -5,12 +5,13 @@ import org.neo4j.graphdb.*;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.generator.editors.domain.BaseDomainVisitor.*;
+import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.generators.templatesNeo.TemplatesNeoNeo.TemplatesNeoLabels.*;
 
 /**
  * Wraps Neo4j methods based on 'TemplatesNeo.stg' file <br/>
  * 
+ * todo: refactor to static methods (no need for node-encapsulation, just let clients get the NeoNodes, but static treatment of each node as a specific type
  */
 public final class TemplatesNeoNeo {
 
@@ -22,11 +23,17 @@ public final class TemplatesNeoNeo {
 		TemplatesNeo_bugfix2,
 		TemplatesNeo_declaration,
 		TemplatesNeo_defaultNodeTypes,
+		TemplatesNeo_keyValueListInterfaceDecl,
 		TemplatesNeo_keyValueListSetter,
 		TemplatesNeo_keyValueRelationships,
+		TemplatesNeo_keyValueVisitor,
+		TemplatesNeo_listInterfaceDecl,
 		TemplatesNeo_listSetter,
+		TemplatesNeo_listVisitor,
 		TemplatesNeo_newInstance,
-		TemplatesNeo_stringSetter, 
+		TemplatesNeo_stringInterfaceDecl,
+		TemplatesNeo_stringSetter,
+		TemplatesNeo_stringVisitor, 
 		StringNode
 	}
 
@@ -34,275 +41,253 @@ public final class TemplatesNeoNeo {
  		this.graph = graph;
 	}
 
-	public interface TemplatesNeoNeoAction {
-
-		void doAction(Transaction tx) throws Throwable;
-
-		void exception(Throwable throwable);
-	}
-
-	public void doInTransaction(TemplatesNeoNeoAction committer) {
-		try (Transaction tx = graph.beginTx()) {
-			try {
-				committer.doAction(tx);
-				tx.success();
-			} catch (Throwable throwable) {
-				committer.exception(throwable);
-				tx.failure();
-			}
-		}
-	}
-
    public static boolean isNeoGroupClassDeclaration(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_NeoGroupClassDeclaration);
+   }
+
+   public static NeoGroupClassDeclarationNode newNeoGroupClassDeclaration(Node node) {
+   	return new NeoGroupClassDeclarationNode(node);
    }
 
    public NeoGroupClassDeclarationNode newNeoGroupClassDeclaration() {
    	return new NeoGroupClassDeclarationNode(graph);
    }
 
-   public NeoGroupClassDeclarationNode newNeoGroupClassDeclaration(Node node) {
-   	return new NeoGroupClassDeclarationNode(graph, node);
-   }
-
-   public void forEachNeoGroupClassDeclarationNodes(Consumer<NeoGroupClassDeclarationNode> consumer) {
-   	graph.findNodes(TemplatesNeo_NeoGroupClassDeclaration).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new NeoGroupClassDeclarationNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitNeoGroupClassDeclarationNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_NeoGroupClassDeclaration).
-   		forEachRemaining(consumer);
+   public ResourceIterator<NeoGroupClassDeclarationNode> findAllNeoGroupClassDeclaration() { 
+   	return graph.findNodes(TemplatesNeo_NeoGroupClassDeclaration).map(TemplatesNeoNeo::newNeoGroupClassDeclaration);
    } 
 
    public static boolean isBugfix2(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_bugfix2);
    }
 
+   public static bugfix2Node newBugfix2(Node node) {
+   	return new bugfix2Node(node);
+   }
+
    public bugfix2Node newBugfix2() {
    	return new bugfix2Node(graph);
    }
 
-   public bugfix2Node newBugfix2(Node node) {
-   	return new bugfix2Node(graph, node);
-   }
-
-   public void forEachBugfix2Nodes(Consumer<bugfix2Node> consumer) {
-   	graph.findNodes(TemplatesNeo_bugfix2).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new bugfix2Node(graph, node));
-   			}
-   		});
-   }
-
-   public void visitBugfix2Nodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_bugfix2).
-   		forEachRemaining(consumer);
+   public ResourceIterator<bugfix2Node> findAllBugfix2() { 
+   	return graph.findNodes(TemplatesNeo_bugfix2).map(TemplatesNeoNeo::newBugfix2);
    } 
 
    public static boolean isDeclaration(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_declaration);
    }
 
+   public static declarationNode newDeclaration(Node node) {
+   	return new declarationNode(node);
+   }
+
    public declarationNode newDeclaration() {
    	return new declarationNode(graph);
    }
 
-   public declarationNode newDeclaration(Node node) {
-   	return new declarationNode(graph, node);
-   }
-
-   public void forEachDeclarationNodes(Consumer<declarationNode> consumer) {
-   	graph.findNodes(TemplatesNeo_declaration).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new declarationNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitDeclarationNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_declaration).
-   		forEachRemaining(consumer);
+   public ResourceIterator<declarationNode> findAllDeclaration() { 
+   	return graph.findNodes(TemplatesNeo_declaration).map(TemplatesNeoNeo::newDeclaration);
    } 
 
    public static boolean isDefaultNodeTypes(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_defaultNodeTypes);
    }
 
+   public static defaultNodeTypesNode newDefaultNodeTypes(Node node) {
+   	return new defaultNodeTypesNode(node);
+   }
+
    public defaultNodeTypesNode newDefaultNodeTypes() {
    	return new defaultNodeTypesNode(graph);
    }
 
-   public defaultNodeTypesNode newDefaultNodeTypes(Node node) {
-   	return new defaultNodeTypesNode(graph, node);
+   public ResourceIterator<defaultNodeTypesNode> findAllDefaultNodeTypes() { 
+   	return graph.findNodes(TemplatesNeo_defaultNodeTypes).map(TemplatesNeoNeo::newDefaultNodeTypes);
+   } 
+
+   public static boolean isKeyValueListInterfaceDecl(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_keyValueListInterfaceDecl);
    }
 
-   public void forEachDefaultNodeTypesNodes(Consumer<defaultNodeTypesNode> consumer) {
-   	graph.findNodes(TemplatesNeo_defaultNodeTypes).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new defaultNodeTypesNode(graph, node));
-   			}
-   		});
+   public static keyValueListInterfaceDeclNode newKeyValueListInterfaceDecl(Node node) {
+   	return new keyValueListInterfaceDeclNode(node);
    }
 
-   public void visitDefaultNodeTypesNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_defaultNodeTypes).
-   		forEachRemaining(consumer);
+   public keyValueListInterfaceDeclNode newKeyValueListInterfaceDecl() {
+   	return new keyValueListInterfaceDeclNode(graph);
+   }
+
+   public ResourceIterator<keyValueListInterfaceDeclNode> findAllKeyValueListInterfaceDecl() { 
+   	return graph.findNodes(TemplatesNeo_keyValueListInterfaceDecl).map(TemplatesNeoNeo::newKeyValueListInterfaceDecl);
    } 
 
    public static boolean isKeyValueListSetter(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_keyValueListSetter);
    }
 
+   public static keyValueListSetterNode newKeyValueListSetter(Node node) {
+   	return new keyValueListSetterNode(node);
+   }
+
    public keyValueListSetterNode newKeyValueListSetter() {
    	return new keyValueListSetterNode(graph);
    }
 
-   public keyValueListSetterNode newKeyValueListSetter(Node node) {
-   	return new keyValueListSetterNode(graph, node);
-   }
-
-   public void forEachKeyValueListSetterNodes(Consumer<keyValueListSetterNode> consumer) {
-   	graph.findNodes(TemplatesNeo_keyValueListSetter).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new keyValueListSetterNode(graph, node));
-   			}
-   		});
-   }
-
-   public void visitKeyValueListSetterNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_keyValueListSetter).
-   		forEachRemaining(consumer);
+   public ResourceIterator<keyValueListSetterNode> findAllKeyValueListSetter() { 
+   	return graph.findNodes(TemplatesNeo_keyValueListSetter).map(TemplatesNeoNeo::newKeyValueListSetter);
    } 
 
    public static boolean isKeyValueRelationships(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_keyValueRelationships);
    }
 
+   public static keyValueRelationshipsNode newKeyValueRelationships(Node node) {
+   	return new keyValueRelationshipsNode(node);
+   }
+
    public keyValueRelationshipsNode newKeyValueRelationships() {
    	return new keyValueRelationshipsNode(graph);
    }
 
-   public keyValueRelationshipsNode newKeyValueRelationships(Node node) {
-   	return new keyValueRelationshipsNode(graph, node);
+   public ResourceIterator<keyValueRelationshipsNode> findAllKeyValueRelationships() { 
+   	return graph.findNodes(TemplatesNeo_keyValueRelationships).map(TemplatesNeoNeo::newKeyValueRelationships);
+   } 
+
+   public static boolean isKeyValueVisitor(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_keyValueVisitor);
    }
 
-   public void forEachKeyValueRelationshipsNodes(Consumer<keyValueRelationshipsNode> consumer) {
-   	graph.findNodes(TemplatesNeo_keyValueRelationships).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new keyValueRelationshipsNode(graph, node));
-   			}
-   		});
+   public static keyValueVisitorNode newKeyValueVisitor(Node node) {
+   	return new keyValueVisitorNode(node);
    }
 
-   public void visitKeyValueRelationshipsNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_keyValueRelationships).
-   		forEachRemaining(consumer);
+   public keyValueVisitorNode newKeyValueVisitor() {
+   	return new keyValueVisitorNode(graph);
+   }
+
+   public ResourceIterator<keyValueVisitorNode> findAllKeyValueVisitor() { 
+   	return graph.findNodes(TemplatesNeo_keyValueVisitor).map(TemplatesNeoNeo::newKeyValueVisitor);
+   } 
+
+   public static boolean isListInterfaceDecl(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_listInterfaceDecl);
+   }
+
+   public static listInterfaceDeclNode newListInterfaceDecl(Node node) {
+   	return new listInterfaceDeclNode(node);
+   }
+
+   public listInterfaceDeclNode newListInterfaceDecl() {
+   	return new listInterfaceDeclNode(graph);
+   }
+
+   public ResourceIterator<listInterfaceDeclNode> findAllListInterfaceDecl() { 
+   	return graph.findNodes(TemplatesNeo_listInterfaceDecl).map(TemplatesNeoNeo::newListInterfaceDecl);
    } 
 
    public static boolean isListSetter(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_listSetter);
    }
 
+   public static listSetterNode newListSetter(Node node) {
+   	return new listSetterNode(node);
+   }
+
    public listSetterNode newListSetter() {
    	return new listSetterNode(graph);
    }
 
-   public listSetterNode newListSetter(Node node) {
-   	return new listSetterNode(graph, node);
+   public ResourceIterator<listSetterNode> findAllListSetter() { 
+   	return graph.findNodes(TemplatesNeo_listSetter).map(TemplatesNeoNeo::newListSetter);
+   } 
+
+   public static boolean isListVisitor(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_listVisitor);
    }
 
-   public void forEachListSetterNodes(Consumer<listSetterNode> consumer) {
-   	graph.findNodes(TemplatesNeo_listSetter).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new listSetterNode(graph, node));
-   			}
-   		});
+   public static listVisitorNode newListVisitor(Node node) {
+   	return new listVisitorNode(node);
    }
 
-   public void visitListSetterNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_listSetter).
-   		forEachRemaining(consumer);
+   public listVisitorNode newListVisitor() {
+   	return new listVisitorNode(graph);
+   }
+
+   public ResourceIterator<listVisitorNode> findAllListVisitor() { 
+   	return graph.findNodes(TemplatesNeo_listVisitor).map(TemplatesNeoNeo::newListVisitor);
    } 
 
    public static boolean isNewInstance(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_newInstance);
    }
 
+   public static newInstanceNode newNewInstance(Node node) {
+   	return new newInstanceNode(node);
+   }
+
    public newInstanceNode newNewInstance() {
    	return new newInstanceNode(graph);
    }
 
-   public newInstanceNode newNewInstance(Node node) {
-   	return new newInstanceNode(graph, node);
+   public ResourceIterator<newInstanceNode> findAllNewInstance() { 
+   	return graph.findNodes(TemplatesNeo_newInstance).map(TemplatesNeoNeo::newNewInstance);
+   } 
+
+   public static boolean isStringInterfaceDecl(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_stringInterfaceDecl);
    }
 
-   public void forEachNewInstanceNodes(Consumer<newInstanceNode> consumer) {
-   	graph.findNodes(TemplatesNeo_newInstance).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new newInstanceNode(graph, node));
-   			}
-   		});
+   public static stringInterfaceDeclNode newStringInterfaceDecl(Node node) {
+   	return new stringInterfaceDeclNode(node);
    }
 
-   public void visitNewInstanceNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_newInstance).
-   		forEachRemaining(consumer);
+   public stringInterfaceDeclNode newStringInterfaceDecl() {
+   	return new stringInterfaceDeclNode(graph);
+   }
+
+   public ResourceIterator<stringInterfaceDeclNode> findAllStringInterfaceDecl() { 
+   	return graph.findNodes(TemplatesNeo_stringInterfaceDecl).map(TemplatesNeoNeo::newStringInterfaceDecl);
    } 
 
    public static boolean isStringSetter(Node node) {
    	return node != null && node.hasLabel(TemplatesNeo_stringSetter);
    }
 
+   public static stringSetterNode newStringSetter(Node node) {
+   	return new stringSetterNode(node);
+   }
+
    public stringSetterNode newStringSetter() {
    	return new stringSetterNode(graph);
    }
 
-   public stringSetterNode newStringSetter(Node node) {
-   	return new stringSetterNode(graph, node);
+   public ResourceIterator<stringSetterNode> findAllStringSetter() { 
+   	return graph.findNodes(TemplatesNeo_stringSetter).map(TemplatesNeoNeo::newStringSetter);
+   } 
+
+   public static boolean isStringVisitor(Node node) {
+   	return node != null && node.hasLabel(TemplatesNeo_stringVisitor);
    }
 
-   public void forEachStringSetterNodes(Consumer<stringSetterNode> consumer) {
-   	graph.findNodes(TemplatesNeo_stringSetter).
-   		forEachRemaining(new Consumer<Node>() {
-   			@Override
-   			public void accept(Node node) {
-   				consumer.accept(new stringSetterNode(graph, node));
-   			}
-   		});
+   public static stringVisitorNode newStringVisitor(Node node) {
+   	return new stringVisitorNode(node);
    }
 
-   public void visitStringSetterNodes(Consumer<Node> consumer) {
-   	graph.findNodes(TemplatesNeo_stringSetter).
-   		forEachRemaining(consumer);
+   public stringVisitorNode newStringVisitor() {
+   	return new stringVisitorNode(graph);
+   }
+
+   public ResourceIterator<stringVisitorNode> findAllStringVisitor() { 
+   	return graph.findNodes(TemplatesNeo_stringVisitor).map(TemplatesNeoNeo::newStringVisitor);
    } 
 
 	public static final class NeoGroupClassDeclarationNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			comments_param, name_param, packageName_param, statements_param
 		}
 
@@ -315,16 +300,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private NeoGroupClassDeclarationNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_NeoGroupClassDeclaration);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private NeoGroupClassDeclarationNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private NeoGroupClassDeclarationNode(final Node node) {
+			// assuming node has label TemplatesNeo_NeoGroupClassDeclaration
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -362,6 +346,7 @@ public final class TemplatesNeoNeo {
 	   // comments
 	   public NeoGroupClassDeclarationNode addCommentsValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.comments_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.comments_param);
 	      return this;
 	   }
@@ -369,6 +354,11 @@ public final class TemplatesNeoNeo {
 	   public void forEachComments(Consumer<Node> consumer) {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.comments_param))
 	   		consumer.accept(other(node, relationship));
+	   }
+
+	   public void forEachCommentsRelation(Consumer<Relationship> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.comments_param))
+	   		consumer.accept(relationship);
 	   } 
 
 	   // name
@@ -384,6 +374,11 @@ public final class TemplatesNeoNeo {
 	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
 	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
 	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
 	   }
 
 	   public void removeName() {
@@ -407,6 +402,11 @@ public final class TemplatesNeoNeo {
 	   	if (!hasOutgoing(node, Parameters.packageName_param)) return null;
 	   	final Relationship relationship = singleOutgoing(node, Parameters.packageName_param);
 	   	return other(node, relationship);
+	   }
+
+	   public Relationship getPackageNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.packageName_param)) return null;
+	   	return singleOutgoing(node, Parameters.packageName_param);
 	   }
 
 	   public void removePackageName() {
@@ -441,16 +441,16 @@ public final class TemplatesNeoNeo {
 	      return this;
 	   }
 
-	   public StatementsKeyValue newStatementsKeyValue() {
+	   public StatementsKeyValue newStatementsKeyValue(GraphDatabaseService graph) {
 	   	final Node node = graph.createNode(KeyValueLabels.Statements);
-	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	node.setProperty("_uuid", UUID.randomUUID().toString());
 	   	return newStatementsKeyValue(node);
 	   }
 
 	   public static StatementsKeyValue newStatementsKeyValue(Node node) {
 	   	if (node==null) throw new IllegalArgumentException("node for newStatementsKeyValue cannot be null");
 
-	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	   	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	   	return new StatementsKeyValue() {
 
@@ -547,25 +547,34 @@ public final class TemplatesNeoNeo {
 	   		consumer.accept(newStatementsKeyValue(other(node, relationship)));
 	   	}
 	   } 
+
+		public interface NeoGroupClassDeclarationNodeVisitor<T> {
+
+			T visit(NeoGroupClassDeclarationNode node);	
+
+		}
+
+		public <T> T visit(NeoGroupClassDeclarationNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class bugfix2Node {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
 		private bugfix2Node(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_bugfix2);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private bugfix2Node(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private bugfix2Node(final Node node) {
+			// assuming node has label TemplatesNeo_bugfix2
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -600,15 +609,25 @@ public final class TemplatesNeoNeo {
 			return getClass().getName() + "  " + uuid;
 		}
 
+
+		public interface bugfix2NodeVisitor<T> {
+
+			T visit(bugfix2Node node);	
+
+		}
+
+		public <T> T visit(bugfix2NodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class declarationNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			groupName_param, name_param, properties_param
 		}
 
@@ -621,16 +640,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private declarationNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_declaration);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private declarationNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private declarationNode(final Node node) {
+			// assuming node has label TemplatesNeo_declaration
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -680,6 +698,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getGroupNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.groupName_param)) return null;
+	   	return singleOutgoing(node, Parameters.groupName_param);
+	   }
+
 	   public void removeGroupName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.groupName_param);
 	   	if (outgoing == null) return;
@@ -701,6 +724,11 @@ public final class TemplatesNeoNeo {
 	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
 	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
 	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
 	   }
 
 	   public void removeName() {
@@ -735,16 +763,16 @@ public final class TemplatesNeoNeo {
 	      return this;
 	   }
 
-	   public PropertiesKeyValue newPropertiesKeyValue() {
+	   public PropertiesKeyValue newPropertiesKeyValue(GraphDatabaseService graph) {
 	   	final Node node = graph.createNode(KeyValueLabels.Properties);
-	   	node.setProperty("uuid", UUID.randomUUID().toString());
+	   	node.setProperty("_uuid", UUID.randomUUID().toString());
 	   	return newPropertiesKeyValue(node);
 	   }
 
 	   public static PropertiesKeyValue newPropertiesKeyValue(Node node) {
 	   	if (node==null) throw new IllegalArgumentException("node for newPropertiesKeyValue cannot be null");
 
-	   	final UUID uuid = UUID.fromString(getString(node, "uuid"));
+	   	final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 	   	return new PropertiesKeyValue() {
 
@@ -841,25 +869,34 @@ public final class TemplatesNeoNeo {
 	   		consumer.accept(newPropertiesKeyValue(other(node, relationship)));
 	   	}
 	   } 
+
+		public interface declarationNodeVisitor<T> {
+
+			T visit(declarationNode node);	
+
+		}
+
+		public <T> T visit(declarationNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class defaultNodeTypesNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
 		private defaultNodeTypesNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_defaultNodeTypes);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private defaultNodeTypesNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private defaultNodeTypesNode(final Node node) {
+			// assuming node has label TemplatesNeo_defaultNodeTypes
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -894,15 +931,122 @@ public final class TemplatesNeoNeo {
 			return getClass().getName() + "  " + uuid;
 		}
 
+
+		public interface defaultNodeTypesNodeVisitor<T> {
+
+			T visit(defaultNodeTypesNode node);	
+
+		}
+
+		public <T> T visit(defaultNodeTypesNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public static final class keyValueListInterfaceDeclNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private keyValueListInterfaceDeclNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_keyValueListInterfaceDecl);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private keyValueListInterfaceDeclNode(final Node node) {
+			// assuming node has label TemplatesNeo_keyValueListInterfaceDecl
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			keyValueListInterfaceDeclNode that = (keyValueListInterfaceDeclNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public keyValueListInterfaceDeclNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface keyValueListInterfaceDeclNodeVisitor<T> {
+
+			T visit(keyValueListInterfaceDeclNode node);	
+
+		}
+
+		public <T> T visit(keyValueListInterfaceDeclNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class keyValueListSetterNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			kvNames_param, propertyName_param, statementName_param
 		}
 
@@ -911,16 +1055,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private keyValueListSetterNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_keyValueListSetter);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private keyValueListSetterNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private keyValueListSetterNode(final Node node) {
+			// assuming node has label TemplatesNeo_keyValueListSetter
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -958,6 +1101,7 @@ public final class TemplatesNeoNeo {
 	   // kvNames
 	   public keyValueListSetterNode addKvNamesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.kvNames_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.kvNames_param);
 	      return this;
 	   }
@@ -965,6 +1109,11 @@ public final class TemplatesNeoNeo {
 	   public void forEachKvNames(Consumer<Node> consumer) {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.kvNames_param))
 	   		consumer.accept(other(node, relationship));
+	   }
+
+	   public void forEachKvNamesRelation(Consumer<Relationship> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.kvNames_param))
+	   		consumer.accept(relationship);
 	   } 
 
 	   // propertyName
@@ -980,6 +1129,11 @@ public final class TemplatesNeoNeo {
 	   	if (!hasOutgoing(node, Parameters.propertyName_param)) return null;
 	   	final Relationship relationship = singleOutgoing(node, Parameters.propertyName_param);
 	   	return other(node, relationship);
+	   }
+
+	   public Relationship getPropertyNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.propertyName_param)) return null;
+	   	return singleOutgoing(node, Parameters.propertyName_param);
 	   }
 
 	   public void removePropertyName() {
@@ -1005,6 +1159,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getStatementNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.statementName_param)) return null;
+	   	return singleOutgoing(node, Parameters.statementName_param);
+	   }
+
 	   public void removeStatementName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.statementName_param);
 	   	if (outgoing == null) return;
@@ -1012,15 +1171,25 @@ public final class TemplatesNeoNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface keyValueListSetterNodeVisitor<T> {
+
+			T visit(keyValueListSetterNode node);	
+
+		}
+
+		public <T> T visit(keyValueListSetterNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class keyValueRelationshipsNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			name_param, types_param
 		}
 
@@ -1029,16 +1198,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private keyValueRelationshipsNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_keyValueRelationships);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private keyValueRelationshipsNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private keyValueRelationshipsNode(final Node node) {
+			// assuming node has label TemplatesNeo_keyValueRelationships
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1088,6 +1256,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
 	   public void removeName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
 	   	if (outgoing == null) return;
@@ -1099,6 +1272,7 @@ public final class TemplatesNeoNeo {
 	   // types
 	   public keyValueRelationshipsNode addTypesValue(Node target) {
 	   	if (node == null) return this;
+	   	if (isAlreadyRelated(node, target, Parameters.types_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.types_param);
 	      return this;
 	   }
@@ -1106,16 +1280,225 @@ public final class TemplatesNeoNeo {
 	   public void forEachTypes(Consumer<Node> consumer) {
 	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.types_param))
 	   		consumer.accept(other(node, relationship));
+	   }
+
+	   public void forEachTypesRelation(Consumer<Relationship> consumer) {
+	   	for (Relationship relationship : node.getRelationships(Direction.OUTGOING, Parameters.types_param))
+	   		consumer.accept(relationship);
 	   } 
+
+		public interface keyValueRelationshipsNodeVisitor<T> {
+
+			T visit(keyValueRelationshipsNode node);	
+
+		}
+
+		public <T> T visit(keyValueRelationshipsNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public static final class keyValueVisitorNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private keyValueVisitorNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_keyValueVisitor);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private keyValueVisitorNode(final Node node) {
+			// assuming node has label TemplatesNeo_keyValueVisitor
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			keyValueVisitorNode that = (keyValueVisitorNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public keyValueVisitorNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface keyValueVisitorNodeVisitor<T> {
+
+			T visit(keyValueVisitorNode node);	
+
+		}
+
+		public <T> T visit(keyValueVisitorNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public static final class listInterfaceDeclNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private listInterfaceDeclNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_listInterfaceDecl);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private listInterfaceDeclNode(final Node node) {
+			// assuming node has label TemplatesNeo_listInterfaceDecl
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			listInterfaceDeclNode that = (listInterfaceDeclNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public listInterfaceDeclNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface listInterfaceDeclNodeVisitor<T> {
+
+			T visit(listInterfaceDeclNode node);	
+
+		}
+
+		public <T> T visit(listInterfaceDeclNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class listSetterNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			propertyName_param, statementName_param
 		}
 
@@ -1124,16 +1507,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private listSetterNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_listSetter);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private listSetterNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private listSetterNode(final Node node) {
+			// assuming node has label TemplatesNeo_listSetter
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1183,6 +1565,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getPropertyNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.propertyName_param)) return null;
+	   	return singleOutgoing(node, Parameters.propertyName_param);
+	   }
+
 	   public void removePropertyName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.propertyName_param);
 	   	if (outgoing == null) return;
@@ -1206,6 +1593,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getStatementNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.statementName_param)) return null;
+	   	return singleOutgoing(node, Parameters.statementName_param);
+	   }
+
 	   public void removeStatementName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.statementName_param);
 	   	if (outgoing == null) return;
@@ -1213,15 +1605,122 @@ public final class TemplatesNeoNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface listSetterNodeVisitor<T> {
+
+			T visit(listSetterNode node);	
+
+		}
+
+		public <T> T visit(listSetterNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public static final class listVisitorNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private listVisitorNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_listVisitor);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private listVisitorNode(final Node node) {
+			// assuming node has label TemplatesNeo_listVisitor
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			listVisitorNode that = (listVisitorNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public listVisitorNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface listVisitorNodeVisitor<T> {
+
+			T visit(listVisitorNode node);	
+
+		}
+
+		public <T> T visit(listVisitorNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class newInstanceNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			groupName_param, name_param
 		}
 
@@ -1230,16 +1729,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private newInstanceNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_newInstance);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private newInstanceNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private newInstanceNode(final Node node) {
+			// assuming node has label TemplatesNeo_newInstance
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1289,6 +1787,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getGroupNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.groupName_param)) return null;
+	   	return singleOutgoing(node, Parameters.groupName_param);
+	   }
+
 	   public void removeGroupName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.groupName_param);
 	   	if (outgoing == null) return;
@@ -1312,6 +1815,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
 	   public void removeName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
 	   	if (outgoing == null) return;
@@ -1319,15 +1827,122 @@ public final class TemplatesNeoNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface newInstanceNodeVisitor<T> {
+
+			T visit(newInstanceNode node);	
+
+		}
+
+		public <T> T visit(newInstanceNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public static final class stringInterfaceDeclNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private stringInterfaceDeclNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_stringInterfaceDecl);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private stringInterfaceDeclNode(final Node node) {
+			// assuming node has label TemplatesNeo_stringInterfaceDecl
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			stringInterfaceDeclNode that = (stringInterfaceDeclNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public stringInterfaceDeclNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface stringInterfaceDeclNodeVisitor<T> {
+
+			T visit(stringInterfaceDeclNode node);	
+
+		}
+
+		public <T> T visit(stringInterfaceDeclNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
 
 	public static final class stringSetterNode {
 
-		private final GraphDatabaseService graph;
+		// TemplatesNeo
 	   private final Node node;
 		private final UUID uuid;
 
-		private enum Parameters implements RelationshipType {
+		public enum Parameters implements RelationshipType {
 			propertyName_param, statementName_param
 		}
 
@@ -1336,16 +1951,15 @@ public final class TemplatesNeoNeo {
 		}
 
 		private stringSetterNode(final GraphDatabaseService graph) {
-			this.graph = graph;
 			this.node = graph.createNode(TemplatesNeo_stringSetter);
-			this.node.setProperty("uuid", UUID.randomUUID().toString());
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
-		private stringSetterNode(final GraphDatabaseService graph, final Node node) {
-			this.graph = graph;
+		private stringSetterNode(final Node node) {
+			// assuming node has label TemplatesNeo_stringSetter
 			this.node = node;
-			this.uuid = UUID.fromString(getString(node, "uuid"));
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
 		}
 
 		public void delete() throws IllegalStateException {
@@ -1395,6 +2009,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getPropertyNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.propertyName_param)) return null;
+	   	return singleOutgoing(node, Parameters.propertyName_param);
+	   }
+
 	   public void removePropertyName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.propertyName_param);
 	   	if (outgoing == null) return;
@@ -1418,6 +2037,11 @@ public final class TemplatesNeoNeo {
 	   	return other(node, relationship);
 	   }
 
+	   public Relationship getStatementNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.statementName_param)) return null;
+	   	return singleOutgoing(node, Parameters.statementName_param);
+	   }
+
 	   public void removeStatementName() {
 	   	final Relationship outgoing = singleOutgoing(node, Parameters.statementName_param);
 	   	if (outgoing == null) return;
@@ -1425,7 +2049,133 @@ public final class TemplatesNeoNeo {
 	   	outgoing.delete();
 	   	tryToDeleteNode(other);
 	   } 
+
+		public interface stringSetterNodeVisitor<T> {
+
+			T visit(stringSetterNode node);	
+
+		}
+
+		public <T> T visit(stringSetterNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
 	} 
+
+	public static final class stringVisitorNode {
+
+		// TemplatesNeo
+	   private final Node node;
+		private final UUID uuid;
+
+		public enum Parameters implements RelationshipType {
+			name_param
+		}
+
+
+		private enum KeyValueLabels implements Label {
+		}
+
+		private stringVisitorNode(final GraphDatabaseService graph) {
+			this.node = graph.createNode(TemplatesNeo_stringVisitor);
+			this.node.setProperty("_uuid", UUID.randomUUID().toString());
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		private stringVisitorNode(final Node node) {
+			// assuming node has label TemplatesNeo_stringVisitor
+			this.node = node;
+			this.uuid = UUID.fromString(getString(node, "_uuid"));
+		}
+
+		public void delete() throws IllegalStateException {
+			if (node.hasRelationship(Direction.INCOMING))
+				throw new IllegalStateException(toString() + " has " + node.getDegree(Direction.INCOMING) + " dependent incoming relations. Delete these first.");
+			tryToDeleteNode(node);
+		}	
+
+		public Node node() {
+			return node;
+		}
+
+		public UUID getUuid() {
+			return uuid;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			stringVisitorNode that = (stringVisitorNode) o;
+			return uuid.equals(that.uuid);
+		}
+
+		@Override
+		public int hashCode() {
+			return uuid.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return getClass().getName() + "  " + uuid;
+		}
+
+	   // name
+	   public stringVisitorNode setName(Node target) {
+	   	if (node == null) return this;
+	   	if (hasOutgoing(node, Parameters.name_param))
+	   		singleOutgoing(node, Parameters.name_param).delete();
+	   	node.createRelationshipTo(target, Parameters.name_param);
+	      return this;
+	   }
+
+	   public Node getName() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	final Relationship relationship = singleOutgoing(node, Parameters.name_param);
+	   	return other(node, relationship);
+	   }
+
+	   public Relationship getNameRelation() {
+	   	if (!hasOutgoing(node, Parameters.name_param)) return null;
+	   	return singleOutgoing(node, Parameters.name_param);
+	   }
+
+	   public void removeName() {
+	   	final Relationship outgoing = singleOutgoing(node, Parameters.name_param);
+	   	if (outgoing == null) return;
+	   	final Node other = other(node, outgoing);
+	   	outgoing.delete();
+	   	tryToDeleteNode(other);
+	   } 
+
+		public interface stringVisitorNodeVisitor<T> {
+
+			T visit(stringVisitorNode node);	
+
+		}
+
+		public <T> T visit(stringVisitorNodeVisitor<T> visitor) {
+			return visitor.visit(this);
+		}
+	} 
+
+	public interface TemplatesNeoNeoAction {
+
+		void doAction(Transaction tx) throws Throwable;
+
+		void exception(Throwable throwable);
+	}
+
+	public void doInTransaction(TemplatesNeoNeoAction committer) {
+		try (Transaction tx = graph.beginTx()) {
+			try {
+				committer.doAction(tx);
+				tx.success();
+			} catch (Throwable throwable) {
+				committer.exception(throwable);
+				tx.failure();
+			}
+		}
+	}
 
 	public static boolean isStringNode(Node node) {
 		return node != null && node.hasLabel(StringNode);
@@ -1436,14 +2186,16 @@ public final class TemplatesNeoNeo {
 		if (value==null) throw new IllegalArgumentException("value for newStringNode cannot be null");
 
 		final Node node = graph.createNode(StringNode);
-		node.setProperty("uuid", UUID.randomUUID().toString());
+		node.setProperty("_uuid", UUID.randomUUID().toString());
 		return newStringNode(node).setValue(value).node();
 	}
 
 	public static StringNode newStringNode(Node node) {
-		if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
 
-		final UUID uuid = UUID.fromString(getString(node, "uuid"));
+		//if (node==null) throw new IllegalArgumentException("node for newStringNode cannot be null");
+		if (node==null) return null;
+
+		final UUID uuid = UUID.fromString(getString(node, "_uuid"));
 
 		return new StringNode() {
 			@Override
