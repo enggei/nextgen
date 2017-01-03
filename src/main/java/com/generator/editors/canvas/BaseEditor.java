@@ -1,7 +1,6 @@
 package com.generator.editors.canvas;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -72,9 +71,15 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
 	public void removeNodeFromCanvas(UUID uuid) {
 		selectedNodes.remove(uuid);
+
 		final N node = layerNodes.remove(uuid);
-		if (node != null) nodesByLabel.get(node.getNodeType()).remove(uuid);
-		if (node != null) nodeLayer.removeChild(node.pNode);
+
+		if (node != null) {
+			final Set<UUID> set = nodesByLabel.get(node.getNodeType());
+			if (set != null) set.remove(uuid);
+
+			nodeLayer.removeChild(node.pNode);
+		}
 	}
 
 	public void addRelationToCanvas(R relationshipPPath) {

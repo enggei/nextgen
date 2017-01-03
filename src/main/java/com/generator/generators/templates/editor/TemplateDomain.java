@@ -42,7 +42,7 @@ public class TemplateDomain {
 	}
 
 	public enum TemplateRelations implements RelationshipType {
-		TEMPLATE_GROUP, IMPORT, TEMPLATE_STATEMENT, TEMPLATE_PARAMETER, DIRECTORY_MEMBER, SUBDIR
+		TEMPLATE_GROUP, IMPORT, TEMPLATE_STATEMENT, TEMPLATE_PARAMETER, DIRECTORY_MEMBER, PROJECT_DIRECTORY
 	}
 
 	public static Node newProject(NeoModel db, String name) {

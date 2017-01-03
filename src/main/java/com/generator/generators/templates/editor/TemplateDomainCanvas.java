@@ -312,7 +312,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
 		} else if (node.hasLabel(Directory)) {
 
-			incoming(node, DIRECTORY_MEMBER).forEach(Relationship::delete);
+//			incoming(node, DIRECTORY_MEMBER).forEach(Relationship::delete);
 			outgoing(node, DIRECTORY_MEMBER).forEach(Relationship::delete);
 
 		} else if (node.hasLabel(Statement)) {
@@ -2089,7 +2089,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
 			final Map<UUID, org.neo4j.graphdb.Label> pNodes = new LinkedHashMap<>();
 
-			outgoing(node, DIRECTORY_MEMBER).forEach(new Consumer<Relationship>() {
+			outgoing(node, PROJECT_DIRECTORY).forEach(new Consumer<Relationship>() {
 				@Override
 				public void accept(Relationship relationship) {
 					pNodes.put(uuidOf(other(node, relationship)), TemplateDomain.TemplateLabels.Directory);
@@ -2138,7 +2138,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 				if (dir == null) return;
 
 				final Node newDirectoryNode = TemplateDomain.newDirectory(editor.getGraph(), dir.getAbsolutePath());
-				node.createRelationshipTo(newDirectoryNode, DIRECTORY_MEMBER);
+				node.createRelationshipTo(newDirectoryNode, PROJECT_DIRECTORY);
 
 				lastDir = dir.getAbsolutePath();
 
