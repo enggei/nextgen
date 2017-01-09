@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * User: Geir Ove
@@ -187,6 +188,21 @@ public final class StringUtil {
 		}
 		return out.toString();
 	}
+
+	public static List<Long> stringToLongList(final String commaSeparatedList) {
+		return Arrays.asList(commaSeparatedList.split(",")).
+			stream().map(String::trim).
+			mapToLong(Long::parseLong).
+			boxed().
+			collect(Collectors.toList());
+	}
+
+	public static List<String> stringToStringList(final String commaSeparatedList) {
+		return Arrays.asList(commaSeparatedList.split(",")).
+			stream().map(String::trim).
+			collect(Collectors.toList());
+	}
+
 
 	public static String findAllDigitsAfter(String key, String text) {
 		final StringBuilder number = new StringBuilder();

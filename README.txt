@@ -23,3 +23,10 @@ Tasks:
 
 * More layers in BaseEditor, like PhotoShop :)
 
+* Right click text node:
+  - toLower, toUpper, camelHump, capitalize
+
+* On new string value (SingleValue) attach to node if already exists.
+
+* Add PNode label
+  - Render custom name as alternative to parameter value

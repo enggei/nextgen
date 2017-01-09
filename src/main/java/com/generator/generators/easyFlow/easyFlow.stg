@@ -1,18 +1,15 @@
-/* uuid : 42ca5cea-c354-4e38-8b58-3a77ded5e55d */
+/* easyFlow bc15673a-2781-4b46-96a0-575db6804f4d*/
 delimiters "~", "~"
 
-/** name,STRINGPROPERTY;state,STRINGPROPERTY; **/
 declaration(name,state) ::= <<.whenEnter(~state~, new ContextHandler<~name~Context>() {
     @Override
     public void call(final ~name~Context context) throws Exception {
-        //log.debug("~state;format="humpToCap"~");
-        if (listener != null) listener.onEnter("~state~", context);
+        log.debug("~state;format="humpToCap"~");
+        if (listener != null) listener.onEnter(~state~, context);
         ~state;format="toLower"~(context);
     }
-}) 
->>
+})>>
 
-/** bindings,KEYVALUELISTPROPERTY,declaration,impl;context,STRINGPROPERTY;events,STRINGPROPERTY;extends,STRINGPROPERTY;name,STRINGPROPERTY;package,STRINGPROPERTY;states,STRINGPROPERTY;superParams,KEYVALUELISTPROPERTY,name,type;transit,STRINGPROPERTY; **/
 easyFlow(bindings,context,events,extends,name,package,states,superParams,transit) ::= <<~if(package)~package ~package~;
 
 ~endif~import au.com.ds.ef.*;
@@ -42,7 +39,7 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
 
     /** ~name~Listener  **/
     public interface ~name~Listener {
-        void onEnter(String state, ~name~Context context);
+        void onEnter(States state, ~name~Context context);
         void onError(ExecutionError error, StatefulContext context);
     }
 
@@ -62,7 +59,7 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
             whenError(new ExecutionErrorHandler<StatefulContext>() {
                 @Override
                 public void call(ExecutionError error, StatefulContext context) {
-                    log.info("ERROR");
+                    log.error("ERROR");
                     if (listener != null) listener.onError(error, context);
                     onERROR(error,context);
                     }
@@ -81,45 +78,30 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
     ~bindings:{it|~it.impl~};separator="\n"~
 
     protected abstract void onERROR(final ExecutionError error, final StatefulContext context);
-} 
->>
+}>>
 
-/** events,LISTPROPERTY; **/
-events(events) ::= <<enum Events implements EventEnum {
+events(events) ::= <<public enum Events implements EventEnum {
     ~events:{it|~it~};separator=",\n"~
-}
->>
+}>>
 
-/** name,STRINGPROPERTY;state,STRINGPROPERTY; **/
-impl(name,state) ::= <<protected abstract void ~state;format="toLower"~(final ~name~Context context) throws Exception;
->>
+impl(name,state) ::= <<protected abstract void ~state;format="toLower"~(final ~name~Context context) throws Exception;>>
 
-/**  **/
 mvn() ::= <<<dependency>
     <groupId>au.com.datasymphony</groupId>
     <artifactId>EasyFlow</artifactId>
     <version>1.3</version>
-</dependency> 
->>
+</dependency> >>
 
-/** comment,STRINGPROPERTY;name,STRINGPROPERTY; **/
-stateDeclaration(comment,name) ::= <<~name~~if(comment)~ /* ~comment~ */ ~endif~
->>
+stateDeclaration(comment,name) ::= <<~name~~if(comment)~ /* ~comment~ */ ~endif~>>
 
-/** contextGeneric,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,comment,modifier,name,type,value; **/
-statefulContext(contextGeneric,name,properties) ::= <<static class ~name~~if(contextGeneric)~~contextGeneric~~endif~Context extends StatefulContext {
+statefulContext(name,properties) ::= <<public static class ~name~Context extends StatefulContext {
     ~properties:{it|~if(it.modifier)~~it.modifier~ ~endif~~it.type~ ~it.name~~if(it.value)~ = ~it.value~~endif~;~if(it.comment)~ //~it.comment~~endif~};separator="\n"~
-}
->>
+}>>
 
-/** states,LISTPROPERTY; **/
-states(states) ::= <<enum States implements StateEnum {
+states(states) ::= <<public enum States implements StateEnum {
     ~states:{it|~it~};separator=",\n"~
-}
->>
+}>>
 
-/** event,STRINGPROPERTY;isFinish,STRINGPROPERTY;isInit,STRINGPROPERTY;state,STRINGPROPERTY;transits,LISTPROPERTY; **/
-transit(event,isFinish,isInit,state,transits) ::= << ~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(
+transit(event,isFinish,isInit,state,transits,name) ::= <<~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit( // ~name~
 ~transits:{it|~it~};separator=",\n"~
-)~endif~ 
->>
+)~endif~>>
