@@ -188,5 +188,4 @@ class TemplateGroupPNode extends TemplateDomainPNode {
             expand();
         }
     }
-
 }
