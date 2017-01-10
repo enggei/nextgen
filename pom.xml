@@ -102,7 +102,6 @@
             <version>1.3</version>
         </dependency>
 
-        <!--&lt;!&ndash;COMBINATORICS (PERMUTATIONS)&ndash;&gt;-->
         <dependency>
             <groupId>com.github.dpaukov</groupId>
             <artifactId>combinatoricslib3</artifactId>

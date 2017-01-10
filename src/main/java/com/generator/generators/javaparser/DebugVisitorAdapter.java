@@ -21,7 +21,6 @@ class DebugVisitorAdapter extends VoidVisitorAdapter<Object>  {
    public DebugVisitorAdapter() {
    }
 
-
    @Override
    public void visit( PrimitiveType arg0,  Object arg) {
        System.out.println(StringUtil.pad(indent++, "-", "PrimitiveType:" + arg0.toString().trim() + " children: " + arg0.getChildrenNodes().size()));

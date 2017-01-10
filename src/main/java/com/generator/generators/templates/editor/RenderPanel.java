@@ -15,7 +15,7 @@ import static com.generator.editors.BaseDomainVisitor.get;
 */
 final class RenderPanel extends JPanel implements PropertyChangeListener {
 
-	private final JTextArea txtEditor = new JTextArea(25, 110);
+	private final JTextArea txtEditor = new JTextArea(25, 85);
 	private final NeoEditor editor;
 
 	public RenderPanel(NeoEditor editor) {
@@ -37,9 +37,9 @@ final class RenderPanel extends JPanel implements PropertyChangeListener {
 
 				final BasePNode pNode = (BasePNode) evt.getNewValue();
 
-				if (pNode instanceof TemplateDomainCanvas.TemplateDomainPNode) {
+				if (pNode instanceof TemplateDomainPNode) {
 
-					final TemplateDomainCanvas.TemplateDomainPNode templateDomainNode = (TemplateDomainCanvas.TemplateDomainPNode) evt.getNewValue();
+					final TemplateDomainPNode templateDomainNode = (TemplateDomainPNode) evt.getNewValue();
 					switch (TemplateDomain.TemplateLabels.valueOf(templateDomainNode.getNodeType())) {
 
 						case TemplateGroup:

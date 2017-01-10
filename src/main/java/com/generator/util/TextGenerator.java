@@ -14,6 +14,8 @@ public class TextGenerator {
 	// generate text: hierarchical, using nodes:
 	public static void main(String[] args) {
 
+		// iteration (loop, feedback, cycle), mutation (rotation,translation,deletion),
+
 		// todo use this to make a regexp-generator, which takes text, and evolves methods to regexp them (extract list, tuples etc from any text)
 		// evaluates by compression time and recovery errors (how much can it compress, how long does it take to compress and recover, and how accurate is the recovery ?)
 
