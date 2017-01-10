@@ -184,7 +184,7 @@ class DirectoryPNode extends TemplateDomainPNode {
 
         @Override
         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            TemplateDomainCanvas.renderProjectMember(node, editor.canvas);
+            TemplateDomain.renderProjectMember(node, editor.canvas);
         }
     }
 }

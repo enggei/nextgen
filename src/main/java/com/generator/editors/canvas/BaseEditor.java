@@ -42,16 +42,18 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 	final MousePositionNode mousePositionNode = new MousePositionNode();
 	protected final Map<UUID, N> selectedNodes = new LinkedHashMap<>();
 
-	protected final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+	private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
 	public BaseEditor() {
 
 		nodeLayer = canvas.getLayer();
 		relationLayer = new PLayer();
 		canvas.getCamera().addLayer(0, relationLayer);
+
 		canvas.removeInputEventListener(canvas.getPanEventHandler());
 		canvas.removeInputEventListener(canvas.getZoomEventHandler());
 		canvas.addInputEventListener(this);
+
 		canvas.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
 		canvas.setPreferredSize(new Dimension(800, 640));
 		canvas.setBackground(Color.LIGHT_GRAY);
@@ -114,11 +116,11 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		return layerNodes.values();
 	}
 
-	public Point2D.Double canvasCenterPoint() {
-		return new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d);
-	}
+//	public Point2D.Double canvasCenterPoint() {
+//		return new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d);
+//	}
 
-	public void selectOutgoing(BasePNode node) {
+	void selectOutgoing(BasePNode node) {
 		layerRelations.values().stream().filter(r -> r.source.uuid.equals(node.uuid)).forEach(r -> r.target.select());
 	}
 
@@ -140,13 +142,10 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		return new AbstractAction("Retain") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new LinkedHashSet<>(layerNodes.keySet()).forEach(new Consumer<UUID>() {
-					@Override
-					public void accept(UUID uuid) {
-						if (selectedNodes.containsKey(uuid)) return;
-						removeNodeFromCanvas(uuid);
-					}
-				});
+				new LinkedHashSet<>(layerNodes.keySet()).forEach(uuid -> {
+                    if (selectedNodes.containsKey(uuid)) return;
+                    removeNodeFromCanvas(uuid);
+                });
 			}
 		};
 	}
@@ -155,12 +154,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		return new AbstractAction("Hide") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new LinkedHashSet<>(selectedNodes.keySet()).forEach(new Consumer<UUID>() {
-					@Override
-					public void accept(UUID uuid) {
-						removeNodeFromCanvas(uuid);
-					}
-				});
+				new LinkedHashSet<>(selectedNodes.keySet()).forEach(uuid -> removeNodeFromCanvas(uuid));
 
 				selectedNodes.clear();
 			}
@@ -171,12 +165,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		return new AbstractAction("Unselect") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new LinkedHashSet<>(layerNodes.keySet()).forEach(new Consumer<UUID>() {
-					@Override
-					public void accept(UUID uuid) {
-						layerNodes.get(uuid).unselect();
-					}
-				});
+				new LinkedHashSet<>(layerNodes.keySet()).forEach(uuid -> layerNodes.get(uuid).unselect());
 
 				selectedNodes.clear();
 			}
@@ -192,7 +181,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		};
 	}
 
-	protected Action cleanCanvas() {
+	private Action cleanCanvas() {
 		return new AbstractAction("Clean") {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -267,24 +256,16 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
 			case KeyEvent.VK_R:
 
-				SwingUtilities.invokeLater(() -> new LinkedHashSet<>(layerNodes.keySet()).forEach(new Consumer<UUID>() {
-					@Override
-					public void accept(UUID uuid) {
-						if (selectedNodes.containsKey(uuid)) return;
-						removeNodeFromCanvas(uuid);
-					}
-				}));
+				SwingUtilities.invokeLater(() -> new LinkedHashSet<>(layerNodes.keySet()).forEach(uuid -> {
+                    if (selectedNodes.containsKey(uuid)) return;
+                    removeNodeFromCanvas(uuid);
+                }));
 				break;
 
 			case KeyEvent.VK_C:
 
 				SwingUtilities.invokeLater(() -> {
-					new ArrayList<>(selectedNodes.values()).forEach(new Consumer<N>() {
-						@Override
-						public void accept(N n) {
-							removeNodeFromCanvas(n.uuid);
-						}
-					});
+					new ArrayList<>(selectedNodes.values()).forEach(n -> removeNodeFromCanvas(n.uuid));
 					event.getInputManager().setKeyboardFocus(this);
 				});
 				break;
@@ -360,15 +341,14 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		}
 	}
 
-	protected void selectNode(N instanceNode) {
+	private void selectNode(N instanceNode) {
 		selectedNodes.put(instanceNode.uuid, instanceNode);
 		mousePositionNode.nodeSelected(instanceNode.uuid);
 	}
 
-	protected void unselectNode(N instanceNode) {
+	private void unselectNode(N instanceNode) {
 		selectedNodes.remove(instanceNode.uuid);
 		mousePositionNode.nodeUnselected(instanceNode.uuid);
-//		System.out.println("unselected " + instanceNode.uuid + " left: " + selectedNodes.size());
 	}
 
 	public void retain(UUID... uuids) {
@@ -381,7 +361,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		}
 	}
 
-	protected void nodeRemoved(N instanceNode) {
+	private void nodeRemoved(N instanceNode) {
 		instanceNode.removePropertyChangeListener(this);
 		selectedNodes.remove(instanceNode.uuid);
 	}
@@ -471,12 +451,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		protected final void drag(PInputEvent event) {
 			super.drag(event);
 			mousePointNode.pNode.translate(event.getDelta().width, event.getDelta().height);
-			lines.values().forEach(new Consumer<RelationPath>() {
-				@Override
-				public void accept(RelationPath mouseRelationPath) {
-					mouseRelationPath.target.pNode.translate(event.getDelta().width, event.getDelta().height);
-				}
-			});
+			lines.values().forEach(mouseRelationPath -> mouseRelationPath.target.pNode.translate(event.getDelta().width, event.getDelta().height));
 		}
 
 		@Override
@@ -517,18 +492,18 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 			}
 		}
 
-		public void toggle() {
+		void toggle() {
 			if (isShowing.get()) hide();
 			else show();
 		}
 
-		public void nodeSelected(UUID uuid) {
+		void nodeSelected(UUID uuid) {
 			if (!isShowing.get()) return;
 
 			addRelationToNode(selectedNodes.get(uuid));
 		}
 
-		public void nodeUnselected(UUID uuid) {
+		void nodeUnselected(UUID uuid) {
 			if (!isShowing.get()) return;
 
 			final RelationPath mouseRelationPath = lines.get(uuid);

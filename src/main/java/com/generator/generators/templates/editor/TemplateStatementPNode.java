@@ -261,7 +261,7 @@ class TemplateStatementPNode extends TemplateDomainPNode {
                             incoming(node, TEMPLATE_STATEMENT).forEach(relationship -> {
                                 final Node statementNode = other(node, relationship);
 
-                                incoming(statementNode, DIRECTORY_MEMBER).forEach(projectRelationship -> TemplateDomainCanvas.renderProjectMember(other(statementNode, projectRelationship), editor.canvas));
+                                incoming(statementNode, DIRECTORY_MEMBER).forEach(projectRelationship -> TemplateDomain.renderProjectMember(other(statementNode, projectRelationship), editor.canvas));
                             });
 
                             SwingUtilities.invokeLater(dialog::dispose);

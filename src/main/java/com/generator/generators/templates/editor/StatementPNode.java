@@ -214,7 +214,7 @@ class StatementPNode extends TemplateDomainPNode {
             if (newValue == null) return;
 
             final Node newSingleValue = TemplateDomain.newSingleValue(editor.getGraph(), newValue);
-            TemplateDomainCanvas.setSingleReference(newSingleValue, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())), editor);
+            TemplateDomain.setSingleReference(newSingleValue, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())), editor);
             // no need for editor.addRelation, as show-method will ensure its visible
             editor.
                     show(uuidOf(newSingleValue), SingleValue.name()).
@@ -240,7 +240,7 @@ class StatementPNode extends TemplateDomainPNode {
             for (String newValue : newValues.split(" ")) {
 
                 final Node newListValue = TemplateDomain.newSingleValue(editor.getGraph(), newValue);
-                TemplateDomainCanvas.addNodeReference(newListValue, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())));
+                TemplateDomain.addNodeReference(newListValue, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())));
                 // no need for editor.addRelation, as show-method will ensure its visible
                 pNodes.put(uuidOf(newListValue), SingleValue);
             }
@@ -341,7 +341,7 @@ class StatementPNode extends TemplateDomainPNode {
 
                     final Node newKeyValueSet = TemplateDomain.newKeyValueSet(editor.getGraph(), node, templateParameter);
                     for (Map.Entry<String, String> entry : validMap.entrySet())
-                        TemplateDomainCanvas.setSingleReference(TemplateDomain.newSingleValue(editor.getGraph(), entry.getValue()), newKeyValueSet, RelationshipType.withName(entry.getKey()), editor);
+                        TemplateDomain.setSingleReference(TemplateDomain.newSingleValue(editor.getGraph(), entry.getValue()), newKeyValueSet, RelationshipType.withName(entry.getKey()), editor);
                     newKeyValueSets.add(uuidOf(newKeyValueSet));
                 }
 
@@ -411,7 +411,7 @@ class StatementPNode extends TemplateDomainPNode {
                     if (!newValue.equals(existingValues.get(singleValueName))) {
 
                         final Node newSingleValue = TemplateDomain.newSingleValue(editor.getGraph(), newValue);
-                        TemplateDomainCanvas.setSingleReference(newSingleValue, node, RelationshipType.withName(get(templateParameters.get(singleValueName), TemplateDomain.TemplateProperties.name.name())), editor);
+                        TemplateDomain.setSingleReference(newSingleValue, node, RelationshipType.withName(get(templateParameters.get(singleValueName), TemplateDomain.TemplateProperties.name.name())), editor);
                         // no need for editor.addRelation, as show-method will ensure its visible
                         editor.
                                 show(uuidOf(newSingleValue), SingleValue.name()).
@@ -463,7 +463,7 @@ class StatementPNode extends TemplateDomainPNode {
 
         @Override
         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            editor.addRelation(TemplateDomainCanvas.setSingleReference(selectedNode, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())), editor));
+            editor.addRelation(TemplateDomain.setSingleReference(selectedNode, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name())), editor));
             updateView();
         }
     }
@@ -480,7 +480,7 @@ class StatementPNode extends TemplateDomainPNode {
 
         @Override
         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            editor.addRelation(TemplateDomainCanvas.addNodeReference(selectedNode, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name()))));
+            editor.addRelation(TemplateDomain.addNodeReference(selectedNode, node, RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name()))));
             editor.clearMousePosition();
         }
     }

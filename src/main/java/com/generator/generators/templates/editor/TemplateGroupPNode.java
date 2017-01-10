@@ -73,7 +73,7 @@ class TemplateGroupPNode extends TemplateDomainPNode {
 
                 final com.generator.generators.templates.domain.TemplateStatement templateStatement = statementEditorPanel.parseAndValidate(delimiter);
                 editor.doInTransaction(tx1 -> {
-                    final Node importTemplateStatement = TemplateDomainCanvas.importTemplateStatement(node, templateStatement, editor);
+                    final Node importTemplateStatement = TemplateDomain.importTemplateStatement(node, templateStatement, editor);
                     editor.show(uuidOf(importTemplateStatement), TemplateStatement.name()).
                             setOffset(event);
                 });

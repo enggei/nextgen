@@ -130,7 +130,7 @@ class KeyValueSetPNode extends TemplateDomainPNode {
                     pop.add(new NeoEditor.TransactionAction("Set " + key, editor.getGraph(), editor.canvas) {
                         @Override
                         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                            editor.addRelation(TemplateDomainCanvas.setSingleReference(selectedNode, node, RelationshipType.withName(key), editor));
+                            editor.addRelation(TemplateDomain.setSingleReference(selectedNode, node, RelationshipType.withName(key), editor));
                             updateView();
                             editor.clearMousePosition();
                         }
@@ -167,7 +167,7 @@ class KeyValueSetPNode extends TemplateDomainPNode {
             if (newValue == null) return;
 
             final Node newSingleValue = TemplateDomain.newSingleValue(editor.getGraph(), newValue);
-            editor.addRelation(TemplateDomainCanvas.setSingleReference(newSingleValue, node, RelationshipType.withName(key), editor));
+            editor.addRelation(TemplateDomain.setSingleReference(newSingleValue, node, RelationshipType.withName(key), editor));
             updateView();
         }
     }
@@ -238,7 +238,7 @@ class KeyValueSetPNode extends TemplateDomainPNode {
                     if (newValue.equals(existingValues.get(key))) continue;
 
                     final Node newSingleValue = TemplateDomain.newSingleValue(editor.getGraph(), newValue);
-                    editor.addRelation(TemplateDomainCanvas.setSingleReference(newSingleValue, node, RelationshipType.withName(key), editor));
+                    editor.addRelation(TemplateDomain.setSingleReference(newSingleValue, node, RelationshipType.withName(key), editor));
                 }
 
                 updateView();

@@ -1,6 +1,5 @@
 package com.generator.generators.templates.editor;
 
-import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.*;
@@ -21,7 +20,6 @@ import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -40,90 +38,12 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  */
 final class TemplateDomainCanvas extends NeoEditor {
 
-    private static String[] getColor(int index) {
-        return new String[][]{
-                "247, 247, 247".split(", "),
-                "64, 64, 64".split(", "),
-                "64, 64, 64".split(", "),
-                "64, 64, 64".split(", "),
-                "64, 64, 64".split(", "),
-                "0, 109, 44".split(", "),
-                "5, 112, 176".split(", "),
-                "0, 68, 27".split(", "),
-                "153, 52, 4".split(", ")
-        }[index];
-    }
-
     TemplateDomainCanvas() {
 
         canvas.setBackground(new Color(Integer.valueOf(getColor(0)[0]), Integer.valueOf(getColor(0)[1]), Integer.valueOf(getColor(0)[2])));
 
         for (TemplateDomain.TemplateLabels label : TemplateDomain.TemplateLabels.values())
             nodesByLabel.put(label.name(), new LinkedHashSet<>());
-    }
-
-    static void renderProjectMember(final Node node, final JComponent component) {
-        outgoing(node, DIRECTORY_MEMBER).forEach(projectRelation -> {
-
-            final String root = getString(node, TemplateDomain.TemplateProperties.name.name());
-            final String outputFormat = getString(projectRelation, TemplateDomain.TemplateProperties.outputFormat.name());
-
-            final Node statementNode = other(node, projectRelation);
-
-            assert outputFormat != null;
-            switch (outputFormat) {
-
-                case "java": {
-
-                    final String packageParameter = getString(projectRelation, TemplateDomain.TemplateProperties.packageName.name());
-                    final String nameParameter = getString(projectRelation, TemplateDomain.TemplateProperties.name.name());
-
-                    new StatementVisitor() {
-
-                        private String nameValue;
-                        private String packageValue;
-
-                        @Override
-                        protected void onSingleValue(String name, Node referenceNode, TemplateDomain.TemplateLabels referenceNodeType) {
-                            assert nameParameter != null;
-                            if (nameParameter.equals(name))
-                                nameValue = TemplateDomain.renderReferenceNode(referenceNode, referenceNodeType);
-                            else {
-                                assert packageParameter != null;
-                                if (packageParameter.equals(name))
-                                    packageValue = TemplateDomain.renderReferenceNode(referenceNode, referenceNodeType);
-                            }
-                        }
-
-                        @Override
-                        protected void onStatementEnd() {
-                            final GeneratedFile generatedFile = GeneratedFile.newJavaFile(root, packageValue, nameValue);
-                            try {
-                                generatedFile.write(TemplateDomain.render(statementNode));
-                            } catch (IOException e1) {
-                                SwingUtil.showException(component, e1);
-                            }
-                        }
-                    }.visitStatement(statementNode);
-
-                    break;
-                }
-
-                case "other": {
-
-                    final String filename = getString(projectRelation, TemplateDomain.TemplateProperties.name.name());
-
-                    assert filename != null;
-                    final GeneratedFile generatedFile = new GeneratedFile(new File(root, filename));
-                    try {
-                        generatedFile.write(TemplateDomain.render(statementNode));
-                    } catch (IOException e1) {
-                        SwingUtil.showException(component, e1);
-                    }
-                    break;
-                }
-            }
-        });
     }
 
     @Override
@@ -192,58 +112,6 @@ final class TemplateDomainCanvas extends NeoEditor {
         super.addToMenu(pop, event);
     }
 
-    static Relationship setSingleReference(Node referencedNode, Node node, RelationshipType type, NeoEditor editor) throws NeoEditor.CircularStatementException {
-
-        final Relationship existingRelationship = singleOutgoing(node, type);
-        if (existingRelationship != null) {
-            // if exact relationship already exists, just return this:
-            if (existingRelationship.getStartNode().equals(node) && existingRelationship.getEndNode().equals(referencedNode) && type.equals(existingRelationship.getType()))
-                return existingRelationship;
-
-            final Node oldReferencedNode = other(node, existingRelationship);
-            existingRelationship.delete(); // Neo-editor will catch deleted relationships and update canvas
-            // try to delete old node (if its not referenced by anything else anymore)
-            try {
-                editor.deleteNode(oldReferencedNode);
-            } catch (NeoEditor.ReferenceException e) {
-                System.out.println("debug: could not remove old single referenced node : " + e.getMessage());
-                // ignore
-            }
-        }
-
-        return addNodeReference(referencedNode, node, type);
-    }
-
-    static Relationship addNodeReference(Node referencedNode, Node node, RelationshipType type) throws NeoEditor.CircularStatementException {
-
-        if (referencedNode.hasLabel(Statement) || referencedNode.hasLabel(SingleValue)) {
-            // check existing relations and return this if already exists:
-            Relationship existingRelation = null;
-            for (Relationship relationship : outgoing(node, type)) {
-                if (other(node, relationship).equals(referencedNode)) {
-                    existingRelation = relationship;
-                    break;
-                }
-            }
-            if (existingRelation != null) return existingRelation;
-
-            // constrain circular statement-relations
-            if (node.hasLabel(Statement) && referencedNode.hasLabel(Statement)) {
-                for (Relationship relationship : referencedNode.getRelationships(OUTGOING)) {
-                    if (other(referencedNode, relationship).equals(node))
-                        throw new NeoEditor.CircularStatementException(node, referencedNode);
-                }
-            }
-
-            final Relationship newRelationship = node.createRelationshipTo(referencedNode, type);
-            newRelationship.setProperty(TemplateDomain.TemplateProperties.relationType.name(), referencedNode.hasLabel(Statement) ? Statement.name() : SingleValue.name());
-            return newRelationship;
-        }
-
-        throw new IllegalArgumentException("illegal reference type: " + NeoModel.getNameOrLabelFrom(referencedNode));
-    }
-
-
     @Override
     public void deleteNode(Node node) throws ReferenceException {
         final Set<Relationship> constraints = new LinkedHashSet<>();
@@ -252,7 +120,7 @@ final class TemplateDomainCanvas extends NeoEditor {
             constraints.add(relationship);
         };
 
-        debugRelationsFor(node);
+        TemplateDomain.debugRelationsFor(node);
 
         if (node.hasLabel(TemplateGroup)) {
 
@@ -382,18 +250,9 @@ final class TemplateDomainCanvas extends NeoEditor {
         for (Relationship layout : incoming(node, NeoEditor.layoutMember))
             layout.delete();
 
-        debugRelationsFor(node);
+        TemplateDomain.debugRelationsFor(node);
 
         node.delete();
-    }
-
-    private static void debugRelationsFor(final Node node) {
-        node.getRelationships(Direction.OUTGOING).forEach(relationship -> System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has OUTGOING '" + relationship.getType() + "' to " + NeoModel.getNameOrLabelFrom(other(node, relationship))));
-
-        node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-            if (NeoEditor.layoutMember.equals(relationship.getType())) return;
-            System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has INCOMING '" + relationship.getType() + "' from " + NeoModel.getNameOrLabelFrom(other(node, relationship)));
-        });
     }
 
     private NeoPNode parseTemplateGroupFile(File file, PInputEvent event) {
@@ -418,41 +277,11 @@ final class TemplateDomainCanvas extends NeoEditor {
         }
 
         for (com.generator.generators.templates.domain.TemplateStatement templateStatement : templateFile.getStatements())
-            importTemplateStatement(templateGroup, templateStatement, this);
+            TemplateDomain.importTemplateStatement(templateGroup, templateStatement, this);
 
         final NeoPNode newTemplateGroupNode = show(uuidOf(templateGroup), TemplateGroup.name());
         newTemplateGroupNode.setOffset(event);
         return newTemplateGroupNode;
-    }
-
-    static Node importTemplateStatement(Node templateGroup, TemplateStatement templateStatement, NeoEditor editor) {
-
-        for (Node next : editor.getGraph().getAll(TemplateStatement.name(), TemplateDomain.TemplateProperties.name.name(), templateStatement.getName())) {
-            final Node otherTemplateGroup = other(next, singleOutgoing(next, TEMPLATE_GROUP));
-            assert otherTemplateGroup != null;
-            if (otherTemplateGroup.equals(templateGroup))
-                return next;   // return if template-group is same, and name is same:
-        }
-
-        final Node templateStatementNode = TemplateDomain.newTemplateStatement(editor.getGraph(), templateGroup, templateStatement.getName(), templateStatement.getText());
-
-        for (TemplateParameter templateParameter : templateStatement.getParameters()) {
-            switch (templateParameter.getDomainEntityType()) {
-                case STRINGPROPERTY:
-                case BOOLEANPROPERTY:
-                case STATEMENTPROPERTY:
-                    TemplateDomain.newSingleTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
-                    break;
-                case LISTPROPERTY:
-                    TemplateDomain.newListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
-                    break;
-                case KEYVALUELISTPROPERTY:
-                    TemplateDomain.newKeyValueListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName(), templateParameter.getKvNames().toArray(new String[templateParameter.getKvNames().size()]));
-                    break;
-            }
-        }
-
-        return templateStatementNode;
     }
 
     private static class CompositePText extends PText {
@@ -907,6 +736,20 @@ final class TemplateDomainCanvas extends NeoEditor {
 
             return parsed;
         }
+    }
+
+    private static String[] getColor(int index) {
+        return new String[][]{
+                "247, 247, 247".split(", "),
+                "64, 64, 64".split(", "),
+                "64, 64, 64".split(", "),
+                "64, 64, 64".split(", "),
+                "64, 64, 64".split(", "),
+                "0, 109, 44".split(", "),
+                "5, 112, 176".split(", "),
+                "0, 68, 27".split(", "),
+                "153, 52, 4".split(", ")
+        }[index];
     }
 
     public static void main(String[] args) {
