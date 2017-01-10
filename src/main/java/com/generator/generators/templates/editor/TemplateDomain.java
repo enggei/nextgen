@@ -32,96 +32,6 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  */
 public class TemplateDomain {
 
-	static Relationship setSingleReference(Node referencedNode, Node node, RelationshipType type, NeoEditor editor) throws NeoEditor.CircularStatementException {
-
-        final Relationship existingRelationship = singleOutgoing(node, type);
-        if (existingRelationship != null) {
-            // if exact relationship already exists, just return this:
-            if (existingRelationship.getStartNode().equals(node) && existingRelationship.getEndNode().equals(referencedNode) && type.equals(existingRelationship.getType()))
-                return existingRelationship;
-
-            final Node oldReferencedNode = other(node, existingRelationship);
-            existingRelationship.delete(); // Neo-editor will catch deleted relationships and update canvas
-            // try to delete old node (if its not referenced by anything else anymore)
-            try {
-                editor.deleteNode(oldReferencedNode);
-            } catch (NeoEditor.ReferenceException e) {
-                System.out.println("debug: could not remove old single referenced node : " + e.getMessage());
-                // ignore
-            }
-        }
-
-        return addNodeReference(referencedNode, node, type);
-    }
-
-	static Relationship addNodeReference(Node referencedNode, Node node, RelationshipType type) throws NeoEditor.CircularStatementException {
-
-        if (referencedNode.hasLabel(Statement) || referencedNode.hasLabel(SingleValue)) {
-            // check existing relations and return this if already exists:
-            Relationship existingRelation = null;
-            for (Relationship relationship : outgoing(node, type)) {
-                if (other(node, relationship).equals(referencedNode)) {
-                    existingRelation = relationship;
-                    break;
-                }
-            }
-            if (existingRelation != null) return existingRelation;
-
-            // constrain circular statement-relations
-            if (node.hasLabel(Statement) && referencedNode.hasLabel(Statement)) {
-                for (Relationship relationship : referencedNode.getRelationships(OUTGOING)) {
-                    if (other(referencedNode, relationship).equals(node))
-                        throw new NeoEditor.CircularStatementException(node, referencedNode);
-                }
-            }
-
-            final Relationship newRelationship = node.createRelationshipTo(referencedNode, type);
-            newRelationship.setProperty(TemplateProperties.relationType.name(), referencedNode.hasLabel(Statement) ? Statement.name() : SingleValue.name());
-            return newRelationship;
-        }
-
-        throw new IllegalArgumentException("illegal reference type: " + NeoModel.getNameOrLabelFrom(referencedNode));
-    }
-
-	static void debugRelationsFor(final Node node) {
-        node.getRelationships(Direction.OUTGOING).forEach(relationship -> System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has OUTGOING '" + relationship.getType() + "' to " + NeoModel.getNameOrLabelFrom(other(node, relationship))));
-
-        node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-            if (NeoEditor.layoutMember.equals(relationship.getType())) return;
-            System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has INCOMING '" + relationship.getType() + "' from " + NeoModel.getNameOrLabelFrom(other(node, relationship)));
-        });
-    }
-
-	static Node importTemplateStatement(Node templateGroup, com.generator.generators.templates.domain.TemplateStatement templateStatement, NeoEditor editor) {
-
-        for (Node next : editor.getGraph().getAll(TemplateStatement.name(), TemplateProperties.name.name(), templateStatement.getName())) {
-            final Node otherTemplateGroup = other(next, singleOutgoing(next, TEMPLATE_GROUP));
-            assert otherTemplateGroup != null;
-            if (otherTemplateGroup.equals(templateGroup))
-                return next;   // return if template-group is same, and name is same:
-        }
-
-        final Node templateStatementNode = newTemplateStatement(editor.getGraph(), templateGroup, templateStatement.getName(), templateStatement.getText());
-
-        for (TemplateParameter templateParameter : templateStatement.getParameters()) {
-            switch (templateParameter.getDomainEntityType()) {
-                case STRINGPROPERTY:
-                case BOOLEANPROPERTY:
-                case STATEMENTPROPERTY:
-                    newSingleTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
-                    break;
-                case LISTPROPERTY:
-                    newListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
-                    break;
-                case KEYVALUELISTPROPERTY:
-                    newKeyValueListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName(), templateParameter.getKvNames().toArray(new String[templateParameter.getKvNames().size()]));
-                    break;
-            }
-        }
-
-        return templateStatementNode;
-    }
-
 	public enum TemplateLabels implements Label {
 		TemplateGroup, TemplateStatement,
 		SingleTemplateParameter, ListTemplateParameter, KeyValueTemplateParameter,
@@ -579,5 +489,95 @@ public class TemplateDomain {
 				return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + File.separator));
 			}
 		};
+	}
+
+	static Relationship setSingleReference(Node referencedNode, Node node, RelationshipType type, NeoEditor editor) throws NeoEditor.CircularStatementException {
+
+		final Relationship existingRelationship = singleOutgoing(node, type);
+		if (existingRelationship != null) {
+			// if exact relationship already exists, just return this:
+			if (existingRelationship.getStartNode().equals(node) && existingRelationship.getEndNode().equals(referencedNode) && type.equals(existingRelationship.getType()))
+				return existingRelationship;
+
+			final Node oldReferencedNode = other(node, existingRelationship);
+			existingRelationship.delete(); // Neo-editor will catch deleted relationships and update canvas
+			// try to delete old node (if its not referenced by anything else anymore)
+			try {
+				editor.deleteNode(oldReferencedNode);
+			} catch (NeoEditor.ReferenceException e) {
+				System.out.println("debug: could not remove old single referenced node : " + e.getMessage());
+				// ignore
+			}
+		}
+
+		return addNodeReference(referencedNode, node, type);
+	}
+
+	static Relationship addNodeReference(Node referencedNode, Node node, RelationshipType type) throws NeoEditor.CircularStatementException {
+
+		if (referencedNode.hasLabel(Statement) || referencedNode.hasLabel(SingleValue)) {
+			// check existing relations and return this if already exists:
+			Relationship existingRelation = null;
+			for (Relationship relationship : outgoing(node, type)) {
+				if (other(node, relationship).equals(referencedNode)) {
+					existingRelation = relationship;
+					break;
+				}
+			}
+			if (existingRelation != null) return existingRelation;
+
+			// constrain circular statement-relations
+			if (node.hasLabel(Statement) && referencedNode.hasLabel(Statement)) {
+				for (Relationship relationship : referencedNode.getRelationships(OUTGOING)) {
+					if (other(referencedNode, relationship).equals(node))
+						throw new NeoEditor.CircularStatementException(node, referencedNode);
+				}
+			}
+
+			final Relationship newRelationship = node.createRelationshipTo(referencedNode, type);
+			newRelationship.setProperty(TemplateProperties.relationType.name(), referencedNode.hasLabel(Statement) ? Statement.name() : SingleValue.name());
+			return newRelationship;
+		}
+
+		throw new IllegalArgumentException("illegal reference type: " + NeoModel.getNameOrLabelFrom(referencedNode));
+	}
+
+	static void debugRelationsFor(final Node node) {
+		node.getRelationships(Direction.OUTGOING).forEach(relationship -> System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has OUTGOING '" + relationship.getType() + "' to " + NeoModel.getNameOrLabelFrom(other(node, relationship))));
+
+		node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+			if (NeoEditor.layoutMember.equals(relationship.getType())) return;
+			System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has INCOMING '" + relationship.getType() + "' from " + NeoModel.getNameOrLabelFrom(other(node, relationship)));
+		});
+	}
+
+	static Node importTemplateStatement(Node templateGroup, com.generator.generators.templates.domain.TemplateStatement templateStatement, NeoEditor editor) {
+
+		for (Node next : editor.getGraph().getAll(TemplateStatement.name(), TemplateProperties.name.name(), templateStatement.getName())) {
+			final Node otherTemplateGroup = other(next, singleOutgoing(next, TEMPLATE_GROUP));
+			assert otherTemplateGroup != null;
+			if (otherTemplateGroup.equals(templateGroup))
+				return next;   // return if template-group is same, and name is same:
+		}
+
+		final Node templateStatementNode = newTemplateStatement(editor.getGraph(), templateGroup, templateStatement.getName(), templateStatement.getText());
+
+		for (TemplateParameter templateParameter : templateStatement.getParameters()) {
+			switch (templateParameter.getDomainEntityType()) {
+				case STRINGPROPERTY:
+				case BOOLEANPROPERTY:
+				case STATEMENTPROPERTY:
+					newSingleTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
+					break;
+				case LISTPROPERTY:
+					newListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName());
+					break;
+				case KEYVALUELISTPROPERTY:
+					newKeyValueListTemplateParameter(editor.getGraph(), templateStatementNode, templateParameter.getPropertyName(), templateParameter.getKvNames().toArray(new String[templateParameter.getKvNames().size()]));
+					break;
+			}
+		}
+
+		return templateStatementNode;
 	}
 }
