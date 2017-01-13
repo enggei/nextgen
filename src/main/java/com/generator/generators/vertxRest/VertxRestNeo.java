@@ -165,7 +165,7 @@ public final class VertxRestNeo {
 	   // endpoints
 	   public APINode addEndpointsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.endpoints_param)) return this;
+	   	if (isRelated(node, target, Parameters.endpoints_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.endpoints_param);
 	      return this;
 	   }

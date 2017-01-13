@@ -354,7 +354,7 @@ public final class TemplatesNeo {
 	   // kvNames
 	   public KeyValueListTemplateParameterNode addKvNamesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.kvNames_param)) return this;
+	   	if (isRelated(node, target, Parameters.kvNames_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.kvNames_param);
 	      return this;
 	   }
@@ -1108,7 +1108,7 @@ public final class TemplatesNeo {
 	   // imports
 	   public TemplateGroupNode addImportsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.imports_param)) return this;
+	   	if (isRelated(node, target, Parameters.imports_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.imports_param);
 	      return this;
 	   }
@@ -1182,7 +1182,7 @@ public final class TemplatesNeo {
 	   // templateStatements
 	   public TemplateGroupNode addTemplateStatementsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.templateStatements_param)) return this;
+	   	if (isRelated(node, target, Parameters.templateStatements_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.templateStatements_param);
 	      return this;
 	   }
@@ -2557,7 +2557,7 @@ public final class TemplatesNeo {
 	   // templateParameters
 	   public TemplateStatementNode addTemplateParametersValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.templateParameters_param)) return this;
+	   	if (isRelated(node, target, Parameters.templateParameters_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.templateParameters_param);
 	      return this;
 	   }

@@ -6,7 +6,6 @@ import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 
 import java.awt.*;
-import java.io.File;
 import java.util.*;
 
 import static org.neo4j.graphdb.Direction.INCOMING;
@@ -54,12 +53,20 @@ public abstract class BaseDomainVisitor {
 		node.delete();
 	}
 
-	public static boolean isAlreadyRelated(Node node, Node target, RelationshipType relationshipType) {
+	public static boolean isRelated(Node node, Node target, RelationshipType relationshipType) {
 		final Object targetUUID = uuidOf(target);
 		for (Relationship relationship : outgoing(node, relationshipType)) {
 			if (targetUUID.equals(uuidOf(other(node, relationship)))) return true;
 		}
 		return false;
+	}
+
+	public static Relationship getRelationship(Node node, Node target, RelationshipType relationshipType) {
+		final Object targetUUID = uuidOf(target);
+		for (Relationship relationship : outgoing(node, relationshipType)) {
+			if (targetUUID.equals(uuidOf(other(node, relationship)))) return relationship;
+		}
+		return null;
 	}
 
 	public static boolean hasOutgoing(Node node, RelationshipType type) {

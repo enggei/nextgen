@@ -2035,7 +2035,7 @@ public final class TemplatesSwingNeo {
 	   // actions
 	   public statementActionsNode addActionsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.actions_param)) return this;
+	   	if (isRelated(node, target, Parameters.actions_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.actions_param);
 	      return this;
 	   }

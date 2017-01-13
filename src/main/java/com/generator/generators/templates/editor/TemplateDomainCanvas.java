@@ -114,145 +114,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
     @Override
     public void deleteNode(Node node) throws ReferenceException {
-        final Set<Relationship> constraints = new LinkedHashSet<>();
-        final Consumer<Relationship> constraintVisitor = relationship -> {
-            if (relationship.isType(NeoEditor.layoutMember)) return;
-            constraints.add(relationship);
-        };
-
-        TemplateDomain.debugRelationsFor(node);
-
-        if (node.hasLabel(TemplateGroup)) {
-
-            node.getRelationships(INCOMING, TEMPLATE_GROUP).forEach(constraintVisitor);
-            if (!constraints.isEmpty())
-                throw new NeoEditor.ReferenceException(node, constraints);
-
-            // delete all imports
-            node.getRelationships(OUTGOING, IMPORT).forEach(Relationship::delete);
-
-        } else if (node.hasLabel(TemplateStatement)) {
-
-            final Set<Node> parameterNodes = new LinkedHashSet<>();
-            new TemplateGroupVisitor() {
-                @Override
-                protected void onTemplateStatementStart(String name, String text, Node templateStatement) {
-                    templateStatement.getRelationships(INCOMING, TEMPLATE_STATEMENT).forEach(constraintVisitor);
-                }
-
-                @Override
-                protected void onSingleTemplateParameter(String name, Node parameterNode) {
-                    parameterNode.getRelationships(INCOMING, TEMPLATE_PARAMETER).forEach(constraintVisitor);
-                    parameterNodes.add(parameterNode);
-                }
-
-                @Override
-                protected void onListTemplateParameter(String name, Node parameterNode) {
-                    parameterNode.getRelationships(INCOMING, TEMPLATE_PARAMETER).forEach(constraintVisitor);
-                    parameterNodes.add(parameterNode);
-                }
-
-                @Override
-                protected void onKeyValueTemplateParameter(String name, String keys, Node parameterNode) {
-                    parameterNode.getRelationships(INCOMING, TEMPLATE_PARAMETER).forEach(constraintVisitor);
-                    parameterNodes.add(parameterNode);
-                }
-            }.visitTemplateStatement(node);
-
-            if (!constraints.isEmpty())
-                throw new NeoEditor.ReferenceException(node, constraints);
-
-            for (Node parameterNode : parameterNodes) {
-                Relationship outgoing = singleOutgoing(parameterNode, TEMPLATE_PARAMETER);
-                assert outgoing != null;
-                outgoing.delete();
-                deleteNode(parameterNode);
-            }
-            Relationship singleOutgoing = singleOutgoing(node, TEMPLATE_GROUP);
-            assert singleOutgoing != null;
-            singleOutgoing.delete();
-
-        } else if (node.hasLabel(Directory)) {
-
-            outgoing(node, DIRECTORY_MEMBER).forEach(Relationship::delete);
-
-        } else if (node.hasLabel(Statement)) {
-
-            node.getRelationships(INCOMING).forEach(constraintVisitor);
-            if (!constraints.isEmpty())
-                throw new NeoEditor.ReferenceException(node, constraints);
-
-            // this will remove all parameter-relations (and recursively try to delete each value, if its only referenced by this statement (not shared))
-            // this will also remove the TEMPLATE_STATEMENT reference for this statement
-            node.getRelationships(Direction.OUTGOING).forEach(relationship -> {
-                final Node other = other(node, relationship);
-                relationship.delete();
-
-                // try to delete any of the parameters for this statement, (if they are only referenced by this)
-                if (other.hasLabel(SingleValue) || other.hasLabel(KeyValueSet) || other.hasLabel(Statement)) {
-                    try {
-                        deleteNode(other);
-                    } catch (ReferenceException e) {
-                        System.out.println("other node is used elsewhere, ignore " + debugNode(other));
-                    }
-                }
-            });
-
-        } else if (node.hasLabel(SingleValue)) {
-
-            node.getRelationships(INCOMING).forEach(constraintVisitor);
-            if (!constraints.isEmpty())
-                throw new NeoEditor.ReferenceException(node, constraints);
-
-            final Relationship templateRelationship = singleOutgoing(node, TEMPLATE_PARAMETER);
-            if (templateRelationship != null) {
-                final Node templateParameter = other(node, templateRelationship);
-                assert templateParameter != null;
-
-                final RelationshipType parameterType = RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name()));
-                final Relationship relationship = singleIncoming(node, parameterType);
-                templateRelationship.delete();
-                relationship.delete();
-            }
-
-        } else if (node.hasLabel(KeyValueSet)) {
-
-            final Relationship templateRelationship = singleOutgoing(node, TEMPLATE_PARAMETER);
-            final Node templateParameter = other(node, templateRelationship);
-            assert templateParameter != null;
-
-            templateRelationship.delete();
-            final RelationshipType parameterType = RelationshipType.withName(get(templateParameter, TemplateDomain.TemplateProperties.name.name()));
-            final Relationship parameterRelation = singleIncoming(node, parameterType);
-            if (parameterRelation != null) parameterRelation.delete();
-
-            String keyString = getString(templateParameter, TemplateDomain.TemplateProperties.keys.name());
-            assert keyString != null;
-            for (String key : keyString.split(" ")) {
-                final Relationship relationship = singleOutgoing(node, RelationshipType.withName(key));
-                if (relationship == null) continue;
-
-                final Node other = other(node, relationship);
-                relationship.delete();
-
-                // try to delete any of the parameters for this statement, (if they are only referenced by this)
-                if (other.hasLabel(SingleValue) || other.hasLabel(KeyValueSet) || other.hasLabel(Statement)) {
-                    try {
-                        deleteNode(other);
-                    } catch (NeoEditor.ReferenceException e) {
-                        System.out.println("other node is used elsewhere, ignore " + debugNode(other));
-                    }
-                }
-            }
-        }
-
-        // delete from layouts:
-        for (Relationship layout : incoming(node, NeoEditor.layoutMember))
-            layout.delete();
-
-        TemplateDomain.debugRelationsFor(node);
-
-        node.delete();
+        TemplateDomain.deleteNode(node);
     }
 
     private NeoPNode parseTemplateGroupFile(File file, PInputEvent event) {
@@ -705,7 +567,7 @@ final class TemplateDomainCanvas extends NeoEditor {
             }
         }
 
-        public String getStatementLabel() {
+        String getStatementLabel() {
             return statementLabel;
         }
 
@@ -716,6 +578,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
             final String text = txtEditor.getText();
 
+            System.out.println("todo ST-bugfixes here (escape } inside anonymous key-value templates, and >> inside statement");
             // 2 bugfixes: } inside anonymous key-value list
             // and >> inside statement
 

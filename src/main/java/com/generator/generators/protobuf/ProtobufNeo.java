@@ -238,7 +238,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public enumNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
+	   	if (isRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -383,7 +383,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public extendNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
+	   	if (isRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -872,7 +872,7 @@ public final class ProtobufNeo {
 	   // properties
 	   public messageNode addPropertiesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.properties_param)) return this;
+	   	if (isRelated(node, target, Parameters.properties_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.properties_param);
 	      return this;
 	   }
@@ -1242,7 +1242,7 @@ public final class ProtobufNeo {
 	   // deliverables
 	   public protobufPackageNode addDeliverablesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.deliverables_param)) return this;
+	   	if (isRelated(node, target, Parameters.deliverables_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.deliverables_param);
 	      return this;
 	   }
@@ -1255,7 +1255,7 @@ public final class ProtobufNeo {
 	   // imports
 	   public protobufPackageNode addImportsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.imports_param)) return this;
+	   	if (isRelated(node, target, Parameters.imports_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.imports_param);
 	      return this;
 	   }

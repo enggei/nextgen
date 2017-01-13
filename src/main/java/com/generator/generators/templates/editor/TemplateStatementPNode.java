@@ -2,6 +2,7 @@ package com.generator.generators.templates.editor;
 
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
+import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -56,6 +57,38 @@ class TemplateStatementPNode extends TemplateDomainPNode {
         super.showNodeActions(pop, event);
     }
 
+    @Override
+    public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+        //todo if selected node is a TemplateStatement, ask to assign its statements as values for a given single-template-parameter (also support key-value-values ?)
+        final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+        if (selectedNodes.size() != 1) return;
+
+        final Node selectedNode = selectedNodes.iterator().next().node;
+        if (!selectedNode.hasLabel(TemplateStatement)) return;
+
+        // assumes selectedNode is a TemplateStatement:
+        new TemplateGroupVisitor() {
+
+            @Override
+            protected void onSingleTemplateParameter(String name, Node templateParameter) {
+                pop.add(new SetTemplateStatementParameter(name, templateParameter, selectedNode));
+            }
+
+            @Override
+            protected void onListTemplateParameter(String name, Node templateParameter) {
+                pop.add(new SetTemplateStatementParameter(name, templateParameter, selectedNode));
+            }
+
+            @Override
+            protected void onKeyValueTemplateParameter(String name, String keys, Node parameterNode) {
+                // todo add support for key-value-values
+                System.out.println("add support for key-value values for statement as value");
+            }
+
+        }.visitTemplateStatement(node);
+    }
+
     private class EditTemplateStatment extends NeoEditor.TransactionAction {
 
         EditTemplateStatment() {
@@ -97,6 +130,8 @@ class TemplateStatementPNode extends TemplateDomainPNode {
 
                                 @Override
                                 protected void onSingleTemplateParameter(String name, Node parameterNode) {
+
+                                    // todo regarding StatementTemplateParameter, check if there is a need to do changes here:
 
                                     TemplateParameter found = null;
                                     for (TemplateParameter templateParameter : parameters) {
@@ -257,11 +292,16 @@ class TemplateStatementPNode extends TemplateDomainPNode {
                                 node.removeProperty(TemplateDomain.TemplateProperties.statementLabel.name());
 
                             updateView();
-                            // for each dependent statement of this template
+
+                            // for each dependent statement of this template, re-render
                             incoming(node, TEMPLATE_STATEMENT).forEach(relationship -> {
                                 final Node statementNode = other(node, relationship);
-
                                 incoming(statementNode, DIRECTORY_MEMBER).forEach(projectRelationship -> TemplateDomain.renderProjectMember(other(statementNode, projectRelationship), editor.canvas));
+                            });
+
+                            editor.getAllNodesByLabel(Statement.name()).forEach(neoPNode -> {
+                                if (isRelated(neoPNode.node, node, TEMPLATE_STATEMENT))
+                                    neoPNode.updateView();
                             });
 
                             SwingUtilities.invokeLater(dialog::dispose);
@@ -304,6 +344,29 @@ class TemplateStatementPNode extends TemplateDomainPNode {
                     constraints.append("\n").append(NeoModel.getNameOrLabelFrom(parameterNode)).append(" (").append(uuidOf(parameterNode)).append(").").append(key).append(" is used by ").append(NeoModel.getNameOrLabelFrom(dependentValue)).append(" (").append(uuidOf(dependentValue)).append(")");
             });
             return !constraintsAtStart.equals(constraints.toString());
+        }
+    }
+
+    private class SetTemplateStatementParameter extends NeoEditor.TransactionAction {
+
+        private final Node parameterNode;
+        private final Node templateStatement;
+
+        SetTemplateStatementParameter(String name, Node parameterNode, Node templateStatement) {
+            super("Set parameter " + name + " to statements of " + get(templateStatement, "name"), editor.getGraph(), editor.canvas);
+            this.parameterNode = parameterNode;
+            this.templateStatement = templateStatement;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            if (isRelated(parameterNode, templateStatement, TemplateDomain.TemplateRelations.STATEMENT_PARAMETER))
+                getRelationship(parameterNode, templateStatement, TemplateDomain.TemplateRelations.STATEMENT_PARAMETER).delete();
+
+            final Relationship statementParameterRelation = parameterNode.createRelationshipTo(templateStatement, TemplateDomain.TemplateRelations.STATEMENT_PARAMETER);
+            editor.addRelation(statementParameterRelation);
+            updateView();
         }
     }
 

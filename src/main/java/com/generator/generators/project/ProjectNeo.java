@@ -195,7 +195,7 @@ public final class ProjectNeo {
 	   // tasks
 	   public aspectNode addTasksValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.tasks_param)) return this;
+	   	if (isRelated(node, target, Parameters.tasks_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.tasks_param);
 	      return this;
 	   }
@@ -346,7 +346,7 @@ public final class ProjectNeo {
 	   // aspects
 	   public projectNode addAspectsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.aspects_param)) return this;
+	   	if (isRelated(node, target, Parameters.aspects_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.aspects_param);
 	      return this;
 	   }

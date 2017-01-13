@@ -346,7 +346,7 @@ public final class TemplatesNeoNeo {
 	   // comments
 	   public NeoGroupClassDeclarationNode addCommentsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.comments_param)) return this;
+	   	if (isRelated(node, target, Parameters.comments_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.comments_param);
 	      return this;
 	   }
@@ -1101,7 +1101,7 @@ public final class TemplatesNeoNeo {
 	   // kvNames
 	   public keyValueListSetterNode addKvNamesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.kvNames_param)) return this;
+	   	if (isRelated(node, target, Parameters.kvNames_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.kvNames_param);
 	      return this;
 	   }
@@ -1272,7 +1272,7 @@ public final class TemplatesNeoNeo {
 	   // types
 	   public keyValueRelationshipsNode addTypesValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.types_param)) return this;
+	   	if (isRelated(node, target, Parameters.types_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.types_param);
 	      return this;
 	   }

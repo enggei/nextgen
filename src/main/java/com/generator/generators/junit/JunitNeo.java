@@ -487,7 +487,7 @@ public final class JunitNeo {
 	   // statements
 	   public testNode addStatementsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.statements_param)) return this;
+	   	if (isRelated(node, target, Parameters.statements_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.statements_param);
 	      return this;
 	   }
@@ -569,7 +569,7 @@ public final class JunitNeo {
 	   // imports
 	   public testsNode addImportsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.imports_param)) return this;
+	   	if (isRelated(node, target, Parameters.imports_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.imports_param);
 	      return this;
 	   }
@@ -651,7 +651,7 @@ public final class JunitNeo {
 	   // tests
 	   public testsNode addTestsValue(Node target) {
 	   	if (node == null) return this;
-	   	if (isAlreadyRelated(node, target, Parameters.tests_param)) return this;
+	   	if (isRelated(node, target, Parameters.tests_param)) return this;
 	   	node.createRelationshipTo(target, Parameters.tests_param);
 	      return this;
 	   }

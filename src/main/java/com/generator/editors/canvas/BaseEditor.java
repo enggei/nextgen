@@ -116,6 +116,13 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 		return layerNodes.values();
 	}
 
+	public final Collection<N> getAllNodesByLabel(String label) {
+		final Collection<N> nodeSet = new ArrayList<>();
+		for (UUID uuid : this.nodesByLabel.get(label))
+			nodeSet.add(layerNodes.get(uuid));
+		return nodeSet;
+	}
+
 //	public Point2D.Double canvasCenterPoint() {
 //		return new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d);
 //	}
