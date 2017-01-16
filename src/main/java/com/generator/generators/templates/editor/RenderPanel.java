@@ -11,83 +11,80 @@ import java.beans.PropertyChangeListener;
 import static com.generator.editors.BaseDomainVisitor.get;
 
 /**
-* goe on 12/29/16.
-*/
+ * goe on 12/29/16.
+ */
 final class RenderPanel extends JPanel implements PropertyChangeListener {
 
-	private final JTextArea txtEditor = new JTextArea(25, 85);
-	private final NeoEditor editor;
+   private final JTextArea txtEditor = new JTextArea(25, 85);
+   private final NeoEditor editor;
 
-	public RenderPanel(NeoEditor editor) {
-		super(new BorderLayout());
+   RenderPanel(NeoEditor editor) {
+      super(new BorderLayout());
 
-		this.editor = editor;
+      this.editor = editor;
 
-		txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
-		txtEditor.setTabSize(3);
-		txtEditor.setEditable(false);
-		add(new JScrollPane(txtEditor), BorderLayout.CENTER);
-	}
+      txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+      txtEditor.setTabSize(3);
+      txtEditor.setEditable(false);
+      add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+   }
 
-	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		switch (evt.getPropertyName()) {
+   @Override
+   public void propertyChange(PropertyChangeEvent evt) {
+      switch (evt.getPropertyName()) {
 
-			case BasePNode.NODE_HIGHLIGHTED: {
+         case BasePNode.NODE_HIGHLIGHTED: {
 
-				final BasePNode pNode = (BasePNode) evt.getNewValue();
+            final BasePNode pNode = (BasePNode) evt.getNewValue();
 
-				if (pNode instanceof TemplateDomainPNode) {
+            final BasePNode templateDomainNode = (BasePNode) evt.getNewValue();
+            switch (TemplateDomain.TemplateLabels.valueOf(templateDomainNode.getNodeType())) {
 
-					final TemplateDomainPNode templateDomainNode = (TemplateDomainPNode) evt.getNewValue();
-					switch (TemplateDomain.TemplateLabels.valueOf(templateDomainNode.getNodeType())) {
+               case TemplateGroup:
+                  editor.doInTransaction(tx -> {
+                     txtEditor.setText(TemplateDomain.asSTGString(((TemplateGroupPNode) templateDomainNode).node));
+                     txtEditor.setCaretPosition(0);
+                  });
+                  break;
 
-						case TemplateGroup:
-							editor.doInTransaction(tx -> {
-								txtEditor.setText(TemplateDomain.asSTGString(templateDomainNode.node));
-								txtEditor.setCaretPosition(0);
-							});
-							break;
+               case TemplateStatement:
+                  editor.doInTransaction(tx -> {
+                     txtEditor.setText(get(((TemplateStatementPNode) templateDomainNode).node, TemplateDomain.TemplateProperties.text.name()));
+                     txtEditor.setCaretPosition(0);
+                  });
+                  break;
+               case SingleTemplateParameter:
+                  break;
+               case ListTemplateParameter:
+                  break;
+               case KeyValueTemplateParameter:
+                  break;
 
-						case TemplateStatement:
-							editor.doInTransaction(tx -> {
-								txtEditor.setText(get(templateDomainNode.node, TemplateDomain.TemplateProperties.text.name()));
-								txtEditor.setCaretPosition(0);
-							});
-							break;
-						case SingleTemplateParameter:
-							break;
-						case ListTemplateParameter:
-							break;
-						case KeyValueTemplateParameter:
-							break;
+               case Statement:
+                  editor.doInTransaction(tx -> {
+                     txtEditor.setText(TemplateDomain.render(((StatementPNode) templateDomainNode).node));
+                     txtEditor.setCaretPosition(0);
+                  });
+                  break;
 
-						case Statement:
-							editor.doInTransaction(tx -> {
-								txtEditor.setText(TemplateDomain.render(templateDomainNode.node));
-								txtEditor.setCaretPosition(0);
-							});
-							break;
+               case SingleValue:
+                  break;
 
-						case SingleValue:
-							break;
+               case KeyValueSet:
+                  break;
 
-						case KeyValueSet:
-							break;
+               case Project:
+                  break;
 
-						case Project:
-							break;
+               case Directory:
+                  break;
 
-						case Directory:
-							break;
-					}
-
-				} else {
-					txtEditor.setText(pNode.getNodeType());
-					txtEditor.setCaretPosition(0);
-				}
-				break;
-			}
-		}
-	}
+               default:
+                  txtEditor.setText(pNode.getNodeType());
+                  txtEditor.setCaretPosition(0);
+                  break;
+            }
+         }
+      }
+   }
 }

@@ -5,7 +5,9 @@ import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
+import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
@@ -26,15 +28,33 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 /**
  * Created 10.01.17.
  */
-class StatementPNode extends TemplateDomainPNode {
+class StatementPNode extends NeoPNode<PNode> {
 
    private final Node templateStatement;
 
-   StatementPNode(Node statement, Node templateStatement, String[] color, NeoEditor editor) {
-      super(statement, new PText(getString(templateStatement, TemplateDomain.TemplateProperties.name.name())), Statement, color, editor);
-      pNode.setFont(new Font("Hack", Font.PLAIN, 11));
+   private final Color selectedColor = Color.RED;
+   private final Color defaultColor;
+
+   private final PText nodeName;
+
+   StatementPNode(Node node, Node templateStatement, String[] defaultColor, NeoEditor editor) {
+      super(node, PPath.createRectangle(0, 0, 75, 65), Statement.name(), editor);
+      this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
+
+      this.nodeName = new PText();
+      this.nodeName.setOffset(5,5);
+      this.nodeName.setFont(new Font("Hack", Font.PLAIN, 11));
+      this.nodeName.setTextPaint(selected.get() ? selectedColor : this.defaultColor);
+      this.pNode.addChild(nodeName);
+
+      // getString(templateStatement, TemplateDomain.TemplateProperties.name.name())
       this.templateStatement = templateStatement;
       updateView();
+   }
+
+   @Override
+   public String getNodeType() {
+      return Statement.name();
    }
 
    @Override
@@ -42,7 +62,7 @@ class StatementPNode extends TemplateDomainPNode {
 
       final String property = getString(templateStatement, TemplateDomain.TemplateProperties.statementLabel.name());
       if (property == null) {
-         pNode.setText(getString(templateStatement, TemplateDomain.TemplateProperties.name.name()));
+         nodeName.setText(getString(templateStatement, TemplateDomain.TemplateProperties.name.name()));
          return;
       }
 
@@ -53,13 +73,13 @@ class StatementPNode extends TemplateDomainPNode {
          @Override
          protected void onSingleValue(String name, Node referenceNode, TemplateDomain.TemplateLabels referenceNodeType) {
             if (property.equals(name))
-               pNode.setText(label = TemplateDomain.renderReferenceNode(referenceNode, referenceNodeType));
+               nodeName.setText(label = TemplateDomain.renderReferenceNode(referenceNode, referenceNodeType));
          }
 
          @Override
          protected void onStatementEnd() {
             if (label == null)
-               pNode.setText(getString(templateStatement, TemplateDomain.TemplateProperties.name.name()));
+               nodeName.setText(getString(templateStatement, TemplateDomain.TemplateProperties.name.name()));
          }
       }.visitStatement(node);
    }
@@ -109,6 +129,30 @@ class StatementPNode extends TemplateDomainPNode {
       pNodes.put(uuidOf(other(node, relationship)), TemplateDomain.TemplateLabels.TemplateStatement);
 
       editor.showAndLayout(pNodes, pNode);
+   }
+
+   @Override
+   public void onSelect() {
+      nodeName.setTextPaint(Color.WHITE);
+      pNode.setPaint(selectedColor);
+   }
+
+   @Override
+   public void onUnselect() {
+      nodeName.setTextPaint(defaultColor);
+      pNode.setPaint(Color.WHITE);
+   }
+
+   @Override
+   public void onStartHighlight() {
+      nodeName.setTextPaint(Color.ORANGE);
+      pNode.setPaint(defaultColor);
+   }
+
+   @Override
+   public void onEndHighlight() {
+      nodeName.setTextPaint(selected.get() ? selectedColor : defaultColor);
+      pNode.setPaint(selected.get() ? defaultColor : Color.WHITE);
    }
 
    @Override

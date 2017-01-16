@@ -24,7 +24,7 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
 	public final N pNode;
 	public final String type;
 
-	protected final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+	final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
 	static final String NODE_SELECTED = "nodeSelected";
 	static final String NODE_UNSELECTED = "nodeUnSelected";
@@ -39,7 +39,7 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
 
 	private final BaseEditor<?,?> editor;
 
-	protected static final Random random = new Random(System.currentTimeMillis());
+	private static final Random random = new Random(System.currentTimeMillis());
 
 	public BasePNode(UUID uuid, N pNode, String type, BaseEditor editor) {
 		this.uuid = uuid;
@@ -75,7 +75,7 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
 		changeSupport.addPropertyChangeListener(propertyChangeListener);
 	}
 
-	public final void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
+	final void removePropertyChangeListener(PropertyChangeListener propertyChangeListener) {
 		changeSupport.removePropertyChangeListener(propertyChangeListener);
 	}
 
@@ -83,7 +83,7 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
 		return type;
 	}
 
-	public Point2D getCenterPosition() {
+	protected Point2D getCenterPosition() {
 		return pNode.getFullBoundsReference().getCenter2D();
 	}
 

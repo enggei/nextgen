@@ -692,15 +692,6 @@ public class TemplateDomain {
       return singleOutgoing(templateParameter, STATEMENT_PARAMETER) != null;
    }
 
-   static void debugRelationsFor(final Node node) {
-      node.getRelationships(Direction.OUTGOING).forEach(relationship -> System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has OUTGOING '" + relationship.getType() + "' to " + NeoModel.getNameOrLabelFrom(other(node, relationship))));
-
-      node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-         if (NeoEditor.layoutMember.equals(relationship.getType())) return;
-         System.out.println(uuidOf(node) + "(" + NeoModel.getNameOrLabelFrom(node) + ") has INCOMING '" + relationship.getType() + "' from " + NeoModel.getNameOrLabelFrom(other(node, relationship)));
-      });
-   }
-
    static Node importTemplateStatement(Node templateGroup, com.generator.generators.templates.domain.TemplateStatement templateStatement, NeoEditor editor) {
 
       for (Node next : editor.getGraph().getAll(TemplateStatement.name(), TemplateProperties.name.name(), templateStatement.getName())) {
@@ -729,5 +720,17 @@ public class TemplateDomain {
       }
 
       return templateStatementNode;
+   }
+
+   private static void debugRelationsFor(final Node node) {
+
+      node.getRelationships(Direction.OUTGOING).
+            forEach(relationship ->
+                  System.out.println(uuidOf(node) + "(" + labelsFor(node) + ") has OUTGOING '" + relationship.getType() + "' to " + labelsFor(other(node, relationship))));
+
+      node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+         if (NeoEditor.layoutMember.equals(relationship.getType())) return;
+         System.out.println(uuidOf(node) + "(" + labelsFor(node) + ") has INCOMING '" + relationship.getType() + "' from " + labelsFor(other(node, relationship)));
+      });
    }
 }

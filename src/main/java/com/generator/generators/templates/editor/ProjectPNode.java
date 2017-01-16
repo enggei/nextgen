@@ -6,7 +6,6 @@ import org.neo4j.graphdb.*;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -29,7 +28,6 @@ class ProjectPNode extends TemplateDomainPNode {
 
     ProjectPNode(Node node, String[] defaultColor, NeoEditor editor) {
         super(node, Project, TemplateDomain.TemplateProperties.name.name(), defaultColor, editor);
-        pNode.setFont(new Font("Hack", Font.BOLD, 12));
     }
 
     @Override
