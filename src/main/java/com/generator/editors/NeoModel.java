@@ -167,7 +167,7 @@ public class NeoModel {
         }
     }
 
-    public static boolean hasUUID(Node node) {
+    static boolean hasUUID(Node node) {
         return node.hasProperty(NeoModel.TAG_UUID);
     }
 

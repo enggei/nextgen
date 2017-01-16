@@ -12,6 +12,7 @@ import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -248,6 +249,14 @@ class StatementPNode extends NeoPNode<PNode> {
                pop.add(new AddListReference(name, templateParameter, selectedNode));
          }
       }.visitTemplateStatement(templateStatement);
+   }
+
+   @Override
+   public void renderTo(JTextComponent textArea) {
+      editor.doInTransaction(tx -> {
+         textArea.setText(TemplateDomain.render(node));
+         textArea.setCaretPosition(0);
+      });
    }
 
    private class SetSingleValue extends NeoEditor.TransactionAction {

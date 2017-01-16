@@ -1,5 +1,6 @@
 package com.generator.generators.templates.editor;
 
+import com.generator.editors.canvas.RenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.*;
@@ -21,17 +22,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.debugNode;
 import static com.generator.editors.NeoModel.uuidOf;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateLabels.*;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateRelations.*;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
-import static org.neo4j.graphdb.Direction.INCOMING;
-import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**
  * goe on 12/29/16.
@@ -621,7 +618,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
         final JFrame frame = new JFrame();
         final TemplateDomainCanvas contentPanel = new TemplateDomainCanvas();
-        final RenderPanel renderPanel = new RenderPanel(contentPanel);
+        final RenderPanel renderPanel = new RenderPanel();
         contentPanel.addPropertyChangeListener(renderPanel);
 
         frame.getContentPane().add(contentPanel.getCanvas(), BorderLayout.CENTER);

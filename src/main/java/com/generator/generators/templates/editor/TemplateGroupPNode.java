@@ -9,6 +9,7 @@ import org.neo4j.graphdb.Transaction;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -51,6 +52,14 @@ class TemplateGroupPNode extends TemplateDomainPNode {
         pop.add(new ToSTGGroup());
         pop.add(new ExpandTemplateGroup());
         super.showNodeActions(pop, event);
+    }
+
+    @Override
+    public void renderTo(JTextComponent textArea) {
+        editor.doInTransaction(tx -> {
+            textArea.setText(TemplateDomain.asSTGString(node));
+            textArea.setCaretPosition(0);
+        });
     }
 
     private class NewTemplateStatement extends NeoEditor.TransactionAction {

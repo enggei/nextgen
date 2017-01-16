@@ -12,6 +12,7 @@ import org.neo4j.graphdb.Transaction;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.*;
@@ -87,6 +88,14 @@ class TemplateStatementPNode extends TemplateDomainPNode {
             }
 
         }.visitTemplateStatement(node);
+    }
+
+    @Override
+    public void renderTo(JTextComponent textArea) {
+        editor.doInTransaction(tx -> {
+            textArea.setText(get(node, TemplateDomain.TemplateProperties.text.name()));
+            textArea.setCaretPosition(0);
+        });
     }
 
     private class EditTemplateStatment extends NeoEditor.TransactionAction {

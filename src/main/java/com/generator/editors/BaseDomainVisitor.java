@@ -229,10 +229,14 @@ public abstract class BaseDomainVisitor {
 	}
 
 	public static String printPropertiesFor(Node node) {
+		return printPropertiesFor(node, " ");
+	}
+
+	public static String printPropertiesFor(Node node, String delimiter) {
 		final StringBuilder out = new StringBuilder();
 		boolean first = true;
 		for (String k : node.getPropertyKeys()) {
-			if (!first) out.append(" ");
+			if (!first) out.append(delimiter);
 			out.append(k).append("=").append(node.getProperty(k));
 			first = false;
 		}
