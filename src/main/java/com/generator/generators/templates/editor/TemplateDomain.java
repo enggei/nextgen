@@ -1,6 +1,5 @@
 package com.generator.generators.templates.editor;
 
-import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.generators.templates.domain.GeneratedFile;
