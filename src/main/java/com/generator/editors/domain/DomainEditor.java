@@ -120,7 +120,6 @@ public class DomainEditor extends NeoEditor {
 	protected void onNewDomainRelation(ActionEvent e, Transaction tx, NeoModel graph, PInputEvent event) throws Exception {
 	}
 
-
 	public void deleteNode(Node node) throws NeoEditor.ReferenceException {
 	}
 

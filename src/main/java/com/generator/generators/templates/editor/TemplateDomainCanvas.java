@@ -1,6 +1,6 @@
 package com.generator.generators.templates.editor;
 
-import com.generator.editors.canvas.RenderPanel;
+import com.generator.editors.canvas.BaseNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.*;
@@ -618,7 +618,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
         final JFrame frame = new JFrame();
         final TemplateDomainCanvas contentPanel = new TemplateDomainCanvas();
-        final RenderPanel renderPanel = new RenderPanel();
+        final BaseNodeRenderPanel renderPanel = new BaseNodeRenderPanel();
         contentPanel.addPropertyChangeListener(renderPanel);
 
         frame.getContentPane().add(contentPanel.getCanvas(), BorderLayout.CENTER);

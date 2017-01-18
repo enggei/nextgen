@@ -5,9 +5,9 @@ import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 
-import java.awt.*;
 import java.util.*;
 
+import static java.util.Comparator.*;
 import static org.neo4j.graphdb.Direction.INCOMING;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
@@ -16,16 +16,10 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  */
 public abstract class BaseDomainVisitor {
 
-	private final String name;
-	protected final Component component;
-
-	protected BaseDomainVisitor(Component component, String name) {
-		this.component = component;
-		this.name = name;
-	}
-
-	public final String getName() {
-		return name;
+	protected static java.util.List<String> split(Node node, String propertyName, String delim) {
+		final String deps = getString(node, propertyName);
+		if (deps != null) return Arrays.asList(deps.split(delim));
+		return Collections.emptyList();
 	}
 
 	public static UUID uuidOf(Node node) {
@@ -113,28 +107,6 @@ public abstract class BaseDomainVisitor {
 		return relationship == null ? null : relationship.getOtherNode(node);
 	}
 
-	public static Node otherIncoming(Node node, RelationshipType type) {
-		return other(node, singleIncoming(node, type));
-	}
-
-	public static Node otherOutgoing(Node node, RelationshipType type) {
-		return other(node, singleOutgoing(node, type));
-	}
-
-	protected static java.util.List<String> split(Node node, String propertyName, String delim) {
-		final String deps = getString(node, propertyName);
-		if (deps != null) return Arrays.asList(deps.split(delim));
-		return Collections.emptyList();
-	}
-
-	public static boolean isType(Relationship relationship, Enum type) {
-		return relationship != null && type.name().equals(relationship.getProperty("type"));
-	}
-
-	public static boolean isType(Node node, Enum type) {
-		return node != null && type.name().equals(node.getLabels().iterator().next().name());
-	}
-
 	@SuppressWarnings("unchecked")
 	public static <T> T get(Node node, String property) {
 		return (T) (has(node, property) ? node.getProperty(property) : null);
@@ -156,10 +128,6 @@ public abstract class BaseDomainVisitor {
 		return get(other(node, relationship), otherProperty);
 	}
 
-	public static Object getOtherProperty(Node node, RelationshipType relationshipType, String otherProperty) {
-		return get(other(node, singleOutgoing(node, relationshipType)), otherProperty);
-	}
-
 	public static String get(Node nodePropertyNode, String property, String defaultValue) {
 		return has(nodePropertyNode, property) ? nodePropertyNode.getProperty(property).toString() : defaultValue;
 	}
@@ -172,36 +140,6 @@ public abstract class BaseDomainVisitor {
 		return relationship != null && relationship.hasProperty(property) && (!"[]".equals(relationship.getProperty(property)) && (!"null".equals(relationship.getProperty(property))));
 	}
 
-	public static boolean isTrue(Node node, String property) {
-		return has(node, property) && Boolean.valueOf(node.getProperty(property) + "");
-	}
-
-	public static void validateHasProperty(Node node, String propertyName) {
-		if (!node.hasProperty(propertyName))
-			throw new IllegalStateException("Node " + NeoModel.getNameOrLabelFrom(node) + " (" + NeoModel.uuidOf(node) + ") is missing required '" + propertyName + "' property");
-	}
-
-	public static void notNull(Node rootModuleNode, String error) {
-		if (rootModuleNode == null) {
-			throw new IllegalStateException(error);
-		}
-	}
-
-	public static String reverseString(java.util.List<String> qualifiedName) {
-		final StringBuilder out = new StringBuilder();
-
-		Collections.reverse(qualifiedName);
-
-		boolean first = true;
-		for (String s : qualifiedName) {
-			if (!first) out.append(".");
-			out.append(s);
-			first = false;
-		}
-
-		return out.toString();
-	}
-
 	public static String types(Iterable<Relationship> relationships) {
 		final StringBuilder out = new StringBuilder();
 		boolean first = true;
@@ -211,21 +149,6 @@ public abstract class BaseDomainVisitor {
 			out.append(item.getType().name());
 		}
 		return out.toString();
-	}
-
-	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
-
-		final Set<Relationship> relations = new TreeSet<>(new Comparator<Relationship>() {
-			@Override
-			public int compare(Relationship o1, Relationship o2) {
-				return Long.compare(o1.getId(), o2.getId());
-			}
-		});
-
-		for (Relationship relationship : relationships)
-			relations.add(relationship);
-
-		return relations;
 	}
 
 	public static String printPropertiesFor(Node node) {
@@ -241,5 +164,15 @@ public abstract class BaseDomainVisitor {
 			first = false;
 		}
 		return out.toString().trim();
+	}
+
+	private static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+
+		final Set<Relationship> relations = new TreeSet<>(comparingLong(Relationship::getId));
+
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+
+		return relations;
 	}
 }

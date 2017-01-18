@@ -210,7 +210,7 @@ class StatementPNode extends NeoPNode<PNode> {
       pop.add(new RenderToClipboard());
       pop.add(new ShowTemplate(event));
 
-      super.showNodeActions(pop, event);
+      super.showNodeActions(pop,event);
    }
 
    @Override

@@ -3,7 +3,6 @@ package com.generator.editors.canvas.neo;
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BasePNode;
-import com.generator.generators.templates.editor.TemplateDomain;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -15,11 +14,14 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * goe on 11/16/16.
  */
 public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
+
+   protected final AtomicBoolean isExpanding = new AtomicBoolean(false);
 
    public final Node node;
    protected final NeoEditor editor;
@@ -153,6 +155,8 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
       pop.addSeparator();
       pop.add(hideNode());
       if (editor.hasLayerNodes()) pop.add(retainNode());
+
+      pop.add(deleteNode());
    }
 
    @Override

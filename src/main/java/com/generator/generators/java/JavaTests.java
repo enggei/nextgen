@@ -1,35 +1,33 @@
- package com.generator.generators.java;
-import com.generator.editors.NeoModel;
+package com.generator.generators.java;
+
+import com.generator.util.FileUtil;
+import com.github.javaparser.ParseException;
 import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 public class JavaTests {
 
-    @Test
+   @Test
    public void testJavaGroup() {
 
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
       final JavaGroup group = new JavaGroup();
 
-   	// todo add JavaGroup- tests here;
+      // todo add JavaGroup- tests here;
 
+   }
 
-   } ;
+   @Test
+   public void testJavaParsingVisitor() throws IOException, ParseException {
 
-    @Test
-   public void testJavaNeo() {
+      File[] list = FileUtil.list("/home/goe/udc/trailer-report/src/main/java/com/ud/tr/domain", ".java");
 
-   	final org.neo4j.graphdb.GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new java.io.File("src/test/tests/db"));
-   	final NeoModel model = new NeoModel(db);
-
-   	model.doInTransaction(new NeoModel.Committer() {
-   		@Override
-   		public void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable {
-   		}
-
-   		@Override
-   		public void exception(Throwable throwable) {
-   			throw new RuntimeException(throwable);
-   		}
-   	});
-   } ;
-} 
+      for (int i = 0; i < list.length; i++) {
+         File file = list[i];
+         System.out.println(file);
+      }
+   }
+}

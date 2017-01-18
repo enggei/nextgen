@@ -34,11 +34,12 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    protected NeoModel graph;
 
    private String currentDir = System.getProperty("user.home");
+//   private String currentDir = "/home/goe/dbtest";
+//   private String currentDir = "/media/goe/Data/old/db";
+
    private Node lastLayoutSaved = null;
    private final Map<Long, UUID> neoRelationPaths = new LinkedHashMap<>();
    public static final RelationshipType layoutMember = RelationshipType.withName("_layoutMember");
-
-//	protected final AtomicBoolean isExpanding = new AtomicBoolean(false);
 
    private final Set<Long> deletedNodes = new LinkedHashSet<>();
    private final Set<Long> deletedRelations = new LinkedHashSet<>();
@@ -118,8 +119,11 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          return layerNodes.get(uuid);
       }
 
+      final Node node = graph.getNode(uuid);
+      if(node==null) return null;
+
       NeoPNode newInstance;
-      layerNodes.put(uuid, newInstance = newNode(graph.getNode(uuid), nodetype));
+      layerNodes.put(uuid, newInstance = newNode(node, nodetype));
 
       newInstance.addPropertyChangeListener(this);
       nodeLayer.addChild(newInstance.pNode);

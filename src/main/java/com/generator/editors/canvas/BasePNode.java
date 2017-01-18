@@ -19,8 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandler implements PropertyChangeListener {
 
-   protected final AtomicBoolean isExpanding = new AtomicBoolean(false);
-
    public final UUID uuid;
    public final N pNode;
    protected final String type;

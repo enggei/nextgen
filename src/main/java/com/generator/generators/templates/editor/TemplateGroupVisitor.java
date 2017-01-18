@@ -1,16 +1,12 @@
 package com.generator.generators.templates.editor;
 
-import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
 import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.BaseDomainVisitor.get;
-import static com.generator.editors.BaseDomainVisitor.getString;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateLabels.TemplateGroup;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateLabels.TemplateStatement;
-import static com.generator.generators.templates.editor.TemplateDomain.TemplateRelations.STATEMENT_PARAMETER;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateRelations.TEMPLATE_GROUP;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateRelations.TEMPLATE_PARAMETER;
 
