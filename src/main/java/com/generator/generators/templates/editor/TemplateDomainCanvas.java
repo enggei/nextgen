@@ -36,7 +36,7 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
 final class TemplateDomainCanvas extends NeoEditor {
 
    private TemplateDomainCanvas() {
-
+      super();
       canvas.setBackground(new Color(Integer.valueOf(getColor(0)[0]), Integer.valueOf(getColor(0)[1]), Integer.valueOf(getColor(0)[2])));
 
       for (TemplateDomain.TemplateLabels label : TemplateDomain.TemplateLabels.values())
@@ -193,6 +193,9 @@ final class TemplateDomainCanvas extends NeoEditor {
 
          final String name = SwingUtil.showInputDialog("Name", canvas);
          if (name == null) return;
+
+         final File file = SwingUtil.showOpenFile(canvas, System.getProperty("user.home"));
+         if (file == null || !file.getName().toLowerCase().endsWith(".stg")) return;
 
          show(uuidOf(TemplateDomain.newProject(graph, name)), Project.name()).
                setOffset(event);

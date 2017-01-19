@@ -5,6 +5,7 @@ import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BaseEditor;
 import com.generator.editors.canvas.BasePNode;
 import com.generator.editors.canvas.RelationPath;
+import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
@@ -18,7 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
-import java.io.File;
+import java.io.*;
 import java.util.*;
 
 import static com.generator.editors.BaseDomainVisitor.*;
@@ -33,9 +34,9 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    // model-state
    protected NeoModel graph;
 
+   private final Properties properties = new Properties();
+   private final File propertiesFile = new File(System.getProperty("user.home"), "/.nextgen/app.properties");
    private String currentDir = System.getProperty("user.home");
-//   private String currentDir = "/home/goe/dbtest";
-//   private String currentDir = "/media/goe/Data/old/db";
 
    private Node lastLayoutSaved = null;
    private final Map<Long, UUID> neoRelationPaths = new LinkedHashMap<>();
@@ -44,6 +45,27 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    private final Set<Long> deletedNodes = new LinkedHashSet<>();
    private final Set<Long> deletedRelations = new LinkedHashSet<>();
    private final Map<Long, Map<String, UUID>> addedRelations = new LinkedHashMap<>();
+
+   public NeoEditor() {
+
+      FileUtil.tryToCreateFileIfNotExists(propertiesFile);
+      if (propertiesFile != null && propertiesFile.exists()) {
+         try {
+            this.properties.load(new BufferedReader(new FileReader(propertiesFile)));
+         } catch (IOException e) {
+            System.out.println("Could not open properties file " + propertiesFile);
+         }
+      }
+
+      for (Map.Entry<Object, Object> property : properties.entrySet()) {
+         System.out.println(property.getKey() + " = " + property.getValue());
+      }
+
+      final String database = this.properties.getProperty("database", null);
+      if (database != null && new File(database).exists()) {
+         setGraph(newEmbeddedDatabase(database));
+      }
+   }
 
    public void setGraph(NeoModel graph) {
 
@@ -120,7 +142,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
 
       final Node node = graph.getNode(uuid);
-      if(node==null) return null;
+      if (node == null) return null;
 
       NeoPNode newInstance;
       layerNodes.put(uuid, newInstance = newNode(node, nodetype));
@@ -142,9 +164,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       super.mouseClicked(event);
 
       if (event.isRightMouseButton()) {
-
-         if (graph == null) {
-
+         SwingUtilities.invokeLater(() -> {
             final JPopupMenu pop = new JPopupMenu();
             pop.add(new AbstractAction("Database") {
                @Override
@@ -164,28 +184,39 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
                      System.out.println("opening database " + dir.getAbsolutePath());
 
                      currentDir = dir.getAbsolutePath();
+                     setGraph(newEmbeddedDatabase(currentDir));
+                     properties.setProperty("database", currentDir);
+                     saveProperties();
 
-                     setGraph(new NeoModel(new GraphDatabaseFactory().
-                           newEmbeddedDatabaseBuilder(dir).
-                           setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").
-                           newGraphDatabase(),
-                           model -> System.out.println("graph closed")));
                      canvas.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                   });
                }
             });
 
-            pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
-            return;
-         }
+            if (graph != null)
+               doInTransaction(tx -> {
+                  addToMenu(pop, event);
+               });
 
-         SwingUtilities.invokeLater(() -> doInTransaction(tx -> {
-            final JPopupMenu pop = new JPopupMenu();
-            addToMenu(pop, event);
             pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
-         }));
-
+         });
       }
+   }
+
+   private void saveProperties() {
+      try {
+         properties.store(new FileWriter(propertiesFile), "autosave");
+      } catch (IOException e) {
+         System.out.println("Could not save properties to " + propertiesFile.getAbsolutePath());
+      }
+   }
+
+   private static NeoModel newEmbeddedDatabase(String dir) {
+      return new NeoModel(new GraphDatabaseFactory().
+            newEmbeddedDatabaseBuilder(new File(dir)).
+            setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").
+            newGraphDatabase(),
+            model -> System.out.println("graph closed"));
    }
 
    @Override
