@@ -1,4 +1,4 @@
-package com.templates;
+package com.nextgen.templates;
 
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;

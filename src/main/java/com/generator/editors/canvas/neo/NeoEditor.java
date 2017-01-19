@@ -63,7 +63,16 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
       final String database = this.properties.getProperty("database", null);
       if (database != null && new File(database).exists()) {
+
          setGraph(newEmbeddedDatabase(database));
+
+         final String lastLayout = properties.getProperty("last.layout");
+         if (lastLayout != null) {
+            doInTransaction(tx -> {
+               final Node layoutNode = getGraph().getNode(UUID.fromString(lastLayout));
+               if (layoutNode != null) loadLayout(layoutNode, "autoload").actionPerformed(null);
+            });
+         }
       }
    }
 
@@ -406,6 +415,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
             }
 
             lastLayoutSaved = node;
+            properties.setProperty("last.layout", uuidOf(lastLayoutSaved).toString());
+            saveProperties();
          }
       };
    }
@@ -414,6 +425,10 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       return new TransactionAction(name, graph, canvas) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            properties.setProperty("last.layout", uuidOf(node).toString());
+            saveProperties();
+
             outgoing(node, layoutMember).forEach(relationship -> {
                final Double x = Double.valueOf(relationship.getProperty("x").toString());
                final Double y = Double.valueOf(relationship.getProperty("y").toString());

@@ -1,4 +1,4 @@
-package com.nextgen.tests;
+package com.nextgen.ssh;
 
 import com.generator.util.FileUtil;
 import com.jcraft.jsch.*;
@@ -17,7 +17,7 @@ import static net.sf.expectit.matcher.Matchers.regexp;
 /**
  * Created by Ernst Sognnes on 07.01.17.
  */
-public class ExpectItTest {
+public class ExpectIt {
 
 	@Test
 	public void testExpectIt() throws Exception {
