@@ -260,6 +260,4 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
    public String toString() {
       return type;
    }
-
-
 }

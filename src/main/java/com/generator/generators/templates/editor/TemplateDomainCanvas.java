@@ -96,7 +96,7 @@ final class TemplateDomainCanvas extends NeoEditor {
       pop.add(newMenu);
 
       final JMenu showMenu = new JMenu("Show");
-      graph.getAllLabelsInUse().forEach(label -> showMenu.add(showAllNodesByLabel(label, event)));
+      graph.getGraphDb().getAllLabelsInUse().forEach(label -> showMenu.add(showAllNodesByLabel(label, event)));
       pop.add(showMenu);
 
       final JMenu hideMenu = new JMenu("Hide");
