@@ -23,8 +23,8 @@ import static org.neo4j.graphdb.Direction.INCOMING;
  */
 class SingleValuePNode extends TemplateDomainPNode {
 
-    SingleValuePNode(Node valueNode, String[] color, NeoEditor editor) {
-        super(valueNode, new PText(), SingleValue, color, editor);
+    SingleValuePNode(Node valueNode, NeoEditor editor) {
+        super(valueNode, new PText(), SingleValue, "0, 109, 44".split(", "), editor);
         pNode.setFont(new Font("Hack", Font.PLAIN, 11));
         updateView();
     }
@@ -34,7 +34,7 @@ class SingleValuePNode extends TemplateDomainPNode {
         final Map<UUID, org.neo4j.graphdb.Label> pNodes = new LinkedHashMap<>();
 
         for (Relationship relationship : node.getRelationships(INCOMING)) {
-            if (NeoEditor.layoutMember.equals(relationship.getType())) continue;
+            if (NeoEditor.isAppRelated(relationship)) continue;
             final Node other = other(node, relationship);
             if (hasLabel(other, TemplateDomain.TemplateLabels.Statement.name()))
                 pNodes.put(uuidOf(other(node, relationship)), TemplateDomain.TemplateLabels.Statement);

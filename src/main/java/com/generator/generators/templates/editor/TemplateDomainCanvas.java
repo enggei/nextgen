@@ -8,7 +8,8 @@ import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.SwingUtil;
 import com.jgoodies.forms.layout.CellConstraints;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.nodes.PText;
@@ -24,7 +25,8 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.BaseDomainVisitor.other;
+import static com.generator.editors.BaseDomainVisitor.singleOutgoing;
 import static com.generator.editors.NeoModel.uuidOf;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateLabels.*;
 import static com.generator.generators.templates.editor.TemplateDomain.TemplateRelations.*;
@@ -37,7 +39,7 @@ final class TemplateDomainCanvas extends NeoEditor {
 
    private TemplateDomainCanvas() {
       super();
-      canvas.setBackground(new Color(Integer.valueOf(getColor(0)[0]), Integer.valueOf(getColor(0)[1]), Integer.valueOf(getColor(0)[2])));
+      canvas.setBackground(new Color(Integer.valueOf("247, 247, 247".split(", ")[0]), Integer.valueOf("247, 247, 247".split(", ")[1]), Integer.valueOf("247, 247, 247".split(", ")[2])));
 
       for (TemplateDomain.TemplateLabels label : TemplateDomain.TemplateLabels.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
@@ -50,36 +52,28 @@ final class TemplateDomainCanvas extends NeoEditor {
 
       nodesByLabel.get(nodetype).add(uuidOf(node));
 
-      final String[] colorOne = getColor(2);
-      final String[] colorTwo = getColor(3);
-      final String[] colorThree = getColor(4);
-      final String[] colorFour = getColor(5);
-      final String[] colorFive = getColor(6);
-      final String[] colorSix = getColor(7);
-      final String[] colorSeven = getColor(8);
-
       switch (TemplateDomain.TemplateLabels.valueOf(nodetype)) {
 
          case TemplateGroup:
-            return new TemplateGroupPNode(node, colorOne, TemplateDomainCanvas.this);
+            return new TemplateGroupPNode(node, TemplateDomainCanvas.this);
          case TemplateStatement:
-            return new TemplateStatementPNode(node, colorTwo, TemplateDomainCanvas.this);
+            return new TemplateStatementPNode(node, TemplateDomainCanvas.this);
          case SingleTemplateParameter:
-            return new TemplateParameterPNode(node, SingleTemplateParameter, TemplateDomain.TemplateProperties.name.name(), colorThree, TemplateDomainCanvas.this);
+            return new TemplateParameterPNode(node, SingleTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
          case ListTemplateParameter:
-            return new TemplateParameterPNode(node, ListTemplateParameter, TemplateDomain.TemplateProperties.name.name(), colorThree, TemplateDomainCanvas.this);
+            return new TemplateParameterPNode(node, ListTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
          case KeyValueTemplateParameter:
-            return new TemplateParameterPNode(node, KeyValueTemplateParameter, TemplateDomain.TemplateProperties.name.name(), colorThree, TemplateDomainCanvas.this);
+            return new TemplateParameterPNode(node, KeyValueTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
          case Statement:
-            return new StatementPNode(node, other(node, singleOutgoing(node, TEMPLATE_STATEMENT)), colorFive, TemplateDomainCanvas.this);
+            return new StatementPNode(node, other(node, singleOutgoing(node, TEMPLATE_STATEMENT)), TemplateDomainCanvas.this);
          case SingleValue:
-            return new SingleValuePNode(node, colorFour, TemplateDomainCanvas.this);
+            return new SingleValuePNode(node, TemplateDomainCanvas.this);
          case KeyValueSet:
-            return new KeyValueSetPNode(node, new CompositePText(), colorSix, TemplateDomainCanvas.this, other(node, singleOutgoing(node, TEMPLATE_PARAMETER)));
+            return new KeyValueSetPNode(node, new CompositePText(), TemplateDomainCanvas.this, other(node, singleOutgoing(node, TEMPLATE_PARAMETER)));
          case Project:
-            return new ProjectPNode(node, colorSeven, TemplateDomainCanvas.this);
+            return new ProjectPNode(node, TemplateDomainCanvas.this);
          case Directory:
-            return new DirectoryPNode(node, colorSeven, TemplateDomainCanvas.this);
+            return new DirectoryPNode(node, TemplateDomainCanvas.this);
       }
 
       throw new IllegalArgumentException("unsupported nodetype: " + nodetype);
@@ -193,9 +187,6 @@ final class TemplateDomainCanvas extends NeoEditor {
 
          final String name = SwingUtil.showInputDialog("Name", canvas);
          if (name == null) return;
-
-         final File file = SwingUtil.showOpenFile(canvas, System.getProperty("user.home"));
-         if (file == null || !file.getName().toLowerCase().endsWith(".stg")) return;
 
          show(uuidOf(TemplateDomain.newProject(graph, name)), Project.name()).
                setOffset(event);
@@ -599,20 +590,6 @@ final class TemplateDomainCanvas extends NeoEditor {
 
          return parsed;
       }
-   }
-
-   private static String[] getColor(int index) {
-      return new String[][]{
-            "247, 247, 247".split(", "),
-            "64, 64, 64".split(", "),
-            "64, 64, 64".split(", "),
-            "64, 64, 64".split(", "),
-            "64, 64, 64".split(", "),
-            "0, 109, 44".split(", "),
-            "5, 112, 176".split(", "),
-            "0, 68, 27".split(", "),
-            "153, 52, 4".split(", ")
-      }[index];
    }
 
    public static void main(String[] args) {

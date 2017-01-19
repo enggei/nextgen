@@ -38,12 +38,13 @@ class StatementPNode extends NeoPNode<PNode> {
 
    private final PText nodeName;
 
-   StatementPNode(Node node, Node templateStatement, String[] defaultColor, NeoEditor editor) {
+   StatementPNode(Node node, Node templateStatement, NeoEditor editor) {
       super(node, PPath.createRectangle(0, 0, 75, 65), Statement.name(), editor);
-      this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
+
+      this.defaultColor = new Color(Integer.valueOf("5, 112, 176".split(", ")[0]), Integer.valueOf("5, 112, 176".split(", ")[1]), Integer.valueOf("5, 112, 176".split(", ")[2]));
 
       this.nodeName = new PText();
-      this.nodeName.setOffset(5,5);
+      this.nodeName.setOffset(5, 5);
       this.nodeName.setFont(new Font("Hack", Font.PLAIN, 11));
       this.nodeName.setTextPaint(selected.get() ? selectedColor : this.defaultColor);
       this.pNode.addChild(nodeName);
@@ -117,7 +118,7 @@ class StatementPNode extends NeoPNode<PNode> {
       final Map<UUID, org.neo4j.graphdb.Label> pNodes = new LinkedHashMap<>();
 
       for (Relationship relationship : node.getRelationships(INCOMING)) {
-         if (NeoEditor.layoutMember.equals(relationship.getType())) continue;
+         if (NeoEditor.isAppRelated(relationship)) continue;
          final Node other = other(node, relationship);
          if (hasLabel(other, TemplateDomain.TemplateLabels.Directory.name()))
             pNodes.put(uuidOf(other(node, relationship)), TemplateDomain.TemplateLabels.Directory);
@@ -210,7 +211,7 @@ class StatementPNode extends NeoPNode<PNode> {
       pop.add(new RenderToClipboard());
       pop.add(new ShowTemplate(event));
 
-      super.showNodeActions(pop,event);
+      super.showNodeActions(pop, event);
    }
 
    @Override
@@ -331,7 +332,7 @@ class StatementPNode extends NeoPNode<PNode> {
             }
          });
 
-         if(nodeDetached.get()) {
+         if (nodeDetached.get()) {
             try {
                TemplateDomain.deleteNode(referencedNode);
             } catch (NeoEditor.ReferenceException e1) {

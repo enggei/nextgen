@@ -28,8 +28,8 @@ import static com.generator.generators.templates.editor.TemplateDomain.TemplateR
  */
 class TemplateStatementPNode extends TemplateDomainPNode {
 
-    TemplateStatementPNode(Node templateStatement, String[] color, NeoEditor editor) {
-        super(templateStatement, TemplateStatement, TemplateDomain.TemplateProperties.name.name(), color, editor);
+    TemplateStatementPNode(Node templateStatement, NeoEditor editor) {
+        super(templateStatement, TemplateStatement, TemplateDomain.TemplateProperties.name.name(), "64, 64, 64".split(", "), editor);
     }
 
     @Override

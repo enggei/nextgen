@@ -31,12 +31,12 @@ class KeyValueSetPNode extends TemplateDomainPNode {
     private final Node templateParameter;
     private final Color defaultColor;
 
-    KeyValueSetPNode(Node keyValueNode, PText pText, String[] color, NeoEditor editor, Node templateParameter) {
-        super(keyValueNode, pText, KeyValueSet, color, editor);
+    KeyValueSetPNode(Node keyValueNode, PText pText, NeoEditor editor, Node templateParameter) {
+        super(keyValueNode, pText, KeyValueSet, "0, 68, 27".split(", "), editor);
         pNode.setFont(new Font("Hack", Font.PLAIN, 11));
         this.templateParameter = templateParameter;
 
-        defaultColor = new Color(Integer.valueOf(color[0]), Integer.valueOf(color[1]), Integer.valueOf(color[2]));
+        defaultColor = new Color(Integer.valueOf("0, 68, 27".split(", ")[0]), Integer.valueOf("0, 68, 27".split(", ")[1]), Integer.valueOf("0, 68, 27".split(", ")[2]));
         updateView();
     }
 

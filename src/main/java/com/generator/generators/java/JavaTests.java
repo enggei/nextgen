@@ -28,6 +28,7 @@ public class JavaTests {
       for (int i = 0; i < list.length; i++) {
          File file = list[i];
          System.out.println(file);
+
       }
    }
 }

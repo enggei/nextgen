@@ -20,9 +20,9 @@ import java.util.UUID;
 class TemplateDomainPNode extends NeoPNode<PText> {
 
     final Color selectedColor = Color.RED;
-    final Color defaultColor;
+    private final Color defaultColor;
     private final String property;
-    final TemplateDomain.TemplateLabels nodeType;
+    private final TemplateDomain.TemplateLabels nodeType;
 
     TemplateDomainPNode(Node node, TemplateDomain.TemplateLabels nodeType, String property, String[] defaultColor, NeoEditor editor) {
         super(node, new PText(node.getProperty(property).toString()), nodeType.name(), editor);

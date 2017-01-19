@@ -26,8 +26,8 @@ import static com.generator.generators.templates.editor.TemplateDomain.TemplateL
  */
 class TemplateGroupPNode extends TemplateDomainPNode {
 
-    TemplateGroupPNode(Node node, String[] defaultColor, NeoEditor editor) {
-        super(node, TemplateGroup, TemplateDomain.TemplateProperties.name.name(), defaultColor, editor);
+    TemplateGroupPNode(Node node, NeoEditor editor) {
+        super(node, TemplateGroup, TemplateDomain.TemplateProperties.name.name(), "64, 64, 64".split(", "), editor);
     }
 
     @Override

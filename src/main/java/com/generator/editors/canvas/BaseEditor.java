@@ -1,6 +1,7 @@
 package com.generator.editors.canvas;
 
 import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Relationship;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;

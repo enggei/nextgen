@@ -21,8 +21,8 @@ import static com.generator.generators.templates.editor.TemplateDomain.TemplateR
  */
 class TemplateParameterPNode extends TemplateDomainPNode {
 
-    TemplateParameterPNode(Node node, TemplateDomain.TemplateLabels nodeType, String property, String[] defaultColor, NeoEditor editor) {
-        super(node, nodeType, property, defaultColor, editor);
+    TemplateParameterPNode(Node node, TemplateDomain.TemplateLabels nodeType, String property, NeoEditor editor) {
+        super(node, nodeType, property, "64, 64, 64".split(", "), editor);
     }
 
     @Override

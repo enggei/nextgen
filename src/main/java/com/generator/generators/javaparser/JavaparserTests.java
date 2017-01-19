@@ -36,23 +36,6 @@ public class JavaparserTests {
    private final String root = "/media/storage/nextgen/src/test/java";
    private final String packageName = "com.generator.generators.javaparser";
 
-   private final String template = "package com.generator.generators.javaparser.test;\n" +
-         "\n" +
-         "import com.generator.generators.templates.domain.GeneratedFile;\n" +
-         "import com.generator.util.FileUtil;\n" +
-         "import com.github.javaparser.*;\n" +
-         "import com.github.javaparser.ast.*;\n" +
-         "import com.github.javaparser.ast.body.*;\n" +
-         "import com.github.javaparser.ast.expr.*;\n" +
-         "import com.github.javaparser.ast.stmt.*;" +
-         "\n\npublic class TestOutput {\n" +
-         "\tpublic static void main(String[] args) {\n" +
-         "\t\tXXX\n" +
-         "\t}\n" +
-         "}";
-
-   // todo: MAKE A USED-BY NEO-GRAPH WHICH SHOWS METHODS AND WHERE THEY ARE CALLED, USING CANVAS !!!
-
    @BeforeClass
    public static void setup() {
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
@@ -419,23 +402,6 @@ public class JavaparserTests {
          }
 
       }.visit(clazz);
-   }
-
-
-   @Test
-   public void testSrc() throws IOException, ParseException {
-
-
-      final StringBuilder commands = new StringBuilder();
-      for (File file : FileUtil.findAllFilesWhichEndsWith(root, ".java")) {
-         System.out.println(file.getAbsolutePath());
-         CompilationUnit cu = JavaParser.parse(file);
-         // generate code like above, from parsed- class (use this and apply to all other java-classes, so I can make buttons for adding methods parameters etc.
-//			new BuilderGenerator(cu, commands);
-         new NeoVisitorAdapter().visit(cu, null);
-      }
-
-      FileUtil.writeFile(template.replace("XXX", commands.toString()), new File("/media/storage/nextgen/src/main/java/com/generator/generators/javaparser/test/TestOutput.java"));
    }
 
    @Test

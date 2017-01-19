@@ -40,7 +40,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
    private Node lastLayoutSaved = null;
    private final Map<Long, UUID> neoRelationPaths = new LinkedHashMap<>();
-   public static final RelationshipType layoutMember = RelationshipType.withName("_layoutMember");
+   private static final RelationshipType layoutMember = RelationshipType.withName("_layoutMember");
 
    private final Set<Long> deletedNodes = new LinkedHashSet<>();
    private final Set<Long> deletedRelations = new LinkedHashSet<>();
@@ -166,7 +166,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       return new NeoPTextNode(node, NeoEditor.this);
    }
 
-   public abstract void deleteNode(Node node) throws NeoEditor.ReferenceException;
+   public abstract void deleteNode(Node node) throws ReferenceException;
 
    @Override
    public void mouseClicked(PInputEvent event) {
@@ -203,29 +203,11 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
             });
 
             if (graph != null)
-               doInTransaction(tx -> {
-                  addToMenu(pop, event);
-               });
+               doInTransaction(tx -> addToMenu(pop, event));
 
             pop.show(canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
          });
       }
-   }
-
-   private void saveProperties() {
-      try {
-         properties.store(new FileWriter(propertiesFile), "autosave");
-      } catch (IOException e) {
-         System.out.println("Could not save properties to " + propertiesFile.getAbsolutePath());
-      }
-   }
-
-   private static NeoModel newEmbeddedDatabase(String dir) {
-      return new NeoModel(new GraphDatabaseFactory().
-            newEmbeddedDatabaseBuilder(new File(dir)).
-            setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").
-            newGraphDatabase(),
-            model -> System.out.println("graph closed"));
    }
 
    @Override
@@ -266,6 +248,11 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       pop.add(new HideUnconnectedNodes());
 
       super.addToMenu(pop, event);
+   }
+
+   public static void removeFromApp(Node node) {
+      for (Relationship layout : incoming(node, layoutMember))
+         layout.delete();
    }
 
    private class ToggleRelationLabels extends TransactionAction {
@@ -339,7 +326,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       super.addRelationToCanvas(relationshipPPath);
    }
 
-   public Action showAllNodesByLabel(final Label label, PInputEvent event) {
+   protected Action showAllNodesByLabel(final Label label, PInputEvent event) {
       return new TransactionAction("Show all " + label, graph, canvas) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -572,6 +559,10 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
    }
 
+   public static boolean isAppRelated(Relationship relationship) {
+      return layoutMember.equals(relationship.getType());
+   }
+
    public static final class CircularStatementException extends ConstraintException {
 
       final Node node;
@@ -591,5 +582,19 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
    }
 
+   private void saveProperties() {
+      try {
+         properties.store(new FileWriter(propertiesFile), "autosave");
+      } catch (IOException e) {
+         System.out.println("Could not save properties to " + propertiesFile.getAbsolutePath());
+      }
+   }
 
+   private static NeoModel newEmbeddedDatabase(String dir) {
+      return new NeoModel(new GraphDatabaseFactory().
+            newEmbeddedDatabaseBuilder(new File(dir)).
+            setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").
+            newGraphDatabase(),
+            model -> System.out.println("graph closed"));
+   }
 }

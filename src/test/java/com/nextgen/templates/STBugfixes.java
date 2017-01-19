@@ -45,7 +45,6 @@ public class STBugfixes {
 		};
 
 		new ST(originals[0], '~', '~');
-//		new ST(originals[1], '~', '~');
 	}
 
 	@Test
@@ -63,10 +62,5 @@ public class STBugfixes {
 		final ST st = new ST(statement, '~', '~');
 		st.addAggr("kv.{name}","NAME");
 		System.out.println(st.render().replaceAll("_bugfixTwo_","};"));
-
-//		final String fixed = parsed.getText().replaceAll("_bugfixOne_", ">");
-//		System.out.println(fixed);
-//		Assert.assertEquals(original, fixed);
-
 	}
 }

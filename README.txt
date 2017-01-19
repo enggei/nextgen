@@ -2,8 +2,6 @@ Codegen project
 
 Tasks:
 
-* Autosave curent layout
-
 * Comments on autosave + timestamp
 
 * Templates:
@@ -14,8 +12,6 @@ Tasks:
 * If island node ask user if delete
 
 * Create motif for group of nodes and relations
-
-* Persist last db path used for auto open in ~/.nextgen/properties.json
 
 * More layers in BaseEditor, like PhotoShop :)
 
@@ -33,3 +29,5 @@ TEST:
   Ex: Cpp - add public, må ta inn elementer av Method
 
 * Possible bug: labels not updating when set
+* Autosave curent layout
+* Persist last db path used for auto open in ~/.nextgen/properties.json

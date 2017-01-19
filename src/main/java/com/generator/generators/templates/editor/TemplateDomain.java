@@ -489,7 +489,7 @@ public class TemplateDomain {
 
       final Set<Relationship> constraints = new LinkedHashSet<>();
       final Consumer<Relationship> constraintVisitor = relationship -> {
-         if (relationship.isType(NeoEditor.layoutMember)) return;
+         if (NeoEditor.isAppRelated(relationship)) return;
          constraints.add(relationship);
       };
 
@@ -620,9 +620,7 @@ public class TemplateDomain {
       }
 
       // delete from layouts:
-      for (Relationship layout : incoming(node, NeoEditor.layoutMember))
-         layout.delete();
-
+      NeoEditor.removeFromApp(node);
       TemplateDomain.debugRelationsFor(node);
 
       node.delete();
@@ -729,7 +727,7 @@ public class TemplateDomain {
                   System.out.println(uuidOf(node) + "(" + labelsFor(node) + ") has OUTGOING '" + relationship.getType() + "' to " + labelsFor(other(node, relationship))));
 
       node.getRelationships(Direction.INCOMING).forEach(relationship -> {
-         if (NeoEditor.layoutMember.equals(relationship.getType())) return;
+         if (NeoEditor.isAppRelated(relationship)) return;
          System.out.println(uuidOf(node) + "(" + labelsFor(node) + ") has INCOMING '" + relationship.getType() + "' from " + labelsFor(other(node, relationship)));
       });
    }
