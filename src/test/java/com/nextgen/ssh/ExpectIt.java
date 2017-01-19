@@ -19,6 +19,8 @@ import static net.sf.expectit.matcher.Matchers.regexp;
  */
 public class ExpectIt {
 
+
+
 	@Test
 	public void testExpectIt() throws Exception {
 		Process process = Runtime.getRuntime().exec("/bin/sh");
