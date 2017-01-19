@@ -23,8 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static com.nextgen.tests.util.ChronicleUtil.ChronicleRecord;
-import static com.nextgen.tests.util.ChronicleUtil.binaryExcerptSearch;
+import static com.nextgen.tests.util.ChronicleUtil.*;
 
 public class ChronicleTestSession {
 
@@ -50,7 +49,7 @@ public class ChronicleTestSession {
 			this.async = context.async();
 			this.marketDataRecord = new ChronicleRecord<MarketData>() {
 				@Override
-				public long getId(WireIn wireIn) {
+				public long id(WireIn wireIn) {
 					return wireIn.read(() -> "t").int64();
 				}
 
@@ -160,6 +159,46 @@ public class ChronicleTestSession {
 			after.handle(sb.toString());
 		}
 
+		public void doSequentialSearchTest(Handler<String> after) {
+			SingleChronicleQueue queue = getChronicleQueue();
+
+			final ZonedDateTime timestamp = getZonedDateTime();
+
+			final MarketData marketData = new MarketData();
+
+			final ExcerptTailer tailer = queue.createTailer();
+
+			IntStream.generate(() -> ThreadLocalRandom.current().nextInt(0, 1000)).limit(1).forEach(recordNum -> {
+				long searchFor = timestamp.plusSeconds(recordNum).toInstant().getEpochSecond() * 1000;
+
+				long result = sequentialExcerptSearch(queue, searchFor, marketDataRecord);
+				long result2 = sequentialExcerptSearchReverse(queue, searchFor, marketDataRecord);
+
+				context.assertEquals(result, result2, "forward and reverse search did not hit same result");
+
+				log.info("Search for " + searchFor + " hit: " + result);
+
+				context.assertTrue(result > 0, "search failed: " + result);
+				context.assertTrue(tailer.moveToIndex(result), "erroneous index from search result: " + result);
+
+				tailer.readDocument(wireIn -> marketData
+					.setTimestamp(wireIn.read(() -> "t").int64())
+					.setInstrument(wireIn.read(() -> "i").text())
+					.setBid(wireIn.read(() -> "b").int32())
+					.setOffer(wireIn.read(() -> "o").int32())
+					.setVolume(wireIn.read(() -> "v").int64()));
+
+				log.debug("Search: index: " + tailer.index() + ", seq_num: " + queue.rollCycle().toSequenceNumber(tailer.index()));
+				debugMarketData(marketData, new AtomicInteger(recordNum));
+
+				context.assertTrue(marketData.getTimestamp() == searchFor, "did not hit exact record");
+			});
+
+			queue.close();
+
+			after.handle(marketData.toString());
+		}
+
 		public void doBinarySearchTest(Handler<String> after) {
 			SingleChronicleQueue queue = getChronicleQueue();
 
@@ -194,7 +233,7 @@ public class ChronicleTestSession {
 
 			queue.close();
 
-			after.handle("Done");
+			after.handle(marketData.toString());
 		}
 	}
 
