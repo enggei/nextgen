@@ -152,7 +152,10 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
 
       final Node node = graph.getNode(uuid);
-      if (node == null) return null;
+      if (node == null) {
+         System.out.println("null node for graph.getNode(" + uuid + ")");
+         return null;
+      }
 
       NeoPNode newInstance;
       layerNodes.put(uuid, newInstance = newNode(node, nodetype));
@@ -164,6 +167,10 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
    @SuppressWarnings("unchecked")
    public NeoPNode newNode(Node node, String nodetype) {
+
+
+
+
       return new NeoPTextNode(node, NeoEditor.this);
    }
 
