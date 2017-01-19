@@ -135,7 +135,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
       labelsMenu.add(addLabel());
 
       final JMenu addLabelMenu = new JMenu("Add");
-      editor.graph.getAllLabelsInUse().forEach(label -> {
+      editor.graph.getGraphDb().getAllLabelsInUse().forEach(label -> {
          if (node.hasLabel(label)) return;
          addLabelMenu.add(addLabelToNode(label));
       });
