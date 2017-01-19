@@ -200,7 +200,7 @@ public class NeoModel {
    }
 
    public static String debugNode(Node node) {
-      return BaseDomainVisitor.uuidOf(node) + " (" + NeoModel.getNameOrLabelFrom(node) + ") [" + BaseDomainVisitor.printPropertiesFor(node, "=") + "]";
+      return BaseDomainVisitor.uuidOf(node) + " (" + BaseDomainVisitor.labelsFor(node) + ") [" + BaseDomainVisitor.printPropertiesFor(node, " ") + "]";
    }
 
    private static boolean hasUUID(Node node) {

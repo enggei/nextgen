@@ -4,9 +4,7 @@ import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BasePNode;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
 
@@ -15,6 +13,7 @@ import javax.swing.text.JTextComponent;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 /**
  * goe on 11/16/16.
@@ -41,7 +40,26 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    @Override
    public void renderTo(JTextComponent textArea) {
       editor.doInTransaction(tx -> {
-         textArea.setText("LABELS:\n" + BaseDomainVisitor.labelsFor(node) + "\n\nPROPERTIES:\n" + BaseDomainVisitor.printPropertiesFor(node, "\n"));
+         final StringBuilder debug = new StringBuilder("LABELS:\n" + BaseDomainVisitor.labelsFor(node));
+         debug.append("\n\nPROPERTIES:\n" + BaseDomainVisitor.printPropertiesFor(node, "\n"));
+
+         debug.append("\n\nOUTGOING:");
+         node.getRelationships(Direction.OUTGOING).forEach(new Consumer<Relationship>() {
+            @Override
+            public void accept(Relationship relationship) {
+               debug.append("\n\t" + "-> (" + relationship.getType() + ") -> " + NeoModel.debugNode(BaseDomainVisitor.other(node, relationship)));
+            }
+         });
+
+         debug.append("\n\nINCOMING:");
+         node.getRelationships(Direction.INCOMING).forEach(new Consumer<Relationship>() {
+            @Override
+            public void accept(Relationship relationship) {
+               debug.append("\n\t" + "<- (" + relationship.getType() + ") <- " + NeoModel.debugNode(BaseDomainVisitor.other(node, relationship)));
+            }
+         });
+
+         textArea.setText(debug.toString().trim());
          textArea.setCaretPosition(0);
       });
    }
