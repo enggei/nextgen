@@ -17,7 +17,7 @@ import static net.sf.expectit.matcher.Matchers.regexp;
 /**
  * Created by Ernst Sognnes on 07.01.17.
  */
-public class ExpectIt {
+public class ExpectItTest {
 
 	@Test
 	public void testExpectIt() throws Exception {
