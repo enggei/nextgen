@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -33,24 +32,6 @@ public class ChronicleTestSession {
 	private static final Logger log = LoggerFactory.getLogger(ChronicleTestSession.class);
 
 	private static String basePath;
-
-	private static void clearChronicle() {
-		File file = new File(basePath);
-		if (file.exists() && file.isDirectory()) {
-			Arrays.asList(file.list())
-				.stream()
-				.filter(s -> new File(s).toString().endsWith(".cq4")).map(s1 -> new File(String.format("%s/%s", basePath, s1))).forEach(f -> {
-				if (!f.delete())
-					log.error("Could not delete " + f);
-				else
-					log.info("Removed " + f);
-
-			});
-		}
-		else if (file.exists() && file.delete()) {
-			log.error("Could not delete " + file);
-		}
-	}
 
 	@BeforeClass
 	public static void setup(TestContext context) {
@@ -116,6 +97,26 @@ public class ChronicleTestSession {
 				.withSecond(0)
 				.withYear(2017)
 				.truncatedTo(ChronoUnit.SECONDS).atZone(ZoneId.of("CET"));
+		}
+
+		private void clearChronicle() {
+			File file = new File(basePath);
+			if (file.exists() && file.isDirectory()) {
+				Arrays.asList(file.list())
+					.stream()
+					.filter(s -> new File(s).toString().endsWith(".cq4")).map(s1 -> new File(String.format("%s/%s", basePath, s1))).forEach(f -> {
+					if (!f.delete()) {
+						log.error("Could not delete " + f);
+						context.fail("Could not delete " + f);
+					}
+					else log.info("Removed " + f);
+
+				});
+			}
+			else if (file.exists() && file.delete()) {
+				log.error("Could not delete " + file);
+				context.fail("Could not delete " + file);
+			}
 		}
 
 		public void doTestWire(Handler<String> after) {
@@ -204,12 +205,7 @@ public class ChronicleTestSession {
 				context.assertTrue(result > 0, "search failed: " + result);
 				context.assertTrue(tailer.moveToIndex(result), "erroneous index from search result: " + result);
 
-				tailer.readDocument(wireIn -> marketData
-					.setTimestamp(wireIn.read(() -> "t").int64())
-					.setInstrument(wireIn.read(() -> "i").text())
-					.setBid(wireIn.read(() -> "b").int32())
-					.setOffer(wireIn.read(() -> "o").int32())
-					.setVolume(wireIn.read(() -> "v").int64()));
+				tailer.readDocument(wireIn -> marketDataRecord.read(wireIn, marketData));
 
 				log.debug("Search: index: " + tailer.index() + ", seq_num: " + queue.rollCycle().toSequenceNumber(tailer.index()));
 				debugMarketData(marketData, new AtomicInteger(recordNum));
@@ -241,12 +237,7 @@ public class ChronicleTestSession {
 				context.assertTrue(result > 0, "search failed: " + result);
 				context.assertTrue(tailer.moveToIndex(result), "erroneous index from search result: " + result);
 
-				tailer.readDocument(wireIn -> marketData
-					.setTimestamp(wireIn.read(() -> "t").int64())
-					.setInstrument(wireIn.read(() -> "i").text())
-					.setBid(wireIn.read(() -> "b").int32())
-					.setOffer(wireIn.read(() -> "o").int32())
-					.setVolume(wireIn.read(() -> "v").int64()));
+				tailer.readDocument(wireIn -> marketDataRecord.read(wireIn, marketData));
 
 				log.debug("Search: index: " + tailer.index() + ", seq_num: " + queue.rollCycle().toSequenceNumber(tailer.index()));
 				debugMarketData(marketData, new AtomicInteger(recordNum));
