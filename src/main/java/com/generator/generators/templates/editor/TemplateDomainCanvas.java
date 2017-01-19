@@ -35,7 +35,7 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  */
 final class TemplateDomainCanvas extends NeoEditor {
 
-    TemplateDomainCanvas() {
+    private TemplateDomainCanvas() {
 
         canvas.setBackground(new Color(Integer.valueOf(getColor(0)[0]), Integer.valueOf(getColor(0)[1]), Integer.valueOf(getColor(0)[2])));
 
