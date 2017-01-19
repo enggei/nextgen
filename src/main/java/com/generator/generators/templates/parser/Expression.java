@@ -219,9 +219,9 @@ public class Expression {
                final Parameter myParam = parameterMap.get(methodParam);
                if (myParam == null) continue;
 
-               System.out.println("'" + this.getName() + "' calls method '" + callEntry.getKey() + "' : parameter '" + myParam.name + "(" + myParam.paramType + ")" + "." + methodParam + ("' ->  set to '" + parameter.last().getDomainEntityType() + "'"));
-               myParam.setParamType(parameter.last().getDomainEntityType());
-               for (String s : parameter.last().getKvNames()) myParam.addKvname(s);
+               System.out.println("'" + this.getName() + "' calls method '" + callEntry.getKey() + "' : parameter '" + myParam.name + "(" + myParam.paramType + ")" + "." + methodParam + ("' ->  set to '" + parameter.getSecond().getDomainEntityType() + "'"));
+               myParam.setParamType(parameter.getSecond().getDomainEntityType());
+               parameter.getSecond().getKvNames().forEach(myParam::addKvname);
             }
          }
          return this;

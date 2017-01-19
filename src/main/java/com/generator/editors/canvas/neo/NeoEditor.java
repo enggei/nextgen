@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
 
@@ -393,9 +394,9 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
             for (BasePNode neoPNode : layerNodes.values()) {
                final Node graphNode = graph.mergeNode(neoPNode.uuid);
                final Relationship layoutMembership = node.createRelationshipTo(graphNode, layoutMember);
-               final Point2D center2D = neoPNode.pNode.getFullBoundsReference().getCenter2D();
-               layoutMembership.setProperty("x", center2D.getX());
-               layoutMembership.setProperty("y", center2D.getY());
+               final Rectangle2D rectangle2D = neoPNode.pNode.getFullBoundsReference().getBounds2D();
+               layoutMembership.setProperty("x", rectangle2D.getX());
+               layoutMembership.setProperty("y", rectangle2D.getY());
                layoutMembership.setProperty("nodeType", neoPNode.getNodeType());
 
                System.out.println("saving " + NeoModel.uuidOf(graphNode) + " : " + neoPNode.getClass().getSimpleName());

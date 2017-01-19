@@ -24,6 +24,17 @@ public class ChronicleTest extends ChronicleTestSession {
 	}
 
 	@Test
+	public void testSequentialSearch(TestContext context) {
+
+		final TestSession session = new TestSession(context);
+
+		session.doSequentialSearchTest(result -> {
+			log.info("Result:\n" + result);
+			session.done();
+		});
+	}
+
+	@Test
 	public void testBinarySearch(TestContext context) {
 
 		final TestSession session = new TestSession(context);

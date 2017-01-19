@@ -1,31 +1,36 @@
 package com.generator.util;
 
 /**
- * goe on 10/17/14.
+ * NextGen core utils 17.01.17
  */
-public final class Tuple<K, V> {
+public class Tuple<F, S> {
 
-    private final K k;
-    private final V v;
+	private F first;
+	private S second;
 
-    public Tuple(K k, V v) {
-        this.k = k;
-        this.v = v;
-    }
+	public Tuple(F first, S second) {
+		this.first = first;
+		this.second = second;
+	}
 
-    public K first() {
-        return k;
-    }
+	public F getFirst() {
+		return first;
+	}
 
-    public V last() {
-        return v;
-    }
+	public S getSecond() {
+		return second;
+	}
 
-    public K key() {
-        return k;
-    }
+	public void setFirst(F first) {
+		this.first = first;
+	}
 
-    public V value() {
-        return v;
-    }
+	public void setSecond(S second) {
+		this.second = second;
+	}
+
+	@Override
+	public String toString() {
+		return "[" + first + "," + second + "]";
+	}
 }
