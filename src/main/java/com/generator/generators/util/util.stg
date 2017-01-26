@@ -390,7 +390,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
- * NextGen core Chronicle utils 19.01.17
+ * NextGen core Chronicle utils 26.01.17
  * 
  * Chronicle: http://chronicle.software/products/chronicle-queue/
  */
@@ -442,7 +442,7 @@ public class ~name~ {
 	private static final class ChronicleMetaData {
 
 		private final RollCycle rollCycle;
-		private final List<Tuple<Integer, Long>~Bugfix()~ cycleRanges;	// List of <chronicle cycle, chronicle sequence length>
+		private final List<Tuple<Integer, Long~Bugfix()~>  cycleRanges;	// List of <chronicle cycle, chronicle sequence length>
 		private long size = 0;
 
 		ChronicleMetaData(final RollingChronicleQueue queue) {
@@ -468,40 +468,10 @@ public class ~name~ {
 			if (cycleRanges.isEmpty())
 				throw new RuntimeException("cycleRanges is empty");
 
-			ExcerptTailer tailer = queue.createTailer();
-
-			final long currentIndex = tailer.index();
-			int currentCycle = tailer.cycle();
-			long currentSeqNum = rollCycle.toSequenceNumber(currentIndex);
-
-			// Collect highest sequence number per cycle
-			// TODO: For large chronicles, find highest sequence number by binary searching for record presence
-			try (DocumentContext dc = tailer.readingDocument()) {
-				if (dc.isPresent()) {
-					// Scan and count all records
-					int crIndex = 0;
-					do {
-						while (tailer.moveToIndex(rollCycle.toIndex(currentCycle, currentSeqNum++))) {
-							//log.debug("Found record at: " + tailer.cycle() + ":" + rollCycle.toSequenceNumber(tailer.index()));
-						}
-
-						cycleRanges.get(crIndex).setSecond(currentSeqNum - 1);
-						size += cycleRanges.get(crIndex).getSecond();
-
-						if (crIndex < cycleRanges.size() - 1) {
-							currentSeqNum = 0;
-							currentCycle = cycleRanges.get(++crIndex).getFirst();
-							log.debug("Changed cycle to: " + currentCycle);
-						}
-					} while(currentCycle != tailer.cycle());
-				}
-				else {
-					log.debug("No records present!");
-				}
-			}
+			size = collectCycleSequenceNumbers2(queue, cycleRanges);
 		}
 
-		public List<Tuple<Integer, Long>~Bugfix()~ cycleRanges() {
+		public List<Tuple<Integer, Long~Bugfix()~>  cycleRanges() {
 			return cycleRanges;
 		}
 
@@ -532,7 +502,7 @@ public class ~name~ {
 	 * @param queue  Chronicle queue
 	 * @param t      Search value (e.g. a timestamp or other sequential record id field)
 	 * @param record Function that extracts record id field
-	 * @return
+	 * @return       Chronicle queue index, or 0 if not found
 	 */
 	public static long sequentialExcerptSearch(final RollingChronicleQueue queue, final long t, ChronicleRecord record) {
 		return sequentialExcerptSearch(queue, t, queue.firstIndex(), new ChronicleMetaData(queue), record);
@@ -545,7 +515,7 @@ public class ~name~ {
 	 * @param queue  Chronicle queue
 	 * @param t      Search value (e.g. a timestamp or other sequential record id field)
 	 * @param record Function that extracts record id field
-	 * @return
+	 * @return       Chronicle queue index, or 0 if not found
 	 */
 	public static long sequentialExcerptSearchReverse(final RollingChronicleQueue queue, final long t, ChronicleRecord record) {
 		final ChronicleMetaData metaData = new ChronicleMetaData(queue);
@@ -553,6 +523,7 @@ public class ~name~ {
 	}
 
 	/**
+	 * Helper method.
 	 * Sequential Chronicle Excerpt record search.
 	 * O(N)
 	 *
@@ -581,9 +552,9 @@ public class ~name~ {
 	 * Binary Chronicle Excerpt record search.
 	 * O(log N)
 	 * 
-	 * @param queue	Chronicle queue
-	 * @param t			Search value (e.g. a timestamp or other sequential record id field)
-	 * @return			Chronicle queue index, or 0 if not found
+	 * @param queue Chronicle queue
+	 * @param t     Search value (e.g. a timestamp or other sequential record id field)
+	 * @return      Chronicle queue index, or 0 if not found
 	 */
 	public static long binaryExcerptSearch(final RollingChronicleQueue queue, final long t, ChronicleRecord record) {
 
@@ -591,7 +562,7 @@ public class ~name~ {
 
 		log.debug("Searching for: " + t);
 
-		long result = binaryExcerptSearch(queue.createTailer(), t, metaData.size() / 2, metaData.size() / 4, metaData, record);
+		long result = binaryExcerptSearch(queue.createTailer(), t, metaData.size() / 2, metaData.size() / 4, metaData, record, 1);
 
 		if (result < 0) {
 			log.debug("Not found: " + t);
@@ -606,22 +577,22 @@ public class ~name~ {
 	 * Sequential Chronicle Excerpt record search.
 	 * O(N)
 	 *
-	 * @param tailer      Chronicle Excerpt tailer
-	 * @param t           Search value (e.g. a timestamp or other sequential record id field)
-	 * @param start       Starting index
-	 * @param metaData    Metadata
-	 * @param record      Function that extracts record id field
-	 * @return            Chronicle queue index, or -1 if an error occurred
-	 * @throws IndexOutOfBoundsException
+	 * @param tailer   Chronicle Excerpt tailer
+	 * @param t        Search value (e.g. a timestamp or other sequential record id field)
+	 * @param start    Starting index
+	 * @param metaData Metadata
+	 * @param record   Function that extracts record id field
+	 * @return         Chronicle queue index, or -1 if an error occurred
+	 * @throws         IndexOutOfBoundsException
 	 */
 	static long sequentialExcerptSearch(final ExcerptTailer tailer, final long t, final long start, final ChronicleMetaData metaData, ChronicleRecord record) throws IndexOutOfBoundsException {
 
 		final RollCycle rollCycle = metaData.rollCycle();
-		final List<Tuple<Integer, Long>~Bugfix()~ cycleRanges = metaData.cycleRanges();
+		final List<Tuple<Integer, Long~Bugfix()~>  cycleRanges = metaData.cycleRanges();
 
-		final long lastIndex = rollCycle.toIndex(cycleRanges.get(cycleRanges.size() - 1).getFirst(), cycleRanges.get(cycleRanges.size() - 1).getSecond());
+		final long lastIndex = metaData.lastIndex();
 
-		if (start >= lastIndex || start < tailer.queue().firstIndex()) {
+		if (start > lastIndex || start < tailer.queue().firstIndex()) {
 			throw new IndexOutOfBoundsException("start out of bounds: " + start + " >= " + lastIndex + " || " + start + " < " + tailer.queue().firstIndex());
 		}
 
@@ -653,26 +624,36 @@ public class ~name~ {
 		tailer.readDocument(wireIn -> id.set(record.id(wireIn)));
 
 		final boolean goDown = t < id.get();
-		log.debug("Scanning " + (goDown ? "DOWN" : "UP"));
-		log.debug("Current position: (cycle: " + cycle.get() + ", seqNum: " + seqNum + ", length: " + cycleRange.getSecond() + ")");
+		//log.debug("Scanning " + (goDown ? "DOWN" : "UP"));
+		//log.debug("Current position: (cycle: " + cycle.get() + ", seqNum: " + seqNum + ", length: " + cycleRange.getSecond() + ")");
 
 		while (goDown ? (t < id.get()) : (t > id.get())) {
 			// Go to next cycle when needed
 			if (goDown && seqNum == 0) {
-				if (cycleIndex.get() == 0) return index; // We're at the very beginning
+				if (cycleIndex.get() == 0) {
+					// We're at the very start
+					log.debug("Scanned to START without locating the record");
+					log.debug("Returning index " + index);
+					return index;
+				}
 				cycleRange = cycleRanges.get(cycleIndex.decrementAndGet());
 				cycle.set(cycleRange.getFirst());
 				seqNum = cycleRange.getSecond() - 1;
 			}
 			else if (!goDown && seqNum == (cycleRange.getSecond() - 1)) {
-				if (cycleIndex.get() == (cycleRanges.size() - 1)) return index; // We're at the very end
+				if (cycleIndex.get() == (cycleRanges.size() - 1)) {
+					// We're at the very end
+					log.debug("Scanned to END without locating the record");
+					log.debug("Returning index " + index);
+					return index;
+				}
 				cycleRange = cycleRanges.get(cycleIndex.incrementAndGet());
 				cycle.set(cycleRange.getFirst());
 				seqNum = 0;
 			}
 			else seqNum += goDown ? -1l : 1l;
 
-			log.debug("Next position: (cycle: " + cycle.get() + ", seqNum: " + seqNum + ", length: " + cycleRange.getSecond() + ")");
+			//log.debug("Next position: (cycle: " + cycle.get() + ", seqNum: " + seqNum + ", length: " + cycleRange.getSecond() + ")");
 
 			index = rollCycle.toIndex(cycle.get(), seqNum);
 			if (!tailer.moveToIndex(index)) {
@@ -694,15 +675,15 @@ public class ~name~ {
 	/**
 	 * Translates a virtual record (sequence) number across all cycles into Chronicle queue index.
 	 *
-	 * @param recordNum   Record number between 0 and s
-	 * @param metaData    Meta data
-	 * @return            Chronicle queue index
-	 * @throws            IndexOutOfBoundsException
+	 * @param recordNum Record number between 0 and s
+	 * @param metaData  Meta data
+	 * @return          Chronicle queue index
+	 * @throws          IndexOutOfBoundsException
 	 */
 	public static long translateRecordNum(final long recordNum, final ChronicleMetaData metaData) throws IndexOutOfBoundsException {
 
 		final RollCycle rollCycle = metaData.rollCycle();
-		final List<Tuple<Integer, Long>~Bugfix()~ cycleRanges = metaData.cycleRanges();
+		final List<Tuple<Integer, Long~Bugfix()~>  cycleRanges = metaData.cycleRanges();
 
 		if (cycleRanges == null || cycleRanges.isEmpty())
 			throw new IllegalArgumentException("cycleRanges cannot be " + (cycleRanges != null ? "empty" : "null") + "!");
@@ -710,20 +691,20 @@ public class ~name~ {
 		if (recordNum >= metaData.size())
 			throw new IndexOutOfBoundsException("recordNum out of bounds: " + recordNum + " >= " + metaData.size());
 
-		long index = 0;
+		long seqNum = 0;
 
 		for (Tuple<Integer, Long> cycleRange : cycleRanges) {
 			// Accumulate until we locate cycle
-			index += cycleRange.getSecond();
+			seqNum += cycleRange.getSecond();
 
-			if (index <= recordNum)
+			if (seqNum <= recordNum)
 				continue;
 
 			// Adjust to correct sequence number in the cycle
-			index = cycleRange.getSecond() - (index - recordNum);
-			//log.debug("Translated index: " + recordNum + " -> " + index + " (" + cycleRange.getSecond() + " - (" + index + " - " + recordNum + "))");
+			seqNum = cycleRange.getSecond() - (seqNum - recordNum);
+			//log.debug("Translated seqNum: " + recordNum + " -> " + seqNum + " (" + cycleRange.getSecond() + " - (" + seqNum + " - " + recordNum + "))");
 
-			return rollCycle.toIndex(cycleRange.getFirst(), index);
+			return rollCycle.toIndex(cycleRange.getFirst(), seqNum);
 		}
 
 		// Should never reach here!
@@ -735,19 +716,20 @@ public class ~name~ {
 	 * Binary Chronicle Excerpt record search.
 	 * O(log N)
 	 *
-	 * @param tailer      Chronicle Excerpt tailer
-	 * @param t           Search value (e.g. a timestamp or other sequential record id field)
-	 * @param i           Relative index
-	 * @param l           Length to go next (forwards or backwards)
-	 * @param metaData    Meta data
-	 * @param record      Function that extracts record id field
-	 * @return            Chronicle queue index, or -1 if an error occurred
+	 * @param tailer   Chronicle Excerpt tailer
+	 * @param t        Search value (e.g. a timestamp or other sequential record id field)
+	 * @param i        Relative index
+	 * @param l        Length to go next
+	 * @param metaData Meta data
+	 * @param record   Function that extracts record id field
+	 * @param d        Recursion depth
+	 * @return         Chronicle queue index, or -1 if an error occurred
 	 */
-	static long binaryExcerptSearch(final ExcerptTailer tailer, final long t, final long i, final long l, final ChronicleMetaData metaData, ChronicleRecord record) {
+	static long binaryExcerptSearch(final ExcerptTailer tailer, final long t, final long i, final long l, final ChronicleMetaData metaData, ChronicleRecord record, final int d) {
 
 		long current = translateRecordNum(i, metaData);
 
-		log.debug("l: " + l + ", i: " + i + ", t: " + t + ", current: " + current);
+		//log.debug("depth: " + d + ", length: " + l + ", index: " + i + ", t: " + t + ", current: " + current);
 
 		if (!tailer.moveToIndex(current)) {
 			log.error("No excerpt at " + current);
@@ -755,10 +737,7 @@ public class ~name~ {
 		}
 
 		// Close enough, try to scan for exact match
-		if (l <= 3l) {
-			log.debug("Close enough: " + l);
-			return sequentialExcerptSearch(tailer, t, current, metaData, record);
-		}
+		if (l <= 3l) return sequentialExcerptSearch(tailer, t, current, metaData, record);
 
 		final AtomicLong id = new AtomicLong(0);
 		tailer.readDocument(wireIn -> id.set(record.id(wireIn)));
@@ -772,7 +751,7 @@ public class ~name~ {
 		if (log.isDebugEnabled() && t > id.get()) log.debug("Going UP  : " + t + " > " + id);
 		else if (log.isDebugEnabled() && t < id.get()) log.debug("Going DOWN: " + t + " < " + id);
 
-		return binaryExcerptSearch(tailer, t, (t > id.get() ? i + l : i - l), l / 2l, metaData, record);
+		return binaryExcerptSearch(tailer, t, (t > id.get() ? i + l : i - l), l / 2l, metaData, record, d + 1);
 	}
 
 	/**
@@ -781,7 +760,7 @@ public class ~name~ {
 	 *
 	 * @param queue Chronicle queue
 	 * @throws      ParseException
-	 * @return      List of cycles
+	 * @return      List of cycle numbers
 	 */
 	static List<Integer> getQueueCycles(final RollingChronicleQueue queue) throws ParseException {
 		final List<Integer> cycles = new ArrayList<>();
@@ -797,6 +776,138 @@ public class ~name~ {
 		}
 
 		return cycles;
+	}
+
+	/**
+	 * Helper method.
+	 * Sequentially calculates the total number of excerpts in a cycle.
+	 *
+	 * @param queue       Chronicle queue
+	 * @param cycleRanges List of cycle ranges
+	 * @return            Total number of excerpts
+	 */
+	@Deprecated
+	static long collectCycleSequenceNumbers(final RollingChronicleQueue queue, final List<Tuple<Integer, Long~Bugfix()~> cycleRanges) {
+
+		final RollCycle rollCycle = queue.rollCycle();
+		final ExcerptTailer tailer = queue.createTailer();
+
+		final long currentIndex = tailer.index();
+		int currentCycle = tailer.cycle();
+
+		tailer.toStart();
+
+		long size = 0;
+		long currentSeqNum = rollCycle.toSequenceNumber(currentIndex);
+
+		// Collect highest populated sequence number per cycle
+		try (DocumentContext dc = tailer.readingDocument()) {
+			if (dc.isPresent()) {
+				// Scan and count all records
+				int crIndex = 0;
+				do {
+					while (tailer.moveToIndex(rollCycle.toIndex(currentCycle, currentSeqNum++))) {
+						//log.debug("Found record at: " + tailer.cycle() + ":" + rollCycle.toSequenceNumber(tailer.index()));
+					}
+
+					cycleRanges.get(crIndex).setSecond(currentSeqNum - 1);
+					size += cycleRanges.get(crIndex).getSecond();
+
+					if (crIndex < cycleRanges.size() - 1) {
+						currentSeqNum = 0;
+						currentCycle = cycleRanges.get(++crIndex).getFirst();
+						log.debug("Changed cycle to: " + currentCycle);
+					}
+				} while(currentCycle != tailer.cycle());
+			}
+			else {
+				log.debug("No records present!");
+			}
+		}
+
+		return size;
+	}
+
+	/**
+	 * Helper method.
+	 * Recursively calculates the total number of excerpts in a cycle.
+	 *
+	 * @param tailer    Chronicle Excerpt tailer
+	 * @param rollCycle Chronicle queue rolling cycle
+	 * @param c         Cycle number
+	 * @param s         Sequence number
+	 * @param l         Length to go next
+	 * @param d         Recursion depth
+	 * @return          Total number of excerpts
+	 */
+	static long findCycleLastIndex(final ExcerptTailer tailer, final RollCycle rollCycle, final int c, final long s, final long l, final int d) {
+
+		long i = rollCycle.toIndex(c, s);
+
+		//log.debug("depth: " + d + ", seqNum: " + s + ", length: " + l + ", cycle: " + c + ", index: " + i);
+
+		boolean found = tailer.moveToIndex(i);
+		boolean finalScan = l == 1 && found;
+
+		while (finalScan && tailer.moveToIndex(i++));
+		if (finalScan) return i - 1;
+
+		return findCycleLastIndex(tailer, rollCycle, c, found ? s + l : s - l, l > 1 ? l / 2l : 1, d + 1);
+	}
+
+	/**
+	 * Helper method.
+	 * Calculates the total number of excerpts in a cycle.
+	 *
+	 * @param tailer     Chronicle Excerpt tailer
+	 * @param rollCycle  Chronicle queue rolling cycle
+	 * @param cycleRange Tuple of cycle range (cycle number and number of excerpts)
+	 * @return           Total number of excerpts
+	 */
+	static long findCycleLastIndex(final ExcerptTailer tailer, final RollCycle rollCycle, final Tuple<Integer, Long> cycleRange) {
+		long maxIndex = rollCycle.toIndex(cycleRange.getFirst(), Long.MAX_VALUE);
+		long maxSeqNum = rollCycle.toSequenceNumber(maxIndex);
+
+		return findCycleLastIndex(tailer, rollCycle, cycleRange.getFirst(), maxSeqNum / 2l, maxSeqNum / 4l, 1);
+	}
+
+	/**
+	 * Helper method.
+	 * Calculates the total number of excerpts for all cycles.
+	 *
+	 * @param queue       Chronicle queue
+	 * @param cycleRanges List of cycle ranges (cycle number and number of excerpts)
+	 * @return            Total number of excerpts
+	 */
+	static long collectCycleSequenceNumbers2(final RollingChronicleQueue queue, final List<Tuple<Integer, Long~Bugfix()~> cycleRanges) {
+
+		final RollCycle rollCycle = queue.rollCycle();
+		final ExcerptTailer forwardTailer = queue.createTailer().toStart();
+
+		// When only one cycle
+		if (cycleRanges.size() == 1) {
+			final ExcerptTailer reverseTailer = queue.createTailer().direction(TailerDirection.BACKWARD);
+
+			// NOTE: countExcerpts() does not work across cycles!
+			long totalExcerpts = queue.countExcerpts(forwardTailer.index(), reverseTailer.toEnd().index());
+
+			cycleRanges.get(0).setSecond(totalExcerpts);
+
+			return totalExcerpts;
+		}
+
+		final AtomicLong size = new AtomicLong(0);
+
+		cycleRanges.stream().forEach(cr -> {
+			long lastIndex = findCycleLastIndex(forwardTailer, rollCycle, cr);
+			long lastSeqNum = rollCycle.toSequenceNumber(lastIndex);
+
+			cr.setSecond(lastSeqNum);
+
+			size.addAndGet(lastSeqNum);
+		});
+
+		return size.get();
 	}
 }>>
 
