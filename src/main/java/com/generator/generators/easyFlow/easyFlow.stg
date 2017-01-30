@@ -4,17 +4,23 @@ delimiters "~", "~"
 declaration(name,state) ::= <<.whenEnter(~state~, new ContextHandler<~name~Context>() {
     @Override
     public void call(final ~name~Context context) throws Exception {
-        log.debug("~state;format="humpToCap"~");
+        //log.debug("entering: ~state;format="humpToCap"~");
         if (listener != null) listener.onEnter(~state~, context);
         ~state;format="toLower"~(context);
     }
+})
+.whenLeave(~state~, new ContextHandler<~name~Context>() {
+    @Override
+    public void call(final ~name~Context context) throws Exception {
+        //log.debug("exiting: ~state;format="humpToCap"~");
+        if (listener != null) listener.onLeave(~state~, context);
+    }
 })>>
 
-easyFlow(bindings,context,events,extends,name,package,states,superParams,transit) ::= <<~if(package)~package ~package~;
+easyFlow(bindings,context,events,extends,name,package,states,superParams,transit,implement) ::= <<~if(package)~package ~package~;
 
 ~endif~import au.com.ds.ef.*;
 import au.com.ds.ef.call.ContextHandler;
-import au.com.ds.ef.call.ExecutionErrorHandler;
 import au.com.ds.ef.err.ExecutionError;
 
 import org.slf4j.Logger;
@@ -25,9 +31,11 @@ import static ~package~.~name~.States.*;
 import static ~package~.~name~.Events.*;
 
 /**
- * http://datasymphony.com.au/open-source/easyflow/
+ * Generated with NextGen
+ * 
+ * EasyFlow: http://datasymphony.com.au/open-source/easyflow/
  */
-public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
+public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~~if(implement)~implements ~implement~~endif~{
 
     protected static final Logger log = LoggerFactory.getLogger(~name~.class);
 
@@ -40,7 +48,9 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
     /** ~name~Listener  **/
     public interface ~name~Listener {
         void onEnter(States state, ~name~Context context);
-        void onError(ExecutionError error, StatefulContext context);
+        void onLeave(States state, ~name~Context context);
+        void onFinalState(States state, ~name~Context context);
+        void onError(ExecutionError error, ~name~Context context);
     }
 
     private final EasyFlow<~name~Context> fsm;
@@ -56,14 +66,16 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
         this.fsm
             .executor(new SyncExecutor())
             ~bindings:{it|~it.declaration~};separator="\n"~.
-            whenError(new ExecutionErrorHandler<StatefulContext>() {
-                @Override
-                public void call(ExecutionError error, StatefulContext context) {
-                    log.error("ERROR");
-                    if (listener != null) listener.onError(error, context);
-                    onERROR(error,context);
-                    }
-                });
+            whenFinalState((state, context) -> {
+                //log.debug("FINAL");
+                if (listener != null) listener.onFinalState((States)state, (~name~Context)context);
+                onFinalState((~name~Context)context);
+            }).
+            whenError((error, context) -> {
+                //log.error("ERROR");
+                if (listener != null) listener.onError(error, (~name~Context)context);
+                onERROR(error, (~name~Context)context);
+            });
     }
 
     public void start(final ~name~Context context) {
@@ -77,7 +89,9 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
 
     ~bindings:{it|~it.impl~};separator="\n"~
 
-    protected abstract void onERROR(final ExecutionError error, final StatefulContext context);
+    protected abstract void onFinalState(final ~name~Context context);
+
+    protected abstract void onERROR(final ExecutionError error, final ~name~Context context);
 }>>
 
 events(events) ::= <<public enum Events implements EventEnum {
