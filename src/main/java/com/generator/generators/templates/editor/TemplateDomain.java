@@ -1,7 +1,9 @@
 package com.generator.generators.templates.editor;
 
+import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
+import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.util.SwingUtil;
@@ -34,6 +36,34 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  * todo: create a method for cloning nodes /trees ?
  */
 public class TemplateDomain {
+
+   public static NeoPNode newPNode(Node node, String nodetype, NeoEditor neoEditor) {
+      switch (TemplateDomain.TemplateLabels.valueOf(nodetype)) {
+
+         case TemplateGroup:
+            return new TemplateGroupPNode(node, neoEditor);
+         case TemplateStatement:
+            return new TemplateStatementPNode(node, neoEditor);
+         case SingleTemplateParameter:
+            return new TemplateParameterPNode(node, SingleTemplateParameter, TemplateDomain.TemplateProperties.name.name(), neoEditor);
+         case ListTemplateParameter:
+            return new TemplateParameterPNode(node, ListTemplateParameter, TemplateDomain.TemplateProperties.name.name(), neoEditor);
+         case KeyValueTemplateParameter:
+            return new TemplateParameterPNode(node, KeyValueTemplateParameter, TemplateDomain.TemplateProperties.name.name(), neoEditor);
+         case Statement:
+            return new StatementPNode(node, other(node, singleOutgoing(node, TEMPLATE_STATEMENT)), neoEditor);
+         case SingleValue:
+            return new SingleValuePNode(node, neoEditor);
+         case KeyValueSet:
+            return new KeyValueSetPNode(node, new TemplateDomainCanvas.CompositePText(), neoEditor, other(node, singleOutgoing(node, TEMPLATE_PARAMETER)));
+         case Project:
+            return new ProjectPNode(node, neoEditor);
+         case Directory:
+            return new DirectoryPNode(node, neoEditor);
+      }
+
+      throw new IllegalArgumentException("unsupported TemplateDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
+   }
 
    public enum TemplateLabels implements Label {
       TemplateGroup, TemplateStatement,
@@ -183,7 +213,7 @@ public class TemplateDomain {
       return existing.iterator().next();
    }
 
-   public static Node newStatement(NeoModel db, Node templateStatement) {
+   static Node newStatement(NeoModel db, Node templateStatement) {
       final Node newNode = db.newNode(Statement);
       newNode.createRelationshipTo(templateStatement, TEMPLATE_STATEMENT);
       return newNode;
@@ -617,6 +647,9 @@ public class TemplateDomain {
                }
             }
          }
+
+      } else {
+         System.out.println("trying to delete unhandled node " + BaseDomainVisitor.labelsFor(node));
       }
 
       // delete from layouts:

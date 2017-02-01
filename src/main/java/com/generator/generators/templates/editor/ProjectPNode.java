@@ -1,6 +1,7 @@
 package com.generator.generators.templates.editor;
 
 import com.generator.editors.canvas.neo.NeoEditor;
+import com.generator.generators.meta.MetaDomain;
 import com.generator.generators.project.ProjectDomain;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
@@ -45,6 +46,7 @@ class ProjectPNode extends TemplateDomainPNode {
    @Override
    public void showNodeActions(JPopupMenu pop, PInputEvent event) {
       pop.add(new SetName(TemplateDomain.TemplateProperties.name.name()));
+      pop.add(new CreateMetaDomain(event));
       pop.add(new CreateJavaProject(event));
       pop.add(new AddDirectory(event));
       super.showNodeActions(pop, event);
@@ -114,6 +116,30 @@ class ProjectPNode extends TemplateDomainPNode {
                setOffset(event);
 
          lastDir = root.getAbsolutePath();
+         updateView();
+      }
+   }
+
+   private class CreateMetaDomain extends NeoEditor.TransactionAction {
+
+      private final PInputEvent event;
+
+      CreateMetaDomain(PInputEvent event) {
+         super("Create Meta Domain", editor.getGraph(), editor.canvas);
+         this.event = event;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+         final File root = SwingUtil.showOpenDir(editor.canvas, lastDir);
+         if (root == null) return;
+
+         final Node project = MetaDomain.newDomainNode(editor.getGraph(), root, node);
+
+         editor.show(uuidOf(project), MetaDomain.LABELS.DOMAIN.name()).
+               setOffset(event);
+
          updateView();
       }
    }

@@ -1,7 +1,12 @@
 package com.generator.editors.canvas;
 
+import com.generator.util.SwingUtil;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -21,6 +26,30 @@ public class BaseNodeRenderPanel extends JPanel implements PropertyChangeListene
       txtEditor.setTabSize(3);
       txtEditor.setEditable(false);
       add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+
+      txtEditor.addMouseListener(new MouseAdapter() {
+         @Override
+         public void mouseClicked(MouseEvent e) {
+            if(!SwingUtilities.isRightMouseButton(e)) return;
+
+            SwingUtilities.invokeLater(new Runnable() {
+               @Override
+               public void run() {
+
+                  final JPopupMenu pop = new JPopupMenu();
+                  pop.add(new AbstractAction("Add to Clipboard") {
+                     @Override
+                     public void actionPerformed(ActionEvent e) {
+                        SwingUtil.toClipboard(txtEditor.getText().trim());
+                     }
+                  });
+
+                  pop.show(txtEditor, e.getX(), e.getY());
+               }
+            });
+         }
+      });
+
    }
 
    @Override

@@ -1,6 +1,7 @@
 package com.generator.generators.templates.editor;
 
 import com.generator.editors.canvas.BaseNodeRenderPanel;
+import com.generator.editors.canvas.DomainFactory;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.*;
@@ -37,46 +38,13 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  */
 final class TemplateDomainCanvas extends NeoEditor {
 
-   private TemplateDomainCanvas() {
-      super();
+   private TemplateDomainCanvas(DomainFactory domainFactory) {
+      super(domainFactory);
+
       canvas.setBackground(new Color(Integer.valueOf("247, 247, 247".split(", ")[0]), Integer.valueOf("247, 247, 247".split(", ")[1]), Integer.valueOf("247, 247, 247".split(", ")[2])));
 
       for (TemplateDomain.TemplateLabels label : TemplateDomain.TemplateLabels.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
-   }
-
-   @Override
-   public NeoPNode newNode(Node node, String nodetype) {
-
-      if (nodetype == null || nodesByLabel.get(nodetype) == null) return super.newNode(node, null);
-
-      nodesByLabel.get(nodetype).add(uuidOf(node));
-
-      switch (TemplateDomain.TemplateLabels.valueOf(nodetype)) {
-
-         case TemplateGroup:
-            return new TemplateGroupPNode(node, TemplateDomainCanvas.this);
-         case TemplateStatement:
-            return new TemplateStatementPNode(node, TemplateDomainCanvas.this);
-         case SingleTemplateParameter:
-            return new TemplateParameterPNode(node, SingleTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
-         case ListTemplateParameter:
-            return new TemplateParameterPNode(node, ListTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
-         case KeyValueTemplateParameter:
-            return new TemplateParameterPNode(node, KeyValueTemplateParameter, TemplateDomain.TemplateProperties.name.name(), TemplateDomainCanvas.this);
-         case Statement:
-            return new StatementPNode(node, other(node, singleOutgoing(node, TEMPLATE_STATEMENT)), TemplateDomainCanvas.this);
-         case SingleValue:
-            return new SingleValuePNode(node, TemplateDomainCanvas.this);
-         case KeyValueSet:
-            return new KeyValueSetPNode(node, new CompositePText(), TemplateDomainCanvas.this, other(node, singleOutgoing(node, TEMPLATE_PARAMETER)));
-         case Project:
-            return new ProjectPNode(node, TemplateDomainCanvas.this);
-         case Directory:
-            return new DirectoryPNode(node, TemplateDomainCanvas.this);
-      }
-
-      throw new IllegalArgumentException("unsupported nodetype: " + nodetype);
    }
 
    @Override
@@ -137,7 +105,7 @@ final class TemplateDomainCanvas extends NeoEditor {
       return newTemplateGroupNode;
    }
 
-   private static class CompositePText extends PText {
+   static class CompositePText extends PText {
 
       @Override
       public void layoutChildren() {
@@ -597,7 +565,7 @@ final class TemplateDomainCanvas extends NeoEditor {
       SwingUtil.setLookAndFeel_Nimbus();
 
       final JFrame frame = new JFrame();
-      final TemplateDomainCanvas contentPanel = new TemplateDomainCanvas();
+      final TemplateDomainCanvas contentPanel = new TemplateDomainCanvas(DomainFactory.newTestFactory());
       final BaseNodeRenderPanel renderPanel = new BaseNodeRenderPanel();
       contentPanel.addPropertyChangeListener(renderPanel);
 

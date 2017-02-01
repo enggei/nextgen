@@ -26,6 +26,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    protected final NeoEditor editor;
    final Long neoId;
 
+   // deprecate representation, let that be instantiated in each constructor
    protected NeoPNode(Node node, N representation, String type, NeoEditor editor) {
       super(NeoModel.uuidOf(node), representation, type, editor);
       if (node == null) throw new IllegalArgumentException("node cannot be null");

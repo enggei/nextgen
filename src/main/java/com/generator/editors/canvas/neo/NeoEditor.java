@@ -4,6 +4,7 @@ import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BaseEditor;
 import com.generator.editors.canvas.BasePNode;
+import com.generator.editors.canvas.DomainFactory;
 import com.generator.editors.canvas.RelationPath;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
@@ -47,7 +48,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    private final Set<Long> deletedRelations = new LinkedHashSet<>();
    private final Map<Long, Map<String, UUID>> addedRelations = new LinkedHashMap<>();
 
-   public NeoEditor() {
+   public NeoEditor(DomainFactory domainFactory) {
+      super(domainFactory);
 
       FileUtil.tryToCreateFileIfNotExists(propertiesFile);
       if (propertiesFile != null && propertiesFile.exists()) {
@@ -157,21 +159,12 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          return null;
       }
 
-      NeoPNode newInstance;
-      layerNodes.put(uuid, newInstance = newNode(node, nodetype));
+      NeoPNode newInstance = domainFactory.newNode(node,nodetype, this);
+      layerNodes.put(uuid, newInstance);
 
       newInstance.addPropertyChangeListener(this);
       nodeLayer.addChild(newInstance.pNode);
       return newInstance;
-   }
-
-   @SuppressWarnings("unchecked")
-   public NeoPNode newNode(Node node, String nodetype) {
-
-
-
-
-      return new NeoPTextNode(node, NeoEditor.this);
    }
 
    public abstract void deleteNode(Node node) throws ReferenceException;

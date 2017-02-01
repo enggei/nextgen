@@ -1,7 +1,6 @@
 package com.generator.editors.canvas;
 
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Relationship;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
@@ -45,7 +44,11 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-   public BaseEditor() {
+   // todo testing factory-pattern for new-domain nodes
+   protected final DomainFactory domainFactory;
+
+   public BaseEditor(DomainFactory domainFactory) {
+      this.domainFactory = domainFactory;
 
       nodeLayer = canvas.getLayer();
       relationLayer = new PLayer();
@@ -408,7 +411,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
          }
 
          final N pNode = show(uuid, pNodes.get(uuid).name());
-         if(pNode==null)
+         if (pNode == null)
             continue;
 
          maxWidth = pNode.pNode.getWidth() > maxWidth ? pNode.pNode.getWidth() : maxWidth;
