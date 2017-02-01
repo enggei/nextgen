@@ -44,4 +44,18 @@ public class ChronicleTest extends ChronicleTestSession {
 			session.done();
 		});
 	}
+
+	@Test
+	public void testBinarySearchForTimestamp(TestContext context) {
+
+		final TestSession session = new TestSession(context);
+
+		final Long timestamp = 238746l;
+
+		session.doBinarySearchTest(timestamp,
+			result -> {
+				log.info("Result:\n" + result);
+				session.done();
+		});
+	}
 }
