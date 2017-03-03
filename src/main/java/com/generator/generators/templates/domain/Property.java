@@ -1,7 +1,6 @@
 package com.generator.generators.templates.domain;
 
 
-import com.generator.domain.BaseEntity;
 import io.vertx.core.json.JsonObject;
 
 import java.util.UUID;

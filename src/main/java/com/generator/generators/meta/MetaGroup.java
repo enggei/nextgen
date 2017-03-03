@@ -1,5 +1,9 @@
 package com.generator.generators.meta;
 
+import com.generator.editors.canvas.neo.NeoEditor;
+import com.generator.editors.canvas.neo.domain.DomainPNode;
+import org.neo4j.graphdb.Node;
+import org.piccolo2d.nodes.PText;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 
@@ -223,4 +227,6 @@ public final class MetaGroup {
       }
       return list.toString() + delimiter;
    }
+
+
 }

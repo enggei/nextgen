@@ -1,7 +1,5 @@
 package com.generator.generators.templates.domain;
 
-import com.generator.domain.BaseEntity;
-
 import java.util.*;
 
 import static com.generator.generators.templates.domain.TemplateEntities.STATEMENT;

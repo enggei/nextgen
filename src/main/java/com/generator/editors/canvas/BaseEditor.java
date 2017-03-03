@@ -31,8 +31,8 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
    public final PSwingCanvas canvas = new PSwingCanvas();
 
    protected PLayer nodeLayer;
-   protected final Map<UUID, N> layerNodes = new LinkedHashMap<>();
-   protected final Map<String, Set<UUID>> nodesByLabel = new ConcurrentHashMap<>();
+   public final Map<UUID, N> layerNodes = new LinkedHashMap<>();
+   public final Map<String, Set<UUID>> nodesByLabel = new ConcurrentHashMap<>();
 
    protected PLayer relationLayer;
    protected final Map<UUID, R> layerRelations = new LinkedHashMap<>();
@@ -44,11 +44,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
 
-   // todo testing factory-pattern for new-domain nodes
-   protected final DomainFactory domainFactory;
-
-   public BaseEditor(DomainFactory domainFactory) {
-      this.domainFactory = domainFactory;
+   public BaseEditor() {
 
       nodeLayer = canvas.getLayer();
       relationLayer = new PLayer();

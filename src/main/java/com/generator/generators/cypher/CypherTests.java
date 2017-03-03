@@ -27,7 +27,7 @@ import java.util.List;
 
 		 System.out.println(group.newcreateNode().
 			 setId("ID").
-			 addLabelsValue("LABELS"));
+			 addLabelsValue("Entities"));
 
 		 System.out.println(
 			 group.newcreateNodes().

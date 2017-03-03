@@ -12,7 +12,7 @@ import java.io.File;
  */
 public interface TemplateVisitor {
 
-	public static void visit(File groupTemplateFile, TemplateVisitor... visitors) {
+	static void visit(File groupTemplateFile, TemplateVisitor... visitors) {
 
 		for (TemplateVisitor visitor : visitors) visitor.onStartGroupTemplateFile(groupTemplateFile);
 

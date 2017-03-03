@@ -4,7 +4,6 @@ import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BaseEditor;
 import com.generator.editors.canvas.BasePNode;
-import com.generator.editors.canvas.DomainFactory;
 import com.generator.editors.canvas.RelationPath;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
@@ -48,8 +47,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    private final Set<Long> deletedRelations = new LinkedHashSet<>();
    private final Map<Long, Map<String, UUID>> addedRelations = new LinkedHashMap<>();
 
-   public NeoEditor(DomainFactory domainFactory) {
-      super(domainFactory);
+   public NeoEditor() {
+      super();
 
       FileUtil.tryToCreateFileIfNotExists(propertiesFile);
       if (propertiesFile != null && propertiesFile.exists()) {
@@ -159,13 +158,19 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          return null;
       }
 
-      NeoPNode newInstance = domainFactory.newNode(node,nodetype, this);
+      NeoPNode newInstance = newNode(node, nodetype);
+      if (newInstance == null) {
+         System.out.println("unknown nodetype: " + nodetype);
+         return null;
+      }
       layerNodes.put(uuid, newInstance);
 
       newInstance.addPropertyChangeListener(this);
       nodeLayer.addChild(newInstance.pNode);
       return newInstance;
    }
+
+   protected abstract NeoPNode newNode(Node node, String nodetype);
 
    public abstract void deleteNode(Node node) throws ReferenceException;
 
@@ -214,6 +219,17 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    @Override
    protected void addToMenu(JPopupMenu pop, PInputEvent event) {
 
+      final JMenu showMenu = new JMenu("Show");
+      getGraph().getGraphDb().getAllLabelsInUse().forEach(label -> showMenu.add(showAllNodesByLabel(label, event)));
+      pop.add(showMenu);
+
+      final JMenu hideMenu = new JMenu("Hide");
+      for (Map.Entry<String, Set<UUID>> entry : nodesByLabel.entrySet()) {
+         if (entry.getValue().isEmpty()) continue;
+         hideMenu.add(new NeoEditor.HideByLabels(entry.getKey(), this));
+      }
+      if (hideMenu.getMenuComponentCount() > 0) pop.add(hideMenu);
+
       if (!selectedNodes.isEmpty()) {
          pop.add(retainSelected());
          pop.add(hideSelected());
@@ -245,25 +261,45 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          pop.add(saveLayout("Save '" + name + "'", lastLayoutSaved, name));
       }
 
-      pop.add(new ToggleRelationLabels());
+      pop.add(new ToggleRelationLabels(this));
       pop.add(new HideUnconnectedNodes());
 
       super.addToMenu(pop, event);
    }
 
-   public static void removeFromApp(Node node) {
+   public static void removeFromLayouts(Node node) {
       for (Relationship layout : incoming(node, layoutMember))
          layout.delete();
    }
 
    private class ToggleRelationLabels extends TransactionAction {
-      ToggleRelationLabels() {
-         super("Toggle relation names", graph, canvas);
+      ToggleRelationLabels(NeoEditor editor) {
+         super("Toggle relation names", editor);
       }
 
       @Override
       public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
          toggleRelationLabels();
+      }
+   }
+
+   public class HideByLabels extends NeoEditor.TransactionAction {
+
+      private final org.neo4j.graphdb.Label label;
+
+      HideByLabels(String label, NeoEditor editor) {
+         super("Hide " + label, editor);
+         this.label = () -> label;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+         final Set<UUID> hide = new LinkedHashSet<>();
+         editor.layerNodes.values().forEach(pNode -> {
+            if (pNode.node.hasLabel(label)) hide.add(pNode.uuid);
+         });
+         hide.forEach(editor::removeNodeFromCanvas);
       }
    }
 
@@ -327,8 +363,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       super.addRelationToCanvas(relationshipPPath);
    }
 
-   protected Action showAllNodesByLabel(final Label label, PInputEvent event) {
-      return new TransactionAction("Show all " + label, graph, canvas) {
+   public Action showAllNodesByLabel(final Label label, PInputEvent event) {
+      return new TransactionAction("Show all " + label, this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
@@ -347,7 +383,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    }
 
    private Action saveNewLayout() {
-      return new TransactionAction("New", graph, canvas) {
+      return new TransactionAction("New", this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -383,7 +419,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    }
 
    private Action saveLayout(final String actionName, final Node node, final String name) {
-      return new TransactionAction(actionName == null ? name : actionName, graph, canvas) {
+      return new TransactionAction(actionName == null ? name : actionName, this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -410,7 +446,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    }
 
    private Action loadLayout(final Node node, final String name) {
-      return new TransactionAction(name, graph, canvas) {
+      return new TransactionAction(name, this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -431,7 +467,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    }
 
    private Action deleteLayout(final Node node, final String name) {
-      return new TransactionAction(name, graph, canvas) {
+      return new TransactionAction(name, this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             outgoing(node, layoutMember).forEach(Relationship::delete);
@@ -478,13 +514,15 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
    public static abstract class TransactionAction extends AbstractAction {
 
-      private final NeoModel graph;
-      private final JComponent canvas;
+      protected final NeoModel graph;
+      protected final JComponent canvas;
+      protected final NeoEditor editor;
 
-      public TransactionAction(String name, NeoModel graph, JComponent canvas) {
+      public TransactionAction(String name, NeoEditor editor) {
          super(name);
-         this.graph = graph;
-         this.canvas = canvas;
+         this.graph = editor.getGraph();
+         this.canvas = editor.getCanvas();
+         this.editor = editor;
       }
 
       @Override

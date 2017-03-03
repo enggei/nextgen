@@ -1,6 +1,5 @@
 package com.generator.generators.templates.domain;
 
-import com.generator.domain.BaseEntity;
 import com.generator.util.FileUtil;
 
 import java.io.File;

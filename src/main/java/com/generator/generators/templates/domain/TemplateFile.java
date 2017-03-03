@@ -1,6 +1,5 @@
 package com.generator.generators.templates.domain;
 
-import com.generator.domain.BaseEntity;
 import com.generator.util.FileUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;

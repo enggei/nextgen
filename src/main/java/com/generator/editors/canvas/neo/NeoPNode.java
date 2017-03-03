@@ -41,7 +41,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    @Override
    public void renderTo(JTextComponent textArea) {
       editor.doInTransaction(tx -> {
-         final StringBuilder debug = new StringBuilder("LABELS:\n" + BaseDomainVisitor.labelsFor(node));
+         final StringBuilder debug = new StringBuilder("Labels:\n" + BaseDomainVisitor.labelsFor(node));
          debug.append("\n\nPROPERTIES:\n" + BaseDomainVisitor.printPropertiesFor(node, "\n"));
 
          debug.append("\n\nOUTGOING:");
@@ -183,7 +183,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    private Action addLabel() {
-      return new NeoEditor.TransactionAction("New", editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction("New", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -198,7 +198,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    private Action addLabelToNode(final Label label) {
-      return new NeoEditor.TransactionAction(label.name(), editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction(label.name(), editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             node.addLabel(label);
@@ -209,7 +209,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    private Action removeLabelFromNode(final Label lbl) {
-      return new NeoEditor.TransactionAction(lbl.name(), editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction(lbl.name(), editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             node.removeLabel(lbl);
@@ -220,7 +220,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    protected Action hideNode() {
-      return new NeoEditor.TransactionAction("Hide", editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction("Hide", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             editor.removeNodeFromCanvas(uuid);
@@ -229,7 +229,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    protected Action retainNode() {
-      return new NeoEditor.TransactionAction("Retain", editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction("Retain", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             editor.retain(uuid);
@@ -238,7 +238,7 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
    }
 
    protected Action deleteNode() {
-      return new NeoEditor.TransactionAction("Delete", editor.graph, editor.canvas) {
+      return new NeoEditor.TransactionAction("Delete", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             if (SwingUtil.showConfirmDialog(editor.canvas, "Delete " + NeoModel.getNameOrLabelFrom(node) + " ?"))

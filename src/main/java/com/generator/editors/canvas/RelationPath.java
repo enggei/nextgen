@@ -1,6 +1,5 @@
 package com.generator.editors.canvas;
 
-import org.neo4j.graphdb.Node;
 import org.piccolo2d.PNode;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
