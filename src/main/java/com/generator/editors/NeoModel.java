@@ -17,7 +17,7 @@ import java.util.UUID;
  */
 public class NeoModel {
 
-   private static final String TAG_UUID = "_uuid";
+   public static final String TAG_UUID = "_uuid";
    public static final String TAG_LAYOUT = "_layout";
 
    private final GraphDatabaseService graphDb;

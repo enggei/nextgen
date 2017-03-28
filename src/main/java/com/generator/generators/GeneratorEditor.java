@@ -1,18 +1,25 @@
 package com.generator.generators;
 
+import com.generator.domain.IDomain;
 import com.generator.editors.NeoModel;
-import com.generator.editors.canvas.BaseNodeRenderPanel;
+import com.generator.editors.canvas.NeoPNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.editors.canvas.neo.NeoPTextNode;
-import com.generator.generators.easyFlow.EasyFlowDomain;
+import com.generator.generators.easyFlow.EasyFlowDomainImpl;
 import com.generator.generators.html5.Html5Domain;
 import com.generator.generators.java.JavaDomain;
-import com.generator.generators.meta.MetaDomain;
+import com.generator.generators.json.JsonDomainImpl;
+import com.generator.generators.maven.MavenDomain;
+import com.generator.generators.maven.MavenDomainImpl;
+import com.generator.generators.meta.MetaDomainImpl;
+import com.generator.generators.mysql.MysqlDomainImpl;
 import com.generator.generators.project.ProjectDomain;
-import com.generator.generators.templates.TemplateDomain;
+import com.generator.generators.project.ProjectDomainImpl;
+import com.generator.generators.templates.TemplateDomainImpl;
 import com.generator.generators.vertx.VertxDomain;
 import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.piccolo2d.event.PInputEvent;
 
@@ -32,26 +39,28 @@ import static javax.swing.JFrame.EXIT_ON_CLOSE;
  */
 public class GeneratorEditor extends NeoEditor {
 
-   GeneratorEditor() {
+   private final Set<IDomain> domains = new LinkedHashSet<>();
+
+   GeneratorEditor(Set<IDomain> domains) {
       super();
       canvas.setBackground(new Color(Integer.valueOf("247, 247, 247".split(", ")[0]), Integer.valueOf("247, 247, 247".split(", ")[1]), Integer.valueOf("247, 247, 247".split(", ")[2])));
 
-      for (TemplateDomain.Entities label : TemplateDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
+      this.domains.addAll(domains);
+      for (IDomain domain : this.domains)
+         for (org.neo4j.graphdb.Label label : domain.values())
+            nodesByLabel.put(label.name(), new LinkedHashSet<>());
 
+      // todo make domains implement IDomain, then move into domains and run above
       for (ProjectDomain.Entities label : ProjectDomain.Entities.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
 
       for (JavaDomain.Entities label : JavaDomain.Entities.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
 
-      for (MetaDomain.Entities label : MetaDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
-      for (EasyFlowDomain.Entities label : EasyFlowDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
       for (VertxDomain.Entities label : VertxDomain.Entities.values())
+         nodesByLabel.put(label.name(), new LinkedHashSet<>());
+
+      for (MavenDomain.Entities label : MavenDomain.Entities.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
    }
 
@@ -67,33 +76,17 @@ public class GeneratorEditor extends NeoEditor {
       if (set == null) nodesByLabel.put(nodetype, set = new LinkedHashSet<>());
       set.add(uuidOf(node));
 
-      for (MetaDomain.Entities label : MetaDomain.Entities.values()) {
-         if (nodetype.equals(label.name())) {
-            return MetaDomain.newPNode(node, nodetype, this);
+      for (IDomain domain : domains) {
+         for (Label label : domain.values()) {
+            if (nodetype.equals(label.name()))
+               return domain.newPNode(node, nodetype, this);
          }
       }
 
-      for (TemplateDomain.Entities entities : TemplateDomain.Entities.values()) {
-         if (nodetype.equals(entities.name())) {
-            return TemplateDomain.newPNode(node, nodetype, this);
-         }
-      }
-
+      // todo move above
       for (JavaDomain.Entities entities : JavaDomain.Entities.values()) {
          if (nodetype.equals(entities.name())) {
             return JavaDomain.newPNode(node, nodetype, this);
-         }
-      }
-
-      for (ProjectDomain.Entities label : ProjectDomain.Entities.values()) {
-         if (nodetype.equals(label.name())) {
-            return ProjectDomain.newPNode(node, nodetype, this);
-         }
-      }
-
-      for (EasyFlowDomain.Entities label : EasyFlowDomain.Entities.values()) {
-         if (nodetype.equals(label.name())) {
-            return EasyFlowDomain.newPNode(node, nodetype, this);
          }
       }
 
@@ -117,27 +110,19 @@ public class GeneratorEditor extends NeoEditor {
 
       final String deleteLabel = node.getLabels().iterator().next().name();// assumes first (and only?) label is the node's label
 
-      for (TemplateDomain.Entities label : TemplateDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            TemplateDomain.deleteNode(node);
-            return;
+      for (IDomain domain : domains) {
+         for (Label label : domain.values()) {
+            if (label.name().equals(deleteLabel)) {
+               domain.deleteNode(node);
+               return;
+            }
          }
+      }
 
-      for (ProjectDomain.Entities label : ProjectDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            ProjectDomain.deleteNode(node);
-            return;
-         }
-
+      // todo move above
       for (JavaDomain.Entities label : JavaDomain.Entities.values())
          if (label.name().equals(deleteLabel)) {
             JavaDomain.deleteNode(node);
-            return;
-         }
-
-      for (EasyFlowDomain.Entities label : EasyFlowDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            EasyFlowDomain.deleteNode(node);
             return;
          }
 
@@ -147,13 +132,7 @@ public class GeneratorEditor extends NeoEditor {
             return;
          }
 
-      for (MetaDomain.Entities label : MetaDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            MetaDomain.deleteNode(node);
-            return;
-         }
-
-         for (VertxDomain.Entities label : VertxDomain.Entities.values())
+      for (VertxDomain.Entities label : VertxDomain.Entities.values())
          if (label.name().equals(deleteLabel)) {
             VertxDomain.deleteNode(node);
             return;
@@ -162,11 +141,24 @@ public class GeneratorEditor extends NeoEditor {
 
    @Override
    protected void addToMenu(JPopupMenu pop, PInputEvent event) {
-      TemplateDomain.addToMenu(pop, event, this);
-      EasyFlowDomain.addToMenu(pop, event, this);
-      MetaDomain.addToMenu(pop, event, this);
+
+      for (IDomain domain : domains) {
+         final JMenu domainMenu = new JMenu(domain.getName());
+         domain.addToDomainMenu(event, this, domainMenu);
+
+         getGraph().getGraphDb().getAllLabelsInUse().forEach(lbl -> {
+            for (Label label : domain.values()) {
+               if (lbl.name().equals(label.name())) {
+                  domainMenu.add(showAllNodesByLabel(label, event));
+                  return;
+               }
+            }
+         });
+
+         pop.add(domainMenu);
+      }
+
       JavaDomain.addToMenu(pop, event, this);
-      ProjectDomain.addToMenu(pop, event, this);
       Html5Domain.addToMenu(pop, event, this);
       VertxDomain.addToMenu(pop, event, this);
       super.addToMenu(pop, event);
@@ -174,11 +166,22 @@ public class GeneratorEditor extends NeoEditor {
 
    public static void main(String[] args) {
 
+      // todo make a parseable-json converting to Set<IDomain>
+      final Set<IDomain> domains = new LinkedHashSet<>();
+      domains.add(new MetaDomainImpl());
+      domains.add(new TemplateDomainImpl());
+      domains.add(new EasyFlowDomainImpl());
+      domains.add(new ProjectDomainImpl());
+      domains.add(new MavenDomainImpl());
+      domains.add(new MysqlDomainImpl());
+      domains.add(new JsonDomainImpl());
+
+      System.setProperty("generator.path", "src/main/java/com/generator/generators");
       SwingUtil.setLookAndFeel_Nimbus();
 
       final JFrame frame = new JFrame();
-      final GeneratorEditor contentPanel = new GeneratorEditor();
-      final BaseNodeRenderPanel renderPanel = new BaseNodeRenderPanel();
+      final GeneratorEditor contentPanel = new GeneratorEditor(domains);
+      final NeoPNodeRenderPanel renderPanel = new NeoPNodeRenderPanel();
       contentPanel.addPropertyChangeListener(renderPanel);
 
       frame.getContentPane().add(contentPanel.getCanvas(), BorderLayout.CENTER);

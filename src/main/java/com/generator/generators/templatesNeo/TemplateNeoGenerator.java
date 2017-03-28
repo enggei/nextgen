@@ -1,6 +1,6 @@
 package com.generator.generators.templatesNeo;
 
-import com.generator.generators.generatorDomain.GeneratorDomainGroup;
+//import com.generator.generators.generatorDomain.GeneratorDomainGroup;
 import com.generator.generators.templates.TemplateVisitor;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
@@ -19,11 +19,11 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 	private final String root;
 	private final String packageName;
 	private final TemplatesNeoGroup group = new TemplatesNeoGroup();
-	private final GeneratorDomainGroup domainGroup = new GeneratorDomainGroup();
+//	private final GeneratorDomainGroup domainGroup = new GeneratorDomainGroup();
 
 	private File groupTemplateFile;
 	private TemplatesNeoGroup.NeoGroupClassDeclarationST groupClassDeclaration;
-	private GeneratorDomainGroup.visitorST visitorST;
+//	private GeneratorDomainGroup.visitorST visitorST;
 	private TemplatesNeoGroup.declarationST declarationST;
 	private Object setter;
 	private Object interfaceDecl;
@@ -44,9 +44,9 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 			setName(getGroupName()).
 			setPackageName(packageName);
 
-		visitorST = domainGroup.newvisitor().
-			setDomain(getGroupName()).
-			setPackage(packageName);
+//		visitorST = domainGroup.newvisitor().
+//			setDomain(getGroupName()).
+//			setPackage(packageName);
 	}
 
 	@Override
@@ -55,11 +55,11 @@ public class TemplateNeoGenerator implements TemplateVisitor {
 		declarationST = group.newdeclaration().
 			setGroupName(getGroupName());
 
-		visitorST.addTermsValue(
-			domainGroup.newtermCase().
-				setTerm(statement.getName()),
-			domainGroup.newtermImpl().
-				setTerm(statement.getName()));
+//		visitorST.addTermsValue(
+//			domainGroup.newtermCase().
+//				setTerm(statement.getName()),
+//			domainGroup.newtermImpl().
+//				setTerm(statement.getName()));
 	}
 
 	@Override

@@ -1,0 +1,310 @@
+/* maven 3f523ffa-c5d8-4ace-9ea9-8bf5a4ee3ebf*/
+delimiters "~", "~"
+
+buildHelperPlugin() ::= <<<plugin>
+	<groupId>org.codehaus.mojo</groupId>
+   <artifactId>build-helper-maven-plugin</artifactId>
+   <version>1.9.1</version>
+   <executions>
+   	<execution>
+      	<id>reserve-network-port</id>
+         <goals>
+         	<goal>reserve-network-port</goal>
+         </goals>
+         <phase>process-sources</phase>
+         <configuration>
+         	<portNames>
+            	<portName>http.port</portName>
+            </portNames>
+			</configuration>
+		</execution>
+   </executions>
+</plugin> >>
+
+buildPlugins(filters,plugins) ::= <<<build>
+
+    ~filters:{it|~it~};separator="\n"~
+
+    <plugins>
+        ~plugins:{it|~it~};separator="\n"~
+    </plugins>
+</build> >>
+
+dependencies(dependencies) ::= <<<dependencies>
+   ~dependencies:{it|~it~};separator="\n"~
+</dependencies> >>
+
+dependency(artifactId,groupId,scope,version) ::= <<<dependency>
+	<groupId>~groupId~</groupId>
+	<artifactId>~artifactId~</artifactId>
+   <version>~version~</version>
+   <scope>~scope~</scope>
+</dependency>>
+
+fatJarVertxPlugin(mainVerticle) ::= <<<!--fat-jar plugin-->
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>2.3</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>shade</goal>
+            </goals>
+            <configuration>
+                <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <manifestEntries>
+                            <Main-Class>io.vertx.core.Launcher</Main-Class>
+                            <Main-Verticle>~mainVerticle~</Main-Verticle>
+                        </manifestEntries>
+                    </transformer>
+                </transformers>
+                <artifactSet/>
+                <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar
+                </outputFile>
+            </configuration>
+        </execution>
+    </executions>
+</plugin> >>
+
+integrationTests() ::= <<<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>2.18.1</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+            </goals>
+            <configuration>
+                <systemProperties>
+                    <http.port>${http.port}</http.port>
+                </systemProperties>
+            </configuration>
+        </execution>
+    </executions>
+</plugin> >>
+
+mavenCompilerPlugin(source,target) ::= <<<plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <version>3.3</version>
+    <configuration>
+        <source>~source~</source>
+        <target>~target~</target>
+    </configuration>
+</plugin> >>
+
+plugin(artifactId,configuration,dependencies,executions,groupId,version) ::= <<<plugin>
+	<groupId>~groupId~</groupId>
+   <artifactId>~artifactId~</artifactId>
+	<version>~version~</version>
+   <configuration>
+   	~configuration:{it|~it~}~
+   </configuration>
+	<dependencies>
+		~dependencies:{it|~it~}~
+	</dependencies>
+	<executions>
+		~executions:{it|~it~}~
+	</executions>
+</plugin>>
+
+pom(buildPlugins,profiles,project,properties,repositories,dependency) ::= <<<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+   ~project~
+
+   ~properties~
+
+   <dependencies>
+~dependency:{it|
+    <dependency>
+	    <groupId>~it.groupId~</groupId>
+		<artifactId>~it.artifactId~</artifactId>
+		<version>~it.version~</version>
+		~if(it.scope)~<scope>~it.scope~</scope>~endif~
+	</dependency>};separator="\n"~
+</dependencies>
+
+   ~buildPlugins~
+
+   ~profiles~
+
+   ~repositories~
+
+</project> >>
+
+project(artifactId,groupId,version) ::= <<<modelVersion>4.0.0</modelVersion>
+<groupId>~groupId~</groupId>
+<artifactId>~artifactId~</artifactId>
+<version>~version~</version> >>
+
+properties(properties) ::= <<<properties>
+   ~properties:{it|<~it.key~>~it.value~</~it.key~>};separator="\n"~
+</properties> >>
+
+repositories(repositories) ::= <<<repositories>
+   ~repositories:{it|~it~};separator="\n"~
+</repositories> >>
+
+repository(id,name,url) ::= <<<repository>
+    <id>~id~</id>
+    <name>~name~</name>
+    <url>~url~</url>
+</repository> >>
+
+runFatJarPlugin(confPath) ::= <<<plugin>
+	<artifactId>maven-antrun-plugin</artifactId>
+   <version>1.8</version>
+   <executions>
+   	<execution>
+			<id>start-vertx-app</id>
+			<phase>pre-integration-test</phase>
+	      <goals>
+	      	<goal>run</goal>
+			</goals>
+	      <configuration>
+		      <target>
+
+	   	      <!--  Launch the application as in 'production' using the fatjar.
+	      	         We pass the generated configuration, configuring the http port to the picked one
+							same as console : java -jar my-first-app-1.0-SNAPSHOT-fat.jar -conf .../my-it-config.json -->
+
+					<exec executable="${java.home}/bin/java" dir="${project.build.directory}" spawn="true">
+						<arg value="-jar"/>
+						<arg value="${project.artifactId}-${project.version}-fat.jar"/>
+		            ~if(confPath)~<arg value="-conf"/>
+	            	<arg value="~confPath~"/>~endif~
+	         	</exec>
+				</target>
+			</configuration>
+			</execution>
+		<execution>
+		   <id>stop-vertx-app</id>
+		   <phase>post-integration-test</phase>
+		   <goals>
+		   	<goal>run</goal>
+			</goals>
+		   <configuration>
+				<target>
+
+					<!-- Kill the started process. Windows command in in the windows profile (below) -->
+
+					<exec executable="bash" dir="${project.build.directory}" spawn="false">
+						<arg value="-c"/>
+	            	<arg value="ps ax | grep -i '${project.artifactId}' | awk 'NR==1{print $1}' | xargs kill -SIGTERM"/>
+	         	</exec>
+	      	</target>
+   		</configuration>
+		</execution>
+	</executions>
+</plugin> >>
+
+testResources(directory,filtering) ::= <<<testResources>
+	<testResource>
+   	<directory>~directory~</directory>
+      <filtering>~filtering~</filtering>
+	</testResource>
+</testResources> >>
+
+vertxIntegrationProfile() ::= <<<!-- A profile for windows as the stop command is different -->
+<!-- todo as of Aug 26 2015 this is untested -->
+<profile>
+    <id>windows</id>
+    <activation>
+        <os>
+            <family>windows</family>
+        </os>
+    </activation>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>stop-vertx-app</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="wmic"
+                                      dir="${project.build.directory}"
+                                      spawn="false">
+                                    <arg value="process"/>
+                                    <arg value="where"/>
+                                    <arg value="CommandLine like '%${project.artifactId}%' and not name='wmic.exe'"/>
+                                    <arg value="delete"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</profile> >>
+
+webrootAssemblyPlugin() ::= <<<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <configuration>
+        <descriptor>src/assembly/webroot.xml</descriptor>
+        <finalName>webroot-${project.version}</finalName>
+    </configuration>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin> >>
+
+windowsProfile() ::= <<<profiles>
+<!-- A profile for windows as the stop command is different -->
+<!-- todo as of Aug 26 2015 this is untested -->
+<profile>
+    <id>windows</id>
+    <activation>
+        <os>
+            <family>windows</family>
+        </os>
+    </activation>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>stop-vertx-app</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <exec executable="wmic"
+                                      dir="${project.build.directory}"
+                                      spawn="false">
+                                    <arg value="process"/>
+                                    <arg value="where"/>
+                                    <arg value="CommandLine like '%${project.artifactId}%' and not name='wmic.exe'"/>
+                                    <arg value="delete"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</profile>
+</profiles> >>

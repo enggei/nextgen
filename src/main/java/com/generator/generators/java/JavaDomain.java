@@ -1,11 +1,21 @@
 package com.generator.generators.java;
 
+import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
+import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.body.BodyDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.NameExpr;
+import com.github.javaparser.ast.expr.QualifiedNameExpr;
+import com.github.javaparser.ast.expr.StringLiteralExpr;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.nodes.PText;
 
@@ -13,6 +23,7 @@ import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.StringReader;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -34,7 +45,7 @@ public class JavaDomain {
    }
 
    public enum Properties implements Label {
-      name, type, scope, returnValue, comment, value
+      name, type, scope, returnValue, comment, value, getter, setter
    }
 
    public enum Relations implements RelationshipType {
@@ -42,9 +53,13 @@ public class JavaDomain {
    }
 
    public static void addToMenu(JPopupMenu pop, PInputEvent event, NeoEditor editor) {
-      final JMenu newMenu = new JMenu("JavaDomain");
-      newMenu.add(new NewPackage(event, editor));
-      pop.add(newMenu);
+      final JMenu domainMenu = new JMenu("JavaDomain");
+      domainMenu.add(new NewPackage(event, editor));
+      editor.getGraph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+         for (Entities entities : Entities.values())
+            if (entities.name().equals(label.name())) domainMenu.add(editor.showAllNodesByLabel(label, event));
+      });
+      pop.add(domainMenu);
    }
 
    public static NeoPNode newPNode(Node node, String nodetype, NeoEditor neoEditor) {
@@ -145,8 +160,63 @@ public class JavaDomain {
             }
          });
 
+         pop.add(new NeoEditor.TransactionAction("Parse Class", editor) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final JTextArea textArea = new JTextArea(50, 80);
+
+               SwingUtil.showTextInput("Java", textArea, editor.getCanvas(), new SwingUtil.OnSave() {
+                  @Override
+                  public void verifyAndSave() throws Exception {
+
+                     graph.doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+
+                           final CompilationUnit compilationUnit = JavaParser.parse(new StringReader(textArea.getText().trim()));
+
+                           // refactor package to this package
+                           final Stack<String> packagePath = new Stack<>();
+                           Node currentPackageNode = node;
+                           Relationship parentRelation;
+                           do {
+                              packagePath.push(getString(currentPackageNode, Properties.name.name()));
+                              parentRelation = singleOutgoing(currentPackageNode, Relations.PACKAGE);
+                              currentPackageNode = other(currentPackageNode, parentRelation);
+                           } while (parentRelation != null);
+                           compilationUnit.setPackage(new PackageDeclaration(new NameExpr(StringUtil.list(packagePath, "."))));
+
+                           for (TypeDeclaration typeDeclaration : compilationUnit.getTypes()) {
+
+                              final String name = typeDeclaration.getName();
+
+                              final Node newNode = graph.newNode(Entities.Class);
+                              newNode.setProperty(Properties.name.name(), name);
+                              newNode.createRelationshipTo(node, PACKAGE); // set package here
+
+                              for (BodyDeclaration declaration : typeDeclaration.getMembers()) {
+
+                              }
+
+                              editor.show(NeoModel.uuidOf(newNode), Entities.Class.name()).setOffset(event);
+                           }
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showMessage("Error " + throwable.getMessage(), editor.getCanvas());
+                        }
+                     });
+                  }
+               });
+            }
+         });
+
          super.showNodeActions(pop, event);
       }
+
+
    }
 
    public static class ClassPNode extends JavaDomainPNode {
@@ -158,27 +228,35 @@ public class JavaDomain {
       @Override
       public void renderTo(JTextComponent textArea) {
 
-         final StringBuilder out = new StringBuilder();
+         // todo improve this with a new java-group better suited for java-domain ?
+         final JavaGroup javaGroup = new JavaGroup();
+         final JavaGroup.classST classST = javaGroup.newclass();
 
          editor.doInTransaction(tx -> {
             visitClass(node, new JavaVisitor() {
                @Override
                public void onClass(String name, Node node) {
-                  out.append("Class ").append(name).append(":");
+                  classST.setName(name);
                }
 
                @Override
-               public void onField(String scope, String type, String name, String value, Node node) {
-                  out.append("\n\t").append(scope).append(" ").append(type).append(" ").append(name).append(" ").append(value);
+               public void onField(String scope, String type, String name, String value, Boolean getter, Boolean setter, Node node) {
+                  classST.addPropertiesValue(null, null, null, false, null, false, null, null, name, scope, type, value);
+
+                  // todo: add custom getters and setters- template ?
+                  if (getter)
+                     classST.addMethodsValue(javaGroup.newmethod().setName("get" + StringUtil.capitalize(name)).setReturnVal(type).setScope("public"));
+                  if (setter)
+                     classST.addMethodsValue(javaGroup.newmethod().setName("set" + StringUtil.capitalize(name)).setScope("public"));
                }
 
                @Override
                public void onMethod(String scope, String name, String returnValue, Node node) {
-                  out.append("\n\t").append(scope).append(" ").append(name).append(" ").append(returnValue).append(" ");
+
                }
             });
 
-            textArea.setText(out.toString());
+            textArea.setText(classST.toString());
             textArea.setCaretPosition(0);
          });
       }
@@ -295,7 +373,7 @@ public class JavaDomain {
             @Override
             public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               final ContextPropertyEditor form = new ContextPropertyEditor(node);
+               final FieldEditor form = new FieldEditor(node);
                SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Field", () -> {
                   editor.doInTransaction(tx1 -> {
                      form.commit(node);
@@ -322,7 +400,7 @@ public class JavaDomain {
             @Override
             public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               final ContextPropertyEditor form = new ContextPropertyEditor(node);
+               final MethodEditor form = new MethodEditor(node);
                SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Method", () -> {
                   editor.doInTransaction(tx1 -> {
                      form.commit(node);
@@ -466,56 +544,117 @@ public class JavaDomain {
       }
    }
 
-   static class ContextPropertyEditor extends SwingUtil.FormPanel {
+   static class FieldEditor extends SwingUtil.FormPanel {
 
       private final JTextField txtName = new JTextField();
       private final JTextField txtType = new JTextField();
-      private final JComboBox cboModifier = new JComboBox();
+      private final JComboBox<String> cboScope = new JComboBox<>();
       private final JTextField txtComment = new JTextField();
       private final JTextField txtValue = new JTextField();
+      private final JCheckBox chkGetter = new JCheckBox("Getter");
+      private final JCheckBox chkSetter = new JCheckBox("Setter");
 
-      ContextPropertyEditor(Node node) {
-         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
+      FieldEditor(Node node) {
+         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
 
          int row = 1;
-         addLabel("Name", 1, row);
+         addLabel(Properties.name.name(), 1, row);
          add(txtName, 3, row);
          txtName.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
 
          row += 2;
-         addLabel("Type", 1, row);
+         addLabel(Properties.type.name(), 1, row);
          add(txtType, 3, row);
          txtType.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
 
          row += 2;
-         addLabel("Modifier", 1, row);
-         add(cboModifier, 3, row);
-         setModifier(cboModifier, node);
+         addLabel(Properties.scope.name(), 1, row);
+         add(cboScope, 3, row);
+         setModifier(cboScope, node);
 
          row += 2;
-         addLabel("Comment", 1, row);
+         addLabel(Properties.comment.name(), 1, row);
          add(txtComment, 3, row);
          txtComment.setText(node.hasProperty(Properties.comment.name()) ? getString(node, Properties.comment.name()) : "");
 
          row += 2;
-         addLabel("Value", 1, row);
+         addLabel(Properties.value.name(), 1, row);
          add(txtValue, 3, row);
          txtValue.setText(node.hasProperty(Properties.value.name()) ? getString(node, Properties.value.name()) : "");
+
+         row += 2;
+         addLabel(Properties.getter.name(), 1, row);
+         add(chkGetter, 3, row);
+         chkGetter.setSelected(Boolean.valueOf(BaseDomainVisitor.get(node, Properties.getter.name(), "false")));
+
+         row += 2;
+         addLabel(Properties.getter.name(), 1, row);
+         add(chkSetter, 3, row);
+         chkSetter.setSelected(Boolean.valueOf(BaseDomainVisitor.get(node, Properties.setter.name(), "false")));
       }
 
       private void setModifier(JComboBox<String> cboModifier, Node node) {
          final String[] items = {"", "private", "protected", "public"};
          cboModifier.setModel(new DefaultComboBoxModel<>(items));
-         if (node.hasProperty("modifier"))
-            cboModifier.setSelectedItem(getString(node, "modifier"));
+         if (node.hasProperty(Properties.scope.name()))
+            cboModifier.setSelectedItem(getString(node, Properties.scope.name()));
       }
 
       private void commit(Node node) throws Exception {
-         node.setProperty("name", txtName.getText().trim());
-         node.setProperty("type", txtName.getText().trim());
-         node.setProperty("modifier", txtName.getText().trim());
-         node.setProperty("comment", txtName.getText().trim());
-         node.setProperty("value", txtName.getText().trim());
+         node.setProperty(Properties.name.name(), txtName.getText().trim());
+         node.setProperty(Properties.type.name(), txtType.getText().trim());
+         node.setProperty(Properties.scope.name(), cboScope.getSelectedItem().toString());
+         node.setProperty(Properties.value.name(), txtValue.getText().trim());
+         node.setProperty(Properties.comment.name(), txtComment.getText().trim());
+         node.setProperty(Properties.getter.name(), chkGetter.isSelected() ? "true" : "false");
+         node.setProperty(Properties.setter.name(), chkSetter.isSelected() ? "true" : "false");
+      }
+   }
+
+   static class MethodEditor extends SwingUtil.FormPanel {
+
+      private final JTextField txtName = new JTextField();
+      private final JTextField txtType = new JTextField();
+      private final JComboBox<String> cboScope = new JComboBox<>();
+      private final JTextField txtComment = new JTextField();
+
+      MethodEditor(Node node) {
+         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
+
+         int row = 1;
+         addLabel(Properties.name.name(), 1, row);
+         add(txtName, 3, row);
+         txtName.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
+
+         row += 2;
+         addLabel(Properties.type.name(), 1, row);
+         add(txtType, 3, row);
+         txtType.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
+
+         row += 2;
+         addLabel(Properties.scope.name(), 1, row);
+         add(cboScope, 3, row);
+         setModifier(cboScope, node);
+
+         row += 2;
+         addLabel(Properties.comment.name(), 1, row);
+         add(txtComment, 3, row);
+         txtComment.setText(node.hasProperty(Properties.comment.name()) ? getString(node, Properties.comment.name()) : "");
+
+      }
+
+      private void setModifier(JComboBox<String> cboModifier, Node node) {
+         final String[] items = {"", "private", "protected", "public"};
+         cboModifier.setModel(new DefaultComboBoxModel<>(items));
+         if (node.hasProperty(Properties.scope.name()))
+            cboModifier.setSelectedItem(getString(node, Properties.scope.name()));
+      }
+
+      private void commit(Node node) throws Exception {
+         node.setProperty(Properties.name.name(), txtName.getText().trim());
+         node.setProperty(Properties.type.name(), txtType.getText().trim());
+         node.setProperty(Properties.scope.name(), cboScope.getSelectedItem().toString());
+         node.setProperty(Properties.comment.name(), txtComment.getText().trim());
       }
    }
 }

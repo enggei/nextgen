@@ -5,6 +5,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import org.jetbrains.annotations.Nullable;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -743,7 +744,11 @@ public class SwingUtil {
 	}
 
 	public static <T> T showSelectDialog(Component parent, T[] available) {
-		return (T) JOptionPane.showInputDialog(parent, "Select template statement", "Template statements", JOptionPane.OK_CANCEL_OPTION, null, available, available.length == 0 ? null : available[0]);
+		return (T) JOptionPane.showInputDialog(parent, "Available ", "Select", JOptionPane.OK_CANCEL_OPTION, null, available, available.length == 0 ? null : available[0]);
+	}
+
+	public static <T> T showSelectDialog(Component parent, T[] available, T selected) {
+		return (T) JOptionPane.showInputDialog(parent, "Available ", "Select", JOptionPane.OK_CANCEL_OPTION, null, available, selected);
 	}
 
 	public static <T> T showSelectDialog(Component parent, Collection<T> list) {
@@ -751,6 +756,33 @@ public class SwingUtil {
 
 		final T[] available = (T[]) list.toArray();
 		return (T) JOptionPane.showInputDialog(parent, "Available: ", "Select", JOptionPane.OK_CANCEL_OPTION, null, available, available.length == 0 ? null : available[0]);
+	}
+
+	public static <T> T showSelectDialog(Component parent, Iterable<T> list) {
+		final Set<T> values = asSet(list);
+		if (values == null) return null;
+		if(values.isEmpty()) return null;
+
+		return showSelectDialog(parent, values);
+	}
+
+	@Nullable
+	private static <T> Set<T> asSet(Iterable<T> list) {
+		if (list == null ) return null;
+		final Iterator<T> iterator = list.iterator();
+
+		final Set<T> values = new LinkedHashSet<T>();
+		while(iterator.hasNext())
+			values.add(iterator.next());
+		return values;
+	}
+
+	public static <T> T showSelectDialog(Component parent, String message, String title, Iterable<T> list) {
+		final Set<T> values = asSet(list);
+		if (values == null) return null;
+		if(values.isEmpty()) return null;
+
+		return showSelectDialog(parent, message, title, values);
 	}
 
 	public static <T> T showSelectDialog(Component parent, String message, String title, Collection<T> list) {

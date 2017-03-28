@@ -1,134 +1,194 @@
 package com.generator.generators.project;
 
+import com.generator.domain.IDomain;
+import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
-import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.piccolo2d.PNode;
+import org.neo4j.graphdb.*;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Consumer;
 
+import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.NeoModel.getNameOrLabelFrom;
 import static com.generator.editors.NeoModel.uuidOf;
 import static com.generator.generators.project.ProjectDomain.Entities.*;
-import static com.generator.generators.project.ProjectDomain.RELATIONS.FILE;
-import static com.generator.generators.project.ProjectDomain.RELATIONS.SUBDIR;
+import static com.generator.generators.project.ProjectDomain.Relations.*;
+import static org.neo4j.graphdb.Direction.INCOMING;
 
 /**
- * Created 19.01.17.
+ * Created 23.02.17.
  */
-public class ProjectDomain {
-
-   //todo refactor all PNodes into DomainPNode
-
-   public static NeoPNode newPNode(Node node, String nodetype, NeoEditor neoEditor) {
-      switch (Entities.valueOf(nodetype)) {
-         case ProjectRoot:
-            return new ProjectRootPNode(node,neoEditor);
-         case JavaSrc:
-            return new JavaSrcPNode(node,neoEditor);
-         case Resources:
-            return new ResourcesPNode(node,neoEditor);
-         case TestJavaSrc:
-            return new TestJavaSourcePNode(node,neoEditor);
-         case TestResources:
-            return new TestResourcesPNode(node,neoEditor);
-         case Pom:
-            return new PomPNode(node, neoEditor);
-         default:
-            return null;
-      }
-   }
-
-   public static void deleteNode(Node node) {
-      // todo enforce constraints
-   }
+public abstract class ProjectDomain implements IDomain {
 
    public enum Entities implements Label {
-      JavaProject,ProjectRoot, JavaSrc, Resources, TestJavaSrc, TestResources,
-      Pom
+      Project, Directory, Renderer, File
    }
 
-   public enum RELATIONS implements RelationshipType {
-      SUBDIR, FILE
+   public enum Relations implements RelationshipType {
+      MEMBER, TARGET
    }
 
-   public static void addToMenu(JPopupMenu pop, PInputEvent event, NeoEditor editor) {
-      final JMenu newMenu = new JMenu("Project");
-      newMenu.add(new JavaProject(event, editor));
-      pop.add(newMenu);
+   public enum Properties {
+      name, path, generator, outputFormat, type, root
    }
 
-   public static Node newJavaProject(NeoModel db, File root) {
-
-      // this creates nodes representing the project-directories (not the directories themselves:)
-      final Node projectRoot = db.newNode(JavaProject);
-      projectRoot.setProperty("name", FileUtil.tryToCreateDirIfNotExists(root).getAbsolutePath());
-
-      newDirectory(db, projectRoot, "src/main/java", JavaSrc);
-      newDirectory(db, projectRoot, "src/main/resources", Resources);
-      newDirectory(db, projectRoot, "src/test/java", TestJavaSrc);
-      newDirectory(db, projectRoot, "src/test/resources", TestResources);
-
-      newFile(db, projectRoot, "pom.xml", Pom);
-
-      return projectRoot;
+   @Override
+   public String getName() {
+      return "Project";
    }
 
-   private static Node newDirectory(NeoModel db, Node project, String subPath, Entities type) {
-      final Node node = db.newNode(type);
-      node.setProperty("name", subPath);
-      project.createRelationshipTo(node, SUBDIR);
-      return node;
+   @Override
+   public final Label[] values() {
+      return Entities.values();
    }
 
-   private static Node newFile(NeoModel db, Node project, String name, Entities type) {
-      final Node node = db.newNode(type);
-      node.setProperty("name", name);
-      project.createRelationshipTo(node, FILE);
-      return node;
-   }
-
-   public static class DomainPNode<T extends PNode> extends NeoPNode<PText> {
-
-      protected final Color selectedColor = Color.RED;
-      protected final Color defaultColor;
-      private final String property;
-      private final org.neo4j.graphdb.Label nodeType;
-
-      public DomainPNode(Node node, Label nodeType, String property, String[] defaultColor, NeoEditor editor) {
-         super(node, new PText(node.getProperty(property).toString()), nodeType.name(), editor);
-         this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
-         this.property = property;
-         this.nodeType = nodeType;
-//      pNode.setTextPaint(this.defaultColor);
-//      pNode.setFont(new Font("Hack", Font.BOLD, 12));
+   @Override
+   public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
+      switch (Entities.valueOf(nodetype)) {
+         case Project:
+         	return newProjectPNode(node, editor);
+         case Directory:
+         	return newDirectoryPNode(node, editor);
+         case Renderer:
+         	return newRendererPNode(node, editor);
+         case File:
+         	return newFilePNode(node, editor);
       }
 
-      public DomainPNode(Node node, PText representation, Label nodeType, String[] defaultColor, NeoEditor editor) {
-         super(node, representation, nodeType.name(), editor);
-         this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
-         this.property = null;
+      throw new IllegalArgumentException("unsupported ProjectDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
+   }
+
+	@Override
+   public void deleteNode(Node node) {
+      // todo enforce constraints
+      final Set<Relationship> constraints = new LinkedHashSet<>();
+
+      final Consumer<Relationship> constraintVisitor = relationship -> {
+         if (NeoEditor.isAppRelated(relationship)) return;
+         constraints.add(relationship);
+      };
+
+      //if (node.hasLabel(ContextProperty)) {
+         //node.getRelationships(INCOMING, PROPERTY).forEach(Relationship::delete);
+         //node.getRelationships(INCOMING, FROM).forEach(Relationship::delete);
+      //}
+
+      // delete from layouts:
+      NeoEditor.removeFromLayouts(node);
+
+      node.delete();
+   }
+
+   protected NeoPNode newProjectPNode(Node node, NeoEditor editor) {
+      return new ProjectPNode(node, editor);
+   }
+
+   protected static class ProjectPNode extends ProjectDomainPNode {
+
+      ProjectPNode(Node node, NeoEditor editor) {
+         super(node, Project, ProjectDomain.Properties.name.name(), "#377eb8", editor);
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newDirectoryPNode(Node node, NeoEditor editor) {
+      return new DirectoryPNode(node, editor);
+   }
+
+   protected static class DirectoryPNode extends ProjectDomainPNode {
+
+      DirectoryPNode(Node node, NeoEditor editor) {
+         super(node, Directory, ProjectDomain.Properties.path.name(), "#4daf4a", editor);
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newRendererPNode(Node node, NeoEditor editor) {
+      return new RendererPNode(node, editor);
+   }
+
+   protected static class RendererPNode extends ProjectDomainPNode {
+
+      RendererPNode(Node node, NeoEditor editor) {
+         super(node, Renderer, "name", "", editor);
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newFilePNode(Node node, NeoEditor editor) {
+      return new FilePNode(node, editor);
+   }
+
+   protected static class FilePNode extends ProjectDomainPNode {
+
+      FilePNode(Node node, NeoEditor editor) {
+         super(node, File, ProjectDomain.Properties.name.name(), "#984ea3", editor);
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+
+   private static class ProjectDomainPNode extends NeoPNode<PText> {
+
+      final Color selectedColor = Color.RED;
+      private final Color defaultColor;
+      private final String property;
+      private final ProjectDomain.Entities nodeType;
+
+      ProjectDomainPNode(Node node, ProjectDomain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
+         super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
+         this.defaultColor = Color.decode(defaultColor);
+         this.property = property;
          this.nodeType = nodeType;
-//      pNode.setTextPaint(this.defaultColor);
-//      pNode.setFont(new Font("Hack", Font.PLAIN, 12));
+         pNode.setTextPaint(this.defaultColor);
+         pNode.setFont(new Font("Hack", Font.BOLD, 12));
       }
 
       @Override
       public String getNodeType() {
          return nodeType.name();
+      }
+
+      @Override
+      public void expand() {
+
       }
 
       @Override
@@ -144,7 +204,7 @@ public class ProjectDomain {
       @Override
       public void updateView() {
          if (property == null) System.out.println("override updateView: property not set");
-//      pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
       }
 
       @Override
@@ -154,17 +214,17 @@ public class ProjectDomain {
 
       @Override
       public void onUnselect() {
-//      pNode.setTextPaint(defaultColor);
+         pNode.setTextPaint(defaultColor);
       }
 
       @Override
       public void onStartHighlight() {
-//      pNode.setTextPaint(Color.ORANGE);
+         pNode.setTextPaint(Color.ORANGE);
       }
 
       @Override
       public void onEndHighlight() {
-//      pNode.setTextPaint(selected.get() ? selectedColor : defaultColor);
+         pNode.setTextPaint(selected.get() ? selectedColor : defaultColor);
       }
 
       @Override
@@ -194,124 +254,178 @@ public class ProjectDomain {
          pop.add(hideNode());
          pop.add(deleteNode());
       }
-
-      @Override
-      public void expand() {
-
-      }
    }
 
-   private static class JavaProject extends NeoEditor.TransactionAction {
+	static class ProjectPropertyEditor extends SwingUtil.FormPanel {
 
-      private final PInputEvent event;
+			private final JTextField _name = new JTextField();
+	//      private final JComboBox<String> cboModifier = new JComboBox<>();
 
-      private String lastDir = System.getProperty("user.home");
+	      ProjectPropertyEditor(Node node) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
 
-      JavaProject(PInputEvent event, NeoEditor editor) {
-         super("New Java Project", editor);
-         this.event = event;
+	         int row = -1;
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+	         _name.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
+
+
+	//         row += 2;
+	//         addLabel("Modifier", 1, row);
+	//         add(cboModifier, 3, row);
+	//         setModifier(cboModifier, node);
+	      }
+
+	      private void setModifier(JComboBox<String> cboModifier, Node node) {
+	         final String[] items = {"", "private", "protected", "public"};
+	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
+	         if (node.hasProperty("modifier"))
+	            cboModifier.setSelectedItem(getString(node, "modifier"));
+	      }
+
+	      void commit(Node node) throws Exception {
+				node.setProperty("name", _name.getText().trim());
+	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+	      }
+	   }
+
+	static class DirectoryPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _path = new JTextField();
+	//      private final JComboBox<String> cboModifier = new JComboBox<>();
+
+	      DirectoryPropertyEditor(Node node) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Path", 1, row);
+	         add(_path, 3, row);
+	         _path.setText(node.hasProperty(Properties.path.name()) ? getString(node, Properties.path.name()) : "");
+
+
+	//         row += 2;
+	//         addLabel("Modifier", 1, row);
+	//         add(cboModifier, 3, row);
+	//         setModifier(cboModifier, node);
+	      }
+
+	      private void setModifier(JComboBox<String> cboModifier, Node node) {
+	         final String[] items = {"", "private", "protected", "public"};
+	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
+	         if (node.hasProperty("modifier"))
+	            cboModifier.setSelectedItem(getString(node, "modifier"));
+	      }
+
+	      void commit(Node node) throws Exception {
+				node.setProperty("path", _path.getText().trim());
+	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+	      }
+	   }
+
+	static class RendererPropertyEditor extends SwingUtil.FormPanel {
+
+	//      private final JComboBox<String> cboModifier = new JComboBox<>();
+
+	      RendererPropertyEditor(Node node) {
+	         super("50dlu, 4dlu, 350dlu", "");
+
+	         int row = -1;
+
+	//         row += 2;
+	//         addLabel("Modifier", 1, row);
+	//         add(cboModifier, 3, row);
+	//         setModifier(cboModifier, node);
+	      }
+
+	      private void setModifier(JComboBox<String> cboModifier, Node node) {
+	         final String[] items = {"", "private", "protected", "public"};
+	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
+	         if (node.hasProperty("modifier"))
+	            cboModifier.setSelectedItem(getString(node, "modifier"));
+	      }
+
+	      void commit(Node node) throws Exception {
+	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+	      }
+	   }
+
+	static class FilePropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _generator = new JTextField();
+			private final JTextField _outputFormat = new JTextField();
+			private final JTextField _type = new JTextField();
+	//      private final JComboBox<String> cboModifier = new JComboBox<>();
+
+	      FilePropertyEditor(Node node) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Generator", 1, row);
+	         add(_generator, 3, row);
+	         _generator.setText(node.hasProperty(Properties.generator.name()) ? getString(node, Properties.generator.name()) : "");
+
+	         row += 2;
+	         addLabel("OutputFormat", 1, row);
+	         add(_outputFormat, 3, row);
+	         _outputFormat.setText(node.hasProperty(Properties.outputFormat.name()) ? getString(node, Properties.outputFormat.name()) : "");
+
+	         row += 2;
+	         addLabel("Type", 1, row);
+	         add(_type, 3, row);
+	         _type.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
+
+
+	//         row += 2;
+	//         addLabel("Modifier", 1, row);
+	//         add(cboModifier, 3, row);
+	//         setModifier(cboModifier, node);
+	      }
+
+	      private void setModifier(JComboBox<String> cboModifier, Node node) {
+	         final String[] items = {"", "private", "protected", "public"};
+	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
+	         if (node.hasProperty("modifier"))
+	            cboModifier.setSelectedItem(getString(node, "modifier"));
+	      }
+
+	      void commit(Node node) throws Exception {
+				node.setProperty("generator", _generator.getText().trim());
+				node.setProperty("outputFormat", _outputFormat.getText().trim());
+				node.setProperty("type", _type.getText().trim());
+	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+	      }
+	   }
+
+   public static abstract class ProjectDomainVisitor implements com.generator.domain.IDomainVisitor {
+
+		@Override
+      public <T> T visit(Node node) {
+         if (node == null) return null;
+		  if (BaseDomainVisitor.hasLabel(node, Project.name())) return visitProject(node);
+		  if (BaseDomainVisitor.hasLabel(node, Directory.name())) return visitDirectory(node);
+		  if (BaseDomainVisitor.hasLabel(node, Renderer.name())) return visitRenderer(node);
+		  if (BaseDomainVisitor.hasLabel(node, File.name())) return visitFile(node);
+         return null;
       }
 
-      @Override
-      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-         final File root = SwingUtil.showOpenDir(editor.canvas, lastDir);
-         if (root == null) return;
-
-         final Node project = ProjectDomain.newJavaProject(editor.getGraph(), root);
-
-         editor.show(uuidOf(project), ProjectDomain.Entities.ProjectRoot.name()).
-               setOffset(event);
-
-         lastDir = root.getAbsolutePath();
-      }
-   }
-
-   static class ProjectDomainPNode extends DomainPNode<PText> {
-
-      ProjectDomainPNode(Node node, ProjectDomain.Entities nodeType, String property, String[] defaultColor, NeoEditor editor) {
-         super(node, new PText(node.getProperty(property).toString()), nodeType, defaultColor, editor);
+		<T> T visitProject(Node node) {
+         return null;
       }
 
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Render ", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            }
-         });
-
-         super.showNodeActions(pop, event);
-      }
-   }
-
-   static class ProjectRootPNode extends ProjectDomainPNode {
-
-      ProjectRootPNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.ProjectRoot, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-   }
-
-   static class JavaSrcPNode extends ProjectDomainPNode {
-
-      JavaSrcPNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.JavaSrc, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-   }
-
-   static class ResourcesPNode extends ProjectDomainPNode {
-
-      ResourcesPNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.Resources, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-   }
-
-   static class TestJavaSourcePNode extends ProjectDomainPNode {
-
-      TestJavaSourcePNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.TestResources, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-   }
-
-   static class TestResourcesPNode extends ProjectDomainPNode {
-
-      TestResourcesPNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.TestResources, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-   }
-
-   static class PomPNode extends ProjectDomainPNode {
-
-      PomPNode(Node node, NeoEditor editor) {
-         super(node, ProjectDomain.Entities.Pom, "name", "153, 52, 4".split(", "), editor);
-         pNode.setFont(new Font("Hack", Font.BOLD, 12));
+		<T> T visitDirectory(Node node) {
+         return null;
       }
 
-      @Override
-      public void onSelect() {
-         pNode.setTextPaint(selectedColor);
+		<T> T visitRenderer(Node node) {
+         return null;
       }
 
-      @Override
-      public void onUnselect() {
-         pNode.setTextPaint(defaultColor);
+		<T> T visitFile(Node node) {
+         return null;
       }
 
-      @Override
-      public void onStartHighlight() {
-         pNode.setTextPaint(Color.ORANGE);
-      }
-
-      @Override
-      public void onEndHighlight() {
-         pNode.setTextPaint(selected.get() ? selectedColor : defaultColor);
-      }
    }
 }

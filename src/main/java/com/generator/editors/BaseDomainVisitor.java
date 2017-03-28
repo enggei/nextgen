@@ -73,6 +73,12 @@ public abstract class BaseDomainVisitor {
       return false;
    }
 
+   public static boolean hasLabel(Node node, org.neo4j.graphdb.Label label) {
+      for (org.neo4j.graphdb.Label lbl : node.getLabels())
+         if (lbl.equals(label)) return true;
+      return false;
+   }
+
    public static String labelsFor(Node node) {
       return labelsFor(node, " ");
    }
@@ -109,6 +115,10 @@ public abstract class BaseDomainVisitor {
 
    public static Node other(Node node, Relationship relationship) {
       return relationship == null ? null : relationship.getOtherNode(node);
+   }
+
+   public static Node otherOutgoing(Node node, RelationshipType type) {
+      return other(node, singleOutgoing(node, type));
    }
 
    @SuppressWarnings("unchecked")

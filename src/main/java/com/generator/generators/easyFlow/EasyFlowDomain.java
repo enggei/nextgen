@@ -1,5 +1,7 @@
 package com.generator.generators.easyFlow;
 
+import com.generator.domain.IDomain;
+import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
@@ -19,51 +21,73 @@ import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.editors.NeoModel.getNameOrLabelFrom;
 import static com.generator.editors.NeoModel.uuidOf;
 import static com.generator.generators.easyFlow.EasyFlowDomain.Entities.*;
-import static com.generator.generators.easyFlow.EasyFlowDomain.Relations.FROM;
-import static com.generator.generators.easyFlow.EasyFlowDomain.Relations.PROPERTY;
+import static com.generator.generators.easyFlow.EasyFlowDomain.Relations.*;
 import static org.neo4j.graphdb.Direction.INCOMING;
 
 /**
  * Created 23.02.17.
  */
-public class EasyFlowDomain {
+public abstract class EasyFlowDomain implements IDomain {
 
    public enum Entities implements Label {
       Flow, ContextProperty, State, Event, SuperParameter
-   }
-
-   public enum Properties implements Label {
-      name, extending, packageName, templateFile, contextGeneric, type, modifier, comment, value
    }
 
    public enum Relations implements RelationshipType {
       FROM, ON, TO, FINISH, PROPERTY, SUPERPARAMETERS
    }
 
-   public static NeoPNode newPNode(Node node, String nodetype, NeoEditor neoEditor) {
+   public enum Properties {
+      name, extending, packageName, templateFile, contextGeneric, type, modifier, comment, value, root
+   }
+
+   @Override
+   public String getName() {
+      return "EasyFlow";
+   }
+
+   @Override
+   public final Label[] values() {
+      return Entities.values();
+   }
+
+   @Override
+   public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
       switch (Entities.valueOf(nodetype)) {
          case Flow:
-            return new FlowPNode(node, neoEditor);
+            return newFlowPNode(node, editor);
          case State:
-            return new StatePNode(node, neoEditor);
+            return newStatePNode(node, editor);
          case Event:
-            return new EventPNode(node, neoEditor);
+            return newEventPNode(node, editor);
          case ContextProperty:
-            return new ContextPropertyPNode(node, neoEditor);
+            return newContextPropertyPNode(node, editor);
       }
 
       throw new IllegalArgumentException("unsupported TemplateDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
    }
 
-   public static void addToMenu(JPopupMenu pop, PInputEvent event, NeoEditor editor) {
-      final JMenu newMenu = new JMenu("EasyFlow");
-      newMenu.add(new NewFlow(event, editor));
-      pop.add(newMenu);
+   protected NeoPNode newFlowPNode(Node node, NeoEditor editor) {
+      return new FlowPNode(node, editor);
    }
 
-   public static void deleteNode(Node node) {
+   protected NeoPNode newStatePNode(Node node, NeoEditor editor) {
+      return new StatePNode(node, editor);
+   }
+
+   protected NeoPNode newEventPNode(Node node, NeoEditor editor) {
+      return new EventPNode(node, editor);
+   }
+
+   protected NeoPNode newContextPropertyPNode(Node node, NeoEditor editor) {
+      return new ContextPropertyPNode(node, editor);
+   }
+
+   @Override
+   public void deleteNode(Node node) {
       // todo enforce constraints
       final Set<Relationship> constraints = new LinkedHashSet<>();
+
       final Consumer<Relationship> constraintVisitor = relationship -> {
          if (NeoEditor.isAppRelated(relationship)) return;
          constraints.add(relationship);
@@ -81,43 +105,10 @@ public class EasyFlowDomain {
       node.delete();
    }
 
-   public static class FlowPNode extends EasyFlowDomainPNode {
+   protected static class FlowPNode extends EasyFlowDomainPNode {
 
       FlowPNode(Node node, NeoEditor editor) {
          super(node, Flow, EasyFlowDomain.Properties.name.name(), "64, 64, 64".split(", "), editor);
-      }
-
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Add From", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(State);
-               newNode.setProperty(Properties.name.name(), name);
-               node.createRelationshipTo(newNode, Relations.FROM);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.State.name()).setOffset(event);
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add ContextProperty", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final Node newNode = graph.newNode(ContextProperty);
-               //newNode.setProperty(Properties.name.name(), name);
-               node.createRelationshipTo(newNode, PROPERTY);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.ContextProperty.name()).setOffset(event);
-            }
-         });
-
-         super.showNodeActions(pop, event);
       }
 
       @Override
@@ -129,72 +120,17 @@ public class EasyFlowDomain {
       }
    }
 
-   public static class ContextPropertyPNode extends EasyFlowDomainPNode {
+   protected static class ContextPropertyPNode extends EasyFlowDomainPNode {
 
       ContextPropertyPNode(Node node, NeoEditor editor) {
          super(node, ContextProperty, EasyFlowDomain.Properties.name.name(), "64, 64, 64".split(", "), editor);
       }
-
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final ContextPropertyEditor form = new ContextPropertyEditor(node);
-               SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "ContextPropery", () -> {
-                  editor.doInTransaction(tx1 -> {
-                     form.commit(node);
-                     editor.show(uuidOf(node), ContextProperty.name()).
-                           setOffset(event);
-                  });
-               });
-
-            }
-         });
-
-         super.showNodeActions(pop, event);
-      }
    }
 
-   public static class StatePNode extends EasyFlowDomainPNode {
+   protected static class StatePNode extends EasyFlowDomainPNode {
 
       StatePNode(Node node, NeoEditor editor) {
          super(node, State, EasyFlowDomain.Properties.name.name(), "64, 64, 64".split(", "), editor);
-      }
-
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Set name", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas, node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-               if (name == null) return;
-
-               node.setProperty(Properties.name.name(), name);
-               updateView();
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Event", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(Event);
-               newNode.setProperty(Properties.name.name(), name);
-               node.createRelationshipTo(newNode, Relations.ON);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.Event.name()).setOffset(event);
-            }
-         });
-
-         super.showNodeActions(pop, event);
       }
 
       @Override
@@ -203,93 +139,12 @@ public class EasyFlowDomain {
          outgoing(node, Relations.ON).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Event));
          editor.showAndLayout(pNodes, pNode);
       }
-
-      @Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-
-         if (selectedNodes.size() != 1) return;
-
-         final Node selectedNode = selectedNodes.iterator().next().node;
-         if (!selectedNode.hasLabel(Event)) return;
-
-         pop.add(new NeoEditor.TransactionAction("Add To", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final Relationship newRelation = selectedNode.createRelationshipTo(node, Relations.TO);
-               editor.addRelation(newRelation);
-               updateView();
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Finish", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final Relationship newRelation = selectedNode.createRelationshipTo(node, Relations.FINISH);
-               editor.addRelation(newRelation);
-               updateView();
-            }
-         });
-
-         SwingUtilities.invokeLater(editor.canvas::repaint);
-      }
    }
 
-   public static class EventPNode extends EasyFlowDomainPNode {
+   protected static class EventPNode extends EasyFlowDomainPNode {
 
       EventPNode(Node node, NeoEditor editor) {
          super(node, Entities.Event, EasyFlowDomain.Properties.name.name(), "128, 64, 255".split(", "), editor);
-      }
-
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Set name", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas, node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-               if (name == null) return;
-
-               node.setProperty(Properties.name.name(), name);
-               updateView();
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add To", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(State);
-               newNode.setProperty(Properties.name.name(), name);
-               node.createRelationshipTo(newNode, Relations.TO);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.State.name()).setOffset(event);
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Finish", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(State);
-               newNode.setProperty(Properties.name.name(), name);
-               node.createRelationshipTo(newNode, Relations.FINISH);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.State.name()).setOffset(event);
-            }
-         });
-
-         super.showNodeActions(pop, event);
       }
 
       @Override
@@ -309,7 +164,7 @@ public class EasyFlowDomain {
       private final EasyFlowDomain.Entities nodeType;
 
       EasyFlowDomainPNode(Node node, EasyFlowDomain.Entities nodeType, String property, String[] defaultColor, NeoEditor editor) {
-         super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
+         super(node, new PText(getNodeLabel(node, property)), nodeType.name(), editor);
          this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
          this.property = property;
          this.nodeType = nodeType;
@@ -339,8 +194,7 @@ public class EasyFlowDomain {
 
       @Override
       public void updateView() {
-         if (property == null) System.out.println("override updateView: property not set");
-         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+         pNode.setText(getNodeLabel(node,property));
       }
 
       @Override
@@ -392,33 +246,11 @@ public class EasyFlowDomain {
       }
    }
 
-   private static class NewFlow extends NeoEditor.TransactionAction {
-
-      private final PInputEvent event;
-
-      NewFlow(PInputEvent event, NeoEditor editor) {
-         super("New Flow", editor);
-         this.event = event;
-      }
-
-      @Override
-      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-         final String name = SwingUtil.showInputDialog("Name", canvas);
-         if (name == null) return;
-
-         final Node node = graph.newNode(Flow);
-         node.setProperty(Properties.name.name(), name);
-
-         editor.show(NeoModel.uuidOf(node), Flow.name()).setOffset(event);
-      }
-   }
-
    static class ContextPropertyEditor extends SwingUtil.FormPanel {
 
       private final JTextField txtName = new JTextField();
       private final JTextField txtType = new JTextField();
-      private final JComboBox cboModifier = new JComboBox();
+      private final JComboBox<String> cboModifier = new JComboBox<>();
       private final JTextField txtComment = new JTextField();
       private final JTextField txtValue = new JTextField();
 
@@ -458,14 +290,45 @@ public class EasyFlowDomain {
             cboModifier.setSelectedItem(getString(node, "modifier"));
       }
 
-      private void commit(Node node) throws Exception {
-
+      void commit(Node node) throws Exception {
          node.setProperty("name", txtName.getText().trim());
-         node.setProperty("type", txtName.getText().trim());
-         node.setProperty("modifier", txtName.getText().trim());
-         node.setProperty("comment", txtName.getText().trim());
-         node.setProperty("value", txtName.getText().trim());
+         node.setProperty("type", txtType.getText().trim());
+         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+         node.setProperty("comment", txtComment.getText().trim());
+         node.setProperty("value", txtValue.getText().trim());
+      }
+   }
 
+   public static abstract class EasyFlowDomainVisitor {
+
+      public <T> T visit(Node node) {
+         if (node == null) return null;
+         if (BaseDomainVisitor.hasLabel(node, Flow.name())) return visitFlow(node);
+         if (BaseDomainVisitor.hasLabel(node, ContextProperty.name())) return visitFlow(node);
+         if (BaseDomainVisitor.hasLabel(node, State.name())) return visitFlow(node);
+         if (BaseDomainVisitor.hasLabel(node, Event.name())) return visitFlow(node);
+         if (BaseDomainVisitor.hasLabel(node, SuperParameter.name())) return visitFlow(node);
+         return null;
+      }
+
+      <T> T visitFlow(Node node) {
+         return null;
+      }
+
+      <T> T visitContextProperty(Node node) {
+         return null;
+      }
+
+      <T> T visitState(Node node) {
+         return null;
+      }
+
+      <T> T visitEvent(Node node) {
+         return null;
+      }
+
+      <T> T visitSuperParameter(Node node) {
+         return null;
       }
    }
 }

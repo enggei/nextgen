@@ -14,6 +14,7 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
 import java.awt.*;
@@ -219,10 +220,6 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    @Override
    protected void addToMenu(JPopupMenu pop, PInputEvent event) {
 
-      final JMenu showMenu = new JMenu("Show");
-      getGraph().getGraphDb().getAllLabelsInUse().forEach(label -> showMenu.add(showAllNodesByLabel(label, event)));
-      pop.add(showMenu);
-
       final JMenu hideMenu = new JMenu("Hide");
       for (Map.Entry<String, Set<UUID>> entry : nodesByLabel.entrySet()) {
          if (entry.getValue().isEmpty()) continue;
@@ -271,6 +268,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       for (Relationship layout : incoming(node, layoutMember))
          layout.delete();
    }
+
 
    private class ToggleRelationLabels extends TransactionAction {
       ToggleRelationLabels(NeoEditor editor) {
@@ -573,6 +571,81 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       ConstraintException(String message) {
          super(message);
       }
+   }
+
+   public NeoEditor.TransactionAction newAddNodeAction(Label label, String property, final PInputEvent event) {
+      return new NeoEditor.TransactionAction("New " + label.name(), this) {
+
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String name = SwingUtil.showInputDialog(property, canvas);
+            if (name == null) return;
+
+            final Node node = graph.newNode(label);
+            node.setProperty(property, name);
+
+            editor.show(NeoModel.uuidOf(node), label.name()).setOffset(event);
+         }
+      };
+   }
+
+   public Action newAddNodeAction(Label entity, String aliasName, String property, RelationshipType relation, NeoPNode pNode, PInputEvent event) {
+      return new NeoEditor.TransactionAction("Add " + aliasName, this) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String name = property == null ? null : SwingUtil.showInputDialog(property, editor.canvas);
+            if (property != null && name == null) return;
+
+            final Node newNode = editor.getGraph().newNode(entity);
+            if (property != null) newNode.setProperty(property, name);
+            pNode.node.createRelationshipTo(newNode, relation);
+
+            editor.show(uuidOf(newNode), entity.name()).
+                  setOffset(event);
+
+            pNode.updateView();
+         }
+      };
+   }
+
+   public Action newAddNodeAction(Label entity, String property, RelationshipType relation, NeoPNode pNode, PInputEvent event) {
+      return newAddNodeAction(entity, entity.name(), property, relation, pNode, event);
+   }
+
+   public Action newAddNodeAction(Label entity, RelationshipType relation, NeoPNode pNode, PInputEvent event) {
+      return newAddNodeAction(entity, entity.name(), null, relation, pNode, event);
+   }
+
+   public Action newSetNodePropertyAction(String property, NeoPNode<PText> pNode) {
+      return new NeoEditor.TransactionAction("Set " + property, this) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String existing = getString(pNode.node, property);
+            final String value = SwingUtil.showInputDialog(property, canvas, existing == null ? "" : existing);
+            if (value == null) return;
+
+            pNode.node.setProperty(property, value);
+            pNode.updateView();
+         }
+      };
+   }
+
+   public Action newSetNodePropertyAction(String property, NeoPNode<PText> pNode, String... values) {
+      return new NeoEditor.TransactionAction("Set " + property, this) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String existing = getString(pNode.node, property);
+            final String value = SwingUtil.showSelectDialog(editor.canvas, values, existing);
+            if (value == null) return;
+
+            pNode.node.setProperty(property, value);
+            pNode.updateView();
+         }
+      };
    }
 
    public static final class ReferenceException extends ConstraintException {

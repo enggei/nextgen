@@ -20,8 +20,7 @@ Tasks:
 
 * On new string value (SingleValue) attach to node if already exists.
 
-* Add PNode label
-  - Render custom name as alternative to parameter value
+
 
 
 TEST:
@@ -31,3 +30,5 @@ TEST:
 * Possible bug: labels not updating when set
 * Autosave curent layout
 * Persist last db path used for auto open in ~/.nextgen/properties.json
+* Add PNode label
+  - Render custom name as alternative to parameter value

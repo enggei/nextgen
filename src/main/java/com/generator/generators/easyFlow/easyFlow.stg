@@ -1,26 +1,25 @@
-/* easyFlow bc15673a-2781-4b46-96a0-575db6804f4d*/
+/* uuid : 5a2715ab-2732-47c7-a63b-c5991582be41 */
 delimiters "~", "~"
 
-declaration(name,state) ::= <<.whenEnter(~state~, new ContextHandler<~name~Context>() {
+/** name,StringProperty;state,StringProperty; **/
+declaration(name,state) ::= <<
+.whenEnter(~state~, new ContextHandler<~name~Context>() {
     @Override
     public void call(final ~name~Context context) throws Exception {
-        //log.debug("entering: ~state;format="humpToCap"~");
-        if (listener != null) listener.onEnter(~state~, context);
+        //log.debug("~state;format="humpToCap"~");
+        if (listener != null) listener.onEnter("~state~", context);
         ~state;format="toLower"~(context);
     }
 })
-.whenLeave(~state~, new ContextHandler<~name~Context>() {
-    @Override
-    public void call(final ~name~Context context) throws Exception {
-        //log.debug("exiting: ~state;format="humpToCap"~");
-        if (listener != null) listener.onLeave(~state~, context);
-    }
-})>>
+>>
 
-easyFlow(bindings,context,events,extends,name,package,states,superParams,transit,implement) ::= <<~if(package)~package ~package~;
+/** bindings,KeyValueListProperty,declaration,impl;context,StringProperty;events,StringProperty;extends,StringProperty;name,StringProperty;package,StringProperty;states,StringProperty;superParams,KeyValueListProperty,name,type;transit,StringProperty; **/
+easyFlow(bindings,context,events,extends,name,package,states,superParams,transit) ::= <<
+package ~package~;
 
-~endif~import au.com.ds.ef.*;
+import au.com.ds.ef.*;
 import au.com.ds.ef.call.ContextHandler;
+import au.com.ds.ef.call.ExecutionErrorHandler;
 import au.com.ds.ef.err.ExecutionError;
 
 import org.slf4j.Logger;
@@ -31,11 +30,9 @@ import static ~package~.~name~.States.*;
 import static ~package~.~name~.Events.*;
 
 /**
- * Generated with NextGen
- * 
- * EasyFlow: http://datasymphony.com.au/open-source/easyflow/
+ * http://datasymphony.com.au/open-source/easyflow/
  */
-public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~~if(implement)~implements ~implement~~endif~{
+public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
 
     protected static final Logger log = LoggerFactory.getLogger(~name~.class);
 
@@ -47,10 +44,8 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~~if(implement
 
     /** ~name~Listener  **/
     public interface ~name~Listener {
-        void onEnter(States state, ~name~Context context);
-        void onLeave(States state, ~name~Context context);
-        void onFinalState(States state, ~name~Context context);
-        void onError(ExecutionError error, ~name~Context context);
+        void onEnter(String state, ~name~Context context);
+        void onError(ExecutionError error, StatefulContext context);
     }
 
     private final EasyFlow<~name~Context> fsm;
@@ -66,16 +61,14 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~~if(implement
         this.fsm
             .executor(new SyncExecutor())
             ~bindings:{it|~it.declaration~};separator="\n"~.
-            whenFinalState((state, context) -> {
-                //log.debug("FINAL");
-                if (listener != null) listener.onFinalState((States)state, (~name~Context)context);
-                onFinalState((~name~Context)context);
-            }).
-            whenError((error, context) -> {
-                //log.error("ERROR");
-                if (listener != null) listener.onError(error, (~name~Context)context);
-                onERROR(error, (~name~Context)context);
-            });
+            whenError(new ExecutionErrorHandler<StatefulContext>() {
+                @Override
+                public void call(ExecutionError error, StatefulContext context) {
+                    log.info("ERROR");
+                    if (listener != null) listener.onError(error, context);
+                    onERROR(error,context);
+                    }
+                });
     }
 
     public void start(final ~name~Context context) {
@@ -89,33 +82,54 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~~if(implement
 
     ~bindings:{it|~it.impl~};separator="\n"~
 
-    protected abstract void onFinalState(final ~name~Context context);
+    protected abstract void onERROR(final ExecutionError error, final StatefulContext context);
+}
+>>
 
-    protected abstract void onERROR(final ExecutionError error, final ~name~Context context);
-}>>
-
-events(events) ::= <<public enum Events implements EventEnum {
+/** events,ListProperty; **/
+events(events) ::= <<
+enum Events implements EventEnum {
     ~events:{it|~it~};separator=",\n"~
-}>>
+}
+>>
 
-impl(name,state) ::= <<protected abstract void ~state;format="toLower"~(final ~name~Context context) throws Exception;>>
+/** name,StringProperty;state,StringProperty; **/
+impl(name,state) ::= <<
+protected abstract void ~state;format="toLower"~(final ~name~Context context) throws Exception;
+>>
 
-mvn() ::= <<<dependency>
+/**  **/
+mvn() ::= <<
+<dependency>
     <groupId>au.com.datasymphony</groupId>
     <artifactId>EasyFlow</artifactId>
     <version>1.3</version>
-</dependency> >>
+<!-- test xx-->
+</dependency>
+>>
 
-stateDeclaration(comment,name) ::= <<~name~~if(comment)~ /* ~comment~ */ ~endif~>>
+/** comment,StringProperty;name,StringProperty; **/
+stateDeclaration(comment,name) ::= <<
+~name~~if(comment)~ /* ~comment~ */ ~endif~
+>>
 
-statefulContext(name,properties) ::= <<public static class ~name~Context extends StatefulContext {
+/** contextGeneric,StringProperty;name,StringProperty;properties,KeyValueListProperty,comment,modifier,name,type,value; **/
+statefulContext(contextGeneric,name,properties) ::= <<
+static class ~name~~if(contextGeneric)~~contextGeneric~~endif~Context extends StatefulContext {
     ~properties:{it|~if(it.modifier)~~it.modifier~ ~endif~~it.type~ ~it.name~~if(it.value)~ = ~it.value~~endif~;~if(it.comment)~ //~it.comment~~endif~};separator="\n"~
-}>>
+}
+>>
 
-states(states) ::= <<public enum States implements StateEnum {
+/** states,ListProperty; **/
+states(states) ::= <<
+enum States implements StateEnum {
     ~states:{it|~it~};separator=",\n"~
-}>>
+}
+>>
 
-transit(event,isFinish,isInit,state,transits,name) ::= <<~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit( // ~name~
+/** event,StringProperty;isFinish,StringProperty;isInit,StringProperty;state,StringProperty;transits,ListProperty; **/
+transit(event,isFinish,isInit,state,transits) ::= <<
+ ~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(
 ~transits:{it|~it~};separator=",\n"~
-)~endif~>>
+)~endif~
+>>

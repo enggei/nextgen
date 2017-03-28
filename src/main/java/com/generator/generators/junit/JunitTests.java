@@ -7,8 +7,8 @@ import java.io.File;
 
 public class JunitTests {
 
-	public static void main(String[] args) {
-		new JunitTests().testJunitGroup();
+	static {
+		System.setProperty("generator.path", "src/main/java/com/generator/generators");
 	}
 
 	@Test

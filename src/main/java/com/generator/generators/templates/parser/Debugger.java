@@ -25,7 +25,7 @@ public class Debugger {
    }
 
    public void onType(Tree ast) {
-//      out.append(tabs(branch)).append("|").append(ast.getType()).append("|").append(("" + ast.getText()).replaceAll("\r\n", "\\\\r\\\\n").replaceAll("\n", "\\\\n")).append("|").append(ast.toStringTree().replaceAll("\r\n", "\\\\r\\\\n").replaceAll("\n", "\\\\n")).append("\n");
+//      out.append(tabs(branch)).append("|").append(ast.getType()).append("|").append(("" + ast.getNodeLabel()).replaceAll("\r\n", "\\\\r\\\\n").replaceAll("\n", "\\\\n")).append("|").append(ast.toStringTree().replaceAll("\r\n", "\\\\r\\\\n").replaceAll("\n", "\\\\n")).append("\n");
       out.append(tabs(branch)).append("|").append(ast.getType()).append("|").append(("" + ast.getText()).replaceAll("\r\n", "\\\\r\\\\n").replaceAll("\n", "\\\\n")).append("|").append("\n");
    }
 

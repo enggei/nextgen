@@ -4,6 +4,8 @@ import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BasePNode;
 import com.generator.util.SwingUtil;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 import org.neo4j.graphdb.*;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PInputEvent;
@@ -14,6 +16,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+
+import static com.generator.editors.BaseDomainVisitor.other;
+import static com.generator.editors.NeoModel.getNameOrLabelFrom;
+import static com.generator.editors.NeoModel.uuidOf;
 
 /**
  * goe on 11/16/16.
@@ -36,10 +42,76 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
       System.out.println(" (" + NeoModel.getNameOrLabelFrom(node) + ")");
    }
 
+   public NeoEditor getEditor() {
+      return editor;
+   }
+
    public abstract void updateView();
+
+   protected static String getNodeLabel(Node node, String property) {
+      return (property != null && node.hasProperty(property)) ? node.getProperty(property).toString() : getNameOrLabelFrom(node);
+   }
 
    @Override
    public void renderTo(JTextComponent textArea) {
+
+//      final JsonObject out = new JsonObject();
+//      out.put(NeoModel.TAG_UUID, uuidOf(node).toString());
+//
+//      final JsonArray labels = new JsonArray();
+//      out.put("labels", labels);
+//      for (Label label : node.getLabels()) labels.add(label.name());
+//
+//      final JsonArray properties = new JsonArray();
+//      out.put("properties", properties);
+//      for (String k : node.getPropertyKeys()) {
+//         final JsonObject property = new JsonObject();
+//         properties.add(property);
+//         property.put(k, node.getProperty(k).toString());
+//      }
+//
+//      final JsonArray outgoing = new JsonArray();
+//      out.put("outgoing", outgoing);
+//      node.getRelationships(Direction.OUTGOING).forEach(new Consumer<Relationship>() {
+//         @Override
+//         public void accept(Relationship relationship) {
+//            final JsonObject rel = new JsonObject();
+//            outgoing.add(rel);
+//            rel.put("type", relationship.getType().name());
+//            rel.put("other", uuidOf(other(node, relationship)).toString());
+//
+//            final JsonArray relationProperties = new JsonArray();
+//            rel.put("properties", relationProperties);
+//            for (String k : relationship.getPropertyKeys()) {
+//               final JsonObject property = new JsonObject();
+//               properties.add(property);
+//               property.put(k, relationship.getProperty(k).toString());
+//            }
+//         }
+//      });
+//
+//      final JsonArray incoming = new JsonArray();
+//      out.put("incoming", incoming);
+//      node.getRelationships(Direction.INCOMING).forEach(new Consumer<Relationship>() {
+//         @Override
+//         public void accept(Relationship relationship) {
+//            final JsonObject rel = new JsonObject();
+//            incoming.add(rel);
+//            rel.put("type", relationship.getType().name());
+//            rel.put("other", uuidOf(other(node, relationship)).toString());
+//
+//            final JsonArray relationProperties = new JsonArray();
+//            rel.put("properties", relationProperties);
+//            for (String k : relationship.getPropertyKeys()) {
+//               final JsonObject property = new JsonObject();
+//               properties.add(property);
+//               property.put(k, relationship.getProperty(k).toString());
+//            }
+//         }
+//      });
+//
+//      textArea.setText(out.encodePrettily());
+
       editor.doInTransaction(tx -> {
          final StringBuilder debug = new StringBuilder("Labels:\n" + BaseDomainVisitor.labelsFor(node));
          debug.append("\n\nPROPERTIES:\n" + BaseDomainVisitor.printPropertiesFor(node, "\n"));
@@ -135,13 +207,14 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
 
       } else if (event.isMiddleMouseButton()) {
          // if a single node is selected, and its not this node. Then apply any actions:
-         if (editor.singleNodeSelected(uuid)) {
-            SwingUtilities.invokeLater(() -> editor.doInTransaction(tx -> {
-               final JPopupMenu pop = new JPopupMenu();
-               showTargetActions(pop, event);
+//         if (editor.singleNodeSelected(uuid)) {
+         SwingUtilities.invokeLater(() -> editor.doInTransaction(tx -> {
+            final JPopupMenu pop = new JPopupMenu();
+            showTargetActions(pop, event);
+            if (pop.getComponentCount() > 0)
                pop.show(editor.canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
-            }));
-         }
+         }));
+//         }
 
       } else
          super.mouseClicked(event);

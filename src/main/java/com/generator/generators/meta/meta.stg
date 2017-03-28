@@ -1,0 +1,283 @@
+/* meta e9cd52a3-8fcf-4a34-9a16-ade868e5d0f2*/
+delimiters "~", "~"
+
+eom() ::= <<}>>
+
+DomainClass(entities,properties,relations,domainName,packageName) ::= <<package ~packageName~;
+
+import com.generator.domain.IDomain;
+import com.generator.editors.BaseDomainVisitor;
+import com.generator.editors.NeoModel;
+import com.generator.editors.canvas.neo.NeoEditor;
+import com.generator.editors.canvas.neo.NeoPNode;
+import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.*;
+import org.piccolo2d.event.PInputEvent;
+import org.piccolo2d.nodes.PText;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+import java.util.function.Consumer;
+
+import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.NeoModel.getNameOrLabelFrom;
+import static com.generator.editors.NeoModel.uuidOf;
+import static ~packageName~.~domainName~Domain.Entities.*;
+import static ~packageName~.~domainName~Domain.Relations.*;
+import static org.neo4j.graphdb.Direction.INCOMING;
+
+/**
+ * Created 23.02.17.
+ */
+public abstract class ~domainName~Domain implements IDomain {
+
+   public enum Entities implements Label {
+      ~entities:{it|~it.name~};separator=", "~
+   }
+
+   public enum Relations implements RelationshipType {
+      ~relations:{it|~it.name;format="toUpper"~};separator=", "~
+   }
+
+   public enum Properties {
+      ~properties:{it|~it.name~};separator=", "~
+   }
+
+   @Override
+   public String getName() {
+      return "~domainName~";
+   }
+
+   @Override
+   public final Label[] values() {
+      return Entities.values();
+   }
+
+   @Override
+   public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
+      switch (Entities.valueOf(nodetype)) {
+         ~entities:{it|case ~it.name~:
+	return new~it.name;format="capitalize"~PNode(node, editor);};separator="\n"~
+      }
+
+      throw new IllegalArgumentException("unsupported ~domainName~Domain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
+   }
+
+	@Override
+   public void deleteNode(Node node) throws NeoEditor.ReferenceException {
+      // todo enforce constraints
+      final Set<Relationship> constraints = new LinkedHashSet<>();
+
+      final Consumer<Relationship> constraintVisitor = relationship -> {
+         if (NeoEditor.isAppRelated(relationship)) return;
+         constraints.add(relationship);
+      };
+
+      //if (node.hasLabel(ContextProperty)) {
+         //node.getRelationships(INCOMING, PROPERTY).forEach(Relationship::delete);
+         //node.getRelationships(INCOMING, FROM).forEach(Relationship::delete);
+      //}
+
+      // delete from layouts:
+      NeoEditor.removeFromLayouts(node);
+
+      node.delete();
+   }
+
+~entities:{it|
+   protected NeoPNode new~it.name;format="capitalize"~PNode(Node node, NeoEditor editor) {
+      return new ~it.name;format="capitalize"~PNode(node, editor);
+   ~eom()~
+
+   protected static class ~it.name;format="capitalize"~PNode extends ~domainName~DomainPNode {
+
+      ~it.name;format="capitalize"~PNode(Node node, NeoEditor editor) {
+         super(node, Entities.~it.name~, ~if(it.label)~~domainName~Domain.Properties.~it.label~.name()~else~"name"~endif~, "~it.color~", editor);
+      ~eom()~
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+         editor.showAndLayout(pNodes, pNode);
+      ~eom()~
+   ~eom()~
+};separator="\n"~
+
+   private static class ~domainName~DomainPNode extends NeoPNode<PText> {
+
+      final Color selectedColor = Color.RED;
+      private final Color defaultColor;
+      private final String property;
+      private final ~domainName~Domain.Entities nodeType;
+
+      ~domainName~DomainPNode(Node node, ~domainName~Domain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
+         super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
+         this.defaultColor = Color.decode(defaultColor);
+         this.property = property;
+         this.nodeType = nodeType;
+         pNode.setTextPaint(this.defaultColor);
+         pNode.setFont(new Font("Hack", Font.BOLD, 12));
+      }
+
+      @Override
+      public String getNodeType() {
+         return nodeType.name();
+      }
+
+      @Override
+      public void expand() {
+
+      }
+
+      @Override
+      public void showDependents() {
+
+      }
+
+      @Override
+      public void keyPressed(PInputEvent event) {
+         super.keyPressed(event);
+      }
+
+      @Override
+      public void updateView() {
+         if (property == null) System.out.println("override updateView: property not set");
+         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+      }
+
+      @Override
+      public void onSelect() {
+         pNode.setTextPaint(selectedColor);
+      }
+
+      @Override
+      public void onUnselect() {
+         pNode.setTextPaint(defaultColor);
+      }
+
+      @Override
+      public void onStartHighlight() {
+         pNode.setTextPaint(Color.ORANGE);
+      }
+
+      @Override
+      public void onEndHighlight() {
+         pNode.setTextPaint(selected.get() ? selectedColor : defaultColor);
+      }
+
+      @Override
+      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+         pop.add(new NeoEditor.TransactionAction("Select all " + nodeType, editor) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               editor.getAllNodes().forEach(neoPNode -> {
+                  if (neoPNode.getNodeType().equals(nodeType.name()) && !neoPNode.selected.get())
+                     neoPNode.select();
+               });
+            }
+         });
+         pop.add(new NeoEditor.TransactionAction("Hide all " + nodeType, editor) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final Set<UUID> hide = new LinkedHashSet<>();
+               editor.getAllNodes().forEach(pNode -> {
+                  if (pNode.getNodeType().equals(nodeType.name())) hide.add(pNode.uuid);
+               });
+               hide.forEach(editor::removeNodeFromCanvas);
+            }
+         });
+
+         pop.add(retainNode());
+         pop.add(hideNode());
+         pop.add(deleteNode());
+      }
+   }
+
+	~entities:{it|~it.editor~};separator="\n\n"~
+
+   public static abstract class ~domainName~DomainVisitor implements com.generator.domain.IDomainVisitor {
+
+		@Override
+      public <T> T visit(Node node) {
+         if (node == null) return null;
+		  ~entities:{it|if (BaseDomainVisitor.hasLabel(node, ~it.name~.name())) return visit~it.name;format="capitalize"~(node);};separator="\n"~
+         return null;
+      }
+
+~entities:{it|
+		<T> T visit~it.name;format="capitalize"~(Node node) {
+         return null;
+      ~eom()~
+};separator="\n"~
+   }
+}>>
+
+EntityEditor(name,properties) ::= <<static class ~name~PropertyEditor extends SwingUtil.FormPanel {
+
+		~properties:{it|private final ~it.component~ _~it.name~ = new ~it.component~();};separator="\n"~
+
+      ~name~PropertyEditor(Node node) {
+         super("50dlu, 4dlu, 350dlu", "~properties:{it|pref, 4dlu};separator=", "~");
+
+         int row = -1;
+~properties:{it|
+         row += 2;
+         addLabel("~it.name;format="capitalize"~", 1, row);
+         add(_~it.name~, 3, row);
+			setValue(_~it.name~, node, Properties.~it.name~.name(), ~it.enums~);
+};separator="\n"~
+      }
+
+		private void setValue(JTextField component, Node node, String property, String[] values) {
+         component.setText(node.hasProperty(property) ? getString(node, property) : "");
+      }
+
+		private void setValue(JCheckBox component, Node node, String property, String[] values) {
+         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
+      }
+
+      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {
+         component.setModel(new DefaultComboBoxModel<>(values));
+       	final String value = node.hasProperty(property) ? getString(node, property) : null;
+	      if (value == null) return;
+	      component.setSelectedItem(value);
+	   }
+
+      void commit(Node node) throws Exception {
+			~properties:{it|getValue(node, "~it.name~", _~it.name~); };separator="\n"~
+      }
+
+		private void getValue(Node node, String property, JTextField component) {
+         node.setProperty(property, component.getText().trim());
+      }
+
+      private void getValue(Node node, String property, JComboBox<String> component) {
+         node.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+      }
+   }>>
+
+EntityInterface(entity,packageName,properties,relations) ::= <<package ~packageName~;
+
+/** Interface for ~entity~ */
+public interface ~entity;format="capitalize"~ {
+
+	~properties:{it|
+   ~it.type~ get~it.name;format="capitalize"~();
+
+   void set~it.name;format="capitalize"~(~it.type~ ~it.name~);
+
+}~
+	~relations:{it|
+   void add~it.name;format="capitalize"~(~it.type;format="capitalize"~ table);
+
+   java.util.List<~it.type;format="capitalize"~> get~it.name;format="capitalize"~();
+
+   java.util.Iterator<~it.type;format="capitalize"~> iterate~it.name;format="capitalize"~();};separator="\n"~
+
+}>>

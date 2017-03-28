@@ -487,9 +487,9 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
       return layerNodes.size() > 1;
    }
 
-   public boolean singleNodeSelected(UUID uuid) {
-      return selectedNodes.size() == 1 && !selectedNodes.keySet().iterator().next().equals(uuid);
-   }
+//   public boolean singleNodeSelected(UUID uuid) {
+//      return selectedNodes.size() == 1 && !selectedNodes.keySet().iterator().next().equals(uuid);
+//   }
 
    class MousePositionNode extends PDragSequenceEventHandler implements PropertyChangeListener {
 
