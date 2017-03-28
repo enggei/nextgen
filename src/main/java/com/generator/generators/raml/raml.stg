@@ -1,45 +1,35 @@
-/* uuid : a876d7b3-4e97-4b96-8e71-3069f232946c */
+/* raml 720cf6a1-0b89-44f4-bcd6-88756ab85493*/
 delimiters "~", "~"
 
-/** contentType,STRINGPROPERTY; **/
 binaryResponse(contentType) ::= <<200:
   body:
-    ~contentType~: 
->>
+    ~contentType~:>>
 
-/** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
 booleanParam(defaultValue,description,name,required) ::= <<~name~:
   description: ~description~
   type: boolean
   ~if(required)~required: true~else~# not required ~endif~
-  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
->>
+  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~>>
 
-/** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;example,STRINGPROPERTY;name,STRINGPROPERTY;pattern,STRINGPROPERTY;required,STRINGPROPERTY; **/
 dateParam(defaultValue,description,example,name,pattern,required) ::= <<~name~:
   description: ~description~
   type: date
   ~if(pattern)~pattern: ~pattern~~else~# no pattern~endif~
   ~if(example)~example: ~example~~else~# no date example ~endif~
   ~if(required)~required: true~else~# not required ~endif~
-  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
->>
+  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~>>
 
-/** description,STRINGPROPERTY;headers,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
 deleteAction(description,headers,query,responses) ::= <<delete:
   description: ~description~
   ~query~
   ~headers~
   responses:
-    ~responses:{it|~it~};separator="\n"~ 
->>
+    ~responses:{it|~it~};separator="\n"~>>
 
-/** actions,LISTPROPERTY;uri,STRINGPROPERTY; **/
-endpoint(actions,uri) ::= <<~uri~:
-  ~actions:{it|~it~};separator="\n"~ 
->>
+endpoint(actions,uri,uriParams) ::= <<~uri~:
+  ~if(uriParams)~~uriParams~~endif~
+  ~actions:{it|~it~};separator="\n"~>>
 
-/** code,STRINGPROPERTY;description,STRINGPROPERTY; **/
 errorResponse(code,description) ::= <<~code~:
   body:
     application/json:
@@ -54,82 +44,38 @@ errorResponse(code,description) ::= <<~code~:
             "DETAILS":  { "type": "array" }
           },
           "required": [ "STATUS","TYPE" ]
-        } 
->>
+        }>>
 
-/** baseUri,STRINGPROPERTY;endpoints,LISTPROPERTY;http,STRINGPROPERTY;https,STRINGPROPERTY;title,STRINGPROPERTY;version,STRINGPROPERTY; **/
 file(baseUri,endpoints,http,https,title,version) ::= <<#%RAML 0.8
 title: ~title~
 baseUri: ~baseUri~
 version: ~version~
 protocols: [~if(http)~ HTTP~endif~~if(https)~~if(http)~,~endif~HTTPS~endif~ ]
-~endpoints:{it|~it~};separator="\n"~ 
->>
+~endpoints:{it|~it~};separator="\n"~>>
 
-/** description,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
 fileParam(description,name,required) ::= <<~name~:
   description: ~description~
   type: file
-  ~if(required)~required: true~else~# not required ~endif~ 
->>
+  ~if(required)~required: true~else~# not required ~endif~>>
 
-/** formParams,LISTPROPERTY;multipart,STRINGPROPERTY; **/
 formBody(formParams,multipart) ::= <<body:
   ~if(multipart)~multipart/form-data~else~application/x-www-form-urlencoded~endif~:
     formParameters:
-      ~formParams:{it|~it~};separator="\n"~ 
->>
+      ~formParams:{it|~it~};separator="\n"~>>
 
-/** description,STRINGPROPERTY;headers,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
 getAction(description,headers,query,responses) ::= <<get:
   description: ~description~
   ~query~
   ~headers~
   responses:
-    ~responses:{it|~it~};separator="\n"~ 
->>
+    ~responses:{it|~it~};separator="\n"~>>
 
-/** description,STRINGPROPERTY;enums,LISTPROPERTY;example,STRINGPROPERTY;name,STRINGPROPERTY;required,STRINGPROPERTY; **/
-header(description,enums,example,name,required) ::= <<~name~:
+header(description,enums,required,example,name) ::= <<~name~:
   description: ~description~
   ~if(enums)~enum: [~enums:{it|~it~};separator=", "~]~else~# no enums~endif~
   ~if(example)~example: ~example~~else~# no example ~endif~
-  ~if(required)~required: true~else~# not required ~endif~ 
->>
+  ~if(required)~required: true~else~# not required ~endif~>>
 
-/** headerParams,LISTPROPERTY; **/
-headerParams(headerParams) ::= <<headers:
-  ~headerParams:{it|~it~};separator="\n"~ 
->>
-
-/** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;example,STRINGPROPERTY;maximum,STRINGPROPERTY;minimum,STRINGPROPERTY;name,STRINGPROPERTY;repeat,STRINGPROPERTY;required,STRINGPROPERTY; **/
-integerParam(defaultValue,description,example,maximum,minimum,name,repeat,required) ::= <<~name~:
-  description: ~description~
-  type: integer
-  ~if(minimum)~minimum: ~minimum~~else~# no minimum ~endif~
-  ~if(maximum)~maximum: ~maximum~~else~# no maximum ~endif~
-  ~if(example)~example: ~example~~else~# no example ~endif~
-  ~if(repeat)~repeat: ~repeat~~else~# no repeat ~endif~
-  ~if(required)~required: true~else~# not required ~endif~
-  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
->>
-
-/** properties,KEYVALUELISTPROPERTY,name,type;required,LISTPROPERTY;schemaDescription,STRINGPROPERTY; **/
-jsonResponse(properties,required,schemaDescription) ::= <<200:
-  body:
-    application/json:
-      schema: |
-        { "$schema": "http://json-schema.org/schema",
-          "type": "object",
-          "description": "~schemaDescription~",
-          "properties": {
-            ~properties:{it|"~it.name~": { "type": "~it.type~" \}};separator=",\n"~
-          },
-          "required": [ ~required:{it|"~it~"};separator=", "~ ]
-        } 
->>
-
-/** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;example,STRINGPROPERTY;maximum,STRINGPROPERTY;minimum,STRINGPROPERTY;name,STRINGPROPERTY;repeat,STRINGPROPERTY;required,STRINGPROPERTY; **/
 numberParam(defaultValue,description,example,maximum,minimum,name,repeat,required) ::= <<~name~:
   description: ~description~
   type: number
@@ -138,35 +84,27 @@ numberParam(defaultValue,description,example,maximum,minimum,name,repeat,require
   ~if(example)~example: ~example~~else~# no example ~endif~
   ~if(repeat)~repeat: ~repeat~~else~# no repeat ~endif~
   ~if(required)~required: true~else~# not required ~endif~
-  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
->>
+  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~>>
 
-/** body,STRINGPROPERTY;description,STRINGPROPERTY;headers,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
 postAction(body,description,headers,query,responses) ::= <<post:
   description: ~description~
   ~query~
   ~headers~
   ~body~
   responses:
-      ~responses:{it|~it~};separator="\n"~ 
->>
+      ~responses:{it|~it~};separator="\n"~>>
 
-/** body,STRINGPROPERTY;description,STRINGPROPERTY;headers,STRINGPROPERTY;query,STRINGPROPERTY;responses,LISTPROPERTY; **/
 putAction(body,description,headers,query,responses) ::= <<put:
   description: ~description~
   ~query~
   ~headers~
   ~body~
   responses:
-      ~responses:{it|~it~};separator="\n"~ 
->>
+      ~responses:{it|~it~};separator="\n"~>>
 
-/** queryParams,LISTPROPERTY; **/
 queryParams(queryParams) ::= <<queryParameters:
-  ~queryParams:{it|~it~};separator="\n"~ 
->>
+  ~queryParams:{it|~it~};separator="\n"~>>
 
-/** defaultValue,STRINGPROPERTY;description,STRINGPROPERTY;enums,LISTPROPERTY;example,STRINGPROPERTY;maxLength,STRINGPROPERTY;minLength,STRINGPROPERTY;name,STRINGPROPERTY;pattern,STRINGPROPERTY;repeat,STRINGPROPERTY;required,STRINGPROPERTY; **/
 stringParam(defaultValue,description,enums,example,maxLength,minLength,name,pattern,repeat,required) ::= <<~name~:
   description: ~description~
   type: string
@@ -177,10 +115,33 @@ stringParam(defaultValue,description,enums,example,maxLength,minLength,name,patt
   ~if(example)~example: ~example~~else~# no example ~endif~
   ~if(repeat)~repeat: ~repeat~~else~# no repeat ~endif~
   ~if(required)~required: true~else~# not required ~endif~
-  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ 
->>
+  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~>>
 
-/** actions,LISTPROPERTY;name,STRINGPROPERTY; **/
-uriParameter(actions,name) ::= <</{~name~}:
-  ~actions:{it|~it~};separator="\n"~ 
->>
+uriParams(uriParams) ::= <<uriParameters:
+  ~uriParams:{it|~it~};separator="\n"~>>
+
+jsonResponse(required,schemaDescription,properties) ::= <<200:
+  body:
+    application/json:
+      schema: |
+        { "$schema": "http://json-schema.org/schema",
+          "type": "object",
+          "description": "~schemaDescription~",
+          "properties": {
+            ~properties:{it|"~it.name~": { "type": "~it.type~" \}};separator=",\n"~
+          },
+          "required": [ ~required:{it|"~it~"};separator=", "~ ]
+        }>>
+
+integerParam(required,repeat,name,minimum,example,maximum,description,defaultValue) ::= <<~name~:
+  description: ~description~
+  type: integer
+  ~if(minimum)~minimum: ~minimum~~else~# no minimum ~endif~
+  ~if(maximum)~maximum: ~maximum~~else~# no maximum ~endif~
+  ~if(example)~example: ~example~~else~# no example ~endif~
+  ~if(repeat)~repeat: ~repeat~~else~# no repeat ~endif~
+  ~if(required)~required: true~else~# not required ~endif~
+  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~>>
+
+headerParams(headerParams) ::= <<headers:
+  ~headerParams:{it|~it~};separator="\n"~>>

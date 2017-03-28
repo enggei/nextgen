@@ -73,6 +73,10 @@ public class Domain {
 			this(name, description, isRequired, UUID.randomUUID());   // example-value is random by default, but can be changed by "setExample(String exampleValue)"
 		}
 
+		UUIDParam(String name, String description) {
+			this(name, description, false);
+		}
+
 		@Override
 		RamlGroup.RamlGroupTemplate asRaml() {
 			return asStringParam().
@@ -431,17 +435,28 @@ public class Domain {
 
 	final class Endpoint {
 
-		final String uri;
+		final StringBuilder uri = new StringBuilder();
 		final Set<HttpAction> actions = new LinkedHashSet<>();
+		final Set<Param> uriParams = new LinkedHashSet<>();
 
 		Endpoint(String uri) {
-			this.uri = uri;
+			this.uri.append(uri);
 		}
 
 		RamlGroup.RamlGroupTemplate asRaml() {
 
 			final RamlGroup.endpointST endpointST = ramlGroup.newendpoint().
-				setUri(uri);
+				setUri(uri.toString());
+
+			if (!uriParams.isEmpty()) {
+
+				final RamlGroup.uriParamsST uriParamsST = ramlGroup.newuriParams();
+
+				for (Param param : uriParams)
+					uriParamsST.addUriParamsValue(param.asRaml());
+
+				endpointST.setUriParams(uriParamsST);
+			}
 
 			for (HttpAction action : actions)
 				endpointST.addActionsValue(action.asRaml());
@@ -453,33 +468,15 @@ public class Domain {
 			this.actions.add(action);
 			return this;
 		}
-	}
 
-	final class URIParameterAction extends HttpAction {
-
-		final String name;
-		final Set<HttpAction> actions = new LinkedHashSet<>();
-
-		URIParameterAction(String name, String description) {
-			super(description);
-			this.name = name;
+		Endpoint addUriParam(Param param) {
+			this.uriParams.add(param);
+			return addUriComponent("{" + param.name + "}");
 		}
 
-		URIParameterAction addAction(HttpAction action) {
-			this.actions.add(action);
+		Endpoint addUriComponent(String uri) {
+			this.uri.append("/").append(uri);
 			return this;
-		}
-
-		@Override
-		RamlGroup.RamlGroupTemplate asRaml() {
-
-			final RamlGroup.uriParameterST uriParameterST = ramlGroup.newuriParameter().
-				setName(name);
-
-			for (HttpAction action : actions)
-				uriParameterST.addActionsValue(action.asRaml());
-
-			return uriParameterST;
 		}
 	}
 
