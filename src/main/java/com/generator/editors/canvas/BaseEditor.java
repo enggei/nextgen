@@ -36,7 +36,8 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
    protected PLayer relationLayer;
    protected final Map<UUID, R> layerRelations = new LinkedHashMap<>();
-   protected final AtomicBoolean showRelationLabels = new AtomicBoolean(false);
+
+   protected RelationPath.PaintRelationStatus paintRelationStatus = RelationPath.PaintRelationStatus.showLines;
 
    // interaction
    final MousePositionNode mousePositionNode = new MousePositionNode();
@@ -467,13 +468,21 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
    }
 
    protected void toggleRelationLabels() {
-      showRelationLabels.set(!showRelationLabels.get());
+
+      switch (paintRelationStatus) {
+         case showLines:
+            paintRelationStatus = RelationPath.PaintRelationStatus.showLinesAndLabels;
+            break;
+         case showLinesAndLabels:
+            paintRelationStatus = RelationPath.PaintRelationStatus.showNothing;
+            break;
+         case showNothing:
+            paintRelationStatus = RelationPath.PaintRelationStatus.showLines;
+            break;
+      }
 
       layerRelations.values().forEach(neoRelationshipPath -> {
-         if (showRelationLabels.get())
-            neoRelationshipPath.showLabel();
-         else
-            neoRelationshipPath.hideLabel();
+         neoRelationshipPath.showLabel(paintRelationStatus);
       });
 
       SwingUtilities.invokeLater(canvas::repaint);

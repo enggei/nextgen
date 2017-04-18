@@ -340,14 +340,14 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          for (Relationship relationship : instanceNode.node.getRelationships(Direction.INCOMING)) {
             if (layerNodes.containsKey(uuidOf(other(instanceNode.node, relationship))) && !neoRelationPaths.containsKey(relationship.getId())) {
                final NeoPNode source = layerNodes.get(uuidOf(other(instanceNode.node, relationship)));
-               addRelationToCanvas(new NeoRelationshipPath(source, instanceNode, relationship, showRelationLabels.get()));
+               addRelationToCanvas(new NeoRelationshipPath(source, instanceNode, relationship, paintRelationStatus));
             }
          }
 
          for (Relationship relationship : instanceNode.node.getRelationships(Direction.OUTGOING)) {
             if (layerNodes.containsKey(uuidOf(other(instanceNode.node, relationship))) && !neoRelationPaths.containsKey(relationship.getId())) {
                final NeoPNode target = layerNodes.get(uuidOf(other(instanceNode.node, relationship)));
-               addRelationToCanvas(new NeoRelationshipPath(instanceNode, target, relationship, showRelationLabels.get()));
+               addRelationToCanvas(new NeoRelationshipPath(instanceNode, target, relationship, paintRelationStatus));
             }
          }
 
@@ -484,7 +484,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       final UUID targetUUID = uuidOf(target);
 
       if (layerNodes.containsKey(sourceUUID) && layerNodes.containsKey(targetUUID) && !neoRelationPaths.containsKey(newRelation.getId()))
-         addRelationToCanvas(new NeoRelationshipPath(layerNodes.get(sourceUUID), layerNodes.get(uuidOf(target)), newRelation, showRelationLabels.get()));
+         addRelationToCanvas(new NeoRelationshipPath(layerNodes.get(sourceUUID), layerNodes.get(uuidOf(target)), newRelation, paintRelationStatus));
 
       SwingUtilities.invokeLater(canvas::repaint);
    }
