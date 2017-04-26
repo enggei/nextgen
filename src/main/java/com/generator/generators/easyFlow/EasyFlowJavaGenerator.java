@@ -30,8 +30,6 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
    <T> T visitFlow(Node node) {
 
       final String name = get(node, EasyFlowDomain.Properties.name.name());
-
-      // testing this solution: only produce target-file if packageName is set. Otherwise, targetFile==null, and a preview will be generated
       final String packageName = get(node, EasyFlowDomain.Properties.packageName.name());
 
       final Set<String> events = new TreeSet<>();

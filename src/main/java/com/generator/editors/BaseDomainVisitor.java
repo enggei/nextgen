@@ -22,13 +22,9 @@ public abstract class BaseDomainVisitor {
       return Collections.emptyList();
    }
 
-   public static UUID uuidOf(Node node) {
-      return NeoModel.uuidOf(node);
-   }
-
    public static void tryToDeleteNode(Node node) throws IllegalStateException {
 
-      final UUID uuid = uuidOf(node);
+      final UUID uuid = NeoModel.uuidOf(node);
 
       if (node.hasRelationship(Direction.INCOMING))
          throw new IllegalStateException(uuid + " has dependencies. Remove these first!");
@@ -36,7 +32,7 @@ public abstract class BaseDomainVisitor {
       System.out.println("deleting node " + uuid);
       for (Relationship nodeRelationship : node.getRelationships(Direction.OUTGOING)) {
          final Node other = other(node, nodeRelationship);
-         System.out.println("deleting relationship " + uuid + " -> (" + nodeRelationship.getType() + ") -> " + uuidOf(other));
+         System.out.println("deleting relationship " + uuid + " -> (" + nodeRelationship.getType() + ") -> " + NeoModel.uuidOf(other));
          nodeRelationship.delete();
          try {
             tryToDeleteNode(other);
@@ -48,17 +44,17 @@ public abstract class BaseDomainVisitor {
    }
 
    public static boolean isRelated(Node node, Node target, RelationshipType relationshipType) {
-      final Object targetUUID = uuidOf(target);
+      final Object targetUUID = NeoModel.uuidOf(target);
       for (Relationship relationship : outgoing(node, relationshipType)) {
-         if (targetUUID.equals(uuidOf(other(node, relationship)))) return true;
+         if (targetUUID.equals(NeoModel.uuidOf(other(node, relationship)))) return true;
       }
       return false;
    }
 
    public static Relationship getRelationship(Node node, Node target, RelationshipType relationshipType) {
-      final Object targetUUID = uuidOf(target);
+      final Object targetUUID = NeoModel.uuidOf(target);
       for (Relationship relationship : outgoing(node, relationshipType)) {
-         if (targetUUID.equals(uuidOf(other(node, relationship)))) return relationship;
+         if (targetUUID.equals(NeoModel.uuidOf(other(node, relationship)))) return relationship;
       }
       return null;
    }
@@ -75,7 +71,7 @@ public abstract class BaseDomainVisitor {
 
    public static boolean hasLabel(Node node, org.neo4j.graphdb.Label label) {
       for (org.neo4j.graphdb.Label lbl : node.getLabels())
-         if (lbl.equals(label)) return true;
+         if (lbl.name().equals(label.name())) return true;
       return false;
    }
 

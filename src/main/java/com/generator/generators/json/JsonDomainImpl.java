@@ -76,7 +76,7 @@ public class JsonDomainImpl extends JsonDomain {
          @Override
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-            outgoing(node, Relations.MEMBER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
+            outgoing(node, Relations.MEMBER).forEach(relationship -> pNodes.put(NeoModel.uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
             editor.showAndLayout(pNodes, pNode);
          }
 
@@ -182,7 +182,7 @@ public class JsonDomainImpl extends JsonDomain {
          @Override
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-            outgoing(node, Relations.PAIR).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Pair));
+            outgoing(node, Relations.PAIR).forEach(relationship -> pNodes.put(NeoModel.uuidOf(other(node, relationship)), Entities.Pair));
             editor.showAndLayout(pNodes, pNode);
          }
       };
@@ -226,7 +226,7 @@ public class JsonDomainImpl extends JsonDomain {
          @Override
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-            outgoing(node, Relations.ELEMENT).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
+            outgoing(node, Relations.ELEMENT).forEach(relationship -> pNodes.put(NeoModel.uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
             editor.showAndLayout(pNodes, pNode);
          }
       };
@@ -322,7 +322,7 @@ public class JsonDomainImpl extends JsonDomain {
          @Override
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-            outgoing(node, Relations.VALUE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
+            outgoing(node, Relations.VALUE).forEach(relationship -> pNodes.put(NeoModel.uuidOf(other(node, relationship)), Entities.valueOf(getString(relationship, Properties.type.name()))));
             editor.showAndLayout(pNodes, pNode);
          }
 

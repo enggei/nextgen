@@ -199,8 +199,11 @@ public abstract class NeoPNode<N extends PNode> extends BasePNode<N> {
             if (editor.isMouseShowing()) {
                showTargetActions(pop, event);
                editor.clearMousePosition();
-            } else
+            } else {
                showNodeActions(pop, event);
+               pop.addSeparator();
+               pop.add(editor.exportAction(node));
+            }
 
             pop.show(editor.canvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
          }));

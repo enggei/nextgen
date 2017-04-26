@@ -15,7 +15,6 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.generator.editors.BaseDomainVisitor.other;
-import static com.generator.editors.BaseDomainVisitor.uuidOf;
 
 /**
  * goe on 11/16/16.

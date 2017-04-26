@@ -6,10 +6,7 @@ import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * User: goe
@@ -57,7 +54,9 @@ public class NeoModel {
 
    public Result query(String query) {
       System.out.println(query);
-      return graphDb.execute(query);
+      final Result result = graphDb.execute(query);
+      System.out.println("Query stats : \n" + result.getQueryStatistics().toString());
+      return result;
    }
 
    public Transaction beginTx() {
@@ -131,7 +130,11 @@ public class NeoModel {
 
    public Node getNode(final UUID uuid) {
       final IndexHits<Node> indexHits = uuids.get(TAG_UUID, uuid);
-      return indexHits.size() == 0 ? null : indexHits.getSingle();
+      if (indexHits.size() == 0) {
+         final Iterator<Node> it = getAll(TAG_UUID, uuid.toString()).iterator();
+         if (it.hasNext()) return it.next();
+      }
+      return indexHits.getSingle();
    }
 
    public Node mergeNode(final UUID uuid) {
@@ -158,9 +161,40 @@ public class NeoModel {
       return result;
    }
 
+   public Set<Node> allByLabel(String label) {
+
+      final String query = "MATCH (entity:" + label + ") RETURN entity";
+
+      final Set<Node> result = new LinkedHashSet<>();
+      try {
+
+         final Result res = query(query);
+         final Iterator<Node> n_column = res.columnAs("entity");
+         for (Node node : Iterators.asIterable(n_column))
+            result.add(node);
+
+      } catch (Exception e) {
+         e.printStackTrace();
+      }
+
+      return result;
+   }
+
    public Set<Node> getAll(String label, String property, String value) {
       final ST cypher = new ST("MATCH (entity:~label~) WHERE entity.~property~ = \"~value~\" RETURN entity", '~', '~');
       cypher.add("label", label);
+      cypher.add("property", property);
+      cypher.add("value", value);
+      final Result res = query(cypher.render());
+      final Iterator<Node> n_column = res.columnAs("entity");
+      final Set<Node> result = new LinkedHashSet<>();
+      for (Node node : Iterators.asIterable(n_column))
+         result.add(node);
+      return result;
+   }
+
+   public Set<Node> getAll(String property, String value) {
+      final ST cypher = new ST("MATCH (entity) WHERE entity.~property~ = \"~value~\" RETURN entity", '~', '~');
       cypher.add("property", property);
       cypher.add("value", value);
       final Result res = query(cypher.render());
@@ -200,7 +234,7 @@ public class NeoModel {
    }
 
    public static String debugNode(Node node) {
-      return BaseDomainVisitor.uuidOf(node) + " (" + BaseDomainVisitor.labelsFor(node) + ") [" + BaseDomainVisitor.printPropertiesFor(node, " ") + "]";
+      return NeoModel.uuidOf(node) + " (" + BaseDomainVisitor.labelsFor(node) + ") [" + BaseDomainVisitor.printPropertiesFor(node, " ") + "]";
    }
 
    private static boolean hasUUID(Node node) {

@@ -5,8 +5,10 @@ import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BaseEditor;
 import com.generator.editors.canvas.BasePNode;
 import com.generator.editors.canvas.RelationPath;
+import com.generator.generators.cypher.CypherGroup;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.event.TransactionData;
@@ -25,6 +27,7 @@ import java.io.*;
 import java.util.*;
 
 import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.NeoModel.TAG_UUID;
 import static com.generator.editors.NeoModel.getNameOrLabelFrom;
 import static com.generator.editors.NeoModel.uuidOf;
 
@@ -234,6 +237,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
       if (!layerNodes.isEmpty())
          pop.add(selectAll());
+
+      pop.add(importFromExport());
 
       final JMenu layoutMenu = new JMenu("Layout");
       final JMenu loadLayoutsMenu = new JMenu("Load ");
@@ -629,6 +634,85 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
             pNode.node.setProperty(property, value);
             pNode.updateView();
+         }
+      };
+   }
+
+   public Action exportAction(final Node node) {
+      return new NeoEditor.TransactionAction("Export", this) {
+
+         final CypherGroup cypherGroup = new CypherGroup();
+
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final CypherGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
+
+            final LinkedHashSet<Relationship> relationships = new LinkedHashSet<>();
+            exportNode(createNodesST, cypherGroup, node, new LinkedHashSet<>(), relationships);
+
+            // add relations at end, using node-uuids:
+            final CypherGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
+            for (Relationship relationship : relationships) {
+               final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-","_");
+               final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-","_");
+               final CypherGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
+                     setSrc(src).
+                     setType(relationship.getType().name()).
+                     setDst(dst);
+
+               for (String key : relationship.getPropertyKeys())
+                  createRelationshipST.addPropertiesValue(cypherGroup.newstringProperty().setName(key).setValue(relationship.getProperty(key)));
+               createRelationshipsST.addRelationshipsValue(createRelationshipST.toString());
+            }
+
+            SwingUtil.showTextResult("Export", createNodesST + (createRelationshipsST.toString().length() == 0 ? "" : ("\n" + createRelationshipsST)), editor.getCanvas());
+         }
+
+         // todo consider creating a clone version of this
+         private void exportNode(CypherGroup.createNodesST export, CypherGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
+
+            if (visitedNodes.contains(node)) return;
+            visitedNodes.add(node);
+
+            final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-","_");
+            final CypherGroup.createNodeST createNodeST = neoGroup.newcreateNode().
+                  setId(id);
+            for (Label label : node.getLabels()) createNodeST.addLabelsValue(label);
+
+            for (String key : node.getPropertyKeys())
+               createNodeST.addPropertiesValue(neoGroup.newstringProperty().setName(key).setValue(node.getProperty(key)));
+            export.addNodesValue(createNodeST.toString());
+
+            final Set<Node> unvisitedNodes = new LinkedHashSet<>();
+            for (Relationship relationship : node.getRelationships(Direction.OUTGOING)) {
+               if (relationships.contains(relationship)) continue;
+               relationships.add(relationship);
+
+               final Node endNode = relationship.getEndNode();
+               if (!visitedNodes.contains(endNode)) unvisitedNodes.add(endNode);
+            }
+
+            for (Node unvisitedNode : unvisitedNodes) {
+               if (visitedNodes.contains(unvisitedNode)) continue;
+               exportNode(export, neoGroup, unvisitedNode, visitedNodes, relationships);
+            }
+         }
+      };
+   }
+
+   public Action importFromExport() {
+      return new NeoEditor.TransactionAction("Import", this) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final JTextArea textArea = new JTextArea("");
+
+            SwingUtil.showTextInput("Cypher-import", textArea, editor.getCanvas(), () -> {
+               final String query = textArea.getText().trim();
+               if (query.length() == 0) return;
+               editor.getGraph().query(query);
+            });
          }
       };
    }

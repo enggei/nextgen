@@ -281,6 +281,10 @@ public abstract class MetaDomain implements IDomain {
 	         component.setText(node.hasProperty(property) ? getString(node, property) : "");
 	      }
 
+			private void setValue(JCheckBox component, Node node, String property, String[] values) {
+	         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
+	      }
+
 	      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {
 	         component.setModel(new DefaultComboBoxModel<>(values));
 	       	final String value = node.hasProperty(property) ? getString(node, property) : null;
@@ -339,6 +343,10 @@ public abstract class MetaDomain implements IDomain {
 	         component.setText(node.hasProperty(property) ? getString(node, property) : "");
 	      }
 
+			private void setValue(JCheckBox component, Node node, String property, String[] values) {
+	         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
+	      }
+
 	      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {
 	         component.setModel(new DefaultComboBoxModel<>(values));
 	       	final String value = node.hasProperty(property) ? getString(node, property) : null;
@@ -393,6 +401,10 @@ public abstract class MetaDomain implements IDomain {
 	         component.setText(node.hasProperty(property) ? getString(node, property) : "");
 	      }
 
+			private void setValue(JCheckBox component, Node node, String property, String[] values) {
+	         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
+	      }
+
 	      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {
 	         component.setModel(new DefaultComboBoxModel<>(values));
 	       	final String value = node.hasProperty(property) ? getString(node, property) : null;
@@ -444,6 +456,10 @@ public abstract class MetaDomain implements IDomain {
 
 			private void setValue(JTextField component, Node node, String property, String[] values) {
 	         component.setText(node.hasProperty(property) ? getString(node, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, Node node, String property, String[] values) {
+	         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
 	      }
 
 	      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {

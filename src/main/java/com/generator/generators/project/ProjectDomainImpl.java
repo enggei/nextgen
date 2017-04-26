@@ -1,26 +1,25 @@
 package com.generator.generators.project;
 
+import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
+import com.generator.generators.cypher.CypherGroup;
 import com.generator.generators.maven.MavenDomain;
 import com.generator.generators.maven.PomGenerator;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.Transaction;
+import org.jetbrains.annotations.NotNull;
+import org.neo4j.graphdb.*;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.NeoModel.*;
 import static com.generator.generators.maven.MavenDomain.Entities.Pom;
 import static com.generator.generators.project.ProjectDomain.Entities.Directory;
 import static com.generator.generators.project.ProjectDomain.Entities.Project;
@@ -143,6 +142,8 @@ public class ProjectDomainImpl extends ProjectDomain {
 //                  }
 //               });
 //            }
+
+
 
             super.showNodeActions(pop, event);
          }

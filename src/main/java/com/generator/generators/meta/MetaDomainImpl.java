@@ -9,10 +9,8 @@ import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.Transaction;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
@@ -133,6 +131,7 @@ public class MetaDomainImpl extends MetaDomain {
 
             pop.add(editor.newSetNodePropertyAction(Properties.name.name(), this));
             pop.add(editor.newAddNodeAction(Entity, Properties.name.name(), ENTITY, this, event));
+
 
             pop.add(new NeoEditor.TransactionAction("Add Multiple Entities", editor) {
                @Override
@@ -842,12 +841,24 @@ public class MetaDomainImpl extends MetaDomain {
 
       } else if (hasLabel(node, Entity.name())) {
 
+
+//         final Set<Relationship> constrained = new LinkedHashSet<>();
+         node.getRelationships(Direction.INCOMING).forEach(new Consumer<Relationship>() {
+            @Override
+            public void accept(Relationship relationship) {
+               if (relationship.isType(Relations.ENTITY) && hasLabel(other(node, relationship), Entities.Domain))
+                  relationship.delete();
+//               else constrained.add(relationship);
+            }
+         });
+
          outgoing(node, Relations.RELATION).forEach(new Consumer<Relationship>() {
             @Override
             public void accept(Relationship relationship) {
                relationship.delete();
             }
          });
+
 
       } else if (hasLabel(node, Relation.name())) {
 

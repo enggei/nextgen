@@ -1,4 +1,5 @@
  package com.generator.generators.cypher;
+import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.util.StringUtil;
 import org.junit.Assert;
@@ -11,6 +12,9 @@ import org.neo4j.graphdb.Transaction;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
  public class CypherTests {
 
@@ -19,6 +23,77 @@ import java.util.List;
 	}
 
 	final CypherGroup group = new CypherGroup();
+
+	@Test
+	public void testExportImportFuck() {
+
+
+		final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("/home/goe/projects/nextgen/src/test/db"));
+		NeoModel model = new NeoModel(db);
+
+		model.doInTransaction(new NeoModel.Committer() {
+			@Override
+			public void doAction(Transaction tx) throws Throwable {
+				model.query("CREATE (n:Person)").close();
+//				model.newNode("Person", "name", "xxx");
+			}
+
+			@Override
+			public void exception(Throwable throwable) {
+				System.out.println("wtf");
+			}
+		});
+
+		model.doInTransaction(new NeoModel.Committer() {
+			@Override
+			public void doAction(Transaction tx) throws Throwable {
+
+				model.query(" CREATE (_1b6e49ad_3f99_4c4a_b40b_192828bb2ba3:Flow {root:'/home/goe/projects/nextgen/src/test', name:'ttt', packageName:'fff', _uuid:'1b6e49ad-3f99-4c4a-b40b-192828bb2ba3'}),\n" +
+						"(_bb079a7a_5e35_4dfb_abee_980c665dc3be:ContextProperty {_uuid:'bb079a7a-5e35-4dfb-abee-980c665dc3be'}),\n" +
+						"(_45e1f0e2_4ed1_42d3_8112_c02220ecc7fd:ContextProperty {_uuid:'45e1f0e2-4ed1-42d3-8112-c02220ecc7fd'}),\n" +
+						"(_0f97a28e_04d9_44cf_a0fe_35ce3cb690ae:State {name:'START', _uuid:'0f97a28e-04d9-44cf-a0fe-35ce3cb690ae'}),\n" +
+						"(_06e7d7d4_ba46_4efa_b846_591e42ccccbf:Event {name:'init', _uuid:'06e7d7d4-ba46-4efa-b846-591e42ccccbf'}),\n" +
+						"(_d683ff20_612f_4b62_8fdd_c1cc09ec5767:State {name:'fff', _uuid:'d683ff20-612f-4b62-8fdd-c1cc09ec5767'}),\n" +
+						"(_88d34018_45b3_432b_91bd_75a2a78ceddc:State {name:'READY', _uuid:'88d34018-45b3-432b-91bd-75a2a78ceddc'}),\n" +
+						"(_1ea559f0_229a_4467_aeb1_d0840ce0197f:Event {name:'triggerTwo', _uuid:'1ea559f0-229a-4467-aeb1-d0840ce0197f'}),\n" +
+						"(_a13b9c8c_bc87_4765_87cf_0551cce2bb6b:State {name:'FINISH', _uuid:'a13b9c8c-bc87-4765-87cf-0551cce2bb6b'}),\n" +
+						"(_cedc3c6d_58a7_48cd_83a9_6590cf54c8c6:Event {name:'triggerOne', _uuid:'cedc3c6d-58a7-48cd-83a9-6590cf54c8c6'})\n" +
+						"CREATE (_1b6e49ad_3f99_4c4a_b40b_192828bb2ba3)-[:PROPERTY]->(_bb079a7a_5e35_4dfb_abee_980c665dc3be),\n" +
+						"(_1b6e49ad_3f99_4c4a_b40b_192828bb2ba3)-[:FROM]->(_45e1f0e2_4ed1_42d3_8112_c02220ecc7fd),\n" +
+						"(_1b6e49ad_3f99_4c4a_b40b_192828bb2ba3)-[:FROM]->(_0f97a28e_04d9_44cf_a0fe_35ce3cb690ae),\n" +
+						"(_0f97a28e_04d9_44cf_a0fe_35ce3cb690ae)-[:ON]->(_06e7d7d4_ba46_4efa_b846_591e42ccccbf),\n" +
+						"(_06e7d7d4_ba46_4efa_b846_591e42ccccbf)-[:TO]->(_d683ff20_612f_4b62_8fdd_c1cc09ec5767),\n" +
+						"(_06e7d7d4_ba46_4efa_b846_591e42ccccbf)-[:TO]->(_88d34018_45b3_432b_91bd_75a2a78ceddc),\n" +
+						"(_88d34018_45b3_432b_91bd_75a2a78ceddc)-[:ON]->(_1ea559f0_229a_4467_aeb1_d0840ce0197f),\n" +
+						"(_88d34018_45b3_432b_91bd_75a2a78ceddc)-[:ON]->(_cedc3c6d_58a7_48cd_83a9_6590cf54c8c6),\n" +
+						"(_1ea559f0_229a_4467_aeb1_d0840ce0197f)-[:FINISH]->(_a13b9c8c_bc87_4765_87cf_0551cce2bb6b),\n" +
+						"(_cedc3c6d_58a7_48cd_83a9_6590cf54c8c6)-[:FINISH]->(_a13b9c8c_bc87_4765_87cf_0551cce2bb6b)");
+
+				model.getAll("Flow").forEach(new Consumer<Node>() {
+					@Override
+					public void accept(Node node) {
+						System.out.println(BaseDomainVisitor.labelsFor(node) + " : " + NeoModel.uuidOf(node));
+					}
+				});
+
+				model.getAll("Person").forEach(new Consumer<Node>() {
+					@Override
+					public void accept(Node node) {
+						System.out.println(BaseDomainVisitor.labelsFor(node) + " : " + NeoModel.uuidOf(node));
+					}
+				});
+			}
+
+			@Override
+			public void exception(Throwable throwable) {
+				System.out.println("wtf");
+			}
+		});
+
+
+		model.close();
+
+	}
 
 	 @Test
 	 public void testCypher() {
@@ -247,7 +322,7 @@ import java.util.List;
 			 " (`Mary`)-[:HAS_ACCOUNT]->(`account12`)");
 		 cypherCommands.add(employeeAccountRelations.toString());
 
-		 final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File(System.getProperty("generator.db")));
+		 final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("/home/goe/projects/nextgen/src/test/db"));
 		 NeoModel model = new NeoModel(db);
 
 		 // run once in clean db:
