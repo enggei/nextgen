@@ -1,23 +1,10 @@
 package com.generator.generators.project;
 
 import com.generator.generators.templates.domain.GeneratedFile;
-import com.generator.util.FileUtil;
-import com.generator.util.SwingUtil;
 import org.junit.Test;
-import org.neo4j.graphdb.Node;
-import org.piccolo2d.event.PDragEventHandler;
-import org.piccolo2d.extras.pswing.PSwingCanvas;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.UUID;
 
-import static com.generator.generators.project.ProjectNeo.newStringNode;
 
 public class ProjectTests {
 

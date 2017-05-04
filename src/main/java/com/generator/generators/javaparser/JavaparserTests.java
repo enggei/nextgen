@@ -1,8 +1,10 @@
 package com.generator.generators.javaparser;
 
+import com.automation.Langton;
 import com.generator.editors.NeoModel;
-import com.generator.editors.canvas.BaseEditor;
+import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.generators.java.JavaGroup;
+import com.generator.generators.meta.MetaDomain;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.FileUtil;
 import com.github.javaparser.ASTHelper;
@@ -12,6 +14,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.*;
+import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
@@ -21,14 +24,17 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
+import java.lang.reflect.*;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class JavaparserTests {
@@ -146,7 +152,6 @@ public class JavaparserTests {
    }
 
 
-
    @Test
    public void createTestClass() throws IOException, ParseException {
 
@@ -246,7 +251,7 @@ public class JavaparserTests {
       neoModel.doInTransaction(new NeoModel.Committer() {
          @Override
          public void doAction(Transaction tx) throws Throwable {
-            new ClasstoNeo(neoModel).visit(BaseEditor.class);
+//            new ClasstoNeo(neoModel).visit(Langton.class);
          }
 
          @Override
@@ -254,7 +259,101 @@ public class JavaparserTests {
             throwable.printStackTrace();
          }
       });
+   }
 
+   @Test
+   public void testVisitorToEntities() {
+
+      new BaseClassVisitor() {
+         @Override
+         public void onDeclaredMethod(Method method) {
+            for (java.lang.reflect.Parameter parameter : method.getParameters()) {
+
+               if (isTypeVariable(parameter)) {
+                  final String simpleName = ((Class) getBounds(asTypeVariableType(parameter))[0]).getSimpleName();
+                  //System.out.println("typeVariable.simpleName " + simpleName);
+
+               } else {
+
+                  final String type = parameter.getParameterizedType().getTypeName().substring(parameter.getParameterizedType().getTypeName().lastIndexOf(".") + 1).trim();
+                  final String parameterType = parameter.getType().getSimpleName();
+                  System.out.println("type " + type + " " + parameterType);
+
+               }
+            }
+         }
+      }.visit(VoidVisitorAdapter.class);
+
+   }
+   @Test
+   public void createJavaParserDomain() {
+
+      final String[] split = "AnnotationDeclaration, AnnotationMemberDeclaration, BaseParameter, ClassOrInterfaceDeclaration, ClassOrInterfaceType, ConstructorDeclaration, EmptyTypeDeclaration, EnumConstantDeclaration, EnumDeclaration, MemberValuePair, MethodDeclaration, MultiTypeParameter, NameExpr, Parameter, QualifiedNameExpr, TypeDeclaration, TypeParameter, VariableDeclaratorId".split(",");
+
+
+      final NeoModel neoModel = NeoEditor.newEmbeddedDatabase("/home/goe/dbMetaTest");
+
+      neoModel.doInTransaction(new NeoModel.Committer() {
+         @Override
+         public void doAction(Transaction tx) throws Throwable {
+
+            final String[] colors = parse("['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']");
+            final AtomicInteger color = new AtomicInteger(0);
+
+            final Node domainNode = neoModel.newNode(MetaDomain.Entities.Domain,
+                  MetaDomain.Properties.name.name(), "JavaParserDomain",
+                  MetaDomain.Properties.packageName.name(), "com.nextgen.meta",
+                  MetaDomain.Properties.root.name(), "/home/goe/projects/nextgen/src/test/java");
+
+
+            new BaseClassVisitor() {
+               @Override
+               public void onDeclaredMethod(Method method) {
+                  newEntity(domainNode, "Package", colors[color.incrementAndGet()%colors.length]);
+               }
+            }.visit(VoidVisitorAdapter.class);
+
+
+            final Node packageNode = newEntity(domainNode, "Package", colors[color.incrementAndGet()%colors.length]);
+
+            final Node classNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Class", MetaDomain.Properties.color.name(), "#1f78b4");
+            final Node fieldNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Field", MetaDomain.Properties.color.name(), "#b2df8a");
+
+            final Node packageMember = neoModel.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "MEMBER");
+            packageMember.createRelationshipTo(packageNode, MetaDomain.Relations.SRC);
+            packageMember.createRelationshipTo(classNode, MetaDomain.Relations.DST);
+
+            final Node classField = neoModel.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "FIELD");
+            classField.createRelationshipTo(classNode, MetaDomain.Relations.SRC);
+            classField.createRelationshipTo(fieldNode, MetaDomain.Relations.DST);
+
+
+            domainNode.createRelationshipTo(classNode, MetaDomain.Relations.ENTITY);
+            domainNode.createRelationshipTo(fieldNode, MetaDomain.Relations.ENTITY);
+
+            domainNode.createRelationshipTo(packageMember, MetaDomain.Relations.RELATION);
+            domainNode.createRelationshipTo(classField, MetaDomain.Relations.RELATION);
+
+         }
+
+         private Node newEntity(Node domainNode, String name, String color) {
+            final Node packageNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), name, MetaDomain.Properties.color.name(), color);
+            domainNode.createRelationshipTo(packageNode, MetaDomain.Relations.ENTITY);
+            return packageNode;
+         }
+
+         private String[] parse(String map) {
+            final String[] c = map.replaceAll("\\[", "").replaceAll("\\]", "").replaceAll("\\'", "").split(",");
+            final String[] colors = new String[c.length];
+            System.arraycopy(c, 0, colors, 0, c.length);
+            return colors;
+         }
+
+         @Override
+         public void exception(Throwable throwable) {
+
+         }
+      });
 
    }
 
@@ -283,8 +382,8 @@ public class JavaparserTests {
                setPackage(packageName).
                setScope("public").
                setName(debugClass).
-               addImportsValue("com.generator.editors.domain.BaseDomainVisitor").
-               addImportsValue("com.generator.editors.domain.NeoModel").
+               addImportsValue("com.generator.editors.BaseDomainVisitor").
+               addImportsValue("com.generator.editors.NeoModel").
                addImportsValue("org.neo4j.graphdb.*").
                addImportsValue("com.github.javaparser.ast.*").
                addImportsValue("com.github.javaparser.ast.body.*").
@@ -307,17 +406,17 @@ public class JavaparserTests {
 
          final JavaGroup.methodST visitMethod = javaGroup.newmethod().setScope("public").setReturnVal("void").setName("visit");
 
-         void onClass(Package classPackage, String className, Class superClass) {
+         @Override
+         public void onClass(Package classPackage, String className, Class superClass) {
             builderGenerator.addPropertiesValue(null, null, null, null, null, null, null, null, "graph", "private", "NeoModel", null);
             builderGenerator.addPropertiesValue("org.neo4j.graphdb.Node", null, "Stack", true, null, null, null, null, "nodes", "private", "Stack", null);
-            builderGenerator.addPropertiesValue(null, null, null, null, null, null, null, null, "editor", "private", "com.generator.editors.canvas.JavaEditor", null);
 
             visitMethod.addParamsValue(null, null, null, null, null, null, "relationship", "Relationship", null);
             visitMethod.addParamsValue(null, null, null, null, null, null, "node", "org.neo4j.graphdb.Node", null);
          }
 
          @Override
-         void onDeclaredMethod(Method method) {
+         public void onDeclaredMethod(Method method) {
 
             if (method.getName().equals("visitComment")) return;
 
@@ -382,7 +481,6 @@ public class JavaparserTests {
             try {
 
                visitMethod.addStatementsValue("final String nodeType = relationship.getProperty(\"nodeType\").toString();");
-               visitMethod.addStatementsValue("editor.addNodeToCanvas(editor.newNode(node, nodeType));");
                final JavaGroup.switchST nodeSwitch = javaGroup.newswitch().setState("nodeType");
                for (String nodeType : nodeTypes)
                   nodeSwitch.addCasesValue(javaGroup.newstring().setValue(nodeType), "visit" + nodeType + "(BaseDomainVisitor.other(node, relationship));");
@@ -432,32 +530,32 @@ public class JavaparserTests {
                setExtends("VoidVisitorAdapter<Object>");
 
          @Override
-         void onClass(Package classPackage, String className, Class superClass) {
+         public void onClass(Package classPackage, String className, Class superClass) {
             builderGenerator.addPropertiesValue(null, null, null, null, null, null, null, null, "indent", "private", "int", null);
          }
 
          @Override
-         void onPublicMethod(Method method) {
+         public void onPublicMethod(Method method) {
             super.onPublicMethod(method);
          }
 
          @Override
-         void onPrivateMethod(Method method) {
+         public void onPrivateMethod(Method method) {
             super.onPrivateMethod(method);
          }
 
          @Override
-         void onProtectedMethod(Method method) {
+         public void onProtectedMethod(Method method) {
             super.onProtectedMethod(method);
          }
 
          @Override
-         void onPackageMethod(Method method) {
+         public void onPackageMethod(Method method) {
             super.onPackageMethod(method);
          }
 
          @Override
-         void onDeclaredMethod(Method method) {
+         public void onDeclaredMethod(Method method) {
 
             if (method.getName().equals("visitComment")) return;
 
@@ -511,7 +609,7 @@ public class JavaparserTests {
          final Set<Class> visitedClasses = new LinkedHashSet<>();
 
          @Override
-         void onClass(Package classPackage, String className, Class superClass) {
+         public void onClass(Package classPackage, String className, Class superClass) {
             if (classPackage == null)
                System.out.println("package: [none]\n\tclass: " + className + " \n\tsuper: " + superClass);
             else
@@ -521,69 +619,69 @@ public class JavaparserTests {
          }
 
          @Override
-         void onInterface(Class classInterface) {
+         public void onInterface(Class classInterface) {
             System.out.println("interface: " + classInterface.getName());
             candidateClasses.add(classInterface);
          }
 
          @Override
-         void onDeclaredMethod(Method method) {
+         public void onDeclaredMethod(Method method) {
             System.out.println("Method " + getName(method) + " " + getReturnType(method));
          }
 
          @Override
-         void onConstructorComplete() {
+         public void onConstructorComplete() {
             super.onConstructorComplete();
          }
 
          @Override
-         void onParameter(String name, Class<?> type) {
+         public void onParameter(String name, Class<?> type) {
             System.out.println("\t" + name + type.getName());
             candidateClasses.add(type);
          }
 
          @Override
-         void onPublicField(String name, Class<?> returnType) {
+         public void onPublicField(String name, Class<?> returnType) {
             System.out.println("public field " + name + " type " + returnType.getName());
          }
 
          @Override
-         void onProtectedField(String name, Class<?> returnType) {
+         public void onProtectedField(String name, Class<?> returnType) {
             System.out.println("protected field " + name + " type " + returnType.getName());
          }
 
          @Override
-         void onPackageField(String name, Class<?> returnType) {
+         public void onPackageField(String name, Class<?> returnType) {
             System.out.println("package field " + name + " type " + returnType.getName());
          }
 
          @Override
-         void onPrivateField(String name, Class<?> returnType) {
+         public void onPrivateField(String name, Class<?> returnType) {
             System.out.println("private field " + name + " type " + returnType.getName());
          }
 
          @Override
-         void onPublicConstructor(String name) {
+         public void onPublicConstructor(String name) {
             System.out.println("public constructor " + name);
          }
 
          @Override
-         void onProtectedConstructor(String name) {
+         public void onProtectedConstructor(String name) {
             System.out.println("protected constructor " + name);
          }
 
          @Override
-         void onPackageConstructor(String name) {
+         public void onPackageConstructor(String name) {
             System.out.println("package constructor " + name);
          }
 
          @Override
-         void onPrivateConstructor(String name) {
+         public void onPrivateConstructor(String name) {
             System.out.println("private constructor " + name);
          }
 
          @Override
-         void onInnerClass(Class innerClass) {
+         public void onInnerClass(Class innerClass) {
             System.out.println("Inner class: " + innerClass.getName());
             candidateClasses.add(innerClass);
          }

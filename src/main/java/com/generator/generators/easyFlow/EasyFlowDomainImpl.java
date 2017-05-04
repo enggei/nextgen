@@ -58,11 +58,7 @@ public class EasyFlowDomainImpl extends EasyFlowDomain {
                      }
 
                      final String javaClass = new EasyFlowJavaGenerator(new EasyFlowGroup()).visitFlow(node);
-
-                     final GeneratedFile javaFile = GeneratedFile.newJavaFile(root, packageName, name);
-                     javaFile.write(javaClass);
-
-                     SwingUtil.showMessage(name + " written to " + javaFile.getFile().getAbsolutePath(), editor.getCanvas());
+                     GeneratedFile.newJavaFile(root, packageName, name).write(javaClass);
                   }
                });
             }
@@ -136,18 +132,11 @@ public class EasyFlowDomainImpl extends EasyFlowDomain {
             pop.add(new NeoEditor.TransactionAction("Edit", editor) {
                @Override
                public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                  final ContextPropertyEditor form = new ContextPropertyEditor(node);
-                  SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "ContextPropery", () -> {
-                     editor.doInTransaction(tx1 -> {
-                        form.commit(node);
-                        editor.show(uuidOf(node), ContextProperty.name()).
-                              setOffset(event);
-                     });
-                  });
-
+                  showContextPropertyEditor(node, editor, event);
                }
             });
+
+            super.showNodeActions(pop, event);
          }
       };
    }

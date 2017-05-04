@@ -230,6 +230,8 @@ public abstract class MetaDomain implements IDomain {
       @Override
       public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
+			editor.showDeleteOutgoingRelations(pop, node);
+
          pop.add(new NeoEditor.TransactionAction("Select all " + nodeType, editor) {
             @Override
             public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {

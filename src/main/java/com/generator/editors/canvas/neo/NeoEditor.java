@@ -8,7 +8,6 @@ import com.generator.editors.canvas.RelationPath;
 import com.generator.generators.cypher.CypherGroup;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.event.TransactionData;
@@ -25,11 +24,10 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.TAG_UUID;
-import static com.generator.editors.NeoModel.getNameOrLabelFrom;
-import static com.generator.editors.NeoModel.uuidOf;
+import static com.generator.editors.NeoModel.*;
 
 /**
  * goe on 11/16/16.
@@ -184,7 +182,9 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
       if (event.isRightMouseButton()) {
          SwingUtilities.invokeLater(() -> {
+
             final JPopupMenu pop = new JPopupMenu();
+
             pop.add(new AbstractAction("Database") {
                @Override
                public void actionPerformed(ActionEvent e) {
@@ -578,6 +578,21 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
    }
 
+   public void showDeleteOutgoingRelations(JPopupMenu pop, Node node) {
+      for (Relationship relationship : outgoing(node)) {
+
+         final Node otherNode = other(node, relationship);
+         if (hasLabel(otherNode, NeoModel.TAG_LAYOUT)) continue;
+
+         pop.add(new NeoEditor.TransactionAction("Remove '" + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(otherNode) + "'", this) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               relationship.delete();
+            }
+         });
+      }
+   }
+
    public NeoEditor.TransactionAction newAddNodeAction(Label label, String property, final PInputEvent event) {
       return new NeoEditor.TransactionAction("New " + label.name(), this) {
 
@@ -596,7 +611,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    }
 
    public Action newAddNodeAction(Label entity, String aliasName, String property, RelationshipType relation, NeoPNode pNode, PInputEvent event) {
-      return new NeoEditor.TransactionAction("Add " + aliasName, this) {
+      return new NeoEditor.TransactionAction("Add -> " + relation.name() + " -> " + aliasName, this) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -638,7 +653,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       };
    }
 
-   public Action exportAction(final Node node) {
+   Action exportAction(final Node node) {
       return new NeoEditor.TransactionAction("Export", this) {
 
          final CypherGroup cypherGroup = new CypherGroup();
@@ -654,8 +669,8 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
             // add relations at end, using node-uuids:
             final CypherGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
             for (Relationship relationship : relationships) {
-               final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-","_");
-               final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-","_");
+               final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
+               final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
                final CypherGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
                      setSrc(src).
                      setType(relationship.getType().name()).
@@ -666,7 +681,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
                createRelationshipsST.addRelationshipsValue(createRelationshipST.toString());
             }
 
-            SwingUtil.showTextResult("Export", createNodesST + (createRelationshipsST.toString().length() == 0 ? "" : ("\n" + createRelationshipsST)), editor.getCanvas());
+            SwingUtil.showTextResult("Export", createNodesST + (relationships.isEmpty() ? "" : ("\n" + createRelationshipsST)), editor.getCanvas());
          }
 
          // todo consider creating a clone version of this
@@ -675,7 +690,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
             if (visitedNodes.contains(node)) return;
             visitedNodes.add(node);
 
-            final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-","_");
+            final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-", "_");
             final CypherGroup.createNodeST createNodeST = neoGroup.newcreateNode().
                   setId(id);
             for (Label label : node.getLabels()) createNodeST.addLabelsValue(label);
@@ -786,7 +801,7 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
    }
 
-   private static NeoModel newEmbeddedDatabase(String dir) {
+   public static NeoModel newEmbeddedDatabase(String dir) {
       return new NeoModel(new GraphDatabaseFactory().
             newEmbeddedDatabaseBuilder(new File(dir)).
             setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").

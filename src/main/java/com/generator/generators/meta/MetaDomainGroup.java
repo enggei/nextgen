@@ -57,18 +57,28 @@ public final class MetaDomainGroup {
    } 
 
 
+   public gtST newgt() {
+      return new gtST(stGroup);
+   } 
+
+
    public DomainClassST newDomainClass() {
       return new DomainClassST(stGroup);
    } 
 
 
-   public EntityEditorST newEntityEditor() {
-      return new EntityEditorST(stGroup);
+   public PropertyEditorST newPropertyEditor() {
+      return new PropertyEditorST(stGroup);
    } 
 
 
    public EntityInterfaceST newEntityInterface() {
       return new EntityInterfaceST(stGroup);
+   } 
+
+
+   public PNodeDeclarationST newPNodeDeclaration() {
+      return new PNodeDeclarationST(stGroup);
    } 
 
    public final class eomST implements MetaDomainGroupTemplate {
@@ -85,42 +95,13 @@ public final class MetaDomainGroup {
    	}
    } 
 
-   public final class DomainClassST implements MetaDomainGroupTemplate {
+   public final class gtST implements MetaDomainGroupTemplate {
 
-      private final AtomicBoolean entitiesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean relationsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean domainNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private DomainClassST(STGroup group) {
-   		template = group.getInstanceOf("DomainClass");
+      private gtST(STGroup group) {
+   		template = group.getInstanceOf("gt");
    	}
-
-      public DomainClassST addEntitiesValue(Object name_, Object label_, Object color_, Object editor_) {
-         entitiesIsSet.set(true);
-         template.addAggr("entities.{name, label, color, editor}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (label_==null || label_.toString().length()==0) ? null : label_), ( (color_==null || color_.toString().length()==0) ? null : color_), ( (editor_==null || editor_.toString().length()==0) ? null : editor_));
-         return this;
-      }
-      public DomainClassST addPropertiesValue(Object name_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public DomainClassST addRelationsValue(Object name_) {
-         relationsIsSet.set(true);
-         template.addAggr("relations.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-       public DomainClassST setDomainName(Object value) {
-      	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
-         return this;
-      } 
-       public DomainClassST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
@@ -128,23 +109,66 @@ public final class MetaDomainGroup {
    	}
    } 
 
-   public final class EntityEditorST implements MetaDomainGroupTemplate {
+   public final class DomainClassST implements MetaDomainGroupTemplate {
+
+      private final AtomicBoolean domainNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean entitiesIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean relationsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private DomainClassST(STGroup group) {
+   		template = group.getInstanceOf("DomainClass");
+   	}
+
+       public DomainClassST setDomainName(Object value) {
+      	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
+         return this;
+      } 
+      public DomainClassST addEntitiesValue(Object editor_, Object name_, Object declaration_) {
+         entitiesIsSet.set(true);
+         template.addAggr("entities.{editor, name, declaration}", ( (editor_==null || editor_.toString().length()==0) ? null : editor_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_));
+         return this;
+      }
+       public DomainClassST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      } 
+      public DomainClassST addPropertiesValue(Object name_) {
+         propertiesIsSet.set(true);
+         template.addAggr("properties.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
+         return this;
+      }
+      public DomainClassST addRelationsValue(Object name_, Object editor_) {
+         relationsIsSet.set(true);
+         template.addAggr("relations.{name, editor}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (editor_==null || editor_.toString().length()==0) ? null : editor_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class PropertyEditorST implements MetaDomainGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private EntityEditorST(STGroup group) {
-   		template = group.getInstanceOf("EntityEditor");
+      private PropertyEditorST(STGroup group) {
+   		template = group.getInstanceOf("PropertyEditor");
    	}
 
-       public EntityEditorST setName(Object value) {
+       public PropertyEditorST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
       } 
-      public EntityEditorST addPropertiesValue(Object name_, Object component_, Object enums_) {
+      public PropertyEditorST addPropertiesValue(Object component_, Object enums_, Object name_) {
          propertiesIsSet.set(true);
-         template.addAggr("properties.{name, component, enums}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (component_==null || component_.toString().length()==0) ? null : component_), ( (enums_==null || enums_.toString().length()==0) ? null : enums_));
+         template.addAggr("properties.{component, enums, name}", ( (component_==null || component_.toString().length()==0) ? null : component_), ( (enums_==null || enums_.toString().length()==0) ? null : enums_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
 
@@ -182,6 +206,65 @@ public final class MetaDomainGroup {
       public EntityInterfaceST addRelationsValue(Object name_, Object type_) {
          relationsIsSet.set(true);
          template.addAggr("relations.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class PNodeDeclarationST implements MetaDomainGroupTemplate {
+
+      private final AtomicBoolean incomingIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean colorIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean domainNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean labelIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean outgoingIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean outgoingWithPropertiesIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private PNodeDeclarationST(STGroup group) {
+   		template = group.getInstanceOf("PNodeDeclaration");
+   	}
+
+      public PNodeDeclarationST addIncomingValue(Object relation_, Object src_) {
+         incomingIsSet.set(true);
+         template.addAggr("incoming.{relation, src}", ( (relation_==null || relation_.toString().length()==0) ? null : relation_), ( (src_==null || src_.toString().length()==0) ? null : src_));
+         return this;
+      }
+       public PNodeDeclarationST setColor(Object value) {
+      	tryToSetStringProperty(template, value, colorIsSet, "color");   
+         return this;
+      } 
+       public PNodeDeclarationST setDomainName(Object value) {
+      	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
+         return this;
+      } 
+       public PNodeDeclarationST setLabel(Object value) {
+      	tryToSetStringProperty(template, value, labelIsSet, "label");   
+         return this;
+      } 
+       public PNodeDeclarationST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      } 
+      public PNodeDeclarationST addOutgoingValue(Object dst_, Object relation_) {
+         outgoingIsSet.set(true);
+         template.addAggr("outgoing.{dst, relation}", ( (dst_==null || dst_.toString().length()==0) ? null : dst_), ( (relation_==null || relation_.toString().length()==0) ? null : relation_));
+         return this;
+      }
+      public PNodeDeclarationST addOutgoingWithPropertiesValue(Object name_, Object relation_) {
+         outgoingWithPropertiesIsSet.set(true);
+         template.addAggr("outgoingWithProperties.{name, relation}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (relation_==null || relation_.toString().length()==0) ? null : relation_));
+         return this;
+      }
+      public PNodeDeclarationST addPropertiesValue(Object name_) {
+         propertiesIsSet.set(true);
+         template.addAggr("properties.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
 

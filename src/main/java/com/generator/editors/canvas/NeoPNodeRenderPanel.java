@@ -97,8 +97,6 @@ public class NeoPNodeRenderPanel extends JPanel implements PropertyChangeListene
          case BasePNode.NODE_HIGHLIGHTED: {
             currentBaseNode = (BasePNode) evt.getNewValue();
             currentBaseNode.renderTo(txtEditor);
-
-
             break;
          }
 

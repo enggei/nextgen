@@ -1,6 +1,7 @@
 package com.generator.generators.easyFlow;
 
 import com.generator.editors.BaseDomainVisitor;
+import com.generator.util.StringUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 
@@ -43,8 +44,9 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
       if (!hasOutgoing(node, FROM))
          throw new IllegalStateException("Flownode has no initial state");
 
-      final Node initState = BaseDomainVisitor.otherOutgoing(node, FROM);
-      expand(initState, transitST.setState(get(initState, "name")), group, events, states, stateComments);
+      final Node initStateNode = BaseDomainVisitor.otherOutgoing(node, FROM);
+      final String initStateName = StringUtil.toUpper(get(initStateNode, "name"));
+      expand(initStateNode, transitST.setState(initStateName), group, events, states, stateComments);
 
       final EasyFlowGroup.eventsST eventsST = group.newevents();
       for (String event : events) eventsST.addEventsValue(event);
@@ -53,7 +55,7 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
       for (String state : states)
          statesST.addStatesValue(group.newstateDeclaration().
                setName(state).
-               setComment(stateComments.containsKey(state) ? stateComments.get(state) : null));
+               setComment(stateComments.getOrDefault(state, null)));
 
       final String contextGeneric = getString(node, "contextGeneric");
 
@@ -103,7 +105,7 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
 
    private void expand(Node state, final EasyFlowGroup.transitST parent, EasyFlowGroup group, Set<String> events, Set<String> states, Map<String, String> stateComments) {
 
-      final String stateName = get(state, "name").toString();
+      final String stateName = StringUtil.toUpper(get(state, "name"));
       if (states.contains(stateName)) return;
       states.add(stateName);
 
@@ -134,7 +136,7 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
             final Node newState = other(eventNode, toStateRelationship);
             final EasyFlowGroup.transitST transit = group.newtransit().
                   setEvent(eventName).
-                  setState(get(newState, "name"));
+                  setState(StringUtil.toUpper(get(newState, "name")));
             expand(newState, transit, group, events, states, stateComments);
             parent.addTransitsValue(transit);
 

@@ -299,6 +299,17 @@ public abstract class EasyFlowDomain implements IDomain {
       }
    }
 
+   protected void showContextPropertyEditor(Node node, NeoEditor editor, PInputEvent event) {
+      final ContextPropertyEditor form = new ContextPropertyEditor(node);
+      SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "ContextPropery", () -> {
+         editor.doInTransaction(tx1 -> {
+            form.commit(node);
+            editor.show(uuidOf(node), ContextProperty.name()).
+                  setOffset(event);
+         });
+      });
+   }
+
    public static abstract class EasyFlowDomainVisitor {
 
       public <T> T visit(Node node) {

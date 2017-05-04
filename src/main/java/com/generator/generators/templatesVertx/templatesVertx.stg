@@ -1,7 +1,10 @@
-/* uuid : 8601cc26-1d44-45e5-ba60-532fa8438257 */
+/* templatesVertx ae08f785-0315-4abf-a764-821b3a171fd1*/
 delimiters "~", "~"
 
-/** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name; **/
+eom() ::= <<}>>
+
+gt() ::= <<> >>
+
 AddMessage(name,parameters) ::= <<public static void sendAdd~name;format="capitalize"~(Vertx vertx, java.util.UUID id, Object content, ~if(parameters)~~parameters:{it|String ~it.name~};separator=", "~, ~endif~Handler<String> instanceHandler) {
 
 	final JsonObject parameters = new JsonObject()~parameters:{it|
@@ -18,30 +21,24 @@ AddMessage(name,parameters) ::= <<public static void sendAdd~name;format="capita
 			log.error("send~name;format="capitalize"~Message " + id + ".~name~ " + parameters.encode() + " failed", t);
 		}
 	});
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY;parameters,KEYVALUELISTPROPERTY,name;statement,STRINGPROPERTY; **/
 ConsumeKeyValueListMessage(name,parameters,statement) ::= <<// key-value list property ~name~
 consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<JsonObject~bugfix()~>() {
 	@Override
 	public void handle(Message<JsonObject> message) {
 		template.add~name;format="capitalize"~Value(~parameters:{it|message.body().getString("~it.name~")};separator=","~);
 	}
-}); 
->>
+});>>
 
-/** name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
 ConsumeListMessage(name,statement) ::= <<// list property ~name~
 consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
 	@Override
 	public void handle(Message<String> message) {
 		template.add~name;format="capitalize"~Value(message.body());
 	}
-}); 
->>
+});>>
 
-/** name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
 ConsumeStringMessage(name,statement) ::= <<// string property ~name~
 consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log, new Handler<Message<String~bugfix()~>() {
 	@Override
@@ -49,10 +46,8 @@ consume(vertx, "~statement~_" + deploymentID(), deploymentID() + ".~name~", log,
 		template.set~name;format="capitalize"~(message.body());
 		message.reply(message.body());
 	}
-}); 
->>
+});>>
 
-/** groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;verticles,KEYVALUELISTPROPERTY,declaration,name,newInstance; **/
 GroupVerticleFactory(groupName,packageName,verticles) ::= <<package ~packageName~;
 
 import com.generator.util.VertxUtil;
@@ -115,12 +110,9 @@ public class ~groupName~Verticles {
 			}
 		};
 	}
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY; **/
-SendMessage(name) ::= << 
- public static void send~name;format="capitalize"~Message(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
+SendMessage(name) ::= <<public static void send~name;format="capitalize"~Message(Vertx vertx, java.util.UUID id, Object content, Handler<String> instanceHandler) {
 	sendMessage(vertx, id + ".~name~", content, log, new VertxUtil.SuccessHandler<Message<String~bugfix()~>() {
 		@Override
 		public void onSuccess(Message<String> result) {
@@ -132,14 +124,10 @@ SendMessage(name) ::= <<
 			log.error("send~name;format="capitalize"~Message " + id + ".~name~ failed", t);
 		}
 	});
-}  
->>
+}>>
 
-/**  **/
-bugfix() ::= <<  > 
->>
+bugfix() ::= <<> >>
 
-/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
 deployVerticle(name,packageName) ::= <<public static void deploy~name;format="capitalize"~Verticle(Vertx vertx) {
 	VertxUtil.deploy(vertx, "~packageName~.~name~Verticle", log, new VertxUtil.SuccessHandler<String>() {
 		@Override
@@ -152,16 +140,12 @@ deployVerticle(name,packageName) ::= <<public static void deploy~name;format="ca
 
 		}
 	});
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY; **/
 newVerticleInstance(name) ::= <<public void new~name;format="capitalize"~Verticle(VertxUtil.SuccessHandler<String> handler) {
 	deploy(vertx, ~name;format="capitalize"~Verticle.class.getName(), log, handler);
-} 
->>
+}>>
 
-/** groupName,STRINGPROPERTY;messages,KEYVALUELISTPROPERTY,consume,send;name,STRINGPROPERTY; **/
 verticleDeclaration(groupName,messages,name) ::= <<public static final class ~name;format="capitalize"~Verticle extends AbstractVerticle {
 
 	private final ~groupName~Group templateGroup = new ~groupName~Group();
@@ -202,5 +186,4 @@ verticleDeclaration(groupName,messages,name) ::= <<public static final class ~na
 			}
 		});
 	}
-} 
->>
+}>>

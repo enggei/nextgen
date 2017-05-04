@@ -1,7 +1,10 @@
-/* uuid : 5ceb66f0-d08f-40d1-a9e7-8d7f81c469cd */
+/* templatesSwing 5e217f29-99e8-4513-bdc1-2fc9f8f14e80*/
 delimiters "~", "~"
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
+eom() ::= <<}>>
+
+gt() ::= <<> >>
+
 CanvasActionStringProperty(groupName,name) ::= <<pop.add(new TransactionAction("Set ~name~", graph, canvas) {
 	@Override
 	public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -12,10 +15,8 @@ CanvasActionStringProperty(groupName,name) ::= <<pop.add(new TransactionAction("
 		if(value==null || value.equals(defaultValue)) return;
 		domainNode.set~name;format="capitalize"~(~groupName~Neo.newStringNode(~name~).node());
 	}
-}); 
->>
+});>>
 
-/** groupName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,canvasActions; **/
 CanvasListener(groupName,statements) ::= <<public static abstract class ~groupName~CanvasListener extends ~groupName~NeoListener {
 
 	protected final ~groupName~Neo db;
@@ -153,10 +154,8 @@ CanvasListener(groupName,statements) ::= <<public static abstract class ~groupNa
 		link.append(line, false);
 		link.closePath();
 	}
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY; **/
 PNode(name) ::= <<private class ~name~ extends DomainNode {
 
 		final TemplateParameter parameter;
@@ -227,10 +226,8 @@ PNode(name) ::= <<private class ~name~ extends DomainNode {
 			this.validInputs.add(templateStatementNode);
 			canvas.addRelationToCanvas(new TemplateParameterInput(this, templateStatementNode));
 		}
-	} 
->>
+	}>>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name; **/
 TemplateCanvas(groupName,name,packageName,statements) ::= <<package ~packageName~;
 
 import com.generator.editors.canvas.NeoEditor;
@@ -328,10 +325,8 @@ public class ~it.name~Node extends NeoPTextNode {
 	~bugfix()~
 ~bugfix()~
 };separator="\n"~
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
 TemplateGroupActions(name,packageName) ::= <<package ~packageName~;
 
 import com.generator.util.SwingUtil;
@@ -493,10 +488,8 @@ public class ~name~ {
 		public abstract void addStatement(TemplatesNeo.TemplateGroupNode templateGroupNode, TemplatesNeo.TemplateStatementNode templateStatementNode);
 
 	}
-} 
->>
+}>>
 
-/** canvasListener,STRINGPROPERTY;groupName,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,name,newAction; **/
 TemplatesSwing(canvasListener,groupName,packageName,statements) ::= <<package ~packageName~;
 
 import com.generator.util.FileUtil;
@@ -587,10 +580,8 @@ public class ~groupName~Swing {
 		final ~groupName~Swing templatesNeoSwing = new ~groupName~Swing(new ~groupName~Neo(new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("src/test/tests/db"))));
 		SwingUtil.showPanel(templatesNeoSwing.newNewInstancesPanel(new ~groupName~NeoListener()));
 	}
-} 
->>
+}>>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
 addListAction(groupName,name,statement) ::= <<new AbstractAction("Add ~name;format="capitalize"~") {
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -641,10 +632,8 @@ addListAction(groupName,name,statement) ::= <<new AbstractAction("Add ~name;form
 				}
 			}));
 	}
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY;packageName,STRINGPROPERTY; **/
 addVerticleAction(name,packageName) ::= <<add(deployVerticleAction(vertx, txtRoot, "~packageName~", "~name~Verticle", new VertxUtil.SuccessHandler<String>() {
 	@Override
 	public void onSuccess(String result) {
@@ -657,18 +646,12 @@ addVerticleAction(name,packageName) ::= <<add(deployVerticleAction(vertx, txtRoo
 	public void onFail(Throwable t) {
 
 	}
-})); 
->>
+}));>>
 
-/**  **/
-bugfix() ::= <<} 
->>
+bugfix() ::= <<}>>
 
-/**  **/
-genericFix() ::= <<> 
->>
+genericFix() ::= <<> >>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
 newAction(groupName,name) ::= <<public Action new~name;format="capitalize"~Action(~groupName~NeoListener listener) {
 	return new AbstractAction("new ~name;format="capitalize"~") {
 		@Override
@@ -709,10 +692,8 @@ public Action all~name;format="capitalize"~Action(~groupName~NeoListener listene
 			});
 		}
 	};
-} 
->>
+}>>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY;statement,STRINGPROPERTY; **/
 setStringAction(groupName,name,statement) ::= <<new AbstractAction("Set ~name;format="capitalize"~") {
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -734,10 +715,8 @@ setStringAction(groupName,name,statement) ::= <<new AbstractAction("Set ~name;fo
 				}
 			}));
 	}
-} 
->>
+}>>
 
-/** actions,LISTPROPERTY;groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
 statementActions(actions,groupName,name) ::= <<@Override
 public PNode new~name;format="capitalize"~(~groupName~Neo.~name~Node node){
 
@@ -822,11 +801,9 @@ public void all~name;format="capitalize"~(ResourceIterator<~groupName~Neo.~name~
 	layoutCircle(pNodes, new Point2D.Double(canvas.getWidth() / 2d, canvas.getHeight() / 2d), 100);
 }
 
-protected abstract ~groupName ~Neo.~name~Node.~name~NodeVisitor new~name;format="capitalize"~NodeVisitor(); 
->>
+protected abstract ~groupName ~Neo.~name~Node.~name~NodeVisitor new~name;format="capitalize"~NodeVisitor();>>
 
-/** groupName,STRINGPROPERTY;name,STRINGPROPERTY; **/
-stringPropertyEditor(groupName,name) ::= << final JPanel ~name~Editor = new JPanel(new GridLayout(1,3));
+stringPropertyEditor(groupName,name) ::= <<final JPanel ~name~Editor = new JPanel(new GridLayout(1,3));
 
 ~name~Editor.add(new JLabel("~name~ "));
 final JTextField txt~name~ = new JTextField(10);
@@ -840,5 +817,4 @@ final JTextField txt~name~ = new JTextField(10);
 		}));
 	}
 }));
-actionPanel.add(~name~Editor); 
->>
+actionPanel.add(~name~Editor);>>

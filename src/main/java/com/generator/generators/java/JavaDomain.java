@@ -1,98 +1,94 @@
 package com.generator.generators.java;
 
+import com.generator.domain.IDomain;
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
-import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.*;
-import com.github.javaparser.ast.body.BodyDeclaration;
-import com.github.javaparser.ast.body.TypeDeclaration;
-import com.github.javaparser.ast.expr.NameExpr;
-import com.github.javaparser.ast.expr.QualifiedNameExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
-import org.neo4j.graphdb.Node;
 import org.piccolo2d.event.PInputEvent;
 import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.StringReader;
 import java.util.*;
 import java.util.function.Consumer;
 
 import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.NeoModel.getNameOrLabelFrom;
 import static com.generator.editors.NeoModel.uuidOf;
+import static com.generator.generators.java.JavaDomain.Entities.*;
 import static com.generator.generators.java.JavaDomain.Relations.*;
-import static com.generator.generators.java.JavaVisitor.visitClass;
 import static org.neo4j.graphdb.Direction.INCOMING;
-import static org.neo4j.graphdb.Direction.OUTGOING;
-
 
 /**
  * Created 23.02.17.
  */
-public class JavaDomain {
+public abstract class JavaDomain implements IDomain {
 
    public enum Entities implements Label {
-      Package, Class, Field, Method
-   }
-
-   public enum Properties implements Label {
-      name, type, scope, returnValue, comment, value, getter, setter
+      Package, Class, Field, Method, Interface, Constructor, JavaStatement, Generator
    }
 
    public enum Relations implements RelationshipType {
-      PACKAGE, FIELD, METHOD, INNER_CLASS
+      FIELD, MEMBER, METHOD, PARENT, TYPE, RETURNVALUE, PARAMETER, CONSTRUCTOR, INNERCLASS, IMPLEMENTS, STATEMENTS, EXTENDS, GENERATE
    }
 
-   public static void addToMenu(JPopupMenu pop, PInputEvent event, NeoEditor editor) {
-      final JMenu domainMenu = new JMenu("JavaDomain");
-      domainMenu.add(new NewPackage(event, editor));
-      editor.getGraph().getGraphDb().getAllLabelsInUse().forEach(label -> {
-         for (Entities entities : Entities.values())
-            if (entities.name().equals(label.name())) domainMenu.add(editor.showAllNodesByLabel(label, event));
-      });
-      pop.add(domainMenu);
+   public enum Properties {
+      name, scope, content, root
    }
 
-   public static NeoPNode newPNode(Node node, String nodetype, NeoEditor neoEditor) {
-      switch (JavaDomain.Entities.valueOf(nodetype)) {
+   @Override
+   public String getName() {
+      return "Java";
+   }
+
+   @Override
+   public final Label[] values() {
+      return Entities.values();
+   }
+
+   @Override
+   public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
+      switch (Entities.valueOf(nodetype)) {
          case Package:
-            return new JavaDomain.PackagePNode(node, neoEditor);
+         	return newPackagePNode(node, editor);
          case Class:
-            return new JavaDomain.ClassPNode(node, neoEditor);
+         	return newClassPNode(node, editor);
          case Field:
-            return new JavaDomain.FieldPNode(node, neoEditor);
+         	return newFieldPNode(node, editor);
          case Method:
-            return new JavaDomain.MethodPNode(node, neoEditor);
+         	return newMethodPNode(node, editor);
+         case Interface:
+         	return newInterfacePNode(node, editor);
+         case Constructor:
+         	return newConstructorPNode(node, editor);
+         case JavaStatement:
+         	return newJavaStatementPNode(node, editor);
+         case Generator:
+         	return newGeneratorPNode(node, editor);
       }
 
-      throw new IllegalArgumentException("unsupported TemplateDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
+      throw new IllegalArgumentException("unsupported JavaDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
    }
 
-   public static void deleteNode(Node node) throws NeoEditor.ReferenceException {
+	@Override
+   public void deleteNode(Node node) throws NeoEditor.ReferenceException {
       // todo enforce constraints
       final Set<Relationship> constraints = new LinkedHashSet<>();
+
       final Consumer<Relationship> constraintVisitor = relationship -> {
          if (NeoEditor.isAppRelated(relationship)) return;
          constraints.add(relationship);
       };
 
-      if (node.hasLabel(Entities.Package)) {
-         node.getRelationships(INCOMING, PACKAGE).forEach(constraintVisitor);
-         if (!constraints.isEmpty())
-            throw new NeoEditor.ReferenceException(node, constraints);
-
-         // delete all imports
-         node.getRelationships(OUTGOING, PACKAGE).forEach(Relationship::delete);
-      }
+      //if (node.hasLabel(ContextProperty)) {
+         //node.getRelationships(INCOMING, PROPERTY).forEach(Relationship::delete);
+         //node.getRelationships(INCOMING, FROM).forEach(Relationship::delete);
+      //}
 
       // delete from layouts:
       NeoEditor.removeFromLayouts(node);
@@ -100,319 +96,980 @@ public class JavaDomain {
       node.delete();
    }
 
-   public static class PackagePNode extends JavaDomainPNode {
+   protected NeoPNode newPackagePNode(Node node, NeoEditor editor) {
+         return new PackagePNode(node, editor);
+      }
+
+   protected static class PackagePNode extends JavaDomainPNode {
 
       PackagePNode(Node node, NeoEditor editor) {
-         super(node, Entities.Package, JavaDomain.Properties.name.name(), "64, 64, 64".split(", "), editor);
+         super(node, Entities.Package, "name", "#66c2a5", editor);
       }
 
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         for (Relationship relationship : incoming(node, Relations.PACKAGE)) {
-            final Node other = other(node, relationship);
-            if (hasLabel(other, Entities.Class.name())) {
-               pNodes.put(uuidOf(other(node, relationship)), Entities.Class);
-            } else if (hasLabel(other, Entities.Package.name())) {
-               pNodes.put(uuidOf(other(node, relationship)), Entities.Package);
-            }
-         }
-         editor.showAndLayout(pNodes, pNode);
-      }
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showPackagePropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.Package, Relations.PARENT, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.MEMBER, this, event));
 
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
-         pop.add(new NeoEditor.TransactionAction("Add Package", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   		super.showNodeActions(pop, event);
+   	}
 
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
 
-               final String[] split = name.split("[. ]");
-               final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-               Node parentNode = node;
-               for (String n : split) {
-                  final Node newNode = graph.newNode(Entities.Package);
-                  newNode.setProperty(Properties.name.name(), n);
-                  if (parentNode != null)
-                     newNode.createRelationshipTo(parentNode, PACKAGE);
-                  pNodes.put(uuidOf(newNode), Entities.Package);
-                  parentNode = newNode;
-               }
-               editor.showAndLayout(pNodes, pNode);
-            }
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Package)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Package.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Package)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Package.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
          });
 
-         pop.add(new NeoEditor.TransactionAction("Add Class", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(Entities.Class);
-               newNode.setProperty(Properties.name.name(), name);
-               newNode.createRelationshipTo(node, PACKAGE);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.Class.name()).setOffset(event);
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Parse Class", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final JTextArea textArea = new JTextArea(50, 80);
-
-               SwingUtil.showTextInput("Java", textArea, editor.getCanvas(), new SwingUtil.OnSave() {
-                  @Override
-                  public void verifyAndSave() throws Exception {
-
-                     graph.doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-
-                           final CompilationUnit compilationUnit = JavaParser.parse(new StringReader(textArea.getText().trim()));
-
-                           // refactor package to this package
-                           final Stack<String> packagePath = new Stack<>();
-                           Node currentPackageNode = node;
-                           Relationship parentRelation;
-                           do {
-                              packagePath.push(getString(currentPackageNode, Properties.name.name()));
-                              parentRelation = singleOutgoing(currentPackageNode, Relations.PACKAGE);
-                              currentPackageNode = other(currentPackageNode, parentRelation);
-                           } while (parentRelation != null);
-                           compilationUnit.setPackage(new PackageDeclaration(new NameExpr(StringUtil.list(packagePath, "."))));
-
-                           for (TypeDeclaration typeDeclaration : compilationUnit.getTypes()) {
-
-                              final String name = typeDeclaration.getName();
-
-                              final Node newNode = graph.newNode(Entities.Class);
-                              newNode.setProperty(Properties.name.name(), name);
-                              newNode.createRelationshipTo(node, PACKAGE); // set package here
-
-                              for (BodyDeclaration declaration : typeDeclaration.getMembers()) {
-
-                              }
-
-                              editor.show(NeoModel.uuidOf(newNode), Entities.Class.name()).setOffset(event);
-                           }
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showMessage("Error " + throwable.getMessage(), editor.getCanvas());
-                        }
-                     });
+         // outgoing
+         if (outgoing.containsKey(Entities.Package.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Package.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.PARENT, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.PARENT);
+                     editor.addRelation(newRelation);
                   }
-               });
-            }
-         });
-
-         super.showNodeActions(pop, event);
-      }
-
-
-   }
-
-   public static class ClassPNode extends JavaDomainPNode {
-
-      ClassPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Class, JavaDomain.Properties.name.name(), "64, 64, 64".split(", "), editor);
-      }
-
-      @Override
-      public void renderTo(JTextComponent textArea) {
-
-         // todo improve this with a new java-group better suited for java-domain ?
-         final JavaGroup javaGroup = new JavaGroup();
-         final JavaGroup.classST classST = javaGroup.newclass();
-
-         editor.doInTransaction(tx -> {
-            visitClass(node, new JavaVisitor() {
-               @Override
-               public void onClass(String name, Node node) {
-                  classST.setName(name);
-               }
-
-               @Override
-               public void onField(String scope, String type, String name, String value, Boolean getter, Boolean setter, Node node) {
-                  classST.addPropertiesValue(null, null, null, false, null, false, null, null, name, scope, type, value);
-
-                  // todo: add custom getters and setters- template ?
-                  if (getter)
-                     classST.addMethodsValue(javaGroup.newmethod().setName("get" + StringUtil.capitalize(name)).setReturnVal(type).setScope("public"));
-                  if (setter)
-                     classST.addMethodsValue(javaGroup.newmethod().setName("set" + StringUtil.capitalize(name)).setScope("public"));
-               }
-
-               @Override
-               public void onMethod(String scope, String name, String returnValue, Node node) {
-
+                  updateView();
                }
             });
+         }
 
-            textArea.setText(classST.toString());
-            textArea.setCaretPosition(0);
-         });
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.MEMBER, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.MEMBER);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         // incoming
+         if (incoming.containsKey(Entities.Package.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Package.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.PARENT, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.PARENT);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
       public void expand() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         for (Relationship relationship : outgoing(node, Relations.FIELD))
-            pNodes.put(uuidOf(other(node, relationship)), Entities.Field);
-         for (Relationship relationship : outgoing(node, Relations.METHOD))
-            pNodes.put(uuidOf(other(node, relationship)), Entities.Method);
-         for (Relationship relationship : outgoing(node, Relations.INNER_CLASS))
-            pNodes.put(uuidOf(other(node, relationship)), Entities.Class);
+   		outgoing(node, Relations.PARENT).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Package));
+   		outgoing(node, Relations.MEMBER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
          editor.showAndLayout(pNodes, pNode);
       }
 
-      @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-
-         pop.add(new NeoEditor.TransactionAction("Set Name", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", canvas, node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-               if (name == null) return;
-
-               node.setProperty(Properties.name.name(), name);
-               updateView();
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Field", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("[name] OR [type] [name] OR [scope] [type] [name]", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(Entities.Field);
-
-               final String[] split = name.split(" ");
-               if (split.length == 1) {
-                  newNode.setProperty(Properties.name.name(), split[0]);
-               } else if (split.length == 2) {
-                  newNode.setProperty(Properties.scope.name(), "private");
-                  newNode.setProperty(Properties.type.name(), split[0]);
-                  newNode.setProperty(Properties.name.name(), split[1]);
-               } else if (split.length == 3) {
-                  newNode.setProperty(Properties.scope.name(), split[0]);
-                  newNode.setProperty(Properties.type.name(), split[1]);
-                  newNode.setProperty(Properties.name.name(), split[2]);
-               } else {
-                  SwingUtil.showMessage("Use format as described", canvas);
-               }
-               node.createRelationshipTo(newNode, FIELD);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.Field.name()).setOffset(event);
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Method", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("[name] OR [name] [returnType]", canvas);
-               if (name == null) return;
-
-               final Node newNode = graph.newNode(Entities.Method);
-
-               final String[] split = name.split(" ");
-               if (split.length == 1) {
-                  newNode.setProperty(Properties.returnValue.name(), "void");
-                  newNode.setProperty(Properties.name.name(), split[0]);
-               } else if (split.length == 2) {
-                  newNode.setProperty(Properties.returnValue.name(), split[1]);
-                  newNode.setProperty(Properties.name.name(), split[0]);
-               } else {
-                  SwingUtil.showMessage("Use format as described", canvas);
-               }
-               node.createRelationshipTo(newNode, METHOD);
-
-               editor.show(NeoModel.uuidOf(newNode), Entities.Method.name()).setOffset(event);
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add Equals", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            }
-         });
-
-         pop.add(new NeoEditor.TransactionAction("Add toString", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            }
-         });
-
-         super.showNodeActions(pop, event);
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.PARENT).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Package));
+         editor.showAndLayout(pNodes, pNode);
       }
    }
 
-   public static class FieldPNode extends JavaDomainPNode {
+   protected NeoPNode newClassPNode(Node node, NeoEditor editor) {
+         return new ClassPNode(node, editor);
+      }
+
+   protected static class ClassPNode extends JavaDomainPNode {
+
+      ClassPNode(Node node, NeoEditor editor) {
+         super(node, Entities.Class, "name", "#fc8d62", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showClassPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.scope.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.EXTENDS, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Interface, Relations.IMPLEMENTS, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.INNERCLASS, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Constructor, Relations.CONSTRUCTOR, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Method, Relations.METHOD, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Field, Relations.FIELD, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Interface)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Interface.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Constructor)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Constructor.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Method)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Method.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Field)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Field.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Method)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Method.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Method)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Method.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Field)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Field.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Package)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Package.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.EXTENDS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.EXTENDS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Interface.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Interface.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.IMPLEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.IMPLEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.INNERCLASS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.INNERCLASS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Constructor.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Constructor.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.CONSTRUCTOR, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.CONSTRUCTOR);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Method.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Method.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.METHOD, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.METHOD);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Field.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Field.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.FIELD, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.FIELD);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         // incoming
+         if (incoming.containsKey(Entities.Method.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Method.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.PARAMETER, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.PARAMETER);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (incoming.containsKey(Entities.Method.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Method.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.RETURNVALUE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.RETURNVALUE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (incoming.containsKey(Entities.Field.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Field.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.TYPE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.TYPE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (incoming.containsKey(Entities.Package.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Package.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.MEMBER, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.MEMBER);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.EXTENDS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+   		outgoing(node, Relations.IMPLEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Interface));
+   		outgoing(node, Relations.INNERCLASS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+   		outgoing(node, Relations.CONSTRUCTOR).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Constructor));
+   		outgoing(node, Relations.METHOD).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Method));
+   		outgoing(node, Relations.FIELD).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Field));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.PARAMETER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Method));
+   		incoming(node, Relations.RETURNVALUE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Method));
+   		incoming(node, Relations.TYPE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Field));
+   		incoming(node, Relations.MEMBER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Package));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newFieldPNode(Node node, NeoEditor editor) {
+         return new FieldPNode(node, editor);
+      }
+
+   protected static class FieldPNode extends JavaDomainPNode {
 
       FieldPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Field, JavaDomain.Properties.name.name(), "64, 255, 64".split(", "), editor);
+         super(node, Entities.Field, "name", "#8da0cb", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showFieldPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.scope.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.TYPE, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.TYPE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.TYPE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         // incoming
+         if (incoming.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.FIELD, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.FIELD);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.TYPE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
+      }
 
-         pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final FieldEditor form = new FieldEditor(node);
-               SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Field", () -> {
-                  editor.doInTransaction(tx1 -> {
-                     form.commit(node);
-                     editor.show(uuidOf(node), Entities.Field.name()).setOffset(event);
-                  });
-               });
-            }
-         });
-
-         super.showNodeActions(pop, event);
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.FIELD).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
       }
    }
 
-   public static class MethodPNode extends JavaDomainPNode {
+   protected NeoPNode newMethodPNode(Node node, NeoEditor editor) {
+         return new MethodPNode(node, editor);
+      }
+
+   protected static class MethodPNode extends JavaDomainPNode {
 
       MethodPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Method, JavaDomain.Properties.name.name(), "64, 125, 64".split(", "), editor);
+         super(node, Entities.Method, "name", "#e78ac3", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showMethodPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.scope.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.JavaStatement, Relations.STATEMENTS, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.PARAMETER, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.RETURNVALUE, this, event));
+
+   		for (Relationship relationship : outgoing(node, Relations.PARAMETER)) {
+               pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
+                  @Override
+                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     showParameterPropertyEditor(relationship, editor, event);
+                  }
+            	});
+            }
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.JavaStatement)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.JavaStatement.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.JavaStatement.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.JavaStatement.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.STATEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.STATEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.PARAMETER, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.PARAMETER);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.RETURNVALUE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.RETURNVALUE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         // incoming
+         if (incoming.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.METHOD, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.METHOD);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
-      public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.JavaStatement));
+   		outgoing(node, Relations.PARAMETER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+   		outgoing(node, Relations.RETURNVALUE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
+      }
 
-         pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final MethodEditor form = new MethodEditor(node);
-               SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Method", () -> {
-                  editor.doInTransaction(tx1 -> {
-                     form.commit(node);
-                     editor.show(uuidOf(node), Entities.Method.name()).setOffset(event);
-                  });
-               });
-            }
-         });
-
-         super.showNodeActions(pop, event);
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.METHOD).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
       }
    }
+
+   protected NeoPNode newInterfacePNode(Node node, NeoEditor editor) {
+         return new InterfacePNode(node, editor);
+      }
+
+   protected static class InterfacePNode extends JavaDomainPNode {
+
+      InterfacePNode(Node node, NeoEditor editor) {
+         super(node, Entities.Interface, "name", "#a6d854", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showInterfacePropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.name.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // incoming
+         if (incoming.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.IMPLEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.IMPLEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.IMPLEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newConstructorPNode(Node node, NeoEditor editor) {
+         return new ConstructorPNode(node, editor);
+      }
+
+   protected static class ConstructorPNode extends JavaDomainPNode {
+
+      ConstructorPNode(Node node, NeoEditor editor) {
+         super(node, Entities.Constructor, "name", "#ffd92f", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.PARAMETER, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.JavaStatement, Relations.STATEMENTS, this, event));
+
+   		for (Relationship relationship : outgoing(node, Relations.PARAMETER)) {
+               pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
+                  @Override
+                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     showParameterPropertyEditor(relationship, editor, event);
+                  }
+            	});
+            }
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.JavaStatement)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.JavaStatement.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.PARAMETER, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.PARAMETER);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.JavaStatement.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.JavaStatement.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.STATEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.STATEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         // incoming
+         if (incoming.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = incoming.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.CONSTRUCTOR, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.CONSTRUCTOR);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.PARAMETER).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+   		outgoing(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.JavaStatement));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.CONSTRUCTOR).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newJavaStatementPNode(Node node, NeoEditor editor) {
+         return new JavaStatementPNode(node, editor);
+      }
+
+   protected static class JavaStatementPNode extends JavaDomainPNode {
+
+      JavaStatementPNode(Node node, NeoEditor editor) {
+         super(node, Entities.JavaStatement, "name", "#e5c494", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showJavaStatementPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.content.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newGeneratorPNode(Node node, NeoEditor editor) {
+         return new GeneratorPNode(node, editor);
+      }
+
+   protected static class GeneratorPNode extends JavaDomainPNode {
+
+      GeneratorPNode(Node node, NeoEditor editor) {
+         super(node, Entities.Generator, "name", "#b3b3b3", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showGeneratorPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.root.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.Package, Relations.GENERATE, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.Class, Relations.GENERATE, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Package)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Package.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+            if (selectedNode.node.hasLabel(Entities.Class)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Class.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.Package.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Package.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.GENERATE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.GENERATE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+         if (outgoing.containsKey(Entities.Class.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Class.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.GENERATE, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.GENERATE);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.GENERATE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Package));
+   		outgoing(node, Relations.GENERATE).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Class));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
 
    private static class JavaDomainPNode extends NeoPNode<PText> {
 
@@ -421,22 +1078,13 @@ public class JavaDomain {
       private final String property;
       private final JavaDomain.Entities nodeType;
 
-      JavaDomainPNode(Node node, JavaDomain.Entities nodeType, String property, String[] defaultColor, NeoEditor editor) {
-         super(node, new PText(node.getProperty(property).toString()), nodeType.name(), editor);
-         this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
+      JavaDomainPNode(Node node, JavaDomain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
+         super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
+         this.defaultColor = Color.decode(defaultColor);
          this.property = property;
          this.nodeType = nodeType;
          pNode.setTextPaint(this.defaultColor);
          pNode.setFont(new Font("Hack", Font.BOLD, 12));
-      }
-
-      JavaDomainPNode(Node node, PText representation, JavaDomain.Entities nodeType, String[] defaultColor, NeoEditor editor) {
-         super(node, representation, nodeType.name(), editor);
-         this.defaultColor = new Color(Integer.valueOf(defaultColor[0]), Integer.valueOf(defaultColor[1]), Integer.valueOf(defaultColor[2]));
-         this.property = null;
-         this.nodeType = nodeType;
-         pNode.setTextPaint(this.defaultColor);
-         pNode.setFont(new Font("Hack", Font.PLAIN, 12));
       }
 
       @Override
@@ -462,7 +1110,7 @@ public class JavaDomain {
       @Override
       public void updateView() {
          if (property == null) System.out.println("override updateView: property not set");
-         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+			pNode.setText(property == null ? "?" : node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node));
       }
 
       @Override
@@ -487,6 +1135,8 @@ public class JavaDomain {
 
       @Override
       public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+         editor.showDeleteOutgoingRelations(pop, node);
 
          pop.add(new NeoEditor.TransactionAction("Select all " + nodeType, editor) {
             @Override
@@ -514,147 +1164,511 @@ public class JavaDomain {
       }
    }
 
-   private static class NewPackage extends NeoEditor.TransactionAction {
+	static class PackagePropertyEditor extends SwingUtil.FormPanel {
 
-      private final PInputEvent event;
+			private final JTextField _name = new JTextField();
 
-      NewPackage(PInputEvent event, NeoEditor editor) {
-         super("New Package", editor);
-         this.event = event;
+	      PackagePropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showPackagePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final PackagePropertyEditor form = new PackagePropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Package", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class ClassPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JComboBox _scope = new JComboBox();
+			private final JTextField _name = new JTextField();
+
+	      ClassPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Scope", 1, row);
+	         add(_scope, 3, row);
+				setValue(_scope, container, Properties.scope.name(), new String[] { "package","private","protected","public" });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "scope", _scope); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showClassPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final ClassPropertyEditor form = new ClassPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Class", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class FieldPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JComboBox _scope = new JComboBox();
+			private final JTextField _name = new JTextField();
+
+	      FieldPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Scope", 1, row);
+	         add(_scope, 3, row);
+				setValue(_scope, container, Properties.scope.name(), new String[] { "package","private","protected","public" });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "scope", _scope); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showFieldPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final FieldPropertyEditor form = new FieldPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Field", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class MethodPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JComboBox _scope = new JComboBox();
+			private final JTextField _name = new JTextField();
+
+	      MethodPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Scope", 1, row);
+	         add(_scope, 3, row);
+				setValue(_scope, container, Properties.scope.name(), new String[] { "package","private","protected","public" });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "scope", _scope); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showMethodPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final MethodPropertyEditor form = new MethodPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Method", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class InterfacePropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _name = new JTextField();
+
+	      InterfacePropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showInterfacePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final InterfacePropertyEditor form = new InterfacePropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Interface", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+
+
+	static class JavaStatementPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _content = new JTextField();
+
+	      JavaStatementPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Content", 1, row);
+	         add(_content, 3, row);
+				setValue(_content, container, Properties.content.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "content", _content); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showJavaStatementPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final JavaStatementPropertyEditor form = new JavaStatementPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "JavaStatement", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class GeneratorPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _root = new JTextField();
+			private final JTextField _name = new JTextField();
+
+	      GeneratorPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Root", 1, row);
+	         add(_root, 3, row);
+				setValue(_root, container, Properties.root.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "root", _root); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showGeneratorPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final GeneratorPropertyEditor form = new GeneratorPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Generator", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class ParameterPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _name = new JTextField();
+
+	      ParameterPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showParameterPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final ParameterPropertyEditor form = new ParameterPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "parameter", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+   public static abstract class JavaDomainVisitor implements com.generator.domain.IDomainVisitor {
+
+		@Override
+      public <T> T visit(Node n) {
+         if (n == null) return null;
+		  if (BaseDomainVisitor.hasLabel(n, Package.name())) return visitPackage(n);
+		  if (BaseDomainVisitor.hasLabel(n, Class.name())) return visitClass(n);
+		  if (BaseDomainVisitor.hasLabel(n, Field.name())) return visitField(n);
+		  if (BaseDomainVisitor.hasLabel(n, Method.name())) return visitMethod(n);
+		  if (BaseDomainVisitor.hasLabel(n, Interface.name())) return visitInterface(n);
+		  if (BaseDomainVisitor.hasLabel(n, Constructor.name())) return visitConstructor(n);
+		  if (BaseDomainVisitor.hasLabel(n, JavaStatement.name())) return visitJavaStatement(n);
+		  if (BaseDomainVisitor.hasLabel(n, Generator.name())) return visitGenerator(n);
+         return null;
       }
 
-      @Override
-      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-         final String name = SwingUtil.showInputDialog("Name", canvas);
-         if (name == null) return;
-
-         final String[] split = name.split("[. ]");
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         Node parentNode = null;
-         for (String n : split) {
-            final Node newNode = graph.newNode(Entities.Package);
-            newNode.setProperty(Properties.name.name(), n);
-            if (parentNode != null)
-               newNode.createRelationshipTo(parentNode, PACKAGE);
-            pNodes.put(uuidOf(newNode), Entities.Package);
-            parentNode = newNode;
-         }
-         editor.showAndLayout(pNodes, event.getCanvasPosition());
-      }
-   }
-
-   static class FieldEditor extends SwingUtil.FormPanel {
-
-      private final JTextField txtName = new JTextField();
-      private final JTextField txtType = new JTextField();
-      private final JComboBox<String> cboScope = new JComboBox<>();
-      private final JTextField txtComment = new JTextField();
-      private final JTextField txtValue = new JTextField();
-      private final JCheckBox chkGetter = new JCheckBox("Getter");
-      private final JCheckBox chkSetter = new JCheckBox("Setter");
-
-      FieldEditor(Node node) {
-         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
-
-         int row = 1;
-         addLabel(Properties.name.name(), 1, row);
-         add(txtName, 3, row);
-         txtName.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-
-         row += 2;
-         addLabel(Properties.type.name(), 1, row);
-         add(txtType, 3, row);
-         txtType.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
-
-         row += 2;
-         addLabel(Properties.scope.name(), 1, row);
-         add(cboScope, 3, row);
-         setModifier(cboScope, node);
-
-         row += 2;
-         addLabel(Properties.comment.name(), 1, row);
-         add(txtComment, 3, row);
-         txtComment.setText(node.hasProperty(Properties.comment.name()) ? getString(node, Properties.comment.name()) : "");
-
-         row += 2;
-         addLabel(Properties.value.name(), 1, row);
-         add(txtValue, 3, row);
-         txtValue.setText(node.hasProperty(Properties.value.name()) ? getString(node, Properties.value.name()) : "");
-
-         row += 2;
-         addLabel(Properties.getter.name(), 1, row);
-         add(chkGetter, 3, row);
-         chkGetter.setSelected(Boolean.valueOf(BaseDomainVisitor.get(node, Properties.getter.name(), "false")));
-
-         row += 2;
-         addLabel(Properties.getter.name(), 1, row);
-         add(chkSetter, 3, row);
-         chkSetter.setSelected(Boolean.valueOf(BaseDomainVisitor.get(node, Properties.setter.name(), "false")));
+		<T> T visitPackage(Node node) {
+         return null;
       }
 
-      private void setModifier(JComboBox<String> cboModifier, Node node) {
-         final String[] items = {"", "private", "protected", "public"};
-         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-         if (node.hasProperty(Properties.scope.name()))
-            cboModifier.setSelectedItem(getString(node, Properties.scope.name()));
+		<T> T visitClass(Node node) {
+         return null;
       }
 
-      private void commit(Node node) throws Exception {
-         node.setProperty(Properties.name.name(), txtName.getText().trim());
-         node.setProperty(Properties.type.name(), txtType.getText().trim());
-         node.setProperty(Properties.scope.name(), cboScope.getSelectedItem().toString());
-         node.setProperty(Properties.value.name(), txtValue.getText().trim());
-         node.setProperty(Properties.comment.name(), txtComment.getText().trim());
-         node.setProperty(Properties.getter.name(), chkGetter.isSelected() ? "true" : "false");
-         node.setProperty(Properties.setter.name(), chkSetter.isSelected() ? "true" : "false");
-      }
-   }
-
-   static class MethodEditor extends SwingUtil.FormPanel {
-
-      private final JTextField txtName = new JTextField();
-      private final JTextField txtType = new JTextField();
-      private final JComboBox<String> cboScope = new JComboBox<>();
-      private final JTextField txtComment = new JTextField();
-
-      MethodEditor(Node node) {
-         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
-
-         int row = 1;
-         addLabel(Properties.name.name(), 1, row);
-         add(txtName, 3, row);
-         txtName.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-
-         row += 2;
-         addLabel(Properties.type.name(), 1, row);
-         add(txtType, 3, row);
-         txtType.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
-
-         row += 2;
-         addLabel(Properties.scope.name(), 1, row);
-         add(cboScope, 3, row);
-         setModifier(cboScope, node);
-
-         row += 2;
-         addLabel(Properties.comment.name(), 1, row);
-         add(txtComment, 3, row);
-         txtComment.setText(node.hasProperty(Properties.comment.name()) ? getString(node, Properties.comment.name()) : "");
-
+		<T> T visitField(Node node) {
+         return null;
       }
 
-      private void setModifier(JComboBox<String> cboModifier, Node node) {
-         final String[] items = {"", "private", "protected", "public"};
-         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-         if (node.hasProperty(Properties.scope.name()))
-            cboModifier.setSelectedItem(getString(node, Properties.scope.name()));
+		<T> T visitMethod(Node node) {
+         return null;
       }
 
-      private void commit(Node node) throws Exception {
-         node.setProperty(Properties.name.name(), txtName.getText().trim());
-         node.setProperty(Properties.type.name(), txtType.getText().trim());
-         node.setProperty(Properties.scope.name(), cboScope.getSelectedItem().toString());
-         node.setProperty(Properties.comment.name(), txtComment.getText().trim());
+		<T> T visitInterface(Node node) {
+         return null;
       }
+
+		<T> T visitConstructor(Node node) {
+         return null;
+      }
+
+		<T> T visitJavaStatement(Node node) {
+         return null;
+      }
+
+		<T> T visitGenerator(Node node) {
+         return null;
+      }
+
    }
 }

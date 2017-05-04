@@ -78,74 +78,74 @@ public abstract class BaseClassVisitor {
 	}
 
 
-	void onClass(Package classPackage, String className, Class superClass) {
+	public void onClass(Package classPackage, String className, Class superClass) {
 
 	}
 
-	void onInterface(Class classInterface) {
+	public void onInterface(Class classInterface) {
 
 	}
 
-	void onPublicField(String name, Class<?> returnType) {
+	public void onPublicField(String name, Class<?> returnType) {
 
 	}
 
-	void onProtectedField(String name, Class<?> returnType) {
+	public void onProtectedField(String name, Class<?> returnType) {
 
 	}
 
-	void onPackageField(String name, Class<?> returnType) {
+	public void onPackageField(String name, Class<?> returnType) {
 
 	}
 
-	void onPrivateField(String name, Class<?> returnType) {
+	public void onPrivateField(String name, Class<?> returnType) {
 
 	}
 
-	void onPublicConstructor(String name) {
+	public void onPublicConstructor(String name) {
 
 	}
 
-	void onProtectedConstructor(String name) {
+	public void onProtectedConstructor(String name) {
 
 	}
 
-	void onPackageConstructor(String name) {
+	public void onPackageConstructor(String name) {
 
 	}
 
-	void onPrivateConstructor(String name) {
+	public void onPrivateConstructor(String name) {
 
 	}
 
-	void onConstructorComplete() {
+	public void onConstructorComplete() {
 
 	}
 
-	void onParameter(String name, Class<?> type) {
+	public void onParameter(String name, Class<?> type) {
 
 	}
 
-	void onTypeParameter(String name, Type[] bounds) {
+	public void onTypeParameter(String name, Type[] bounds) {
 
 	}
 
-	void onDeclaredMethod(Method method) {
+	public void onDeclaredMethod(Method method) {
 	}
 
-	void onPublicMethod(Method method) {
+	public void onPublicMethod(Method method) {
 	}
 
-	void onPrivateMethod(Method method) {
+	public void onPrivateMethod(Method method) {
 	}
 
-	void onProtectedMethod(Method method) {
+	public void onProtectedMethod(Method method) {
 	}
 
-	void onPackageMethod(Method method) {
+	public void onPackageMethod(Method method) {
 	}
 
-	void onInnerClass(Class innerClass) {
+	public void onInnerClass(Class innerClass) {
 
 	}
 

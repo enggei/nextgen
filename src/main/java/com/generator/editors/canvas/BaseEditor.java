@@ -32,7 +32,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
 
    protected PLayer nodeLayer;
    public final Map<UUID, N> layerNodes = new LinkedHashMap<>();
-   public final Map<String, Set<UUID>> nodesByLabel = new ConcurrentHashMap<>();
+   protected final Map<String, Set<UUID>> nodesByLabel = new ConcurrentHashMap<>();
 
    protected PLayer relationLayer;
    protected final Map<UUID, R> layerRelations = new LinkedHashMap<>();
@@ -132,7 +132,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
       layerRelations.values().stream().filter(r -> r.source.uuid.equals(node.uuid)).forEach(r -> r.target.select());
    }
 
-   public void reset() {
+   protected void reset() {
 
       relationLayer.removeAllChildren();
       nodeLayer.removeAllChildren();
@@ -481,9 +481,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
             break;
       }
 
-      layerRelations.values().forEach(neoRelationshipPath -> {
-         neoRelationshipPath.showLabel(paintRelationStatus);
-      });
+      layerRelations.values().forEach(neoRelationshipPath -> neoRelationshipPath.showLabel(paintRelationStatus));
 
       SwingUtilities.invokeLater(canvas::repaint);
    }

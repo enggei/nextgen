@@ -8,16 +8,18 @@ import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.editors.canvas.neo.NeoPTextNode;
 import com.generator.generators.easyFlow.EasyFlowDomainImpl;
 import com.generator.generators.html5.Html5Domain;
-import com.generator.generators.java.JavaDomain;
+import com.generator.generators.java.JavaDomainImpl;
 import com.generator.generators.json.JsonDomainImpl;
 import com.generator.generators.maven.MavenDomain;
 import com.generator.generators.maven.MavenDomainImpl;
 import com.generator.generators.meta.MetaDomainImpl;
 import com.generator.generators.mysql.MysqlDomainImpl;
+import com.generator.generators.neo.NeoDomainImpl;
 import com.generator.generators.project.ProjectDomain;
 import com.generator.generators.project.ProjectDomainImpl;
 import com.generator.generators.templates.TemplateDomainImpl;
 import com.generator.generators.vertx.VertxDomain;
+import com.generator.generators.vertx.VertxDomainImpl;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -54,12 +56,6 @@ public class GeneratorEditor extends NeoEditor {
       for (ProjectDomain.Entities label : ProjectDomain.Entities.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
 
-      for (JavaDomain.Entities label : JavaDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
-      for (VertxDomain.Entities label : VertxDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
       for (MavenDomain.Entities label : MavenDomain.Entities.values())
          nodesByLabel.put(label.name(), new LinkedHashSet<>());
    }
@@ -72,8 +68,7 @@ public class GeneratorEditor extends NeoEditor {
          return new NeoPTextNode(node, this);
       }
 
-      Set<UUID> set = nodesByLabel.get(nodetype);
-      if (set == null) nodesByLabel.put(nodetype, set = new LinkedHashSet<>());
+      final Set<UUID> set = nodesByLabel.computeIfAbsent(nodetype, k -> new LinkedHashSet<>());
       set.add(uuidOf(node));
 
       for (IDomain domain : domains) {
@@ -83,22 +78,9 @@ public class GeneratorEditor extends NeoEditor {
          }
       }
 
-      // todo move above
-      for (JavaDomain.Entities entities : JavaDomain.Entities.values()) {
-         if (nodetype.equals(entities.name())) {
-            return JavaDomain.newPNode(node, nodetype, this);
-         }
-      }
-
       for (Html5Domain.Entities label : Html5Domain.Entities.values()) {
          if (nodetype.equals(label.name())) {
             return Html5Domain.newPNode(node, nodetype, this);
-         }
-      }
-
-      for (VertxDomain.Entities label : VertxDomain.Entities.values()) {
-         if (nodetype.equals(label.name())) {
-            return VertxDomain.newPNode(node, nodetype, this);
          }
       }
 
@@ -120,21 +102,9 @@ public class GeneratorEditor extends NeoEditor {
       }
 
       // todo move above
-      for (JavaDomain.Entities label : JavaDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            JavaDomain.deleteNode(node);
-            return;
-         }
-
       for (Html5Domain.Entities label : Html5Domain.Entities.values())
          if (label.name().equals(deleteLabel)) {
             Html5Domain.deleteNode(node);
-            return;
-         }
-
-      for (VertxDomain.Entities label : VertxDomain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            VertxDomain.deleteNode(node);
             return;
          }
    }
@@ -158,9 +128,7 @@ public class GeneratorEditor extends NeoEditor {
          pop.add(domainMenu);
       }
 
-      JavaDomain.addToMenu(pop, event, this);
       Html5Domain.addToMenu(pop, event, this);
-      VertxDomain.addToMenu(pop, event, this);
       super.addToMenu(pop, event);
    }
 
@@ -171,10 +139,13 @@ public class GeneratorEditor extends NeoEditor {
       domains.add(new MetaDomainImpl());
       domains.add(new TemplateDomainImpl());
       domains.add(new EasyFlowDomainImpl());
+      domains.add(new VertxDomainImpl());
       domains.add(new ProjectDomainImpl());
       domains.add(new MavenDomainImpl());
       domains.add(new MysqlDomainImpl());
       domains.add(new JsonDomainImpl());
+      domains.add(new JavaDomainImpl());
+      domains.add(new NeoDomainImpl());
 
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
       SwingUtil.setLookAndFeel_Nimbus();

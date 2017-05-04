@@ -20,7 +20,7 @@ import static org.neo4j.graphdb.RelationshipType.withName;
 /**
  * Created 10.01.17.
  */
-public class JavaParserDomain {
+public class JavaParserDomainOld {
 
     public static final class DomainBuilder {
 

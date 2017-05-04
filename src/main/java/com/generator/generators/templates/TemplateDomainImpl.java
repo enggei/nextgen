@@ -39,6 +39,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.editors.BaseDomainVisitor.getString;
 import static com.generator.editors.NeoModel.*;
 import static com.generator.editors.NeoModel.uuidOf;
 import static com.generator.generators.templates.TemplateDomain.Entities.*;
@@ -1239,7 +1240,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
       final Node templateParameter = other(node, singleOutgoing(node, Relations.TEMPLATE_PARAMETER));
 
-      return new TemplateDomain.KeyValueSetPNode(node,editor) {
+      return new TemplateDomain.KeyValueSetPNode(node, editor) {
          @Override
          public void expand() {
             final Map<UUID, org.neo4j.graphdb.Label> pNodes = new LinkedHashMap<>();
@@ -1492,7 +1493,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newSingleValuePNode(Node node, NeoEditor editor) {
-      return new SingleValuePNode(node,editor) {
+      return new SingleValuePNode(node, editor) {
          @Override
          public void showDependents() {
             final Map<UUID, org.neo4j.graphdb.Label> pNodes = new LinkedHashMap<>();
@@ -1553,9 +1554,10 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newReferencePNode(Node node, NeoEditor editor) {
-      return new ReferencePNode(node,editor) {
+      return new ReferencePNode(node, editor) {
          @Override
          public void updateView() {
+
             pNode.setText("(\"" + node.getProperty(Properties.reference.name()) + "\")");
          }
 
@@ -2607,6 +2609,8 @@ public class TemplateDomainImpl extends TemplateDomain {
          final Node statementTemplate = other(statement, singleOutgoing(statement, TEMPLATE_STATEMENT));
          final Node templateGroup = other(statementTemplate, singleOutgoing(statementTemplate, TEMPLATE_GROUP));
 
+         if (statementTemplate == null || templateGroup == null) return;
+
          onStatementStart(statementTemplate, templateGroup);
 
          for (Relationship templateParameterRelation : incoming(statementTemplate, TEMPLATE_PARAMETER)) {
@@ -2680,8 +2684,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newTemplateGroupPNode(Node node, NeoEditor editor) {
-      return new TemplateDomain.TemplateGroupPNode(node,editor) {
-
+      return new TemplateDomain.TemplateGroupPNode(node, editor) {
 
 
          @Override
@@ -2704,7 +2707,7 @@ public class TemplateDomainImpl extends TemplateDomain {
             pop.add(new NewTemplateStatement(event, editor));
             pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.root.name(), this));
             pop.add(editor.newSetNodePropertyAction(Properties.packageName.name(), this));
-            pop.add(new CreateGroupFile(editor));
+            pop.add(new GenerateGroupFile(this, editor));
 //            pop.add(new ExpandTemplateGroup(editor));
             super.showNodeActions(pop, event);
          }
@@ -2745,97 +2748,6 @@ public class TemplateDomainImpl extends TemplateDomain {
             }
          }
 
-         class CreateGroupFile extends NeoEditor.TransactionAction {
-
-            CreateGroupFile(NeoEditor editor) {
-               super("Create group-file", editor);
-            }
-
-            @Override
-            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String packageName = getString(node, TemplateDomainImpl.Properties.packageName.name());
-               final String groupName = StringUtil.capitalize(getString(node, TemplateDomainImpl.Properties.name.name())) + "DomainGroup";
-               final String root = getString(node, ProjectDomain.Properties.root.name());
-
-               final TemplateGroupGroup group = new TemplateGroupGroup();
-
-               new TemplateGroupVisitor() {
-
-                  private TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration;
-                  private TemplateGroupGroup.NewStatementDeclarationST declarationST;
-                  private String statementName;
-                  private Object setter;
-
-                  @Override
-                  protected void onTemplateGroupStart(String name, String delimiter, Node templateGroup) {
-                     groupClassDeclaration = group.newGroupClassDeclaration().
-                           setName(groupName).
-                           setDomain(name).
-                           setGroupString(TemplateDomainImpl.asSTGString(templateGroup)).
-                           setPackageName(packageName);
-                  }
-
-                  @Override
-                  protected void onTemplateStatementStart(String name, String text, Node templateStatement) {
-                     declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
-                     statementName = name;
-                  }
-
-                  @Override
-                  protected void onTemplateParameterStart(String name) {
-                     setter = null;
-                  }
-
-                  @Override
-                  protected void onSingleTemplateParameter(String name, Node parameterNode) {
-                     setter = group.newStatementStringPropertySetter().setPropertyName(name).setStatementName(statementName);
-                  }
-
-                  @Override
-                  protected void onListTemplateParameter(String name, Node parameterNode) {
-                     setter = group.newStatementListPropertySetter().setPropertyName(name).setStatementName(statementName);
-                  }
-
-                  @Override
-                  protected void onKeyValueTemplateParameter(String name, String keys, Node parameterNode) {
-                     final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
-                           setPropertyName(name).
-                           setStatementName(statementName);
-                     for (String key : keys.split(" ")) kvSetter.addKvNamesValue(key);
-                     setter = kvSetter;
-                  }
-
-                  @Override
-                  protected void onTemplateParameterEnd(String name) {
-                     declarationST.addPropertiesValue(name, setter);
-                  }
-
-                  @Override
-                  protected void onTemplateStatementEnd(String name, String text, Node templateStatement) {
-                     groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), group.newNewStatementInstance().setName(statementName));
-                  }
-
-                  @Override
-                  protected void onTemplateGroupEnd() {
-
-                     if (root != null && packageName != null) {
-                        final GeneratedFile javaFile = GeneratedFile.newJavaFile(root, packageName, groupName);
-                        final File groupFile = FileUtil.tryToCreateFileIfNotExists(new File(root, GeneratedFile.packageToPath(packageName, getString(node, TemplateDomainImpl.Properties.name.name()) + ".stg")));
-
-                        try {
-                           javaFile.write(groupClassDeclaration.toString());
-                           FileUtil.writeFile(TemplateDomainImpl.asSTGString(node), groupFile);
-                        } catch (IOException e1) {
-                           SwingUtil.showException(editor.getCanvas(), e1);
-                        }
-                     }
-
-                     SwingUtil.toClipboard(groupClassDeclaration.toString());
-                  }
-               }.visitTemplateGroup(node);
-            }
-         }
       };
    }
 
@@ -2916,7 +2828,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newSingleTemplateParameterPNode(Node node, NeoEditor editor) {
-      return new SingleTemplateParameterPNode(node,editor) {
+      return new SingleTemplateParameterPNode(node, editor) {
          @Override
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
             // not allowed to delete node
@@ -2934,7 +2846,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newListTemplateParameterPNode(Node node, NeoEditor editor) {
-      return new ListTemplateParameterPNode(node,editor) {
+      return new ListTemplateParameterPNode(node, editor) {
          @Override
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
             // not allowed to delete node
@@ -2952,7 +2864,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newKeyValueTemplateParameterPNode(Node node, NeoEditor editor) {
-      return new KeyValueTemplateParameterPNode(node,editor) {
+      return new KeyValueTemplateParameterPNode(node, editor) {
          @Override
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
             // not allowed to delete node
@@ -2970,7 +2882,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
    @Override
    protected NeoPNode newTemplateStatementPNode(Node node, NeoEditor editor) {
-      return new TemplateStatementPNode(node,editor) {
+      return new TemplateStatementPNode(node, editor) {
          @Override
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
@@ -3422,5 +3334,100 @@ public class TemplateDomainImpl extends TemplateDomain {
             }
          }
       };
+   }
+
+   class GenerateGroupFile extends NeoEditor.TransactionAction {
+
+      private TemplateGroupPNode templateGroupPNode;
+
+      GenerateGroupFile(TemplateGroupPNode templateGroupPNode, NeoEditor editor) {
+         super("Generate group-file", editor);
+         this.templateGroupPNode = templateGroupPNode;
+      }
+
+      @Override
+      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+         final String packageName = BaseDomainVisitor.getString(templateGroupPNode.node, Properties.packageName.name());
+         final String groupName = StringUtil.capitalize(BaseDomainVisitor.getString(templateGroupPNode.node, Properties.name.name())) + "DomainGroup";
+         final String root = BaseDomainVisitor.getString(templateGroupPNode.node, ProjectDomain.Properties.root.name());
+
+         final TemplateGroupGroup group = new TemplateGroupGroup();
+
+         new TemplateGroupVisitor() {
+
+            private TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration;
+            private TemplateGroupGroup.NewStatementDeclarationST declarationST;
+            private String statementName;
+            private Object setter;
+
+            @Override
+            protected void onTemplateGroupStart(String name, String delimiter, Node templateGroup) {
+               groupClassDeclaration = group.newGroupClassDeclaration().
+                     setName(groupName).
+                     setDomain(name).
+                     setGroupString(TemplateDomainImpl.asSTGString(templateGroup)).
+                     setPackageName(packageName);
+            }
+
+            @Override
+            protected void onTemplateStatementStart(String name, String text, Node templateStatement) {
+               declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
+               statementName = name;
+            }
+
+            @Override
+            protected void onTemplateParameterStart(String name) {
+               setter = null;
+            }
+
+            @Override
+            protected void onSingleTemplateParameter(String name, Node parameterNode) {
+               setter = group.newStatementStringPropertySetter().setPropertyName(name).setStatementName(statementName);
+            }
+
+            @Override
+            protected void onListTemplateParameter(String name, Node parameterNode) {
+               setter = group.newStatementListPropertySetter().setPropertyName(name).setStatementName(statementName);
+            }
+
+            @Override
+            protected void onKeyValueTemplateParameter(String name, String keys, Node parameterNode) {
+               final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
+                     setPropertyName(name).
+                     setStatementName(statementName);
+               for (String key : keys.split(" ")) kvSetter.addKvNamesValue(key);
+               setter = kvSetter;
+            }
+
+            @Override
+            protected void onTemplateParameterEnd(String name) {
+               declarationST.addPropertiesValue(name, setter);
+            }
+
+            @Override
+            protected void onTemplateStatementEnd(String name, String text, Node templateStatement) {
+               groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), group.newNewStatementInstance().setName(statementName));
+            }
+
+            @Override
+            protected void onTemplateGroupEnd() {
+
+               if (root != null && packageName != null) {
+                  final GeneratedFile javaFile = GeneratedFile.newJavaFile(root, packageName, groupName);
+                  final File groupFile = FileUtil.tryToCreateFileIfNotExists(new File(root, GeneratedFile.packageToPath(packageName, BaseDomainVisitor.getString(templateGroupPNode.node, Properties.name.name()) + ".stg")));
+
+                  try {
+                     javaFile.write(groupClassDeclaration.toString());
+                     FileUtil.writeFile(TemplateDomainImpl.asSTGString(templateGroupPNode.node), groupFile);
+                  } catch (IOException e1) {
+                     SwingUtil.showException(editor.getCanvas(), e1);
+                  }
+               }
+
+               SwingUtil.toClipboard(groupClassDeclaration.toString());
+            }
+         }.visitTemplateGroup(templateGroupPNode.node);
+      }
    }
 }

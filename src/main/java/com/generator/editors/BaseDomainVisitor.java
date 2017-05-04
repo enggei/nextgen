@@ -1,9 +1,6 @@
 package com.generator.editors;
 
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.*;
 
 import java.util.*;
 
@@ -85,12 +82,16 @@ public abstract class BaseDomainVisitor {
       return lbl.toString().trim();
    }
 
+   public static Iterable<Relationship> outgoing(Node node) {
+      return node == null ? Collections.emptyList() : node.getRelationships(OUTGOING);
+   }
+
    public static Iterable<Relationship> outgoing(Node node, RelationshipType type) {
       return node == null ? Collections.emptyList() : sort(node.getRelationships(OUTGOING, type));
    }
 
    public static Relationship singleOutgoing(Node node, RelationshipType type) {
-      return node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
+      return node==null ? null : node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
    }
 
    public static Iterable<Relationship> incoming(Node node, RelationshipType type) {
@@ -118,36 +119,24 @@ public abstract class BaseDomainVisitor {
    }
 
    @SuppressWarnings("unchecked")
-   public static <T> T get(Node node, String property) {
+   public static <T> T get(PropertyContainer node, String property) {
       return (T) (has(node, property) ? node.getProperty(property) : null);
    }
 
-   public static Object get(Relationship relationship, String property) {
-      return has(relationship, property) ? relationship.getProperty(property) : null;
-   }
-
-   public static String getString(Node node, String property) {
+   public static String getString(PropertyContainer node, String property) {
       return has(node, property) ? String.valueOf(node.getProperty(property)) : null;
-   }
-
-   public static String getString(Relationship relationship, String property) {
-      return has(relationship, property) ? String.valueOf(relationship.getProperty(property)) : null;
    }
 
    public static <T> T getOtherProperty(Node node, Relationship relationship, String otherProperty) {
       return get(other(node, relationship), otherProperty);
    }
 
-   public static String get(Node nodePropertyNode, String property, String defaultValue) {
+   public static String get(PropertyContainer nodePropertyNode, String property, String defaultValue) {
       return has(nodePropertyNode, property) ? nodePropertyNode.getProperty(property).toString() : defaultValue;
    }
 
-   public static boolean has(Node node, String property) {
+   public static boolean has(PropertyContainer node, String property) {
       return node != null && node.hasProperty(property) && (!"[]".equals(node.getProperty(property)) && (!"null".equals(node.getProperty(property))));
-   }
-
-   public static boolean has(Relationship relationship, String property) {
-      return relationship != null && relationship.hasProperty(property) && (!"[]".equals(relationship.getProperty(property)) && (!"null".equals(relationship.getProperty(property))));
    }
 
    public static String types(Iterable<Relationship> relationships) {
@@ -161,11 +150,11 @@ public abstract class BaseDomainVisitor {
       return out.toString();
    }
 
-   public static String printPropertiesFor(Node node) {
+   public static String printPropertiesFor(PropertyContainer node) {
       return printPropertiesFor(node, " ");
    }
 
-   public static String printPropertiesFor(Node node, String delimiter) {
+   public static String printPropertiesFor(PropertyContainer node, String delimiter) {
       final StringBuilder out = new StringBuilder();
       boolean first = true;
       for (String k : node.getPropertyKeys()) {

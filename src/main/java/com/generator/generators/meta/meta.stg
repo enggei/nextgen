@@ -1,9 +1,11 @@
-/* meta e9cd52a3-8fcf-4a34-9a16-ade868e5d0f2*/
+/* meta d7edfa85-3b26-4035-b712-15db0af3094a*/
 delimiters "~", "~"
 
 eom() ::= <<}>>
 
-DomainClass(entities,properties,relations,domainName,packageName) ::= <<package ~packageName~;
+gt() ::= <<> >>
+
+DomainClass(domainName,entities,packageName,properties,relations) ::= <<package ~packageName~;
 
 import com.generator.domain.IDomain;
 import com.generator.editors.BaseDomainVisitor;
@@ -88,24 +90,7 @@ public abstract class ~domainName~Domain implements IDomain {
    }
 
 ~entities:{it|
-   protected NeoPNode new~it.name;format="capitalize"~PNode(Node node, NeoEditor editor) {
-      return new ~it.name;format="capitalize"~PNode(node, editor);
-   ~eom()~
-
-   protected static class ~it.name;format="capitalize"~PNode extends ~domainName~DomainPNode {
-
-      ~it.name;format="capitalize"~PNode(Node node, NeoEditor editor) {
-         super(node, Entities.~it.name~, ~if(it.label)~~domainName~Domain.Properties.~it.label~.name()~else~"name"~endif~, "~it.color~", editor);
-      ~eom()~
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
-         editor.showAndLayout(pNodes, pNode);
-      ~eom()~
-   ~eom()~
+   ~it.declaration~
 };separator="\n"~
 
    private static class ~domainName~DomainPNode extends NeoPNode<PText> {
@@ -147,7 +132,7 @@ public abstract class ~domainName~Domain implements IDomain {
       @Override
       public void updateView() {
          if (property == null) System.out.println("override updateView: property not set");
-         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+			pNode.setText(property == null ? "?" : node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node));
       }
 
       @Override
@@ -172,6 +157,8 @@ public abstract class ~domainName~Domain implements IDomain {
 
       @Override
       public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+         editor.showDeleteOutgoingRelations(pop, node);
 
          pop.add(new NeoEditor.TransactionAction("Select all " + nodeType, editor) {
             @Override
@@ -201,12 +188,14 @@ public abstract class ~domainName~Domain implements IDomain {
 
 	~entities:{it|~it.editor~};separator="\n\n"~
 
+	~relations:{it|~it.editor~};separator="\n\n"~
+
    public static abstract class ~domainName~DomainVisitor implements com.generator.domain.IDomainVisitor {
 
 		@Override
-      public <T> T visit(Node node) {
-         if (node == null) return null;
-		  ~entities:{it|if (BaseDomainVisitor.hasLabel(node, ~it.name~.name())) return visit~it.name;format="capitalize"~(node);};separator="\n"~
+      public <T> T visit(Node n) {
+         if (n == null) return null;
+		  ~entities:{it|if (BaseDomainVisitor.hasLabel(n, ~it.name~.name())) return visit~it.name;format="capitalize"~(n);};separator="\n"~
          return null;
       }
 
@@ -218,11 +207,12 @@ public abstract class ~domainName~Domain implements IDomain {
    }
 }>>
 
-EntityEditor(name,properties) ::= <<static class ~name~PropertyEditor extends SwingUtil.FormPanel {
+PropertyEditor(name,properties) ::= <<~if(properties)~
+static class ~name;format="capitalize"~PropertyEditor extends SwingUtil.FormPanel {
 
 		~properties:{it|private final ~it.component~ _~it.name~ = new ~it.component~();};separator="\n"~
 
-      ~name~PropertyEditor(Node node) {
+      ~name;format="capitalize"~PropertyEditor(PropertyContainer container) {
          super("50dlu, 4dlu, 350dlu", "~properties:{it|pref, 4dlu};separator=", "~");
 
          int row = -1;
@@ -230,37 +220,46 @@ EntityEditor(name,properties) ::= <<static class ~name~PropertyEditor extends Sw
          row += 2;
          addLabel("~it.name;format="capitalize"~", 1, row);
          add(_~it.name~, 3, row);
-			setValue(_~it.name~, node, Properties.~it.name~.name(), ~it.enums~);
+			setValue(_~it.name~, container, Properties.~it.name~.name(), ~it.enums~);
 };separator="\n"~
       }
 
-		private void setValue(JTextField component, Node node, String property, String[] values) {
-         component.setText(node.hasProperty(property) ? getString(node, property) : "");
+		private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+         component.setText(container.hasProperty(property) ? getString(container, property) : "");
       }
 
-		private void setValue(JCheckBox component, Node node, String property, String[] values) {
-         component.setSelected(node.hasProperty(property) ? getString(node, property).toLowerCase().startsWith("boo") : false);
+		private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
       }
 
-      private void setValue(JComboBox<String> component, Node node, String property, String[] values) {
+      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
          component.setModel(new DefaultComboBoxModel<>(values));
-       	final String value = node.hasProperty(property) ? getString(node, property) : null;
+       	final String value = container.hasProperty(property) ? getString(container, property) : null;
 	      if (value == null) return;
 	      component.setSelectedItem(value);
 	   }
 
-      void commit(Node node) throws Exception {
-			~properties:{it|getValue(node, "~it.name~", _~it.name~); };separator="\n"~
+      void commit(PropertyContainer container) throws Exception {
+			~properties:{it|getValue(container, "~it.name~", _~it.name~); };separator="\n"~
       }
 
-		private void getValue(Node node, String property, JTextField component) {
-         node.setProperty(property, component.getText().trim());
+		private void getValue(PropertyContainer container, String property, JTextField component) {
+         container.setProperty(property, component.getText().trim());
       }
 
-      private void getValue(Node node, String property, JComboBox<String> component) {
-         node.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
       }
-   }>>
+   }
+
+static void show~name;format="capitalize"~PropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+   final ~name;format="capitalize"~PropertyEditor form = new ~name;format="capitalize"~PropertyEditor(container);
+   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "~name~", () -> {
+      editor.doInTransaction(tx1 -> {
+         form.commit(container);
+      });
+   });
+}~endif~>>
 
 EntityInterface(entity,packageName,properties,relations) ::= <<package ~packageName~;
 
@@ -280,4 +279,125 @@ public interface ~entity;format="capitalize"~ {
 
    java.util.Iterator<~it.type;format="capitalize"~> iterate~it.name;format="capitalize"~();};separator="\n"~
 
+}>>
+
+PNodeDeclaration(incoming,color,domainName,label,name,outgoing,outgoingWithProperties,properties) ::= <<protected NeoPNode new~name;format="capitalize"~PNode(Node node, NeoEditor editor) {
+      return new ~name;format="capitalize"~PNode(node, editor);
+   ~eom()~
+
+protected static class ~name;format="capitalize"~PNode extends ~domainName~DomainPNode {
+
+   ~name;format="capitalize"~PNode(Node node, NeoEditor editor) {
+      super(node, Entities.~name~, ~if(label)~~domainName~Domain.Properties.~label~.name()~else~"name"~endif~, "~color~", editor);
+   ~eom()~
+
+	@Override
+	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+		~if(properties)~
+		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+			@Override
+			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+				show~name;format="capitalize"~PropertyEditor(node, editor, event);
+			}
+		});~endif~
+
+		~properties:{it|pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.~it.name~.name(), this));};separator="\n"~
+		~outgoing:{it|pop.add(editor.newAddNodeAction(Entities.~it.dst~, Relations.~it.relation~, this, event));};separator="\n"~
+
+~outgoingWithProperties:{it|
+		for (Relationship relationship : outgoing(node, Relations.~it.relation~)) {
+            pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  show~it.name;format="capitalize"~PropertyEditor(relationship, editor, event);
+               ~eom()~
+         	~eom()~);
+         ~eom()~
+};separator="\n"~
+
+		super.showNodeActions(pop, event);
+	}
+	
+	@Override
+   public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+      final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+      if (selectedNodes.isEmpty()) return;
+
+      ~if(outgoing)~final Map<String, Set<Node>~gt()~outgoing = new TreeMap<>();~endif~
+      ~if(incoming)~final Map<String, Set<Node>~gt()~incoming = new TreeMap<>();~endif~
+
+      selectedNodes.forEach(selectedNode -> {
+~if(outgoing)~
+         // outgoing
+~outgoing:{it|
+         if (selectedNode.node.hasLabel(Entities.~it.dst~)) {
+            final Set<Node> set = outgoing.computeIfAbsent(Entities.~it.dst~.name(), k -> new LinkedHashSet<>());
+            //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+            set.add(selectedNode.node);
+			~eom()~
+};separator="\n"~
+~endif~
+~if(incoming)~
+         // incoming
+~incoming:{it|
+         if (selectedNode.node.hasLabel(Entities.~it.src~)) {
+            final Set<Node> set = incoming.computeIfAbsent(Entities.~it.src~.name(), k -> new LinkedHashSet<>());
+            set.add(selectedNode.node);
+			~eom()~
+};separator="\n"~
+~endif~
+      });
+
+~if(outgoing)~
+      // outgoing
+~outgoing:{it|
+      if (outgoing.containsKey(Entities.~it.dst~.name())) {
+         final Set<Node> nodes = outgoing.get(Entities.~it.dst~.name());
+         pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.~it.relation~, editor) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               for (Node dst : nodes) {
+                  final Relationship newRelation = node.createRelationshipTo(dst, Relations.~it.relation~);
+                  editor.addRelation(newRelation);
+               ~eom()~
+               updateView();
+            ~eom()~
+         ~eom()~);
+      ~eom()~
+};separator="\n"~
+~endif~
+~if(incoming)~
+      // incoming
+~incoming:{it|
+      if (incoming.containsKey(Entities.~it.src~.name())) {
+         final Set<Node> nodes = incoming.get(Entities.~it.src~.name());
+         pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.~it.relation~, editor) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               for (Node src : nodes) {
+                  final Relationship newRelation = src.createRelationshipTo(node, Relations.~it.relation~);
+                  editor.addRelation(newRelation);
+               ~eom()~
+               updateView();
+            ~eom()~
+         ~eom()~);
+      ~eom()~
+};separator="\n"~
+~endif~
+   }
+
+   @Override
+   public void expand() {
+      final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+		~outgoing:{it|outgoing(node, Relations.~it.relation~).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.~it.dst~));};separator="\n"~
+      editor.showAndLayout(pNodes, pNode);
+   }
+		
+	@Override
+   public void showDependents() {
+      final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+		~incoming:{it|incoming(node, Relations.~it.relation~).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.~it.src~));};separator="\n"~
+      editor.showAndLayout(pNodes, pNode);
+   }
 }>>

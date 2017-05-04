@@ -130,10 +130,8 @@ public class MetaDomainImpl extends MetaDomain {
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
             pop.add(editor.newSetNodePropertyAction(Properties.name.name(), this));
-            pop.add(editor.newAddNodeAction(Entity, Properties.name.name(), ENTITY, this, event));
 
-
-            pop.add(new NeoEditor.TransactionAction("Add Multiple Entities", editor) {
+            pop.add(new NeoEditor.TransactionAction("Add Entities", editor) {
                @Override
                public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -179,18 +177,7 @@ public class MetaDomainImpl extends MetaDomain {
                }
             });
 
-            pop.add(editor.newAddNodeAction(Relation, Properties.name.name(), RELATION, this, event));
-
-            pop.add(new NeoEditor.TransactionAction("Expand Relations", editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-                  outgoing(node, RELATION).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Relation));
-                  editor.showAndLayout(pNodes, pNode);
-               }
-            });
-
-            pop.add(new NeoEditor.TransactionAction("Add Multiple Relations", editor) {
+            pop.add(new NeoEditor.TransactionAction("Add Relations", editor) {
                @Override
                public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -233,6 +220,15 @@ public class MetaDomainImpl extends MetaDomain {
                            field.setText("");
                      }
                   });
+               }
+            });
+
+            pop.add(new NeoEditor.TransactionAction("Expand Relations", editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+                  outgoing(node, RELATION).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Relation));
+                  editor.showAndLayout(pNodes, pNode);
                }
             });
 
@@ -392,109 +388,8 @@ public class MetaDomainImpl extends MetaDomain {
                pop.add(new NeoEditor.TransactionAction("Generate java", editor) {
                   @Override
                   public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
                      final MetaDomainGroup group = new MetaDomainGroup();
-
-                     final String domain = new MetaDomainVisitor() {
-
-                        private MetaDomainGroup.DomainClassST domainClassST;
-                        private MetaDomainGroup.EntityEditorST entityEditor;
-                        private final Set<String> properties = new LinkedHashSet<>();
-
-                        @Override
-                        protected <T> T visitDomain(Node node) {
-
-                           domainClassST = group.newDomainClass();
-                           domainClassST.setDomainName(BaseDomainVisitor.getString(node, Properties.name.name()));
-                           domainClassST.setPackageName(BaseDomainVisitor.getString(node, Properties.packageName.name()));
-
-                           for (Relationship entityRelation : BaseDomainVisitor.outgoing(node, Relations.ENTITY))
-                              visitEntity(other(node, entityRelation));
-
-                           for (Relationship entityRelation : BaseDomainVisitor.outgoing(node, Relations.RELATION))
-                              visitRelation(other(node, entityRelation));
-
-                           return (T) domainClassST.toString();
-                        }
-
-                        @Override
-                        protected <T> T visitEntity(Node node) {
-
-                           entityEditor = group.newEntityEditor().setName(getString(node, Properties.name.name()));
-
-                           for (Relationship propertyRelation : BaseDomainVisitor.outgoing(node, Relations.PROPERTY))
-                              visit(other(node, propertyRelation));
-
-                           domainClassST.addEntitiesValue(getString(node, "name"), getString(node, Properties.label.name()), getString(node, Properties.color.name()), entityEditor);
-//                        final boolean isRoot = "true".equals(getString(node, "root"));
-//                        if (isRoot) result.put("root", true);
-                           return null;
-                        }
-
-                        @Override
-                        protected <T> T visitRelation(Node node) {
-
-                           final String name = getString(node, "name");
-                           domainClassST.addRelationsValue(name);
-
-                           for (Relationship propertyRelation : BaseDomainVisitor.outgoing(node, Relations.PROPERTY))
-                              visit(other(node, propertyRelation));
-
-//                        final JsonObject result = new JsonObject();
-//                        result.put("name", getString(node, "name"));
-//                        result.put("cardinality", getString(node, "cardinality"));
-
-//                        final JsonArray src = new JsonArray();
-//                        result.put("src", src);
-//                        for (Relationship relation : BaseDomainVisitor.incoming(node, Relations.SRC))
-//                           src.add("" + BaseDomainVisitor.getOtherProperty(node, relation, "name"));
-
-//                        final JsonArray dst = new JsonArray();
-//                        result.put("dst", dst);
-//                        for (Relationship relation : BaseDomainVisitor.outgoing(node, Relations.DST))
-//                           dst.add("" + BaseDomainVisitor.getOtherProperty(node, relation, "name"));
-
-                           return (T) null;
-                        }
-
-                        @Override
-                        protected <T> T visitProperty(Node node) {
-
-                           final String name = getString(node, "name");
-                           if (!properties.contains(name))
-                              domainClassST.addPropertiesValue(name);
-                           properties.add(name);
-
-                           final String type = getString(node, Properties.type.name());
-                           if ("String".equals(type)) {
-                              entityEditor.addPropertiesValue(getString(node, Properties.name.name()), "JTextField", "new String[] { }");
-                           } else if (type != null && type.toLowerCase().startsWith("boo")) {
-                              entityEditor.addPropertiesValue(getString(node, Properties.name.name()), "JCheckBox", "new String[] { }");
-                           } else if ("Enum".equals(type)) {
-
-                              final Set<String> values = new TreeSet<>();
-                              for (Relationship relationship : outgoing(node, ENUM_VALUE)) {
-                                 final Node other = other(node, relationship);
-                                 values.add("\"" + other.getProperty(getString(relationship, "property")) + "\"");
-                              }
-                              entityEditor.addPropertiesValue(getString(node, Properties.name.name()), "JComboBox", "new String[] { " + StringUtil.list(values, ",") + " }");
-                           }
-
-                           return null;
-                        }
-                     }.visit(node);
-
-                     final String root = getString(node, Properties.root.name());
-                     if (root != null) {
-                        final GeneratedFile javaFile = GeneratedFile.newJavaFile(root, BaseDomainVisitor.getString(node, Properties.packageName.name()), getString(node, Properties.name.name()) + "Domain");
-                        try {
-                           javaFile.write(domain);
-                        } catch (IOException e1) {
-                           SwingUtil.showException(editor.getCanvas(), e1);
-                        }
-                     }
-
-                     SwingUtil.toClipboard(domain);
+                     SwingUtil.toClipboard(new GenerateJavaDomain(group).visit(node));
                   }
                });
             }
@@ -563,26 +458,6 @@ public class MetaDomainImpl extends MetaDomain {
                @Override
                public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                  final String name = SwingUtil.showInputDialog("Name", editor.canvas);
-                  if (name == null) return;
-
-                  final Node newNode = editor.getGraph().newNode(Property);
-                  final String[] s = name.split(" ");
-                  newNode.setProperty(Properties.name.name(), s[0]);
-                  newNode.setProperty(Properties.type.name(), s.length > 1 ? s[1] : "String");
-                  node.createRelationshipTo(newNode, Relations.PROPERTY);
-
-                  editor.show(uuidOf(newNode), Property.name()).
-                        setOffset(event);
-
-                  updateView();
-               }
-            });
-
-            pop.add(new NeoEditor.TransactionAction("Add Multiple Properties", editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
                   final JTextField[] fields = new JTextField[5];
 
                   final StringBuilder rows = new StringBuilder();
@@ -627,18 +502,6 @@ public class MetaDomainImpl extends MetaDomain {
                }
             });
 
-            for (Relationship relationship : outgoing(node, PROPERTY)) {
-
-               final Node propertyNode = other(node, relationship);
-
-               pop.add(new NeoEditor.TransactionAction("Delete " + getString(propertyNode, Properties.name.name()), editor) {
-                  @Override
-                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     MetaDomainImpl.this.deleteNode(propertyNode);
-                  }
-               });
-            }
-
             super.showNodeActions(pop, event);
          }
 
@@ -648,20 +511,47 @@ public class MetaDomainImpl extends MetaDomain {
             final Iterator<NeoPNode> selectedNodes = editor.getSelectedNodes().iterator();
 
             final Set<NeoPNode> propertyNodes = new LinkedHashSet<>();
+            final Set<NeoPNode> entityNodes = new LinkedHashSet<>();
             while (selectedNodes.hasNext()) {
                final NeoPNode next = selectedNodes.next();
                if (hasLabel(next.node, Property.name())) propertyNodes.add(next);
+               if (hasLabel(next.node, Entity.name())) entityNodes.add(next);
             }
-            if (propertyNodes.isEmpty()) return;
 
-            pop.add(new NeoEditor.TransactionAction("Add " + (propertyNodes.size() == 1 ? "Property" : "Properties"), editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (NeoPNode propertyNode : propertyNodes)
-                     editor.addRelation(node.createRelationshipTo(propertyNode.node, Relations.PROPERTY));
-                  updateView();
-               }
-            });
+            if (!propertyNodes.isEmpty()) {
+               pop.add(new NeoEditor.TransactionAction("Add " + (propertyNodes.size() == 1 ? "Property" : "Properties"), editor) {
+                  @Override
+                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     for (NeoPNode propertyNode : propertyNodes)
+                        editor.addRelation(node.createRelationshipTo(propertyNode.node, Relations.PROPERTY));
+                     updateView();
+                  }
+               });
+            }
+
+            if (!entityNodes.isEmpty()) {
+               pop.add(new NeoEditor.TransactionAction("New Relation", editor) {
+                  @Override
+                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final String name = SwingUtil.showInputDialog(Properties.name.name(), editor.canvas);
+                     if (Properties.name.name() != null && name == null) return;
+
+                     final Node newNode = editor.getGraph().newNode(Relation);
+                     newNode.setProperty(Properties.name.name(), name);
+                     final Node domainNode = other(node, singleIncoming(node, ENTITY));
+                     editor.addRelation(domainNode.createRelationshipTo(newNode, RELATION));
+                     editor.addRelation(newNode.createRelationshipTo(node, Relations.DST));
+
+                     editor.show(uuidOf(newNode), Relation.name()).
+                           setOffset(event);
+
+                     for (NeoPNode neoPNode : entityNodes)
+                        editor.addRelation(newNode.createRelationshipTo(neoPNode.node, Relations.SRC));
+                     updateView();
+                  }
+               });
+            }
 
             SwingUtilities.invokeLater(editor.canvas::repaint);
          }
@@ -777,6 +667,7 @@ public class MetaDomainImpl extends MetaDomain {
          public void expand() {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
             outgoing(node, Relations.DST).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Entity));
+            outgoing(node, Relations.PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Property));
             editor.showAndLayout(pNodes, pNode);
          }
       };
@@ -818,6 +709,8 @@ public class MetaDomainImpl extends MetaDomain {
                }
             });
 
+            editor.showDeleteOutgoingRelations(pop, node);
+
             super.showNodeActions(pop, event);
          }
       };
@@ -831,13 +724,17 @@ public class MetaDomainImpl extends MetaDomain {
 
       if (hasLabel(node, Property.name())) {
 
-         // todo consider linking model-properties to Property for added constraint...(similar to Statements and Parameters linked to TemplateStatements and TemplateParameters)
-         node.getRelationships().forEach(new Consumer<Relationship>() {
-            @Override
-            public void accept(Relationship relationship) {
-               relationship.delete();
-            }
+         final Set<Relationship> constraints = new LinkedHashSet<>();
+         node.getRelationships(Direction.INCOMING).forEach(relationship -> {
+            final Node otherNode = other(node, relationship);
+            if (hasLabel(otherNode, NeoModel.TAG_LAYOUT)) return;
+
+            constraints.add(relationship);
          });
+
+         if (!constraints.isEmpty()) throw new NeoEditor.ReferenceException(node, constraints);
+
+         node.getRelationships(Direction.INCOMING).forEach(Relationship::delete);
 
       } else if (hasLabel(node, Entity.name())) {
 
@@ -873,4 +770,3 @@ public class MetaDomainImpl extends MetaDomain {
       super.deleteNode(node);
    }
 }
-
