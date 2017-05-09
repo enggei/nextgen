@@ -6,37 +6,34 @@ import org.stringtemplate.v4.STGroup;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'DurandalGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'durandal.stg' file<br/>
  */
-public final class DurandalGroup {
-
+public final class DurandalDomainGroup {
+   // old durandal
    private final STGroup stGroup;
    private final char delimiter;
 
-	public DurandalGroup() {
-
+	public DurandalDomainGroup() {
 		final String generatorPath = System.getProperty("generator.path");
 
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "durandal" + java.io.File.separator + "durandal.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(DurandalGroup.class.getResource("/com/generator/generators/durandal/durandal.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "durandal" + java.io.File.separator + "durandal.stg"));
+        if (generatorPath != null) {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "durandal" + java.io.File.separator + "durandal.stg");
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        } else {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(DurandalDomainGroup.class.getResource("/com/generator/generators/durandal/durandal.stg"), "UTF-8", '~', '~');
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        }
    }
 
-   public DurandalGroup(STGroup stGroup) {
+   public DurandalDomainGroup(STGroup stGroup) {
       this.stGroup = stGroup;
       this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
       this.delimiter = stGroup.delimiterStartChar;
    }
 
-   public DurandalGroup(java.io.File templateFile) {
+   public DurandalDomainGroup(java.io.File templateFile) {
    	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
 	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 	   this.delimiter = stGroup.delimiterStartChar;
@@ -50,72 +47,99 @@ public final class DurandalGroup {
       return delimiter;
    }
 
+	public interface DurandalDomainGroupTemplate {
+
+	}
+
+   public eomST neweom() {
+      return new eomST(stGroup);
+   }
+
+   public gtST newgt() {
+      return new gtST(stGroup);
+   }
 
    public CrudHtmlST newCrudHtml() {
       return new CrudHtmlST(stGroup);
-   } 
-
+   }
 
    public CrudJSST newCrudJS() {
       return new CrudJSST(stGroup);
-   } 
-
+   }
 
    public EditDialogHTMLST newEditDialogHTML() {
       return new EditDialogHTMLST(stGroup);
-   } 
-
+   }
 
    public EditDialogJSST newEditDialogJS() {
       return new EditDialogJSST(stGroup);
-   } 
-
+   }
 
    public NewDialogHTMLST newNewDialogHTML() {
       return new NewDialogHTMLST(stGroup);
-   } 
-
+   }
 
    public NewDialogJSST newNewDialogJS() {
       return new NewDialogJSST(stGroup);
-   } 
-
+   }
 
    public appHTMLST newappHTML() {
       return new appHTMLST(stGroup);
-   } 
-
+   }
 
    public bugfix2ST newbugfix2() {
       return new bugfix2ST(stGroup);
-   } 
-
+   }
 
    public mainJSST newmainJS() {
       return new mainJSST(stGroup);
-   } 
-
+   }
 
    public moduleHTMLST newmoduleHTML() {
       return new moduleHTMLST(stGroup);
-   } 
-
+   }
 
    public moduleJSST newmoduleJS() {
       return new moduleJSST(stGroup);
-   } 
-
+   }
 
    public shellHTMLST newshellHTML() {
       return new shellHTMLST(stGroup);
-   } 
-
+   }
 
    public shellJSST newshellJS() {
       return new shellJSST(stGroup);
-   } 
+   }
 
-    public final class CrudHtmlST {
+   public final class eomST implements DurandalDomainGroupTemplate {
+
+      private final ST template;
+
+      private eomST(STGroup group) {
+   		template = group.getInstanceOf("eom");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class gtST implements DurandalDomainGroupTemplate {
+
+      private final ST template;
+
+      private gtST(STGroup group) {
+   		template = group.getInstanceOf("gt");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class CrudHtmlST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -130,18 +154,18 @@ public final class DurandalGroup {
          template.addAggr("columns.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public CrudHtmlST setType(Object value) {
+      public CrudHtmlST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class CrudJSST {
+   public final class CrudJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean editableFieldsIsSet = new AtomicBoolean(false);
@@ -162,18 +186,18 @@ public final class DurandalGroup {
          template.addAggr("editableFields.{defaultValue, name}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public CrudJSST setType(Object value) {
+      public CrudJSST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class EditDialogHTMLST {
+   public final class EditDialogHTMLST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -188,18 +212,18 @@ public final class DurandalGroup {
          template.addAggr("fields.{label, name}", ( (label_==null || label_.toString().length()==0) ? null : label_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public EditDialogHTMLST setType(Object value) {
+      public EditDialogHTMLST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class EditDialogJSST {
+   public final class EditDialogJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -214,18 +238,18 @@ public final class DurandalGroup {
          template.addAggr("fields.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public EditDialogJSST setType(Object value) {
+      public EditDialogJSST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class NewDialogHTMLST {
+   public final class NewDialogHTMLST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -240,18 +264,18 @@ public final class DurandalGroup {
          template.addAggr("fields.{label, name}", ( (label_==null || label_.toString().length()==0) ? null : label_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public NewDialogHTMLST setType(Object value) {
+      public NewDialogHTMLST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class NewDialogJSST {
+   public final class NewDialogJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -266,18 +290,18 @@ public final class DurandalGroup {
          template.addAggr("fields.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public NewDialogJSST setType(Object value) {
+      public NewDialogJSST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class appHTMLST {
+   public final class appHTMLST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean appStylesheetPathIsSet = new AtomicBoolean(false);
       private final AtomicBoolean splashTitleIsSet = new AtomicBoolean(false);
@@ -287,22 +311,22 @@ public final class DurandalGroup {
    		template = group.getInstanceOf("appHTML");
    	}
 
-       public appHTMLST setAppStylesheetPath(Object value) {
+      public appHTMLST setAppStylesheetPath(Object value) {
       	tryToSetStringProperty(template, value, appStylesheetPathIsSet, "appStylesheetPath");   
          return this;
-      } 
-       public appHTMLST setSplashTitle(Object value) {
+      }
+      public appHTMLST setSplashTitle(Object value) {
       	tryToSetStringProperty(template, value, splashTitleIsSet, "splashTitle");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class bugfix2ST {
+   public final class bugfix2ST implements DurandalDomainGroupTemplate {
 
       private final ST template;
 
@@ -314,24 +338,23 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class mainJSST {
+   public final class mainJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean appTitleIsSet = new AtomicBoolean(false);
       private final AtomicBoolean pathsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean pluginsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean systemDebugIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private mainJSST(STGroup group) {
    		template = group.getInstanceOf("mainJS");
    	}
 
-       public mainJSST setAppTitle(Object value) {
+      public mainJSST setAppTitle(Object value) {
       	tryToSetStringProperty(template, value, appTitleIsSet, "appTitle");   
          return this;
-      } 
+      }
       public mainJSST addPathsValue(Object name_, Object path_) {
          pathsIsSet.set(true);
          template.addAggr("paths.{name, path}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (path_==null || path_.toString().length()==0) ? null : path_));
@@ -342,18 +365,14 @@ public final class DurandalGroup {
          template.addAggr("plugins.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public mainJSST setSystemDebug(Object value) {
-      	tryToSetStringProperty(template, value, systemDebugIsSet, "systemDebug");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class moduleHTMLST {
+   public final class moduleHTMLST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
       private final AtomicBoolean titleIsSet = new AtomicBoolean(false);
@@ -367,18 +386,18 @@ public final class DurandalGroup {
       	tryToSetListProperty(template, value, contentIsSet, "content");
          return this;
       }
-       public moduleHTMLST setTitle(Object value) {
+      public moduleHTMLST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class moduleJSST {
+   public final class moduleJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean dependenciesIsSet = new AtomicBoolean(false);
       private final AtomicBoolean returnsIsSet = new AtomicBoolean(false);
@@ -408,9 +427,9 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class shellHTMLST {
+   public final class shellHTMLST implements DurandalDomainGroupTemplate {
 
       private final ST template;
 
@@ -422,13 +441,11 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class shellJSST {
+   public final class shellJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean routesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean unknownRoutePageIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean unknownRoutePathIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private shellJSST(STGroup group) {
@@ -440,20 +457,12 @@ public final class DurandalGroup {
          template.addAggr("routes.{moduleId, nav, route, title}", ( (moduleId_==null || moduleId_.toString().length()==0) ? null : moduleId_), ( (nav_==null || nav_.toString().length()==0) ? null : nav_), ( (route_==null || route_.toString().length()==0) ? null : route_), ( (title_==null || title_.toString().length()==0) ? null : title_));
          return this;
       }
-       public shellJSST setUnknownRoutePage(Object value) {
-      	tryToSetStringProperty(template, value, unknownRoutePageIsSet, "unknownRoutePage");   
-         return this;
-      } 
-       public shellJSST setUnknownRoutePath(Object value) {
-      	tryToSetStringProperty(template, value, unknownRoutePathIsSet, "unknownRoutePath");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -570,7 +579,7 @@ public final class DurandalGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -582,4 +591,4 @@ public final class DurandalGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+}

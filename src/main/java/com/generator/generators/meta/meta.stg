@@ -102,7 +102,7 @@ public abstract class ~domainName~Domain implements IDomain {
 
       ~domainName~DomainPNode(Node node, ~domainName~Domain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
          super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
-         this.defaultColor = Color.decode(defaultColor);
+         this.defaultColor = defaultColor==null || defaultColor.length()==0 ? Color.BLACK : Color.decode(defaultColor);
          this.property = property;
          this.nodeType = nodeType;
          pNode.setTextPaint(this.defaultColor);
@@ -301,7 +301,7 @@ protected static class ~name;format="capitalize"~PNode extends ~domainName~Domai
 			}
 		});~endif~
 
-		~properties:{it|pop.add(editor.newSetNodePropertyAction(JavaDomain.Properties.~it.name~.name(), this));};separator="\n"~
+		~properties:{it|pop.add(editor.newSetNodePropertyAction(~domainName~Domain.Properties.~it.name~.name(), this));};separator="\n"~
 		~outgoing:{it|pop.add(editor.newAddNodeAction(Entities.~it.dst~, Relations.~it.relation~, this, event));};separator="\n"~
 
 ~outgoingWithProperties:{it|

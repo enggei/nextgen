@@ -1,7 +1,10 @@
-/* uuid : 900f3992-a391-4aa6-9fc6-dd8b93ec393a */
+/* durandal 561c7a8f-b965-458c-bec7-f6f7a2d4b09d*/
 delimiters "~", "~"
 
-/** columns,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
+eom() ::= <<}>>
+
+gt() ::= <<> >>
+
 CrudHtml(columns,type) ::= <<<section>
     <div class="page-header">
 
@@ -39,11 +42,9 @@ CrudHtml(columns,type) ::= <<<section>
         </table>
     </div>
 
-</section> 
->>
+</section> >>
 
-/** columns,KEYVALUELISTPROPERTY,defaultValue,name;editableFields,KEYVALUELISTPROPERTY,defaultValue,name;type,STRINGPROPERTY; **/
-CrudJS(columns,editableFields,type) ::= << define(['serverChannel', 'knockout', 'knockoutMapping', 'utils', 'domain', './Edit~type~Dialog', './New~type~Dialog', 'durandal/app'], function (serverchannel, ko, knockoutMapping, utils, Domain, EditDialog, NewDialog, app) {
+CrudJS(columns,editableFields,type) ::= <<define(['serverChannel', 'knockout', 'knockoutMapping', 'utils', 'domain', './Edit~type~Dialog', './New~type~Dialog', 'durandal/app'], function (serverchannel, ko, knockoutMapping, utils, Domain, EditDialog, NewDialog, app) {
 
     var list = ko.observableArray();
 
@@ -170,11 +171,9 @@ CrudJS(columns,editableFields,type) ::= << define(['serverChannel', 'knockout', 
                 });
         }
     }
-}); 
->>
+});>>
 
-/** fields,KEYVALUELISTPROPERTY,label,name;type,STRINGPROPERTY; **/
-EditDialogHTML(fields,type) ::= << <div class="modal-content">
+EditDialogHTML(fields,type) ::= <<<div class="modal-content">
     <div class="modal-header">
         <h3>Edit ~type~</h3>
     </div>
@@ -191,11 +190,9 @@ EditDialogHTML(fields,type) ::= << <div class="modal-content">
         <button class="btn btn-primary" data-bind="click: ok">Ok</button>
         <button class="btn btn-primary" data-bind="click: cancel">Cancel</button>
     </div>
-</div> 
->>
+</div> >>
 
-/** fields,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
-EditDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
+EditDialogJS(fields,type) ::= <<define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
 
    var closeable = false;
 
@@ -240,11 +237,9 @@ EditDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'kno
    };
 
 	return Edit~type~Dialog;
-}); 
->>
+});>>
 
-/** fields,KEYVALUELISTPROPERTY,label,name;type,STRINGPROPERTY; **/
-NewDialogHTML(fields,type) ::= << <div class="modal-content">
+NewDialogHTML(fields,type) ::= <<<div class="modal-content">
     <div class="modal-header">
         <h3>New ~type~</h3>
     </div>
@@ -261,11 +256,9 @@ NewDialogHTML(fields,type) ::= << <div class="modal-content">
         <button class="btn btn-primary" data-bind="click: ok">Ok</button>
         <button class="btn btn-primary" data-bind="click: cancel">Cancel</button>
     </div>
-</div> 
->>
+</div> >>
 
-/** fields,KEYVALUELISTPROPERTY,name;type,STRINGPROPERTY; **/
-NewDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
+NewDialogJS(fields,type) ::= <<define(['plugins/dialog', 'serverChannel', 'knockout', 'utils', 'domain'], function (dialog, serverChannel, ko, utils, Domain) {
 
     var closeable = false;
 
@@ -314,10 +307,8 @@ NewDialogJS(fields,type) ::= << define(['plugins/dialog', 'serverChannel', 'knoc
     };
 
     return New~type~Dialog;
-}); 
->>
+});>>
 
-/** appStylesheetPath,STRINGPROPERTY;splashTitle,STRINGPROPERTY; **/
 appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>
 <html>
 <head>
@@ -332,19 +323,19 @@ appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>
     <!-- uncomment this to force a refresh on the favicon -->
     <!--<link rel="shortcut icon" href="https://localhost:8080/favicon.ico?v=2" />-->
 
-    <link rel="apple-touch-startup-image" href="../lib/durandal/img/ios-startup-image-landscape.png" media="(orientation:landscape)"/>
-    <link rel="apple-touch-startup-image" href="../lib/durandal/img/ios-startup-image-portrait.png" media="(orientation:portrait)"/>
-    <link rel="apple-touch-icon" href="../lib/durandal/img/icon.png"/>
+    <link rel="apple-touch-startup-image" href="./lib/durandal/img/ios-startup-image-landscape.png" media="(orientation:landscape)"/>
+    <link rel="apple-touch-startup-image" href="./lib/durandal/img/ios-startup-image-portrait.png" media="(orientation:portrait)"/>
+    <link rel="apple-touch-icon" href="./lib/durandal/img/icon.png"/>
 
-    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="../lib/durandal/css/durandal.css"/>
+    <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="./lib/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="./lib/durandal/css/durandal.css"/>
 
-    <link href="../lib/bootstrap/css/bootstrap-material-design.min.css" rel="stylesheet">
-    <link href="../lib/bootstrap/css/ripples.min.css" rel="stylesheet">
+    <link href="./lib/bootstrap/css/bootstrap-material-design.min.css" rel="stylesheet">
+    <link href="./lib/bootstrap/css/ripples.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="../lib/css/ie10mobile.css"/>
-    <link rel="stylesheet" href="../lib/durandal/css/starterkit.css"/>
+    <link rel="stylesheet" href="./lib/css/ie10mobile.css"/>
+    <link rel="stylesheet" href="./lib/durandal/css/starterkit.css"/>
 
     <!-- use this file to set all app-specific css-->
     ~if(appStylesheetPath)~<link rel="stylesheet" href="~appStylesheetPath~"/>~endif~
@@ -365,65 +356,69 @@ appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>
         <i class="fa fa-spinner fa-spin"></i>
     </div>
 </div>
-<script src="../lib/require/require.js" data-main="/app/main.js"></script>
+<script src="./lib/require/require.js" data-main="./main.js"></script>
 </body>
-</html> 
->>
+</html> >>
 
-/**  **/
-bugfix2() ::= << } 
->>
+bugfix2() ::= <<}>>
 
-/** appTitle,STRINGPROPERTY;paths,KEYVALUELISTPROPERTY,name,path;plugins,KEYVALUELISTPROPERTY,name;systemDebug,STRINGPROPERTY; **/
-mainJS(appTitle,paths,plugins,systemDebug) ::= << requirejs.config({
+mainJS(appTitle,paths,plugins) ::= <<requirejs.config({
     paths: {
-        ~paths:{it|'~it.name~': '~it.path~',};separator=",\n"~
+		'durandal': 'lib/durandal/js',
+        'plugins': 'lib/durandal/js/plugins',
+        'transitions': 'lib/durandal/js/transitions',
+        'jquery': 'lib/jquery/jquery-1.9.1.min',
+        'jquery-ui': 'lib/jquery-ui/jquery-ui.min',
+        'knockout': 'lib/knockout/knockout-3.1.0',
+        'knockoutMapping': 'lib/knockout/knockout.mapping-latest',
+        'text': 'lib/require/text',
+        'sockjs': 'lib/sockjs/sockjs.min',
+        'eventbus': 'lib/vertx/vertxbus-3.1.0',
+        'material': 'lib/bootstrap/js/material.min',
+        'dropdown': 'lib/bootstrap/js/dropdown',
+        'materialRipples': 'lib/bootstrap/js/ripples.min'~if(paths)~
+			~paths:{it|'~it.name~': '~it.path~',};separator=",\n"~~endif~
     }
 });
 
-define(function (require) {
-    var system = require('durandal/system'),
-        app    = require('durandal/app');
+define(['durandal/system', 'durandal/app'], function (system, app) {
 
-
-    system.debug(~systemDebug~);
+    system.debug(true);
 
     app.title = '~appTitle~';
 
     app.configurePlugins({
-			~plugins:{it|~it.name~: true};separator=",\n"~
+		 router: true,
+       dialog: true,
+       numberFormatter: true,
+       flash: true~if(plugins)~
+		~plugins:{it|~it.name~: true};separator=",\n"~~endif~
     });
 
     app.start().then(function () {
-        app.setRoot('shell');
+        app.setRoot('shell', 'entrance');
     });
-}); 
->>
+});>>
 
-/** content,LISTPROPERTY;title,STRINGPROPERTY; **/
-moduleHTML(content,title) ::= << <section>
+moduleHTML(content,title) ::= <<<section>
 	<div class="page-header">
 
 		<h2>~title~</h2>
 
    	~content:{it|~it~};separator="\n"~
 	</div>
-</section> 
->>
+</section> >>
 
-/** dependencies,KEYVALUELISTPROPERTY,importName,refName;returns,KEYVALUELISTPROPERTY,impl,name;statements,LISTPROPERTY; **/
-moduleJS(dependencies,returns,statements) ::= << define([~dependencies:{it|'~it.importName~'};separator=", "~], function (~dependencies:{it|~it.refName~};separator=", "~) {
+moduleJS(dependencies,returns,statements) ::= <<define([~dependencies:{it|'~it.importName~'};separator=", "~], function (~dependencies:{it|~it.refName~};separator=", "~) {
 
    ~statements:{it|~it~};separator="\n"~
 
 	return {
       ~returns:{it|~it.name~: ~it.impl~};separator=",\n\n"~
 	}
-}); 
->>
+});>>
 
-/**  **/
-shellHTML() ::= << <div>
+shellHTML() ::= <<<div>
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -460,11 +455,9 @@ shellHTML() ::= << <div>
     </nav>
 
     <div class="page-host" data-bind="router: { transition:'entrance' }"></div>
-</div> 
->>
+</div> >>
 
-/** routes,KEYVALUELISTPROPERTY,moduleId,nav,route,title;unknownRoutePage,STRINGPROPERTY;unknownRoutePath,STRINGPROPERTY; **/
-shellJS(routes,unknownRoutePage,unknownRoutePath) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
+shellJS(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {
 
     return {
 
@@ -486,11 +479,10 @@ shellJS(routes,unknownRoutePage,unknownRoutePath) ::= <<define(['plugins/router'
             $.material.init();
 
             return router.map([
-               ~routes:{it|{route: ['~it.route~'], moduleId: '~it.moduleId~', title: '~it.title~'~if(it.nav)~, nav: ~it.nav~~endif~~bugfix2()~};separator=",\n"~ 
+               ~routes:{it|{route: ['~it.route~'], moduleId: '~it.moduleId~/~it.moduleId~', title: '~it.title~'~if(it.nav)~, nav: ~it.nav~~endif~~bugfix2()~};separator=",\n"~ 
             ]).buildNavigationModel().
-                mapUnknownRoutes('~unknownRoutePath~', '~unknownRoutePage~').
+                mapUnknownRoutes().
                 activate();
         }
     };
-}); 
->>
+});>>

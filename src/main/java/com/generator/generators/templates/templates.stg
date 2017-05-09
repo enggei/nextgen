@@ -76,12 +76,12 @@ templateStatements:
 /** name,STRINGPROPERTY;onBooleanTemplateParameter,KEYVALUELISTPROPERTY,declaration,statements;onKeyValueListTemplateParameter,KEYVALUELISTPROPERTY,declaration,statements;onListTemplateParameter,KEYVALUELISTPROPERTY,declaration,statements;onStatementTemplateParameter,KEYVALUELISTPROPERTY,declaration,statements;onStringTemplateParameter,KEYVALUELISTPROPERTY,declaration,statements;onTemplateGroup,KEYVALUELISTPROPERTY,declaration,statements;onTemplateGroupEnd,KEYVALUELISTPROPERTY,declaration,statements;onTemplateStatement,KEYVALUELISTPROPERTY,declaration,statements;onTemplateStatementEnd,KEYVALUELISTPROPERTY,declaration,statements;packageName,STRINGPROPERTY;returnProperty,STRINGPROPERTY;returnType,STRINGPROPERTY; **/
 TemplateGroupVisitor(name,onBooleanTemplateParameter,onKeyValueListTemplateParameter,onListTemplateParameter,onStatementTemplateParameter,onStringTemplateParameter,onTemplateGroup,onTemplateGroupEnd,onTemplateStatement,onTemplateStatementEnd,packageName,returnProperty,returnType) ::= <<package ~packageName~;
 
-import com.generator.generators.templateGroup.TemplateGroupGroup;
+import com.generator.generators.templateGroup.TemplateGroupDomainGroup;
 
 public class ~name~ extends TemplateVisitorNeo<~returnType~> {
 
 	// todo this needs to be a neo-group (which gets its templates from a traversed visitor)
-	private final TemplateGroupGroup group = new TemplateGroupGroup();
+	private final TemplateGroupDomainGroup group = new TemplateGroupDomainGroup();
 
 	// onTemplateGroup
 	~onTemplateGroup:{it|~it.declaration~};separator="\n"~

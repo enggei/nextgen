@@ -21,8 +21,8 @@ import static com.generator.editors.BaseDomainVisitor.other;
  */
 public class NeoPTextNode extends NeoPNode<PText> {
 
-   public NeoPTextNode(Node node, NeoEditor editor) {
-      super(node, new PText(NeoModel.getNameOrLabelFrom(node)), "Text", editor);
+   public NeoPTextNode(Node node, NeoEditor editor, String nodetype) {
+      super(node, new PText(NeoModel.getNameOrLabelFrom(node)), nodetype, editor);
    }
 
    public NeoPTextNode(Node node, String value, NeoEditor editor) {

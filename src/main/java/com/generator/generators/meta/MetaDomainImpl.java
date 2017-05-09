@@ -199,26 +199,23 @@ public class MetaDomainImpl extends MetaDomain {
                      row += 2;
                   }
 
-                  SwingUtil.showApplyCloseDialog(component, editor.getCanvas(), "Relations", new SwingUtil.OnSave() {
-                     @Override
-                     public void verifyAndSave() throws Exception {
-                        editor.doInTransaction(tx1 -> {
-                           for (JTextField field : fields) {
-                              final String name = field.getText().trim();
-                              if (name.length() == 0) continue;
+                  SwingUtil.showApplyCloseDialog(component, editor.getCanvas(), "Relations", () -> {
+                     editor.doInTransaction(tx1 -> {
+                        for (JTextField field : fields) {
+                           final String name = field.getText().trim();
+                           if (name.length() == 0) continue;
 
-                              final Node newNode = editor.getGraph().newNode(Relation);
-                              newNode.setProperty(Properties.name.name(), name);
-                              node.createRelationshipTo(newNode, Relations.RELATION);
+                           final Node newNode = editor.getGraph().newNode(Relation);
+                           newNode.setProperty(Properties.name.name(), name);
+                           node.createRelationshipTo(newNode, Relations.RELATION);
 
-                              editor.show(uuidOf(newNode), Relation.name()).
-                                    setOffset(event);
-                           }
-                        });
+                           editor.show(uuidOf(newNode), Relation.name()).
+                                 setOffset(event);
+                        }
+                     });
 
-                        for (JTextField field : fields)
-                           field.setText("");
-                     }
+                     for (JTextField field : fields)
+                        field.setText("");
                   });
                }
             });

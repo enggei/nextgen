@@ -1,7 +1,10 @@
-/* uuid : c476f4bc-d406-44cf-9e72-ca27a3cd643a */
+/* templateGroup c81739fd-b9a0-4983-9054-750168129d95*/
 delimiters "~", "~"
 
-/**  **/
+eom() ::= <<}>>
+
+gt() ::= <<> >>
+
 AttributeRendererDeclaration() ::= <<private enum FormatCode {
       capitalize, toUpper, lowFirst, toLower, humpToCap, camelHump, splitCamelHump, singlify, packageToPath
    }
@@ -103,11 +106,9 @@ AttributeRendererDeclaration() ::= <<private enum FormatCode {
       private String packageToPath(String packageName) {
           return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
       }
-   } 
->>
+   }>>
 
-/** domain,STRINGPROPERTY;groupString,STRINGPROPERTY;name,STRINGPROPERTY;packageName,STRINGPROPERTY;statements,KEYVALUELISTPROPERTY,declaration,newInstance; **/
-GroupClassDeclaration(domain,groupString,name,packageName,statements) ::= <<package ~packageName~;
+GroupClassDeclaration(domain,name,packageName,statements) ::= <<package ~packageName~;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -190,17 +191,12 @@ public final class ~name;format="capitalize"~ {
 		}
 		return list.toString() + delimiter;
 	}
-}
->>
+}>>
 
-/** filename,STRINGPROPERTY;name,STRINGPROPERTY; **/
-NewGroupInstance(filename,name) ::= << 
-public ~name~ new~name~() {
+NewGroupInstance(filename,name) ::= <<public ~name~ new~name~() {
    return new ~name~(get("~filename~"), renderer);
-} 
->>
+}>>
 
-/** groupname,STRINGPROPERTY;name,STRINGPROPERTY;properties,KEYVALUELISTPROPERTY,name,setter; **/
 NewStatementDeclaration(groupname,name,properties) ::= <<public final class ~name~ST implements ~groupname~Template {
 
    ~properties:{it|private final AtomicBoolean ~it.name~IsSet = new AtomicBoolean(false);};separator="\n"~
@@ -218,39 +214,26 @@ NewStatementDeclaration(groupname,name,properties) ::= <<public final class ~nam
 	public String toString() {
 		return template.render();
 	}
-} 
->>
+}>>
 
-/** name,STRINGPROPERTY; **/
-NewStatementInstance(name) ::= << 
-
-public ~name~ST new~name~() {
+NewStatementInstance(name) ::= <<public ~name~ST new~name~() {
    return new ~name~ST(stGroup);
-} 
->>
+}>>
 
-/** kvNames,LISTPROPERTY;propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
 StatementKeyValueListPropertySetter(kvNames,propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format="capitalize"~Value(~kvNames:{it|Object ~it~_};separator=", "~) {
    ~propertyName~IsSet.set(true);
    template.addAggr("~propertyName~.{~kvNames:{it|~it~};separator=", "~}", ~kvNames:{it|( (~it~_==null || ~it~_.toString().length()==0) ? null : ~it~_)};separator=", "~);
    return this;
-}
->>
+}>>
 
-/** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
 StatementListPropertySetter(propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format="capitalize"~Value(Object value) {
 	tryToSetListProperty(template, value, ~propertyName~IsSet, "~propertyName~");
    return this;
-}
->>
+}>>
 
-/** propertyName,STRINGPROPERTY;statementName,STRINGPROPERTY; **/
-StatementStringPropertySetter(propertyName,statementName) ::= << public ~statementName~ST set~propertyName;format="capitalize"~(Object value) {
+StatementStringPropertySetter(propertyName,statementName) ::= <<public ~statementName~ST set~propertyName;format="capitalize"~(Object value) {
 	tryToSetStringProperty(template, value, ~propertyName~IsSet, "~propertyName~");   
    return this;
-} 
->>
+}>>
 
-/**  **/
-bugfix() ::= <<> 
->>
+bugfix() ::= <<> >>

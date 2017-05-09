@@ -6,6 +6,7 @@ import com.generator.editors.canvas.NeoPNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.editors.canvas.neo.NeoPTextNode;
+import com.generator.generators.durandal.DurandalDomainImpl;
 import com.generator.generators.easyFlow.EasyFlowDomainImpl;
 import com.generator.generators.html5.Html5Domain;
 import com.generator.generators.java.JavaDomainImpl;
@@ -65,7 +66,7 @@ public class GeneratorEditor extends NeoEditor {
 
       if (nodetype == null) {
          System.out.println("null nodetype");
-         return new NeoPTextNode(node, this);
+         return new NeoPTextNode(node, this, node.getLabels().iterator().next().toString());
       }
 
       final Set<UUID> set = nodesByLabel.computeIfAbsent(nodetype, k -> new LinkedHashSet<>());
@@ -84,7 +85,9 @@ public class GeneratorEditor extends NeoEditor {
          }
       }
 
-      throw new IllegalArgumentException("nodetype " + nodetype + " is unsupported for node " + NeoModel.debugNode(node));
+      System.err.println("nodetype " + nodetype + " is unsupported for node " + NeoModel.debugNode(node));
+
+      return new NeoPTextNode(node,this, node.getLabels().iterator().next().toString());
    }
 
    @Override
@@ -146,6 +149,7 @@ public class GeneratorEditor extends NeoEditor {
       domains.add(new JsonDomainImpl());
       domains.add(new JavaDomainImpl());
       domains.add(new NeoDomainImpl());
+      domains.add(new DurandalDomainImpl());
 
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
       SwingUtil.setLookAndFeel_Nimbus();

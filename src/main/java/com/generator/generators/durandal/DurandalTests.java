@@ -21,7 +21,7 @@ public class DurandalTests {
 	private final File webSrc = new File("/media/storage/ucs/filmjump/src/main/web/");
 	private final File adminSrc = new File(webSrc, "app/admin");
 
-	private final DurandalGroup group = new DurandalGroup();
+	private final DurandalDomainGroup group = new DurandalDomainGroup();
 	private final Html5Group html = new Html5Group();
 	private final JavascriptGroup js = new JavascriptGroup();
 	private final JsonGroup json = new JsonGroup();
@@ -160,9 +160,7 @@ public class DurandalTests {
 		createCRUD(webSrc, module, type, fields, columns, group);
 
 
-		final DurandalGroup.shellJSST shellJSST = group.newshellJS().
-			setUnknownRoutePage("not-found").
-			setUnknownRoutePath("viewmodels/");
+		final DurandalDomainGroup.shellJSST shellJSST = group.newshellJS();
 
 		shellJSST.addRoutesValue("admin/menu", "true", "", "Filmjump");
 		shellJSST.addRoutesValue("admin/location/ListLocation", "false", "manageLocation", "Manage Locations");
@@ -175,23 +173,23 @@ public class DurandalTests {
 		write(shellJSST, new File(webSrc, "app/shell.js"));
 	}
 
-	private void createCRUD(File webSrc, String module, String type, String[][] fields, String[][] columns, DurandalGroup group) {
+	private void createCRUD(File webSrc, String module, String type, String[][] fields, String[][] columns, DurandalDomainGroup group) {
 
 		// edit dialog
-		final DurandalGroup.EditDialogJSST editDialogJSST = group.newEditDialogJS().
+		final DurandalDomainGroup.EditDialogJSST editDialogJSST = group.newEditDialogJS().
 			setType(type);
 		for (String[] field : fields)
 			editDialogJSST.addFieldsValue(field[0]);
 		write(editDialogJSST, new File(webSrc, module + "Edit" + type + "Dialog.js"));
 
-		final DurandalGroup.EditDialogHTMLST editDialogHTMLST = group.newEditDialogHTML().
+		final DurandalDomainGroup.EditDialogHTMLST editDialogHTMLST = group.newEditDialogHTML().
 			setType(type);
 		for (String[] field : fields)
 			editDialogHTMLST.addFieldsValue(StringUtil.capitalize(field[0]), field[0]);
 		write(editDialogHTMLST, new File(webSrc, module + "Edit" + type + "Dialog.html"));
 
 		// List (CRUD) panel
-		final DurandalGroup.CrudJSST crudJSST = group.newCrudJS().
+		final DurandalDomainGroup.CrudJSST crudJSST = group.newCrudJS().
 			setType(type);
 		for (String[] column : columns)
 			crudJSST.addColumnsValue(column[1], column[0]);
@@ -199,20 +197,20 @@ public class DurandalTests {
 			crudJSST.addEditableFieldsValue(field[1], field[0]);
 		write(crudJSST, new File(webSrc, module + "List" + type + ".js"));
 
-		final DurandalGroup.CrudHtmlST crudHtmlST = group.newCrudHtml().
+		final DurandalDomainGroup.CrudHtmlST crudHtmlST = group.newCrudHtml().
 			setType(type);
 		for (String[] column : columns)
 			crudHtmlST.addColumnsValue(column[0]);
 		write(crudHtmlST, new File(webSrc, module + "List" + type + ".html"));
 
 		// new dialog
-		final DurandalGroup.NewDialogJSST newDialogJSST = group.newNewDialogJS().
+		final DurandalDomainGroup.NewDialogJSST newDialogJSST = group.newNewDialogJS().
 			setType(type);
 		for (String[] field : fields)
 			newDialogJSST.addFieldsValue(field[0]);
 		write(newDialogJSST, new File(webSrc, module + "New" + type + "Dialog.js"));
 
-		final DurandalGroup.NewDialogHTMLST newDialogHTMLST = group.newNewDialogHTML().
+		final DurandalDomainGroup.NewDialogHTMLST newDialogHTMLST = group.newNewDialogHTML().
 			setType(type);
 		for (String[] field : fields)
 			newDialogHTMLST.addFieldsValue(StringUtil.capitalize(field[0]), field[0]);

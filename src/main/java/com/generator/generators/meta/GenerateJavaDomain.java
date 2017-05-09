@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.Consumer;
 
 import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.generators.meta.MetaDomain.Properties.name;
@@ -73,9 +72,12 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
       propertyEditorST = group.newPropertyEditor().
             setName(name);
 
+      final String color = getString(node, MetaDomain.Properties.color.name());
+      if(color==null || color.length()==0) throw new IllegalStateException("no color set for " + name + ". Set color to all entities.");
+
       final MetaDomainGroup.PNodeDeclarationST declaration = group.newPNodeDeclaration().
             setName(name).
-            setColor(getString(node, MetaDomain.Properties.color.name())).
+            setColor(color).
             setDomainName(domainName).
             setLabel(getString(node, MetaDomain.Properties.label.name()));
 
@@ -85,29 +87,26 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
          declaration.addPropertiesValue(getString(propertyNode, MetaDomain.Properties.name.name()));
       }
 
-      node.getRelationships().forEach(new Consumer<Relationship>() {
-         @Override
-         public void accept(Relationship relationship) {
+      node.getRelationships().forEach(relationship -> {
 
-            if (MetaDomain.Relations.SRC.name().equals(relationship.getType().name())) {
-               final Node relationNode = other(node, relationship);
+         if (MetaDomain.Relations.SRC.name().equals(relationship.getType().name())) {
+            final Node relationNode = other(node, relationship);
 
-               outgoing(relationNode, MetaDomain.Relations.DST).forEach(rel -> {
-                  final Node dst = other(relationNode, rel);
-                  declaration.addOutgoingValue(getString(dst, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
+            outgoing(relationNode, MetaDomain.Relations.DST).forEach(rel -> {
+               final Node dst = other(relationNode, rel);
+               declaration.addOutgoingValue(getString(dst, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
 
-                  if(hasOutgoing(relationNode, MetaDomain.Relations.PROPERTY))
-                     declaration.addOutgoingWithPropertiesValue(getString(relationNode, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
-               });
+               if(hasOutgoing(relationNode, MetaDomain.Relations.PROPERTY))
+                  declaration.addOutgoingWithPropertiesValue(getString(relationNode, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
+            });
 
-            } else if (MetaDomain.Relations.DST.name().equals(relationship.getType().name())) {
-               final Node relationNode = other(node, relationship);
+         } else if (MetaDomain.Relations.DST.name().equals(relationship.getType().name())) {
+            final Node relationNode = other(node, relationship);
 
-               outgoing(relationNode, MetaDomain.Relations.SRC).forEach(rel -> {
-                  final Node src = other(relationNode, rel);
-                  declaration.addIncomingValue(StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())), getString(src, MetaDomain.Properties.name.name()));
-               });
-            }
+            outgoing(relationNode, MetaDomain.Relations.SRC).forEach(rel -> {
+               final Node src = other(relationNode, rel);
+               declaration.addIncomingValue(StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())), getString(src, MetaDomain.Properties.name.name()));
+            });
          }
       });
 

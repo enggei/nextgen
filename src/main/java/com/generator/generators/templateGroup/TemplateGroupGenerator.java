@@ -18,11 +18,11 @@ public class TemplateGroupGenerator implements TemplateVisitor {
 
 	private final String root;
 	private final String packageName;
-	private final TemplateGroupGroup group = new TemplateGroupGroup();
+	private final TemplateGroupDomainGroup group = new TemplateGroupDomainGroup();
 
 	private File groupTemplateFile;
-	private TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration;
-	private TemplateGroupGroup.NewStatementDeclarationST declarationST;
+	private TemplateGroupDomainGroup.GroupClassDeclarationST groupClassDeclaration;
+	private TemplateGroupDomainGroup.NewStatementDeclarationST declarationST;
 	private Object setter;
 
 	public TemplateGroupGenerator(String root, String packageName) {
@@ -54,7 +54,7 @@ public class TemplateGroupGenerator implements TemplateVisitor {
 	@Override
 	public void onKeyValueTemplateParameter(TemplateParameter templateParameter, TemplateStatement statement) {
 
-		final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
+		final TemplateGroupDomainGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
 			setPropertyName(templateParameter.getPropertyName()).
 			setStatementName(statement.getName());
 		templateParameter.getKvNames().forEach(kvSetter::addKvNamesValue);
