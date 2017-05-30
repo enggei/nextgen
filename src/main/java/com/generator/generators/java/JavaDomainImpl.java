@@ -1,8 +1,5 @@
 package com.generator.generators.java;
 
-import com.automation.Langton;
-import com.generator.editors.BaseDomainVisitor;
-import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.GeneratedFile;
@@ -13,7 +10,6 @@ import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.Stack;
 import java.util.function.Consumer;
 
@@ -31,9 +27,6 @@ public class JavaDomainImpl extends JavaDomain {
       domainMenu.add(new NeoEditor.TransactionAction("Parse class", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            new ClasstoNeo(editor.getGraph()).visit(Langton.class);
-
          }
       });
    }

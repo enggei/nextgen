@@ -1,6 +1,5 @@
 package com.generator.generators.javaparser;
 
-import com.automation.Langton;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.generators.java.JavaGroup;
