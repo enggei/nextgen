@@ -22,7 +22,7 @@ import java.util.function.Function;
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
 	}
 
-	final CypherGroup group = new CypherGroup();
+	final CypherDomainGroup group = new CypherDomainGroup();
 
 	@Test
 	public void testExportImportFuck() {
@@ -98,7 +98,7 @@ import java.util.function.Function;
 	 @Test
 	 public void testCypher() {
 
-		 // todo add CypherGroup- tests here;
+		 // todo add CypherDomainGroup- tests here;
 
 		 System.out.println(group.newcreateNode().
 			 setId("ID").
@@ -115,12 +115,12 @@ import java.util.function.Function;
 	 @Test
 	 public void testCRUD() {
 
-		 final CypherGroup cypherGroup = new CypherGroup();
+		 final CypherDomainGroup cypherGroup = new CypherDomainGroup();
 
 		 // from http://gist.neo4j.org/?4471127413fd724ed0a3:
 		 final List<String> cypherCommands = new ArrayList<>();
 
-		 final CypherGroup.createNodesST createAdministrators = cypherGroup.newcreateNodes();
+		 final CypherDomainGroup.createNodesST createAdministrators = cypherGroup.newcreateNodes();
 		 createAdministrators.addNodesValue(cypherGroup.newcreateNode().setId("Ben").addLabelsValue("administrator").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Ben")));
 		 createAdministrators.addNodesValue(cypherGroup.newcreateNode().setId("Sarah").addLabelsValue("administrator").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Sarah")));
 		 createAdministrators.addNodesValue(cypherGroup.newcreateNode().setId("Liz").addLabelsValue("administrator").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Liz")));
@@ -131,7 +131,7 @@ import java.util.function.Function;
 			 " (`Phil`:administrator {name:'Phil'})");
 		 cypherCommands.add(createAdministrators.toString());
 
-		 final CypherGroup.createNodesST createGroups = cypherGroup.newcreateNodes();
+		 final CypherDomainGroup.createNodesST createGroups = cypherGroup.newcreateNodes();
 		 createGroups.addNodesValue(cypherGroup.newcreateNode().setId("Group1").addLabelsValue("group").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Group1")));
 		 createGroups.addNodesValue(cypherGroup.newcreateNode().setId("Group2").addLabelsValue("group").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Group2")));
 		 createGroups.addNodesValue(cypherGroup.newcreateNode().setId("Group3").addLabelsValue("group").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Group3")));
@@ -148,7 +148,7 @@ import java.util.function.Function;
 			 " (`Group7`:group {name:'Group7'})");
 		 cypherCommands.add(createGroups.toString());
 
-		 final CypherGroup.createNodesST createCompanies = cypherGroup.newcreateNodes();
+		 final CypherDomainGroup.createNodesST createCompanies = cypherGroup.newcreateNodes();
 		 createCompanies.addNodesValue(cypherGroup.newcreateNode().setId("Acme").addLabelsValue("company").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Acme")));
 		 createCompanies.addNodesValue(cypherGroup.newcreateNode().setId("Spinoff").addLabelsValue("company").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Spinoff")));
 		 createCompanies.addNodesValue(cypherGroup.newcreateNode().setId("Startup").addLabelsValue("company").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Startup")));
@@ -169,7 +169,7 @@ import java.util.function.Function;
 			 " (`OneManShop`:company {name:'OneManShop'})");
 		 cypherCommands.add(createCompanies.toString());
 
-		 final CypherGroup.createNodesST createEmployees = cypherGroup.newcreateNodes();
+		 final CypherDomainGroup.createNodesST createEmployees = cypherGroup.newcreateNodes();
 		 createEmployees.addNodesValue(cypherGroup.newcreateNode().setId("Arnold").addLabelsValue("employee").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Arnold")));
 		 createEmployees.addNodesValue(cypherGroup.newcreateNode().setId("Charlie").addLabelsValue("employee").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Charlie")));
 		 createEmployees.addNodesValue(cypherGroup.newcreateNode().setId("Emily").addLabelsValue("employee").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Emily")));
@@ -194,7 +194,7 @@ import java.util.function.Function;
 			 " (`Mary`:employee {name:'Mary'})");
 		 cypherCommands.add(createEmployees.toString());
 
-		 final CypherGroup.createNodesST createAccounts = cypherGroup.newcreateNodes();
+		 final CypherDomainGroup.createNodesST createAccounts = cypherGroup.newcreateNodes();
 		 createAccounts.addNodesValue(cypherGroup.newcreateNode().setId("account1").addLabelsValue("account").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Acct 1")));
 		 createAccounts.addNodesValue(cypherGroup.newcreateNode().setId("account2").addLabelsValue("account").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Acct 2")));
 		 createAccounts.addNodesValue(cypherGroup.newcreateNode().setId("account3").addLabelsValue("account").addPropertiesValue(cypherGroup.newstringProperty().setName("name").setValue("Acct 3")));
@@ -222,7 +222,7 @@ import java.util.function.Function;
 		 cypherCommands.add(createAccounts.toString());
 
 		 //administrator-group relationships
-		 final CypherGroup.createRelationshipsST adminGroupRelations = cypherGroup.newcreateRelationships();
+		 final CypherDomainGroup.createRelationshipsST adminGroupRelations = cypherGroup.newcreateRelationships();
 		 adminGroupRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Ben").setType("MEMBER_OF").setDst("Group1"));
 		 adminGroupRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Ben").setType("MEMBER_OF").setDst("Group3"));
 		 adminGroupRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Sarah").setType("MEMBER_OF").setDst("Group2"));
@@ -238,7 +238,7 @@ import java.util.function.Function;
 		 cypherCommands.add(adminGroupRelations.toString());
 
 		 //administrator-group relationships
-		 final CypherGroup.createRelationshipsST groupCompanyRelations = cypherGroup.newcreateRelationships();
+		 final CypherDomainGroup.createRelationshipsST groupCompanyRelations = cypherGroup.newcreateRelationships();
 		 groupCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Group1").setType("ALLOWED_INHERIT").setDst("Acme"));
 		 groupCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Group2").setType("ALLOWED_DO_NOT_INHERIT").setDst("Acme"));
 		 groupCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Group2").setType("DENIED").setDst("Skunkworkz"));
@@ -256,7 +256,7 @@ import java.util.function.Function;
 			 " (`Group7`)-[:ALLOWED_INHERIT]->(`Subsidry`)");
 		 cypherCommands.add(groupCompanyRelations.toString());
 
-		 final CypherGroup.createRelationshipsST companyCompanyRelations = cypherGroup.newcreateRelationships();
+		 final CypherDomainGroup.createRelationshipsST companyCompanyRelations = cypherGroup.newcreateRelationships();
 		 companyCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Spinoff").setType("CHILD_OF").setDst("Acme"));
 		 companyCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Skunkworkz").setType("CHILD_OF").setDst("Startup"));
 		 companyCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Aquired").setType("CHILD_OF").setDst("BigCo"));
@@ -271,7 +271,7 @@ import java.util.function.Function;
 			 " (`OneManShop`)-[:CHILD_OF]->(`Subsidry`)");
 		 cypherCommands.add(companyCompanyRelations.toString());
 
-		 final CypherGroup.createRelationshipsST employeeCompanyRelations = cypherGroup.newcreateRelationships();
+		 final CypherDomainGroup.createRelationshipsST employeeCompanyRelations = cypherGroup.newcreateRelationships();
 		 employeeCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Arnold").setType("WORKS_FOR").setDst("Acme"));
 		 employeeCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Charlie").setType("WORKS_FOR").setDst("Acme"));
 		 employeeCompanyRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Emily").setType("WORKS_FOR").setDst("Spinoff"));
@@ -296,7 +296,7 @@ import java.util.function.Function;
 			 " (`Mary`)-[:WORKS_FOR]->(`DevShop`)");
 		 cypherCommands.add(employeeCompanyRelations.toString());
 
-		 final CypherGroup.createRelationshipsST employeeAccountRelations = cypherGroup.newcreateRelationships();
+		 final CypherDomainGroup.createRelationshipsST employeeAccountRelations = cypherGroup.newcreateRelationships();
 		 employeeAccountRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Arnold").setType("HAS_ACCOUNT").setDst("account1"));
 		 employeeAccountRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Arnold").setType("HAS_ACCOUNT").setDst("account2"));
 		 employeeAccountRelations.addRelationshipsValue(cypherGroup.newcreateRelationship().setSrc("Charlie").setType("HAS_ACCOUNT").setDst("account3"));

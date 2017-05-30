@@ -29,7 +29,7 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
    static final String NODE_UNSELECTED = "nodeUnSelected";
    public final AtomicBoolean selected = new AtomicBoolean(false);
 
-   public static final String NODE_HIGHLIGHTED = "nodeHighlighted";
+   static final String NODE_HIGHLIGHTED = "nodeHighlighted";
    static final String NODE_UNHIGHLIGHTED = "nodeUnHighlighted";
    private final AtomicBoolean highlighted = new AtomicBoolean(false);
 

@@ -65,15 +65,17 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
    protected <T> T visitEntity(Node node) {
 
       final String name = getString(node, MetaDomain.Properties.name.name());
+      final String qualifiedName = domainName + "_" + getString(node, MetaDomain.Properties.name.name());
       if (entities.contains(name))
          throw new IllegalStateException(name + " is defined twice");
-      entities.add(name);
+      entities.add(qualifiedName);
 
       propertyEditorST = group.newPropertyEditor().
             setName(name);
 
       final String color = getString(node, MetaDomain.Properties.color.name());
-      if(color==null || color.length()==0) throw new IllegalStateException("no color set for " + name + ". Set color to all entities.");
+      if (color == null || color.length() == 0)
+         throw new IllegalStateException("no color set for " + name + ". Set color to all entities.");
 
       final MetaDomainGroup.PNodeDeclarationST declaration = group.newPNodeDeclaration().
             setName(name).
@@ -96,7 +98,7 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
                final Node dst = other(relationNode, rel);
                declaration.addOutgoingValue(getString(dst, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
 
-               if(hasOutgoing(relationNode, MetaDomain.Relations.PROPERTY))
+               if (hasOutgoing(relationNode, MetaDomain.Relations.PROPERTY))
                   declaration.addOutgoingWithPropertiesValue(getString(relationNode, MetaDomain.Properties.name.name()), StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())));
             });
 
@@ -110,7 +112,7 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
          }
       });
 
-      domainClassST.addEntitiesValue(propertyEditorST, getString(node, "name"), declaration);
+      domainClassST.addEntitiesValue(propertyEditorST, name, declaration);
 
       return null;
    }

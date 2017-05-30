@@ -30,15 +30,15 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public abstract class ProjectDomain implements IDomain {
 
    public enum Entities implements Label {
-      Project, Directory, Renderer, File
+      TemplateGroup, Project
    }
 
    public enum Relations implements RelationshipType {
-      MEMBER, TARGET
+      GROUPS
    }
 
    public enum Properties {
-      name, path, generator, outputFormat, type, root
+      templatePath, reference, name, packageName, root, javaVersion, artifactId, groupId, version
    }
 
    @Override
@@ -54,21 +54,17 @@ public abstract class ProjectDomain implements IDomain {
    @Override
    public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
       switch (Entities.valueOf(nodetype)) {
+         case TemplateGroup:
+         	return newTemplateGroupPNode(node, editor);
          case Project:
          	return newProjectPNode(node, editor);
-         case Directory:
-         	return newDirectoryPNode(node, editor);
-         case Renderer:
-         	return newRendererPNode(node, editor);
-         case File:
-         	return newFilePNode(node, editor);
       }
 
       throw new IllegalArgumentException("unsupported ProjectDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
    }
 
 	@Override
-   public void deleteNode(Node node) {
+   public void deleteNode(Node node) throws NeoEditor.ReferenceException {
       // todo enforce constraints
       final Set<Relationship> constraints = new LinkedHashSet<>();
 
@@ -88,78 +84,133 @@ public abstract class ProjectDomain implements IDomain {
       node.delete();
    }
 
-   protected NeoPNode newProjectPNode(Node node, NeoEditor editor) {
-      return new ProjectPNode(node, editor);
+   protected NeoPNode newTemplateGroupPNode(Node node, NeoEditor editor) {
+         return new TemplateGroupPNode(node, editor);
+      }
+
+   protected static class TemplateGroupPNode extends ProjectDomainPNode {
+
+      TemplateGroupPNode(Node node, NeoEditor editor) {
+         super(node, Entities.TemplateGroup, "name", "#1b7837", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showTemplateGroupPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.templatePath.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.reference.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.name.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
    }
+
+   protected NeoPNode newProjectPNode(Node node, NeoEditor editor) {
+         return new ProjectPNode(node, editor);
+      }
 
    protected static class ProjectPNode extends ProjectDomainPNode {
 
       ProjectPNode(Node node, NeoEditor editor) {
-         super(node, Project, ProjectDomain.Properties.name.name(), "#377eb8", editor);
+         super(node, Entities.Project, "name", "#762a83", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showProjectPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.packageName.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.root.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.javaVersion.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.artifactId.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.groupId.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.version.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.TemplateGroup, Relations.GROUPS, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.TemplateGroup)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.TemplateGroup.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.TemplateGroup.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.TemplateGroup.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.GROUPS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.GROUPS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
       public void expand() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
+   		outgoing(node, Relations.GROUPS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.TemplateGroup));
          editor.showAndLayout(pNodes, pNode);
       }
-   }
 
-   protected NeoPNode newDirectoryPNode(Node node, NeoEditor editor) {
-      return new DirectoryPNode(node, editor);
-   }
-
-   protected static class DirectoryPNode extends ProjectDomainPNode {
-
-      DirectoryPNode(Node node, NeoEditor editor) {
-         super(node, Directory, ProjectDomain.Properties.path.name(), "#4daf4a", editor);
-      }
-
-      @Override
-      public void expand() {
+   	@Override
+      public void showDependents() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newRendererPNode(Node node, NeoEditor editor) {
-      return new RendererPNode(node, editor);
-   }
-
-   protected static class RendererPNode extends ProjectDomainPNode {
-
-      RendererPNode(Node node, NeoEditor editor) {
-         super(node, Renderer, "name", "", editor);
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newFilePNode(Node node, NeoEditor editor) {
-      return new FilePNode(node, editor);
-   }
-
-   protected static class FilePNode extends ProjectDomainPNode {
-
-      FilePNode(Node node, NeoEditor editor) {
-         super(node, File, ProjectDomain.Properties.name.name(), "#984ea3", editor);
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-//         outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-//         outgoing(node, PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
          editor.showAndLayout(pNodes, pNode);
       }
    }
@@ -174,7 +225,7 @@ public abstract class ProjectDomain implements IDomain {
 
       ProjectDomainPNode(Node node, ProjectDomain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
          super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
-         this.defaultColor = Color.decode(defaultColor);
+         this.defaultColor = defaultColor==null || defaultColor.length()==0 ? Color.BLACK : Color.decode(defaultColor);
          this.property = property;
          this.nodeType = nodeType;
          pNode.setTextPaint(this.defaultColor);
@@ -204,7 +255,7 @@ public abstract class ProjectDomain implements IDomain {
       @Override
       public void updateView() {
          if (property == null) System.out.println("override updateView: property not set");
-         pNode.setText(property == null ? "?" : node.getProperty(property).toString());
+			pNode.setText(property == null ? "?" : node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node));
       }
 
       @Override
@@ -229,6 +280,8 @@ public abstract class ProjectDomain implements IDomain {
 
       @Override
       public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+         editor.showDeleteOutgoingRelations(pop, node);
 
          pop.add(new NeoEditor.TransactionAction("Select all " + nodeType, editor) {
             @Override
@@ -256,174 +309,182 @@ public abstract class ProjectDomain implements IDomain {
       }
    }
 
-	static class ProjectPropertyEditor extends SwingUtil.FormPanel {
+	static class TemplateGroupPropertyEditor extends SwingUtil.FormPanel {
 
+			private final JTextField _templatePath = new JTextField();
+			private final JTextField _reference = new JTextField();
 			private final JTextField _name = new JTextField();
-	//      private final JComboBox<String> cboModifier = new JComboBox<>();
 
-	      ProjectPropertyEditor(Node node) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-	         _name.setText(node.hasProperty(Properties.name.name()) ? getString(node, Properties.name.name()) : "");
-
-
-	//         row += 2;
-	//         addLabel("Modifier", 1, row);
-	//         add(cboModifier, 3, row);
-	//         setModifier(cboModifier, node);
-	      }
-
-	      private void setModifier(JComboBox<String> cboModifier, Node node) {
-	         final String[] items = {"", "private", "protected", "public"};
-	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-	         if (node.hasProperty("modifier"))
-	            cboModifier.setSelectedItem(getString(node, "modifier"));
-	      }
-
-	      void commit(Node node) throws Exception {
-				node.setProperty("name", _name.getText().trim());
-	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
-	      }
-	   }
-
-	static class DirectoryPropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _path = new JTextField();
-	//      private final JComboBox<String> cboModifier = new JComboBox<>();
-
-	      DirectoryPropertyEditor(Node node) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("Path", 1, row);
-	         add(_path, 3, row);
-	         _path.setText(node.hasProperty(Properties.path.name()) ? getString(node, Properties.path.name()) : "");
-
-
-	//         row += 2;
-	//         addLabel("Modifier", 1, row);
-	//         add(cboModifier, 3, row);
-	//         setModifier(cboModifier, node);
-	      }
-
-	      private void setModifier(JComboBox<String> cboModifier, Node node) {
-	         final String[] items = {"", "private", "protected", "public"};
-	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-	         if (node.hasProperty("modifier"))
-	            cboModifier.setSelectedItem(getString(node, "modifier"));
-	      }
-
-	      void commit(Node node) throws Exception {
-				node.setProperty("path", _path.getText().trim());
-	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
-	      }
-	   }
-
-	static class RendererPropertyEditor extends SwingUtil.FormPanel {
-
-	//      private final JComboBox<String> cboModifier = new JComboBox<>();
-
-	      RendererPropertyEditor(Node node) {
-	         super("50dlu, 4dlu, 350dlu", "");
-
-	         int row = -1;
-
-	//         row += 2;
-	//         addLabel("Modifier", 1, row);
-	//         add(cboModifier, 3, row);
-	//         setModifier(cboModifier, node);
-	      }
-
-	      private void setModifier(JComboBox<String> cboModifier, Node node) {
-	         final String[] items = {"", "private", "protected", "public"};
-	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-	         if (node.hasProperty("modifier"))
-	            cboModifier.setSelectedItem(getString(node, "modifier"));
-	      }
-
-	      void commit(Node node) throws Exception {
-	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
-	      }
-	   }
-
-	static class FilePropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _generator = new JTextField();
-			private final JTextField _outputFormat = new JTextField();
-			private final JTextField _type = new JTextField();
-	//      private final JComboBox<String> cboModifier = new JComboBox<>();
-
-	      FilePropertyEditor(Node node) {
+	      TemplateGroupPropertyEditor(PropertyContainer container) {
 	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu");
 
 	         int row = -1;
 	         row += 2;
-	         addLabel("Generator", 1, row);
-	         add(_generator, 3, row);
-	         _generator.setText(node.hasProperty(Properties.generator.name()) ? getString(node, Properties.generator.name()) : "");
+	         addLabel("TemplatePath", 1, row);
+	         add(_templatePath, 3, row);
+				setValue(_templatePath, container, Properties.templatePath.name(), new String[] { });
 
 	         row += 2;
-	         addLabel("OutputFormat", 1, row);
-	         add(_outputFormat, 3, row);
-	         _outputFormat.setText(node.hasProperty(Properties.outputFormat.name()) ? getString(node, Properties.outputFormat.name()) : "");
+	         addLabel("Reference", 1, row);
+	         add(_reference, 3, row);
+				setValue(_reference, container, Properties.reference.name(), new String[] { });
 
 	         row += 2;
-	         addLabel("Type", 1, row);
-	         add(_type, 3, row);
-	         _type.setText(node.hasProperty(Properties.type.name()) ? getString(node, Properties.type.name()) : "");
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
 
-
-	//         row += 2;
-	//         addLabel("Modifier", 1, row);
-	//         add(cboModifier, 3, row);
-	//         setModifier(cboModifier, node);
 	      }
 
-	      private void setModifier(JComboBox<String> cboModifier, Node node) {
-	         final String[] items = {"", "private", "protected", "public"};
-	         cboModifier.setModel(new DefaultComboBoxModel<>(items));
-	         if (node.hasProperty("modifier"))
-	            cboModifier.setSelectedItem(getString(node, "modifier"));
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
 	      }
 
-	      void commit(Node node) throws Exception {
-				node.setProperty("generator", _generator.getText().trim());
-				node.setProperty("outputFormat", _outputFormat.getText().trim());
-				node.setProperty("type", _type.getText().trim());
-	//         node.setProperty("modifier", cboModifier.getSelectedItem() + "");
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "templatePath", _templatePath); 
+				getValue(container, "reference", _reference); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
 	      }
 	   }
+
+	static void showTemplateGroupPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final TemplateGroupPropertyEditor form = new TemplateGroupPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "TemplateGroup", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class ProjectPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _packageName = new JTextField();
+			private final JTextField _root = new JTextField();
+			private final JTextField _javaVersion = new JTextField();
+			private final JTextField _artifactId = new JTextField();
+			private final JTextField _groupId = new JTextField();
+			private final JTextField _version = new JTextField();
+			private final JTextField _name = new JTextField();
+
+	      ProjectPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("PackageName", 1, row);
+	         add(_packageName, 3, row);
+				setValue(_packageName, container, Properties.packageName.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Root", 1, row);
+	         add(_root, 3, row);
+				setValue(_root, container, Properties.root.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("JavaVersion", 1, row);
+	         add(_javaVersion, 3, row);
+				setValue(_javaVersion, container, Properties.javaVersion.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("ArtifactId", 1, row);
+	         add(_artifactId, 3, row);
+				setValue(_artifactId, container, Properties.artifactId.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("GroupId", 1, row);
+	         add(_groupId, 3, row);
+				setValue(_groupId, container, Properties.groupId.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Version", 1, row);
+	         add(_version, 3, row);
+				setValue(_version, container, Properties.version.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "packageName", _packageName); 
+				getValue(container, "root", _root); 
+				getValue(container, "javaVersion", _javaVersion); 
+				getValue(container, "artifactId", _artifactId); 
+				getValue(container, "groupId", _groupId); 
+				getValue(container, "version", _version); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showProjectPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final ProjectPropertyEditor form = new ProjectPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Project", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
 
    public static abstract class ProjectDomainVisitor implements com.generator.domain.IDomainVisitor {
 
 		@Override
-      public <T> T visit(Node node) {
-         if (node == null) return null;
-		  if (BaseDomainVisitor.hasLabel(node, Project.name())) return visitProject(node);
-		  if (BaseDomainVisitor.hasLabel(node, Directory.name())) return visitDirectory(node);
-		  if (BaseDomainVisitor.hasLabel(node, Renderer.name())) return visitRenderer(node);
-		  if (BaseDomainVisitor.hasLabel(node, File.name())) return visitFile(node);
+      public <T> T visit(Node n) {
+         if (n == null) return null;
+		  if (BaseDomainVisitor.hasLabel(n, TemplateGroup.name())) return visitTemplateGroup(n);
+		  if (BaseDomainVisitor.hasLabel(n, Project.name())) return visitProject(n);
+         return null;
+      }
+
+		<T> T visitTemplateGroup(Node node) {
          return null;
       }
 
 		<T> T visitProject(Node node) {
-         return null;
-      }
-
-		<T> T visitDirectory(Node node) {
-         return null;
-      }
-
-		<T> T visitRenderer(Node node) {
-         return null;
-      }
-
-		<T> T visitFile(Node node) {
          return null;
       }
 

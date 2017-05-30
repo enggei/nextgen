@@ -143,6 +143,7 @@ public final class TemplateGroupDomainGroup {
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean resourcePathIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private GroupClassDeclarationST(STGroup group) {
@@ -164,6 +165,10 @@ public final class TemplateGroupDomainGroup {
       public GroupClassDeclarationST addStatementsValue(Object declaration_, Object newInstance_) {
          statementsIsSet.set(true);
          template.addAggr("statements.{declaration, newInstance}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_));
+         return this;
+      }
+      public GroupClassDeclarationST setResourcePath(Object value) {
+      	tryToSetStringProperty(template, value, resourcePathIsSet, "resourcePath");   
          return this;
       }
 

@@ -108,7 +108,7 @@ AttributeRendererDeclaration() ::= <<private enum FormatCode {
       }
    }>>
 
-GroupClassDeclaration(domain,name,packageName,statements) ::= <<package ~packageName~;
+GroupClassDeclaration(domain,name,packageName,statements,resourcePath) ::= <<package ~packageName~;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -131,7 +131,7 @@ public final class ~name;format="capitalize"~ {
         	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
         	this.delimiter = stGroup.delimiterStartChar;
         } else {
-        	this.stGroup = new org.stringtemplate.v4.STGroupFile(~name;format="capitalize"~.class.getResource("/com/generator/generators/~domain~/~domain~.stg"), "UTF-8", '\~', '\~');
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(~name;format="capitalize"~.class.getResource("/~resourcePath~~domain~.stg"), "UTF-8", '\~', '\~');
         	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
         	this.delimiter = stGroup.delimiterStartChar;
         }

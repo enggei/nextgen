@@ -1,34 +1,22 @@
-/* uuid : bbf55b5f-02ff-4d5e-81c1-27c9cf846412 */
+/* cypher 289a30b0-ab74-4e09-9c00-57132ba8459a*/
 delimiters "~", "~"
 
-/** id,STRINGPROPERTY;labels,LISTPROPERTY;properties,LISTPROPERTY; **/
-createNode(id,labels,properties) ::= <<(~if(id)~_~id~~endif~~if(labels)~:~labels:{it|~it~};separator=":"~~endif~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~)
->>
+eom() ::= <<}>>
 
-/** nodes,LISTPROPERTY; **/
-createNodes(nodes) ::= << CREATE ~nodes:{it|~it~};separator=",\n"~
->>
+gt() ::= <<> >>
 
-/** dst,STRINGPROPERTY;properties,LISTPROPERTY;src,STRINGPROPERTY;type,STRINGPROPERTY; **/
-createRelationship(dst,properties,src,type) ::= <<(_~src~)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~]->(_~dst~)
->>
+createNode(id,labels,properties) ::= <<(~if(id)~_~id~~endif~~if(labels)~:~labels:{it|~it~};separator=":"~~endif~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~)>>
 
-/** relationships,LISTPROPERTY; **/
-createRelationships(relationships) ::= <<CREATE ~relationships:{it|~it~};separator=",\n"~
->>
+createNodes(nodes) ::= <<CREATE ~nodes:{it|~it~};separator=",\n"~>>
 
-/** label,STRINGPROPERTY;name,STRINGPROPERTY; **/
-matchLabel(label,name) ::= <<(~name~:~label~)
->>
+createRelationship(dst,properties,src,type) ::= <<(_~src~)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=", "~}~endif~]->(_~dst~)>>
 
-/** match,STRINGPROPERTY;return,STRINGPROPERTY;where,STRINGPROPERTY; **/
-query(match,return,where) ::= <<MATCH ~match~ WHERE ~where~ RETURN ~return~
->>
+createRelationships(relationships) ::= <<CREATE ~relationships:{it|~it~};separator=",\n"~>>
 
-/** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
-stringProperty(name,value) ::= <<~name~:'~value~'
->>
+matchLabel(label,name) ::= <<(~name~:~label~)>>
 
-/** name,STRINGPROPERTY;value,STRINGPROPERTY; **/
-valueProperty(name,value) ::= <<~name~:~value~
->>
+query(match,return,where) ::= <<MATCH ~match~ WHERE ~where~ RETURN ~return~>>
+
+stringProperty(name,value) ::= <<~name~:'~value~'>>
+
+valueProperty(name,value) ::= <<~name~:~value~>>

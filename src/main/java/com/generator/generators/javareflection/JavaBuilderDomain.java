@@ -1,4 +1,4 @@
-package com.generator.generators.vertx;
+package com.generator.generators.javareflection;
 
 import com.generator.domain.IDomain;
 import com.generator.editors.BaseDomainVisitor;
@@ -20,29 +20,29 @@ import java.util.function.Consumer;
 import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.editors.NeoModel.getNameOrLabelFrom;
 import static com.generator.editors.NeoModel.uuidOf;
-import static com.generator.generators.vertx.VertxDomain.Entities.*;
-import static com.generator.generators.vertx.VertxDomain.Relations.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Entities.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.*;
 import static org.neo4j.graphdb.Direction.INCOMING;
 
 /**
  * Created 23.02.17.
  */
-public abstract class VertxDomain implements IDomain {
+public abstract class JavaBuilderDomain implements IDomain {
 
    public enum Entities implements Label {
-      RouterVerticle
+      CLASS, PACKAGE, METHOD, INSTANCE
    }
 
    public enum Relations implements RelationshipType {
+      PARENT, PACKAGE, CONSTRUCTOR, PARAMETER, METHOD, INSTANCE_TYPE, INSTANCE_INITIALIZE
    }
 
    public enum Properties {
-      name
    }
 
    @Override
    public String getName() {
-      return "Vertx";
+      return "JavaBuilder";
    }
 
    @Override
@@ -53,11 +53,17 @@ public abstract class VertxDomain implements IDomain {
    @Override
    public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
       switch (Entities.valueOf(nodetype)) {
-         case RouterVerticle:
-         	return newRouterVerticlePNode(node, editor);
+         case CLASS:
+         	return newCLASSPNode(node, editor);
+         case PACKAGE:
+         	return newPACKAGEPNode(node, editor);
+         case METHOD:
+         	return newMETHODPNode(node, editor);
+         case INSTANCE:
+         	return newINSTANCEPNode(node, editor);
       }
 
-      throw new IllegalArgumentException("unsupported VertxDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
+      throw new IllegalArgumentException("unsupported JavaBuilderDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
    }
 
 	@Override
@@ -81,25 +87,144 @@ public abstract class VertxDomain implements IDomain {
       node.delete();
    }
 
-   protected NeoPNode newRouterVerticlePNode(Node node, NeoEditor editor) {
-         return new RouterVerticlePNode(node, editor);
+   protected NeoPNode newCLASSPNode(Node node, NeoEditor editor) {
+         return new CLASSPNode(node, editor);
       }
 
-   protected static class RouterVerticlePNode extends VertxDomainPNode {
+   protected static class CLASSPNode extends JavaBuilderDomainPNode {
 
-      RouterVerticlePNode(Node node, NeoEditor editor) {
-         super(node, Entities.RouterVerticle, "name", "#101010", editor);
+      CLASSPNode(Node node, NeoEditor editor) {
+         super(node, Entities.CLASS, "name", "#d8daeb", editor);
       }
 
    	@Override
    	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showRouterVerticlePropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(VertxDomain.Properties.name.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newPACKAGEPNode(Node node, NeoEditor editor) {
+         return new PACKAGEPNode(node, editor);
+      }
+
+   protected static class PACKAGEPNode extends JavaBuilderDomainPNode {
+
+      PACKAGEPNode(Node node, NeoEditor editor) {
+         super(node, Entities.PACKAGE, "name", "#7f3b08", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newMETHODPNode(Node node, NeoEditor editor) {
+         return new METHODPNode(node, editor);
+      }
+
+   protected static class METHODPNode extends JavaBuilderDomainPNode {
+
+      METHODPNode(Node node, NeoEditor editor) {
+         super(node, Entities.METHOD, "name", "#b2abd2", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newINSTANCEPNode(Node node, NeoEditor editor) {
+         return new INSTANCEPNode(node, editor);
+      }
+
+   protected static class INSTANCEPNode extends JavaBuilderDomainPNode {
+
+      INSTANCEPNode(Node node, NeoEditor editor) {
+         super(node, Entities.INSTANCE, "name", "#542788", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
 
    		super.showNodeActions(pop, event);
@@ -131,14 +256,14 @@ public abstract class VertxDomain implements IDomain {
    }
 
 
-   private static class VertxDomainPNode extends NeoPNode<PText> {
+   private static class JavaBuilderDomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
       private final Color defaultColor;
       private final String property;
-      private final VertxDomain.Entities nodeType;
+      private final JavaBuilderDomain.Entities nodeType;
 
-      VertxDomainPNode(Node node, VertxDomain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
+      JavaBuilderDomainPNode(Node node, JavaBuilderDomain.Entities nodeType, String property, String defaultColor, NeoEditor editor) {
          super(node, new PText(node.hasProperty(property) ? node.getProperty(property).toString() : getNameOrLabelFrom(node)), nodeType.name(), editor);
          this.defaultColor = defaultColor==null || defaultColor.length()==0 ? Color.BLACK : Color.decode(defaultColor);
          this.property = property;
@@ -224,69 +349,33 @@ public abstract class VertxDomain implements IDomain {
       }
    }
 
-	static class RouterVerticlePropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _name = new JTextField();
-
-	      RouterVerticlePropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
-
-	      }
-
-			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
-	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
-	      }
-
-			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
-	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
-	      }
-
-	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
-	         component.setModel(new DefaultComboBoxModel<>(values));
-	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
-		      if (value == null) return;
-		      component.setSelectedItem(value);
-		   }
-
-	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "name", _name); 
-	      }
-
-			private void getValue(PropertyContainer container, String property, JTextField component) {
-	         container.setProperty(property, component.getText().trim());
-	      }
-
-	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
-	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
-	      }
-	   }
-
-	static void showRouterVerticlePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final RouterVerticlePropertyEditor form = new RouterVerticlePropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "RouterVerticle", () -> {
-	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
-	      });
-	   });
-	}
 
 
-   public static abstract class VertxDomainVisitor implements com.generator.domain.IDomainVisitor {
+   public static abstract class JavaBuilderDomainVisitor implements com.generator.domain.IDomainVisitor {
 
 		@Override
       public <T> T visit(Node n) {
          if (n == null) return null;
-		  if (BaseDomainVisitor.hasLabel(n, Entities.RouterVerticle.name())) return visitRouterVerticle(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.CLASS.name())) return visitCLASS(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.PACKAGE.name())) return visitPACKAGE(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.METHOD.name())) return visitMETHOD(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.INSTANCE.name())) return visitINSTANCE(n);
          return null;
       }
 
-		<T> T visitRouterVerticle(Node node) {
+		<T> T visitCLASS(Node node) {
+         return null;
+      }
+
+		<T> T visitPACKAGE(Node node) {
+         return null;
+      }
+
+		<T> T visitMETHOD(Node node) {
+         return null;
+      }
+
+		<T> T visitINSTANCE(Node node) {
          return null;
       }
 

@@ -1,6 +1,5 @@
 package com.generator.generators.templates;
 
-import com.generator.generators.templateGroup.TemplateGroupGenerator;
 import com.generator.generators.templates.domain.TemplateParameter;
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
@@ -81,15 +80,4 @@ public interface TemplateVisitor {
 
 	void onEndGroupTemplateFile(File groupTemplateFile);
 
-	public static void main(String[] args) {
-
-		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-
-		// a dynamic visitor for use in generators (traverses a StringTemplate
-		final File groupTemplateFile = new File("/media/storage/nextgen/src/main/java/com/generator/generators/templatesSwing/templatesSwing.stg");
-		final String root = "src/main/java/";
-		final String packageName = "com.generator.generators.templatesSwing";
-
-		TemplateVisitor.visit(groupTemplateFile, new TemplateGroupGenerator(root, packageName));
-	}
 }

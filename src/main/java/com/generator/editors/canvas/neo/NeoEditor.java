@@ -5,7 +5,7 @@ import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.BaseEditor;
 import com.generator.editors.canvas.BasePNode;
 import com.generator.editors.canvas.RelationPath;
-import com.generator.generators.cypher.CypherGroup;
+import com.generator.generators.cypher.CypherDomainGroup;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -24,7 +24,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.editors.NeoModel.*;
@@ -88,6 +87,12 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
       this.graph = graph;
       this.graph.getGraphDb().registerTransactionEventHandler(this);
+   }
+
+   @Override
+   protected void reset() {
+      lastLayoutSaved = null;
+      super.reset();
    }
 
    public NeoModel getGraph() {
@@ -656,22 +661,22 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
    Action exportAction(final Node node) {
       return new NeoEditor.TransactionAction("Export", this) {
 
-         final CypherGroup cypherGroup = new CypherGroup();
+         final CypherDomainGroup cypherGroup = new CypherDomainGroup();
 
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-            final CypherGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
+            final CypherDomainGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
 
             final LinkedHashSet<Relationship> relationships = new LinkedHashSet<>();
             exportNode(createNodesST, cypherGroup, node, new LinkedHashSet<>(), relationships);
 
             // add relations at end, using node-uuids:
-            final CypherGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
+            final CypherDomainGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
             for (Relationship relationship : relationships) {
                final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
                final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
-               final CypherGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
+               final CypherDomainGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
                      setSrc(src).
                      setType(relationship.getType().name()).
                      setDst(dst);
@@ -685,13 +690,13 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
          }
 
          // todo consider creating a clone version of this
-         private void exportNode(CypherGroup.createNodesST export, CypherGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
+         private void exportNode(CypherDomainGroup.createNodesST export, CypherDomainGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
 
             if (visitedNodes.contains(node)) return;
             visitedNodes.add(node);
 
             final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-", "_");
-            final CypherGroup.createNodeST createNodeST = neoGroup.newcreateNode().
+            final CypherDomainGroup.createNodeST createNodeST = neoGroup.newcreateNode().
                   setId(id);
             for (Label label : node.getLabels()) createNodeST.addLabelsValue(label);
 

@@ -51,640 +51,513 @@ public final class Html5DomainGroup {
 
 	}
 
-
    public eomST neweom() {
       return new eomST(stGroup);
-   } 
-
+   }
 
    public gtST newgt() {
       return new gtST(stGroup);
-   } 
-
+   }
 
    public aST newa() {
       return new aST(stGroup);
-   } 
-
+   }
 
    public abbrST newabbr() {
       return new abbrST(stGroup);
-   } 
-
+   }
 
    public acronymST newacronym() {
       return new acronymST(stGroup);
-   } 
-
+   }
 
    public addressST newaddress() {
       return new addressST(stGroup);
-   } 
-
+   }
 
    public appletST newapplet() {
       return new appletST(stGroup);
-   } 
-
+   }
 
    public areaST newarea() {
       return new areaST(stGroup);
-   } 
-
+   }
 
    public articleST newarticle() {
       return new articleST(stGroup);
-   } 
-
+   }
 
    public asideST newaside() {
       return new asideST(stGroup);
-   } 
-
+   }
 
    public audioST newaudio() {
       return new audioST(stGroup);
-   } 
-
+   }
 
    public bST newb() {
       return new bST(stGroup);
-   } 
-
+   }
 
    public baseST newbase() {
       return new baseST(stGroup);
-   } 
-
+   }
 
    public basefontST newbasefont() {
       return new basefontST(stGroup);
-   } 
-
+   }
 
    public bdiST newbdi() {
       return new bdiST(stGroup);
-   } 
-
+   }
 
    public bdoST newbdo() {
       return new bdoST(stGroup);
-   } 
-
+   }
 
    public bigST newbig() {
       return new bigST(stGroup);
-   } 
-
+   }
 
    public blockST newblock() {
       return new blockST(stGroup);
-   } 
-
+   }
 
    public blockquoteST newblockquote() {
       return new blockquoteST(stGroup);
-   } 
-
+   }
 
    public bodyST newbody() {
       return new bodyST(stGroup);
-   } 
-
+   }
 
    public brST newbr() {
       return new brST(stGroup);
-   } 
-
+   }
 
    public buttonST newbutton() {
       return new buttonST(stGroup);
-   } 
-
+   }
 
    public canvasST newcanvas() {
       return new canvasST(stGroup);
-   } 
-
+   }
 
    public captionST newcaption() {
       return new captionST(stGroup);
-   } 
-
+   }
 
    public centerST newcenter() {
       return new centerST(stGroup);
-   } 
-
+   }
 
    public citeST newcite() {
       return new citeST(stGroup);
-   } 
-
+   }
 
    public codeST newcode() {
       return new codeST(stGroup);
-   } 
-
+   }
 
    public colST newcol() {
       return new colST(stGroup);
-   } 
-
+   }
 
    public colgroupST newcolgroup() {
       return new colgroupST(stGroup);
-   } 
-
+   }
 
    public commentST newcomment() {
       return new commentST(stGroup);
-   } 
-
+   }
 
    public datalistST newdatalist() {
       return new datalistST(stGroup);
-   } 
-
+   }
 
    public ddST newdd() {
       return new ddST(stGroup);
-   } 
-
+   }
 
    public delST newdel() {
       return new delST(stGroup);
-   } 
-
+   }
 
    public detailsST newdetails() {
       return new detailsST(stGroup);
-   } 
-
+   }
 
    public dfnST newdfn() {
       return new dfnST(stGroup);
-   } 
-
+   }
 
    public dialogST newdialog() {
       return new dialogST(stGroup);
-   } 
-
+   }
 
    public dirST newdir() {
       return new dirST(stGroup);
-   } 
-
+   }
 
    public divST newdiv() {
       return new divST(stGroup);
-   } 
-
+   }
 
    public dlST newdl() {
       return new dlST(stGroup);
-   } 
-
+   }
 
    public dtST newdt() {
       return new dtST(stGroup);
-   } 
-
+   }
 
    public emST newem() {
       return new emST(stGroup);
-   } 
-
+   }
 
    public embedST newembed() {
       return new embedST(stGroup);
-   } 
-
+   }
 
    public fieldsetST newfieldset() {
       return new fieldsetST(stGroup);
-   } 
-
+   }
 
    public figcaptionST newfigcaption() {
       return new figcaptionST(stGroup);
-   } 
-
+   }
 
    public figureST newfigure() {
       return new figureST(stGroup);
-   } 
-
+   }
 
    public fontST newfont() {
       return new fontST(stGroup);
-   } 
-
+   }
 
    public footerST newfooter() {
       return new footerST(stGroup);
-   } 
-
+   }
 
    public formST newform() {
       return new formST(stGroup);
-   } 
-
+   }
 
    public frameST newframe() {
       return new frameST(stGroup);
-   } 
-
+   }
 
    public framesetST newframeset() {
       return new framesetST(stGroup);
-   } 
-
+   }
 
    public h1ST newh1() {
       return new h1ST(stGroup);
-   } 
-
+   }
 
    public h2ST newh2() {
       return new h2ST(stGroup);
-   } 
-
+   }
 
    public h3ST newh3() {
       return new h3ST(stGroup);
-   } 
-
+   }
 
    public h4ST newh4() {
       return new h4ST(stGroup);
-   } 
-
+   }
 
    public h5ST newh5() {
       return new h5ST(stGroup);
-   } 
-
+   }
 
    public h6ST newh6() {
       return new h6ST(stGroup);
-   } 
-
+   }
 
    public headST newhead() {
       return new headST(stGroup);
-   } 
-
+   }
 
    public headerST newheader() {
       return new headerST(stGroup);
-   } 
-
+   }
 
    public hgroupST newhgroup() {
       return new hgroupST(stGroup);
-   } 
-
+   }
 
    public hrST newhr() {
       return new hrST(stGroup);
-   } 
-
+   }
 
    public iST newi() {
       return new iST(stGroup);
-   } 
-
+   }
 
    public iframeST newiframe() {
       return new iframeST(stGroup);
-   } 
-
+   }
 
    public imgST newimg() {
       return new imgST(stGroup);
-   } 
-
+   }
 
    public inputST newinput() {
       return new inputST(stGroup);
-   } 
-
+   }
 
    public insST newins() {
       return new insST(stGroup);
-   } 
-
+   }
 
    public kbdST newkbd() {
       return new kbdST(stGroup);
-   } 
-
+   }
 
    public keygenST newkeygen() {
       return new keygenST(stGroup);
-   } 
-
+   }
 
    public labelST newlabel() {
       return new labelST(stGroup);
-   } 
-
+   }
 
    public legendST newlegend() {
       return new legendST(stGroup);
-   } 
-
+   }
 
    public liST newli() {
       return new liST(stGroup);
-   } 
-
+   }
 
    public linkST newlink() {
       return new linkST(stGroup);
-   } 
-
+   }
 
    public mainST newmain() {
       return new mainST(stGroup);
-   } 
-
+   }
 
    public mapST newmap() {
       return new mapST(stGroup);
-   } 
-
+   }
 
    public markST newmark() {
       return new markST(stGroup);
-   } 
-
+   }
 
    public menuST newmenu() {
       return new menuST(stGroup);
-   } 
-
+   }
 
    public menuitemST newmenuitem() {
       return new menuitemST(stGroup);
-   } 
-
+   }
 
    public metaST newmeta() {
       return new metaST(stGroup);
-   } 
-
+   }
 
    public meterST newmeter() {
       return new meterST(stGroup);
-   } 
-
+   }
 
    public mimeJsonST newmimeJson() {
       return new mimeJsonST(stGroup);
-   } 
-
+   }
 
    public navST newnav() {
       return new navST(stGroup);
-   } 
-
+   }
 
    public noframesST newnoframes() {
       return new noframesST(stGroup);
-   } 
-
+   }
 
    public noscriptST newnoscript() {
       return new noscriptST(stGroup);
-   } 
-
+   }
 
    public objectST newobject() {
       return new objectST(stGroup);
-   } 
-
+   }
 
    public olST newol() {
       return new olST(stGroup);
-   } 
-
+   }
 
    public optgroupST newoptgroup() {
       return new optgroupST(stGroup);
-   } 
-
+   }
 
    public optionST newoption() {
       return new optionST(stGroup);
-   } 
-
+   }
 
    public outputST newoutput() {
       return new outputST(stGroup);
-   } 
-
+   }
 
    public pST newp() {
       return new pST(stGroup);
-   } 
-
+   }
 
    public pageST newpage() {
       return new pageST(stGroup);
-   } 
-
+   }
 
    public paramST newparam() {
       return new paramST(stGroup);
-   } 
-
+   }
 
    public preST newpre() {
       return new preST(stGroup);
-   } 
-
+   }
 
    public progressST newprogress() {
       return new progressST(stGroup);
-   } 
-
+   }
 
    public qST newq() {
       return new qST(stGroup);
-   } 
-
+   }
 
    public rpST newrp() {
       return new rpST(stGroup);
-   } 
-
+   }
 
    public rtST newrt() {
       return new rtST(stGroup);
-   } 
-
+   }
 
    public rubyST newruby() {
       return new rubyST(stGroup);
-   } 
-
+   }
 
    public sST news() {
       return new sST(stGroup);
-   } 
-
+   }
 
    public sampST newsamp() {
       return new sampST(stGroup);
-   } 
-
+   }
 
    public scriptST newscript() {
       return new scriptST(stGroup);
-   } 
-
+   }
 
    public sectionST newsection() {
       return new sectionST(stGroup);
-   } 
-
+   }
 
    public selectST newselect() {
       return new selectST(stGroup);
-   } 
-
+   }
 
    public smallST newsmall() {
       return new smallST(stGroup);
-   } 
-
+   }
 
    public sourceST newsource() {
       return new sourceST(stGroup);
-   } 
-
+   }
 
    public spanST newspan() {
       return new spanST(stGroup);
-   } 
-
+   }
 
    public strikeST newstrike() {
       return new strikeST(stGroup);
-   } 
-
+   }
 
    public strongST newstrong() {
       return new strongST(stGroup);
-   } 
-
+   }
 
    public styleST newstyle() {
       return new styleST(stGroup);
-   } 
-
+   }
 
    public subST newsub() {
       return new subST(stGroup);
-   } 
-
+   }
 
    public summaryST newsummary() {
       return new summaryST(stGroup);
-   } 
-
+   }
 
    public supST newsup() {
       return new supST(stGroup);
-   } 
-
+   }
 
    public tableST newtable() {
       return new tableST(stGroup);
-   } 
-
+   }
 
    public tbodyST newtbody() {
       return new tbodyST(stGroup);
-   } 
-
+   }
 
    public tdST newtd() {
       return new tdST(stGroup);
-   } 
-
+   }
 
    public textareaST newtextarea() {
       return new textareaST(stGroup);
-   } 
-
+   }
 
    public tfootST newtfoot() {
       return new tfootST(stGroup);
-   } 
-
+   }
 
    public thST newth() {
       return new thST(stGroup);
-   } 
-
+   }
 
    public theadST newthead() {
       return new theadST(stGroup);
-   } 
-
+   }
 
    public timeST newtime() {
       return new timeST(stGroup);
-   } 
-
+   }
 
    public titleST newtitle() {
       return new titleST(stGroup);
-   } 
-
+   }
 
    public trST newtr() {
       return new trST(stGroup);
-   } 
-
+   }
 
    public trackST newtrack() {
       return new trackST(stGroup);
-   } 
-
+   }
 
    public ttST newtt() {
       return new ttST(stGroup);
-   } 
-
+   }
 
    public uST newu() {
       return new uST(stGroup);
-   } 
-
+   }
 
    public ulST newul() {
       return new ulST(stGroup);
-   } 
-
+   }
 
    public varST newvar() {
       return new varST(stGroup);
-   } 
-
+   }
 
    public videoST newvideo() {
       return new videoST(stGroup);
-   } 
-
+   }
 
    public wbrST newwbr() {
       return new wbrST(stGroup);
-   } 
+   }
 
    public final class eomST implements Html5DomainGroupTemplate {
 
@@ -698,7 +571,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class gtST implements Html5DomainGroupTemplate {
 
@@ -712,7 +585,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class aST implements Html5DomainGroupTemplate {
 
@@ -747,113 +620,113 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("a");
    	}
 
-       public aST setAccesskey(Object value) {
+      public aST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public aST setClass(Object value) {
+      }
+      public aST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public aST setContent(Object value) {
+      }
+      public aST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public aST setContenteditable(Object value) {
+      }
+      public aST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public aST setContextmenu(Object value) {
+      }
+      public aST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public aST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public aST setDatabind(Object value) {
+      public aST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public aST setDir(Object value) {
+      }
+      public aST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public aST setDownload(Object value) {
+      }
+      public aST setDownload(Object value) {
       	tryToSetStringProperty(template, value, downloadIsSet, "download");   
          return this;
-      } 
-       public aST setDraggable(Object value) {
+      }
+      public aST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public aST setDropzone(Object value) {
+      }
+      public aST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public aST setHidden(Object value) {
+      }
+      public aST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public aST setHref(Object value) {
+      }
+      public aST setHref(Object value) {
       	tryToSetStringProperty(template, value, hrefIsSet, "href");   
          return this;
-      } 
-       public aST setHreflang(Object value) {
+      }
+      public aST setHreflang(Object value) {
       	tryToSetStringProperty(template, value, hreflangIsSet, "hreflang");   
          return this;
-      } 
-       public aST setId(Object value) {
+      }
+      public aST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public aST setLang(Object value) {
+      }
+      public aST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public aST setMedia(Object value) {
+      }
+      public aST setMedia(Object value) {
       	tryToSetStringProperty(template, value, mediaIsSet, "media");   
          return this;
-      } 
-       public aST setRel(Object value) {
+      }
+      public aST setRel(Object value) {
       	tryToSetStringProperty(template, value, relIsSet, "rel");   
          return this;
-      } 
-       public aST setSpellcheck(Object value) {
+      }
+      public aST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public aST setStyle(Object value) {
+      }
+      public aST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public aST setTabindex(Object value) {
+      }
+      public aST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public aST setTarget(Object value) {
+      }
+      public aST setTarget(Object value) {
       	tryToSetStringProperty(template, value, targetIsSet, "target");   
          return this;
-      } 
-       public aST setTitle(Object value) {
+      }
+      public aST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public aST setTranslate(Object value) {
+      }
+      public aST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public aST setType(Object value) {
+      }
+      public aST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class abbrST implements Html5DomainGroupTemplate {
 
@@ -881,85 +754,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("abbr");
    	}
 
-       public abbrST setAccesskey(Object value) {
+      public abbrST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public abbrST setClass(Object value) {
+      }
+      public abbrST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public abbrST setContent(Object value) {
+      }
+      public abbrST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public abbrST setContenteditable(Object value) {
+      }
+      public abbrST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public abbrST setContextmenu(Object value) {
+      }
+      public abbrST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public abbrST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public abbrST setDatabind(Object value) {
+      public abbrST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public abbrST setDir(Object value) {
+      }
+      public abbrST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public abbrST setDraggable(Object value) {
+      }
+      public abbrST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public abbrST setDropzone(Object value) {
+      }
+      public abbrST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public abbrST setHidden(Object value) {
+      }
+      public abbrST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public abbrST setId(Object value) {
+      }
+      public abbrST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public abbrST setLang(Object value) {
+      }
+      public abbrST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public abbrST setSpellcheck(Object value) {
+      }
+      public abbrST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public abbrST setStyle(Object value) {
+      }
+      public abbrST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public abbrST setTabindex(Object value) {
+      }
+      public abbrST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public abbrST setTitle(Object value) {
+      }
+      public abbrST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public abbrST setTranslate(Object value) {
+      }
+      public abbrST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class acronymST implements Html5DomainGroupTemplate {
 
@@ -987,85 +860,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("acronym");
    	}
 
-       public acronymST setAccesskey(Object value) {
+      public acronymST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public acronymST setClass(Object value) {
+      }
+      public acronymST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public acronymST setContent(Object value) {
+      }
+      public acronymST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public acronymST setContenteditable(Object value) {
+      }
+      public acronymST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public acronymST setContextmenu(Object value) {
+      }
+      public acronymST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public acronymST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public acronymST setDatabind(Object value) {
+      public acronymST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public acronymST setDir(Object value) {
+      }
+      public acronymST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public acronymST setDraggable(Object value) {
+      }
+      public acronymST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public acronymST setDropzone(Object value) {
+      }
+      public acronymST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public acronymST setHidden(Object value) {
+      }
+      public acronymST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public acronymST setId(Object value) {
+      }
+      public acronymST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public acronymST setLang(Object value) {
+      }
+      public acronymST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public acronymST setSpellcheck(Object value) {
+      }
+      public acronymST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public acronymST setStyle(Object value) {
+      }
+      public acronymST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public acronymST setTabindex(Object value) {
+      }
+      public acronymST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public acronymST setTitle(Object value) {
+      }
+      public acronymST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public acronymST setTranslate(Object value) {
+      }
+      public acronymST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class addressST implements Html5DomainGroupTemplate {
 
@@ -1093,85 +966,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("address");
    	}
 
-       public addressST setAccesskey(Object value) {
+      public addressST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public addressST setClass(Object value) {
+      }
+      public addressST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public addressST setContent(Object value) {
+      }
+      public addressST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public addressST setContenteditable(Object value) {
+      }
+      public addressST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public addressST setContextmenu(Object value) {
+      }
+      public addressST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public addressST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public addressST setDatabind(Object value) {
+      public addressST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public addressST setDir(Object value) {
+      }
+      public addressST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public addressST setDraggable(Object value) {
+      }
+      public addressST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public addressST setDropzone(Object value) {
+      }
+      public addressST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public addressST setHidden(Object value) {
+      }
+      public addressST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public addressST setId(Object value) {
+      }
+      public addressST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public addressST setLang(Object value) {
+      }
+      public addressST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public addressST setSpellcheck(Object value) {
+      }
+      public addressST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public addressST setStyle(Object value) {
+      }
+      public addressST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public addressST setTabindex(Object value) {
+      }
+      public addressST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public addressST setTitle(Object value) {
+      }
+      public addressST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public addressST setTranslate(Object value) {
+      }
+      public addressST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class appletST implements Html5DomainGroupTemplate {
 
@@ -1210,129 +1083,129 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("applet");
    	}
 
-       public appletST setAccesskey(Object value) {
+      public appletST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public appletST setAlign(Object value) {
+      }
+      public appletST setAlign(Object value) {
       	tryToSetStringProperty(template, value, alignIsSet, "align");   
          return this;
-      } 
-       public appletST setAlt(Object value) {
+      }
+      public appletST setAlt(Object value) {
       	tryToSetStringProperty(template, value, altIsSet, "alt");   
          return this;
-      } 
-       public appletST setArchive(Object value) {
+      }
+      public appletST setArchive(Object value) {
       	tryToSetStringProperty(template, value, archiveIsSet, "archive");   
          return this;
-      } 
-       public appletST setClass(Object value) {
+      }
+      public appletST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public appletST setCode(Object value) {
+      }
+      public appletST setCode(Object value) {
       	tryToSetStringProperty(template, value, codeIsSet, "code");   
          return this;
-      } 
-       public appletST setCodebase(Object value) {
+      }
+      public appletST setCodebase(Object value) {
       	tryToSetStringProperty(template, value, codebaseIsSet, "codebase");   
          return this;
-      } 
-       public appletST setContent(Object value) {
+      }
+      public appletST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public appletST setContenteditable(Object value) {
+      }
+      public appletST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public appletST setContextmenu(Object value) {
+      }
+      public appletST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public appletST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public appletST setDatabind(Object value) {
+      public appletST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public appletST setDir(Object value) {
+      }
+      public appletST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public appletST setDraggable(Object value) {
+      }
+      public appletST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public appletST setDropzone(Object value) {
+      }
+      public appletST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public appletST setHeight(Object value) {
+      }
+      public appletST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public appletST setHidden(Object value) {
+      }
+      public appletST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public appletST setHspace(Object value) {
+      }
+      public appletST setHspace(Object value) {
       	tryToSetStringProperty(template, value, hspaceIsSet, "hspace");   
          return this;
-      } 
-       public appletST setId(Object value) {
+      }
+      public appletST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public appletST setLang(Object value) {
+      }
+      public appletST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public appletST setName(Object value) {
+      }
+      public appletST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public appletST setObject(Object value) {
+      }
+      public appletST setObject(Object value) {
       	tryToSetStringProperty(template, value, objectIsSet, "object");   
          return this;
-      } 
-       public appletST setSpellcheck(Object value) {
+      }
+      public appletST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public appletST setStyle(Object value) {
+      }
+      public appletST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public appletST setTabindex(Object value) {
+      }
+      public appletST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public appletST setTitle(Object value) {
+      }
+      public appletST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public appletST setTranslate(Object value) {
+      }
+      public appletST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public appletST setVspace(Object value) {
+      }
+      public appletST setVspace(Object value) {
       	tryToSetStringProperty(template, value, vspaceIsSet, "vspace");   
          return this;
-      } 
-       public appletST setWidth(Object value) {
+      }
+      public appletST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class areaST implements Html5DomainGroupTemplate {
 
@@ -1369,121 +1242,121 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("area");
    	}
 
-       public areaST setAccesskey(Object value) {
+      public areaST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public areaST setAlt(Object value) {
+      }
+      public areaST setAlt(Object value) {
       	tryToSetStringProperty(template, value, altIsSet, "alt");   
          return this;
-      } 
-       public areaST setClass(Object value) {
+      }
+      public areaST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public areaST setContenteditable(Object value) {
+      }
+      public areaST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public areaST setContextmenu(Object value) {
+      }
+      public areaST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
-       public areaST setCoords(Object value) {
+      }
+      public areaST setCoords(Object value) {
       	tryToSetStringProperty(template, value, coordsIsSet, "coords");   
          return this;
-      } 
+      }
       public areaST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public areaST setDatabind(Object value) {
+      public areaST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public areaST setDir(Object value) {
+      }
+      public areaST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public areaST setDownload(Object value) {
+      }
+      public areaST setDownload(Object value) {
       	tryToSetStringProperty(template, value, downloadIsSet, "download");   
          return this;
-      } 
-       public areaST setDraggable(Object value) {
+      }
+      public areaST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public areaST setDropzone(Object value) {
+      }
+      public areaST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public areaST setHidden(Object value) {
+      }
+      public areaST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public areaST setHref(Object value) {
+      }
+      public areaST setHref(Object value) {
       	tryToSetStringProperty(template, value, hrefIsSet, "href");   
          return this;
-      } 
-       public areaST setHreflang(Object value) {
+      }
+      public areaST setHreflang(Object value) {
       	tryToSetStringProperty(template, value, hreflangIsSet, "hreflang");   
          return this;
-      } 
-       public areaST setId(Object value) {
+      }
+      public areaST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public areaST setLang(Object value) {
+      }
+      public areaST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public areaST setMedia(Object value) {
+      }
+      public areaST setMedia(Object value) {
       	tryToSetStringProperty(template, value, mediaIsSet, "media");   
          return this;
-      } 
-       public areaST setRel(Object value) {
+      }
+      public areaST setRel(Object value) {
       	tryToSetStringProperty(template, value, relIsSet, "rel");   
          return this;
-      } 
-       public areaST setShape(Object value) {
+      }
+      public areaST setShape(Object value) {
       	tryToSetStringProperty(template, value, shapeIsSet, "shape");   
          return this;
-      } 
-       public areaST setSpellcheck(Object value) {
+      }
+      public areaST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public areaST setStyle(Object value) {
+      }
+      public areaST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public areaST setTabindex(Object value) {
+      }
+      public areaST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public areaST setTarget(Object value) {
+      }
+      public areaST setTarget(Object value) {
       	tryToSetStringProperty(template, value, targetIsSet, "target");   
          return this;
-      } 
-       public areaST setTitle(Object value) {
+      }
+      public areaST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public areaST setTranslate(Object value) {
+      }
+      public areaST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public areaST setType(Object value) {
+      }
+      public areaST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class articleST implements Html5DomainGroupTemplate {
 
@@ -1511,85 +1384,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("article");
    	}
 
-       public articleST setAccesskey(Object value) {
+      public articleST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public articleST setClass(Object value) {
+      }
+      public articleST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public articleST setContent(Object value) {
+      }
+      public articleST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public articleST setContenteditable(Object value) {
+      }
+      public articleST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public articleST setContextmenu(Object value) {
+      }
+      public articleST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public articleST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public articleST setDatabind(Object value) {
+      public articleST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public articleST setDir(Object value) {
+      }
+      public articleST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public articleST setDraggable(Object value) {
+      }
+      public articleST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public articleST setDropzone(Object value) {
+      }
+      public articleST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public articleST setHidden(Object value) {
+      }
+      public articleST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public articleST setId(Object value) {
+      }
+      public articleST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public articleST setLang(Object value) {
+      }
+      public articleST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public articleST setSpellcheck(Object value) {
+      }
+      public articleST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public articleST setStyle(Object value) {
+      }
+      public articleST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public articleST setTabindex(Object value) {
+      }
+      public articleST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public articleST setTitle(Object value) {
+      }
+      public articleST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public articleST setTranslate(Object value) {
+      }
+      public articleST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class asideST implements Html5DomainGroupTemplate {
 
@@ -1617,85 +1490,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("aside");
    	}
 
-       public asideST setAccesskey(Object value) {
+      public asideST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public asideST setClass(Object value) {
+      }
+      public asideST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public asideST setContent(Object value) {
+      }
+      public asideST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public asideST setContenteditable(Object value) {
+      }
+      public asideST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public asideST setContextmenu(Object value) {
+      }
+      public asideST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public asideST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public asideST setDatabind(Object value) {
+      public asideST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public asideST setDir(Object value) {
+      }
+      public asideST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public asideST setDraggable(Object value) {
+      }
+      public asideST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public asideST setDropzone(Object value) {
+      }
+      public asideST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public asideST setHidden(Object value) {
+      }
+      public asideST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public asideST setId(Object value) {
+      }
+      public asideST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public asideST setLang(Object value) {
+      }
+      public asideST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public asideST setSpellcheck(Object value) {
+      }
+      public asideST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public asideST setStyle(Object value) {
+      }
+      public asideST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public asideST setTabindex(Object value) {
+      }
+      public asideST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public asideST setTitle(Object value) {
+      }
+      public asideST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public asideST setTranslate(Object value) {
+      }
+      public asideST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class audioST implements Html5DomainGroupTemplate {
 
@@ -1729,109 +1602,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("audio");
    	}
 
-       public audioST setAccesskey(Object value) {
+      public audioST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public audioST setAutoplay(Object value) {
+      }
+      public audioST setAutoplay(Object value) {
       	tryToSetStringProperty(template, value, autoplayIsSet, "autoplay");   
          return this;
-      } 
-       public audioST setClass(Object value) {
+      }
+      public audioST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public audioST setContent(Object value) {
+      }
+      public audioST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public audioST setContenteditable(Object value) {
+      }
+      public audioST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public audioST setContextmenu(Object value) {
+      }
+      public audioST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
-       public audioST setControls(Object value) {
+      }
+      public audioST setControls(Object value) {
       	tryToSetStringProperty(template, value, controlsIsSet, "controls");   
          return this;
-      } 
+      }
       public audioST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public audioST setDatabind(Object value) {
+      public audioST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public audioST setDir(Object value) {
+      }
+      public audioST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public audioST setDraggable(Object value) {
+      }
+      public audioST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public audioST setDropzone(Object value) {
+      }
+      public audioST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public audioST setHidden(Object value) {
+      }
+      public audioST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public audioST setId(Object value) {
+      }
+      public audioST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public audioST setLang(Object value) {
+      }
+      public audioST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public audioST setLoop(Object value) {
+      }
+      public audioST setLoop(Object value) {
       	tryToSetStringProperty(template, value, loopIsSet, "loop");   
          return this;
-      } 
-       public audioST setMuted(Object value) {
+      }
+      public audioST setMuted(Object value) {
       	tryToSetStringProperty(template, value, mutedIsSet, "muted");   
          return this;
-      } 
-       public audioST setPreload(Object value) {
+      }
+      public audioST setPreload(Object value) {
       	tryToSetStringProperty(template, value, preloadIsSet, "preload");   
          return this;
-      } 
-       public audioST setSpellcheck(Object value) {
+      }
+      public audioST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public audioST setSrc(Object value) {
+      }
+      public audioST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public audioST setStyle(Object value) {
+      }
+      public audioST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public audioST setTabindex(Object value) {
+      }
+      public audioST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public audioST setTitle(Object value) {
+      }
+      public audioST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public audioST setTranslate(Object value) {
+      }
+      public audioST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class bST implements Html5DomainGroupTemplate {
 
@@ -1859,85 +1732,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("b");
    	}
 
-       public bST setAccesskey(Object value) {
+      public bST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public bST setClass(Object value) {
+      }
+      public bST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public bST setContent(Object value) {
+      }
+      public bST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public bST setContenteditable(Object value) {
+      }
+      public bST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public bST setContextmenu(Object value) {
+      }
+      public bST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public bST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public bST setDatabind(Object value) {
+      public bST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public bST setDir(Object value) {
+      }
+      public bST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public bST setDraggable(Object value) {
+      }
+      public bST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public bST setDropzone(Object value) {
+      }
+      public bST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public bST setHidden(Object value) {
+      }
+      public bST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public bST setId(Object value) {
+      }
+      public bST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public bST setLang(Object value) {
+      }
+      public bST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public bST setSpellcheck(Object value) {
+      }
+      public bST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public bST setStyle(Object value) {
+      }
+      public bST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public bST setTabindex(Object value) {
+      }
+      public bST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public bST setTitle(Object value) {
+      }
+      public bST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public bST setTranslate(Object value) {
+      }
+      public bST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class baseST implements Html5DomainGroupTemplate {
 
@@ -1966,89 +1839,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("base");
    	}
 
-       public baseST setAccesskey(Object value) {
+      public baseST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public baseST setClass(Object value) {
+      }
+      public baseST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public baseST setContenteditable(Object value) {
+      }
+      public baseST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public baseST setContextmenu(Object value) {
+      }
+      public baseST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public baseST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public baseST setDatabind(Object value) {
+      public baseST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public baseST setDir(Object value) {
+      }
+      public baseST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public baseST setDraggable(Object value) {
+      }
+      public baseST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public baseST setDropzone(Object value) {
+      }
+      public baseST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public baseST setHidden(Object value) {
+      }
+      public baseST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public baseST setHref(Object value) {
+      }
+      public baseST setHref(Object value) {
       	tryToSetStringProperty(template, value, hrefIsSet, "href");   
          return this;
-      } 
-       public baseST setId(Object value) {
+      }
+      public baseST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public baseST setLang(Object value) {
+      }
+      public baseST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public baseST setSpellcheck(Object value) {
+      }
+      public baseST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public baseST setStyle(Object value) {
+      }
+      public baseST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public baseST setTabindex(Object value) {
+      }
+      public baseST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public baseST setTarget(Object value) {
+      }
+      public baseST setTarget(Object value) {
       	tryToSetStringProperty(template, value, targetIsSet, "target");   
          return this;
-      } 
-       public baseST setTitle(Object value) {
+      }
+      public baseST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public baseST setTranslate(Object value) {
+      }
+      public baseST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class basefontST implements Html5DomainGroupTemplate {
 
@@ -2076,85 +1949,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("basefont");
    	}
 
-       public basefontST setAccesskey(Object value) {
+      public basefontST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public basefontST setClass(Object value) {
+      }
+      public basefontST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public basefontST setContent(Object value) {
+      }
+      public basefontST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public basefontST setContenteditable(Object value) {
+      }
+      public basefontST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public basefontST setContextmenu(Object value) {
+      }
+      public basefontST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public basefontST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public basefontST setDatabind(Object value) {
+      public basefontST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public basefontST setDir(Object value) {
+      }
+      public basefontST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public basefontST setDraggable(Object value) {
+      }
+      public basefontST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public basefontST setDropzone(Object value) {
+      }
+      public basefontST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public basefontST setHidden(Object value) {
+      }
+      public basefontST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public basefontST setId(Object value) {
+      }
+      public basefontST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public basefontST setLang(Object value) {
+      }
+      public basefontST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public basefontST setSpellcheck(Object value) {
+      }
+      public basefontST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public basefontST setStyle(Object value) {
+      }
+      public basefontST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public basefontST setTabindex(Object value) {
+      }
+      public basefontST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public basefontST setTitle(Object value) {
+      }
+      public basefontST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public basefontST setTranslate(Object value) {
+      }
+      public basefontST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class bdiST implements Html5DomainGroupTemplate {
 
@@ -2182,85 +2055,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("bdi");
    	}
 
-       public bdiST setAccesskey(Object value) {
+      public bdiST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public bdiST setClass(Object value) {
+      }
+      public bdiST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public bdiST setContent(Object value) {
+      }
+      public bdiST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public bdiST setContenteditable(Object value) {
+      }
+      public bdiST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public bdiST setContextmenu(Object value) {
+      }
+      public bdiST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public bdiST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public bdiST setDatabind(Object value) {
+      public bdiST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public bdiST setDir(Object value) {
+      }
+      public bdiST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public bdiST setDraggable(Object value) {
+      }
+      public bdiST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public bdiST setDropzone(Object value) {
+      }
+      public bdiST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public bdiST setHidden(Object value) {
+      }
+      public bdiST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public bdiST setId(Object value) {
+      }
+      public bdiST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public bdiST setLang(Object value) {
+      }
+      public bdiST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public bdiST setSpellcheck(Object value) {
+      }
+      public bdiST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public bdiST setStyle(Object value) {
+      }
+      public bdiST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public bdiST setTabindex(Object value) {
+      }
+      public bdiST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public bdiST setTitle(Object value) {
+      }
+      public bdiST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public bdiST setTranslate(Object value) {
+      }
+      public bdiST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class bdoST implements Html5DomainGroupTemplate {
 
@@ -2288,85 +2161,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("bdo");
    	}
 
-       public bdoST setAccesskey(Object value) {
+      public bdoST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public bdoST setClass(Object value) {
+      }
+      public bdoST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public bdoST setContent(Object value) {
+      }
+      public bdoST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public bdoST setContenteditable(Object value) {
+      }
+      public bdoST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public bdoST setContextmenu(Object value) {
+      }
+      public bdoST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public bdoST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public bdoST setDatabind(Object value) {
+      public bdoST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public bdoST setDir(Object value) {
+      }
+      public bdoST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public bdoST setDraggable(Object value) {
+      }
+      public bdoST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public bdoST setDropzone(Object value) {
+      }
+      public bdoST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public bdoST setHidden(Object value) {
+      }
+      public bdoST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public bdoST setId(Object value) {
+      }
+      public bdoST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public bdoST setLang(Object value) {
+      }
+      public bdoST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public bdoST setSpellcheck(Object value) {
+      }
+      public bdoST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public bdoST setStyle(Object value) {
+      }
+      public bdoST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public bdoST setTabindex(Object value) {
+      }
+      public bdoST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public bdoST setTitle(Object value) {
+      }
+      public bdoST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public bdoST setTranslate(Object value) {
+      }
+      public bdoST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class bigST implements Html5DomainGroupTemplate {
 
@@ -2394,85 +2267,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("big");
    	}
 
-       public bigST setAccesskey(Object value) {
+      public bigST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public bigST setClass(Object value) {
+      }
+      public bigST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public bigST setContent(Object value) {
+      }
+      public bigST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public bigST setContenteditable(Object value) {
+      }
+      public bigST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public bigST setContextmenu(Object value) {
+      }
+      public bigST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public bigST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public bigST setDatabind(Object value) {
+      public bigST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public bigST setDir(Object value) {
+      }
+      public bigST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public bigST setDraggable(Object value) {
+      }
+      public bigST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public bigST setDropzone(Object value) {
+      }
+      public bigST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public bigST setHidden(Object value) {
+      }
+      public bigST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public bigST setId(Object value) {
+      }
+      public bigST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public bigST setLang(Object value) {
+      }
+      public bigST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public bigST setSpellcheck(Object value) {
+      }
+      public bigST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public bigST setStyle(Object value) {
+      }
+      public bigST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public bigST setTabindex(Object value) {
+      }
+      public bigST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public bigST setTitle(Object value) {
+      }
+      public bigST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public bigST setTranslate(Object value) {
+      }
+      public bigST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class blockST implements Html5DomainGroupTemplate {
 
@@ -2492,7 +2365,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class blockquoteST implements Html5DomainGroupTemplate {
 
@@ -2521,89 +2394,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("blockquote");
    	}
 
-       public blockquoteST setAccesskey(Object value) {
+      public blockquoteST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public blockquoteST setCite(Object value) {
+      }
+      public blockquoteST setCite(Object value) {
       	tryToSetStringProperty(template, value, citeIsSet, "cite");   
          return this;
-      } 
-       public blockquoteST setClass(Object value) {
+      }
+      public blockquoteST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public blockquoteST setContent(Object value) {
+      }
+      public blockquoteST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public blockquoteST setContenteditable(Object value) {
+      }
+      public blockquoteST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public blockquoteST setContextmenu(Object value) {
+      }
+      public blockquoteST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public blockquoteST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public blockquoteST setDatabind(Object value) {
+      public blockquoteST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public blockquoteST setDir(Object value) {
+      }
+      public blockquoteST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public blockquoteST setDraggable(Object value) {
+      }
+      public blockquoteST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public blockquoteST setDropzone(Object value) {
+      }
+      public blockquoteST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public blockquoteST setHidden(Object value) {
+      }
+      public blockquoteST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public blockquoteST setId(Object value) {
+      }
+      public blockquoteST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public blockquoteST setLang(Object value) {
+      }
+      public blockquoteST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public blockquoteST setSpellcheck(Object value) {
+      }
+      public blockquoteST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public blockquoteST setStyle(Object value) {
+      }
+      public blockquoteST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public blockquoteST setTabindex(Object value) {
+      }
+      public blockquoteST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public blockquoteST setTitle(Object value) {
+      }
+      public blockquoteST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public blockquoteST setTranslate(Object value) {
+      }
+      public blockquoteST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class bodyST implements Html5DomainGroupTemplate {
 
@@ -2623,7 +2496,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class brST implements Html5DomainGroupTemplate {
 
@@ -2650,81 +2523,81 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("br");
    	}
 
-       public brST setAccesskey(Object value) {
+      public brST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public brST setClass(Object value) {
+      }
+      public brST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public brST setContenteditable(Object value) {
+      }
+      public brST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public brST setContextmenu(Object value) {
+      }
+      public brST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public brST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public brST setDatabind(Object value) {
+      public brST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public brST setDir(Object value) {
+      }
+      public brST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public brST setDraggable(Object value) {
+      }
+      public brST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public brST setDropzone(Object value) {
+      }
+      public brST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public brST setHidden(Object value) {
+      }
+      public brST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public brST setId(Object value) {
+      }
+      public brST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public brST setLang(Object value) {
+      }
+      public brST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public brST setSpellcheck(Object value) {
+      }
+      public brST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public brST setStyle(Object value) {
+      }
+      public brST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public brST setTabindex(Object value) {
+      }
+      public brST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public brST setTitle(Object value) {
+      }
+      public brST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public brST setTranslate(Object value) {
+      }
+      public brST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class buttonST implements Html5DomainGroupTemplate {
 
@@ -2763,129 +2636,129 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("button");
    	}
 
-       public buttonST setAccesskey(Object value) {
+      public buttonST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public buttonST setAutofocus(Object value) {
+      }
+      public buttonST setAutofocus(Object value) {
       	tryToSetStringProperty(template, value, autofocusIsSet, "autofocus");   
          return this;
-      } 
-       public buttonST setClass(Object value) {
+      }
+      public buttonST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public buttonST setContent(Object value) {
+      }
+      public buttonST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public buttonST setContenteditable(Object value) {
+      }
+      public buttonST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public buttonST setContextmenu(Object value) {
+      }
+      public buttonST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public buttonST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public buttonST setDatabind(Object value) {
+      public buttonST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public buttonST setDir(Object value) {
+      }
+      public buttonST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public buttonST setDisabled(Object value) {
+      }
+      public buttonST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public buttonST setDraggable(Object value) {
+      }
+      public buttonST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public buttonST setDropzone(Object value) {
+      }
+      public buttonST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public buttonST setForm(Object value) {
+      }
+      public buttonST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public buttonST setFormaction(Object value) {
+      }
+      public buttonST setFormaction(Object value) {
       	tryToSetStringProperty(template, value, formactionIsSet, "formaction");   
          return this;
-      } 
-       public buttonST setFormenctype(Object value) {
+      }
+      public buttonST setFormenctype(Object value) {
       	tryToSetStringProperty(template, value, formenctypeIsSet, "formenctype");   
          return this;
-      } 
-       public buttonST setFormmethod(Object value) {
+      }
+      public buttonST setFormmethod(Object value) {
       	tryToSetStringProperty(template, value, formmethodIsSet, "formmethod");   
          return this;
-      } 
-       public buttonST setFormnovalidate(Object value) {
+      }
+      public buttonST setFormnovalidate(Object value) {
       	tryToSetStringProperty(template, value, formnovalidateIsSet, "formnovalidate");   
          return this;
-      } 
-       public buttonST setFormtarget(Object value) {
+      }
+      public buttonST setFormtarget(Object value) {
       	tryToSetStringProperty(template, value, formtargetIsSet, "formtarget");   
          return this;
-      } 
-       public buttonST setHidden(Object value) {
+      }
+      public buttonST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public buttonST setId(Object value) {
+      }
+      public buttonST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public buttonST setLang(Object value) {
+      }
+      public buttonST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public buttonST setName(Object value) {
+      }
+      public buttonST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public buttonST setSpellcheck(Object value) {
+      }
+      public buttonST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public buttonST setStyle(Object value) {
+      }
+      public buttonST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public buttonST setTabindex(Object value) {
+      }
+      public buttonST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public buttonST setTitle(Object value) {
+      }
+      public buttonST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public buttonST setTranslate(Object value) {
+      }
+      public buttonST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public buttonST setType(Object value) {
+      }
+      public buttonST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
-       public buttonST setValue(Object value) {
+      }
+      public buttonST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class canvasST implements Html5DomainGroupTemplate {
 
@@ -2915,93 +2788,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("canvas");
    	}
 
-       public canvasST setAccesskey(Object value) {
+      public canvasST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public canvasST setClass(Object value) {
+      }
+      public canvasST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public canvasST setContent(Object value) {
+      }
+      public canvasST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public canvasST setContenteditable(Object value) {
+      }
+      public canvasST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public canvasST setContextmenu(Object value) {
+      }
+      public canvasST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public canvasST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public canvasST setDatabind(Object value) {
+      public canvasST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public canvasST setDir(Object value) {
+      }
+      public canvasST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public canvasST setDraggable(Object value) {
+      }
+      public canvasST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public canvasST setDropzone(Object value) {
+      }
+      public canvasST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public canvasST setHeight(Object value) {
+      }
+      public canvasST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public canvasST setHidden(Object value) {
+      }
+      public canvasST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public canvasST setId(Object value) {
+      }
+      public canvasST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public canvasST setLang(Object value) {
+      }
+      public canvasST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public canvasST setSpellcheck(Object value) {
+      }
+      public canvasST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public canvasST setStyle(Object value) {
+      }
+      public canvasST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public canvasST setTabindex(Object value) {
+      }
+      public canvasST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public canvasST setTitle(Object value) {
+      }
+      public canvasST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public canvasST setTranslate(Object value) {
+      }
+      public canvasST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public canvasST setWidth(Object value) {
+      }
+      public canvasST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class captionST implements Html5DomainGroupTemplate {
 
@@ -3029,85 +2902,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("caption");
    	}
 
-       public captionST setAccesskey(Object value) {
+      public captionST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public captionST setClass(Object value) {
+      }
+      public captionST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public captionST setContent(Object value) {
+      }
+      public captionST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public captionST setContenteditable(Object value) {
+      }
+      public captionST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public captionST setContextmenu(Object value) {
+      }
+      public captionST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public captionST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public captionST setDatabind(Object value) {
+      public captionST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public captionST setDir(Object value) {
+      }
+      public captionST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public captionST setDraggable(Object value) {
+      }
+      public captionST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public captionST setDropzone(Object value) {
+      }
+      public captionST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public captionST setHidden(Object value) {
+      }
+      public captionST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public captionST setId(Object value) {
+      }
+      public captionST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public captionST setLang(Object value) {
+      }
+      public captionST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public captionST setSpellcheck(Object value) {
+      }
+      public captionST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public captionST setStyle(Object value) {
+      }
+      public captionST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public captionST setTabindex(Object value) {
+      }
+      public captionST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public captionST setTitle(Object value) {
+      }
+      public captionST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public captionST setTranslate(Object value) {
+      }
+      public captionST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class centerST implements Html5DomainGroupTemplate {
 
@@ -3135,85 +3008,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("center");
    	}
 
-       public centerST setAccesskey(Object value) {
+      public centerST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public centerST setClass(Object value) {
+      }
+      public centerST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public centerST setContent(Object value) {
+      }
+      public centerST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public centerST setContenteditable(Object value) {
+      }
+      public centerST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public centerST setContextmenu(Object value) {
+      }
+      public centerST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public centerST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public centerST setDatabind(Object value) {
+      public centerST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public centerST setDir(Object value) {
+      }
+      public centerST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public centerST setDraggable(Object value) {
+      }
+      public centerST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public centerST setDropzone(Object value) {
+      }
+      public centerST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public centerST setHidden(Object value) {
+      }
+      public centerST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public centerST setId(Object value) {
+      }
+      public centerST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public centerST setLang(Object value) {
+      }
+      public centerST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public centerST setSpellcheck(Object value) {
+      }
+      public centerST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public centerST setStyle(Object value) {
+      }
+      public centerST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public centerST setTabindex(Object value) {
+      }
+      public centerST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public centerST setTitle(Object value) {
+      }
+      public centerST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public centerST setTranslate(Object value) {
+      }
+      public centerST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class citeST implements Html5DomainGroupTemplate {
 
@@ -3241,85 +3114,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("cite");
    	}
 
-       public citeST setAccesskey(Object value) {
+      public citeST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public citeST setClass(Object value) {
+      }
+      public citeST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public citeST setContent(Object value) {
+      }
+      public citeST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public citeST setContenteditable(Object value) {
+      }
+      public citeST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public citeST setContextmenu(Object value) {
+      }
+      public citeST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public citeST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public citeST setDatabind(Object value) {
+      public citeST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public citeST setDir(Object value) {
+      }
+      public citeST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public citeST setDraggable(Object value) {
+      }
+      public citeST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public citeST setDropzone(Object value) {
+      }
+      public citeST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public citeST setHidden(Object value) {
+      }
+      public citeST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public citeST setId(Object value) {
+      }
+      public citeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public citeST setLang(Object value) {
+      }
+      public citeST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public citeST setSpellcheck(Object value) {
+      }
+      public citeST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public citeST setStyle(Object value) {
+      }
+      public citeST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public citeST setTabindex(Object value) {
+      }
+      public citeST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public citeST setTitle(Object value) {
+      }
+      public citeST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public citeST setTranslate(Object value) {
+      }
+      public citeST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class codeST implements Html5DomainGroupTemplate {
 
@@ -3347,85 +3220,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("code");
    	}
 
-       public codeST setAccesskey(Object value) {
+      public codeST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public codeST setClass(Object value) {
+      }
+      public codeST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public codeST setContent(Object value) {
+      }
+      public codeST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public codeST setContenteditable(Object value) {
+      }
+      public codeST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public codeST setContextmenu(Object value) {
+      }
+      public codeST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public codeST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public codeST setDatabind(Object value) {
+      public codeST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public codeST setDir(Object value) {
+      }
+      public codeST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public codeST setDraggable(Object value) {
+      }
+      public codeST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public codeST setDropzone(Object value) {
+      }
+      public codeST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public codeST setHidden(Object value) {
+      }
+      public codeST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public codeST setId(Object value) {
+      }
+      public codeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public codeST setLang(Object value) {
+      }
+      public codeST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public codeST setSpellcheck(Object value) {
+      }
+      public codeST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public codeST setStyle(Object value) {
+      }
+      public codeST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public codeST setTabindex(Object value) {
+      }
+      public codeST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public codeST setTitle(Object value) {
+      }
+      public codeST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public codeST setTranslate(Object value) {
+      }
+      public codeST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class colST implements Html5DomainGroupTemplate {
 
@@ -3453,85 +3326,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("col");
    	}
 
-       public colST setAccesskey(Object value) {
+      public colST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public colST setClass(Object value) {
+      }
+      public colST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public colST setContenteditable(Object value) {
+      }
+      public colST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public colST setContextmenu(Object value) {
+      }
+      public colST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public colST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public colST setDatabind(Object value) {
+      public colST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public colST setDir(Object value) {
+      }
+      public colST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public colST setDraggable(Object value) {
+      }
+      public colST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public colST setDropzone(Object value) {
+      }
+      public colST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public colST setHidden(Object value) {
+      }
+      public colST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public colST setId(Object value) {
+      }
+      public colST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public colST setLang(Object value) {
+      }
+      public colST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public colST setSpan(Object value) {
+      }
+      public colST setSpan(Object value) {
       	tryToSetStringProperty(template, value, spanIsSet, "span");   
          return this;
-      } 
-       public colST setSpellcheck(Object value) {
+      }
+      public colST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public colST setStyle(Object value) {
+      }
+      public colST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public colST setTabindex(Object value) {
+      }
+      public colST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public colST setTitle(Object value) {
+      }
+      public colST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public colST setTranslate(Object value) {
+      }
+      public colST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class colgroupST implements Html5DomainGroupTemplate {
 
@@ -3560,89 +3433,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("colgroup");
    	}
 
-       public colgroupST setAccesskey(Object value) {
+      public colgroupST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public colgroupST setClass(Object value) {
+      }
+      public colgroupST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public colgroupST setContent(Object value) {
+      }
+      public colgroupST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public colgroupST setContenteditable(Object value) {
+      }
+      public colgroupST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public colgroupST setContextmenu(Object value) {
+      }
+      public colgroupST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public colgroupST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public colgroupST setDatabind(Object value) {
+      public colgroupST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public colgroupST setDir(Object value) {
+      }
+      public colgroupST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public colgroupST setDraggable(Object value) {
+      }
+      public colgroupST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public colgroupST setDropzone(Object value) {
+      }
+      public colgroupST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public colgroupST setHidden(Object value) {
+      }
+      public colgroupST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public colgroupST setId(Object value) {
+      }
+      public colgroupST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public colgroupST setLang(Object value) {
+      }
+      public colgroupST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public colgroupST setSpan(Object value) {
+      }
+      public colgroupST setSpan(Object value) {
       	tryToSetStringProperty(template, value, spanIsSet, "span");   
          return this;
-      } 
-       public colgroupST setSpellcheck(Object value) {
+      }
+      public colgroupST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public colgroupST setStyle(Object value) {
+      }
+      public colgroupST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public colgroupST setTabindex(Object value) {
+      }
+      public colgroupST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public colgroupST setTitle(Object value) {
+      }
+      public colgroupST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public colgroupST setTranslate(Object value) {
+      }
+      public colgroupST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class commentST implements Html5DomainGroupTemplate {
 
@@ -3653,16 +3526,16 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("comment");
    	}
 
-       public commentST setComment(Object value) {
+      public commentST setComment(Object value) {
       	tryToSetStringProperty(template, value, commentIsSet, "comment");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class datalistST implements Html5DomainGroupTemplate {
 
@@ -3690,85 +3563,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("datalist");
    	}
 
-       public datalistST setAccesskey(Object value) {
+      public datalistST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public datalistST setClass(Object value) {
+      }
+      public datalistST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public datalistST setContent(Object value) {
+      }
+      public datalistST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public datalistST setContenteditable(Object value) {
+      }
+      public datalistST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public datalistST setContextmenu(Object value) {
+      }
+      public datalistST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public datalistST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public datalistST setDatabind(Object value) {
+      public datalistST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public datalistST setDir(Object value) {
+      }
+      public datalistST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public datalistST setDraggable(Object value) {
+      }
+      public datalistST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public datalistST setDropzone(Object value) {
+      }
+      public datalistST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public datalistST setHidden(Object value) {
+      }
+      public datalistST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public datalistST setId(Object value) {
+      }
+      public datalistST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public datalistST setLang(Object value) {
+      }
+      public datalistST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public datalistST setSpellcheck(Object value) {
+      }
+      public datalistST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public datalistST setStyle(Object value) {
+      }
+      public datalistST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public datalistST setTabindex(Object value) {
+      }
+      public datalistST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public datalistST setTitle(Object value) {
+      }
+      public datalistST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public datalistST setTranslate(Object value) {
+      }
+      public datalistST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class ddST implements Html5DomainGroupTemplate {
 
@@ -3796,85 +3669,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dd");
    	}
 
-       public ddST setAccesskey(Object value) {
+      public ddST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public ddST setClass(Object value) {
+      }
+      public ddST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public ddST setContent(Object value) {
+      }
+      public ddST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public ddST setContenteditable(Object value) {
+      }
+      public ddST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public ddST setContextmenu(Object value) {
+      }
+      public ddST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public ddST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public ddST setDatabind(Object value) {
+      public ddST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public ddST setDir(Object value) {
+      }
+      public ddST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public ddST setDraggable(Object value) {
+      }
+      public ddST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public ddST setDropzone(Object value) {
+      }
+      public ddST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public ddST setHidden(Object value) {
+      }
+      public ddST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public ddST setId(Object value) {
+      }
+      public ddST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public ddST setLang(Object value) {
+      }
+      public ddST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public ddST setSpellcheck(Object value) {
+      }
+      public ddST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public ddST setStyle(Object value) {
+      }
+      public ddST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public ddST setTabindex(Object value) {
+      }
+      public ddST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public ddST setTitle(Object value) {
+      }
+      public ddST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public ddST setTranslate(Object value) {
+      }
+      public ddST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class delST implements Html5DomainGroupTemplate {
 
@@ -3904,93 +3777,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("del");
    	}
 
-       public delST setAccesskey(Object value) {
+      public delST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public delST setCite(Object value) {
+      }
+      public delST setCite(Object value) {
       	tryToSetStringProperty(template, value, citeIsSet, "cite");   
          return this;
-      } 
-       public delST setClass(Object value) {
+      }
+      public delST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public delST setContent(Object value) {
+      }
+      public delST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public delST setContenteditable(Object value) {
+      }
+      public delST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public delST setContextmenu(Object value) {
+      }
+      public delST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public delST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public delST setDatabind(Object value) {
+      public delST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public delST setDatetime(Object value) {
+      }
+      public delST setDatetime(Object value) {
       	tryToSetStringProperty(template, value, datetimeIsSet, "datetime");   
          return this;
-      } 
-       public delST setDir(Object value) {
+      }
+      public delST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public delST setDraggable(Object value) {
+      }
+      public delST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public delST setDropzone(Object value) {
+      }
+      public delST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public delST setHidden(Object value) {
+      }
+      public delST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public delST setId(Object value) {
+      }
+      public delST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public delST setLang(Object value) {
+      }
+      public delST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public delST setSpellcheck(Object value) {
+      }
+      public delST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public delST setStyle(Object value) {
+      }
+      public delST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public delST setTabindex(Object value) {
+      }
+      public delST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public delST setTitle(Object value) {
+      }
+      public delST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public delST setTranslate(Object value) {
+      }
+      public delST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class detailsST implements Html5DomainGroupTemplate {
 
@@ -4019,89 +3892,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("details");
    	}
 
-       public detailsST setAccesskey(Object value) {
+      public detailsST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public detailsST setClass(Object value) {
+      }
+      public detailsST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public detailsST setContent(Object value) {
+      }
+      public detailsST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public detailsST setContenteditable(Object value) {
+      }
+      public detailsST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public detailsST setContextmenu(Object value) {
+      }
+      public detailsST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public detailsST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public detailsST setDatabind(Object value) {
+      public detailsST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public detailsST setDir(Object value) {
+      }
+      public detailsST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public detailsST setDraggable(Object value) {
+      }
+      public detailsST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public detailsST setDropzone(Object value) {
+      }
+      public detailsST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public detailsST setHidden(Object value) {
+      }
+      public detailsST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public detailsST setId(Object value) {
+      }
+      public detailsST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public detailsST setLang(Object value) {
+      }
+      public detailsST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public detailsST setOpen(Object value) {
+      }
+      public detailsST setOpen(Object value) {
       	tryToSetStringProperty(template, value, openIsSet, "open");   
          return this;
-      } 
-       public detailsST setSpellcheck(Object value) {
+      }
+      public detailsST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public detailsST setStyle(Object value) {
+      }
+      public detailsST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public detailsST setTabindex(Object value) {
+      }
+      public detailsST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public detailsST setTitle(Object value) {
+      }
+      public detailsST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public detailsST setTranslate(Object value) {
+      }
+      public detailsST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dfnST implements Html5DomainGroupTemplate {
 
@@ -4129,85 +4002,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dfn");
    	}
 
-       public dfnST setAccesskey(Object value) {
+      public dfnST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public dfnST setClass(Object value) {
+      }
+      public dfnST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public dfnST setContent(Object value) {
+      }
+      public dfnST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public dfnST setContenteditable(Object value) {
+      }
+      public dfnST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public dfnST setContextmenu(Object value) {
+      }
+      public dfnST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public dfnST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public dfnST setDatabind(Object value) {
+      public dfnST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public dfnST setDir(Object value) {
+      }
+      public dfnST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public dfnST setDraggable(Object value) {
+      }
+      public dfnST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public dfnST setDropzone(Object value) {
+      }
+      public dfnST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public dfnST setHidden(Object value) {
+      }
+      public dfnST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public dfnST setId(Object value) {
+      }
+      public dfnST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public dfnST setLang(Object value) {
+      }
+      public dfnST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public dfnST setSpellcheck(Object value) {
+      }
+      public dfnST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public dfnST setStyle(Object value) {
+      }
+      public dfnST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public dfnST setTabindex(Object value) {
+      }
+      public dfnST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public dfnST setTitle(Object value) {
+      }
+      public dfnST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public dfnST setTranslate(Object value) {
+      }
+      public dfnST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dialogST implements Html5DomainGroupTemplate {
 
@@ -4236,89 +4109,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dialog");
    	}
 
-       public dialogST setAccesskey(Object value) {
+      public dialogST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public dialogST setClass(Object value) {
+      }
+      public dialogST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public dialogST setContent(Object value) {
+      }
+      public dialogST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public dialogST setContenteditable(Object value) {
+      }
+      public dialogST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public dialogST setContextmenu(Object value) {
+      }
+      public dialogST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public dialogST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public dialogST setDatabind(Object value) {
+      public dialogST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public dialogST setDir(Object value) {
+      }
+      public dialogST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public dialogST setDraggable(Object value) {
+      }
+      public dialogST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public dialogST setDropzone(Object value) {
+      }
+      public dialogST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public dialogST setHidden(Object value) {
+      }
+      public dialogST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public dialogST setId(Object value) {
+      }
+      public dialogST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public dialogST setLang(Object value) {
+      }
+      public dialogST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public dialogST setOpen(Object value) {
+      }
+      public dialogST setOpen(Object value) {
       	tryToSetStringProperty(template, value, openIsSet, "open");   
          return this;
-      } 
-       public dialogST setSpellcheck(Object value) {
+      }
+      public dialogST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public dialogST setStyle(Object value) {
+      }
+      public dialogST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public dialogST setTabindex(Object value) {
+      }
+      public dialogST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public dialogST setTitle(Object value) {
+      }
+      public dialogST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public dialogST setTranslate(Object value) {
+      }
+      public dialogST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dirST implements Html5DomainGroupTemplate {
 
@@ -4346,85 +4219,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dir");
    	}
 
-       public dirST setAccesskey(Object value) {
+      public dirST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public dirST setClass(Object value) {
+      }
+      public dirST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public dirST setContent(Object value) {
+      }
+      public dirST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public dirST setContenteditable(Object value) {
+      }
+      public dirST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public dirST setContextmenu(Object value) {
+      }
+      public dirST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public dirST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public dirST setDatabind(Object value) {
+      public dirST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public dirST setDir(Object value) {
+      }
+      public dirST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public dirST setDraggable(Object value) {
+      }
+      public dirST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public dirST setDropzone(Object value) {
+      }
+      public dirST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public dirST setHidden(Object value) {
+      }
+      public dirST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public dirST setId(Object value) {
+      }
+      public dirST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public dirST setLang(Object value) {
+      }
+      public dirST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public dirST setSpellcheck(Object value) {
+      }
+      public dirST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public dirST setStyle(Object value) {
+      }
+      public dirST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public dirST setTabindex(Object value) {
+      }
+      public dirST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public dirST setTitle(Object value) {
+      }
+      public dirST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public dirST setTranslate(Object value) {
+      }
+      public dirST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class divST implements Html5DomainGroupTemplate {
 
@@ -4452,85 +4325,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("div");
    	}
 
-       public divST setAccesskey(Object value) {
+      public divST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public divST setClass(Object value) {
+      }
+      public divST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public divST setContent(Object value) {
+      }
+      public divST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public divST setContenteditable(Object value) {
+      }
+      public divST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public divST setContextmenu(Object value) {
+      }
+      public divST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public divST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public divST setDatabind(Object value) {
+      public divST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public divST setDir(Object value) {
+      }
+      public divST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public divST setDraggable(Object value) {
+      }
+      public divST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public divST setDropzone(Object value) {
+      }
+      public divST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public divST setHidden(Object value) {
+      }
+      public divST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public divST setId(Object value) {
+      }
+      public divST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public divST setLang(Object value) {
+      }
+      public divST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public divST setSpellcheck(Object value) {
+      }
+      public divST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public divST setStyle(Object value) {
+      }
+      public divST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public divST setTabindex(Object value) {
+      }
+      public divST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public divST setTitle(Object value) {
+      }
+      public divST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public divST setTranslate(Object value) {
+      }
+      public divST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dlST implements Html5DomainGroupTemplate {
 
@@ -4558,85 +4431,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dl");
    	}
 
-       public dlST setAccesskey(Object value) {
+      public dlST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public dlST setClass(Object value) {
+      }
+      public dlST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public dlST setContent(Object value) {
+      }
+      public dlST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public dlST setContenteditable(Object value) {
+      }
+      public dlST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public dlST setContextmenu(Object value) {
+      }
+      public dlST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public dlST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public dlST setDatabind(Object value) {
+      public dlST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public dlST setDir(Object value) {
+      }
+      public dlST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public dlST setDraggable(Object value) {
+      }
+      public dlST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public dlST setDropzone(Object value) {
+      }
+      public dlST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public dlST setHidden(Object value) {
+      }
+      public dlST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public dlST setId(Object value) {
+      }
+      public dlST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public dlST setLang(Object value) {
+      }
+      public dlST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public dlST setSpellcheck(Object value) {
+      }
+      public dlST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public dlST setStyle(Object value) {
+      }
+      public dlST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public dlST setTabindex(Object value) {
+      }
+      public dlST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public dlST setTitle(Object value) {
+      }
+      public dlST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public dlST setTranslate(Object value) {
+      }
+      public dlST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dtST implements Html5DomainGroupTemplate {
 
@@ -4664,85 +4537,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("dt");
    	}
 
-       public dtST setAccesskey(Object value) {
+      public dtST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public dtST setClass(Object value) {
+      }
+      public dtST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public dtST setContent(Object value) {
+      }
+      public dtST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public dtST setContenteditable(Object value) {
+      }
+      public dtST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public dtST setContextmenu(Object value) {
+      }
+      public dtST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public dtST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public dtST setDatabind(Object value) {
+      public dtST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public dtST setDir(Object value) {
+      }
+      public dtST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public dtST setDraggable(Object value) {
+      }
+      public dtST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public dtST setDropzone(Object value) {
+      }
+      public dtST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public dtST setHidden(Object value) {
+      }
+      public dtST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public dtST setId(Object value) {
+      }
+      public dtST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public dtST setLang(Object value) {
+      }
+      public dtST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public dtST setSpellcheck(Object value) {
+      }
+      public dtST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public dtST setStyle(Object value) {
+      }
+      public dtST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public dtST setTabindex(Object value) {
+      }
+      public dtST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public dtST setTitle(Object value) {
+      }
+      public dtST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public dtST setTranslate(Object value) {
+      }
+      public dtST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class emST implements Html5DomainGroupTemplate {
 
@@ -4770,85 +4643,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("em");
    	}
 
-       public emST setAccesskey(Object value) {
+      public emST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public emST setClass(Object value) {
+      }
+      public emST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public emST setContent(Object value) {
+      }
+      public emST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public emST setContenteditable(Object value) {
+      }
+      public emST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public emST setContextmenu(Object value) {
+      }
+      public emST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public emST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public emST setDatabind(Object value) {
+      public emST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public emST setDir(Object value) {
+      }
+      public emST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public emST setDraggable(Object value) {
+      }
+      public emST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public emST setDropzone(Object value) {
+      }
+      public emST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public emST setHidden(Object value) {
+      }
+      public emST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public emST setId(Object value) {
+      }
+      public emST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public emST setLang(Object value) {
+      }
+      public emST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public emST setSpellcheck(Object value) {
+      }
+      public emST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public emST setStyle(Object value) {
+      }
+      public emST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public emST setTabindex(Object value) {
+      }
+      public emST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public emST setTitle(Object value) {
+      }
+      public emST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public emST setTranslate(Object value) {
+      }
+      public emST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class embedST implements Html5DomainGroupTemplate {
 
@@ -4880,101 +4753,101 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("embed");
    	}
 
-       public embedST setAccesskey(Object value) {
+      public embedST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public embedST setClass(Object value) {
+      }
+      public embedST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public embedST setContent(Object value) {
+      }
+      public embedST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public embedST setContenteditable(Object value) {
+      }
+      public embedST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public embedST setContextmenu(Object value) {
+      }
+      public embedST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public embedST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public embedST setDatabind(Object value) {
+      public embedST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public embedST setDir(Object value) {
+      }
+      public embedST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public embedST setDraggable(Object value) {
+      }
+      public embedST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public embedST setDropzone(Object value) {
+      }
+      public embedST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public embedST setHeight(Object value) {
+      }
+      public embedST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public embedST setHidden(Object value) {
+      }
+      public embedST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public embedST setId(Object value) {
+      }
+      public embedST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public embedST setLang(Object value) {
+      }
+      public embedST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public embedST setSpellcheck(Object value) {
+      }
+      public embedST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public embedST setSrc(Object value) {
+      }
+      public embedST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public embedST setStyle(Object value) {
+      }
+      public embedST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public embedST setTabindex(Object value) {
+      }
+      public embedST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public embedST setTitle(Object value) {
+      }
+      public embedST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public embedST setTranslate(Object value) {
+      }
+      public embedST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public embedST setType(Object value) {
+      }
+      public embedST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
-       public embedST setWidth(Object value) {
+      }
+      public embedST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class fieldsetST implements Html5DomainGroupTemplate {
 
@@ -5005,97 +4878,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("fieldset");
    	}
 
-       public fieldsetST setAccesskey(Object value) {
+      public fieldsetST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public fieldsetST setClass(Object value) {
+      }
+      public fieldsetST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public fieldsetST setContent(Object value) {
+      }
+      public fieldsetST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public fieldsetST setContenteditable(Object value) {
+      }
+      public fieldsetST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public fieldsetST setContextmenu(Object value) {
+      }
+      public fieldsetST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public fieldsetST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public fieldsetST setDatabind(Object value) {
+      public fieldsetST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public fieldsetST setDir(Object value) {
+      }
+      public fieldsetST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public fieldsetST setDisabled(Object value) {
+      }
+      public fieldsetST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public fieldsetST setDraggable(Object value) {
+      }
+      public fieldsetST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public fieldsetST setDropzone(Object value) {
+      }
+      public fieldsetST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public fieldsetST setForm(Object value) {
+      }
+      public fieldsetST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public fieldsetST setHidden(Object value) {
+      }
+      public fieldsetST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public fieldsetST setId(Object value) {
+      }
+      public fieldsetST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public fieldsetST setLang(Object value) {
+      }
+      public fieldsetST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public fieldsetST setName(Object value) {
+      }
+      public fieldsetST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public fieldsetST setSpellcheck(Object value) {
+      }
+      public fieldsetST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public fieldsetST setStyle(Object value) {
+      }
+      public fieldsetST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public fieldsetST setTabindex(Object value) {
+      }
+      public fieldsetST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public fieldsetST setTitle(Object value) {
+      }
+      public fieldsetST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public fieldsetST setTranslate(Object value) {
+      }
+      public fieldsetST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class figcaptionST implements Html5DomainGroupTemplate {
 
@@ -5123,85 +4996,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("figcaption");
    	}
 
-       public figcaptionST setAccesskey(Object value) {
+      public figcaptionST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public figcaptionST setClass(Object value) {
+      }
+      public figcaptionST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public figcaptionST setContent(Object value) {
+      }
+      public figcaptionST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public figcaptionST setContenteditable(Object value) {
+      }
+      public figcaptionST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public figcaptionST setContextmenu(Object value) {
+      }
+      public figcaptionST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public figcaptionST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public figcaptionST setDatabind(Object value) {
+      public figcaptionST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public figcaptionST setDir(Object value) {
+      }
+      public figcaptionST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public figcaptionST setDraggable(Object value) {
+      }
+      public figcaptionST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public figcaptionST setDropzone(Object value) {
+      }
+      public figcaptionST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public figcaptionST setHidden(Object value) {
+      }
+      public figcaptionST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public figcaptionST setId(Object value) {
+      }
+      public figcaptionST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public figcaptionST setLang(Object value) {
+      }
+      public figcaptionST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public figcaptionST setSpellcheck(Object value) {
+      }
+      public figcaptionST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public figcaptionST setStyle(Object value) {
+      }
+      public figcaptionST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public figcaptionST setTabindex(Object value) {
+      }
+      public figcaptionST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public figcaptionST setTitle(Object value) {
+      }
+      public figcaptionST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public figcaptionST setTranslate(Object value) {
+      }
+      public figcaptionST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class figureST implements Html5DomainGroupTemplate {
 
@@ -5229,85 +5102,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("figure");
    	}
 
-       public figureST setAccesskey(Object value) {
+      public figureST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public figureST setClass(Object value) {
+      }
+      public figureST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public figureST setContent(Object value) {
+      }
+      public figureST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public figureST setContenteditable(Object value) {
+      }
+      public figureST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public figureST setContextmenu(Object value) {
+      }
+      public figureST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public figureST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public figureST setDatabind(Object value) {
+      public figureST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public figureST setDir(Object value) {
+      }
+      public figureST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public figureST setDraggable(Object value) {
+      }
+      public figureST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public figureST setDropzone(Object value) {
+      }
+      public figureST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public figureST setHidden(Object value) {
+      }
+      public figureST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public figureST setId(Object value) {
+      }
+      public figureST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public figureST setLang(Object value) {
+      }
+      public figureST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public figureST setSpellcheck(Object value) {
+      }
+      public figureST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public figureST setStyle(Object value) {
+      }
+      public figureST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public figureST setTabindex(Object value) {
+      }
+      public figureST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public figureST setTitle(Object value) {
+      }
+      public figureST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public figureST setTranslate(Object value) {
+      }
+      public figureST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class fontST implements Html5DomainGroupTemplate {
 
@@ -5335,85 +5208,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("font");
    	}
 
-       public fontST setAccesskey(Object value) {
+      public fontST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public fontST setClass(Object value) {
+      }
+      public fontST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public fontST setContent(Object value) {
+      }
+      public fontST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public fontST setContenteditable(Object value) {
+      }
+      public fontST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public fontST setContextmenu(Object value) {
+      }
+      public fontST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public fontST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public fontST setDatabind(Object value) {
+      public fontST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public fontST setDir(Object value) {
+      }
+      public fontST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public fontST setDraggable(Object value) {
+      }
+      public fontST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public fontST setDropzone(Object value) {
+      }
+      public fontST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public fontST setHidden(Object value) {
+      }
+      public fontST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public fontST setId(Object value) {
+      }
+      public fontST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public fontST setLang(Object value) {
+      }
+      public fontST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public fontST setSpellcheck(Object value) {
+      }
+      public fontST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public fontST setStyle(Object value) {
+      }
+      public fontST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public fontST setTabindex(Object value) {
+      }
+      public fontST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public fontST setTitle(Object value) {
+      }
+      public fontST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public fontST setTranslate(Object value) {
+      }
+      public fontST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class footerST implements Html5DomainGroupTemplate {
 
@@ -5441,85 +5314,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("footer");
    	}
 
-       public footerST setAccesskey(Object value) {
+      public footerST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public footerST setClass(Object value) {
+      }
+      public footerST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public footerST setContent(Object value) {
+      }
+      public footerST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public footerST setContenteditable(Object value) {
+      }
+      public footerST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public footerST setContextmenu(Object value) {
+      }
+      public footerST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public footerST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public footerST setDatabind(Object value) {
+      public footerST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public footerST setDir(Object value) {
+      }
+      public footerST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public footerST setDraggable(Object value) {
+      }
+      public footerST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public footerST setDropzone(Object value) {
+      }
+      public footerST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public footerST setHidden(Object value) {
+      }
+      public footerST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public footerST setId(Object value) {
+      }
+      public footerST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public footerST setLang(Object value) {
+      }
+      public footerST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public footerST setSpellcheck(Object value) {
+      }
+      public footerST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public footerST setStyle(Object value) {
+      }
+      public footerST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public footerST setTabindex(Object value) {
+      }
+      public footerST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public footerST setTitle(Object value) {
+      }
+      public footerST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public footerST setTranslate(Object value) {
+      }
+      public footerST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class formST implements Html5DomainGroupTemplate {
 
@@ -5555,117 +5428,117 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("form");
    	}
 
-       public formST setAccept_charset(Object value) {
+      public formST setAccept_charset(Object value) {
       	tryToSetStringProperty(template, value, accept_charsetIsSet, "accept_charset");   
          return this;
-      } 
-       public formST setAccesskey(Object value) {
+      }
+      public formST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public formST setAction(Object value) {
+      }
+      public formST setAction(Object value) {
       	tryToSetStringProperty(template, value, actionIsSet, "action");   
          return this;
-      } 
-       public formST setAutocomplete(Object value) {
+      }
+      public formST setAutocomplete(Object value) {
       	tryToSetStringProperty(template, value, autocompleteIsSet, "autocomplete");   
          return this;
-      } 
-       public formST setClass(Object value) {
+      }
+      public formST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public formST setContent(Object value) {
+      }
+      public formST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public formST setContenteditable(Object value) {
+      }
+      public formST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public formST setContextmenu(Object value) {
+      }
+      public formST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public formST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public formST setDatabind(Object value) {
+      public formST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public formST setDir(Object value) {
+      }
+      public formST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public formST setDraggable(Object value) {
+      }
+      public formST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public formST setDropzone(Object value) {
+      }
+      public formST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public formST setEnctype(Object value) {
+      }
+      public formST setEnctype(Object value) {
       	tryToSetStringProperty(template, value, enctypeIsSet, "enctype");   
          return this;
-      } 
-       public formST setHidden(Object value) {
+      }
+      public formST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public formST setId(Object value) {
+      }
+      public formST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public formST setLang(Object value) {
+      }
+      public formST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public formST setMethod(Object value) {
+      }
+      public formST setMethod(Object value) {
       	tryToSetStringProperty(template, value, methodIsSet, "method");   
          return this;
-      } 
-       public formST setName(Object value) {
+      }
+      public formST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public formST setNovalidate(Object value) {
+      }
+      public formST setNovalidate(Object value) {
       	tryToSetStringProperty(template, value, novalidateIsSet, "novalidate");   
          return this;
-      } 
-       public formST setSpellcheck(Object value) {
+      }
+      public formST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public formST setStyle(Object value) {
+      }
+      public formST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public formST setTabindex(Object value) {
+      }
+      public formST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public formST setTarget(Object value) {
+      }
+      public formST setTarget(Object value) {
       	tryToSetStringProperty(template, value, targetIsSet, "target");   
          return this;
-      } 
-       public formST setTitle(Object value) {
+      }
+      public formST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public formST setTranslate(Object value) {
+      }
+      public formST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class frameST implements Html5DomainGroupTemplate {
 
@@ -5692,81 +5565,81 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("frame");
    	}
 
-       public frameST setAccesskey(Object value) {
+      public frameST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public frameST setClass(Object value) {
+      }
+      public frameST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public frameST setContenteditable(Object value) {
+      }
+      public frameST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public frameST setContextmenu(Object value) {
+      }
+      public frameST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public frameST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public frameST setDatabind(Object value) {
+      public frameST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public frameST setDir(Object value) {
+      }
+      public frameST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public frameST setDraggable(Object value) {
+      }
+      public frameST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public frameST setDropzone(Object value) {
+      }
+      public frameST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public frameST setHidden(Object value) {
+      }
+      public frameST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public frameST setId(Object value) {
+      }
+      public frameST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public frameST setLang(Object value) {
+      }
+      public frameST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public frameST setSpellcheck(Object value) {
+      }
+      public frameST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public frameST setStyle(Object value) {
+      }
+      public frameST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public frameST setTabindex(Object value) {
+      }
+      public frameST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public frameST setTitle(Object value) {
+      }
+      public frameST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public frameST setTranslate(Object value) {
+      }
+      public frameST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class framesetST implements Html5DomainGroupTemplate {
 
@@ -5794,85 +5667,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("frameset");
    	}
 
-       public framesetST setAccesskey(Object value) {
+      public framesetST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public framesetST setClass(Object value) {
+      }
+      public framesetST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public framesetST setContent(Object value) {
+      }
+      public framesetST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public framesetST setContenteditable(Object value) {
+      }
+      public framesetST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public framesetST setContextmenu(Object value) {
+      }
+      public framesetST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public framesetST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public framesetST setDatabind(Object value) {
+      public framesetST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public framesetST setDir(Object value) {
+      }
+      public framesetST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public framesetST setDraggable(Object value) {
+      }
+      public framesetST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public framesetST setDropzone(Object value) {
+      }
+      public framesetST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public framesetST setHidden(Object value) {
+      }
+      public framesetST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public framesetST setId(Object value) {
+      }
+      public framesetST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public framesetST setLang(Object value) {
+      }
+      public framesetST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public framesetST setSpellcheck(Object value) {
+      }
+      public framesetST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public framesetST setStyle(Object value) {
+      }
+      public framesetST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public framesetST setTabindex(Object value) {
+      }
+      public framesetST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public framesetST setTitle(Object value) {
+      }
+      public framesetST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public framesetST setTranslate(Object value) {
+      }
+      public framesetST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h1ST implements Html5DomainGroupTemplate {
 
@@ -5900,85 +5773,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h1");
    	}
 
-       public h1ST setAccesskey(Object value) {
+      public h1ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h1ST setClass(Object value) {
+      }
+      public h1ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h1ST setContent(Object value) {
+      }
+      public h1ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h1ST setContenteditable(Object value) {
+      }
+      public h1ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h1ST setContextmenu(Object value) {
+      }
+      public h1ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h1ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h1ST setDatabind(Object value) {
+      public h1ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h1ST setDir(Object value) {
+      }
+      public h1ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h1ST setDraggable(Object value) {
+      }
+      public h1ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h1ST setDropzone(Object value) {
+      }
+      public h1ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h1ST setHidden(Object value) {
+      }
+      public h1ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h1ST setId(Object value) {
+      }
+      public h1ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h1ST setLang(Object value) {
+      }
+      public h1ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h1ST setSpellcheck(Object value) {
+      }
+      public h1ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h1ST setStyle(Object value) {
+      }
+      public h1ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h1ST setTabindex(Object value) {
+      }
+      public h1ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h1ST setTitle(Object value) {
+      }
+      public h1ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h1ST setTranslate(Object value) {
+      }
+      public h1ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h2ST implements Html5DomainGroupTemplate {
 
@@ -6006,85 +5879,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h2");
    	}
 
-       public h2ST setAccesskey(Object value) {
+      public h2ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h2ST setClass(Object value) {
+      }
+      public h2ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h2ST setContent(Object value) {
+      }
+      public h2ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h2ST setContenteditable(Object value) {
+      }
+      public h2ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h2ST setContextmenu(Object value) {
+      }
+      public h2ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h2ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h2ST setDatabind(Object value) {
+      public h2ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h2ST setDir(Object value) {
+      }
+      public h2ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h2ST setDraggable(Object value) {
+      }
+      public h2ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h2ST setDropzone(Object value) {
+      }
+      public h2ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h2ST setHidden(Object value) {
+      }
+      public h2ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h2ST setId(Object value) {
+      }
+      public h2ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h2ST setLang(Object value) {
+      }
+      public h2ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h2ST setSpellcheck(Object value) {
+      }
+      public h2ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h2ST setStyle(Object value) {
+      }
+      public h2ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h2ST setTabindex(Object value) {
+      }
+      public h2ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h2ST setTitle(Object value) {
+      }
+      public h2ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h2ST setTranslate(Object value) {
+      }
+      public h2ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h3ST implements Html5DomainGroupTemplate {
 
@@ -6112,85 +5985,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h3");
    	}
 
-       public h3ST setAccesskey(Object value) {
+      public h3ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h3ST setClass(Object value) {
+      }
+      public h3ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h3ST setContent(Object value) {
+      }
+      public h3ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h3ST setContenteditable(Object value) {
+      }
+      public h3ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h3ST setContextmenu(Object value) {
+      }
+      public h3ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h3ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h3ST setDatabind(Object value) {
+      public h3ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h3ST setDir(Object value) {
+      }
+      public h3ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h3ST setDraggable(Object value) {
+      }
+      public h3ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h3ST setDropzone(Object value) {
+      }
+      public h3ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h3ST setHidden(Object value) {
+      }
+      public h3ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h3ST setId(Object value) {
+      }
+      public h3ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h3ST setLang(Object value) {
+      }
+      public h3ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h3ST setSpellcheck(Object value) {
+      }
+      public h3ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h3ST setStyle(Object value) {
+      }
+      public h3ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h3ST setTabindex(Object value) {
+      }
+      public h3ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h3ST setTitle(Object value) {
+      }
+      public h3ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h3ST setTranslate(Object value) {
+      }
+      public h3ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h4ST implements Html5DomainGroupTemplate {
 
@@ -6218,85 +6091,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h4");
    	}
 
-       public h4ST setAccesskey(Object value) {
+      public h4ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h4ST setClass(Object value) {
+      }
+      public h4ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h4ST setContent(Object value) {
+      }
+      public h4ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h4ST setContenteditable(Object value) {
+      }
+      public h4ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h4ST setContextmenu(Object value) {
+      }
+      public h4ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h4ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h4ST setDatabind(Object value) {
+      public h4ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h4ST setDir(Object value) {
+      }
+      public h4ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h4ST setDraggable(Object value) {
+      }
+      public h4ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h4ST setDropzone(Object value) {
+      }
+      public h4ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h4ST setHidden(Object value) {
+      }
+      public h4ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h4ST setId(Object value) {
+      }
+      public h4ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h4ST setLang(Object value) {
+      }
+      public h4ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h4ST setSpellcheck(Object value) {
+      }
+      public h4ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h4ST setStyle(Object value) {
+      }
+      public h4ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h4ST setTabindex(Object value) {
+      }
+      public h4ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h4ST setTitle(Object value) {
+      }
+      public h4ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h4ST setTranslate(Object value) {
+      }
+      public h4ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h5ST implements Html5DomainGroupTemplate {
 
@@ -6324,85 +6197,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h5");
    	}
 
-       public h5ST setAccesskey(Object value) {
+      public h5ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h5ST setClass(Object value) {
+      }
+      public h5ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h5ST setContent(Object value) {
+      }
+      public h5ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h5ST setContenteditable(Object value) {
+      }
+      public h5ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h5ST setContextmenu(Object value) {
+      }
+      public h5ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h5ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h5ST setDatabind(Object value) {
+      public h5ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h5ST setDir(Object value) {
+      }
+      public h5ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h5ST setDraggable(Object value) {
+      }
+      public h5ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h5ST setDropzone(Object value) {
+      }
+      public h5ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h5ST setHidden(Object value) {
+      }
+      public h5ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h5ST setId(Object value) {
+      }
+      public h5ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h5ST setLang(Object value) {
+      }
+      public h5ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h5ST setSpellcheck(Object value) {
+      }
+      public h5ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h5ST setStyle(Object value) {
+      }
+      public h5ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h5ST setTabindex(Object value) {
+      }
+      public h5ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h5ST setTitle(Object value) {
+      }
+      public h5ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h5ST setTranslate(Object value) {
+      }
+      public h5ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class h6ST implements Html5DomainGroupTemplate {
 
@@ -6430,85 +6303,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("h6");
    	}
 
-       public h6ST setAccesskey(Object value) {
+      public h6ST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public h6ST setClass(Object value) {
+      }
+      public h6ST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public h6ST setContent(Object value) {
+      }
+      public h6ST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public h6ST setContenteditable(Object value) {
+      }
+      public h6ST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public h6ST setContextmenu(Object value) {
+      }
+      public h6ST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public h6ST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public h6ST setDatabind(Object value) {
+      public h6ST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public h6ST setDir(Object value) {
+      }
+      public h6ST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public h6ST setDraggable(Object value) {
+      }
+      public h6ST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public h6ST setDropzone(Object value) {
+      }
+      public h6ST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public h6ST setHidden(Object value) {
+      }
+      public h6ST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public h6ST setId(Object value) {
+      }
+      public h6ST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public h6ST setLang(Object value) {
+      }
+      public h6ST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public h6ST setSpellcheck(Object value) {
+      }
+      public h6ST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public h6ST setStyle(Object value) {
+      }
+      public h6ST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public h6ST setTabindex(Object value) {
+      }
+      public h6ST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public h6ST setTitle(Object value) {
+      }
+      public h6ST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public h6ST setTranslate(Object value) {
+      }
+      public h6ST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class headST implements Html5DomainGroupTemplate {
 
@@ -6528,7 +6401,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class headerST implements Html5DomainGroupTemplate {
 
@@ -6556,85 +6429,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("header");
    	}
 
-       public headerST setAccesskey(Object value) {
+      public headerST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public headerST setClass(Object value) {
+      }
+      public headerST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public headerST setContent(Object value) {
+      }
+      public headerST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public headerST setContenteditable(Object value) {
+      }
+      public headerST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public headerST setContextmenu(Object value) {
+      }
+      public headerST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public headerST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public headerST setDatabind(Object value) {
+      public headerST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public headerST setDir(Object value) {
+      }
+      public headerST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public headerST setDraggable(Object value) {
+      }
+      public headerST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public headerST setDropzone(Object value) {
+      }
+      public headerST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public headerST setHidden(Object value) {
+      }
+      public headerST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public headerST setId(Object value) {
+      }
+      public headerST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public headerST setLang(Object value) {
+      }
+      public headerST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public headerST setSpellcheck(Object value) {
+      }
+      public headerST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public headerST setStyle(Object value) {
+      }
+      public headerST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public headerST setTabindex(Object value) {
+      }
+      public headerST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public headerST setTitle(Object value) {
+      }
+      public headerST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public headerST setTranslate(Object value) {
+      }
+      public headerST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class hgroupST implements Html5DomainGroupTemplate {
 
@@ -6662,85 +6535,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("hgroup");
    	}
 
-       public hgroupST setAccesskey(Object value) {
+      public hgroupST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public hgroupST setClass(Object value) {
+      }
+      public hgroupST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public hgroupST setContent(Object value) {
+      }
+      public hgroupST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public hgroupST setContenteditable(Object value) {
+      }
+      public hgroupST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public hgroupST setContextmenu(Object value) {
+      }
+      public hgroupST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public hgroupST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public hgroupST setDatabind(Object value) {
+      public hgroupST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public hgroupST setDir(Object value) {
+      }
+      public hgroupST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public hgroupST setDraggable(Object value) {
+      }
+      public hgroupST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public hgroupST setDropzone(Object value) {
+      }
+      public hgroupST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public hgroupST setHidden(Object value) {
+      }
+      public hgroupST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public hgroupST setId(Object value) {
+      }
+      public hgroupST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public hgroupST setLang(Object value) {
+      }
+      public hgroupST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public hgroupST setSpellcheck(Object value) {
+      }
+      public hgroupST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public hgroupST setStyle(Object value) {
+      }
+      public hgroupST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public hgroupST setTabindex(Object value) {
+      }
+      public hgroupST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public hgroupST setTitle(Object value) {
+      }
+      public hgroupST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public hgroupST setTranslate(Object value) {
+      }
+      public hgroupST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class hrST implements Html5DomainGroupTemplate {
 
@@ -6767,81 +6640,81 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("hr");
    	}
 
-       public hrST setAccesskey(Object value) {
+      public hrST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public hrST setClass(Object value) {
+      }
+      public hrST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public hrST setContenteditable(Object value) {
+      }
+      public hrST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public hrST setContextmenu(Object value) {
+      }
+      public hrST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public hrST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public hrST setDatabind(Object value) {
+      public hrST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public hrST setDir(Object value) {
+      }
+      public hrST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public hrST setDraggable(Object value) {
+      }
+      public hrST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public hrST setDropzone(Object value) {
+      }
+      public hrST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public hrST setHidden(Object value) {
+      }
+      public hrST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public hrST setId(Object value) {
+      }
+      public hrST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public hrST setLang(Object value) {
+      }
+      public hrST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public hrST setSpellcheck(Object value) {
+      }
+      public hrST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public hrST setStyle(Object value) {
+      }
+      public hrST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public hrST setTabindex(Object value) {
+      }
+      public hrST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public hrST setTitle(Object value) {
+      }
+      public hrST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public hrST setTranslate(Object value) {
+      }
+      public hrST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class iST implements Html5DomainGroupTemplate {
 
@@ -6869,85 +6742,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("i");
    	}
 
-       public iST setAccesskey(Object value) {
+      public iST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public iST setClass(Object value) {
+      }
+      public iST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public iST setContent(Object value) {
+      }
+      public iST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public iST setContenteditable(Object value) {
+      }
+      public iST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public iST setContextmenu(Object value) {
+      }
+      public iST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public iST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public iST setDatabind(Object value) {
+      public iST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public iST setDir(Object value) {
+      }
+      public iST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public iST setDraggable(Object value) {
+      }
+      public iST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public iST setDropzone(Object value) {
+      }
+      public iST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public iST setHidden(Object value) {
+      }
+      public iST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public iST setId(Object value) {
+      }
+      public iST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public iST setLang(Object value) {
+      }
+      public iST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public iST setSpellcheck(Object value) {
+      }
+      public iST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public iST setStyle(Object value) {
+      }
+      public iST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public iST setTabindex(Object value) {
+      }
+      public iST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public iST setTitle(Object value) {
+      }
+      public iST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public iST setTranslate(Object value) {
+      }
+      public iST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class iframeST implements Html5DomainGroupTemplate {
 
@@ -6981,109 +6854,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("iframe");
    	}
 
-       public iframeST setAccesskey(Object value) {
+      public iframeST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public iframeST setClass(Object value) {
+      }
+      public iframeST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public iframeST setContent(Object value) {
+      }
+      public iframeST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public iframeST setContenteditable(Object value) {
+      }
+      public iframeST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public iframeST setContextmenu(Object value) {
+      }
+      public iframeST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public iframeST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public iframeST setDatabind(Object value) {
+      public iframeST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public iframeST setDir(Object value) {
+      }
+      public iframeST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public iframeST setDraggable(Object value) {
+      }
+      public iframeST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public iframeST setDropzone(Object value) {
+      }
+      public iframeST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public iframeST setHeight(Object value) {
+      }
+      public iframeST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public iframeST setHidden(Object value) {
+      }
+      public iframeST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public iframeST setId(Object value) {
+      }
+      public iframeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public iframeST setLang(Object value) {
+      }
+      public iframeST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public iframeST setName(Object value) {
+      }
+      public iframeST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public iframeST setSandbox(Object value) {
+      }
+      public iframeST setSandbox(Object value) {
       	tryToSetStringProperty(template, value, sandboxIsSet, "sandbox");   
          return this;
-      } 
-       public iframeST setSpellcheck(Object value) {
+      }
+      public iframeST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public iframeST setSrc(Object value) {
+      }
+      public iframeST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public iframeST setSrcdoc(Object value) {
+      }
+      public iframeST setSrcdoc(Object value) {
       	tryToSetStringProperty(template, value, srcdocIsSet, "srcdoc");   
          return this;
-      } 
-       public iframeST setStyle(Object value) {
+      }
+      public iframeST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public iframeST setTabindex(Object value) {
+      }
+      public iframeST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public iframeST setTitle(Object value) {
+      }
+      public iframeST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public iframeST setTranslate(Object value) {
+      }
+      public iframeST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public iframeST setWidth(Object value) {
+      }
+      public iframeST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class imgST implements Html5DomainGroupTemplate {
 
@@ -7118,113 +6991,113 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("img");
    	}
 
-       public imgST setAccesskey(Object value) {
+      public imgST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public imgST setAlt(Object value) {
+      }
+      public imgST setAlt(Object value) {
       	tryToSetStringProperty(template, value, altIsSet, "alt");   
          return this;
-      } 
-       public imgST setClass(Object value) {
+      }
+      public imgST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public imgST setContenteditable(Object value) {
+      }
+      public imgST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public imgST setContextmenu(Object value) {
+      }
+      public imgST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
-       public imgST setCrossorigin(Object value) {
+      }
+      public imgST setCrossorigin(Object value) {
       	tryToSetStringProperty(template, value, crossoriginIsSet, "crossorigin");   
          return this;
-      } 
+      }
       public imgST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public imgST setDatabind(Object value) {
+      public imgST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public imgST setDir(Object value) {
+      }
+      public imgST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public imgST setDraggable(Object value) {
+      }
+      public imgST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public imgST setDropzone(Object value) {
+      }
+      public imgST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public imgST setHeight(Object value) {
+      }
+      public imgST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public imgST setHidden(Object value) {
+      }
+      public imgST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public imgST setId(Object value) {
+      }
+      public imgST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public imgST setIsmap(Object value) {
+      }
+      public imgST setIsmap(Object value) {
       	tryToSetStringProperty(template, value, ismapIsSet, "ismap");   
          return this;
-      } 
-       public imgST setLang(Object value) {
+      }
+      public imgST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public imgST setLongdesc(Object value) {
+      }
+      public imgST setLongdesc(Object value) {
       	tryToSetStringProperty(template, value, longdescIsSet, "longdesc");   
          return this;
-      } 
-       public imgST setSpellcheck(Object value) {
+      }
+      public imgST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public imgST setSrc(Object value) {
+      }
+      public imgST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public imgST setStyle(Object value) {
+      }
+      public imgST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public imgST setTabindex(Object value) {
+      }
+      public imgST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public imgST setTitle(Object value) {
+      }
+      public imgST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public imgST setTranslate(Object value) {
+      }
+      public imgST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public imgST setUsemap(Object value) {
+      }
+      public imgST setUsemap(Object value) {
       	tryToSetStringProperty(template, value, usemapIsSet, "usemap");   
          return this;
-      } 
-       public imgST setWidth(Object value) {
+      }
+      public imgST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class inputST implements Html5DomainGroupTemplate {
 
@@ -7280,197 +7153,197 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("input");
    	}
 
-       public inputST setAccept(Object value) {
+      public inputST setAccept(Object value) {
       	tryToSetStringProperty(template, value, acceptIsSet, "accept");   
          return this;
-      } 
-       public inputST setAccesskey(Object value) {
+      }
+      public inputST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public inputST setAlt(Object value) {
+      }
+      public inputST setAlt(Object value) {
       	tryToSetStringProperty(template, value, altIsSet, "alt");   
          return this;
-      } 
-       public inputST setAutocomplete(Object value) {
+      }
+      public inputST setAutocomplete(Object value) {
       	tryToSetStringProperty(template, value, autocompleteIsSet, "autocomplete");   
          return this;
-      } 
-       public inputST setAutofocus(Object value) {
+      }
+      public inputST setAutofocus(Object value) {
       	tryToSetStringProperty(template, value, autofocusIsSet, "autofocus");   
          return this;
-      } 
-       public inputST setChecked(Object value) {
+      }
+      public inputST setChecked(Object value) {
       	tryToSetStringProperty(template, value, checkedIsSet, "checked");   
          return this;
-      } 
-       public inputST setClass(Object value) {
+      }
+      public inputST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public inputST setContenteditable(Object value) {
+      }
+      public inputST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public inputST setContextmenu(Object value) {
+      }
+      public inputST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public inputST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public inputST setDatabind(Object value) {
+      public inputST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public inputST setDir(Object value) {
+      }
+      public inputST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public inputST setDisabled(Object value) {
+      }
+      public inputST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public inputST setDraggable(Object value) {
+      }
+      public inputST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public inputST setDropzone(Object value) {
+      }
+      public inputST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public inputST setForm(Object value) {
+      }
+      public inputST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public inputST setFormaction(Object value) {
+      }
+      public inputST setFormaction(Object value) {
       	tryToSetStringProperty(template, value, formactionIsSet, "formaction");   
          return this;
-      } 
-       public inputST setFormenctype(Object value) {
+      }
+      public inputST setFormenctype(Object value) {
       	tryToSetStringProperty(template, value, formenctypeIsSet, "formenctype");   
          return this;
-      } 
-       public inputST setFormmethod(Object value) {
+      }
+      public inputST setFormmethod(Object value) {
       	tryToSetStringProperty(template, value, formmethodIsSet, "formmethod");   
          return this;
-      } 
-       public inputST setFormnovalidate(Object value) {
+      }
+      public inputST setFormnovalidate(Object value) {
       	tryToSetStringProperty(template, value, formnovalidateIsSet, "formnovalidate");   
          return this;
-      } 
-       public inputST setFormtarget(Object value) {
+      }
+      public inputST setFormtarget(Object value) {
       	tryToSetStringProperty(template, value, formtargetIsSet, "formtarget");   
          return this;
-      } 
-       public inputST setHeight(Object value) {
+      }
+      public inputST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public inputST setHidden(Object value) {
+      }
+      public inputST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public inputST setId(Object value) {
+      }
+      public inputST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public inputST setLang(Object value) {
+      }
+      public inputST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public inputST setList(Object value) {
+      }
+      public inputST setList(Object value) {
       	tryToSetStringProperty(template, value, listIsSet, "list");   
          return this;
-      } 
-       public inputST setMax(Object value) {
+      }
+      public inputST setMax(Object value) {
       	tryToSetStringProperty(template, value, maxIsSet, "max");   
          return this;
-      } 
-       public inputST setMaxlength(Object value) {
+      }
+      public inputST setMaxlength(Object value) {
       	tryToSetStringProperty(template, value, maxlengthIsSet, "maxlength");   
          return this;
-      } 
-       public inputST setMin(Object value) {
+      }
+      public inputST setMin(Object value) {
       	tryToSetStringProperty(template, value, minIsSet, "min");   
          return this;
-      } 
-       public inputST setMultiple(Object value) {
+      }
+      public inputST setMultiple(Object value) {
       	tryToSetStringProperty(template, value, multipleIsSet, "multiple");   
          return this;
-      } 
-       public inputST setName(Object value) {
+      }
+      public inputST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public inputST setPattern(Object value) {
+      }
+      public inputST setPattern(Object value) {
       	tryToSetStringProperty(template, value, patternIsSet, "pattern");   
          return this;
-      } 
-       public inputST setPlaceholder(Object value) {
+      }
+      public inputST setPlaceholder(Object value) {
       	tryToSetStringProperty(template, value, placeholderIsSet, "placeholder");   
          return this;
-      } 
-       public inputST setReadonly(Object value) {
+      }
+      public inputST setReadonly(Object value) {
       	tryToSetStringProperty(template, value, readonlyIsSet, "readonly");   
          return this;
-      } 
-       public inputST setRequired(Object value) {
+      }
+      public inputST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      } 
-       public inputST setSize(Object value) {
+      }
+      public inputST setSize(Object value) {
       	tryToSetStringProperty(template, value, sizeIsSet, "size");   
          return this;
-      } 
-       public inputST setSpellcheck(Object value) {
+      }
+      public inputST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public inputST setSrc(Object value) {
+      }
+      public inputST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public inputST setStep(Object value) {
+      }
+      public inputST setStep(Object value) {
       	tryToSetStringProperty(template, value, stepIsSet, "step");   
          return this;
-      } 
-       public inputST setStyle(Object value) {
+      }
+      public inputST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public inputST setTabindex(Object value) {
+      }
+      public inputST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public inputST setTitle(Object value) {
+      }
+      public inputST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public inputST setTranslate(Object value) {
+      }
+      public inputST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public inputST setType(Object value) {
+      }
+      public inputST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
-       public inputST setValue(Object value) {
+      }
+      public inputST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
-       public inputST setWidth(Object value) {
+      }
+      public inputST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class insST implements Html5DomainGroupTemplate {
 
@@ -7500,93 +7373,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("ins");
    	}
 
-       public insST setAccesskey(Object value) {
+      public insST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public insST setCite(Object value) {
+      }
+      public insST setCite(Object value) {
       	tryToSetStringProperty(template, value, citeIsSet, "cite");   
          return this;
-      } 
-       public insST setClass(Object value) {
+      }
+      public insST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public insST setContent(Object value) {
+      }
+      public insST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public insST setContenteditable(Object value) {
+      }
+      public insST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public insST setContextmenu(Object value) {
+      }
+      public insST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public insST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public insST setDatabind(Object value) {
+      public insST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public insST setDatetime(Object value) {
+      }
+      public insST setDatetime(Object value) {
       	tryToSetStringProperty(template, value, datetimeIsSet, "datetime");   
          return this;
-      } 
-       public insST setDir(Object value) {
+      }
+      public insST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public insST setDraggable(Object value) {
+      }
+      public insST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public insST setDropzone(Object value) {
+      }
+      public insST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public insST setHidden(Object value) {
+      }
+      public insST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public insST setId(Object value) {
+      }
+      public insST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public insST setLang(Object value) {
+      }
+      public insST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public insST setSpellcheck(Object value) {
+      }
+      public insST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public insST setStyle(Object value) {
+      }
+      public insST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public insST setTabindex(Object value) {
+      }
+      public insST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public insST setTitle(Object value) {
+      }
+      public insST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public insST setTranslate(Object value) {
+      }
+      public insST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class kbdST implements Html5DomainGroupTemplate {
 
@@ -7614,85 +7487,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("kbd");
    	}
 
-       public kbdST setAccesskey(Object value) {
+      public kbdST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public kbdST setClass(Object value) {
+      }
+      public kbdST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public kbdST setContent(Object value) {
+      }
+      public kbdST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public kbdST setContenteditable(Object value) {
+      }
+      public kbdST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public kbdST setContextmenu(Object value) {
+      }
+      public kbdST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public kbdST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public kbdST setDatabind(Object value) {
+      public kbdST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public kbdST setDir(Object value) {
+      }
+      public kbdST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public kbdST setDraggable(Object value) {
+      }
+      public kbdST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public kbdST setDropzone(Object value) {
+      }
+      public kbdST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public kbdST setHidden(Object value) {
+      }
+      public kbdST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public kbdST setId(Object value) {
+      }
+      public kbdST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public kbdST setLang(Object value) {
+      }
+      public kbdST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public kbdST setSpellcheck(Object value) {
+      }
+      public kbdST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public kbdST setStyle(Object value) {
+      }
+      public kbdST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public kbdST setTabindex(Object value) {
+      }
+      public kbdST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public kbdST setTitle(Object value) {
+      }
+      public kbdST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public kbdST setTranslate(Object value) {
+      }
+      public kbdST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class keygenST implements Html5DomainGroupTemplate {
 
@@ -7726,109 +7599,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("keygen");
    	}
 
-       public keygenST setAccesskey(Object value) {
+      public keygenST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public keygenST setAutofocus(Object value) {
+      }
+      public keygenST setAutofocus(Object value) {
       	tryToSetStringProperty(template, value, autofocusIsSet, "autofocus");   
          return this;
-      } 
-       public keygenST setChallenge(Object value) {
+      }
+      public keygenST setChallenge(Object value) {
       	tryToSetStringProperty(template, value, challengeIsSet, "challenge");   
          return this;
-      } 
-       public keygenST setClass(Object value) {
+      }
+      public keygenST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public keygenST setContent(Object value) {
+      }
+      public keygenST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public keygenST setContenteditable(Object value) {
+      }
+      public keygenST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public keygenST setContextmenu(Object value) {
+      }
+      public keygenST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public keygenST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public keygenST setDatabind(Object value) {
+      public keygenST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public keygenST setDir(Object value) {
+      }
+      public keygenST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public keygenST setDisabled(Object value) {
+      }
+      public keygenST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public keygenST setDraggable(Object value) {
+      }
+      public keygenST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public keygenST setDropzone(Object value) {
+      }
+      public keygenST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public keygenST setForm(Object value) {
+      }
+      public keygenST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public keygenST setHidden(Object value) {
+      }
+      public keygenST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public keygenST setId(Object value) {
+      }
+      public keygenST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public keygenST setKeytype(Object value) {
+      }
+      public keygenST setKeytype(Object value) {
       	tryToSetStringProperty(template, value, keytypeIsSet, "keytype");   
          return this;
-      } 
-       public keygenST setLang(Object value) {
+      }
+      public keygenST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public keygenST setName(Object value) {
+      }
+      public keygenST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public keygenST setSpellcheck(Object value) {
+      }
+      public keygenST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public keygenST setStyle(Object value) {
+      }
+      public keygenST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public keygenST setTabindex(Object value) {
+      }
+      public keygenST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public keygenST setTitle(Object value) {
+      }
+      public keygenST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public keygenST setTranslate(Object value) {
+      }
+      public keygenST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class labelST implements Html5DomainGroupTemplate {
 
@@ -7858,93 +7731,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("label");
    	}
 
-       public labelST setAccesskey(Object value) {
+      public labelST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public labelST setClass(Object value) {
+      }
+      public labelST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public labelST setContent(Object value) {
+      }
+      public labelST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public labelST setContenteditable(Object value) {
+      }
+      public labelST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public labelST setContextmenu(Object value) {
+      }
+      public labelST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public labelST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public labelST setDatabind(Object value) {
+      public labelST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public labelST setDir(Object value) {
+      }
+      public labelST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public labelST setDraggable(Object value) {
+      }
+      public labelST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public labelST setDropzone(Object value) {
+      }
+      public labelST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public labelST setFor(Object value) {
+      }
+      public labelST setFor(Object value) {
       	tryToSetStringProperty(template, value, forIsSet, "for");   
          return this;
-      } 
-       public labelST setForm(Object value) {
+      }
+      public labelST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public labelST setHidden(Object value) {
+      }
+      public labelST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public labelST setId(Object value) {
+      }
+      public labelST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public labelST setLang(Object value) {
+      }
+      public labelST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public labelST setSpellcheck(Object value) {
+      }
+      public labelST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public labelST setStyle(Object value) {
+      }
+      public labelST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public labelST setTabindex(Object value) {
+      }
+      public labelST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public labelST setTitle(Object value) {
+      }
+      public labelST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public labelST setTranslate(Object value) {
+      }
+      public labelST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class legendST implements Html5DomainGroupTemplate {
 
@@ -7972,85 +7845,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("legend");
    	}
 
-       public legendST setAccesskey(Object value) {
+      public legendST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public legendST setClass(Object value) {
+      }
+      public legendST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public legendST setContent(Object value) {
+      }
+      public legendST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public legendST setContenteditable(Object value) {
+      }
+      public legendST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public legendST setContextmenu(Object value) {
+      }
+      public legendST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public legendST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public legendST setDatabind(Object value) {
+      public legendST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public legendST setDir(Object value) {
+      }
+      public legendST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public legendST setDraggable(Object value) {
+      }
+      public legendST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public legendST setDropzone(Object value) {
+      }
+      public legendST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public legendST setHidden(Object value) {
+      }
+      public legendST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public legendST setId(Object value) {
+      }
+      public legendST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public legendST setLang(Object value) {
+      }
+      public legendST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public legendST setSpellcheck(Object value) {
+      }
+      public legendST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public legendST setStyle(Object value) {
+      }
+      public legendST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public legendST setTabindex(Object value) {
+      }
+      public legendST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public legendST setTitle(Object value) {
+      }
+      public legendST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public legendST setTranslate(Object value) {
+      }
+      public legendST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class liST implements Html5DomainGroupTemplate {
 
@@ -8079,89 +7952,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("li");
    	}
 
-       public liST setAccesskey(Object value) {
+      public liST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public liST setClass(Object value) {
+      }
+      public liST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public liST setContent(Object value) {
+      }
+      public liST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public liST setContenteditable(Object value) {
+      }
+      public liST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public liST setContextmenu(Object value) {
+      }
+      public liST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public liST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public liST setDatabind(Object value) {
+      public liST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public liST setDir(Object value) {
+      }
+      public liST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public liST setDraggable(Object value) {
+      }
+      public liST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public liST setDropzone(Object value) {
+      }
+      public liST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public liST setHidden(Object value) {
+      }
+      public liST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public liST setId(Object value) {
+      }
+      public liST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public liST setLang(Object value) {
+      }
+      public liST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public liST setSpellcheck(Object value) {
+      }
+      public liST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public liST setStyle(Object value) {
+      }
+      public liST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public liST setTabindex(Object value) {
+      }
+      public liST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public liST setTitle(Object value) {
+      }
+      public liST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public liST setTranslate(Object value) {
+      }
+      public liST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public liST setValue(Object value) {
+      }
+      public liST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class linkST implements Html5DomainGroupTemplate {
 
@@ -8195,109 +8068,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("link");
    	}
 
-       public linkST setAccesskey(Object value) {
+      public linkST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public linkST setClass(Object value) {
+      }
+      public linkST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public linkST setContenteditable(Object value) {
+      }
+      public linkST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public linkST setContextmenu(Object value) {
+      }
+      public linkST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
-       public linkST setCrossorigin(Object value) {
+      }
+      public linkST setCrossorigin(Object value) {
       	tryToSetStringProperty(template, value, crossoriginIsSet, "crossorigin");   
          return this;
-      } 
+      }
       public linkST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public linkST setDatabind(Object value) {
+      public linkST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public linkST setDir(Object value) {
+      }
+      public linkST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public linkST setDraggable(Object value) {
+      }
+      public linkST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public linkST setDropzone(Object value) {
+      }
+      public linkST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public linkST setHidden(Object value) {
+      }
+      public linkST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public linkST setHref(Object value) {
+      }
+      public linkST setHref(Object value) {
       	tryToSetStringProperty(template, value, hrefIsSet, "href");   
          return this;
-      } 
-       public linkST setHreflang(Object value) {
+      }
+      public linkST setHreflang(Object value) {
       	tryToSetStringProperty(template, value, hreflangIsSet, "hreflang");   
          return this;
-      } 
-       public linkST setId(Object value) {
+      }
+      public linkST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public linkST setLang(Object value) {
+      }
+      public linkST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public linkST setMedia(Object value) {
+      }
+      public linkST setMedia(Object value) {
       	tryToSetStringProperty(template, value, mediaIsSet, "media");   
          return this;
-      } 
-       public linkST setRel(Object value) {
+      }
+      public linkST setRel(Object value) {
       	tryToSetStringProperty(template, value, relIsSet, "rel");   
          return this;
-      } 
-       public linkST setSizes(Object value) {
+      }
+      public linkST setSizes(Object value) {
       	tryToSetStringProperty(template, value, sizesIsSet, "sizes");   
          return this;
-      } 
-       public linkST setSpellcheck(Object value) {
+      }
+      public linkST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public linkST setStyle(Object value) {
+      }
+      public linkST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public linkST setTabindex(Object value) {
+      }
+      public linkST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public linkST setTitle(Object value) {
+      }
+      public linkST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public linkST setTranslate(Object value) {
+      }
+      public linkST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public linkST setType(Object value) {
+      }
+      public linkST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class mainST implements Html5DomainGroupTemplate {
 
@@ -8325,85 +8198,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("main");
    	}
 
-       public mainST setAccesskey(Object value) {
+      public mainST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public mainST setClass(Object value) {
+      }
+      public mainST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public mainST setContent(Object value) {
+      }
+      public mainST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public mainST setContenteditable(Object value) {
+      }
+      public mainST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public mainST setContextmenu(Object value) {
+      }
+      public mainST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public mainST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public mainST setDatabind(Object value) {
+      public mainST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public mainST setDir(Object value) {
+      }
+      public mainST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public mainST setDraggable(Object value) {
+      }
+      public mainST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public mainST setDropzone(Object value) {
+      }
+      public mainST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public mainST setHidden(Object value) {
+      }
+      public mainST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public mainST setId(Object value) {
+      }
+      public mainST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public mainST setLang(Object value) {
+      }
+      public mainST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public mainST setSpellcheck(Object value) {
+      }
+      public mainST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public mainST setStyle(Object value) {
+      }
+      public mainST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public mainST setTabindex(Object value) {
+      }
+      public mainST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public mainST setTitle(Object value) {
+      }
+      public mainST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public mainST setTranslate(Object value) {
+      }
+      public mainST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class mapST implements Html5DomainGroupTemplate {
 
@@ -8432,89 +8305,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("map");
    	}
 
-       public mapST setAccesskey(Object value) {
+      public mapST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public mapST setClass(Object value) {
+      }
+      public mapST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public mapST setContent(Object value) {
+      }
+      public mapST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public mapST setContenteditable(Object value) {
+      }
+      public mapST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public mapST setContextmenu(Object value) {
+      }
+      public mapST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public mapST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public mapST setDatabind(Object value) {
+      public mapST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public mapST setDir(Object value) {
+      }
+      public mapST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public mapST setDraggable(Object value) {
+      }
+      public mapST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public mapST setDropzone(Object value) {
+      }
+      public mapST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public mapST setHidden(Object value) {
+      }
+      public mapST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public mapST setId(Object value) {
+      }
+      public mapST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public mapST setLang(Object value) {
+      }
+      public mapST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public mapST setName(Object value) {
+      }
+      public mapST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public mapST setSpellcheck(Object value) {
+      }
+      public mapST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public mapST setStyle(Object value) {
+      }
+      public mapST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public mapST setTabindex(Object value) {
+      }
+      public mapST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public mapST setTitle(Object value) {
+      }
+      public mapST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public mapST setTranslate(Object value) {
+      }
+      public mapST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class markST implements Html5DomainGroupTemplate {
 
@@ -8542,85 +8415,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("mark");
    	}
 
-       public markST setAccesskey(Object value) {
+      public markST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public markST setClass(Object value) {
+      }
+      public markST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public markST setContent(Object value) {
+      }
+      public markST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public markST setContenteditable(Object value) {
+      }
+      public markST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public markST setContextmenu(Object value) {
+      }
+      public markST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public markST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public markST setDatabind(Object value) {
+      public markST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public markST setDir(Object value) {
+      }
+      public markST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public markST setDraggable(Object value) {
+      }
+      public markST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public markST setDropzone(Object value) {
+      }
+      public markST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public markST setHidden(Object value) {
+      }
+      public markST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public markST setId(Object value) {
+      }
+      public markST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public markST setLang(Object value) {
+      }
+      public markST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public markST setSpellcheck(Object value) {
+      }
+      public markST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public markST setStyle(Object value) {
+      }
+      public markST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public markST setTabindex(Object value) {
+      }
+      public markST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public markST setTitle(Object value) {
+      }
+      public markST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public markST setTranslate(Object value) {
+      }
+      public markST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class menuST implements Html5DomainGroupTemplate {
 
@@ -8650,93 +8523,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("menu");
    	}
 
-       public menuST setAccesskey(Object value) {
+      public menuST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public menuST setClass(Object value) {
+      }
+      public menuST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public menuST setContent(Object value) {
+      }
+      public menuST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public menuST setContenteditable(Object value) {
+      }
+      public menuST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public menuST setContextmenu(Object value) {
+      }
+      public menuST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public menuST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public menuST setDatabind(Object value) {
+      public menuST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public menuST setDir(Object value) {
+      }
+      public menuST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public menuST setDraggable(Object value) {
+      }
+      public menuST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public menuST setDropzone(Object value) {
+      }
+      public menuST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public menuST setHidden(Object value) {
+      }
+      public menuST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public menuST setId(Object value) {
+      }
+      public menuST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public menuST setLabel(Object value) {
+      }
+      public menuST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public menuST setLang(Object value) {
+      }
+      public menuST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public menuST setSpellcheck(Object value) {
+      }
+      public menuST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public menuST setStyle(Object value) {
+      }
+      public menuST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public menuST setTabindex(Object value) {
+      }
+      public menuST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public menuST setTitle(Object value) {
+      }
+      public menuST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public menuST setTranslate(Object value) {
+      }
+      public menuST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public menuST setType(Object value) {
+      }
+      public menuST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class menuitemST implements Html5DomainGroupTemplate {
 
@@ -8772,117 +8645,117 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("menuitem");
    	}
 
-       public menuitemST setAccesskey(Object value) {
+      public menuitemST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public menuitemST setChecked(Object value) {
+      }
+      public menuitemST setChecked(Object value) {
       	tryToSetStringProperty(template, value, checkedIsSet, "checked");   
          return this;
-      } 
-       public menuitemST setClass(Object value) {
+      }
+      public menuitemST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public menuitemST setCommand(Object value) {
+      }
+      public menuitemST setCommand(Object value) {
       	tryToSetStringProperty(template, value, commandIsSet, "command");   
          return this;
-      } 
-       public menuitemST setContent(Object value) {
+      }
+      public menuitemST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public menuitemST setContenteditable(Object value) {
+      }
+      public menuitemST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public menuitemST setContextmenu(Object value) {
+      }
+      public menuitemST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public menuitemST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public menuitemST setDatabind(Object value) {
+      public menuitemST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public menuitemST setDefault_(Object value) {
+      }
+      public menuitemST setDefault_(Object value) {
       	tryToSetStringProperty(template, value, default_IsSet, "default_");   
          return this;
-      } 
-       public menuitemST setDir(Object value) {
+      }
+      public menuitemST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public menuitemST setDisabled(Object value) {
+      }
+      public menuitemST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public menuitemST setDraggable(Object value) {
+      }
+      public menuitemST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public menuitemST setDropzone(Object value) {
+      }
+      public menuitemST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public menuitemST setHidden(Object value) {
+      }
+      public menuitemST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public menuitemST setIcon(Object value) {
+      }
+      public menuitemST setIcon(Object value) {
       	tryToSetStringProperty(template, value, iconIsSet, "icon");   
          return this;
-      } 
-       public menuitemST setId(Object value) {
+      }
+      public menuitemST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public menuitemST setLabel(Object value) {
+      }
+      public menuitemST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public menuitemST setLang(Object value) {
+      }
+      public menuitemST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public menuitemST setRadiogroup(Object value) {
+      }
+      public menuitemST setRadiogroup(Object value) {
       	tryToSetStringProperty(template, value, radiogroupIsSet, "radiogroup");   
          return this;
-      } 
-       public menuitemST setSpellcheck(Object value) {
+      }
+      public menuitemST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public menuitemST setStyle(Object value) {
+      }
+      public menuitemST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public menuitemST setTabindex(Object value) {
+      }
+      public menuitemST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public menuitemST setTitle(Object value) {
+      }
+      public menuitemST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public menuitemST setTranslate(Object value) {
+      }
+      public menuitemST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public menuitemST setType(Object value) {
+      }
+      public menuitemST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class metaST implements Html5DomainGroupTemplate {
 
@@ -8913,97 +8786,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("meta");
    	}
 
-       public metaST setAccesskey(Object value) {
+      public metaST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public metaST setCharset(Object value) {
+      }
+      public metaST setCharset(Object value) {
       	tryToSetStringProperty(template, value, charsetIsSet, "charset");   
          return this;
-      } 
-       public metaST setClass(Object value) {
+      }
+      public metaST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public metaST setContent(Object value) {
+      }
+      public metaST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public metaST setContenteditable(Object value) {
+      }
+      public metaST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public metaST setContextmenu(Object value) {
+      }
+      public metaST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public metaST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public metaST setDatabind(Object value) {
+      public metaST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public metaST setDir(Object value) {
+      }
+      public metaST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public metaST setDraggable(Object value) {
+      }
+      public metaST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public metaST setDropzone(Object value) {
+      }
+      public metaST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public metaST setHidden(Object value) {
+      }
+      public metaST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public metaST setHttp_equiv(Object value) {
+      }
+      public metaST setHttp_equiv(Object value) {
       	tryToSetStringProperty(template, value, http_equivIsSet, "http_equiv");   
          return this;
-      } 
-       public metaST setId(Object value) {
+      }
+      public metaST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public metaST setLang(Object value) {
+      }
+      public metaST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public metaST setName(Object value) {
+      }
+      public metaST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public metaST setSpellcheck(Object value) {
+      }
+      public metaST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public metaST setStyle(Object value) {
+      }
+      public metaST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public metaST setTabindex(Object value) {
+      }
+      public metaST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public metaST setTitle(Object value) {
+      }
+      public metaST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public metaST setTranslate(Object value) {
+      }
+      public metaST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class meterST implements Html5DomainGroupTemplate {
 
@@ -9038,113 +8911,113 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("meter");
    	}
 
-       public meterST setAccesskey(Object value) {
+      public meterST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public meterST setClass(Object value) {
+      }
+      public meterST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public meterST setContent(Object value) {
+      }
+      public meterST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public meterST setContenteditable(Object value) {
+      }
+      public meterST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public meterST setContextmenu(Object value) {
+      }
+      public meterST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public meterST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public meterST setDatabind(Object value) {
+      public meterST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public meterST setDir(Object value) {
+      }
+      public meterST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public meterST setDraggable(Object value) {
+      }
+      public meterST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public meterST setDropzone(Object value) {
+      }
+      public meterST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public meterST setForm(Object value) {
+      }
+      public meterST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public meterST setHidden(Object value) {
+      }
+      public meterST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public meterST setHigh(Object value) {
+      }
+      public meterST setHigh(Object value) {
       	tryToSetStringProperty(template, value, highIsSet, "high");   
          return this;
-      } 
-       public meterST setId(Object value) {
+      }
+      public meterST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public meterST setLang(Object value) {
+      }
+      public meterST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public meterST setLow(Object value) {
+      }
+      public meterST setLow(Object value) {
       	tryToSetStringProperty(template, value, lowIsSet, "low");   
          return this;
-      } 
-       public meterST setMax(Object value) {
+      }
+      public meterST setMax(Object value) {
       	tryToSetStringProperty(template, value, maxIsSet, "max");   
          return this;
-      } 
-       public meterST setMin(Object value) {
+      }
+      public meterST setMin(Object value) {
       	tryToSetStringProperty(template, value, minIsSet, "min");   
          return this;
-      } 
-       public meterST setOptimum(Object value) {
+      }
+      public meterST setOptimum(Object value) {
       	tryToSetStringProperty(template, value, optimumIsSet, "optimum");   
          return this;
-      } 
-       public meterST setSpellcheck(Object value) {
+      }
+      public meterST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public meterST setStyle(Object value) {
+      }
+      public meterST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public meterST setTabindex(Object value) {
+      }
+      public meterST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public meterST setTitle(Object value) {
+      }
+      public meterST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public meterST setTranslate(Object value) {
+      }
+      public meterST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public meterST setValue(Object value) {
+      }
+      public meterST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class mimeJsonST implements Html5DomainGroupTemplate {
 
@@ -9158,7 +9031,7 @@ public final class Html5DomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class navST implements Html5DomainGroupTemplate {
 
@@ -9186,85 +9059,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("nav");
    	}
 
-       public navST setAccesskey(Object value) {
+      public navST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public navST setClass(Object value) {
+      }
+      public navST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public navST setContent(Object value) {
+      }
+      public navST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public navST setContenteditable(Object value) {
+      }
+      public navST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public navST setContextmenu(Object value) {
+      }
+      public navST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public navST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public navST setDatabind(Object value) {
+      public navST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public navST setDir(Object value) {
+      }
+      public navST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public navST setDraggable(Object value) {
+      }
+      public navST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public navST setDropzone(Object value) {
+      }
+      public navST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public navST setHidden(Object value) {
+      }
+      public navST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public navST setId(Object value) {
+      }
+      public navST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public navST setLang(Object value) {
+      }
+      public navST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public navST setSpellcheck(Object value) {
+      }
+      public navST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public navST setStyle(Object value) {
+      }
+      public navST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public navST setTabindex(Object value) {
+      }
+      public navST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public navST setTitle(Object value) {
+      }
+      public navST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public navST setTranslate(Object value) {
+      }
+      public navST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class noframesST implements Html5DomainGroupTemplate {
 
@@ -9292,85 +9165,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("noframes");
    	}
 
-       public noframesST setAccesskey(Object value) {
+      public noframesST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public noframesST setClass(Object value) {
+      }
+      public noframesST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public noframesST setContent(Object value) {
+      }
+      public noframesST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public noframesST setContenteditable(Object value) {
+      }
+      public noframesST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public noframesST setContextmenu(Object value) {
+      }
+      public noframesST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public noframesST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public noframesST setDatabind(Object value) {
+      public noframesST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public noframesST setDir(Object value) {
+      }
+      public noframesST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public noframesST setDraggable(Object value) {
+      }
+      public noframesST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public noframesST setDropzone(Object value) {
+      }
+      public noframesST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public noframesST setHidden(Object value) {
+      }
+      public noframesST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public noframesST setId(Object value) {
+      }
+      public noframesST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public noframesST setLang(Object value) {
+      }
+      public noframesST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public noframesST setSpellcheck(Object value) {
+      }
+      public noframesST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public noframesST setStyle(Object value) {
+      }
+      public noframesST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public noframesST setTabindex(Object value) {
+      }
+      public noframesST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public noframesST setTitle(Object value) {
+      }
+      public noframesST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public noframesST setTranslate(Object value) {
+      }
+      public noframesST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class noscriptST implements Html5DomainGroupTemplate {
 
@@ -9398,85 +9271,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("noscript");
    	}
 
-       public noscriptST setAccesskey(Object value) {
+      public noscriptST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public noscriptST setClass(Object value) {
+      }
+      public noscriptST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public noscriptST setContent(Object value) {
+      }
+      public noscriptST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public noscriptST setContenteditable(Object value) {
+      }
+      public noscriptST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public noscriptST setContextmenu(Object value) {
+      }
+      public noscriptST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public noscriptST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public noscriptST setDatabind(Object value) {
+      public noscriptST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public noscriptST setDir(Object value) {
+      }
+      public noscriptST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public noscriptST setDraggable(Object value) {
+      }
+      public noscriptST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public noscriptST setDropzone(Object value) {
+      }
+      public noscriptST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public noscriptST setHidden(Object value) {
+      }
+      public noscriptST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public noscriptST setId(Object value) {
+      }
+      public noscriptST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public noscriptST setLang(Object value) {
+      }
+      public noscriptST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public noscriptST setSpellcheck(Object value) {
+      }
+      public noscriptST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public noscriptST setStyle(Object value) {
+      }
+      public noscriptST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public noscriptST setTabindex(Object value) {
+      }
+      public noscriptST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public noscriptST setTitle(Object value) {
+      }
+      public noscriptST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public noscriptST setTranslate(Object value) {
+      }
+      public noscriptST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class objectST implements Html5DomainGroupTemplate {
 
@@ -9510,109 +9383,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("object");
    	}
 
-       public objectST setAccesskey(Object value) {
+      public objectST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public objectST setClass(Object value) {
+      }
+      public objectST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public objectST setContent(Object value) {
+      }
+      public objectST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public objectST setContenteditable(Object value) {
+      }
+      public objectST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public objectST setContextmenu(Object value) {
+      }
+      public objectST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public objectST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public objectST setDatabind(Object value) {
+      public objectST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public objectST setDir(Object value) {
+      }
+      public objectST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public objectST setDraggable(Object value) {
+      }
+      public objectST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public objectST setDropzone(Object value) {
+      }
+      public objectST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public objectST setForm(Object value) {
+      }
+      public objectST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public objectST setHeight(Object value) {
+      }
+      public objectST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public objectST setHidden(Object value) {
+      }
+      public objectST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public objectST setId(Object value) {
+      }
+      public objectST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public objectST setLang(Object value) {
+      }
+      public objectST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public objectST setName(Object value) {
+      }
+      public objectST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public objectST setSpellcheck(Object value) {
+      }
+      public objectST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public objectST setStyle(Object value) {
+      }
+      public objectST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public objectST setTabindex(Object value) {
+      }
+      public objectST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public objectST setTitle(Object value) {
+      }
+      public objectST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public objectST setTranslate(Object value) {
+      }
+      public objectST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public objectST setType(Object value) {
+      }
+      public objectST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
-       public objectST setUsemap(Object value) {
+      }
+      public objectST setUsemap(Object value) {
       	tryToSetStringProperty(template, value, usemapIsSet, "usemap");   
          return this;
-      } 
-       public objectST setWidth(Object value) {
+      }
+      public objectST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class olST implements Html5DomainGroupTemplate {
 
@@ -9643,97 +9516,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("ol");
    	}
 
-       public olST setAccesskey(Object value) {
+      public olST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public olST setClass(Object value) {
+      }
+      public olST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public olST setContent(Object value) {
+      }
+      public olST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public olST setContenteditable(Object value) {
+      }
+      public olST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public olST setContextmenu(Object value) {
+      }
+      public olST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public olST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public olST setDatabind(Object value) {
+      public olST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public olST setDir(Object value) {
+      }
+      public olST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public olST setDraggable(Object value) {
+      }
+      public olST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public olST setDropzone(Object value) {
+      }
+      public olST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public olST setHidden(Object value) {
+      }
+      public olST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public olST setId(Object value) {
+      }
+      public olST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public olST setLang(Object value) {
+      }
+      public olST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public olST setReversed(Object value) {
+      }
+      public olST setReversed(Object value) {
       	tryToSetStringProperty(template, value, reversedIsSet, "reversed");   
          return this;
-      } 
-       public olST setSpellcheck(Object value) {
+      }
+      public olST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public olST setStart(Object value) {
+      }
+      public olST setStart(Object value) {
       	tryToSetStringProperty(template, value, startIsSet, "start");   
          return this;
-      } 
-       public olST setStyle(Object value) {
+      }
+      public olST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public olST setTabindex(Object value) {
+      }
+      public olST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public olST setTitle(Object value) {
+      }
+      public olST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public olST setTranslate(Object value) {
+      }
+      public olST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public olST setType(Object value) {
+      }
+      public olST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class optgroupST implements Html5DomainGroupTemplate {
 
@@ -9763,93 +9636,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("optgroup");
    	}
 
-       public optgroupST setAccesskey(Object value) {
+      public optgroupST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public optgroupST setClass(Object value) {
+      }
+      public optgroupST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public optgroupST setContent(Object value) {
+      }
+      public optgroupST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public optgroupST setContenteditable(Object value) {
+      }
+      public optgroupST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public optgroupST setContextmenu(Object value) {
+      }
+      public optgroupST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public optgroupST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public optgroupST setDatabind(Object value) {
+      public optgroupST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public optgroupST setDir(Object value) {
+      }
+      public optgroupST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public optgroupST setDisabled(Object value) {
+      }
+      public optgroupST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public optgroupST setDraggable(Object value) {
+      }
+      public optgroupST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public optgroupST setDropzone(Object value) {
+      }
+      public optgroupST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public optgroupST setHidden(Object value) {
+      }
+      public optgroupST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public optgroupST setId(Object value) {
+      }
+      public optgroupST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public optgroupST setLabel(Object value) {
+      }
+      public optgroupST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public optgroupST setLang(Object value) {
+      }
+      public optgroupST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public optgroupST setSpellcheck(Object value) {
+      }
+      public optgroupST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public optgroupST setStyle(Object value) {
+      }
+      public optgroupST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public optgroupST setTabindex(Object value) {
+      }
+      public optgroupST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public optgroupST setTitle(Object value) {
+      }
+      public optgroupST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public optgroupST setTranslate(Object value) {
+      }
+      public optgroupST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class optionST implements Html5DomainGroupTemplate {
 
@@ -9881,101 +9754,101 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("option");
    	}
 
-       public optionST setAccesskey(Object value) {
+      public optionST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public optionST setClass(Object value) {
+      }
+      public optionST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public optionST setContent(Object value) {
+      }
+      public optionST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public optionST setContenteditable(Object value) {
+      }
+      public optionST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public optionST setContextmenu(Object value) {
+      }
+      public optionST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public optionST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public optionST setDatabind(Object value) {
+      public optionST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public optionST setDir(Object value) {
+      }
+      public optionST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public optionST setDisabled(Object value) {
+      }
+      public optionST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public optionST setDraggable(Object value) {
+      }
+      public optionST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public optionST setDropzone(Object value) {
+      }
+      public optionST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public optionST setHidden(Object value) {
+      }
+      public optionST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public optionST setId(Object value) {
+      }
+      public optionST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public optionST setLabel(Object value) {
+      }
+      public optionST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public optionST setLang(Object value) {
+      }
+      public optionST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public optionST setSelected(Object value) {
+      }
+      public optionST setSelected(Object value) {
       	tryToSetStringProperty(template, value, selectedIsSet, "selected");   
          return this;
-      } 
-       public optionST setSpellcheck(Object value) {
+      }
+      public optionST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public optionST setStyle(Object value) {
+      }
+      public optionST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public optionST setTabindex(Object value) {
+      }
+      public optionST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public optionST setTitle(Object value) {
+      }
+      public optionST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public optionST setTranslate(Object value) {
+      }
+      public optionST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public optionST setValue(Object value) {
+      }
+      public optionST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class outputST implements Html5DomainGroupTemplate {
 
@@ -10006,97 +9879,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("output");
    	}
 
-       public outputST setAccesskey(Object value) {
+      public outputST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public outputST setClass(Object value) {
+      }
+      public outputST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public outputST setContent(Object value) {
+      }
+      public outputST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public outputST setContenteditable(Object value) {
+      }
+      public outputST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public outputST setContextmenu(Object value) {
+      }
+      public outputST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public outputST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public outputST setDatabind(Object value) {
+      public outputST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public outputST setDir(Object value) {
+      }
+      public outputST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public outputST setDraggable(Object value) {
+      }
+      public outputST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public outputST setDropzone(Object value) {
+      }
+      public outputST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public outputST setFor(Object value) {
+      }
+      public outputST setFor(Object value) {
       	tryToSetStringProperty(template, value, forIsSet, "for");   
          return this;
-      } 
-       public outputST setForm(Object value) {
+      }
+      public outputST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public outputST setHidden(Object value) {
+      }
+      public outputST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public outputST setId(Object value) {
+      }
+      public outputST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public outputST setLang(Object value) {
+      }
+      public outputST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public outputST setName(Object value) {
+      }
+      public outputST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public outputST setSpellcheck(Object value) {
+      }
+      public outputST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public outputST setStyle(Object value) {
+      }
+      public outputST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public outputST setTabindex(Object value) {
+      }
+      public outputST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public outputST setTitle(Object value) {
+      }
+      public outputST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public outputST setTranslate(Object value) {
+      }
+      public outputST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class pST implements Html5DomainGroupTemplate {
 
@@ -10124,85 +9997,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("p");
    	}
 
-       public pST setAccesskey(Object value) {
+      public pST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public pST setClass(Object value) {
+      }
+      public pST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public pST setContent(Object value) {
+      }
+      public pST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public pST setContenteditable(Object value) {
+      }
+      public pST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public pST setContextmenu(Object value) {
+      }
+      public pST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public pST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public pST setDatabind(Object value) {
+      public pST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public pST setDir(Object value) {
+      }
+      public pST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public pST setDraggable(Object value) {
+      }
+      public pST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public pST setDropzone(Object value) {
+      }
+      public pST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public pST setHidden(Object value) {
+      }
+      public pST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public pST setId(Object value) {
+      }
+      public pST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public pST setLang(Object value) {
+      }
+      public pST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public pST setSpellcheck(Object value) {
+      }
+      public pST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public pST setStyle(Object value) {
+      }
+      public pST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public pST setTabindex(Object value) {
+      }
+      public pST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public pST setTitle(Object value) {
+      }
+      public pST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public pST setTranslate(Object value) {
+      }
+      public pST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class pageST implements Html5DomainGroupTemplate {
 
@@ -10214,20 +10087,20 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("page");
    	}
 
-       public pageST setBody(Object value) {
+      public pageST setBody(Object value) {
       	tryToSetStringProperty(template, value, bodyIsSet, "body");   
          return this;
-      } 
-       public pageST setHead(Object value) {
+      }
+      public pageST setHead(Object value) {
       	tryToSetStringProperty(template, value, headIsSet, "head");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class paramST implements Html5DomainGroupTemplate {
 
@@ -10256,89 +10129,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("param");
    	}
 
-       public paramST setAccesskey(Object value) {
+      public paramST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public paramST setClass(Object value) {
+      }
+      public paramST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public paramST setContenteditable(Object value) {
+      }
+      public paramST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public paramST setContextmenu(Object value) {
+      }
+      public paramST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public paramST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public paramST setDatabind(Object value) {
+      public paramST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public paramST setDir(Object value) {
+      }
+      public paramST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public paramST setDraggable(Object value) {
+      }
+      public paramST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public paramST setDropzone(Object value) {
+      }
+      public paramST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public paramST setHidden(Object value) {
+      }
+      public paramST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public paramST setId(Object value) {
+      }
+      public paramST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public paramST setLang(Object value) {
+      }
+      public paramST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public paramST setName(Object value) {
+      }
+      public paramST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public paramST setSpellcheck(Object value) {
+      }
+      public paramST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public paramST setStyle(Object value) {
+      }
+      public paramST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public paramST setTabindex(Object value) {
+      }
+      public paramST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public paramST setTitle(Object value) {
+      }
+      public paramST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public paramST setTranslate(Object value) {
+      }
+      public paramST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public paramST setValue(Object value) {
+      }
+      public paramST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class preST implements Html5DomainGroupTemplate {
 
@@ -10366,85 +10239,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("pre");
    	}
 
-       public preST setAccesskey(Object value) {
+      public preST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public preST setClass(Object value) {
+      }
+      public preST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public preST setContent(Object value) {
+      }
+      public preST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public preST setContenteditable(Object value) {
+      }
+      public preST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public preST setContextmenu(Object value) {
+      }
+      public preST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public preST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public preST setDatabind(Object value) {
+      public preST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public preST setDir(Object value) {
+      }
+      public preST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public preST setDraggable(Object value) {
+      }
+      public preST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public preST setDropzone(Object value) {
+      }
+      public preST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public preST setHidden(Object value) {
+      }
+      public preST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public preST setId(Object value) {
+      }
+      public preST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public preST setLang(Object value) {
+      }
+      public preST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public preST setSpellcheck(Object value) {
+      }
+      public preST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public preST setStyle(Object value) {
+      }
+      public preST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public preST setTabindex(Object value) {
+      }
+      public preST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public preST setTitle(Object value) {
+      }
+      public preST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public preST setTranslate(Object value) {
+      }
+      public preST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class progressST implements Html5DomainGroupTemplate {
 
@@ -10474,93 +10347,93 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("progress");
    	}
 
-       public progressST setAccesskey(Object value) {
+      public progressST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public progressST setClass(Object value) {
+      }
+      public progressST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public progressST setContent(Object value) {
+      }
+      public progressST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public progressST setContenteditable(Object value) {
+      }
+      public progressST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public progressST setContextmenu(Object value) {
+      }
+      public progressST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public progressST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public progressST setDatabind(Object value) {
+      public progressST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public progressST setDir(Object value) {
+      }
+      public progressST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public progressST setDraggable(Object value) {
+      }
+      public progressST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public progressST setDropzone(Object value) {
+      }
+      public progressST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public progressST setHidden(Object value) {
+      }
+      public progressST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public progressST setId(Object value) {
+      }
+      public progressST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public progressST setLang(Object value) {
+      }
+      public progressST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public progressST setMax(Object value) {
+      }
+      public progressST setMax(Object value) {
       	tryToSetStringProperty(template, value, maxIsSet, "max");   
          return this;
-      } 
-       public progressST setSpellcheck(Object value) {
+      }
+      public progressST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public progressST setStyle(Object value) {
+      }
+      public progressST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public progressST setTabindex(Object value) {
+      }
+      public progressST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public progressST setTitle(Object value) {
+      }
+      public progressST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public progressST setTranslate(Object value) {
+      }
+      public progressST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public progressST setValue(Object value) {
+      }
+      public progressST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class qST implements Html5DomainGroupTemplate {
 
@@ -10589,89 +10462,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("q");
    	}
 
-       public qST setAccesskey(Object value) {
+      public qST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public qST setCite(Object value) {
+      }
+      public qST setCite(Object value) {
       	tryToSetStringProperty(template, value, citeIsSet, "cite");   
          return this;
-      } 
-       public qST setClass(Object value) {
+      }
+      public qST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public qST setContent(Object value) {
+      }
+      public qST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public qST setContenteditable(Object value) {
+      }
+      public qST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public qST setContextmenu(Object value) {
+      }
+      public qST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public qST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public qST setDatabind(Object value) {
+      public qST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public qST setDir(Object value) {
+      }
+      public qST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public qST setDraggable(Object value) {
+      }
+      public qST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public qST setDropzone(Object value) {
+      }
+      public qST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public qST setHidden(Object value) {
+      }
+      public qST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public qST setId(Object value) {
+      }
+      public qST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public qST setLang(Object value) {
+      }
+      public qST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public qST setSpellcheck(Object value) {
+      }
+      public qST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public qST setStyle(Object value) {
+      }
+      public qST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public qST setTabindex(Object value) {
+      }
+      public qST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public qST setTitle(Object value) {
+      }
+      public qST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public qST setTranslate(Object value) {
+      }
+      public qST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class rpST implements Html5DomainGroupTemplate {
 
@@ -10699,85 +10572,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("rp");
    	}
 
-       public rpST setAccesskey(Object value) {
+      public rpST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public rpST setClass(Object value) {
+      }
+      public rpST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public rpST setContent(Object value) {
+      }
+      public rpST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public rpST setContenteditable(Object value) {
+      }
+      public rpST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public rpST setContextmenu(Object value) {
+      }
+      public rpST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public rpST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public rpST setDatabind(Object value) {
+      public rpST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public rpST setDir(Object value) {
+      }
+      public rpST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public rpST setDraggable(Object value) {
+      }
+      public rpST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public rpST setDropzone(Object value) {
+      }
+      public rpST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public rpST setHidden(Object value) {
+      }
+      public rpST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public rpST setId(Object value) {
+      }
+      public rpST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public rpST setLang(Object value) {
+      }
+      public rpST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public rpST setSpellcheck(Object value) {
+      }
+      public rpST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public rpST setStyle(Object value) {
+      }
+      public rpST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public rpST setTabindex(Object value) {
+      }
+      public rpST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public rpST setTitle(Object value) {
+      }
+      public rpST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public rpST setTranslate(Object value) {
+      }
+      public rpST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class rtST implements Html5DomainGroupTemplate {
 
@@ -10805,85 +10678,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("rt");
    	}
 
-       public rtST setAccesskey(Object value) {
+      public rtST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public rtST setClass(Object value) {
+      }
+      public rtST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public rtST setContent(Object value) {
+      }
+      public rtST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public rtST setContenteditable(Object value) {
+      }
+      public rtST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public rtST setContextmenu(Object value) {
+      }
+      public rtST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public rtST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public rtST setDatabind(Object value) {
+      public rtST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public rtST setDir(Object value) {
+      }
+      public rtST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public rtST setDraggable(Object value) {
+      }
+      public rtST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public rtST setDropzone(Object value) {
+      }
+      public rtST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public rtST setHidden(Object value) {
+      }
+      public rtST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public rtST setId(Object value) {
+      }
+      public rtST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public rtST setLang(Object value) {
+      }
+      public rtST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public rtST setSpellcheck(Object value) {
+      }
+      public rtST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public rtST setStyle(Object value) {
+      }
+      public rtST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public rtST setTabindex(Object value) {
+      }
+      public rtST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public rtST setTitle(Object value) {
+      }
+      public rtST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public rtST setTranslate(Object value) {
+      }
+      public rtST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class rubyST implements Html5DomainGroupTemplate {
 
@@ -10911,85 +10784,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("ruby");
    	}
 
-       public rubyST setAccesskey(Object value) {
+      public rubyST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public rubyST setClass(Object value) {
+      }
+      public rubyST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public rubyST setContent(Object value) {
+      }
+      public rubyST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public rubyST setContenteditable(Object value) {
+      }
+      public rubyST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public rubyST setContextmenu(Object value) {
+      }
+      public rubyST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public rubyST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public rubyST setDatabind(Object value) {
+      public rubyST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public rubyST setDir(Object value) {
+      }
+      public rubyST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public rubyST setDraggable(Object value) {
+      }
+      public rubyST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public rubyST setDropzone(Object value) {
+      }
+      public rubyST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public rubyST setHidden(Object value) {
+      }
+      public rubyST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public rubyST setId(Object value) {
+      }
+      public rubyST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public rubyST setLang(Object value) {
+      }
+      public rubyST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public rubyST setSpellcheck(Object value) {
+      }
+      public rubyST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public rubyST setStyle(Object value) {
+      }
+      public rubyST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public rubyST setTabindex(Object value) {
+      }
+      public rubyST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public rubyST setTitle(Object value) {
+      }
+      public rubyST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public rubyST setTranslate(Object value) {
+      }
+      public rubyST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class sST implements Html5DomainGroupTemplate {
 
@@ -11017,85 +10890,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("s");
    	}
 
-       public sST setAccesskey(Object value) {
+      public sST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public sST setClass(Object value) {
+      }
+      public sST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public sST setContent(Object value) {
+      }
+      public sST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public sST setContenteditable(Object value) {
+      }
+      public sST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public sST setContextmenu(Object value) {
+      }
+      public sST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public sST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public sST setDatabind(Object value) {
+      public sST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public sST setDir(Object value) {
+      }
+      public sST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public sST setDraggable(Object value) {
+      }
+      public sST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public sST setDropzone(Object value) {
+      }
+      public sST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public sST setHidden(Object value) {
+      }
+      public sST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public sST setId(Object value) {
+      }
+      public sST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public sST setLang(Object value) {
+      }
+      public sST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public sST setSpellcheck(Object value) {
+      }
+      public sST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public sST setStyle(Object value) {
+      }
+      public sST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public sST setTabindex(Object value) {
+      }
+      public sST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public sST setTitle(Object value) {
+      }
+      public sST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public sST setTranslate(Object value) {
+      }
+      public sST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class sampST implements Html5DomainGroupTemplate {
 
@@ -11123,85 +10996,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("samp");
    	}
 
-       public sampST setAccesskey(Object value) {
+      public sampST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public sampST setClass(Object value) {
+      }
+      public sampST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public sampST setContent(Object value) {
+      }
+      public sampST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public sampST setContenteditable(Object value) {
+      }
+      public sampST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public sampST setContextmenu(Object value) {
+      }
+      public sampST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public sampST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public sampST setDatabind(Object value) {
+      public sampST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public sampST setDir(Object value) {
+      }
+      public sampST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public sampST setDraggable(Object value) {
+      }
+      public sampST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public sampST setDropzone(Object value) {
+      }
+      public sampST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public sampST setHidden(Object value) {
+      }
+      public sampST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public sampST setId(Object value) {
+      }
+      public sampST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public sampST setLang(Object value) {
+      }
+      public sampST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public sampST setSpellcheck(Object value) {
+      }
+      public sampST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public sampST setStyle(Object value) {
+      }
+      public sampST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public sampST setTabindex(Object value) {
+      }
+      public sampST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public sampST setTitle(Object value) {
+      }
+      public sampST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public sampST setTranslate(Object value) {
+      }
+      public sampST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class scriptST implements Html5DomainGroupTemplate {
 
@@ -11234,105 +11107,105 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("script");
    	}
 
-       public scriptST setAccesskey(Object value) {
+      public scriptST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public scriptST setAsync(Object value) {
+      }
+      public scriptST setAsync(Object value) {
       	tryToSetStringProperty(template, value, asyncIsSet, "async");   
          return this;
-      } 
-       public scriptST setCharset(Object value) {
+      }
+      public scriptST setCharset(Object value) {
       	tryToSetStringProperty(template, value, charsetIsSet, "charset");   
          return this;
-      } 
-       public scriptST setClass(Object value) {
+      }
+      public scriptST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public scriptST setContent(Object value) {
+      }
+      public scriptST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public scriptST setContenteditable(Object value) {
+      }
+      public scriptST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public scriptST setContextmenu(Object value) {
+      }
+      public scriptST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public scriptST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public scriptST setDatabind(Object value) {
+      public scriptST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public scriptST setDefer(Object value) {
+      }
+      public scriptST setDefer(Object value) {
       	tryToSetStringProperty(template, value, deferIsSet, "defer");   
          return this;
-      } 
-       public scriptST setDir(Object value) {
+      }
+      public scriptST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public scriptST setDraggable(Object value) {
+      }
+      public scriptST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public scriptST setDropzone(Object value) {
+      }
+      public scriptST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public scriptST setHidden(Object value) {
+      }
+      public scriptST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public scriptST setId(Object value) {
+      }
+      public scriptST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public scriptST setLang(Object value) {
+      }
+      public scriptST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public scriptST setSpellcheck(Object value) {
+      }
+      public scriptST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public scriptST setSrc(Object value) {
+      }
+      public scriptST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public scriptST setStyle(Object value) {
+      }
+      public scriptST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public scriptST setTabindex(Object value) {
+      }
+      public scriptST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public scriptST setTitle(Object value) {
+      }
+      public scriptST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public scriptST setTranslate(Object value) {
+      }
+      public scriptST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public scriptST setType(Object value) {
+      }
+      public scriptST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class sectionST implements Html5DomainGroupTemplate {
 
@@ -11360,85 +11233,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("section");
    	}
 
-       public sectionST setAccesskey(Object value) {
+      public sectionST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public sectionST setClass(Object value) {
+      }
+      public sectionST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public sectionST setContent(Object value) {
+      }
+      public sectionST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public sectionST setContenteditable(Object value) {
+      }
+      public sectionST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public sectionST setContextmenu(Object value) {
+      }
+      public sectionST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public sectionST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public sectionST setDatabind(Object value) {
+      public sectionST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public sectionST setDir(Object value) {
+      }
+      public sectionST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public sectionST setDraggable(Object value) {
+      }
+      public sectionST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public sectionST setDropzone(Object value) {
+      }
+      public sectionST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public sectionST setHidden(Object value) {
+      }
+      public sectionST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public sectionST setId(Object value) {
+      }
+      public sectionST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public sectionST setLang(Object value) {
+      }
+      public sectionST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public sectionST setSpellcheck(Object value) {
+      }
+      public sectionST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public sectionST setStyle(Object value) {
+      }
+      public sectionST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public sectionST setTabindex(Object value) {
+      }
+      public sectionST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public sectionST setTitle(Object value) {
+      }
+      public sectionST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public sectionST setTranslate(Object value) {
+      }
+      public sectionST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class selectST implements Html5DomainGroupTemplate {
 
@@ -11473,113 +11346,113 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("select");
    	}
 
-       public selectST setAccesskey(Object value) {
+      public selectST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public selectST setAutofocus(Object value) {
+      }
+      public selectST setAutofocus(Object value) {
       	tryToSetStringProperty(template, value, autofocusIsSet, "autofocus");   
          return this;
-      } 
-       public selectST setClass(Object value) {
+      }
+      public selectST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public selectST setContent(Object value) {
+      }
+      public selectST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public selectST setContenteditable(Object value) {
+      }
+      public selectST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public selectST setContextmenu(Object value) {
+      }
+      public selectST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public selectST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public selectST setDatabind(Object value) {
+      public selectST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public selectST setDir(Object value) {
+      }
+      public selectST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public selectST setDisabled(Object value) {
+      }
+      public selectST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public selectST setDraggable(Object value) {
+      }
+      public selectST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public selectST setDropzone(Object value) {
+      }
+      public selectST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public selectST setForm(Object value) {
+      }
+      public selectST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public selectST setHidden(Object value) {
+      }
+      public selectST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public selectST setId(Object value) {
+      }
+      public selectST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public selectST setLang(Object value) {
+      }
+      public selectST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public selectST setMultiple(Object value) {
+      }
+      public selectST setMultiple(Object value) {
       	tryToSetStringProperty(template, value, multipleIsSet, "multiple");   
          return this;
-      } 
-       public selectST setName(Object value) {
+      }
+      public selectST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public selectST setRequired(Object value) {
+      }
+      public selectST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      } 
-       public selectST setSize(Object value) {
+      }
+      public selectST setSize(Object value) {
       	tryToSetStringProperty(template, value, sizeIsSet, "size");   
          return this;
-      } 
-       public selectST setSpellcheck(Object value) {
+      }
+      public selectST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public selectST setStyle(Object value) {
+      }
+      public selectST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public selectST setTabindex(Object value) {
+      }
+      public selectST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public selectST setTitle(Object value) {
+      }
+      public selectST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public selectST setTranslate(Object value) {
+      }
+      public selectST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class smallST implements Html5DomainGroupTemplate {
 
@@ -11607,85 +11480,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("small");
    	}
 
-       public smallST setAccesskey(Object value) {
+      public smallST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public smallST setClass(Object value) {
+      }
+      public smallST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public smallST setContent(Object value) {
+      }
+      public smallST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public smallST setContenteditable(Object value) {
+      }
+      public smallST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public smallST setContextmenu(Object value) {
+      }
+      public smallST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public smallST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public smallST setDatabind(Object value) {
+      public smallST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public smallST setDir(Object value) {
+      }
+      public smallST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public smallST setDraggable(Object value) {
+      }
+      public smallST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public smallST setDropzone(Object value) {
+      }
+      public smallST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public smallST setHidden(Object value) {
+      }
+      public smallST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public smallST setId(Object value) {
+      }
+      public smallST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public smallST setLang(Object value) {
+      }
+      public smallST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public smallST setSpellcheck(Object value) {
+      }
+      public smallST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public smallST setStyle(Object value) {
+      }
+      public smallST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public smallST setTabindex(Object value) {
+      }
+      public smallST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public smallST setTitle(Object value) {
+      }
+      public smallST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public smallST setTranslate(Object value) {
+      }
+      public smallST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class sourceST implements Html5DomainGroupTemplate {
 
@@ -11716,97 +11589,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("source");
    	}
 
-       public sourceST setAccesskey(Object value) {
+      public sourceST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public sourceST setClass(Object value) {
+      }
+      public sourceST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public sourceST setContent(Object value) {
+      }
+      public sourceST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public sourceST setContenteditable(Object value) {
+      }
+      public sourceST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public sourceST setContextmenu(Object value) {
+      }
+      public sourceST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public sourceST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public sourceST setDatabind(Object value) {
+      public sourceST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public sourceST setDir(Object value) {
+      }
+      public sourceST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public sourceST setDraggable(Object value) {
+      }
+      public sourceST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public sourceST setDropzone(Object value) {
+      }
+      public sourceST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public sourceST setHidden(Object value) {
+      }
+      public sourceST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public sourceST setId(Object value) {
+      }
+      public sourceST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public sourceST setLang(Object value) {
+      }
+      public sourceST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public sourceST setMedia(Object value) {
+      }
+      public sourceST setMedia(Object value) {
       	tryToSetStringProperty(template, value, mediaIsSet, "media");   
          return this;
-      } 
-       public sourceST setSpellcheck(Object value) {
+      }
+      public sourceST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public sourceST setSrc(Object value) {
+      }
+      public sourceST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public sourceST setStyle(Object value) {
+      }
+      public sourceST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public sourceST setTabindex(Object value) {
+      }
+      public sourceST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public sourceST setTitle(Object value) {
+      }
+      public sourceST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public sourceST setTranslate(Object value) {
+      }
+      public sourceST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public sourceST setType(Object value) {
+      }
+      public sourceST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class spanST implements Html5DomainGroupTemplate {
 
@@ -11834,85 +11707,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("span");
    	}
 
-       public spanST setAccesskey(Object value) {
+      public spanST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public spanST setClass(Object value) {
+      }
+      public spanST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public spanST setContent(Object value) {
+      }
+      public spanST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public spanST setContenteditable(Object value) {
+      }
+      public spanST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public spanST setContextmenu(Object value) {
+      }
+      public spanST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public spanST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public spanST setDatabind(Object value) {
+      public spanST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public spanST setDir(Object value) {
+      }
+      public spanST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public spanST setDraggable(Object value) {
+      }
+      public spanST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public spanST setDropzone(Object value) {
+      }
+      public spanST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public spanST setHidden(Object value) {
+      }
+      public spanST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public spanST setId(Object value) {
+      }
+      public spanST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public spanST setLang(Object value) {
+      }
+      public spanST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public spanST setSpellcheck(Object value) {
+      }
+      public spanST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public spanST setStyle(Object value) {
+      }
+      public spanST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public spanST setTabindex(Object value) {
+      }
+      public spanST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public spanST setTitle(Object value) {
+      }
+      public spanST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public spanST setTranslate(Object value) {
+      }
+      public spanST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class strikeST implements Html5DomainGroupTemplate {
 
@@ -11940,85 +11813,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("strike");
    	}
 
-       public strikeST setAccesskey(Object value) {
+      public strikeST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public strikeST setClass(Object value) {
+      }
+      public strikeST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public strikeST setContent(Object value) {
+      }
+      public strikeST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public strikeST setContenteditable(Object value) {
+      }
+      public strikeST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public strikeST setContextmenu(Object value) {
+      }
+      public strikeST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public strikeST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public strikeST setDatabind(Object value) {
+      public strikeST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public strikeST setDir(Object value) {
+      }
+      public strikeST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public strikeST setDraggable(Object value) {
+      }
+      public strikeST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public strikeST setDropzone(Object value) {
+      }
+      public strikeST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public strikeST setHidden(Object value) {
+      }
+      public strikeST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public strikeST setId(Object value) {
+      }
+      public strikeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public strikeST setLang(Object value) {
+      }
+      public strikeST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public strikeST setSpellcheck(Object value) {
+      }
+      public strikeST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public strikeST setStyle(Object value) {
+      }
+      public strikeST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public strikeST setTabindex(Object value) {
+      }
+      public strikeST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public strikeST setTitle(Object value) {
+      }
+      public strikeST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public strikeST setTranslate(Object value) {
+      }
+      public strikeST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class strongST implements Html5DomainGroupTemplate {
 
@@ -12046,85 +11919,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("strong");
    	}
 
-       public strongST setAccesskey(Object value) {
+      public strongST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public strongST setClass(Object value) {
+      }
+      public strongST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public strongST setContent(Object value) {
+      }
+      public strongST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public strongST setContenteditable(Object value) {
+      }
+      public strongST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public strongST setContextmenu(Object value) {
+      }
+      public strongST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public strongST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public strongST setDatabind(Object value) {
+      public strongST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public strongST setDir(Object value) {
+      }
+      public strongST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public strongST setDraggable(Object value) {
+      }
+      public strongST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public strongST setDropzone(Object value) {
+      }
+      public strongST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public strongST setHidden(Object value) {
+      }
+      public strongST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public strongST setId(Object value) {
+      }
+      public strongST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public strongST setLang(Object value) {
+      }
+      public strongST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public strongST setSpellcheck(Object value) {
+      }
+      public strongST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public strongST setStyle(Object value) {
+      }
+      public strongST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public strongST setTabindex(Object value) {
+      }
+      public strongST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public strongST setTitle(Object value) {
+      }
+      public strongST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public strongST setTranslate(Object value) {
+      }
+      public strongST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class styleST implements Html5DomainGroupTemplate {
 
@@ -12155,97 +12028,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("style");
    	}
 
-       public styleST setAccesskey(Object value) {
+      public styleST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public styleST setClass(Object value) {
+      }
+      public styleST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public styleST setContent(Object value) {
+      }
+      public styleST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public styleST setContenteditable(Object value) {
+      }
+      public styleST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public styleST setContextmenu(Object value) {
+      }
+      public styleST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public styleST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public styleST setDatabind(Object value) {
+      public styleST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public styleST setDir(Object value) {
+      }
+      public styleST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public styleST setDraggable(Object value) {
+      }
+      public styleST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public styleST setDropzone(Object value) {
+      }
+      public styleST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public styleST setHidden(Object value) {
+      }
+      public styleST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public styleST setId(Object value) {
+      }
+      public styleST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public styleST setLang(Object value) {
+      }
+      public styleST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public styleST setMedia(Object value) {
+      }
+      public styleST setMedia(Object value) {
       	tryToSetStringProperty(template, value, mediaIsSet, "media");   
          return this;
-      } 
-       public styleST setScoped(Object value) {
+      }
+      public styleST setScoped(Object value) {
       	tryToSetStringProperty(template, value, scopedIsSet, "scoped");   
          return this;
-      } 
-       public styleST setSpellcheck(Object value) {
+      }
+      public styleST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public styleST setStyle(Object value) {
+      }
+      public styleST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public styleST setTabindex(Object value) {
+      }
+      public styleST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public styleST setTitle(Object value) {
+      }
+      public styleST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public styleST setTranslate(Object value) {
+      }
+      public styleST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public styleST setType(Object value) {
+      }
+      public styleST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class subST implements Html5DomainGroupTemplate {
 
@@ -12273,85 +12146,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("sub");
    	}
 
-       public subST setAccesskey(Object value) {
+      public subST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public subST setClass(Object value) {
+      }
+      public subST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public subST setContent(Object value) {
+      }
+      public subST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public subST setContenteditable(Object value) {
+      }
+      public subST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public subST setContextmenu(Object value) {
+      }
+      public subST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public subST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public subST setDatabind(Object value) {
+      public subST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public subST setDir(Object value) {
+      }
+      public subST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public subST setDraggable(Object value) {
+      }
+      public subST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public subST setDropzone(Object value) {
+      }
+      public subST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public subST setHidden(Object value) {
+      }
+      public subST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public subST setId(Object value) {
+      }
+      public subST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public subST setLang(Object value) {
+      }
+      public subST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public subST setSpellcheck(Object value) {
+      }
+      public subST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public subST setStyle(Object value) {
+      }
+      public subST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public subST setTabindex(Object value) {
+      }
+      public subST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public subST setTitle(Object value) {
+      }
+      public subST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public subST setTranslate(Object value) {
+      }
+      public subST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class summaryST implements Html5DomainGroupTemplate {
 
@@ -12379,85 +12252,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("summary");
    	}
 
-       public summaryST setAccesskey(Object value) {
+      public summaryST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public summaryST setClass(Object value) {
+      }
+      public summaryST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public summaryST setContent(Object value) {
+      }
+      public summaryST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public summaryST setContenteditable(Object value) {
+      }
+      public summaryST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public summaryST setContextmenu(Object value) {
+      }
+      public summaryST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public summaryST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public summaryST setDatabind(Object value) {
+      public summaryST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public summaryST setDir(Object value) {
+      }
+      public summaryST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public summaryST setDraggable(Object value) {
+      }
+      public summaryST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public summaryST setDropzone(Object value) {
+      }
+      public summaryST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public summaryST setHidden(Object value) {
+      }
+      public summaryST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public summaryST setId(Object value) {
+      }
+      public summaryST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public summaryST setLang(Object value) {
+      }
+      public summaryST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public summaryST setSpellcheck(Object value) {
+      }
+      public summaryST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public summaryST setStyle(Object value) {
+      }
+      public summaryST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public summaryST setTabindex(Object value) {
+      }
+      public summaryST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public summaryST setTitle(Object value) {
+      }
+      public summaryST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public summaryST setTranslate(Object value) {
+      }
+      public summaryST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class supST implements Html5DomainGroupTemplate {
 
@@ -12485,85 +12358,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("sup");
    	}
 
-       public supST setAccesskey(Object value) {
+      public supST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public supST setClass(Object value) {
+      }
+      public supST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public supST setContent(Object value) {
+      }
+      public supST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public supST setContenteditable(Object value) {
+      }
+      public supST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public supST setContextmenu(Object value) {
+      }
+      public supST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public supST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public supST setDatabind(Object value) {
+      public supST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public supST setDir(Object value) {
+      }
+      public supST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public supST setDraggable(Object value) {
+      }
+      public supST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public supST setDropzone(Object value) {
+      }
+      public supST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public supST setHidden(Object value) {
+      }
+      public supST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public supST setId(Object value) {
+      }
+      public supST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public supST setLang(Object value) {
+      }
+      public supST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public supST setSpellcheck(Object value) {
+      }
+      public supST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public supST setStyle(Object value) {
+      }
+      public supST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public supST setTabindex(Object value) {
+      }
+      public supST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public supST setTitle(Object value) {
+      }
+      public supST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public supST setTranslate(Object value) {
+      }
+      public supST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class tableST implements Html5DomainGroupTemplate {
 
@@ -12592,89 +12465,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("table");
    	}
 
-       public tableST setAccesskey(Object value) {
+      public tableST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public tableST setClass(Object value) {
+      }
+      public tableST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public tableST setContent(Object value) {
+      }
+      public tableST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public tableST setContenteditable(Object value) {
+      }
+      public tableST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public tableST setContextmenu(Object value) {
+      }
+      public tableST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public tableST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public tableST setDatabind(Object value) {
+      public tableST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public tableST setDir(Object value) {
+      }
+      public tableST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public tableST setDraggable(Object value) {
+      }
+      public tableST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public tableST setDropzone(Object value) {
+      }
+      public tableST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public tableST setHidden(Object value) {
+      }
+      public tableST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public tableST setId(Object value) {
+      }
+      public tableST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public tableST setLang(Object value) {
+      }
+      public tableST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public tableST setSortable(Object value) {
+      }
+      public tableST setSortable(Object value) {
       	tryToSetStringProperty(template, value, sortableIsSet, "sortable");   
          return this;
-      } 
-       public tableST setSpellcheck(Object value) {
+      }
+      public tableST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public tableST setStyle(Object value) {
+      }
+      public tableST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public tableST setTabindex(Object value) {
+      }
+      public tableST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public tableST setTitle(Object value) {
+      }
+      public tableST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public tableST setTranslate(Object value) {
+      }
+      public tableST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class tbodyST implements Html5DomainGroupTemplate {
 
@@ -12702,85 +12575,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("tbody");
    	}
 
-       public tbodyST setAccesskey(Object value) {
+      public tbodyST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public tbodyST setClass(Object value) {
+      }
+      public tbodyST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public tbodyST setContent(Object value) {
+      }
+      public tbodyST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public tbodyST setContenteditable(Object value) {
+      }
+      public tbodyST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public tbodyST setContextmenu(Object value) {
+      }
+      public tbodyST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public tbodyST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public tbodyST setDatabind(Object value) {
+      public tbodyST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public tbodyST setDir(Object value) {
+      }
+      public tbodyST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public tbodyST setDraggable(Object value) {
+      }
+      public tbodyST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public tbodyST setDropzone(Object value) {
+      }
+      public tbodyST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public tbodyST setHidden(Object value) {
+      }
+      public tbodyST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public tbodyST setId(Object value) {
+      }
+      public tbodyST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public tbodyST setLang(Object value) {
+      }
+      public tbodyST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public tbodyST setSpellcheck(Object value) {
+      }
+      public tbodyST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public tbodyST setStyle(Object value) {
+      }
+      public tbodyST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public tbodyST setTabindex(Object value) {
+      }
+      public tbodyST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public tbodyST setTitle(Object value) {
+      }
+      public tbodyST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public tbodyST setTranslate(Object value) {
+      }
+      public tbodyST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class tdST implements Html5DomainGroupTemplate {
 
@@ -12811,97 +12684,97 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("td");
    	}
 
-       public tdST setAccesskey(Object value) {
+      public tdST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public tdST setClass(Object value) {
+      }
+      public tdST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public tdST setColspan(Object value) {
+      }
+      public tdST setColspan(Object value) {
       	tryToSetStringProperty(template, value, colspanIsSet, "colspan");   
          return this;
-      } 
-       public tdST setContent(Object value) {
+      }
+      public tdST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public tdST setContenteditable(Object value) {
+      }
+      public tdST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public tdST setContextmenu(Object value) {
+      }
+      public tdST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public tdST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public tdST setDatabind(Object value) {
+      public tdST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public tdST setDir(Object value) {
+      }
+      public tdST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public tdST setDraggable(Object value) {
+      }
+      public tdST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public tdST setDropzone(Object value) {
+      }
+      public tdST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public tdST setHeaders(Object value) {
+      }
+      public tdST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      } 
-       public tdST setHidden(Object value) {
+      }
+      public tdST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public tdST setId(Object value) {
+      }
+      public tdST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public tdST setLang(Object value) {
+      }
+      public tdST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public tdST setRowspan(Object value) {
+      }
+      public tdST setRowspan(Object value) {
       	tryToSetStringProperty(template, value, rowspanIsSet, "rowspan");   
          return this;
-      } 
-       public tdST setSpellcheck(Object value) {
+      }
+      public tdST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public tdST setStyle(Object value) {
+      }
+      public tdST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public tdST setTabindex(Object value) {
+      }
+      public tdST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public tdST setTitle(Object value) {
+      }
+      public tdST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public tdST setTranslate(Object value) {
+      }
+      public tdST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class textareaST implements Html5DomainGroupTemplate {
 
@@ -12940,129 +12813,129 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("textarea");
    	}
 
-       public textareaST setAccesskey(Object value) {
+      public textareaST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public textareaST setAutofocus(Object value) {
+      }
+      public textareaST setAutofocus(Object value) {
       	tryToSetStringProperty(template, value, autofocusIsSet, "autofocus");   
          return this;
-      } 
-       public textareaST setClass(Object value) {
+      }
+      public textareaST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public textareaST setCols(Object value) {
+      }
+      public textareaST setCols(Object value) {
       	tryToSetStringProperty(template, value, colsIsSet, "cols");   
          return this;
-      } 
-       public textareaST setContent(Object value) {
+      }
+      public textareaST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public textareaST setContenteditable(Object value) {
+      }
+      public textareaST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public textareaST setContextmenu(Object value) {
+      }
+      public textareaST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public textareaST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public textareaST setDatabind(Object value) {
+      public textareaST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public textareaST setDir(Object value) {
+      }
+      public textareaST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public textareaST setDisabled(Object value) {
+      }
+      public textareaST setDisabled(Object value) {
       	tryToSetStringProperty(template, value, disabledIsSet, "disabled");   
          return this;
-      } 
-       public textareaST setDraggable(Object value) {
+      }
+      public textareaST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public textareaST setDropzone(Object value) {
+      }
+      public textareaST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public textareaST setForm(Object value) {
+      }
+      public textareaST setForm(Object value) {
       	tryToSetStringProperty(template, value, formIsSet, "form");   
          return this;
-      } 
-       public textareaST setHidden(Object value) {
+      }
+      public textareaST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public textareaST setId(Object value) {
+      }
+      public textareaST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public textareaST setLang(Object value) {
+      }
+      public textareaST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public textareaST setMaxlength(Object value) {
+      }
+      public textareaST setMaxlength(Object value) {
       	tryToSetStringProperty(template, value, maxlengthIsSet, "maxlength");   
          return this;
-      } 
-       public textareaST setName(Object value) {
+      }
+      public textareaST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public textareaST setPlaceholder(Object value) {
+      }
+      public textareaST setPlaceholder(Object value) {
       	tryToSetStringProperty(template, value, placeholderIsSet, "placeholder");   
          return this;
-      } 
-       public textareaST setReadonly(Object value) {
+      }
+      public textareaST setReadonly(Object value) {
       	tryToSetStringProperty(template, value, readonlyIsSet, "readonly");   
          return this;
-      } 
-       public textareaST setRequired(Object value) {
+      }
+      public textareaST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      } 
-       public textareaST setRows(Object value) {
+      }
+      public textareaST setRows(Object value) {
       	tryToSetStringProperty(template, value, rowsIsSet, "rows");   
          return this;
-      } 
-       public textareaST setSpellcheck(Object value) {
+      }
+      public textareaST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public textareaST setStyle(Object value) {
+      }
+      public textareaST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public textareaST setTabindex(Object value) {
+      }
+      public textareaST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public textareaST setTitle(Object value) {
+      }
+      public textareaST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public textareaST setTranslate(Object value) {
+      }
+      public textareaST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public textareaST setWrap(Object value) {
+      }
+      public textareaST setWrap(Object value) {
       	tryToSetStringProperty(template, value, wrapIsSet, "wrap");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class tfootST implements Html5DomainGroupTemplate {
 
@@ -13090,85 +12963,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("tfoot");
    	}
 
-       public tfootST setAccesskey(Object value) {
+      public tfootST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public tfootST setClass(Object value) {
+      }
+      public tfootST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public tfootST setContent(Object value) {
+      }
+      public tfootST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public tfootST setContenteditable(Object value) {
+      }
+      public tfootST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public tfootST setContextmenu(Object value) {
+      }
+      public tfootST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public tfootST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public tfootST setDatabind(Object value) {
+      public tfootST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public tfootST setDir(Object value) {
+      }
+      public tfootST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public tfootST setDraggable(Object value) {
+      }
+      public tfootST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public tfootST setDropzone(Object value) {
+      }
+      public tfootST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public tfootST setHidden(Object value) {
+      }
+      public tfootST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public tfootST setId(Object value) {
+      }
+      public tfootST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public tfootST setLang(Object value) {
+      }
+      public tfootST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public tfootST setSpellcheck(Object value) {
+      }
+      public tfootST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public tfootST setStyle(Object value) {
+      }
+      public tfootST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public tfootST setTabindex(Object value) {
+      }
+      public tfootST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public tfootST setTitle(Object value) {
+      }
+      public tfootST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public tfootST setTranslate(Object value) {
+      }
+      public tfootST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class thST implements Html5DomainGroupTemplate {
 
@@ -13202,109 +13075,109 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("th");
    	}
 
-       public thST setAbbr(Object value) {
+      public thST setAbbr(Object value) {
       	tryToSetStringProperty(template, value, abbrIsSet, "abbr");   
          return this;
-      } 
-       public thST setAccesskey(Object value) {
+      }
+      public thST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public thST setClass(Object value) {
+      }
+      public thST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public thST setColspan(Object value) {
+      }
+      public thST setColspan(Object value) {
       	tryToSetStringProperty(template, value, colspanIsSet, "colspan");   
          return this;
-      } 
-       public thST setContent(Object value) {
+      }
+      public thST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public thST setContenteditable(Object value) {
+      }
+      public thST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public thST setContextmenu(Object value) {
+      }
+      public thST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public thST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public thST setDatabind(Object value) {
+      public thST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public thST setDir(Object value) {
+      }
+      public thST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public thST setDraggable(Object value) {
+      }
+      public thST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public thST setDropzone(Object value) {
+      }
+      public thST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public thST setHeaders(Object value) {
+      }
+      public thST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      } 
-       public thST setHidden(Object value) {
+      }
+      public thST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public thST setId(Object value) {
+      }
+      public thST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public thST setLang(Object value) {
+      }
+      public thST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public thST setRowspan(Object value) {
+      }
+      public thST setRowspan(Object value) {
       	tryToSetStringProperty(template, value, rowspanIsSet, "rowspan");   
          return this;
-      } 
-       public thST setScope(Object value) {
+      }
+      public thST setScope(Object value) {
       	tryToSetStringProperty(template, value, scopeIsSet, "scope");   
          return this;
-      } 
-       public thST setSorted(Object value) {
+      }
+      public thST setSorted(Object value) {
       	tryToSetStringProperty(template, value, sortedIsSet, "sorted");   
          return this;
-      } 
-       public thST setSpellcheck(Object value) {
+      }
+      public thST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public thST setStyle(Object value) {
+      }
+      public thST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public thST setTabindex(Object value) {
+      }
+      public thST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public thST setTitle(Object value) {
+      }
+      public thST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public thST setTranslate(Object value) {
+      }
+      public thST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class theadST implements Html5DomainGroupTemplate {
 
@@ -13332,85 +13205,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("thead");
    	}
 
-       public theadST setAccesskey(Object value) {
+      public theadST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public theadST setClass(Object value) {
+      }
+      public theadST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public theadST setContent(Object value) {
+      }
+      public theadST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public theadST setContenteditable(Object value) {
+      }
+      public theadST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public theadST setContextmenu(Object value) {
+      }
+      public theadST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public theadST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public theadST setDatabind(Object value) {
+      public theadST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public theadST setDir(Object value) {
+      }
+      public theadST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public theadST setDraggable(Object value) {
+      }
+      public theadST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public theadST setDropzone(Object value) {
+      }
+      public theadST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public theadST setHidden(Object value) {
+      }
+      public theadST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public theadST setId(Object value) {
+      }
+      public theadST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public theadST setLang(Object value) {
+      }
+      public theadST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public theadST setSpellcheck(Object value) {
+      }
+      public theadST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public theadST setStyle(Object value) {
+      }
+      public theadST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public theadST setTabindex(Object value) {
+      }
+      public theadST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public theadST setTitle(Object value) {
+      }
+      public theadST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public theadST setTranslate(Object value) {
+      }
+      public theadST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class timeST implements Html5DomainGroupTemplate {
 
@@ -13439,89 +13312,89 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("time");
    	}
 
-       public timeST setAccesskey(Object value) {
+      public timeST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public timeST setClass(Object value) {
+      }
+      public timeST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public timeST setContent(Object value) {
+      }
+      public timeST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public timeST setContenteditable(Object value) {
+      }
+      public timeST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public timeST setContextmenu(Object value) {
+      }
+      public timeST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public timeST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public timeST setDatabind(Object value) {
+      public timeST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public timeST setDatetime(Object value) {
+      }
+      public timeST setDatetime(Object value) {
       	tryToSetStringProperty(template, value, datetimeIsSet, "datetime");   
          return this;
-      } 
-       public timeST setDir(Object value) {
+      }
+      public timeST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public timeST setDraggable(Object value) {
+      }
+      public timeST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public timeST setDropzone(Object value) {
+      }
+      public timeST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public timeST setHidden(Object value) {
+      }
+      public timeST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public timeST setId(Object value) {
+      }
+      public timeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public timeST setLang(Object value) {
+      }
+      public timeST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public timeST setSpellcheck(Object value) {
+      }
+      public timeST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public timeST setStyle(Object value) {
+      }
+      public timeST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public timeST setTabindex(Object value) {
+      }
+      public timeST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public timeST setTitle(Object value) {
+      }
+      public timeST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public timeST setTranslate(Object value) {
+      }
+      public timeST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class titleST implements Html5DomainGroupTemplate {
 
@@ -13549,85 +13422,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("title");
    	}
 
-       public titleST setAccesskey(Object value) {
+      public titleST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public titleST setClass(Object value) {
+      }
+      public titleST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public titleST setContent(Object value) {
+      }
+      public titleST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public titleST setContenteditable(Object value) {
+      }
+      public titleST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public titleST setContextmenu(Object value) {
+      }
+      public titleST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public titleST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public titleST setDatabind(Object value) {
+      public titleST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public titleST setDir(Object value) {
+      }
+      public titleST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public titleST setDraggable(Object value) {
+      }
+      public titleST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public titleST setDropzone(Object value) {
+      }
+      public titleST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public titleST setHidden(Object value) {
+      }
+      public titleST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public titleST setId(Object value) {
+      }
+      public titleST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public titleST setLang(Object value) {
+      }
+      public titleST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public titleST setSpellcheck(Object value) {
+      }
+      public titleST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public titleST setStyle(Object value) {
+      }
+      public titleST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public titleST setTabindex(Object value) {
+      }
+      public titleST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public titleST setTitle(Object value) {
+      }
+      public titleST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public titleST setTranslate(Object value) {
+      }
+      public titleST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class trST implements Html5DomainGroupTemplate {
 
@@ -13655,85 +13528,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("tr");
    	}
 
-       public trST setAccesskey(Object value) {
+      public trST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public trST setClass(Object value) {
+      }
+      public trST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public trST setContent(Object value) {
+      }
+      public trST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public trST setContenteditable(Object value) {
+      }
+      public trST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public trST setContextmenu(Object value) {
+      }
+      public trST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public trST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public trST setDatabind(Object value) {
+      public trST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public trST setDir(Object value) {
+      }
+      public trST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public trST setDraggable(Object value) {
+      }
+      public trST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public trST setDropzone(Object value) {
+      }
+      public trST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public trST setHidden(Object value) {
+      }
+      public trST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public trST setId(Object value) {
+      }
+      public trST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public trST setLang(Object value) {
+      }
+      public trST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public trST setSpellcheck(Object value) {
+      }
+      public trST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public trST setStyle(Object value) {
+      }
+      public trST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public trST setTabindex(Object value) {
+      }
+      public trST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public trST setTitle(Object value) {
+      }
+      public trST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public trST setTranslate(Object value) {
+      }
+      public trST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class trackST implements Html5DomainGroupTemplate {
 
@@ -13766,105 +13639,105 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("track");
    	}
 
-       public trackST setAccesskey(Object value) {
+      public trackST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public trackST setClass(Object value) {
+      }
+      public trackST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public trackST setContent(Object value) {
+      }
+      public trackST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public trackST setContenteditable(Object value) {
+      }
+      public trackST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public trackST setContextmenu(Object value) {
+      }
+      public trackST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public trackST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public trackST setDatabind(Object value) {
+      public trackST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public trackST setDefault_(Object value) {
+      }
+      public trackST setDefault_(Object value) {
       	tryToSetStringProperty(template, value, default_IsSet, "default_");   
          return this;
-      } 
-       public trackST setDir(Object value) {
+      }
+      public trackST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public trackST setDraggable(Object value) {
+      }
+      public trackST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public trackST setDropzone(Object value) {
+      }
+      public trackST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public trackST setHidden(Object value) {
+      }
+      public trackST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public trackST setId(Object value) {
+      }
+      public trackST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public trackST setKind(Object value) {
+      }
+      public trackST setKind(Object value) {
       	tryToSetStringProperty(template, value, kindIsSet, "kind");   
          return this;
-      } 
-       public trackST setLabel(Object value) {
+      }
+      public trackST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public trackST setLang(Object value) {
+      }
+      public trackST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public trackST setSpellcheck(Object value) {
+      }
+      public trackST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public trackST setSrc(Object value) {
+      }
+      public trackST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public trackST setSrclang(Object value) {
+      }
+      public trackST setSrclang(Object value) {
       	tryToSetStringProperty(template, value, srclangIsSet, "srclang");   
          return this;
-      } 
-       public trackST setStyle(Object value) {
+      }
+      public trackST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public trackST setTabindex(Object value) {
+      }
+      public trackST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public trackST setTitle(Object value) {
+      }
+      public trackST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public trackST setTranslate(Object value) {
+      }
+      public trackST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class ttST implements Html5DomainGroupTemplate {
 
@@ -13892,85 +13765,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("tt");
    	}
 
-       public ttST setAccesskey(Object value) {
+      public ttST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public ttST setClass(Object value) {
+      }
+      public ttST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public ttST setContent(Object value) {
+      }
+      public ttST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public ttST setContenteditable(Object value) {
+      }
+      public ttST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public ttST setContextmenu(Object value) {
+      }
+      public ttST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public ttST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public ttST setDatabind(Object value) {
+      public ttST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public ttST setDir(Object value) {
+      }
+      public ttST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public ttST setDraggable(Object value) {
+      }
+      public ttST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public ttST setDropzone(Object value) {
+      }
+      public ttST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public ttST setHidden(Object value) {
+      }
+      public ttST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public ttST setId(Object value) {
+      }
+      public ttST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public ttST setLang(Object value) {
+      }
+      public ttST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public ttST setSpellcheck(Object value) {
+      }
+      public ttST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public ttST setStyle(Object value) {
+      }
+      public ttST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public ttST setTabindex(Object value) {
+      }
+      public ttST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public ttST setTitle(Object value) {
+      }
+      public ttST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public ttST setTranslate(Object value) {
+      }
+      public ttST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class uST implements Html5DomainGroupTemplate {
 
@@ -13998,85 +13871,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("u");
    	}
 
-       public uST setAccesskey(Object value) {
+      public uST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public uST setClass(Object value) {
+      }
+      public uST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public uST setContent(Object value) {
+      }
+      public uST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public uST setContenteditable(Object value) {
+      }
+      public uST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public uST setContextmenu(Object value) {
+      }
+      public uST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public uST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public uST setDatabind(Object value) {
+      public uST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public uST setDir(Object value) {
+      }
+      public uST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public uST setDraggable(Object value) {
+      }
+      public uST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public uST setDropzone(Object value) {
+      }
+      public uST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public uST setHidden(Object value) {
+      }
+      public uST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public uST setId(Object value) {
+      }
+      public uST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public uST setLang(Object value) {
+      }
+      public uST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public uST setSpellcheck(Object value) {
+      }
+      public uST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public uST setStyle(Object value) {
+      }
+      public uST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public uST setTabindex(Object value) {
+      }
+      public uST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public uST setTitle(Object value) {
+      }
+      public uST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public uST setTranslate(Object value) {
+      }
+      public uST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class ulST implements Html5DomainGroupTemplate {
 
@@ -14104,85 +13977,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("ul");
    	}
 
-       public ulST setAccesskey(Object value) {
+      public ulST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public ulST setClass(Object value) {
+      }
+      public ulST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public ulST setContent(Object value) {
+      }
+      public ulST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public ulST setContenteditable(Object value) {
+      }
+      public ulST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public ulST setContextmenu(Object value) {
+      }
+      public ulST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public ulST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public ulST setDatabind(Object value) {
+      public ulST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public ulST setDir(Object value) {
+      }
+      public ulST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public ulST setDraggable(Object value) {
+      }
+      public ulST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public ulST setDropzone(Object value) {
+      }
+      public ulST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public ulST setHidden(Object value) {
+      }
+      public ulST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public ulST setId(Object value) {
+      }
+      public ulST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public ulST setLang(Object value) {
+      }
+      public ulST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public ulST setSpellcheck(Object value) {
+      }
+      public ulST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public ulST setStyle(Object value) {
+      }
+      public ulST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public ulST setTabindex(Object value) {
+      }
+      public ulST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public ulST setTitle(Object value) {
+      }
+      public ulST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public ulST setTranslate(Object value) {
+      }
+      public ulST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class varST implements Html5DomainGroupTemplate {
 
@@ -14210,85 +14083,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("var");
    	}
 
-       public varST setAccesskey(Object value) {
+      public varST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public varST setClass(Object value) {
+      }
+      public varST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public varST setContent(Object value) {
+      }
+      public varST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public varST setContenteditable(Object value) {
+      }
+      public varST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public varST setContextmenu(Object value) {
+      }
+      public varST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public varST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public varST setDatabind(Object value) {
+      public varST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public varST setDir(Object value) {
+      }
+      public varST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public varST setDraggable(Object value) {
+      }
+      public varST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public varST setDropzone(Object value) {
+      }
+      public varST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public varST setHidden(Object value) {
+      }
+      public varST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public varST setId(Object value) {
+      }
+      public varST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public varST setLang(Object value) {
+      }
+      public varST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public varST setSpellcheck(Object value) {
+      }
+      public varST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public varST setStyle(Object value) {
+      }
+      public varST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public varST setTabindex(Object value) {
+      }
+      public varST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public varST setTitle(Object value) {
+      }
+      public varST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public varST setTranslate(Object value) {
+      }
+      public varST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class videoST implements Html5DomainGroupTemplate {
 
@@ -14325,121 +14198,121 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("video");
    	}
 
-       public videoST setAccesskey(Object value) {
+      public videoST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public videoST setAutoplay(Object value) {
+      }
+      public videoST setAutoplay(Object value) {
       	tryToSetStringProperty(template, value, autoplayIsSet, "autoplay");   
          return this;
-      } 
-       public videoST setClass(Object value) {
+      }
+      public videoST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public videoST setContent(Object value) {
+      }
+      public videoST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public videoST setContenteditable(Object value) {
+      }
+      public videoST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public videoST setContextmenu(Object value) {
+      }
+      public videoST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
-       public videoST setControls(Object value) {
+      }
+      public videoST setControls(Object value) {
       	tryToSetStringProperty(template, value, controlsIsSet, "controls");   
          return this;
-      } 
+      }
       public videoST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public videoST setDatabind(Object value) {
+      public videoST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public videoST setDir(Object value) {
+      }
+      public videoST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public videoST setDraggable(Object value) {
+      }
+      public videoST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public videoST setDropzone(Object value) {
+      }
+      public videoST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public videoST setHeight(Object value) {
+      }
+      public videoST setHeight(Object value) {
       	tryToSetStringProperty(template, value, heightIsSet, "height");   
          return this;
-      } 
-       public videoST setHidden(Object value) {
+      }
+      public videoST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public videoST setId(Object value) {
+      }
+      public videoST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public videoST setLang(Object value) {
+      }
+      public videoST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public videoST setLoop(Object value) {
+      }
+      public videoST setLoop(Object value) {
       	tryToSetStringProperty(template, value, loopIsSet, "loop");   
          return this;
-      } 
-       public videoST setMuted(Object value) {
+      }
+      public videoST setMuted(Object value) {
       	tryToSetStringProperty(template, value, mutedIsSet, "muted");   
          return this;
-      } 
-       public videoST setPoster(Object value) {
+      }
+      public videoST setPoster(Object value) {
       	tryToSetStringProperty(template, value, posterIsSet, "poster");   
          return this;
-      } 
-       public videoST setPreload(Object value) {
+      }
+      public videoST setPreload(Object value) {
       	tryToSetStringProperty(template, value, preloadIsSet, "preload");   
          return this;
-      } 
-       public videoST setSpellcheck(Object value) {
+      }
+      public videoST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public videoST setSrc(Object value) {
+      }
+      public videoST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      } 
-       public videoST setStyle(Object value) {
+      }
+      public videoST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public videoST setTabindex(Object value) {
+      }
+      public videoST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public videoST setTitle(Object value) {
+      }
+      public videoST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public videoST setTranslate(Object value) {
+      }
+      public videoST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
-       public videoST setWidth(Object value) {
+      }
+      public videoST setWidth(Object value) {
       	tryToSetStringProperty(template, value, widthIsSet, "width");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class wbrST implements Html5DomainGroupTemplate {
 
@@ -14467,85 +14340,85 @@ public final class Html5DomainGroup {
    		template = group.getInstanceOf("wbr");
    	}
 
-       public wbrST setAccesskey(Object value) {
+      public wbrST setAccesskey(Object value) {
       	tryToSetStringProperty(template, value, accesskeyIsSet, "accesskey");   
          return this;
-      } 
-       public wbrST setClass(Object value) {
+      }
+      public wbrST setClass(Object value) {
       	tryToSetStringProperty(template, value, classIsSet, "class");   
          return this;
-      } 
-       public wbrST setContent(Object value) {
+      }
+      public wbrST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public wbrST setContenteditable(Object value) {
+      }
+      public wbrST setContenteditable(Object value) {
       	tryToSetStringProperty(template, value, contenteditableIsSet, "contenteditable");   
          return this;
-      } 
-       public wbrST setContextmenu(Object value) {
+      }
+      public wbrST setContextmenu(Object value) {
       	tryToSetStringProperty(template, value, contextmenuIsSet, "contextmenu");   
          return this;
-      } 
+      }
       public wbrST addDataValue(Object name_, Object value_) {
          dataIsSet.set(true);
          template.addAggr("data.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public wbrST setDatabind(Object value) {
+      public wbrST setDatabind(Object value) {
       	tryToSetStringProperty(template, value, databindIsSet, "databind");   
          return this;
-      } 
-       public wbrST setDir(Object value) {
+      }
+      public wbrST setDir(Object value) {
       	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
-       public wbrST setDraggable(Object value) {
+      }
+      public wbrST setDraggable(Object value) {
       	tryToSetStringProperty(template, value, draggableIsSet, "draggable");   
          return this;
-      } 
-       public wbrST setDropzone(Object value) {
+      }
+      public wbrST setDropzone(Object value) {
       	tryToSetStringProperty(template, value, dropzoneIsSet, "dropzone");   
          return this;
-      } 
-       public wbrST setHidden(Object value) {
+      }
+      public wbrST setHidden(Object value) {
       	tryToSetStringProperty(template, value, hiddenIsSet, "hidden");   
          return this;
-      } 
-       public wbrST setId(Object value) {
+      }
+      public wbrST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      } 
-       public wbrST setLang(Object value) {
+      }
+      public wbrST setLang(Object value) {
       	tryToSetStringProperty(template, value, langIsSet, "lang");   
          return this;
-      } 
-       public wbrST setSpellcheck(Object value) {
+      }
+      public wbrST setSpellcheck(Object value) {
       	tryToSetStringProperty(template, value, spellcheckIsSet, "spellcheck");   
          return this;
-      } 
-       public wbrST setStyle(Object value) {
+      }
+      public wbrST setStyle(Object value) {
       	tryToSetStringProperty(template, value, styleIsSet, "style");   
          return this;
-      } 
-       public wbrST setTabindex(Object value) {
+      }
+      public wbrST setTabindex(Object value) {
       	tryToSetStringProperty(template, value, tabindexIsSet, "tabindex");   
          return this;
-      } 
-       public wbrST setTitle(Object value) {
+      }
+      public wbrST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      } 
-       public wbrST setTranslate(Object value) {
+      }
+      public wbrST setTranslate(Object value) {
       	tryToSetStringProperty(template, value, translateIsSet, "translate");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -14662,7 +14535,7 @@ public final class Html5DomainGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();

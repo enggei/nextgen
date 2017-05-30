@@ -96,7 +96,7 @@ public abstract class ~domainName~Domain implements IDomain {
    private static class ~domainName~DomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
-      private final Color defaultColor;
+      protected final Color defaultColor;
       private final String property;
       private final ~domainName~Domain.Entities nodeType;
 
@@ -195,7 +195,7 @@ public abstract class ~domainName~Domain implements IDomain {
 		@Override
       public <T> T visit(Node n) {
          if (n == null) return null;
-		  ~entities:{it|if (BaseDomainVisitor.hasLabel(n, ~it.name~.name())) return visit~it.name;format="capitalize"~(n);};separator="\n"~
+		  ~entities:{it|if (BaseDomainVisitor.hasLabel(n, Entities.~it.name~.name())) return visit~it.name;format="capitalize"~(n);};separator="\n"~
          return null;
       }
 

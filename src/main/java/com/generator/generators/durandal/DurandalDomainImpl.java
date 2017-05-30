@@ -63,7 +63,7 @@ public class DurandalDomainImpl extends DurandalDomain {
                      final String moduleName = getString(moduleNode, Properties.name.name());
 
                      final DurandalDomainGroup.moduleJSST moduleJSST = group.newmoduleJS();
-                     final DurandalDomainGroup.moduleHTMLST moduleHTMLST = group.newmoduleHTML();
+//                     final DurandalDomainGroup.moduleHTMLST moduleHTMLST = group.newmoduleHTML();
 
                      outgoing(moduleNode, Relations.DEPENDENCY).forEach(dependencyRelation -> {
                         final Object dependencyName = get(other(moduleNode, dependencyRelation), Properties.name.name());
@@ -76,7 +76,7 @@ public class DurandalDomainImpl extends DurandalDomain {
 
                      shellJSST.addRoutesValue(moduleName, false, getString(relationship, Properties.route.name()), getString(relationship, Properties.title.name()));
 
-                     FileUtil.write(moduleHTMLST, new File(root + File.separator + moduleName, moduleName + ".html"));
+//                     FileUtil.write(moduleHTMLST, new File(root + File.separator + moduleName, moduleName + ".html"));
                      FileUtil.write(moduleJSST, new File(root + File.separator + moduleName, moduleName + ".js"));
                   });
 

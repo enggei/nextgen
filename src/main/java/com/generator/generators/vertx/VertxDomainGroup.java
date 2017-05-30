@@ -1,4 +1,4 @@
-package com.generator.generators.project;
+package com.generator.generators.vertx;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -6,35 +6,34 @@ import org.stringtemplate.v4.STGroup;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'ProjectGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'Vertx.stg' file<br/>
  */
-public final class ProjectGroup {
-
+public final class VertxDomainGroup {
+   // old Vertx
    private final STGroup stGroup;
    private final char delimiter;
 
-	public ProjectGroup() {
-
+	public VertxDomainGroup() {
 		final String generatorPath = System.getProperty("generator.path");
 
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "project" + java.io.File.separator + "project.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(ProjectGroup.class.getResource("/com/generator/generators/project/project.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
+        if (generatorPath != null) {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "Vertx" + java.io.File.separator + "Vertx.stg");
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        } else {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(VertxDomainGroup.class.getResource("/com/generator/generators/vertx/Vertx.stg"), "UTF-8", '~', '~');
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        }
    }
 
-   public ProjectGroup(STGroup stGroup) {
+   public VertxDomainGroup(STGroup stGroup) {
       this.stGroup = stGroup;
       this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
       this.delimiter = stGroup.delimiterStartChar;
    }
 
-   public ProjectGroup(java.io.File templateFile) {
+   public VertxDomainGroup(java.io.File templateFile) {
    	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
 	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 	   this.delimiter = stGroup.delimiterStartChar;
@@ -48,180 +47,85 @@ public final class ProjectGroup {
       return delimiter;
    }
 
-	public interface ProjectGroupTemplate {
+	public interface VertxDomainGroupTemplate {
 
 	}
 
+   public eomST neweom() {
+      return new eomST(stGroup);
+   }
 
-   public aspectST newaspect() {
-      return new aspectST(stGroup);
-   } 
+   public gtST newgt() {
+      return new gtST(stGroup);
+   }
 
+   public RouterVerticleST newRouterVerticle() {
+      return new RouterVerticleST(stGroup);
+   }
 
-   public bugfixST newbugfix() {
-      return new bugfixST(stGroup);
-   } 
-
-
-   public projectST newproject() {
-      return new projectST(stGroup);
-   } 
-
-
-   public stringValueST newstringValue() {
-      return new stringValueST(stGroup);
-   } 
-
-
-   public writeFileST newwriteFile() {
-      return new writeFileST(stGroup);
-   } 
-
-   public final class aspectST implements ProjectGroupTemplate {
-
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tasksIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private aspectST(STGroup group) {
-   		template = group.getInstanceOf("aspect");
-   	}
-
-       public aspectST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-      public aspectST addTasksValue(Object value) {
-      	tryToSetListProperty(template, value, tasksIsSet, "tasks");
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-   public final class bugfixST implements ProjectGroupTemplate {
+   public final class eomST implements VertxDomainGroupTemplate {
 
       private final ST template;
 
-      private bugfixST(STGroup group) {
-   		template = group.getInstanceOf("bugfix");
+      private eomST(STGroup group) {
+   		template = group.getInstanceOf("eom");
    	}
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-   public final class projectST implements ProjectGroupTemplate {
+   public final class gtST implements VertxDomainGroupTemplate {
 
-      private final AtomicBoolean aspectsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean groupsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private gtST(STGroup group) {
+   		template = group.getInstanceOf("gt");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class RouterVerticleST implements VertxDomainGroupTemplate {
+
+      private final AtomicBoolean endpointsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean indexUriIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean rootsIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private projectST(STGroup group) {
-   		template = group.getInstanceOf("project");
+      private RouterVerticleST(STGroup group) {
+   		template = group.getInstanceOf("RouterVerticle");
    	}
 
-      public projectST addAspectsValue(Object value) {
-      	tryToSetListProperty(template, value, aspectsIsSet, "aspects");
+      public RouterVerticleST addEndpointsValue(Object name_, Object uri_) {
+         endpointsIsSet.set(true);
+         template.addAggr("endpoints.{name, uri}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (uri_==null || uri_.toString().length()==0) ? null : uri_));
          return this;
       }
-       public projectST setComments(Object value) {
-      	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
-         return this;
-      } 
-      public projectST addGroupsValue(Object name_, Object packageName_, Object path_, Object reference_) {
-         groupsIsSet.set(true);
-         template.addAggr("groups.{name, packageName, path, reference}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (packageName_==null || packageName_.toString().length()==0) ? null : packageName_), ( (path_==null || path_.toString().length()==0) ? null : path_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
+      public RouterVerticleST setIndexUri(Object value) {
+      	tryToSetStringProperty(template, value, indexUriIsSet, "indexUri");   
          return this;
       }
-       public projectST setName(Object value) {
+      public RouterVerticleST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public projectST setPackageName(Object value) {
+      }
+      public RouterVerticleST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      } 
-      public projectST addRootsValue(Object path_, Object reference_) {
-         rootsIsSet.set(true);
-         template.addAggr("roots.{path, reference}", ( (path_==null || path_.toString().length()==0) ? null : path_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
-         return this;
       }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-   public final class stringValueST implements ProjectGroupTemplate {
-
-      private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private stringValueST(STGroup group) {
-   		template = group.getInstanceOf("stringValue");
-   	}
-
-       public stringValueST setValue(Object value) {
-      	tryToSetStringProperty(template, value, valueIsSet, "value");   
-         return this;
-      } 
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-   public final class writeFileST implements ProjectGroupTemplate {
-
-      private final AtomicBoolean commentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean dirIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean filetypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private writeFileST(STGroup group) {
-   		template = group.getInstanceOf("writeFile");
-   	}
-
-       public writeFileST setComment(Object value) {
-      	tryToSetStringProperty(template, value, commentIsSet, "comment");   
-         return this;
-      } 
-       public writeFileST setContent(Object value) {
-      	tryToSetStringProperty(template, value, contentIsSet, "content");   
-         return this;
-      } 
-       public writeFileST setDir(Object value) {
-      	tryToSetStringProperty(template, value, dirIsSet, "dir");   
-         return this;
-      } 
-       public writeFileST setFiletype(Object value) {
-      	tryToSetStringProperty(template, value, filetypeIsSet, "filetype");   
-         return this;
-      } 
-       public writeFileST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -338,7 +242,7 @@ public final class ProjectGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -350,4 +254,4 @@ public final class ProjectGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+}

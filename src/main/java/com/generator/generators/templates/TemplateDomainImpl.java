@@ -1629,8 +1629,8 @@ public class TemplateDomainImpl extends TemplateDomain {
             for (Relationship relationship : node.getRelationships(INCOMING)) {
                if (NeoEditor.isAppRelated(relationship)) continue;
                final Node other = other(node, relationship);
-               if (hasLabel(other, ProjectDomain.Entities.Directory.name()))
-                  pNodes.put(uuidOf(other(node, relationship)), ProjectDomain.Entities.Directory);
+               if (hasLabel(other, Entities.Directory.name()))
+                  pNodes.put(uuidOf(other(node, relationship)), Entities.Directory);
                else
                   System.out.println(other.getLabels().iterator().next());
             }
@@ -2141,8 +2141,8 @@ public class TemplateDomainImpl extends TemplateDomain {
 //         for (Relationship relationship : node.getRelationships(INCOMING)) {
 //            if (NeoEditor.isAppRelated(relationship)) continue;
 //            final Node other = other(node, relationship);
-//            if (hasLabel(other, ProjectDomain.Entities.Directory.name()))
-//               pNodes.put(uuidOf(other(node, relationship)), ProjectDomain.Entities.Directory);
+//            if (hasLabel(other, Entities.Directory.name()))
+//               pNodes.put(uuidOf(other(node, relationship)), Entities.Directory);
 //            else
 //               System.out.println(other.getLabels().iterator().next());
 //         }
@@ -2705,7 +2705,7 @@ public class TemplateDomainImpl extends TemplateDomain {
          @Override
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
             pop.add(new NewTemplateStatement(event, editor));
-            pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.root.name(), this));
+            pop.add(editor.newSetNodePropertyAction(Properties.root.name(), this));
             pop.add(editor.newSetNodePropertyAction(Properties.packageName.name(), this));
             pop.add(new GenerateGroupFile(this, editor));
 //            pop.add(new ExpandTemplateGroup(editor));
@@ -3157,7 +3157,7 @@ public class TemplateDomainImpl extends TemplateDomain {
                            //todo refactor this ? Its a convenience for when updating templates, to render to any dependent-statements
 //                        incoming(node, TEMPLATE_STATEMENT).forEach(relationship -> {
 //                           final Node statementNode = other(node, relationship);
-//                           incoming(statementNode, DIRECTORY_MEMBER).forEach(projectRelationship -> ProjectDomain.renderProjectMember(other(statementNode, projectRelationship), editor.canvas));
+//                           incoming(statementNode, DIRECTORY_MEMBER).forEach(projectRelationship -> renderProjectMember(other(statementNode, projectRelationship), editor.canvas));
 //                        });
 
                            editor.getAllNodesByLabel(Statement.name()).forEach(neoPNode -> {
@@ -3350,7 +3350,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
          final String packageName = BaseDomainVisitor.getString(templateGroupPNode.node, Properties.packageName.name());
          final String groupName = StringUtil.capitalize(BaseDomainVisitor.getString(templateGroupPNode.node, Properties.name.name())) + "DomainGroup";
-         final String root = BaseDomainVisitor.getString(templateGroupPNode.node, ProjectDomain.Properties.root.name());
+         final String root = BaseDomainVisitor.getString(templateGroupPNode.node, Properties.root.name());
 
          final TemplateGroupDomainGroup group = new TemplateGroupDomainGroup();
 
@@ -3366,7 +3366,7 @@ public class TemplateDomainImpl extends TemplateDomain {
                groupClassDeclaration = group.newGroupClassDeclaration().
                      setName(groupName).
                      setDomain(name).
-//                     setGroupString(TemplateDomainImpl.asSTGString(templateGroup)).
+                     setResourcePath(GeneratedFile.packageToPath(packageName)).
                      setPackageName(packageName);
             }
 

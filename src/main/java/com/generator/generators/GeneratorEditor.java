@@ -10,6 +10,7 @@ import com.generator.generators.durandal.DurandalDomainImpl;
 import com.generator.generators.easyFlow.EasyFlowDomainImpl;
 import com.generator.generators.html5.Html5Domain;
 import com.generator.generators.java.JavaDomainImpl;
+import com.generator.generators.javareflection.JavaBuilderDomainImpl;
 import com.generator.generators.json.JsonDomainImpl;
 import com.generator.generators.maven.MavenDomain;
 import com.generator.generators.maven.MavenDomainImpl;
@@ -52,13 +53,6 @@ public class GeneratorEditor extends NeoEditor {
       for (IDomain domain : this.domains)
          for (org.neo4j.graphdb.Label label : domain.values())
             nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
-      // todo make domains implement IDomain, then move into domains and run above
-      for (ProjectDomain.Entities label : ProjectDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
-
-      for (MavenDomain.Entities label : MavenDomain.Entities.values())
-         nodesByLabel.put(label.name(), new LinkedHashSet<>());
    }
 
    @Override
@@ -103,13 +97,6 @@ public class GeneratorEditor extends NeoEditor {
             }
          }
       }
-
-      // todo move above
-      for (Html5Domain.Entities label : Html5Domain.Entities.values())
-         if (label.name().equals(deleteLabel)) {
-            Html5Domain.deleteNode(node);
-            return;
-         }
    }
 
    @Override
@@ -131,7 +118,6 @@ public class GeneratorEditor extends NeoEditor {
          pop.add(domainMenu);
       }
 
-      Html5Domain.addToMenu(pop, event, this);
       super.addToMenu(pop, event);
    }
 
@@ -150,6 +136,7 @@ public class GeneratorEditor extends NeoEditor {
       domains.add(new JavaDomainImpl());
       domains.add(new NeoDomainImpl());
       domains.add(new DurandalDomainImpl());
+      domains.add(new JavaBuilderDomainImpl());
 
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
       SwingUtil.setLookAndFeel_Nimbus();

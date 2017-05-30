@@ -1,20 +1,19 @@
-/* uuid : 63121ef2-630a-45ce-a942-414359a13eb0 */
+/* project ee326037-0741-41c9-a8fd-eed7b3fbc8ee*/
 delimiters "~", "~"
 
-/** name,STRINGPROPERTY;tasks,LISTPROPERTY; **/
+eom() ::= <<}>>
+
+gt() ::= <<> >>
+
 aspect(name,tasks) ::= <<@org.junit.Test
 public void ~name~() throws Exception {
 
 	~tasks:{it|~it~};separator="\n"~
 
-} 
->>
+}>>
 
-/**  **/
-bugfix() ::= <<} 
->>
+bugfix() ::= <<}>>
 
-/** aspects,LISTPROPERTY;comments,STRINGPROPERTY;groups,KEYVALUELISTPROPERTY,name,packageName,path,reference;name,STRINGPROPERTY;packageName,STRINGPROPERTY;roots,KEYVALUELISTPROPERTY,path,reference; **/
 project(aspects,comments,groups,name,packageName,roots) ::= <<package ~packageName~;
 
 /**
@@ -22,19 +21,14 @@ project(aspects,comments,groups,name,packageName,roots) ::= <<package ~packageNa
  */
 public class ~name~ {
 
-   ~groups:{it|protected final ~it.packageName~.~it.name~ ~it.reference~ = new ~it.packageName~.~it.name~(new java.io.File("~it.path~"));};separator="\n"~    
+   ~groups:{it|protected final ~it.packageName~.~it.name~ ~it.reference~ = new ~it.packageName~.~it.name~();};separator="\n"~    
 
    ~roots:{it|protected final java.io.File ~it.reference~ = new java.io.File("~it.path~");};separator="\n"~
 
 	~aspects:{it|~it~};separator="\n"~
-} 
->>
+}>>
 
-/** value,STRINGPROPERTY; **/
-stringValue(value) ::= <<"~value~" 
->>
+stringValue(value) ::= <<"~value~">>
 
-/** comment,STRINGPROPERTY;content,STRINGPROPERTY;dir,STRINGPROPERTY;filetype,STRINGPROPERTY;name,STRINGPROPERTY; **/
-writeFile(comment,content,dir,filetype,name) ::= <<// ~comment~
-com.generator.util.FileUtil.writeFile(~content~, new java.io.File("~dir~", "~name~.~filetype~")); 
->>
+writeFile(comment,filetype,name,dir,content) ::= <<// ~comment~
+com.generator.util.FileUtil.writeFile(~content~, new java.io.File("~dir~", "~name~.~filetype~"));>>

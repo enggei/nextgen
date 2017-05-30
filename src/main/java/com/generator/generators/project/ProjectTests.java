@@ -12,16 +12,16 @@ public class ProjectTests {
 	public void testProjectGroup() throws IOException {
 
 		System.setProperty("generator.path", "src/main/java/com/generator/generators");
-		final ProjectGroup group = new ProjectGroup();
+		final ProjectDomainGroup group = new ProjectDomainGroup();
 
-		// todo add ProjectGroup- tests here;
+		// todo add ProjectDomainGroup- tests here;
 
-		final ProjectGroup.projectST nextGen = group.newproject().
+		final ProjectDomainGroup.projectST nextGen = group.newproject().
 			setName("NextGen").
 			setPackageName("com.generator.generators.project").
 			setComments("Represents the nextgen project. Will generate app for managing projects, templates and generation of these.");
 
-		nextGen.addGroupsValue("ProjectGroup", "com.generator.generators.project", "/media/storage/nextgen/src/main/java/com/generator/generators/project/project.stg", "project");
+//		nextGen.addGroupsValue("ProjectDomainGroup", "com.generator.generators.project", "/media/storage/nextgen/src/main/java/com/generator/generators/project/project.stg", "project");
 
 		nextGen.addRootsValue("/media/storage/nextgen/src/main/java/com/generator/generators/project/test", "root");
 		nextGen.addRootsValue("/media/storage/nextgen/src/main/java/com/generator/generators/project/test/src/java", "javaRoot");

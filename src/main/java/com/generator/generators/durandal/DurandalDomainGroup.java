@@ -59,30 +59,6 @@ public final class DurandalDomainGroup {
       return new gtST(stGroup);
    }
 
-   public CrudHtmlST newCrudHtml() {
-      return new CrudHtmlST(stGroup);
-   }
-
-   public CrudJSST newCrudJS() {
-      return new CrudJSST(stGroup);
-   }
-
-   public EditDialogHTMLST newEditDialogHTML() {
-      return new EditDialogHTMLST(stGroup);
-   }
-
-   public EditDialogJSST newEditDialogJS() {
-      return new EditDialogJSST(stGroup);
-   }
-
-   public NewDialogHTMLST newNewDialogHTML() {
-      return new NewDialogHTMLST(stGroup);
-   }
-
-   public NewDialogJSST newNewDialogJS() {
-      return new NewDialogJSST(stGroup);
-   }
-
    public appHTMLST newappHTML() {
       return new appHTMLST(stGroup);
    }
@@ -95,10 +71,6 @@ public final class DurandalDomainGroup {
       return new mainJSST(stGroup);
    }
 
-   public moduleHTMLST newmoduleHTML() {
-      return new moduleHTMLST(stGroup);
-   }
-
    public moduleJSST newmoduleJS() {
       return new moduleJSST(stGroup);
    }
@@ -109,6 +81,10 @@ public final class DurandalDomainGroup {
 
    public shellJSST newshellJS() {
       return new shellJSST(stGroup);
+   }
+
+   public modelST newmodel() {
+      return new modelST(stGroup);
    }
 
    public final class eomST implements DurandalDomainGroupTemplate {
@@ -132,168 +108,6 @@ public final class DurandalDomainGroup {
       private gtST(STGroup group) {
    		template = group.getInstanceOf("gt");
    	}
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class CrudHtmlST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private CrudHtmlST(STGroup group) {
-   		template = group.getInstanceOf("CrudHtml");
-   	}
-
-      public CrudHtmlST addColumnsValue(Object name_) {
-         columnsIsSet.set(true);
-         template.addAggr("columns.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public CrudHtmlST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class CrudJSST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean editableFieldsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private CrudJSST(STGroup group) {
-   		template = group.getInstanceOf("CrudJS");
-   	}
-
-      public CrudJSST addColumnsValue(Object defaultValue_, Object name_) {
-         columnsIsSet.set(true);
-         template.addAggr("columns.{defaultValue, name}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public CrudJSST addEditableFieldsValue(Object defaultValue_, Object name_) {
-         editableFieldsIsSet.set(true);
-         template.addAggr("editableFields.{defaultValue, name}", ( (defaultValue_==null || defaultValue_.toString().length()==0) ? null : defaultValue_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public CrudJSST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class EditDialogHTMLST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private EditDialogHTMLST(STGroup group) {
-   		template = group.getInstanceOf("EditDialogHTML");
-   	}
-
-      public EditDialogHTMLST addFieldsValue(Object label_, Object name_) {
-         fieldsIsSet.set(true);
-         template.addAggr("fields.{label, name}", ( (label_==null || label_.toString().length()==0) ? null : label_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public EditDialogHTMLST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class EditDialogJSST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private EditDialogJSST(STGroup group) {
-   		template = group.getInstanceOf("EditDialogJS");
-   	}
-
-      public EditDialogJSST addFieldsValue(Object name_) {
-         fieldsIsSet.set(true);
-         template.addAggr("fields.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public EditDialogJSST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class NewDialogHTMLST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private NewDialogHTMLST(STGroup group) {
-   		template = group.getInstanceOf("NewDialogHTML");
-   	}
-
-      public NewDialogHTMLST addFieldsValue(Object label_, Object name_) {
-         fieldsIsSet.set(true);
-         template.addAggr("fields.{label, name}", ( (label_==null || label_.toString().length()==0) ? null : label_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public NewDialogHTMLST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class NewDialogJSST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean fieldsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private NewDialogJSST(STGroup group) {
-   		template = group.getInstanceOf("NewDialogJS");
-   	}
-
-      public NewDialogJSST addFieldsValue(Object name_) {
-         fieldsIsSet.set(true);
-         template.addAggr("fields.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-      public NewDialogJSST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      }
 
       @Override
    	public String toString() {
@@ -372,36 +186,11 @@ public final class DurandalDomainGroup {
    	}
    }
 
-   public final class moduleHTMLST implements DurandalDomainGroupTemplate {
-
-      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean titleIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private moduleHTMLST(STGroup group) {
-   		template = group.getInstanceOf("moduleHTML");
-   	}
-
-      public moduleHTMLST addContentValue(Object value) {
-      	tryToSetListProperty(template, value, contentIsSet, "content");
-         return this;
-      }
-      public moduleHTMLST setTitle(Object value) {
-      	tryToSetStringProperty(template, value, titleIsSet, "title");   
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
    public final class moduleJSST implements DurandalDomainGroupTemplate {
 
       private final AtomicBoolean dependenciesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean returnsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean returnValueIsSet = new AtomicBoolean(false);
       private final ST template;
 
       private moduleJSST(STGroup group) {
@@ -413,13 +202,12 @@ public final class DurandalDomainGroup {
          template.addAggr("dependencies.{importName, refName}", ( (importName_==null || importName_.toString().length()==0) ? null : importName_), ( (refName_==null || refName_.toString().length()==0) ? null : refName_));
          return this;
       }
-      public moduleJSST addReturnsValue(Object impl_, Object name_) {
-         returnsIsSet.set(true);
-         template.addAggr("returns.{impl, name}", ( (impl_==null || impl_.toString().length()==0) ? null : impl_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
       public moduleJSST addStatementsValue(Object value) {
       	tryToSetListProperty(template, value, statementsIsSet, "statements");
+         return this;
+      }
+      public moduleJSST setReturnValue(Object value) {
+      	tryToSetStringProperty(template, value, returnValueIsSet, "returnValue");   
          return this;
       }
 
@@ -455,6 +243,31 @@ public final class DurandalDomainGroup {
       public shellJSST addRoutesValue(Object moduleId_, Object nav_, Object route_, Object title_) {
          routesIsSet.set(true);
          template.addAggr("routes.{moduleId, nav, route, title}", ( (moduleId_==null || moduleId_.toString().length()==0) ? null : moduleId_), ( (nav_==null || nav_.toString().length()==0) ? null : nav_), ( (route_==null || route_.toString().length()==0) ? null : route_), ( (title_==null || title_.toString().length()==0) ? null : title_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class modelST implements DurandalDomainGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private modelST(STGroup group) {
+   		template = group.getInstanceOf("model");
+   	}
+
+      public modelST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+      public modelST addStatementsValue(Object value) {
+      	tryToSetListProperty(template, value, statementsIsSet, "statements");
          return this;
       }
 

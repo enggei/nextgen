@@ -1,4 +1,4 @@
-package com.generator.generators.cypher;
+package com.generator.generators.project;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
@@ -6,37 +6,34 @@ import org.stringtemplate.v4.STGroup;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'CypherGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'project.stg' file<br/>
  */
-public final class CypherGroup {
-
+public final class ProjectDomainGroup {
+   // old project
    private final STGroup stGroup;
    private final char delimiter;
 
-	public CypherGroup() {
-
+	public ProjectDomainGroup() {
 		final String generatorPath = System.getProperty("generator.path");
 
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "cypher" + java.io.File.separator + "cypher.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(CypherGroup.class.getResource("/com/generator/generators/cypher/cypher.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "cypher" + java.io.File.separator + "cypher.stg"));
+        if (generatorPath != null) {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "project" + java.io.File.separator + "project.stg");
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        } else {
+        	this.stGroup = new org.stringtemplate.v4.STGroupFile(ProjectDomainGroup.class.getResource("/com/generator/generators/project/project.stg"), "UTF-8", '~', '~');
+        	this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
+        	this.delimiter = stGroup.delimiterStartChar;
+        }
    }
 
-   public CypherGroup(STGroup stGroup) {
+   public ProjectDomainGroup(STGroup stGroup) {
       this.stGroup = stGroup;
       this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
       this.delimiter = stGroup.delimiterStartChar;
    }
 
-   public CypherGroup(java.io.File templateFile) {
+   public ProjectDomainGroup(java.io.File templateFile) {
    	this.stGroup = new org.stringtemplate.v4.STGroupFile(templateFile.getAbsolutePath());
 	   this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
 	   this.delimiter = stGroup.delimiterStartChar;
@@ -50,255 +47,211 @@ public final class CypherGroup {
       return delimiter;
    }
 
+	public interface ProjectDomainGroupTemplate {
 
-   public createNodeST newcreateNode() {
-      return new createNodeST(stGroup);
-   } 
+	}
 
+   public eomST neweom() {
+      return new eomST(stGroup);
+   }
 
-   public createNodesST newcreateNodes() {
-      return new createNodesST(stGroup);
-   } 
+   public gtST newgt() {
+      return new gtST(stGroup);
+   }
 
+   public aspectST newaspect() {
+      return new aspectST(stGroup);
+   }
 
-   public createRelationshipST newcreateRelationship() {
-      return new createRelationshipST(stGroup);
-   } 
+   public bugfixST newbugfix() {
+      return new bugfixST(stGroup);
+   }
 
+   public projectST newproject() {
+      return new projectST(stGroup);
+   }
 
-   public createRelationshipsST newcreateRelationships() {
-      return new createRelationshipsST(stGroup);
-   } 
+   public stringValueST newstringValue() {
+      return new stringValueST(stGroup);
+   }
 
+   public writeFileST newwriteFile() {
+      return new writeFileST(stGroup);
+   }
 
-   public matchLabelST newmatchLabel() {
-      return new matchLabelST(stGroup);
-   } 
+   public final class eomST implements ProjectDomainGroupTemplate {
 
-
-   public queryST newquery() {
-      return new queryST(stGroup);
-   } 
-
-
-   public stringPropertyST newstringProperty() {
-      return new stringPropertyST(stGroup);
-   } 
-
-
-   public valuePropertyST newvalueProperty() {
-      return new valuePropertyST(stGroup);
-   } 
-
-    public final class createNodeST {
-
-      private final AtomicBoolean idIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean labelsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private createNodeST(STGroup group) {
-   		template = group.getInstanceOf("createNode");
+      private eomST(STGroup group) {
+   		template = group.getInstanceOf("eom");
    	}
-
-       public createNodeST setId(Object value) {
-      	tryToSetStringProperty(template, value, idIsSet, "id");   
-         return this;
-      } 
-      public createNodeST addLabelsValue(Object value) {
-      	tryToSetListProperty(template, value, labelsIsSet, "labels");
-         return this;
-      }
-      public createNodeST addPropertiesValue(Object value) {
-      	tryToSetListProperty(template, value, propertiesIsSet, "properties");
-         return this;
-      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class createNodesST {
+   public final class gtST implements ProjectDomainGroupTemplate {
 
-      private final AtomicBoolean nodesIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private createNodesST(STGroup group) {
-   		template = group.getInstanceOf("createNodes");
+      private gtST(STGroup group) {
+   		template = group.getInstanceOf("gt");
    	}
-
-      public createNodesST addNodesValue(Object value) {
-      	tryToSetListProperty(template, value, nodesIsSet, "nodes");
-         return this;
-      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class createRelationshipST {
+   public final class aspectST implements ProjectDomainGroupTemplate {
 
-      private final AtomicBoolean dstIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean srcIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private createRelationshipST(STGroup group) {
-   		template = group.getInstanceOf("createRelationship");
-   	}
-
-       public createRelationshipST setDst(Object value) {
-      	tryToSetStringProperty(template, value, dstIsSet, "dst");   
-         return this;
-      } 
-      public createRelationshipST addPropertiesValue(Object value) {
-      	tryToSetListProperty(template, value, propertiesIsSet, "properties");
-         return this;
-      }
-       public createRelationshipST setSrc(Object value) {
-      	tryToSetStringProperty(template, value, srcIsSet, "src");   
-         return this;
-      } 
-       public createRelationshipST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      } 
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class createRelationshipsST {
-
-      private final AtomicBoolean relationshipsIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private createRelationshipsST(STGroup group) {
-   		template = group.getInstanceOf("createRelationships");
-   	}
-
-      public createRelationshipsST addRelationshipsValue(Object value) {
-      	tryToSetListProperty(template, value, relationshipsIsSet, "relationships");
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class matchLabelST {
-
-      private final AtomicBoolean labelIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean tasksIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private matchLabelST(STGroup group) {
-   		template = group.getInstanceOf("matchLabel");
+      private aspectST(STGroup group) {
+   		template = group.getInstanceOf("aspect");
    	}
 
-       public matchLabelST setLabel(Object value) {
-      	tryToSetStringProperty(template, value, labelIsSet, "label");   
-         return this;
-      } 
-       public matchLabelST setName(Object value) {
+      public aspectST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
+      public aspectST addTasksValue(Object value) {
+      	tryToSetListProperty(template, value, tasksIsSet, "tasks");
+         return this;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class queryST {
+   public final class bugfixST implements ProjectDomainGroupTemplate {
 
-      private final AtomicBoolean matchIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean returnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean whereIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private queryST(STGroup group) {
-   		template = group.getInstanceOf("query");
+      private bugfixST(STGroup group) {
+   		template = group.getInstanceOf("bugfix");
    	}
-
-       public queryST setMatch(Object value) {
-      	tryToSetStringProperty(template, value, matchIsSet, "match");   
-         return this;
-      } 
-       public queryST setReturn(Object value) {
-      	tryToSetStringProperty(template, value, returnIsSet, "return");   
-         return this;
-      } 
-       public queryST setWhere(Object value) {
-      	tryToSetStringProperty(template, value, whereIsSet, "where");   
-         return this;
-      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class stringPropertyST {
+   public final class projectST implements ProjectDomainGroupTemplate {
 
+      private final AtomicBoolean aspectsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean groupsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean rootsIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private projectST(STGroup group) {
+   		template = group.getInstanceOf("project");
+   	}
+
+      public projectST addAspectsValue(Object value) {
+      	tryToSetListProperty(template, value, aspectsIsSet, "aspects");
+         return this;
+      }
+      public projectST setComments(Object value) {
+      	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
+         return this;
+      }
+      public projectST addGroupsValue(Object name_, Object packageName_, Object reference_) {
+         groupsIsSet.set(true);
+         template.addAggr("groups.{name, packageName, reference}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (packageName_==null || packageName_.toString().length()==0) ? null : packageName_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
+         return this;
+      }
+      public projectST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+      public projectST setPackageName(Object value) {
+      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
+         return this;
+      }
+      public projectST addRootsValue(Object path_, Object reference_) {
+         rootsIsSet.set(true);
+         template.addAggr("roots.{path, reference}", ( (path_==null || path_.toString().length()==0) ? null : path_), ( (reference_==null || reference_.toString().length()==0) ? null : reference_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class stringValueST implements ProjectDomainGroupTemplate {
+
       private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private stringPropertyST(STGroup group) {
-   		template = group.getInstanceOf("stringProperty");
+      private stringValueST(STGroup group) {
+   		template = group.getInstanceOf("stringValue");
    	}
 
-       public stringPropertyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-       public stringPropertyST setValue(Object value) {
+      public stringValueST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class valuePropertyST {
+   public final class writeFileST implements ProjectDomainGroupTemplate {
 
+      private final AtomicBoolean commentIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean filetypeIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean dirIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private valuePropertyST(STGroup group) {
-   		template = group.getInstanceOf("valueProperty");
+      private writeFileST(STGroup group) {
+   		template = group.getInstanceOf("writeFile");
    	}
 
-       public valuePropertyST setName(Object value) {
+      public writeFileST setComment(Object value) {
+      	tryToSetStringProperty(template, value, commentIsSet, "comment");   
+         return this;
+      }
+      public writeFileST setFiletype(Object value) {
+      	tryToSetStringProperty(template, value, filetypeIsSet, "filetype");   
+         return this;
+      }
+      public writeFileST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public valuePropertyST setValue(Object value) {
-      	tryToSetStringProperty(template, value, valueIsSet, "value");   
+      }
+      public writeFileST setDir(Object value) {
+      	tryToSetStringProperty(template, value, dirIsSet, "dir");   
          return this;
-      } 
+      }
+      public writeFileST setContent(Object value) {
+      	tryToSetStringProperty(template, value, contentIsSet, "content");   
+         return this;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -415,7 +368,7 @@ public final class CypherGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -427,4 +380,4 @@ public final class CypherGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+}

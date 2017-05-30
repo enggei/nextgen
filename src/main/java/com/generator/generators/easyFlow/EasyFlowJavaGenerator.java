@@ -81,8 +81,8 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
 
       if (has(node, "extends")) fsm.setExtends(get(node, "extends"));
 
-      for (Relationship relationship : outgoing(node, SUPERPARAMETERS))
-         fsm.addSuperParamsValue(getOtherProperty(node, relationship, "name"), getOtherProperty(node, relationship, "type"));
+//      for (Relationship relationship : outgoing(node, SUPERPARAMETERS))
+//         fsm.addSuperParamsValue(getOtherProperty(node, relationship, "name"), getOtherProperty(node, relationship, "type"));
 
       for (String state : states) {
          fsm.addBindingsValue(

@@ -5,8 +5,14 @@ import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
+import com.github.javaparser.JavaParser;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.EnumConstantDeclaration;
+import com.github.javaparser.ast.body.EnumDeclaration;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.neo4j.graphdb.*;
@@ -16,6 +22,7 @@ import org.piccolo2d.event.PInputEvent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,89 +44,137 @@ public class MetaDomainImpl extends MetaDomain {
 
       domainMenu.add(editor.newAddNodeAction(Domain, MetaDomain.Properties.name.name(), event));
 
-      domainMenu.add(new NeoEditor.TransactionAction("Parse Domain", editor) {
-
+      domainMenu.add(new NeoEditor.TransactionAction("Parse java domain-class", editor) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-            final JTextArea textArea = new JTextArea(800, 600);
-            textArea.setFont(new Font("Hack", Font.PLAIN, 10));
-            SwingUtil.showTextInput("Json", textArea, editor.getCanvas(), () -> {
+            final File file = FileUtil.openFile(editor.getCanvas(), new File(System.getProperty("user.home")));
+            if (file == null) return;
 
-               final AtomicBoolean success = new AtomicBoolean(true);
+            final CompilationUnit cu = JavaParser.parse(file);
 
-               editor.getGraph().doInTransaction(new NeoModel.Committer() {
-                  @Override
-                  public void doAction(Transaction tx1) throws Throwable {
+            final Node domainNode = editor.getGraph().newNode(MetaDomain.Entities.Domain,
+                  MetaDomain.Properties.name.name(), file.getName());
 
-                     final JsonObject domain = new JsonObject(textArea.getText().trim());
+            new VoidVisitorAdapter<Object>() {
 
-                     final Node newDomain = graph.newNode(Domain);
-                     newDomain.setProperty(Properties.name.name(), domain.getString("name"));
-                     newDomain.setProperty(Properties.packageName.name(), domain.getString("packageName", ""));
+               String currentEnum = "";
 
-                     final Map<String, Node> entitiesIndex = new LinkedHashMap<>();
-                     for (Object element : domain.getJsonArray("entities", new JsonArray())) {
-                        final JsonObject entity = (JsonObject) element;
+               @Override
+               public void visit(EnumConstantDeclaration n, Object arg) {
 
-                        final Node newEntity = editor.getGraph().newNode(Entity);
-                        newEntity.setProperty(Properties.name.name(), entity.getString("name"));
-                        newEntity.setProperty(Properties.color.name(), entity.getString("color", "#000000"));
-                        newEntity.setProperty(Properties.root.name(), entity.getBoolean("root", false));
-                        newEntity.setProperty(Properties.label.name(), entity.getString("label", "name"));
-                        newDomain.createRelationshipTo(newEntity, Relations.ENTITY);
-
-                        for (Object pElement : entity.getJsonArray("properties", new JsonArray())) {
-                           final JsonObject property = (JsonObject) pElement;
-
-                           final Node newProperty = editor.getGraph().newNode(Property);
-                           newProperty.setProperty(Properties.name.name(), property.getString("name"));
-                           newProperty.setProperty(Properties.type.name(), property.getString("type"));
-                           if ("Enum".equals(property.getString("type"))) {
-                              for (Object val : property.getJsonArray("values", new JsonArray())) {
-
-                                 final Node newSingleValue = editor.getGraph().newNode(SingleValue);
-                                 newSingleValue.setProperty(Properties.value.name(), val);
-
-                                 final Relationship relationship = newProperty.createRelationshipTo(newSingleValue, ENUM_VALUE);
-                                 relationship.setProperty("property", Properties.value.name());
-                              }
-                           }
-                           newEntity.createRelationshipTo(newProperty, Relations.PROPERTY);
-                        }
-
-                        entitiesIndex.put(entity.getString("name"), newEntity);
-                     }
-
-                     for (Object element : domain.getJsonArray("relations", new JsonArray())) {
-                        final JsonObject relation = (JsonObject) element;
-
-                        final Node newRelation = editor.getGraph().newNode(Relation);
-                        newRelation.setProperty(Properties.name.name(), relation.getString("name"));
-                        newRelation.setProperty(Properties.cardinality.name(), relation.getString("cardinality"));
-                        newDomain.createRelationshipTo(newRelation, Relations.RELATION);
-
-                        for (Object srcElement : relation.getJsonArray("src", new JsonArray()))
-                           entitiesIndex.get(srcElement + "").createRelationshipTo(newRelation, Relations.SRC);
-
-                        for (Object dstElement : relation.getJsonArray("dst", new JsonArray()))
-                           newRelation.createRelationshipTo(entitiesIndex.get(dstElement + ""), Relations.DST);
-                     }
-
-                     editor.show(NeoModel.uuidOf(newDomain), Domain.name()).setOffset(event);
+                  switch (currentEnum) {
+                     case "entities":
+                        final Node entityNode = editor.getGraph().newNode(MetaDomain.Entities.Entity, Properties.name.name(), n.getName());
+                        domainNode.createRelationshipTo(entityNode, MetaDomain.Relations.ENTITY);
+                        break;
+                     case "relations":
+                        final Node relationNode = editor.getGraph().newNode(MetaDomain.Entities.Entity, Properties.name.name(), n.getName());
+                        domainNode.createRelationshipTo(relationNode, MetaDomain.Relations.RELATION);
+                        break;
+//                     case "properties":
+//                        final Node entityNode = editor.getGraph().newNode(MetaDomain.Entities.Entity, n.getName());
+//                        domainNode.createRelationshipTo(entityNode, MetaDomain.Relations.ENTITY);
+//                        break;
                   }
 
-                  @Override
-                  public void exception(Throwable throwable) {
-                     //SwingUtil.showException(editor.getCanvas(), throwable);
-                     success.set(false);
-                  }
-               });
+                  System.out.println("\t" + n.getName());
+                  super.visit(n, arg);
+               }
 
-               if (!success.get()) throw new IllegalArgumentException("Invalid json content");
-            });
+               @Override
+               public void visit(EnumDeclaration n, Object arg) {
+                  System.out.println(n.getName());
+                  currentEnum = n.getName().toLowerCase();
+                  super.visit(n, arg);
+               }
+            }.visit(cu, null);
          }
       });
+
+//      domainMenu.add(new NeoEditor.TransactionAction("Parse Domain", editor) {
+//
+//         @Override
+//         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//
+//            final JTextArea textArea = new JTextArea(800, 600);
+//            textArea.setFont(new Font("Hack", Font.PLAIN, 10));
+//            SwingUtil.showTextInput("Json", textArea, editor.getCanvas(), () -> {
+//
+//               final AtomicBoolean success = new AtomicBoolean(true);
+//
+//               editor.getGraph().doInTransaction(new NeoModel.Committer() {
+//                  @Override
+//                  public void doAction(Transaction tx1) throws Throwable {
+//
+//                     final JsonObject domain = new JsonObject(textArea.getText().trim());
+//
+//                     final Node newDomain = graph.newNode(Domain);
+//                     newDomain.setProperty(Properties.name.name(), domain.getString("name"));
+//                     newDomain.setProperty(Properties.packageName.name(), domain.getString("packageName", ""));
+//
+//                     final Map<String, Node> entitiesIndex = new LinkedHashMap<>();
+//                     for (Object element : domain.getJsonArray("entities", new JsonArray())) {
+//                        final JsonObject entity = (JsonObject) element;
+//
+//                        final Node newEntity = editor.getGraph().newNode(Entity);
+//                        newEntity.setProperty(Properties.name.name(), entity.getString("name"));
+//                        newEntity.setProperty(Properties.color.name(), entity.getString("color", "#000000"));
+//                        newEntity.setProperty(Properties.root.name(), entity.getBoolean("root", false));
+//                        newEntity.setProperty(Properties.label.name(), entity.getString("label", "name"));
+//                        newDomain.createRelationshipTo(newEntity, Relations.ENTITY);
+//
+//                        for (Object pElement : entity.getJsonArray("properties", new JsonArray())) {
+//                           final JsonObject property = (JsonObject) pElement;
+//
+//                           final Node newProperty = editor.getGraph().newNode(Property);
+//                           newProperty.setProperty(Properties.name.name(), property.getString("name"));
+//                           newProperty.setProperty(Properties.type.name(), property.getString("type"));
+//                           if ("Enum".equals(property.getString("type"))) {
+//                              for (Object val : property.getJsonArray("values", new JsonArray())) {
+//
+//                                 final Node newSingleValue = editor.getGraph().newNode(SingleValue);
+//                                 newSingleValue.setProperty(Properties.value.name(), val);
+//
+//                                 final Relationship relationship = newProperty.createRelationshipTo(newSingleValue, ENUM_VALUE);
+//                                 relationship.setProperty("property", Properties.value.name());
+//                              }
+//                           }
+//                           newEntity.createRelationshipTo(newProperty, Relations.PROPERTY);
+//                        }
+//
+//                        entitiesIndex.put(entity.getString("name"), newEntity);
+//                     }
+//
+//                     for (Object element : domain.getJsonArray("relations", new JsonArray())) {
+//                        final JsonObject relation = (JsonObject) element;
+//
+//                        final Node newRelation = editor.getGraph().newNode(Relation);
+//                        newRelation.setProperty(Properties.name.name(), relation.getString("name"));
+//                        newRelation.setProperty(Properties.cardinality.name(), relation.getString("cardinality"));
+//                        newDomain.createRelationshipTo(newRelation, Relations.RELATION);
+//
+//                        for (Object srcElement : relation.getJsonArray("src", new JsonArray()))
+//                           entitiesIndex.get(srcElement + "").createRelationshipTo(newRelation, Relations.SRC);
+//
+//                        for (Object dstElement : relation.getJsonArray("dst", new JsonArray()))
+//                           newRelation.createRelationshipTo(entitiesIndex.get(dstElement + ""), Relations.DST);
+//                     }
+//
+//                     editor.show(NeoModel.uuidOf(newDomain), Domain.name()).setOffset(event);
+//                  }
+//
+//                  @Override
+//                  public void exception(Throwable throwable) {
+//                     //SwingUtil.showException(editor.getCanvas(), throwable);
+//                     success.set(false);
+//                  }
+//               });
+//
+//               if (!success.get()) throw new IllegalArgumentException("Invalid json content");
+//            });
+//         }
+//      });
    }
 
    @Override
