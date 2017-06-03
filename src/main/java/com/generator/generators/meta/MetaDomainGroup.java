@@ -51,35 +51,29 @@ public final class MetaDomainGroup {
 
 	}
 
-
    public eomST neweom() {
       return new eomST(stGroup);
-   } 
-
+   }
 
    public gtST newgt() {
       return new gtST(stGroup);
-   } 
-
+   }
 
    public DomainClassST newDomainClass() {
       return new DomainClassST(stGroup);
-   } 
-
-
-   public PropertyEditorST newPropertyEditor() {
-      return new PropertyEditorST(stGroup);
-   } 
-
+   }
 
    public EntityInterfaceST newEntityInterface() {
       return new EntityInterfaceST(stGroup);
-   } 
-
+   }
 
    public PNodeDeclarationST newPNodeDeclaration() {
       return new PNodeDeclarationST(stGroup);
-   } 
+   }
+
+   public PropertyEditorST newPropertyEditor() {
+      return new PropertyEditorST(stGroup);
+   }
 
    public final class eomST implements MetaDomainGroupTemplate {
 
@@ -93,7 +87,7 @@ public final class MetaDomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class gtST implements MetaDomainGroupTemplate {
 
@@ -107,7 +101,7 @@ public final class MetaDomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class DomainClassST implements MetaDomainGroupTemplate {
 
@@ -122,27 +116,27 @@ public final class MetaDomainGroup {
    		template = group.getInstanceOf("DomainClass");
    	}
 
-       public DomainClassST setDomainName(Object value) {
+      public DomainClassST setDomainName(Object value) {
       	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
          return this;
-      } 
-      public DomainClassST addEntitiesValue(Object editor_, Object name_, Object declaration_) {
+      }
+      public DomainClassST addEntitiesValue(Object declaration_, Object editor_, Object name_) {
          entitiesIsSet.set(true);
-         template.addAggr("entities.{editor, name, declaration}", ( (editor_==null || editor_.toString().length()==0) ? null : editor_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_));
+         template.addAggr("entities.{declaration, editor, name}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (editor_==null || editor_.toString().length()==0) ? null : editor_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public DomainClassST setPackageName(Object value) {
+      public DomainClassST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      } 
+      }
       public DomainClassST addPropertiesValue(Object name_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-      public DomainClassST addRelationsValue(Object name_, Object editor_) {
+      public DomainClassST addRelationsValue(Object editor_, Object name_) {
          relationsIsSet.set(true);
-         template.addAggr("relations.{name, editor}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (editor_==null || editor_.toString().length()==0) ? null : editor_));
+         template.addAggr("relations.{editor, name}", ( (editor_==null || editor_.toString().length()==0) ? null : editor_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
 
@@ -150,33 +144,7 @@ public final class MetaDomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-   public final class PropertyEditorST implements MetaDomainGroupTemplate {
-
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private PropertyEditorST(STGroup group) {
-   		template = group.getInstanceOf("PropertyEditor");
-   	}
-
-       public PropertyEditorST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-      public PropertyEditorST addPropertiesValue(Object component_, Object enums_, Object name_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{component, enums, name}", ( (component_==null || component_.toString().length()==0) ? null : component_), ( (enums_==null || enums_.toString().length()==0) ? null : enums_), ( (name_==null || name_.toString().length()==0) ? null : name_));
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
+   }
 
    public final class EntityInterfaceST implements MetaDomainGroupTemplate {
 
@@ -190,14 +158,14 @@ public final class MetaDomainGroup {
    		template = group.getInstanceOf("EntityInterface");
    	}
 
-       public EntityInterfaceST setEntity(Object value) {
+      public EntityInterfaceST setEntity(Object value) {
       	tryToSetStringProperty(template, value, entityIsSet, "entity");   
          return this;
-      } 
-       public EntityInterfaceST setPackageName(Object value) {
+      }
+      public EntityInterfaceST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      } 
+      }
       public EntityInterfaceST addPropertiesValue(Object name_, Object type_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
@@ -213,13 +181,13 @@ public final class MetaDomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class PNodeDeclarationST implements MetaDomainGroupTemplate {
 
-      private final AtomicBoolean incomingIsSet = new AtomicBoolean(false);
       private final AtomicBoolean colorIsSet = new AtomicBoolean(false);
       private final AtomicBoolean domainNameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean incomingIsSet = new AtomicBoolean(false);
       private final AtomicBoolean labelIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean outgoingIsSet = new AtomicBoolean(false);
@@ -231,27 +199,27 @@ public final class MetaDomainGroup {
    		template = group.getInstanceOf("PNodeDeclaration");
    	}
 
+      public PNodeDeclarationST setColor(Object value) {
+      	tryToSetStringProperty(template, value, colorIsSet, "color");   
+         return this;
+      }
+      public PNodeDeclarationST setDomainName(Object value) {
+      	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
+         return this;
+      }
       public PNodeDeclarationST addIncomingValue(Object relation_, Object src_) {
          incomingIsSet.set(true);
          template.addAggr("incoming.{relation, src}", ( (relation_==null || relation_.toString().length()==0) ? null : relation_), ( (src_==null || src_.toString().length()==0) ? null : src_));
          return this;
       }
-       public PNodeDeclarationST setColor(Object value) {
-      	tryToSetStringProperty(template, value, colorIsSet, "color");   
-         return this;
-      } 
-       public PNodeDeclarationST setDomainName(Object value) {
-      	tryToSetStringProperty(template, value, domainNameIsSet, "domainName");   
-         return this;
-      } 
-       public PNodeDeclarationST setLabel(Object value) {
+      public PNodeDeclarationST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      } 
-       public PNodeDeclarationST setName(Object value) {
+      }
+      public PNodeDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public PNodeDeclarationST addOutgoingValue(Object dst_, Object relation_) {
          outgoingIsSet.set(true);
          template.addAggr("outgoing.{dst, relation}", ( (dst_==null || dst_.toString().length()==0) ? null : dst_), ( (relation_==null || relation_.toString().length()==0) ? null : relation_));
@@ -272,7 +240,33 @@ public final class MetaDomainGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
+
+   public final class PropertyEditorST implements MetaDomainGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private PropertyEditorST(STGroup group) {
+   		template = group.getInstanceOf("PropertyEditor");
+   	}
+
+      public PropertyEditorST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+      public PropertyEditorST addPropertiesValue(Object component_, Object enums_, Object name_) {
+         propertiesIsSet.set(true);
+         template.addAggr("properties.{component, enums, name}", ( (component_==null || component_.toString().length()==0) ? null : component_), ( (enums_==null || enums_.toString().length()==0) ? null : enums_), ( (name_==null || name_.toString().length()==0) ? null : name_));
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -389,7 +383,7 @@ public final class MetaDomainGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();

@@ -1,4 +1,4 @@
-/* meta d7edfa85-3b26-4035-b712-15db0af3094a*/
+/* meta f108241e-63b7-4981-8513-7d85fc0da582*/
 delimiters "~", "~"
 
 eom() ::= <<}>>
@@ -207,60 +207,6 @@ public abstract class ~domainName~Domain implements IDomain {
    }
 }>>
 
-PropertyEditor(name,properties) ::= <<~if(properties)~
-static class ~name;format="capitalize"~PropertyEditor extends SwingUtil.FormPanel {
-
-		~properties:{it|private final ~it.component~ _~it.name~ = new ~it.component~();};separator="\n"~
-
-      ~name;format="capitalize"~PropertyEditor(PropertyContainer container) {
-         super("50dlu, 4dlu, 350dlu", "~properties:{it|pref, 4dlu};separator=", "~");
-
-         int row = -1;
-~properties:{it|
-         row += 2;
-         addLabel("~it.name;format="capitalize"~", 1, row);
-         add(_~it.name~, 3, row);
-			setValue(_~it.name~, container, Properties.~it.name~.name(), ~it.enums~);
-};separator="\n"~
-      }
-
-		private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
-         component.setText(container.hasProperty(property) ? getString(container, property) : "");
-      }
-
-		private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
-         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
-      }
-
-      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
-         component.setModel(new DefaultComboBoxModel<>(values));
-       	final String value = container.hasProperty(property) ? getString(container, property) : null;
-	      if (value == null) return;
-	      component.setSelectedItem(value);
-	   }
-
-      void commit(PropertyContainer container) throws Exception {
-			~properties:{it|getValue(container, "~it.name~", _~it.name~); };separator="\n"~
-      }
-
-		private void getValue(PropertyContainer container, String property, JTextField component) {
-         container.setProperty(property, component.getText().trim());
-      }
-
-      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
-         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
-      }
-   }
-
-static void show~name;format="capitalize"~PropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-   final ~name;format="capitalize"~PropertyEditor form = new ~name;format="capitalize"~PropertyEditor(container);
-   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "~name~", () -> {
-      editor.doInTransaction(tx1 -> {
-         form.commit(container);
-      });
-   });
-}~endif~>>
-
 EntityInterface(entity,packageName,properties,relations) ::= <<package ~packageName~;
 
 /** Interface for ~entity~ */
@@ -281,7 +227,7 @@ public interface ~entity;format="capitalize"~ {
 
 }>>
 
-PNodeDeclaration(incoming,color,domainName,label,name,outgoing,outgoingWithProperties,properties) ::= <<protected NeoPNode new~name;format="capitalize"~PNode(Node node, NeoEditor editor) {
+PNodeDeclaration(color,domainName,incoming,label,name,outgoing,outgoingWithProperties,properties) ::= <<protected NeoPNode new~name;format="capitalize"~PNode(Node node, NeoEditor editor) {
       return new ~name;format="capitalize"~PNode(node, editor);
    ~eom()~
 
@@ -297,7 +243,7 @@ protected static class ~name;format="capitalize"~PNode extends ~domainName~Domai
 		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
 			@Override
 			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-				show~name;format="capitalize"~PropertyEditor(node, editor, event);
+				show~name;format="capitalize"~PropertyEditor(~name;format="capitalize"~PNode.this, editor, event);
 			}
 		});~endif~
 
@@ -401,3 +347,58 @@ protected static class ~name;format="capitalize"~PNode extends ~domainName~Domai
       editor.showAndLayout(pNodes, pNode);
    }
 }>>
+
+PropertyEditor(name,properties) ::= <<~if(properties)~
+static class ~name;format="capitalize"~PropertyEditor extends SwingUtil.FormPanel {
+
+		~properties:{it|private final ~it.component~ _~it.name~ = new ~it.component~();};separator="\n"~
+
+      ~name;format="capitalize"~PropertyEditor(PropertyContainer container) {
+         super("50dlu, 4dlu, 350dlu", "~properties:{it|pref, 4dlu};separator=", "~");
+
+         int row = -1;
+~properties:{it|
+         row += 2;
+         addLabel("~it.name;format="capitalize"~", 1, row);
+         add(_~it.name~, 3, row);
+			setValue(_~it.name~, container, Properties.~it.name~.name(), ~it.enums~);
+};separator="\n"~
+      }
+
+		private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+      }
+
+		private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+      }
+
+      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+         component.setModel(new DefaultComboBoxModel<>(values));
+       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+	      if (value == null) return;
+	      component.setSelectedItem(value);
+	   }
+
+      void commit(PropertyContainer container) throws Exception {
+			~properties:{it|getValue(container, "~it.name~", _~it.name~); };separator="\n"~
+      }
+
+		private void getValue(PropertyContainer container, String property, JTextField component) {
+         container.setProperty(property, component.getText().trim());
+      }
+
+      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+      }
+   }
+
+static void show~name;format="capitalize"~PropertyEditor(~name;format="capitalize"~PNode pNode, NeoEditor editor, PInputEvent event) {
+   final ~name;format="capitalize"~PropertyEditor form = new ~name;format="capitalize"~PropertyEditor(pNode.node);
+   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "~name~", () -> {
+      editor.doInTransaction(tx1 -> {
+         form.commit(pNode.node);
+			pNode.updateView();
+      });
+   });
+}~endif~>>

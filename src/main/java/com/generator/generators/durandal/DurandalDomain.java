@@ -30,15 +30,15 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public abstract class DurandalDomain implements IDomain {
 
    public enum Entities implements Label {
-      Module, View, App, html
+      html, App, View, Module
    }
 
    public enum Relations implements RelationshipType {
-      VIEW, DEPENDENCY, MODULES, STATEMENTS
+      STATEMENTS, VIEW, MODULES, DEPENDENCY
    }
 
    public enum Properties {
-      name, root, element, route, title
+      element, name, root, title, route
    }
 
    @Override
@@ -54,14 +54,14 @@ public abstract class DurandalDomain implements IDomain {
    @Override
    public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
       switch (Entities.valueOf(nodetype)) {
-         case Module:
-         	return newModulePNode(node, editor);
-         case View:
-         	return newViewPNode(node, editor);
-         case App:
-         	return newAppPNode(node, editor);
          case html:
          	return newHtmlPNode(node, editor);
+         case App:
+         	return newAppPNode(node, editor);
+         case View:
+         	return newViewPNode(node, editor);
+         case Module:
+         	return newModulePNode(node, editor);
       }
 
       throw new IllegalArgumentException("unsupported DurandalDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
@@ -86,6 +86,236 @@ public abstract class DurandalDomain implements IDomain {
       NeoEditor.removeFromLayouts(node);
 
       node.delete();
+   }
+
+   protected NeoPNode newHtmlPNode(Node node, NeoEditor editor) {
+         return new HtmlPNode(node, editor);
+      }
+
+   protected static class HtmlPNode extends DurandalDomainPNode {
+
+      HtmlPNode(Node node, NeoEditor editor) {
+         super(node, Entities.html, "name", "#a6d854", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showHtmlPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.element.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> incoming = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // incoming
+            if (selectedNode.node.hasLabel(Entities.View)) {
+               final Set<Node> set = incoming.computeIfAbsent(Entities.View.name(), k -> new LinkedHashSet<>());
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // incoming
+         if (incoming.containsKey(Entities.View.name())) {
+            final Set<Node> nodes = incoming.get(Entities.View.name());
+            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.STATEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node src : nodes) {
+                     final Relationship newRelation = src.createRelationshipTo(node, Relations.STATEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		incoming(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.View));
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newAppPNode(Node node, NeoEditor editor) {
+         return new AppPNode(node, editor);
+      }
+
+   protected static class AppPNode extends DurandalDomainPNode {
+
+      AppPNode(Node node, NeoEditor editor) {
+         super(node, Entities.App, "name", "#377eb8", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showAppPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.name.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.root.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.Module, Relations.MODULES, this, event));
+
+   		for (Relationship relationship : outgoing(node, Relations.MODULES)) {
+               pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
+                  @Override
+                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     showModulesPropertyEditor(relationship, editor, event);
+                  }
+            	});
+            }
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.Module)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.Module.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.Module.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.Module.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.MODULES, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.MODULES);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.MODULES).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Module));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newViewPNode(Node node, NeoEditor editor) {
+         return new ViewPNode(node, editor);
+      }
+
+   protected static class ViewPNode extends DurandalDomainPNode {
+
+      ViewPNode(Node node, NeoEditor editor) {
+         super(node, Entities.View, "name", "#4daf4a", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showViewPropertyEditor(node, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.html, Relations.STATEMENTS, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.html)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.html.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.html.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.html.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.STATEMENTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.STATEMENTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.html));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
    }
 
    protected NeoPNode newModulePNode(Node node, NeoEditor editor) {
@@ -184,241 +414,11 @@ public abstract class DurandalDomain implements IDomain {
       }
    }
 
-   protected NeoPNode newViewPNode(Node node, NeoEditor editor) {
-         return new ViewPNode(node, editor);
-      }
-
-   protected static class ViewPNode extends DurandalDomainPNode {
-
-      ViewPNode(Node node, NeoEditor editor) {
-         super(node, Entities.View, "name", "#4daf4a", editor);
-      }
-
-   	@Override
-   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showViewPropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.name.name(), this));
-   		pop.add(editor.newAddNodeAction(Entities.html, Relations.STATEMENTS, this, event));
-
-
-   		super.showNodeActions(pop, event);
-   	}
-
-   	@Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-         if (selectedNodes.isEmpty()) return;
-
-         final Map<String, Set<Node>> outgoing = new TreeMap<>();
-
-         selectedNodes.forEach(selectedNode -> {
-            // outgoing
-            if (selectedNode.node.hasLabel(Entities.html)) {
-               final Set<Node> set = outgoing.computeIfAbsent(Entities.html.name(), k -> new LinkedHashSet<>());
-               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
-               set.add(selectedNode.node);
-   			}
-
-         });
-
-         // outgoing
-         if (outgoing.containsKey(Entities.html.name())) {
-            final Set<Node> nodes = outgoing.get(Entities.html.name());
-            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.STATEMENTS, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node dst : nodes) {
-                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.STATEMENTS);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		outgoing(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.html));
-         editor.showAndLayout(pNodes, pNode);
-      }
-
-   	@Override
-      public void showDependents() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newAppPNode(Node node, NeoEditor editor) {
-         return new AppPNode(node, editor);
-      }
-
-   protected static class AppPNode extends DurandalDomainPNode {
-
-      AppPNode(Node node, NeoEditor editor) {
-         super(node, Entities.App, "name", "#377eb8", editor);
-      }
-
-   	@Override
-   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showAppPropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.name.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.root.name(), this));
-   		pop.add(editor.newAddNodeAction(Entities.Module, Relations.MODULES, this, event));
-
-   		for (Relationship relationship : outgoing(node, Relations.MODULES)) {
-               pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
-                  @Override
-                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     showModulesPropertyEditor(relationship, editor, event);
-                  }
-            	});
-            }
-
-
-   		super.showNodeActions(pop, event);
-   	}
-
-   	@Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-         if (selectedNodes.isEmpty()) return;
-
-         final Map<String, Set<Node>> outgoing = new TreeMap<>();
-
-         selectedNodes.forEach(selectedNode -> {
-            // outgoing
-            if (selectedNode.node.hasLabel(Entities.Module)) {
-               final Set<Node> set = outgoing.computeIfAbsent(Entities.Module.name(), k -> new LinkedHashSet<>());
-               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
-               set.add(selectedNode.node);
-   			}
-
-         });
-
-         // outgoing
-         if (outgoing.containsKey(Entities.Module.name())) {
-            final Set<Node> nodes = outgoing.get(Entities.Module.name());
-            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.MODULES, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node dst : nodes) {
-                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.MODULES);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		outgoing(node, Relations.MODULES).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Module));
-         editor.showAndLayout(pNodes, pNode);
-      }
-
-   	@Override
-      public void showDependents() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newHtmlPNode(Node node, NeoEditor editor) {
-         return new HtmlPNode(node, editor);
-      }
-
-   protected static class HtmlPNode extends DurandalDomainPNode {
-
-      HtmlPNode(Node node, NeoEditor editor) {
-         super(node, Entities.html, "name", "#a6d854", editor);
-      }
-
-   	@Override
-   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showHtmlPropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(DurandalDomain.Properties.element.name(), this));
-
-
-   		super.showNodeActions(pop, event);
-   	}
-
-   	@Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-         if (selectedNodes.isEmpty()) return;
-
-         final Map<String, Set<Node>> incoming = new TreeMap<>();
-
-         selectedNodes.forEach(selectedNode -> {
-            // incoming
-            if (selectedNode.node.hasLabel(Entities.View)) {
-               final Set<Node> set = incoming.computeIfAbsent(Entities.View.name(), k -> new LinkedHashSet<>());
-               set.add(selectedNode.node);
-   			}
-
-         });
-
-         // incoming
-         if (incoming.containsKey(Entities.View.name())) {
-            final Set<Node> nodes = incoming.get(Entities.View.name());
-            pop.add(new NeoEditor.TransactionAction("Add <- " + Relations.STATEMENTS, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node src : nodes) {
-                     final Relationship newRelation = src.createRelationshipTo(node, Relations.STATEMENTS);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-
-   	@Override
-      public void showDependents() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		incoming(node, Relations.STATEMENTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.View));
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
 
    private static class DurandalDomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
-      private final Color defaultColor;
+      protected final Color defaultColor;
       private final String property;
       private final DurandalDomain.Entities nodeType;
 
@@ -508,18 +508,18 @@ public abstract class DurandalDomain implements IDomain {
       }
    }
 
-	static class ModulePropertyEditor extends SwingUtil.FormPanel {
+	static class HtmlPropertyEditor extends SwingUtil.FormPanel {
 
-			private final JTextField _name = new JTextField();
+			private final JTextField _element = new JTextField();
 
-	      ModulePropertyEditor(PropertyContainer container) {
+	      HtmlPropertyEditor(PropertyContainer container) {
 	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
 
 	         int row = -1;
 	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
+	         addLabel("Element", 1, row);
+	         add(_element, 3, row);
+				setValue(_element, container, Properties.element.name(), new String[] { });
 
 	      }
 
@@ -539,7 +539,7 @@ public abstract class DurandalDomain implements IDomain {
 		   }
 
 	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "name", _name); 
+				getValue(container, "element", _element); 
 	      }
 
 			private void getValue(PropertyContainer container, String property, JTextField component) {
@@ -551,61 +551,9 @@ public abstract class DurandalDomain implements IDomain {
 	      }
 	   }
 
-	static void showModulePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final ModulePropertyEditor form = new ModulePropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Module", () -> {
-	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
-	      });
-	   });
-	}
-
-	static class ViewPropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _name = new JTextField();
-
-	      ViewPropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
-
-	      }
-
-			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
-	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
-	      }
-
-			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
-	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
-	      }
-
-	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
-	         component.setModel(new DefaultComboBoxModel<>(values));
-	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
-		      if (value == null) return;
-		      component.setSelectedItem(value);
-		   }
-
-	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "name", _name); 
-	      }
-
-			private void getValue(PropertyContainer container, String property, JTextField component) {
-	         container.setProperty(property, component.getText().trim());
-	      }
-
-	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
-	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
-	      }
-	   }
-
-	static void showViewPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final ViewPropertyEditor form = new ViewPropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "View", () -> {
+	static void showHtmlPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final HtmlPropertyEditor form = new HtmlPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "html", () -> {
 	      editor.doInTransaction(tx1 -> {
 	         form.commit(container);
 	      });
@@ -671,30 +619,18 @@ public abstract class DurandalDomain implements IDomain {
 	   });
 	}
 
-	static class HtmlPropertyEditor extends SwingUtil.FormPanel {
+	static class ViewPropertyEditor extends SwingUtil.FormPanel {
 
-			private final JTextField _element = new JTextField();
-			private final JTextField _route = new JTextField();
-			private final JTextField _title = new JTextField();
+			private final JTextField _name = new JTextField();
 
-	      HtmlPropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu");
+	      ViewPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
 
 	         int row = -1;
 	         row += 2;
-	         addLabel("Element", 1, row);
-	         add(_element, 3, row);
-				setValue(_element, container, Properties.element.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Route", 1, row);
-	         add(_route, 3, row);
-				setValue(_route, container, Properties.route.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Title", 1, row);
-	         add(_title, 3, row);
-				setValue(_title, container, Properties.title.name(), new String[] { });
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
 
 	      }
 
@@ -714,9 +650,7 @@ public abstract class DurandalDomain implements IDomain {
 		   }
 
 	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "element", _element); 
-				getValue(container, "route", _route); 
-				getValue(container, "title", _title); 
+				getValue(container, "name", _name); 
 	      }
 
 			private void getValue(PropertyContainer container, String property, JTextField component) {
@@ -728,33 +662,39 @@ public abstract class DurandalDomain implements IDomain {
 	      }
 	   }
 
-	static void showHtmlPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final HtmlPropertyEditor form = new HtmlPropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "html", () -> {
+	static void showViewPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final ViewPropertyEditor form = new ViewPropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "View", () -> {
 	      editor.doInTransaction(tx1 -> {
 	         form.commit(container);
 	      });
 	   });
 	}
 
-	static class ModulesPropertyEditor extends SwingUtil.FormPanel {
+	static class ModulePropertyEditor extends SwingUtil.FormPanel {
 
-			private final JTextField _route = new JTextField();
+			private final JTextField _name = new JTextField();
 			private final JTextField _title = new JTextField();
+			private final JTextField _route = new JTextField();
 
-	      ModulesPropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+	      ModulePropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu");
 
 	         int row = -1;
 	         row += 2;
-	         addLabel("Route", 1, row);
-	         add(_route, 3, row);
-				setValue(_route, container, Properties.route.name(), new String[] { });
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
 
 	         row += 2;
 	         addLabel("Title", 1, row);
 	         add(_title, 3, row);
 				setValue(_title, container, Properties.title.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Route", 1, row);
+	         add(_route, 3, row);
+				setValue(_route, container, Properties.route.name(), new String[] { });
 
 	      }
 
@@ -774,8 +714,68 @@ public abstract class DurandalDomain implements IDomain {
 		   }
 
 	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "route", _route); 
+				getValue(container, "name", _name); 
 				getValue(container, "title", _title); 
+				getValue(container, "route", _route); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showModulePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
+	   final ModulePropertyEditor form = new ModulePropertyEditor(container);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Module", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(container);
+	      });
+	   });
+	}
+
+	static class ModulesPropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _title = new JTextField();
+			private final JTextField _route = new JTextField();
+
+	      ModulesPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Title", 1, row);
+	         add(_title, 3, row);
+				setValue(_title, container, Properties.title.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Route", 1, row);
+	         add(_route, 3, row);
+				setValue(_route, container, Properties.route.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "title", _title); 
+				getValue(container, "route", _route); 
 	      }
 
 			private void getValue(PropertyContainer container, String property, JTextField component) {
@@ -803,18 +803,14 @@ public abstract class DurandalDomain implements IDomain {
 		@Override
       public <T> T visit(Node n) {
          if (n == null) return null;
-		  if (BaseDomainVisitor.hasLabel(n, Module.name())) return visitModule(n);
-		  if (BaseDomainVisitor.hasLabel(n, View.name())) return visitView(n);
-		  if (BaseDomainVisitor.hasLabel(n, App.name())) return visitApp(n);
-		  if (BaseDomainVisitor.hasLabel(n, html.name())) return visitHtml(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.html.name())) return visitHtml(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.App.name())) return visitApp(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.View.name())) return visitView(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.Module.name())) return visitModule(n);
          return null;
       }
 
-		<T> T visitModule(Node node) {
-         return null;
-      }
-
-		<T> T visitView(Node node) {
+		<T> T visitHtml(Node node) {
          return null;
       }
 
@@ -822,7 +818,11 @@ public abstract class DurandalDomain implements IDomain {
          return null;
       }
 
-		<T> T visitHtml(Node node) {
+		<T> T visitView(Node node) {
+         return null;
+      }
+
+		<T> T visitModule(Node node) {
          return null;
       }
 

@@ -30,15 +30,15 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public abstract class EasyFlowDomain implements IDomain {
 
    public enum Entities implements Label {
-      Flow, ContextProperty, State, Event
+      Flow, State, ContextProperty, Event
    }
 
    public enum Relations implements RelationshipType {
-      FROM, ON, FINISH, PROPERTY, TO
+      PROPERTY, FINISH, TO, FROM, ON
    }
 
    public enum Properties {
-      name, packageName, root, extending, modifier, comment, type, value
+      root, extending, packageName, name, modifier, comment, type, value
    }
 
    @Override
@@ -56,10 +56,10 @@ public abstract class EasyFlowDomain implements IDomain {
       switch (Entities.valueOf(nodetype)) {
          case Flow:
          	return newFlowPNode(node, editor);
-         case ContextProperty:
-         	return newContextPropertyPNode(node, editor);
          case State:
          	return newStatePNode(node, editor);
+         case ContextProperty:
+         	return newContextPropertyPNode(node, editor);
          case Event:
          	return newEventPNode(node, editor);
       }
@@ -95,7 +95,7 @@ public abstract class EasyFlowDomain implements IDomain {
    protected static class FlowPNode extends EasyFlowDomainPNode {
 
       FlowPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Flow, "name", "#7b3294", editor);
+         super(node, Entities.Flow, EasyFlowDomain.Properties.name.name(), "#7b3294", editor);
       }
 
    	@Override
@@ -103,15 +103,15 @@ public abstract class EasyFlowDomain implements IDomain {
    		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
    			@Override
    			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showFlowPropertyEditor(node, editor, event);
+   				showFlowPropertyEditor(FlowPNode.this, editor, event);
    			}
    		});
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.packageName.name(), this));
    		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.root.name(), this));
    		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.extending.name(), this));
-   		pop.add(editor.newAddNodeAction(Entities.ContextProperty, Relations.PROPERTY, this, event));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.packageName.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
    		pop.add(editor.newAddNodeAction(Entities.State, Relations.FROM, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.ContextProperty, Relations.PROPERTY, this, event));
 
 
    		super.showNodeActions(pop, event);
@@ -127,14 +127,14 @@ public abstract class EasyFlowDomain implements IDomain {
 
          selectedNodes.forEach(selectedNode -> {
             // outgoing
-            if (selectedNode.node.hasLabel(Entities.ContextProperty)) {
-               final Set<Node> set = outgoing.computeIfAbsent(Entities.ContextProperty.name(), k -> new LinkedHashSet<>());
+            if (selectedNode.node.hasLabel(Entities.State)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.State.name(), k -> new LinkedHashSet<>());
                //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
                set.add(selectedNode.node);
    			}
 
-            if (selectedNode.node.hasLabel(Entities.State)) {
-               final Set<Node> set = outgoing.computeIfAbsent(Entities.State.name(), k -> new LinkedHashSet<>());
+            if (selectedNode.node.hasLabel(Entities.ContextProperty)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.ContextProperty.name(), k -> new LinkedHashSet<>());
                //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
                set.add(selectedNode.node);
    			}
@@ -142,20 +142,6 @@ public abstract class EasyFlowDomain implements IDomain {
          });
 
          // outgoing
-         if (outgoing.containsKey(Entities.ContextProperty.name())) {
-            final Set<Node> nodes = outgoing.get(Entities.ContextProperty.name());
-            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.PROPERTY, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node dst : nodes) {
-                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.PROPERTY);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
          if (outgoing.containsKey(Entities.State.name())) {
             final Set<Node> nodes = outgoing.get(Entities.State.name());
             pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.FROM, editor) {
@@ -170,66 +156,27 @@ public abstract class EasyFlowDomain implements IDomain {
             });
          }
 
+         if (outgoing.containsKey(Entities.ContextProperty.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.ContextProperty.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.PROPERTY, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.PROPERTY);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
       public void expand() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		outgoing(node, Relations.PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
    		outgoing(node, Relations.FROM).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
-         editor.showAndLayout(pNodes, pNode);
-      }
-
-   	@Override
-      public void showDependents() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newContextPropertyPNode(Node node, NeoEditor editor) {
-         return new ContextPropertyPNode(node, editor);
-      }
-
-   protected static class ContextPropertyPNode extends EasyFlowDomainPNode {
-
-      ContextPropertyPNode(Node node, NeoEditor editor) {
-         super(node, Entities.ContextProperty, "name", "#008837", editor);
-      }
-
-   	@Override
-   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showContextPropertyPropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.modifier.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.comment.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.type.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.value.name(), this));
-
-
-   		super.showNodeActions(pop, event);
-   	}
-
-   	@Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-         if (selectedNodes.isEmpty()) return;
-
-
-         selectedNodes.forEach(selectedNode -> {
-         });
-
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.ContextProperty));
          editor.showAndLayout(pNodes, pNode);
       }
 
@@ -247,7 +194,7 @@ public abstract class EasyFlowDomain implements IDomain {
    protected static class StatePNode extends EasyFlowDomainPNode {
 
       StatePNode(Node node, NeoEditor editor) {
-         super(node, Entities.State, "name", "#c2a5cf", editor);
+         super(node, Entities.State, EasyFlowDomain.Properties.name.name(), "#c2a5cf", editor);
       }
 
    	@Override
@@ -256,7 +203,6 @@ public abstract class EasyFlowDomain implements IDomain {
    			@Override
    			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
    				showStatePropertyEditor(StatePNode.this, editor, event);
-   				updateView();
    			}
    		});
    		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
@@ -315,14 +261,14 @@ public abstract class EasyFlowDomain implements IDomain {
       }
    }
 
-   protected NeoPNode newEventPNode(Node node, NeoEditor editor) {
-         return new EventPNode(node, editor);
+   protected NeoPNode newContextPropertyPNode(Node node, NeoEditor editor) {
+         return new ContextPropertyPNode(node, editor);
       }
 
-   protected static class EventPNode extends EasyFlowDomainPNode {
+   protected static class ContextPropertyPNode extends EasyFlowDomainPNode {
 
-      EventPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Event, "name", "#a6dba0", editor);
+      ContextPropertyPNode(Node node, NeoEditor editor) {
+         super(node, Entities.ContextProperty, EasyFlowDomain.Properties.name.name(), "#008837", editor);
       }
 
    	@Override
@@ -330,12 +276,65 @@ public abstract class EasyFlowDomain implements IDomain {
    		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
    			@Override
    			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showEventPropertyEditor(node, editor, event);
+   				showContextPropertyPropertyEditor(ContextPropertyPNode.this, editor, event);
    			}
    		});
    		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
-   		pop.add(editor.newAddNodeAction(Entities.State, Relations.FINISH, this, event));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.modifier.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.comment.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.type.name(), this));
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.value.name(), this));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+
+         selectedNodes.forEach(selectedNode -> {
+         });
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newEventPNode(Node node, NeoEditor editor) {
+         return new EventPNode(node, editor);
+      }
+
+   protected static class EventPNode extends EasyFlowDomainPNode {
+
+      EventPNode(Node node, NeoEditor editor) {
+         super(node, Entities.Event, EasyFlowDomain.Properties.name.name(), "#a6dba0", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
+   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
+   			@Override
+   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+   				showEventPropertyEditor(EventPNode.this, editor, event);
+   			}
+   		});
+   		pop.add(editor.newSetNodePropertyAction(EasyFlowDomain.Properties.name.name(), this));
    		pop.add(editor.newAddNodeAction(Entities.State, Relations.TO, this, event));
+   		pop.add(editor.newAddNodeAction(Entities.State, Relations.FINISH, this, event));
 
 
    		super.showNodeActions(pop, event);
@@ -368,20 +367,6 @@ public abstract class EasyFlowDomain implements IDomain {
          // outgoing
          if (outgoing.containsKey(Entities.State.name())) {
             final Set<Node> nodes = outgoing.get(Entities.State.name());
-            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.FINISH, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node dst : nodes) {
-                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.FINISH);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
-         if (outgoing.containsKey(Entities.State.name())) {
-            final Set<Node> nodes = outgoing.get(Entities.State.name());
             pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.TO, editor) {
                @Override
                public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -394,13 +379,27 @@ public abstract class EasyFlowDomain implements IDomain {
             });
          }
 
+         if (outgoing.containsKey(Entities.State.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.State.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.FINISH, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.FINISH);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
       }
 
       @Override
       public void expand() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		outgoing(node, Relations.FINISH).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
    		outgoing(node, Relations.TO).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
+   		outgoing(node, Relations.FINISH).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.State));
          editor.showAndLayout(pNodes, pNode);
       }
 
@@ -415,7 +414,7 @@ public abstract class EasyFlowDomain implements IDomain {
    private static class EasyFlowDomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
-      private final Color defaultColor;
+      protected final Color defaultColor;
       private final String property;
       private final EasyFlowDomain.Entities nodeType;
 
@@ -507,25 +506,15 @@ public abstract class EasyFlowDomain implements IDomain {
 
 	static class FlowPropertyEditor extends SwingUtil.FormPanel {
 
-			private final JTextField _name = new JTextField();
-			private final JTextField _packageName = new JTextField();
 			private final JTextField _root = new JTextField();
 			private final JTextField _extending = new JTextField();
+			private final JTextField _packageName = new JTextField();
+			private final JTextField _name = new JTextField();
 
 	      FlowPropertyEditor(PropertyContainer container) {
 	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu");
 
 	         int row = -1;
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("PackageName", 1, row);
-	         add(_packageName, 3, row);
-				setValue(_packageName, container, Properties.packageName.name(), new String[] { });
-
 	         row += 2;
 	         addLabel("Root", 1, row);
 	         add(_root, 3, row);
@@ -535,6 +524,72 @@ public abstract class EasyFlowDomain implements IDomain {
 	         addLabel("Extending", 1, row);
 	         add(_extending, 3, row);
 				setValue(_extending, container, Properties.extending.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("PackageName", 1, row);
+	         add(_packageName, 3, row);
+				setValue(_packageName, container, Properties.packageName.name(), new String[] { });
+
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
+
+	      }
+
+			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
+	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
+	      }
+
+			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
+	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
+	      }
+
+	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
+	         component.setModel(new DefaultComboBoxModel<>(values));
+	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
+		      if (value == null) return;
+		      component.setSelectedItem(value);
+		   }
+
+	      void commit(PropertyContainer container) throws Exception {
+				getValue(container, "root", _root); 
+				getValue(container, "extending", _extending); 
+				getValue(container, "packageName", _packageName); 
+				getValue(container, "name", _name); 
+	      }
+
+			private void getValue(PropertyContainer container, String property, JTextField component) {
+	         container.setProperty(property, component.getText().trim());
+	      }
+
+	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
+	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
+	      }
+	   }
+
+	static void showFlowPropertyEditor(FlowPNode pNode, NeoEditor editor, PInputEvent event) {
+	   final FlowPropertyEditor form = new FlowPropertyEditor(pNode.node);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Flow", () -> {
+	      editor.doInTransaction(tx1 -> {
+	         form.commit(pNode.node);
+				pNode.updateView();
+	      });
+	   });
+	}
+
+	static class StatePropertyEditor extends SwingUtil.FormPanel {
+
+			private final JTextField _name = new JTextField();
+
+	      StatePropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
+
+	         int row = -1;
+	         row += 2;
+	         addLabel("Name", 1, row);
+	         add(_name, 3, row);
+				setValue(_name, container, Properties.name.name(), new String[] { });
 
 	      }
 
@@ -555,9 +610,6 @@ public abstract class EasyFlowDomain implements IDomain {
 
 	      void commit(PropertyContainer container) throws Exception {
 				getValue(container, "name", _name); 
-				getValue(container, "packageName", _packageName); 
-				getValue(container, "root", _root); 
-				getValue(container, "extending", _extending); 
 	      }
 
 			private void getValue(PropertyContainer container, String property, JTextField component) {
@@ -569,11 +621,12 @@ public abstract class EasyFlowDomain implements IDomain {
 	      }
 	   }
 
-	static void showFlowPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final FlowPropertyEditor form = new FlowPropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Flow", () -> {
+	static void showStatePropertyEditor(StatePNode pNode, NeoEditor editor, PInputEvent event) {
+	   final StatePropertyEditor form = new StatePropertyEditor(pNode.node);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "State", () -> {
 	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
+	         form.commit(pNode.node);
+				pNode.updateView();
 	      });
 	   });
 	}
@@ -649,64 +702,12 @@ public abstract class EasyFlowDomain implements IDomain {
 	      }
 	   }
 
-	static void showContextPropertyPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final ContextPropertyPropertyEditor form = new ContextPropertyPropertyEditor(container);
+	static void showContextPropertyPropertyEditor(ContextPropertyPNode pNode, NeoEditor editor, PInputEvent event) {
+	   final ContextPropertyPropertyEditor form = new ContextPropertyPropertyEditor(pNode.node);
 	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "ContextProperty", () -> {
 	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
-	      });
-	   });
-	}
-
-	static class StatePropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _name = new JTextField();
-
-	      StatePropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
-
-	      }
-
-			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
-	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
-	      }
-
-			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
-	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
-	      }
-
-	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
-	         component.setModel(new DefaultComboBoxModel<>(values));
-	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
-		      if (value == null) return;
-		      component.setSelectedItem(value);
-		   }
-
-	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "name", _name); 
-	      }
-
-			private void getValue(PropertyContainer container, String property, JTextField component) {
-	         container.setProperty(property, component.getText().trim());
-	      }
-
-	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
-	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
-	      }
-	   }
-
-	static void showStatePropertyEditor(StatePNode pNode, NeoEditor editor, PInputEvent event) {
-	   final StatePropertyEditor form = new StatePropertyEditor(pNode.node);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "State", () -> {
-	      editor.doInTransaction(tx1 -> {
 	         form.commit(pNode.node);
-	         pNode.updateView();
+				pNode.updateView();
 	      });
 	   });
 	}
@@ -754,11 +755,12 @@ public abstract class EasyFlowDomain implements IDomain {
 	      }
 	   }
 
-	static void showEventPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final EventPropertyEditor form = new EventPropertyEditor(container);
+	static void showEventPropertyEditor(EventPNode pNode, NeoEditor editor, PInputEvent event) {
+	   final EventPropertyEditor form = new EventPropertyEditor(pNode.node);
 	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Event", () -> {
 	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
+	         form.commit(pNode.node);
+				pNode.updateView();
 	      });
 	   });
 	}
@@ -769,10 +771,10 @@ public abstract class EasyFlowDomain implements IDomain {
 		@Override
       public <T> T visit(Node n) {
          if (n == null) return null;
-		  if (BaseDomainVisitor.hasLabel(n, Flow.name())) return visitFlow(n);
-		  if (BaseDomainVisitor.hasLabel(n, ContextProperty.name())) return visitContextProperty(n);
-		  if (BaseDomainVisitor.hasLabel(n, State.name())) return visitState(n);
-		  if (BaseDomainVisitor.hasLabel(n, Event.name())) return visitEvent(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.Flow.name())) return visitFlow(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.State.name())) return visitState(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.ContextProperty.name())) return visitContextProperty(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.Event.name())) return visitEvent(n);
          return null;
       }
 
@@ -780,11 +782,11 @@ public abstract class EasyFlowDomain implements IDomain {
          return null;
       }
 
-		<T> T visitContextProperty(Node node) {
+		<T> T visitState(Node node) {
          return null;
       }
 
-		<T> T visitState(Node node) {
+		<T> T visitContextProperty(Node node) {
          return null;
       }
 
