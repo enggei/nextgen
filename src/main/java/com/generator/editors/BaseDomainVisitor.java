@@ -41,10 +41,8 @@ public abstract class BaseDomainVisitor {
    }
 
    public static boolean isRelated(Node node, Node target, RelationshipType relationshipType) {
-      final Object targetUUID = NeoModel.uuidOf(target);
-      for (Relationship relationship : outgoing(node, relationshipType)) {
-         if (targetUUID.equals(NeoModel.uuidOf(other(node, relationship)))) return true;
-      }
+      for (Relationship relationship : outgoing(node, relationshipType))
+         if (target.getId() == other(node, relationship).getId()) return true;
       return false;
    }
 
@@ -91,11 +89,15 @@ public abstract class BaseDomainVisitor {
    }
 
    public static Relationship singleOutgoing(Node node, RelationshipType type) {
-      return node==null ? null : node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
+      return node == null ? null : node.hasRelationship(type) ? node.getSingleRelationship(type, OUTGOING) : null;
    }
 
    public static Iterable<Relationship> incoming(Node node, RelationshipType type) {
       return sort(node.getRelationships(INCOMING, type));
+   }
+
+   public static Iterable<Relationship> incoming(Node node) {
+      return sort(node.getRelationships(INCOMING));
    }
 
    public static boolean hasIncoming(Node node, RelationshipType type) {
@@ -125,6 +127,14 @@ public abstract class BaseDomainVisitor {
 
    public static String getString(PropertyContainer node, String property) {
       return has(node, property) ? String.valueOf(node.getProperty(property)) : null;
+   }
+
+   public static Double getDouble(PropertyContainer node, String property) {
+      return has(node, property) ? Double.valueOf(getString(node,property)) : null;
+   }
+
+   public static String getString(PropertyContainer node, String property, String defaultValue) {
+      return has(node, property) ? String.valueOf(node.getProperty(property)) : defaultValue;
    }
 
    public static <T> T getOtherProperty(Node node, Relationship relationship, String otherProperty) {

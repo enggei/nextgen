@@ -12,15 +12,12 @@ import com.generator.generators.html5.Html5Domain;
 import com.generator.generators.java.JavaDomainImpl;
 import com.generator.generators.javareflection.JavaBuilderDomainImpl;
 import com.generator.generators.json.JsonDomainImpl;
-import com.generator.generators.maven.MavenDomain;
 import com.generator.generators.maven.MavenDomainImpl;
 import com.generator.generators.meta.MetaDomainImpl;
 import com.generator.generators.mysql.MysqlDomainImpl;
 import com.generator.generators.neo.NeoDomainImpl;
-import com.generator.generators.project.ProjectDomain;
 import com.generator.generators.project.ProjectDomainImpl;
 import com.generator.generators.templates.TemplateDomainImpl;
-import com.generator.generators.vertx.VertxDomain;
 import com.generator.generators.vertx.VertxDomainImpl;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -47,7 +44,8 @@ public class GeneratorEditor extends NeoEditor {
 
    GeneratorEditor(Set<IDomain> domains) {
       super();
-      canvas.setBackground(new Color(Integer.valueOf("247, 247, 247".split(", ")[0]), Integer.valueOf("247, 247, 247".split(", ")[1]), Integer.valueOf("247, 247, 247".split(", ")[2])));
+      final String[] bgColor = "255, 255, 255".split(", ");
+      canvas.setBackground(new Color(Integer.valueOf(bgColor[0]), Integer.valueOf(bgColor[1]), Integer.valueOf(bgColor[2])));
 
       this.domains.addAll(domains);
       for (IDomain domain : this.domains)
@@ -137,6 +135,7 @@ public class GeneratorEditor extends NeoEditor {
       domains.add(new NeoDomainImpl());
       domains.add(new DurandalDomainImpl());
       domains.add(new JavaBuilderDomainImpl());
+      domains.add(new ProjectDomainImpl());
 
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
       SwingUtil.setLookAndFeel_Nimbus();
@@ -146,8 +145,11 @@ public class GeneratorEditor extends NeoEditor {
       final NeoPNodeRenderPanel renderPanel = new NeoPNodeRenderPanel();
       contentPanel.addPropertyChangeListener(renderPanel);
 
-      frame.getContentPane().add(contentPanel.getCanvas(), BorderLayout.CENTER);
-      frame.getContentPane().add(new JScrollPane(renderPanel), BorderLayout.EAST);
+      final NavigatorPanel navigatorPanel = new NavigatorPanel();
+
+
+      final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(contentPanel.getCanvas()), new JScrollPane(renderPanel));
+      frame.getContentPane().add(split, BorderLayout.CENTER);
       frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
       frame.addWindowFocusListener(new WindowAdapter() {
          @Override
@@ -157,5 +159,9 @@ public class GeneratorEditor extends NeoEditor {
       });
 
       SwingUtil.show(frame);
+   }
+
+   private static final class NavigatorPanel extends JPanel {
+
    }
 }

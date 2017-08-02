@@ -25,7 +25,6 @@ public class RelationPath<S extends BasePNode, T extends BasePNode> implements P
    public final S source;
    public final T target;
    final PPath path;
-
    PText pText;
 
    public enum PaintRelationStatus {

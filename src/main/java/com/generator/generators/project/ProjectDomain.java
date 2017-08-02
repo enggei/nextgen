@@ -30,15 +30,14 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public abstract class ProjectDomain implements IDomain {
 
    public enum Entities implements Label {
-      TemplateGroup, Project
+      ROOT
    }
 
    public enum Relations implements RelationshipType {
-      GROUPS
    }
 
    public enum Properties {
-      templatePath, reference, name, packageName, root, javaVersion, artifactId, groupId, version
+      path
    }
 
    @Override
@@ -54,10 +53,8 @@ public abstract class ProjectDomain implements IDomain {
    @Override
    public final NeoPNode newPNode(Node node, String nodetype, NeoEditor editor) {
       switch (Entities.valueOf(nodetype)) {
-         case TemplateGroup:
-         	return newTemplateGroupPNode(node, editor);
-         case Project:
-         	return newProjectPNode(node, editor);
+         case ROOT:
+         	return newROOTPNode(node, editor);
       }
 
       throw new IllegalArgumentException("unsupported ProjectDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
@@ -84,14 +81,14 @@ public abstract class ProjectDomain implements IDomain {
       node.delete();
    }
 
-   protected NeoPNode newTemplateGroupPNode(Node node, NeoEditor editor) {
-         return new TemplateGroupPNode(node, editor);
+   protected NeoPNode newROOTPNode(Node node, NeoEditor editor) {
+         return new ROOTPNode(node, editor);
       }
 
-   protected static class TemplateGroupPNode extends ProjectDomainPNode {
+   protected static class ROOTPNode extends ProjectDomainPNode {
 
-      TemplateGroupPNode(Node node, NeoEditor editor) {
-         super(node, Entities.TemplateGroup, "name", "#1b7837", editor);
+      ROOTPNode(Node node, NeoEditor editor) {
+         super(node, Entities.ROOT, "name", "#dd1c77", editor);
       }
 
    	@Override
@@ -99,13 +96,10 @@ public abstract class ProjectDomain implements IDomain {
    		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
    			@Override
    			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showTemplateGroupPropertyEditor(node, editor, event);
+   				showROOTPropertyEditor(ROOTPNode.this, editor, event);
    			}
    		});
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.templatePath.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.reference.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.name.name(), this));
-
+   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.path.name(), this));
 
    		super.showNodeActions(pop, event);
    	}
@@ -125,86 +119,6 @@ public abstract class ProjectDomain implements IDomain {
       @Override
       public void expand() {
          final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-
-   	@Override
-      public void showDependents() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-         editor.showAndLayout(pNodes, pNode);
-      }
-   }
-
-   protected NeoPNode newProjectPNode(Node node, NeoEditor editor) {
-         return new ProjectPNode(node, editor);
-      }
-
-   protected static class ProjectPNode extends ProjectDomainPNode {
-
-      ProjectPNode(Node node, NeoEditor editor) {
-         super(node, Entities.Project, "name", "#762a83", editor);
-      }
-
-   	@Override
-   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
-   		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
-   			@Override
-   			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showProjectPropertyEditor(node, editor, event);
-   			}
-   		});
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.packageName.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.root.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.javaVersion.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.artifactId.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.groupId.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.version.name(), this));
-   		pop.add(editor.newSetNodePropertyAction(ProjectDomain.Properties.name.name(), this));
-   		pop.add(editor.newAddNodeAction(Entities.TemplateGroup, Relations.GROUPS, this, event));
-
-
-   		super.showNodeActions(pop, event);
-   	}
-
-   	@Override
-      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
-
-         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
-         if (selectedNodes.isEmpty()) return;
-
-         final Map<String, Set<Node>> outgoing = new TreeMap<>();
-
-         selectedNodes.forEach(selectedNode -> {
-            // outgoing
-            if (selectedNode.node.hasLabel(Entities.TemplateGroup)) {
-               final Set<Node> set = outgoing.computeIfAbsent(Entities.TemplateGroup.name(), k -> new LinkedHashSet<>());
-               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
-               set.add(selectedNode.node);
-   			}
-
-         });
-
-         // outgoing
-         if (outgoing.containsKey(Entities.TemplateGroup.name())) {
-            final Set<Node> nodes = outgoing.get(Entities.TemplateGroup.name());
-            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.GROUPS, editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  for (Node dst : nodes) {
-                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.GROUPS);
-                     editor.addRelation(newRelation);
-                  }
-                  updateView();
-               }
-            });
-         }
-
-      }
-
-      @Override
-      public void expand() {
-         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-   		outgoing(node, Relations.GROUPS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.TemplateGroup));
          editor.showAndLayout(pNodes, pNode);
       }
 
@@ -219,7 +133,7 @@ public abstract class ProjectDomain implements IDomain {
    private static class ProjectDomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
-      private final Color defaultColor;
+      protected final Color defaultColor;
       private final String property;
       private final ProjectDomain.Entities nodeType;
 
@@ -230,6 +144,7 @@ public abstract class ProjectDomain implements IDomain {
          this.nodeType = nodeType;
          pNode.setTextPaint(this.defaultColor);
          pNode.setFont(new Font("Hack", Font.BOLD, 12));
+         updateView();
       }
 
       @Override
@@ -309,30 +224,18 @@ public abstract class ProjectDomain implements IDomain {
       }
    }
 
-	static class TemplateGroupPropertyEditor extends SwingUtil.FormPanel {
+	static class ROOTPropertyEditor extends SwingUtil.FormPanel {
 
-			private final JTextField _templatePath = new JTextField();
-			private final JTextField _reference = new JTextField();
-			private final JTextField _name = new JTextField();
+			private final JTextField _path = new JTextField();
 
-	      TemplateGroupPropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu");
+	      ROOTPropertyEditor(PropertyContainer container) {
+	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu");
 
 	         int row = -1;
 	         row += 2;
-	         addLabel("TemplatePath", 1, row);
-	         add(_templatePath, 3, row);
-				setValue(_templatePath, container, Properties.templatePath.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Reference", 1, row);
-	         add(_reference, 3, row);
-				setValue(_reference, container, Properties.reference.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
+	         addLabel("Path", 1, row);
+	         add(_path, 3, row);
+				setValue(_path, container, Properties.path.name(), new String[] { });
 
 	      }
 
@@ -352,9 +255,7 @@ public abstract class ProjectDomain implements IDomain {
 		   }
 
 	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "templatePath", _templatePath); 
-				getValue(container, "reference", _reference); 
-				getValue(container, "name", _name); 
+				getValue(container, "path", _path); 
 	      }
 
 			private void getValue(PropertyContainer container, String property, JTextField component) {
@@ -366,105 +267,12 @@ public abstract class ProjectDomain implements IDomain {
 	      }
 	   }
 
-	static void showTemplateGroupPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final TemplateGroupPropertyEditor form = new TemplateGroupPropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "TemplateGroup", () -> {
+	static void showROOTPropertyEditor(ROOTPNode pNode, NeoEditor editor, PInputEvent event) {
+	   final ROOTPropertyEditor form = new ROOTPropertyEditor(pNode.node);
+	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "ROOT", () -> {
 	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
-	      });
-	   });
-	}
-
-	static class ProjectPropertyEditor extends SwingUtil.FormPanel {
-
-			private final JTextField _packageName = new JTextField();
-			private final JTextField _root = new JTextField();
-			private final JTextField _javaVersion = new JTextField();
-			private final JTextField _artifactId = new JTextField();
-			private final JTextField _groupId = new JTextField();
-			private final JTextField _version = new JTextField();
-			private final JTextField _name = new JTextField();
-
-	      ProjectPropertyEditor(PropertyContainer container) {
-	         super("50dlu, 4dlu, 350dlu", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu, pref, 4dlu");
-
-	         int row = -1;
-	         row += 2;
-	         addLabel("PackageName", 1, row);
-	         add(_packageName, 3, row);
-				setValue(_packageName, container, Properties.packageName.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Root", 1, row);
-	         add(_root, 3, row);
-				setValue(_root, container, Properties.root.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("JavaVersion", 1, row);
-	         add(_javaVersion, 3, row);
-				setValue(_javaVersion, container, Properties.javaVersion.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("ArtifactId", 1, row);
-	         add(_artifactId, 3, row);
-				setValue(_artifactId, container, Properties.artifactId.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("GroupId", 1, row);
-	         add(_groupId, 3, row);
-				setValue(_groupId, container, Properties.groupId.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Version", 1, row);
-	         add(_version, 3, row);
-				setValue(_version, container, Properties.version.name(), new String[] { });
-
-	         row += 2;
-	         addLabel("Name", 1, row);
-	         add(_name, 3, row);
-				setValue(_name, container, Properties.name.name(), new String[] { });
-
-	      }
-
-			private void setValue(JTextField component, PropertyContainer container, String property, String[] values) {
-	         component.setText(container.hasProperty(property) ? getString(container, property) : "");
-	      }
-
-			private void setValue(JCheckBox component, PropertyContainer container, String property, String[] values) {
-	         component.setSelected(container.hasProperty(property) ? getString(container, property).toLowerCase().startsWith("boo") : false);
-	      }
-
-	      private void setValue(JComboBox<String> component, PropertyContainer container, String property, String[] values) {
-	         component.setModel(new DefaultComboBoxModel<>(values));
-	       	final String value = container.hasProperty(property) ? getString(container, property) : null;
-		      if (value == null) return;
-		      component.setSelectedItem(value);
-		   }
-
-	      void commit(PropertyContainer container) throws Exception {
-				getValue(container, "packageName", _packageName); 
-				getValue(container, "root", _root); 
-				getValue(container, "javaVersion", _javaVersion); 
-				getValue(container, "artifactId", _artifactId); 
-				getValue(container, "groupId", _groupId); 
-				getValue(container, "version", _version); 
-				getValue(container, "name", _name); 
-	      }
-
-			private void getValue(PropertyContainer container, String property, JTextField component) {
-	         container.setProperty(property, component.getText().trim());
-	      }
-
-	      private void getValue(PropertyContainer container, String property, JComboBox<String> component) {
-	         container.setProperty(property, component.getSelectedItem() == null ? null : component.getSelectedItem().toString());
-	      }
-	   }
-
-	static void showProjectPropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final ProjectPropertyEditor form = new ProjectPropertyEditor(container);
-	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "Project", () -> {
-	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
+	         form.commit(pNode.node);
+				pNode.updateView();
 	      });
 	   });
 	}
@@ -475,16 +283,11 @@ public abstract class ProjectDomain implements IDomain {
 		@Override
       public <T> T visit(Node n) {
          if (n == null) return null;
-		  if (BaseDomainVisitor.hasLabel(n, TemplateGroup.name())) return visitTemplateGroup(n);
-		  if (BaseDomainVisitor.hasLabel(n, Project.name())) return visitProject(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.ROOT.name())) return visitROOT(n);
          return null;
       }
 
-		<T> T visitTemplateGroup(Node node) {
-         return null;
-      }
-
-		<T> T visitProject(Node node) {
+		<T> T visitROOT(Node node) {
          return null;
       }
 

@@ -109,6 +109,13 @@ public abstract class BasePNode<N extends PNode> extends PDragSequenceEventHandl
       textArea.setCaretPosition(0);
    }
 
+   public void renderTo(NeoPNodeRenderPanel panel) {
+      panel.editors.removeAll();
+      panel.txtEditor.setText(uuid + " " + type);
+      panel.txtEditor.setCaretPosition(0);
+      panel.editors.add("Default", new JScrollPane(panel.txtEditor));
+   }
+
    public final void select() {
       if (selected.get()) {
          editor.selectOutgoing(this);

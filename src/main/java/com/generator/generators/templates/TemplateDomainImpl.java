@@ -2,6 +2,7 @@ package com.generator.generators.templates;
 
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
+import com.generator.editors.canvas.NeoPNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.generators.project.ProjectDomain;
@@ -1737,10 +1738,12 @@ public class TemplateDomainImpl extends TemplateDomain {
          }
 
          @Override
-         public void renderTo(JTextComponent textArea) {
+         public void renderTo(NeoPNodeRenderPanel panel) {
+            super.renderTo(panel);
+
             editor.doInTransaction(tx -> {
-               textArea.setText(TemplateDomainImpl.render(node));
-               textArea.setCaretPosition(0);
+               panel.txtEditor.setText(TemplateDomainImpl.render(node));
+               panel.txtEditor.setCaretPosition(0);
             });
          }
 

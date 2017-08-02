@@ -53,9 +53,9 @@ public class NeoModel {
    }
 
    public Result query(String query) {
-      System.out.println(query);
+      //System.out.println(query);
       final Result result = graphDb.execute(query);
-      System.out.println("Query stats : \n" + result.getQueryStatistics().toString());
+      //System.out.println("Query stats : \n" + result.getQueryStatistics().toString());
       return result;
    }
 
@@ -83,7 +83,7 @@ public class NeoModel {
 
       Node node = getNode(uuid);
       if (node == null) {
-         System.out.println("newNode " + uuid + " (" + label + ")");
+         //System.out.println("newNode " + uuid + " (" + label + ")");
          node = label == null ? graphDb.createNode() : graphDb.createNode(() -> label);
          node.setProperty(TAG_UUID, uuid.toString());
          uuids.add(node, TAG_UUID, uuid.toString());
@@ -102,21 +102,40 @@ public class NeoModel {
    }
 
    public static String getNameOrLabelFrom(Node node) {
-
       if (node == null) return "NULL";
-
-      if (node.hasProperty("name")) {
+      if (node.hasProperty("name") && !"".equals(node.getProperty("name").toString())) {
          return node.getProperty("name").toString();
-
       } else {
-
          // if node has labels, show all
          final StringBuilder lbl = new StringBuilder();
          for (Label label : node.getLabels()) lbl.append(label).append(" ");
          if (lbl.length() > 0) return lbl.toString().trim();
-
          // if no labels, show uuid:
          return hasUUID(node) ? uuidOf(node).toString() : "[" + node.getPropertyKeys() + "]";
+      }
+   }
+
+   public static String getNameAndLabelsFrom(Node node) {
+      final StringBuilder lbl = new StringBuilder();
+
+      if (node == null) {
+         lbl.append("NULL");
+      } else {
+         final String name = BaseDomainVisitor.getString(node, "name", "");
+         lbl.append(name);
+         lbl.append(name.length() == 0 ? "(" : " (");
+         for (Label label : node.getLabels()) lbl.append(label).append(" ");
+         lbl.append(")");
+      }
+      return lbl.toString();
+   }
+
+   public static String getNameOrTypeFrom(Relationship relationship) {
+      if (relationship == null) return "NULL";
+      if (relationship.hasProperty("name") && !"".equals(relationship.getProperty("name").toString())) {
+         return relationship.getProperty("name").toString();
+      } else {
+         return relationship.getType().name();
       }
    }
 
@@ -205,6 +224,15 @@ public class NeoModel {
       return result;
    }
 
+   public Iterable<Node> findNodesWithProperty(String property) {
+      final ST cypher = new ST("MATCH (entity) WHERE EXISTS(entity.~property~) RETURN entity", '~', '~');
+      cypher.add("property", property);
+      final Result res = query(cypher.render());
+      final Iterator<Node> n_column = res.columnAs("entity");
+      final Set<Node> result = new LinkedHashSet<>();
+      return Iterators.asIterable(n_column);
+   }
+
    public ResourceIterator<Node> findNodes(Label label) {
       return graphDb.findNodes(label);
    }
@@ -213,6 +241,10 @@ public class NeoModel {
       return graphDb.findNodes(label, key, value);
    }
 
+   public Node findNode(Label label, String key, Object value) {
+      final ResourceIterator<Node> iterator = graphDb.findNodes(label, key, value);
+      return iterator.hasNext() ? iterator.next() : null;
+   }
 
    public interface Committer {
 

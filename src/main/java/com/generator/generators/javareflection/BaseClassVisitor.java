@@ -1,4 +1,4 @@
-package com.generator.generators.javaparser;
+package com.generator.generators.javareflection;
 
 import com.generator.util.StringUtil;
 

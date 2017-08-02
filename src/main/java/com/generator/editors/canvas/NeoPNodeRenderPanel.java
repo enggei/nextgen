@@ -24,9 +24,10 @@ import static com.generator.editors.canvas.BasePNode.*;
  */
 public class NeoPNodeRenderPanel extends JPanel implements PropertyChangeListener {
 
-   private final JTextArea txtEditor = new JTextArea(25, 85);
-
    private BasePNode currentBaseNode;
+
+   public final JTextArea txtEditor = new JTextArea(25, 85);
+   final JTabbedPane editors = new JTabbedPane();
 
    public NeoPNodeRenderPanel() {
       super(new BorderLayout());
@@ -34,7 +35,9 @@ public class NeoPNodeRenderPanel extends JPanel implements PropertyChangeListene
       txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
       txtEditor.setTabSize(3);
       txtEditor.setEditable(false);
-      add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+
+      add(editors, BorderLayout.CENTER);
+      editors.add("Default", new JScrollPane(txtEditor));
 
       txtEditor.addMouseListener(new MouseAdapter() {
          @Override
@@ -96,7 +99,7 @@ public class NeoPNodeRenderPanel extends JPanel implements PropertyChangeListene
       switch (evt.getPropertyName()) {
          case BasePNode.NODE_HIGHLIGHTED: {
             currentBaseNode = (BasePNode) evt.getNewValue();
-            currentBaseNode.renderTo(txtEditor);
+            currentBaseNode.renderTo(this);
             break;
          }
 

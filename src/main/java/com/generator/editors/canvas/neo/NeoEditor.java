@@ -50,20 +50,11 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
 
    public NeoEditor() {
       super();
+      initialisePropertiesFile();
+      tryToLoadDatabaseAndLastLayout();
+   }
 
-      FileUtil.tryToCreateFileIfNotExists(propertiesFile);
-      if (propertiesFile != null && propertiesFile.exists()) {
-         try {
-            this.properties.load(new BufferedReader(new FileReader(propertiesFile)));
-         } catch (IOException e) {
-            System.out.println("Could not open properties file " + propertiesFile);
-         }
-      }
-
-      for (Map.Entry<Object, Object> property : properties.entrySet()) {
-         System.out.println(property.getKey() + " = " + property.getValue());
-      }
-
+   private void tryToLoadDatabaseAndLastLayout() {
       final String database = this.properties.getProperty("database", null);
       if (database != null && new File(database).exists()) {
 
@@ -79,12 +70,20 @@ public abstract class NeoEditor extends BaseEditor<NeoPNode, NeoRelationshipPath
       }
    }
 
+   private void initialisePropertiesFile() {
+      FileUtil.tryToCreateFileIfNotExists(propertiesFile);
+      if (propertiesFile != null && propertiesFile.exists()) {
+         try {
+            this.properties.load(new BufferedReader(new FileReader(propertiesFile)));
+         } catch (IOException e) {
+            System.out.println("Could not open properties file " + propertiesFile);
+         }
+      }
+   }
+
    public void setGraph(NeoModel graph) {
-
       if (this.graph != null) this.graph.getGraphDb().unregisterTransactionEventHandler(this);
-
       reset();
-
       this.graph = graph;
       this.graph.getGraphDb().registerTransactionEventHandler(this);
    }

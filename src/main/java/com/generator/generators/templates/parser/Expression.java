@@ -130,15 +130,14 @@ public class Expression {
       private final char delimiterStartChar;
       private final String content;
 
-      public ParameterBuilder(String name, char delimiterStartChar, String content) {
+      ParameterBuilder(String name, char delimiterStartChar, String content) {
          this.name = name;
          this.delimiterStartChar = delimiterStartChar;
          this.content = content;
       }
 
-      public void addMethodCall(String name, boolean isSuper) {
-         MethodCall methodCall = methodCalls.get(name);
-         if (methodCall == null) methodCalls.put(name, methodCall = new MethodCall());
+      void addMethodCall(String name, boolean isSuper) {
+         MethodCall methodCall = methodCalls.computeIfAbsent(name, k -> new MethodCall());
          methodCall.setName(name);
          if (isSuper) methodCall.isSuper = isSuper;
          currentMethod = name;
@@ -148,13 +147,12 @@ public class Expression {
          return !methodCalls.isEmpty();
       }
 
-      public void addMethodCallParam(String paramName) {
+      void addMethodCallParam(String paramName) {
          methodCalls.get(currentMethod).methodParams.add(paramName);
       }
 
       public void setName(String text) {
-         Parameter parameter = parameterMap.get(text);
-         if (parameter == null) parameterMap.put(text, parameter = new Parameter());
+         Parameter parameter = parameterMap.computeIfAbsent(text, k -> new Parameter());
          parameter.setName(text);
          currentParameter = text;
 
@@ -164,7 +162,7 @@ public class Expression {
          }
       }
 
-      public void addKvname(String iterator, String text) {
+      void addKvname(String iterator, String text) {
          String key = iteratorParameterMap.get(iterator);
 
          if (key == null) {
@@ -176,7 +174,7 @@ public class Expression {
          parameterMap.get(iteratorParameterMap.get(iterator)).addKvname(text);
       }
 
-      public void isCollection() {
+      void isCollection() {
          isCollection = true;
       }
 
@@ -185,7 +183,7 @@ public class Expression {
          return parameterMap.values() + (methodCalls.isEmpty() ? "" : ("\n\t -> " + methodCalls));
       }
 
-      public void addIterator(String iteratorName) {
+      void addIterator(String iteratorName) {
          iteratorParameterMap.put(iteratorName, currentParameter);
       }
 
@@ -196,11 +194,11 @@ public class Expression {
          return list;
       }
 
-      public boolean isIterator(String token) {
+      boolean isIterator(String token) {
          return iteratorParameterMap.keySet().contains(token);
       }
 
-      public TemplateStatement toStatement() {
+      TemplateStatement toStatement() {
          return new TemplateStatement(name, TemplateStatementType.METHOD, getParameters(), content, delimiterStartChar);
       }
 
@@ -208,7 +206,7 @@ public class Expression {
          return name;
       }
 
-      public ParameterBuilder processMethodCalls(Map<String, ParameterBuilder> map, Map<String, TemplateFile> imports) {
+      ParameterBuilder processMethodCalls(Map<String, ParameterBuilder> map, Map<String, TemplateFile> imports) {
          for (Map.Entry<String, MethodCall> callEntry : methodCalls.entrySet()) {
             for (String methodParam : callEntry.getValue().methodParams) {
                final Tuple<TemplateStatement, TemplateParameter> parameter = findTemplateParameterFor(callEntry.getKey(), methodParam, map, imports);
@@ -270,7 +268,7 @@ public class Expression {
          private TemplateEntities paramType = TemplateEntities.STRINGPROPERTY;
          private final Set<String> kvNames = new TreeSet<>();
 
-         public void setParamType(TemplateEntities paramType) {
+         void setParamType(TemplateEntities paramType) {
             this.paramType = paramType;
          }
 
@@ -278,11 +276,11 @@ public class Expression {
             this.name = name;
          }
 
-         public void isCollection() {
+         void isCollection() {
             this.paramType = TemplateEntities.LISTPROPERTY;
          }
 
-         public void addKvname(String name) {
+         void addKvname(String name) {
             this.kvNames.add(name);
             this.paramType = TemplateEntities.KEYVALUELISTPROPERTY;
          }
@@ -292,10 +290,9 @@ public class Expression {
             return name + "(" + paramType + ")" + (kvNames.size() > 0 ? kvNames : "");
          }
 
-         public TemplateParameter asTemplateParameter() {
+         TemplateParameter asTemplateParameter() {
             return new TemplateParameter(name, paramType, kvNames);
          }
       }
    }
-
 }

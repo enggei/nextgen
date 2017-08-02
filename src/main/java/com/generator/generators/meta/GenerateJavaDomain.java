@@ -105,14 +105,14 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
          } else if (MetaDomain.Relations.DST.name().equals(relationship.getType().name())) {
             final Node relationNode = other(node, relationship);
 
-            outgoing(relationNode, MetaDomain.Relations.SRC).forEach(rel -> {
+            incoming(relationNode, MetaDomain.Relations.SRC).forEach(rel -> {
                final Node src = other(relationNode, rel);
                declaration.addIncomingValue(StringUtil.toUpper(getString(relationNode, MetaDomain.Properties.name.name())), getString(src, MetaDomain.Properties.name.name()));
             });
          }
       });
 
-      domainClassST.addEntitiesValue(propertyEditorST, name, declaration);
+      domainClassST.addEntitiesValue(declaration, propertyEditorST, name );
 
       return null;
    }
@@ -132,7 +132,7 @@ class GenerateJavaDomain extends MetaDomain.MetaDomainVisitor {
          addToPropertyEditor(other(node, propertyRelation), propertyEditorST);
       }
 
-      domainClassST.addRelationsValue(name, propertyEditorST);
+      domainClassST.addRelationsValue(propertyEditorST, name);
       return (T) null;
    }
 

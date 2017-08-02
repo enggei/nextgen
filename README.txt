@@ -2,26 +2,39 @@ Codegen project
 
 Tasks:
 
-* Comments on autosave + timestamp
+* Assign to template in both directions
+* index in AppMotif.Properties.name, _Value
+* VK_F search for name-property
 
-* Templates:
-  - For Piccolo: Allow custom node rendering per template (colour, shape, parameters, etc)
-  - Indicators for incoming / outgoing relations
-  - Custom layout
+* implement undo:
+class Commit {
+               private final Set<Node> deletedNodes;
+               private final Set<Relationship> deletedRelations;
 
-* If island node ask user if delete
+               public Commit(Set<Node> deletedNodes, Set<Relationship> deletedRelations) {
+                  this.deletedNodes = new LinkedHashSet<>(deletedNodes);
+                  this.deletedRelations = new LinkedHashSet<>(deletedRelations);
+               }
 
-* Create motif for group of nodes and relations
+               void undo() {
+                  for (Node deletedNode : deletedNodes) {
+                     final Node node = model.graph().getGraphDb().createNode();
+                  }
+               }
+            }
 
-* More layers in BaseEditor, like PhotoShop :)
-
-* Right click text node:
-  - toLower, toUpper, camelHump, capitalize
-
-* On new string value (SingleValue) attach to node if already exists.
+            private final Stack<Commit> history = new Stack<>();
 
 
 
+* Create browser-editor (example):
+https://github.com/behavior3/behavior3editor
+
+http://www.material-ui.com/#/
+http://formidable.com/open-source/victory/
+https://material.io/
+http://nd4j.org/
+https://deeplearning4j.org/gpu
 
 TEST:
 * Add constraint på template group som definerer type av parametre

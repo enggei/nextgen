@@ -3,6 +3,7 @@ package com.generator.generators.templates;
 import com.generator.domain.IDomain;
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
+import com.generator.editors.canvas.NeoPNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
 import com.generator.util.SwingUtil;
@@ -626,6 +627,7 @@ public abstract class TemplateDomain implements IDomain {
 
       SingleValuePNode(Node node, NeoEditor editor) {
          super(node, Entities.SingleValue, "name", "#fdbf6f", editor);
+         updateView();
       }
 
    	@Override

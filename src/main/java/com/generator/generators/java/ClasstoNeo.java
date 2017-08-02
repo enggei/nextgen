@@ -2,11 +2,10 @@ package com.generator.generators.java;
 
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
-import com.generator.generators.javaparser.BaseClassVisitor;
+import com.generator.generators.javareflection.BaseClassVisitor;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;

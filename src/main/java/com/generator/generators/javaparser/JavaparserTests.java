@@ -3,6 +3,8 @@ package com.generator.generators.javaparser;
 import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.generators.java.JavaGroup;
+import com.generator.generators.javareflection.BaseClassVisitor;
+import com.generator.generators.javareflection.JavaBuilderDomain;
 import com.generator.generators.meta.MetaDomain;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.FileUtil;
@@ -13,27 +15,32 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
 import com.github.javaparser.ast.PackageDeclaration;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.body.Parameter;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
+import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.*;
+import java.io.StringReader;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.generators.java.JavaDomain.Relations.FIELD;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Entities.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Properties.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.PACKAGE;
 
 
 public class JavaparserTests {
@@ -150,6 +157,208 @@ public class JavaparserTests {
       System.out.println();
    }
 
+   @Test
+   public void testNeoVisitor() throws IOException, ParseException {
+
+
+      final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().
+            newEmbeddedDatabase(new File("src/main/java/com/generator/generators/javaparser/testdb"));
+      final NeoModel graph = new NeoModel(db);
+
+//      File[] list = FileUtil.list("/home/goe/udc/trailer-report/src/main/java/com/ud/tr/domain", ".java");
+//      for (File file : list) {
+//         System.out.println(file);
+//
+//         CompilationUnit cu = JavaParser.parse(file);
+//
+//         graph.doInTransaction(new NeoModel.Committer() {
+//            @Override
+//            public void doAction(Transaction tx) throws Throwable {
+//               importIntoNeo(cu, graph);
+//            }
+//
+//            @Override
+//            public void exception(Throwable throwable) {
+//               throwable.printStackTrace();
+//            }
+//         });
+//      }
+
+      CompilationUnit cu = JavaParser.parse(new StringReader("package com.test;" +
+            "import java.util.*;" +
+            "import java.text.SimpleDateFormat;" +
+            "import static com.generator.generators.javareflection.JavaBuilderDomain.Entities.*;"));
+
+      graph.doInTransaction(new NeoModel.Committer() {
+         @Override
+         public void doAction(Transaction tx) throws Throwable {
+            importIntoNeo(cu, graph);
+         }
+
+         @Override
+         public void exception(Throwable throwable) {
+            throwable.printStackTrace();
+         }
+      });
+
+
+   }
+
+   private static void importIntoNeo(CompilationUnit cu, NeoModel graph) {
+
+      final Stack<org.neo4j.graphdb.Node> nodes = new Stack<>();
+
+      new VoidVisitorAdapter<String>() {
+
+         @Override
+         public void visit(PackageDeclaration n, String arg) {
+            final Node packageNode = findPackageNode(n.getPackageName().split("[.]"), 0, graph, null);
+            nodes.push(packageNode);
+            super.visit(n, arg);
+         }
+
+         private Node findPackageNode(String[] packagePath, int index, NeoModel graph, Node currentPackageNode) {
+
+            if (index == packagePath.length) return currentPackageNode;
+
+            final String packageName = packagePath[index];
+            if (index == 0) {
+               final ResourceIterator<Node> packageNodes = graph.findNodes(JavaBuilderDomain.Entities.PACKAGE, JavaBuilderDomain.Properties.name.name(), packageName);
+               if (packageNodes.hasNext()) {
+                  return findPackageNode(packagePath, index + 1, graph, packageNodes.next());
+               } else {
+                  return findPackageNode(packagePath, index + 1, graph, graph.newNode(JavaBuilderDomain.Entities.PACKAGE, JavaBuilderDomain.Properties.name.name(), packageName));
+               }
+            }
+
+            for (Relationship relationship : incoming(currentPackageNode, PARENT)) {
+               final String subPackageName = getOtherProperty(currentPackageNode, relationship, JavaBuilderDomain.Properties.name.name());
+               if (packageName.equals(subPackageName))
+                  return findPackageNode(packagePath, index + 1, graph, other(currentPackageNode, relationship));
+            }
+
+            final Node newPackageNode = graph.newNode(JavaBuilderDomain.Entities.PACKAGE, JavaBuilderDomain.Properties.name.name(), packageName);
+            newPackageNode.createRelationshipTo(currentPackageNode, PARENT);
+            return findPackageNode(packagePath, index + 1, graph, newPackageNode);
+         }
+
+         @Override
+         public void visit(ImportDeclaration n, String arg) {
+            final QualifiedNameExpr qualifiedNameExpr = (QualifiedNameExpr) n.getName();
+            final Node packageNode = findPackageNode(qualifiedNameExpr.getQualifier().getName().split("[.]"), 0, graph, null);
+
+            if(n.isAsterisk()) {
+               // all classes todo: HAVE to do jar/library first!
+            }
+
+            final Node classNode = findClassNode(n.getName(), packageNode, graph);
+            System.out.println("import " + getString(classNode, JavaBuilderDomain.Properties.name.name()));
+            super.visit(n, arg);
+         }
+
+         private Node findClassNode(NameExpr name, final Node packageNode, NeoModel graph) {
+            for (Relationship relationship : incoming(packageNode, PACKAGE)) {
+               final Node classNode = other(packageNode, relationship);
+               if (name.getName().equals(getString(classNode, JavaBuilderDomain.Properties.name.name())))
+                  return classNode;
+            }
+            final Node newClassNode = graph.newNode(CLASS, JavaBuilderDomain.Properties.name.name(), name.getName());
+            newClassNode.createRelationshipTo(packageNode, PACKAGE);
+            return newClassNode;
+         }
+
+         @Override
+         public void visit(ClassOrInterfaceDeclaration n, String arg) {
+            final Node packageNode = nodes.peek();
+            final Node classNode = findClassNode(n.getNameExpr(), packageNode, graph);
+            nodes.push(classNode);
+            // todo do extends and import
+            super.visit(n, arg);
+         }
+
+         @Override
+         public void visit(FieldDeclaration n, String arg) {
+
+            final Node classNode = nodes.peek();
+            final Node typeNode = findType(classNode, n);
+
+            outgoing(classNode, FIELD).forEach(relationship -> {
+               final Node fieldNode = other(classNode, relationship);
+               // todo add modifiers on relationship
+            });
+
+            final StringBuilder out = new StringBuilder();
+
+//            for (VariableDeclarator variableDeclarator : n.getVariables()) {
+//               out.append("\n\t\t\t").append(ModifierSet.getAccessSpecifier(n.getModifiers())).append(" ").append(type).append(" ").append(variableDeclarator.getId()).append(variableDeclarator.getInit() == null ? "" : (" = " + variableDeclarator.getInit()));
+//            }
+
+            System.out.print(out.toString());
+            super.visit(n, arg);
+         }
+
+         private Node findType(Node classNode, FieldDeclaration n) {
+            final String type = n.getType().toString();
+
+            // look for type in primitives (java.lang)
+
+            // look for type in imports
+//            outgoing(classNode,)
+
+            // look for type in package
+
+            return null;
+         }
+
+         @Override
+         public void visit(MethodDeclaration n, String arg) {
+            final StringBuilder out = new StringBuilder();
+            out.append("\n\t\t\t").append(ModifierSet.getAccessSpecifier(n.getModifiers())).append(" ").append(n.getType()).append(" ").append(n.getName()).append("(");
+            for (Parameter parameter : n.getParameters()) {
+               out.append(parameter.getType()).append(" ").append(parameter.getName()).append(" ");
+            }
+            out.append(")");
+
+            for (Statement statement : n.getBody().getStmts()) {
+               //out.append("\n\t\t\t\t").append(statement);
+               statement.accept(new VoidVisitorAdapter<String>() {
+
+                  @Override
+                  public void visit(VariableDeclarator n, String arg) {
+                     out.append("\n\t\t\t\t\tLOCAL." + n.getId());
+                     super.visit(n, arg);
+                  }
+
+                  @Override
+                  public void visit(FieldAccessExpr n, String arg) {
+                     out.append("\n\t\t\t\t\tTHIS." + n.getField());
+                     super.visit(n, arg);
+                  }
+
+                  @Override
+                  public void visit(ReturnStmt n, String arg) {
+                     out.append("\n\t\t\t\t\tRETURNS " + n.getExpr());
+                     super.visit(n, arg);
+                  }
+
+                  @Override
+                  public void visit(MethodCallExpr n, String arg) {
+                     out.append("\n\t\t\t\t\tCALLING " + (n.getScope() == null ? "" : ("THIS." + n.getScope() + ".")) + n.getName());
+                     super.visit(n, arg);
+                  }
+               }, "");
+            }
+
+            System.out.print(out.toString());
+            super.visit(n, arg);
+         }
+
+
+      }.visit(cu, null);
+      System.out.println();
+      System.out.println();
+   }
+
 
    @Test
    public void createTestClass() throws IOException, ParseException {
@@ -217,14 +426,14 @@ public class JavaparserTests {
             newEmbeddedDatabaseBuilder(testDB).
             newGraphDatabase();
 
-      final NeoModel neoModel = new NeoModel(testGraph, mod -> FileUtil.removeFilesUnderIncluding(testDB.getAbsolutePath()));
+      final NeoModel graph = new NeoModel(testGraph, mod -> FileUtil.removeFilesUnderIncluding(testDB.getAbsolutePath()));
 
       final CompilationUnit cu = JavaParser.parse(new File("/media/storage/nextgen/src/main/java/com/generator/generators/templates/editors/CanvasEditor.java"));
 
-      neoModel.doInTransaction(new NeoModel.Committer() {
+      graph.doInTransaction(new NeoModel.Committer() {
          @Override
          public void doAction(Transaction tx) throws Throwable {
-            new NeoVisitorAdapter(neoModel, new Stack<>()).visit(cu, null);
+            new NeoVisitorAdapter(graph, new Stack<>()).visit(cu, null);
          }
 
          @Override
@@ -246,11 +455,11 @@ public class JavaparserTests {
             newEmbeddedDatabaseBuilder(testDB).
             newGraphDatabase();
 
-      final NeoModel neoModel = new NeoModel(testGraph, mod -> FileUtil.removeFilesUnderIncluding(testDB.getAbsolutePath()));
-      neoModel.doInTransaction(new NeoModel.Committer() {
+      final NeoModel graph = new NeoModel(testGraph, mod -> FileUtil.removeFilesUnderIncluding(testDB.getAbsolutePath()));
+      graph.doInTransaction(new NeoModel.Committer() {
          @Override
          public void doAction(Transaction tx) throws Throwable {
-//            new ClasstoNeo(neoModel).visit(Langton.class);
+//            new ClasstoNeo(graph).visit(Langton.class);
          }
 
          @Override
@@ -284,22 +493,23 @@ public class JavaparserTests {
       }.visit(VoidVisitorAdapter.class);
 
    }
+
    @Test
    public void createJavaParserDomain() {
 
       final String[] split = "AnnotationDeclaration, AnnotationMemberDeclaration, BaseParameter, ClassOrInterfaceDeclaration, ClassOrInterfaceType, ConstructorDeclaration, EmptyTypeDeclaration, EnumConstantDeclaration, EnumDeclaration, MemberValuePair, MethodDeclaration, MultiTypeParameter, NameExpr, Parameter, QualifiedNameExpr, TypeDeclaration, TypeParameter, VariableDeclaratorId".split(",");
 
 
-      final NeoModel neoModel = NeoEditor.newEmbeddedDatabase("/home/goe/dbMetaTest");
+      final NeoModel graph = NeoEditor.newEmbeddedDatabase("/home/goe/dbMetaTest");
 
-      neoModel.doInTransaction(new NeoModel.Committer() {
+      graph.doInTransaction(new NeoModel.Committer() {
          @Override
          public void doAction(Transaction tx) throws Throwable {
 
             final String[] colors = parse("['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928']");
             final AtomicInteger color = new AtomicInteger(0);
 
-            final Node domainNode = neoModel.newNode(MetaDomain.Entities.Domain,
+            final Node domainNode = graph.newNode(MetaDomain.Entities.Domain,
                   MetaDomain.Properties.name.name(), "JavaParserDomain",
                   MetaDomain.Properties.packageName.name(), "com.nextgen.meta",
                   MetaDomain.Properties.root.name(), "/home/goe/projects/nextgen/src/test/java");
@@ -308,21 +518,21 @@ public class JavaparserTests {
             new BaseClassVisitor() {
                @Override
                public void onDeclaredMethod(Method method) {
-                  newEntity(domainNode, "Package", colors[color.incrementAndGet()%colors.length]);
+                  newEntity(domainNode, "Package", colors[color.incrementAndGet() % colors.length]);
                }
             }.visit(VoidVisitorAdapter.class);
 
 
-            final Node packageNode = newEntity(domainNode, "Package", colors[color.incrementAndGet()%colors.length]);
+            final Node packageNode = newEntity(domainNode, "Package", colors[color.incrementAndGet() % colors.length]);
 
-            final Node classNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Class", MetaDomain.Properties.color.name(), "#1f78b4");
-            final Node fieldNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Field", MetaDomain.Properties.color.name(), "#b2df8a");
+            final Node classNode = graph.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Class", MetaDomain.Properties.color.name(), "#1f78b4");
+            final Node fieldNode = graph.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), "Field", MetaDomain.Properties.color.name(), "#b2df8a");
 
-            final Node packageMember = neoModel.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "MEMBER");
+            final Node packageMember = graph.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "MEMBER");
             packageMember.createRelationshipTo(packageNode, MetaDomain.Relations.SRC);
             packageMember.createRelationshipTo(classNode, MetaDomain.Relations.DST);
 
-            final Node classField = neoModel.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "FIELD");
+            final Node classField = graph.newNode(MetaDomain.Entities.Relation, MetaDomain.Properties.name.name(), "FIELD");
             classField.createRelationshipTo(classNode, MetaDomain.Relations.SRC);
             classField.createRelationshipTo(fieldNode, MetaDomain.Relations.DST);
 
@@ -336,7 +546,7 @@ public class JavaparserTests {
          }
 
          private Node newEntity(Node domainNode, String name, String color) {
-            final Node packageNode = neoModel.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), name, MetaDomain.Properties.color.name(), color);
+            final Node packageNode = graph.newNode(MetaDomain.Entities.Entity, MetaDomain.Properties.name.name(), name, MetaDomain.Properties.color.name(), color);
             domainNode.createRelationshipTo(packageNode, MetaDomain.Relations.ENTITY);
             return packageNode;
          }
@@ -598,122 +808,6 @@ public class JavaparserTests {
             }
          }
 
-      }.visit(clazz);
-   }
-
-   private static void createRecursiveVisitor(Class<VoidVisitorAdapter> clazz) {
-      new BaseClassVisitor() {
-
-         final Set<Class> candidateClasses = new LinkedHashSet<>();
-         final Set<Class> visitedClasses = new LinkedHashSet<>();
-
-         @Override
-         public void onClass(Package classPackage, String className, Class superClass) {
-            if (classPackage == null)
-               System.out.println("package: [none]\n\tclass: " + className + " \n\tsuper: " + superClass);
-            else
-               System.out.println("package: " + classPackage.getName() + "\n\tclass: " + className + "\n\tsuper: " + superClass);
-
-            if (superClass != null) candidateClasses.add(superClass);
-         }
-
-         @Override
-         public void onInterface(Class classInterface) {
-            System.out.println("interface: " + classInterface.getName());
-            candidateClasses.add(classInterface);
-         }
-
-         @Override
-         public void onDeclaredMethod(Method method) {
-            System.out.println("Method " + getName(method) + " " + getReturnType(method));
-         }
-
-         @Override
-         public void onConstructorComplete() {
-            super.onConstructorComplete();
-         }
-
-         @Override
-         public void onParameter(String name, Class<?> type) {
-            System.out.println("\t" + name + type.getName());
-            candidateClasses.add(type);
-         }
-
-         @Override
-         public void onPublicField(String name, Class<?> returnType) {
-            System.out.println("public field " + name + " type " + returnType.getName());
-         }
-
-         @Override
-         public void onProtectedField(String name, Class<?> returnType) {
-            System.out.println("protected field " + name + " type " + returnType.getName());
-         }
-
-         @Override
-         public void onPackageField(String name, Class<?> returnType) {
-            System.out.println("package field " + name + " type " + returnType.getName());
-         }
-
-         @Override
-         public void onPrivateField(String name, Class<?> returnType) {
-            System.out.println("private field " + name + " type " + returnType.getName());
-         }
-
-         @Override
-         public void onPublicConstructor(String name) {
-            System.out.println("public constructor " + name);
-         }
-
-         @Override
-         public void onProtectedConstructor(String name) {
-            System.out.println("protected constructor " + name);
-         }
-
-         @Override
-         public void onPackageConstructor(String name) {
-            System.out.println("package constructor " + name);
-         }
-
-         @Override
-         public void onPrivateConstructor(String name) {
-            System.out.println("private constructor " + name);
-         }
-
-         @Override
-         public void onInnerClass(Class innerClass) {
-            System.out.println("Inner class: " + innerClass.getName());
-            candidateClasses.add(innerClass);
-         }
-
-         @Override
-         public void done() {
-
-            System.out.println("visited " + clazz.getName());
-            System.out.println(" ----------------------------------------------------- ");
-            System.out.println(" ");
-            System.out.println(" ");
-            System.out.println(" ");
-
-            visitedClasses.add(clazz);
-            if (candidateClasses.isEmpty()) return;
-
-            Class next = null;
-            while (next == null) {
-
-               for (Class candidateClass : candidateClasses) {
-                  if (visitedClasses.contains(candidateClass)) continue;
-                  next = candidateClass;
-                  break;
-               }
-
-               if (next == null) {
-                  System.out.println("Done");
-                  return;
-               }
-            }
-
-            visit(next);
-         }
       }.visit(clazz);
    }
 }

@@ -30,10 +30,11 @@ import static org.neo4j.graphdb.Direction.INCOMING;
 public abstract class VertxDomain implements IDomain {
 
    public enum Entities implements Label {
-      RouterVerticle
+      RouterVerticle, endpoint
    }
 
    public enum Relations implements RelationshipType {
+      ENDPOINTS
    }
 
    public enum Properties {
@@ -55,6 +56,8 @@ public abstract class VertxDomain implements IDomain {
       switch (Entities.valueOf(nodetype)) {
          case RouterVerticle:
          	return newRouterVerticlePNode(node, editor);
+         case endpoint:
+         	return newEndpointPNode(node, editor);
       }
 
       throw new IllegalArgumentException("unsupported VertxDomain nodetype " + nodetype + " for node " + NeoModel.debugNode(node));
@@ -96,10 +99,77 @@ public abstract class VertxDomain implements IDomain {
    		pop.add(new NeoEditor.TransactionAction("Edit", editor) {
    			@Override
    			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-   				showRouterVerticlePropertyEditor(node, editor, event);
+   				showRouterVerticlePropertyEditor(RouterVerticlePNode.this, editor, event);
    			}
    		});
    		pop.add(editor.newSetNodePropertyAction(VertxDomain.Properties.name.name(), this));
+   		pop.add(editor.newAddNodeAction(Entities.endpoint, Relations.ENDPOINTS, this, event));
+
+
+   		super.showNodeActions(pop, event);
+   	}
+
+   	@Override
+      public void showTargetActions(JPopupMenu pop, PInputEvent event) {
+
+         final Collection<NeoPNode> selectedNodes = editor.getSelectedNodes();
+         if (selectedNodes.isEmpty()) return;
+
+         final Map<String, Set<Node>> outgoing = new TreeMap<>();
+
+         selectedNodes.forEach(selectedNode -> {
+            // outgoing
+            if (selectedNode.node.hasLabel(Entities.endpoint)) {
+               final Set<Node> set = outgoing.computeIfAbsent(Entities.endpoint.name(), k -> new LinkedHashSet<>());
+               //todo: add constraint and add if allowed (control circular constraints, one-to-many, only-one etc.)
+               set.add(selectedNode.node);
+   			}
+
+         });
+
+         // outgoing
+         if (outgoing.containsKey(Entities.endpoint.name())) {
+            final Set<Node> nodes = outgoing.get(Entities.endpoint.name());
+            pop.add(new NeoEditor.TransactionAction("Add -> " + Relations.ENDPOINTS, editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  for (Node dst : nodes) {
+                     final Relationship newRelation = node.createRelationshipTo(dst, Relations.ENDPOINTS);
+                     editor.addRelation(newRelation);
+                  }
+                  updateView();
+               }
+            });
+         }
+
+      }
+
+      @Override
+      public void expand() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+   		outgoing(node, Relations.ENDPOINTS).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.endpoint));
+         editor.showAndLayout(pNodes, pNode);
+      }
+
+   	@Override
+      public void showDependents() {
+         final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+         editor.showAndLayout(pNodes, pNode);
+      }
+   }
+
+   protected NeoPNode newEndpointPNode(Node node, NeoEditor editor) {
+         return new EndpointPNode(node, editor);
+      }
+
+   protected static class EndpointPNode extends VertxDomainPNode {
+
+      EndpointPNode(Node node, NeoEditor editor) {
+         super(node, Entities.endpoint, "name", "#b2182b", editor);
+      }
+
+   	@Override
+   	public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
 
    		super.showNodeActions(pop, event);
@@ -134,7 +204,7 @@ public abstract class VertxDomain implements IDomain {
    private static class VertxDomainPNode extends NeoPNode<PText> {
 
       final Color selectedColor = Color.RED;
-      private final Color defaultColor;
+      protected final Color defaultColor;
       private final String property;
       private final VertxDomain.Entities nodeType;
 
@@ -267,14 +337,17 @@ public abstract class VertxDomain implements IDomain {
 	      }
 	   }
 
-	static void showRouterVerticlePropertyEditor(PropertyContainer container, NeoEditor editor, PInputEvent event) {
-	   final RouterVerticlePropertyEditor form = new RouterVerticlePropertyEditor(container);
+	static void showRouterVerticlePropertyEditor(RouterVerticlePNode pNode, NeoEditor editor, PInputEvent event) {
+	   final RouterVerticlePropertyEditor form = new RouterVerticlePropertyEditor(pNode.node);
 	   SwingUtil.showDialogNoDefaultButton(form, editor.canvas, "RouterVerticle", () -> {
 	      editor.doInTransaction(tx1 -> {
-	         form.commit(container);
+	         form.commit(pNode.node);
+				pNode.updateView();
 	      });
 	   });
 	}
+
+
 
 
    public static abstract class VertxDomainVisitor implements com.generator.domain.IDomainVisitor {
@@ -283,10 +356,15 @@ public abstract class VertxDomain implements IDomain {
       public <T> T visit(Node n) {
          if (n == null) return null;
 		  if (BaseDomainVisitor.hasLabel(n, Entities.RouterVerticle.name())) return visitRouterVerticle(n);
+		  if (BaseDomainVisitor.hasLabel(n, Entities.endpoint.name())) return visitEndpoint(n);
          return null;
       }
 
 		<T> T visitRouterVerticle(Node node) {
+         return null;
+      }
+
+		<T> T visitEndpoint(Node node) {
          return null;
       }
 

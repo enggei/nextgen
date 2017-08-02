@@ -22,6 +22,7 @@ import org.piccolo2d.event.PInputEvent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -185,6 +186,76 @@ public class MetaDomainImpl extends MetaDomain {
          public void showNodeActions(JPopupMenu pop, PInputEvent event) {
 
             pop.add(editor.newSetNodePropertyAction(Properties.name.name(), this));
+
+            // todo try layout as a grid instead
+            pop.add(new NeoEditor.TransactionAction("Edit (work in progress)", editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final JPanel domainEditor = new JPanel(new BorderLayout());
+
+                  final JTabbedPane tab = new JTabbedPane();
+                  domainEditor.add(tab, BorderLayout.CENTER);
+
+                  final JTextField txtPackage = new JTextField(30);
+                  final SwingUtil.FormPanel properties = new SwingUtil.FormPanel("pref,4dlu,pref", "pref,4dlu,pref");
+                  properties.add(new JLabel("Package"), 1, 1);
+                  properties.add(txtPackage, 3, 1);
+                  tab.add("Properties", properties);
+
+                  final JPanel entitiesPanel = new JPanel();
+
+                  for (Relationship relationship : outgoing(node, Relations.ENTITY)) {
+                  }
+                  SwingUtil.showDialog(domainEditor, editor.getCanvas(), "Edit " + getString(node, Properties.name.name()));
+               }
+            });
+
+            pop.add(new NeoEditor.TransactionAction("Layout", editor) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+                  new MetaDomainVisitor() {
+
+                     Point2D startPosition = getCenterPosition();
+                     Point2D currentPoint = new Point.Double(startPosition.getX(), startPosition.getY());
+
+                     @Override
+                     <T> T visitDomain(Node node) {
+                        for (Relationship relationship : outgoing(node, ENTITY))
+                           visitEntity(other(node,relationship));
+                        return super.visitDomain(node);
+                     }
+
+                     @Override
+                     <T> T visitEntity(Node node) {
+
+                        final NeoPNode pNode = editor.show(uuid, Entities.Entity.name());
+                        final double x = currentPoint.getX() + pNode.pNode.getWidth() + 5;
+                        final double y = currentPoint.getY();
+                        pNode.setOffset(new Point2D.Double(x, y));
+                        currentPoint.setLocation(x, y);
+                        System.out.println(x + ", " + y);
+
+                        return super.visitEntity(node);
+                     }
+
+                     @Override
+                     <T> T visitRelation(Node node) {
+                        return super.visitRelation(node);
+                     }
+
+                     @Override
+                     <T> T visitProperty(Node node) {
+                        return super.visitProperty(node);
+                     }
+                  }.visit(node);
+
+                  SwingUtilities.invokeLater(canvas::repaint);
+               }
+            });
+
 
             pop.add(new NeoEditor.TransactionAction("Add Entities", editor) {
                @Override
@@ -615,6 +686,13 @@ public class MetaDomainImpl extends MetaDomain {
             outgoing(node, Relations.SRC).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Relation));
             editor.showAndLayout(pNodes, pNode);
          }
+
+         @Override
+         public void showDependents() {
+            final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+            incoming(node, Relations.DST).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Relation));
+            editor.showAndLayout(pNodes, pNode);
+         }
       };
    }
 
@@ -720,6 +798,13 @@ public class MetaDomainImpl extends MetaDomain {
             final Map<UUID, Label> pNodes = new LinkedHashMap<>();
             outgoing(node, Relations.DST).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Entity));
             outgoing(node, Relations.PROPERTY).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Property));
+            editor.showAndLayout(pNodes, pNode);
+         }
+
+         @Override
+         public void showDependents() {
+            final Map<UUID, Label> pNodes = new LinkedHashMap<>();
+            incoming(node, Relations.SRC).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.Entity));
             editor.showAndLayout(pNodes, pNode);
          }
       };

@@ -107,6 +107,7 @@ public abstract class ~domainName~Domain implements IDomain {
          this.nodeType = nodeType;
          pNode.setTextPaint(this.defaultColor);
          pNode.setFont(new Font("Hack", Font.BOLD, 12));
+         updateView();
       }
 
       @Override
@@ -250,17 +251,6 @@ protected static class ~name;format="capitalize"~PNode extends ~domainName~Domai
 		~properties:{it|pop.add(editor.newSetNodePropertyAction(~domainName~Domain.Properties.~it.name~.name(), this));};separator="\n"~
 		~outgoing:{it|pop.add(editor.newAddNodeAction(Entities.~it.dst~, Relations.~it.relation~, this, event));};separator="\n"~
 
-~outgoingWithProperties:{it|
-		for (Relationship relationship : outgoing(node, Relations.~it.relation~)) {
-            pop.add(new NeoEditor.TransactionAction("Edit " + relationship.getType() + "' -> '" + NeoModel.getNameOrLabelFrom(other(node, relationship)) + "'", editor) {
-               @Override
-               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  show~it.name;format="capitalize"~PropertyEditor(relationship, editor, event);
-               ~eom()~
-         	~eom()~);
-         ~eom()~
-};separator="\n"~
-
 		super.showNodeActions(pop, event);
 	}
 	
@@ -336,7 +326,7 @@ protected static class ~name;format="capitalize"~PNode extends ~domainName~Domai
    @Override
    public void expand() {
       final Map<UUID, Label> pNodes = new LinkedHashMap<>();
-		~outgoing:{it|outgoing(node, Relations.~it.relation~).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.~it.dst~));};separator="\n"~
+	  ~outgoing:{it|outgoing(node, Relations.~it.relation~).forEach(relationship -> pNodes.put(uuidOf(other(node, relationship)), Entities.~it.dst~));};separator="\n"~
       editor.showAndLayout(pNodes, pNode);
    }
 		
