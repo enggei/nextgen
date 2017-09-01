@@ -276,7 +276,7 @@ public class DomainPlugin extends Plugin {
             incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final String content = StringTemplatePlugin.render(node, other(node, singleIncoming(node, Relations.INSTANCE)));
+                  final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
                   renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
                }
             }));

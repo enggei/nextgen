@@ -2271,7 +2271,7 @@ public final class Workspace extends JPanel {
                for (Relationship instanceRelation : incoming(node, DomainPlugin.Relations.INSTANCE)) {
                   final Node instanceNode = other(node, instanceRelation);
                   if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
-                     return StringTemplatePlugin.render(node, instanceNode);
+                     return StringTemplatePlugin.renderStatement(node, instanceNode);
 
                   }
                }

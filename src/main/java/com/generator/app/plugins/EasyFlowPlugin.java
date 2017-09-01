@@ -46,22 +46,18 @@ public class EasyFlowPlugin extends DomainPlugin {
       root, extending, packageName, modifier, comment, type, value
    }
 
-   private final Node domainNode;
    private final Node flowNode;
-   private final Node stateNode;
-   private final Node contextPropertyNode;
-   private final Node eventNode;
 
    public EasyFlowPlugin(App app) {
       super(app, "EasyFlow");
 
-      domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(),"EasyFlow");
+      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
 
       // use domain-node outgoing to merge here, not findOrCreate
       flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
-      stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
-      contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
-      eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
+      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
+      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
+      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
 
       relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
 
@@ -129,32 +125,27 @@ public class EasyFlowPlugin extends DomainPlugin {
    @Override
    protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
 
-      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
+      if (hasLabel(neoNode.getNode(), Entities.Flow)) {
+         if (hasOutgoing(neoNode.getNode(), FROM)) {
+            pop.add(new App.TransactionAction("Generate Java", app) {
+               @Override
+               public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-         final Node instanceNode = other(neoNode.getNode(), instanceRelation);
+                  final String rootValue = getPropertyValue(neoNode.getNode(), root.name());
+                  final String packageNameValue = getPropertyValue(neoNode.getNode(), packageName.name());
+                  final String nameValue = getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
 
-         if (flowNode.getId() == instanceNode.getId()) {
-            if (hasOutgoing(neoNode.getNode(), FROM)) {
-               pop.add(new App.TransactionAction("Generate Java", app) {
-                  @Override
-                  public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String rootValue = getPropertyValue(neoNode.getNode(), root.name());
-                     final String packageNameValue = getPropertyValue(neoNode.getNode(), packageName.name());
-                     final String nameValue = getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
-
-                     if (rootValue == null || packageNameValue == null || nameValue == null) {
-                        SwingUtil.showMessage("Flow must have 'root', 'packageName' and 'name' to generate java-file", app);
-                        return;
-                     }
-
-                     final String javaClass = new JavaGenerator(new EasyFlowGroup()).visitFlow(neoNode.getNode());
-                     GeneratedFile.newJavaFile(rootValue, packageNameValue, nameValue).write(javaClass);
+                  if (rootValue == null || packageNameValue == null || nameValue == null) {
+                     SwingUtil.showMessage("Flow must have 'root', 'packageName' and 'name' to generate java-file", app);
+                     return;
                   }
-               });
-            }
+
+                  final String javaClass = new JavaGenerator(new EasyFlowGroup()).visitFlow(neoNode.getNode());
+                  GeneratedFile.newJavaFile(rootValue, packageNameValue, nameValue).write(javaClass);
+               }
+            });
          }
-      });
+      }
    }
 
    private final class JavaGenerator {
