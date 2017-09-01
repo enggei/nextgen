@@ -1,6 +1,5 @@
 package com.generator.generators.html5.parser;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.junit.Test;
 
 import java.io.FileReader;
@@ -23,7 +22,7 @@ public class Tests {
             private final AtomicBoolean inDfn = new AtomicBoolean(false);
 
             @Override
-            public Object visitHtmlTagName(@NotNull HTMLParser.HtmlTagNameContext ctx) {
+            public Object visitHtmlTagName(HTMLParser.HtmlTagNameContext ctx) {
 
                 if (ctx.TAG_NAME().toString().equals("dfn")) {
                     inDfn.set(true);
@@ -33,7 +32,7 @@ public class Tests {
             }
 
             @Override
-            public Object visitHtmlAttributeValue(@NotNull HTMLParser.HtmlAttributeValueContext ctx) {
+            public Object visitHtmlAttributeValue(HTMLParser.HtmlAttributeValueContext ctx) {
 
                 if (inDfn.get()) {
                     System.out.println(ctx.ATTVALUE_VALUE().toString().trim());
@@ -43,7 +42,7 @@ public class Tests {
             }
 
             @Override
-            public Object visitHtmlContent(@NotNull HTMLParser.HtmlContentContext ctx) {
+            public Object visitHtmlContent(HTMLParser.HtmlContentContext ctx) {
 
                 if (inDfn.get()) {
                     System.out.println(ctx.getText().trim());

@@ -39,28 +39,28 @@ class NodeDetailPanel extends JPanel {
 
       add(content, BorderLayout.CENTER);
 
-      app.events.addPropertyChangeListener(GRAPH_NEW,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
+      app.events.addPropertyChangeListener(GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
          protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addPropertyChangeListener(AppEvents.NODES_CLOSED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
+      app.events.addPropertyChangeListener(AppEvents.NODES_CLOSED, new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
          protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addPropertyChangeListener(NODES_SELECTED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
+      app.events.addPropertyChangeListener(NODES_SELECTED, new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
          protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addPropertyChangeListener(NODE_HIGHLIGHTED,evt -> {
+      app.events.addPropertyChangeListener(NODE_HIGHLIGHTED, evt -> {
          labelsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
          propertiesPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
          nodeRelationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
@@ -68,25 +68,25 @@ class NodeDetailPanel extends JPanel {
             relationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
       });
 
-      app.events.addPropertyChangeListener(NODES_DELETED,evt -> {
+      app.events.addPropertyChangeListener(NODES_DELETED, evt -> {
          labelsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
          propertiesPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
          nodeRelationsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
       });
 
-      app.events.addPropertyChangeListener(RELATIONS_SELECTED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
+      app.events.addPropertyChangeListener(RELATIONS_SELECTED, new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
          protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addPropertyChangeListener(RELATIONS_DELETED,evt -> {
+      app.events.addPropertyChangeListener(RELATIONS_DELETED, evt -> {
          if (relationsPanel != null)
             relationsPanel.onRelationsDeleted((Set<Long>) evt.getNewValue());
       });
 
-      app.events.addPropertyChangeListener(RELATION_HIGHLIGHTED,evt -> {
+      app.events.addPropertyChangeListener(RELATION_HIGHLIGHTED, evt -> {
          nodeRelationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
          if (relationsPanel != null)
             relationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
@@ -322,7 +322,7 @@ class NodeDetailPanel extends JPanel {
                final LabelTableModel.LabelElement element = content.get(rowIndex);
                if (((Boolean) aValue)) element.addLabel(columns.get(columnIndex));
                else element.removeLabel(columns.get(columnIndex));
-               app.events.firePropertyChange(NODE_CHANGED +element.node.id());
+               app.events.firePropertyChange(NODE_CHANGED + element.node.id());
                SwingUtilities.invokeLater(() -> fireTableCellUpdated(rowIndex, columnIndex));
             }
 
@@ -750,10 +750,20 @@ class NodeDetailPanel extends JPanel {
 
                int selectedRow[] = getSelectedRows();
                final Set<RelationTableModel.RelationElement> elements = new LinkedHashSet<>();
-               for (int row : selectedRow) elements.add(tableModel.getValueAt(row));
+               for (int row : selectedRow) elements.add(tableModel.getValueAt(convertRowIndexToModel(row)));
                if (elements.isEmpty()) return;
 
                final JPopupMenu pop = new JPopupMenu();
+
+               pop.add(new TransactionAction("Open nodes", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
+                     for (RelationTableModel.RelationElement element : elements)
+                        nodes.add(new NodeLoadEvent(element.relationship.getEndNode()));
+                     app.events.firePropertyChange(NODE_LOAD, nodes);
+                  }
+               });
 
                pop.add(new TransactionAction("Delete", app) {
                   @Override
@@ -797,7 +807,7 @@ class NodeDetailPanel extends JPanel {
                      SwingUtilities.invokeLater(() -> {
                         int selectedRow[] = getSelectedRows();
                         final Set<RelationTableModel.RelationElement> elements = new LinkedHashSet<>();
-                        for (int row : selectedRow) elements.add(tableModel.getValueAt(row));
+                        for (int row : selectedRow) elements.add(tableModel.getValueAt(convertRowIndexToModel(row)));
                         if (elements.isEmpty()) return;
 
                         if (SwingUtil.showConfirmDialog(app, "Delete relation" + (elements.size() == 1 ? "" : "s") + " ?")) {

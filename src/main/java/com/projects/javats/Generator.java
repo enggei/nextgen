@@ -10,10 +10,11 @@ import java.io.File;
 
 /**
  * Created 10.05.17.
+ * todo turn this into an editor
  */
 public class Generator {
 
-   private final File webroot = new File("/home/goe/udc/transfer-service-java/src/main/web");
+   private final File webroot = new File("/home/goe/projects/nextgen/src/test/web");
 
    private final DurandalDomainGroup durandal = new DurandalDomainGroup();
    private final Html5DomainGroup html = new Html5DomainGroup();
@@ -31,13 +32,13 @@ public class Generator {
             setContent(html.newdiv().setClass("page-headers").
                   setContent(
                         html.newh2().
-                              setContent("Monitor").toString() +
+                              setContent("Monitor") + "\n" +
                               html.newdiv().setContent(
                                     html.newul().setContent(
                                           html.newbutton().
                                                 setClass("btn btn-primary").
                                                 setDatabind("click: createtorrent").
-                                                setContent("Create torrent"))) + "" +html.newinput()));
+                                                setContent("Create torrent"))) + "" + html.newinput()));
 
       final DurandalDomainGroup.modelST monitor = durandal.newmodel().setName("Monitor");
       monitor.addStatementsValue("self.eb = new EventBus(utils.getHost(\"eventbus/\"), null, {debug: true})");

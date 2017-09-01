@@ -354,20 +354,18 @@ public class DomainPlugin extends Plugin {
 
                   for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
 
-                     final boolean isProperty = hasLabel(dstNode, Entities.Property) && hasLabel(selectedNode.getNode(), Entities.Value);
-                     final boolean isEntity = hasLabel(selectedNode.getNode(), dstType);
+//                     final boolean isProperty = hasLabel(dstNode, Entities.Property) && hasLabel(selectedNode.getNode(), Entities.Value);
 
                      if (!isRelated(node, selectedNode.getNode(), RelationshipType.withName(parameterName))) {
-                        if (isProperty) {
-                           final Map<String, Set<Node>> map = groupAssign.get(parameterName);
-                           map.computeIfAbsent(Entities.Property.name(), k -> new LinkedHashSet<>());
-                           map.get(Entities.Property.name()).add(selectedNode.getNode());
-                        }
 
-                        if (isEntity) {
+                        if (hasLabel(selectedNode.getNode(), dstType)) {
                            final Map<String, Set<Node>> map = groupAssign.get(parameterName);
                            map.computeIfAbsent(Entities.Entity.name(), k -> new LinkedHashSet<>());
                            map.get(Entities.Entity.name()).add(selectedNode.getNode());
+                        } else if (hasLabel(dstNode, Entities.Property)) {
+                           final Map<String, Set<Node>> map = groupAssign.get(parameterName);
+                           map.computeIfAbsent(Entities.Property.name(), k -> new LinkedHashSet<>());
+                           map.get(Entities.Property.name()).add(selectedNode.getNode());
                         }
                      }
                   }

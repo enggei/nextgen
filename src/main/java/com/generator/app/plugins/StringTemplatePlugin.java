@@ -339,7 +339,8 @@ public class StringTemplatePlugin extends DomainPlugin {
 
             outgoing(node, RelationshipType.withName(parameterName)).forEach(listRelation -> {
                final Node other = other(node, listRelation);
-               if (hasLabel(dstNode, DomainPlugin.Entities.Property) && hasLabel(other, DomainPlugin.Entities.Value)) {
+//               if (hasLabel(dstNode, DomainPlugin.Entities.Property) && hasLabel(other, DomainPlugin.Entities.Value)) {
+               if (hasLabel(dstNode, DomainPlugin.Entities.Property)) {
                   renderNode(template, relationNode, parameterName, other);
                } else if (hasLabel(dstNode, DomainPlugin.Entities.Entity) && !hasLabel(other, DomainPlugin.Entities.Value)) {
                   renderNode(template, relationNode, parameterName, other);
