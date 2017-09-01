@@ -66,7 +66,7 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
                 public void call(ExecutionError error, StatefulContext context) {
                     log.info("ERROR");
                     if (listener != null) listener.onError(error, context);
-                    onERROR(error,context);
+                    onERROR(error, (~name~Context) context);
                     }
                 });
     }
@@ -82,7 +82,7 @@ public abstract class ~name~ ~if(extends)~extends ~extends~ ~endif~{
 
     ~bindings:{it|~it.impl~};separator="\n"~
 
-    protected abstract void onERROR(final ExecutionError error, final StatefulContext context);
+    protected abstract void onERROR(final ExecutionError error, final ~name~Context context);
 }
 >>
 

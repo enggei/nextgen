@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.app.plugins.DomainPlugin;
 import org.neo4j.graphdb.*;
 
 import java.awt.geom.Point2D;
@@ -15,26 +16,26 @@ import static com.generator.editors.BaseDomainVisitor.outgoing;
 /**
  * Created 18.07.17.
  */
-final class AppMotif {
+public final class AppMotif {
 
    enum Entities implements Label {
-      _Layout, _Color, _RegexpPattern
+      _Layout, _Color, _RegexpPattern, _Motif
    }
 
    enum Relations implements RelationshipType {
       _LAYOUT_MEMBER
    }
 
-   enum Properties {
-      name, _color, _lastLayout, _x, _y
+   public enum Properties {
+      name, _color, _lastLayout, x, y
    }
 
    enum RelationPaintStrategy {
-      showLines, showLinesAndLabels, showNothing
+      showLines, showLinesAndLabels, showNothing, showLinesAndProperties
    }
 
    enum NodePaintStrategy {
-      showNameAndLabels, showName, showLabels
+      showNameAndLabels, showName, showLabels, showProperties, showValues
    }
 
    enum RelationPathStrategy {
@@ -45,6 +46,10 @@ final class AppMotif {
       all, hasValue
    }
 
+   enum LayoutDirection {
+      left, right
+   }
+
    static void saveLayout(Node layoutNode, Set<Workspace.NodeCanvas.NeoNode> nodes) {
 
       outgoing(layoutNode).forEach(Relationship::delete);
@@ -52,8 +57,8 @@ final class AppMotif {
       for (Workspace.NodeCanvas.NeoNode neoNode : nodes) {
          final Relationship layoutMembership = layoutNode.createRelationshipTo(neoNode.getNode(), AppMotif.Relations._LAYOUT_MEMBER);
          final Rectangle2D rectangle2D = neoNode.getFullBoundsReference().getBounds2D();
-         layoutMembership.setProperty(AppMotif.Properties._x.name(), rectangle2D.getX());
-         layoutMembership.setProperty(AppMotif.Properties._y.name(), rectangle2D.getY());
+         layoutMembership.setProperty(AppMotif.Properties.x.name(), rectangle2D.getX());
+         layoutMembership.setProperty(AppMotif.Properties.y.name(), rectangle2D.getY());
       }
    }
 
@@ -69,8 +74,8 @@ final class AppMotif {
    static Set<AppEvents.NodeLoadEvent> getLayoutNodes(Node layoutNode) {
       final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
       outgoing(layoutNode, AppMotif.Relations._LAYOUT_MEMBER).forEach(relationship -> {
-         final Double x = Double.valueOf(relationship.getProperty(AppMotif.Properties._x.name()).toString());
-         final Double y = Double.valueOf(relationship.getProperty(AppMotif.Properties._y.name()).toString());
+         final Double x = Double.valueOf(relationship.getProperty(AppMotif.Properties.x.name()).toString());
+         final Double y = Double.valueOf(relationship.getProperty(AppMotif.Properties.y.name()).toString());
          nodes.add(new AppEvents.NodeLoadEvent(other(layoutNode, relationship), new Point2D.Double(x, y)));
       });
       return nodes;
@@ -80,23 +85,18 @@ final class AppMotif {
       return app.model.graph().getAll(AppMotif.Entities._Layout.name());
    }
 
-   static void deleteLayout(Node layoutNode) {
-      outgoing(layoutNode, AppMotif.Relations._LAYOUT_MEMBER).forEach(Relationship::delete);
-      layoutNode.delete();
-   }
+   public static void tryToDeleteValueNode(Node oldValueNode) {
 
-   static void tryToDeleteValueNode(Node oldValueNode) {
+      final AtomicBoolean notInUse = new AtomicBoolean(true);
 
-      // if oldValueNode is only used by node, delete this as well
-      final AtomicBoolean isOnlyUsedByNode = new AtomicBoolean(true);
-
+      // if there are not any nodes (except LAYOUT and INSTANCES) linked to this node, delete it
       incoming(oldValueNode).forEach(valueNodeDependency -> {
-         if (AppMotif.Relations._LAYOUT_MEMBER.name().equals(valueNodeDependency.getType().name()))
-            return;
-         isOnlyUsedByNode.set(false);
+         if (AppMotif.Relations._LAYOUT_MEMBER.name().equals(valueNodeDependency.getType().name())) return;
+         if (DomainPlugin.Relations.INSTANCE.name().equals(valueNodeDependency.getType().name())) return;
+         notInUse.set(false);
       });
 
-      if (isOnlyUsedByNode.get()) {
+      if (notInUse.get()) {
          incoming(oldValueNode).forEach(Relationship::delete);
          outgoing(oldValueNode).forEach(Relationship::delete);
          oldValueNode.delete();

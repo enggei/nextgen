@@ -2,10 +2,8 @@ package com.generator.app;
 
 import com.generator.editors.NeoModel;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
 
 import javax.swing.*;
@@ -14,12 +12,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
+import static com.generator.app.AppEvents.*;
 import static com.generator.editors.BaseDomainVisitor.*;
 
 /**
@@ -29,6 +26,9 @@ final class InformationPanel extends JPanel {
 
    private final App app;
    private final JTree informationTree;
+   private LabelsNode labels;
+   private InformationNode layouts;
+   private RelationsNode relationships;
 
    InformationPanel(App app) {
       super(new BorderLayout());
@@ -64,50 +64,91 @@ final class InformationPanel extends JPanel {
       }};
       add(new JScrollPane(informationTree), BorderLayout.CENTER);
 
-      app.events.addGraphNewListener(evt -> loadGraph(informationTree, (NeoModel) evt.getNewValue()));
+      app.events.addPropertyChangeListener(GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(getClass(), InformationPanel.this, app) {
 
-      app.events.addNodesDeletedListener(evt -> {
+         @Override
+         protected void propertyChange(Object oldValue, Object newValue) {
+            loadGraph(informationTree);
+         }
+      });
+
+      app.events.addPropertyChangeListener(NODES_DELETED, evt -> {
          final Set<Long> nodesDeleted = (Set<Long>) evt.getNewValue();
          final DefaultTreeModel model = (DefaultTreeModel) (informationTree.getModel());
          final InformationNode root = (InformationNode) model.getRoot();
          SwingUtilities.invokeLater(() -> root.handleNodesDeleted(nodesDeleted));
       });
+
+      app.events.addPropertyChangeListener(LABELS_ASSIGNED, new AppEvents.TransactionalPropertyChangeListener<Object, Set<LabelEntry>>(getClass(), app, app) {
+         @Override
+         protected void propertyChange(Object oldValue, Set<LabelEntry> nodes) {
+            for (LabelEntry labelEntry : nodes) {
+               final AtomicBoolean found = new AtomicBoolean(false);
+               for (int i = 0; i < labels.getChildCount(); i++) {
+                  if (!(labels.getChildAt(i) instanceof InformationNode)) continue;
+                  final InformationNode informationNode = (InformationNode) labels.getChildAt(i);
+                  if (informationNode.label.equals(labelEntry.label().name())) {
+                     found.set(true);
+                     break;
+                  }
+               }
+
+               if (!found.get()) labels.addChildNode(new LabelNode(labelEntry.label()), labels, informationTree);
+            }
+         }
+      });
+
+      app.events.addPropertyChangeListener(NODES_ADDED, new AppEvents.TransactionalPropertyChangeListener<Object, Set<Node>>(getClass(), app, app) {
+         @Override
+         protected void propertyChange(Object oldValue, Set<Node> nodes) {
+            for (Node node : nodes) {
+               if (hasLabel(node, AppMotif.Entities._Layout))
+                  layouts.addChildNode(new LayoutNode(node), layouts, informationTree);
+            }
+         }
+      });
+
+      app.events.addPropertyChangeListener(RELATIONS_ADDED, new AppEvents.TransactionalPropertyChangeListener<Object, Set<Relationship>>(getClass(), app, app) {
+
+         @Override
+         protected void propertyChange(Object oldValue, Set<Relationship> relations) {
+            for (Relationship relationship : relations) {
+               final AtomicBoolean found = new AtomicBoolean(false);
+               for (int i = 0; i < relationships.getChildCount(); i++) {
+                  if (!(relationships.getChildAt(i) instanceof RelationshipTypeNode)) continue;
+                  final RelationshipTypeNode informationNode = (RelationshipTypeNode) relationships.getChildAt(i);
+                  if (informationNode.label.equals(relationship.getType().name())) {
+                     found.set(true);
+                     break;
+                  }
+               }
+
+               if (!found.get())
+                  relationships.addChildNode(new RelationshipTypeNode(relationship.getType()), relationships, informationTree);
+            }
+         }
+      });
    }
 
-   private void loadGraph(JTree informationTree, NeoModel graph) {
+   private void loadGraph(JTree informationTree) {
       app.model.graph().doInTransaction(new NeoModel.Committer() {
 
          @Override
          public void doAction(Transaction tx) throws Throwable {
             setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            final InformationNode root = new DatabaseNode(graph);
+            final InformationNode root = new DatabaseNode();
 
-            final InformationNode labels = new InformationNode("Labels");
+            labels = new LabelsNode();
             root.add(labels);
-            app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> labels.add(new LabelNode(label)));
+            final Set<String> sorted = new TreeSet<>();
+            app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> sorted.add(label.name()));
+            for (String label : sorted) labels.add(new LabelNode(Label.label(label)));
 
-            app.events.addLabelsAssignedListener(new AppEvents.EventsTransactionHandler<Set<LabelEntry>>(getClass(), app, app.model) {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  for (LabelEntry labelEntry : getValue()) {
-                     final AtomicBoolean found = new AtomicBoolean(false);
-                     for (int i = 0; i < labels.getChildCount(); i++) {
-                        if (!(labels.getChildAt(i) instanceof InformationNode)) continue;
-                        final InformationNode informationNode = (InformationNode) labels.getChildAt(i);
-                        if (informationNode.label.equals(labelEntry.label().name())) {
-                           found.set(true);
-                           break;
-                        }
-                     }
-
-                     if (!found.get()) labels.addChildNode(new LabelNode(labelEntry.label()), labels, informationTree);
-                  }
-               }
-            });
-
-            final InformationNode relationships = new InformationNode("Relationships");
+            relationships = new RelationsNode();
             root.add(relationships);
-            app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(new RelationshipTypeNode(relationshipType)));
+            final Set<String> sortedRelations = new TreeSet<>();
+            app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> sortedRelations.add(relationshipType.name()));
+            for (String sortedRelation : sortedRelations) relationships.add(new RelationshipTypeNode(RelationshipType.withName(sortedRelation)));
 
             final PropertyNode propertyNodes = new PropertyNode("Properties");
             root.add(propertyNodes);
@@ -123,101 +164,9 @@ final class InformationPanel extends JPanel {
             for (String indexName : app.model.graph().getGraphDb().index().relationshipIndexNames())
                relationIndices.add(new RelationshipIndexNode(indexName));
 
-            final InformationNode layouts = new InformationNode("Layouts");
+            layouts = new InformationNode("Layouts");
             root.add(layouts);
-
-            app.events.addNodesAddedListener(new AppEvents.EventsTransactionHandler<Set<Node>>(getClass(), app, app.model) {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  for (Node node : getValue()) {
-                     if (hasLabel(node, AppMotif.Entities._Layout))
-                        layouts.addChildNode(new LayoutNode(node), layouts, informationTree);
-                  }
-               }
-            });
-
             app.model.graph().findNodes(AppMotif.Entities._Layout).forEachRemaining(node -> layouts.add(new LayoutNode(node)));
-
-            final InformationNode domains = new InformationNode("Domains") {
-               @Override
-               void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-                  pop.add(new App.TransactionAction("New", app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                        final String name = SwingUtil.showInputDialog("Domain name", InformationPanel.this);
-                        if (name == null || name.length() == 0) return;
-
-                        final Node existing = app.model.graph().getGraphDb().findNode(TemplateMotif.Entities._Domain, AppMotif.Properties.name.name(), name);
-                        if (existing != null) {
-                           SwingUtil.showMessage(name + " already exists", InformationPanel.this);
-                           return;
-                        }
-
-                        final Node newNode = app.model.graph().newNode(TemplateMotif.Entities._Domain.name(), AppMotif.Properties.name.name(), name);
-                        addChildNode(new DomainNode(newNode), selectionPath, source);
-                        app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(newNode));
-                     }
-                  });
-               }
-            };
-            root.add(domains);
-            app.model.graph().findNodes(TemplateMotif.Entities._Domain).forEachRemaining(node -> domains.add(new DomainNode(node)));
-
-            final InformationNode templates = new InformationNode("Templates") {
-               @Override
-               void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-                  pop.add(new App.TransactionAction("New TemplateGroup", app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                        final String name = SwingUtil.showInputDialog("Group name", InformationPanel.this);
-                        if (name == null || name.length() == 0) return;
-
-                        final Node existing = app.model.graph().getGraphDb().findNode(TemplateMotif.Entities._STGroup, AppMotif.Properties.name.name(), name);
-                        if (existing != null) {
-                           SwingUtil.showMessage(name + " already exists", InformationPanel.this);
-                           return;
-                        }
-
-                        final Node newNode = app.model.graph().newNode(TemplateMotif.Entities._STGroup.name(), AppMotif.Properties.name.name(), name);
-                        addChildNode(new STTGemplateNode(newNode), selectionPath, source);
-                        app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(newNode));
-                     }
-                  });
-               }
-            };
-            root.add(templates);
-
-            app.model.graph().findNodes(TemplateMotif.Entities._STGroup).forEachRemaining(node -> templates.add(new STTGemplateNode(node)));
-
-            final InformationNode directories = new InformationNode("Directories") {
-               @Override
-               void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-                  pop.add(new App.TransactionAction("Add Directory", app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                        final File dir = SwingUtil.showOpenDir(app, app.model.getCurrentDatabaseDir());
-                        if (dir == null) return;
-
-                        final Node newNode = app.model.graph().newNode(ProjectMotif.Entities._Directory.name(), AppMotif.Properties.name.name(), dir.getName(), ProjectMotif.Properties._path.name(), dir.getPath());
-                        addChildNode(new DirectoryNode(newNode), selectionPath, source);
-                        app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(newNode));
-                     }
-                  });
-               }
-            };
-            app.model.graph().findNodes(ProjectMotif.Entities._Directory).forEachRemaining(node -> directories.add(new DirectoryNode(node)));
-
-            app.events.addNodesAddedListener(new AppEvents.EventsTransactionHandler<Set<Node>>(getClass(), app, app.model) {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  for (Node node : getValue()) {
-                     if (hasLabel(node, ProjectMotif.Entities._Directory))
-                        layouts.addChildNode(new DirectoryNode(node), layouts, informationTree);
-                  }
-               }
-            });
-
-            root.add(directories);
 
             informationTree.setModel(new DefaultTreeModel(root));
             setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -246,13 +195,6 @@ final class InformationPanel extends JPanel {
 
       }
 
-      void addChildNode(InformationNode treeNode, TreePath selectionPath, JTree source) {
-         final MutableTreeNode currentNode = (MutableTreeNode) selectionPath.getLastPathComponent();
-         final DefaultTreeModel dm = (DefaultTreeModel) source.getModel();
-         dm.insertNodeInto(treeNode, currentNode, currentNode.getChildCount());
-         source.expandPath(new TreePath(dm.getPathToRoot(treeNode.getParent())));
-      }
-
       void addChildNode(InformationNode treeNode, MutableTreeNode currentNode, JTree source) {
          final DefaultTreeModel dm = (DefaultTreeModel) source.getModel();
          dm.insertNodeInto(treeNode, currentNode, currentNode.getChildCount());
@@ -274,14 +216,14 @@ final class InformationPanel extends JPanel {
 
    private final class DatabaseNode extends InformationNode {
 
-      DatabaseNode(NeoModel graph) {
+      DatabaseNode() {
          super("Database");
-         setUserObject(graph);
+         setUserObject("Database");
       }
 
       @Override
       void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-         pop.add(new App.TransactionAction("Get all disconnected nodes", app) {
+         pop.add(new App.TransactionAction("Show all disconnected nodes", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
@@ -289,14 +231,131 @@ final class InformationPanel extends JPanel {
                   if (node.getRelationships().iterator().hasNext()) return;
                   nodes.add(new AppEvents.NodeLoadEvent(node));
                }));
-               app.events.fireNodeLoad(nodes);
+               app.events.firePropertyChange(NODE_LOAD, nodes);
+            }
+         });
+
+         pop.add(new App.TransactionAction("Show all distinct motifs", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               // todo: move this to neoModel
+               final Map<Label, Motif> structureMap = new LinkedHashMap<>();
+
+               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
+                  final Motif structure = structureMap.computeIfAbsent(label, Motif::new);
+                  outgoing(node).forEach(relationship -> {
+                     final Node dstNode = other(node, relationship);
+                     for (Label dstLabel : dstNode.getLabels()) {
+                        structure.dst.add(dstLabel);
+                        final Set<RelationshipType> typeSet = structure.relationTypes.computeIfAbsent(dstLabel, k -> new LinkedHashSet<>());
+                        typeSet.add(relationship.getType());
+                     }
+                  });
+               }));
+
+               final StringBuilder out = new StringBuilder(structureMap.size() + " unique motifs:\n\n");
+               for (Map.Entry<Label, Motif> structureEntry : structureMap.entrySet())
+                  out.append(structureEntry.getValue());
+               SwingUtil.showTextResult("Structures", out.toString(), app);
+            }
+
+            final class Motif {
+
+               private final Label src;
+               private final Set<Label> dst = new LinkedHashSet<>();
+               private Map<Label, Set<RelationshipType>> relationTypes = new LinkedHashMap<>();
+
+               Motif(Label src) {
+                  this.src = src;
+               }
+
+               @Override
+               public String toString() {
+                  final StringBuilder out = new StringBuilder();
+                  for (Label dstLabel : dst) {
+                     final Set<RelationshipType> types = relationTypes.get(dstLabel);
+                     for (RelationshipType type : types) {
+                        out.append(src).append(" -> [").append(type).append("] -> ").append(dstLabel).append("\n");
+                        out.append("(").append(src).append(")").append("(a)-[r:TYPE1|TYPE2]->(b)").append(dstLabel).append("\n");
+                     }
+                  }
+                  if (dst.isEmpty()) out.append(src);
+                  out.append("\n");
+                  return out.toString();
+               }
+            }
+
+         });
+      }
+   }
+
+   private class LabelsNode extends InformationNode {
+      LabelsNode() {
+         super("Labels");
+      }
+
+      @Override
+      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
+
+         pop.add(new App.TransactionAction("Change Labels", app) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final Set<String> existing = new TreeSet<>();
+               final Set<String> replacements = new TreeSet<>();
+               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+                  existing.add(label.name());
+                  replacements.add(label.name());
+               });
+
+               final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+               final JComboBox<String> cboReplacements = new JComboBox<>(replacements.toArray(new String[replacements.size()]));
+               final JTextField txtNewLabel = new JTextField();
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref");
+               editor.addLabel("Existing", 1, 1);
+               editor.add(cboExisting, 3, 1);
+               editor.addLabel("Replacement", 1, 3);
+               editor.add(cboReplacements, 3, 3);
+               editor.addLabel("New Label", 1, 5);
+               editor.add(txtNewLabel, 3, 5);
+               editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.OnSave() {
+                  @Override
+                  public void verifyAndSave() throws Exception {
+
+                     final Label toBeReplaced = Label.label((String) cboExisting.getSelectedItem());
+                     final Label replacement = Label.label(txtNewLabel.getText().trim().length() == 0 ? (String) cboReplacements.getSelectedItem() : txtNewLabel.getText().trim());
+                     if (toBeReplaced.name().equals(replacement.name())) return;
+
+                     app.model.graph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           final Set<Long> updatedNodes = new LinkedHashSet<>();
+                           app.model.graph().findNodes(toBeReplaced).forEachRemaining(node -> {
+                              node.removeLabel(toBeReplaced);
+                              node.addLabel(replacement);
+                              updatedNodes.add(node.getId());
+                           });
+                           app.events.firePropertyChange(NODE_CHANGED + updatedNodes);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
             }
          });
       }
    }
 
    private final class LabelNode extends InformationNode {
-      LabelNode(org.neo4j.graphdb.Label label) {
+      LabelNode(Label label) {
          super(label.name());
          setUserObject(label);
       }
@@ -307,32 +366,90 @@ final class InformationPanel extends JPanel {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-               app.model.graph().findNodes(((org.neo4j.graphdb.Label) getUserObject())).forEachRemaining(node -> nodes.add(new AppEvents.NodeLoadEvent(node)));
-               app.events.fireNodeLoad(nodes);
+               app.model.graph().findNodes(((Label) getUserObject())).forEachRemaining(node -> nodes.add(new AppEvents.NodeLoadEvent(node)));
+               app.events.firePropertyChange(NODE_LOAD, nodes);
             }
          });
 
          pop.add(new App.TransactionAction("New", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(app.model.graph().newNode((org.neo4j.graphdb.Label) getUserObject())));
+               app.events.firePropertyChange(NODE_LOAD, new AppEvents.NodeLoadEvent(app.model.graph().newNode((Label) getUserObject())));
+            }
+         });
+
+         pop.add(new App.TransactionAction("Change", app) {
+            @Override
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final Set<String> replacements = new TreeSet<>();
+               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+                  replacements.add(label.name());
+               });
+
+               final JComboBox<String> cboReplacements = new JComboBox<>(replacements.toArray(new String[replacements.size()]));
+               final JTextField txtNewLabel = new JTextField();
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+               editor.addLabel("Replacement", 1, 1);
+               editor.add(cboReplacements, 3, 1);
+               editor.addLabel("New Label", 1, 3);
+               editor.add(txtNewLabel, 3, 3);
+               editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.OnSave() {
+                  @Override
+                  public void verifyAndSave() throws Exception {
+
+                     final Label toBeReplaced = (Label) getUserObject();
+                     final Label replacement = Label.label(txtNewLabel.getText().trim().length() == 0 ? (String) cboReplacements.getSelectedItem() : txtNewLabel.getText().trim());
+
+                     app.model.graph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           final Set<Long> updatedNodes = new LinkedHashSet<>();
+                           app.model.graph().findNodes(toBeReplaced).forEachRemaining(node -> {
+                              node.removeLabel(toBeReplaced);
+                              node.addLabel(replacement);
+                              updatedNodes.add(node.getId());
+                           });
+
+                           for (Long node : updatedNodes)
+                              app.events.firePropertyChange(NODE_CHANGED + node, null, node);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
             }
          });
 
          pop.add(new App.TransactionAction("Set color", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               Node colorNode = app.model.graph().getGraphDb().findNode(AppMotif.Entities._Color, "label", ((org.neo4j.graphdb.Label) getUserObject()).name());
+               Node colorNode = app.model.graph().getGraphDb().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
                if (colorNode == null)
-                  colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((org.neo4j.graphdb.Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
+                  colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
                final String color = SwingUtil.showInputDialog("Color", InformationPanel.this, getString(colorNode, AppMotif.Properties._color.name()));
                if (color == null) return;
                colorNode.setProperty(AppMotif.Properties._color.name(), color);
                // old, just run to clean up
-               app.model.graph().findNodes(((org.neo4j.graphdb.Label) getUserObject())).forEachRemaining(node -> node.removeProperty(AppMotif.Properties._color.name()));
-               app.events.fireNodeColorChanged(((org.neo4j.graphdb.Label) getUserObject()).name(), Color.decode(color));
+               app.model.graph().findNodes(((Label) getUserObject())).forEachRemaining(node -> node.removeProperty(AppMotif.Properties._color.name()));
+               app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), Color.decode(color));
             }
          });
+      }
+   }
+
+   private class RelationsNode extends InformationNode {
+
+      RelationsNode() {
+         super("Relationships");
+
       }
    }
 
@@ -347,12 +464,14 @@ final class InformationPanel extends JPanel {
          pop.add(new App.TransactionAction("Show all", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
+               final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
                final String existingType = ((RelationshipType) getUserObject()).name();
                app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
                   if (!relationship.getType().name().equals(existingType)) return;
-                  app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(relationship.getStartNode()));
-                  app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(relationship.getEndNode()));
+                  nodes.add(new AppEvents.NodeLoadEvent(relationship.getStartNode()));
+                  nodes.add(new AppEvents.NodeLoadEvent(relationship.getEndNode()));
                });
+               app.events.firePropertyChange(NODE_LOAD, nodes);
             }
          });
 
@@ -394,7 +513,7 @@ final class InformationPanel extends JPanel {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
                for (Node node : app.model.graph().findNodesWithProperty(property))
                   nodes.add(new AppEvents.NodeLoadEvent(node));
-               app.events.fireNodeLoad(nodes);
+               app.events.firePropertyChange(NODE_LOAD, nodes);
             }
          });
 
@@ -408,6 +527,11 @@ final class InformationPanel extends JPanel {
 
                for (Node node : app.model.graph().findNodesWithProperty(existingProperty))
                   node.setProperty(newProperty, node.removeProperty(existingProperty));
+
+               app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+                  if (!relationship.hasProperty(existingProperty)) return;
+                  relationship.setProperty(newProperty, relationship.removeProperty(existingProperty));
+               });
             }
          });
       }
@@ -443,7 +567,7 @@ final class InformationPanel extends JPanel {
                   app.model.graph().doInTransaction(new NeoModel.Committer() {
                      @Override
                      public void doAction(Transaction tx) throws Throwable {
-                        app.events.fireNodeLoad(AppMotif.getLayoutNodes((Node) getUserObject()));
+                        app.events.firePropertyChange(NODE_LOAD, AppMotif.getLayoutNodes((Node) getUserObject()));
                      }
 
                      @Override
@@ -463,8 +587,7 @@ final class InformationPanel extends JPanel {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
                if (SwingUtil.showConfirmDialog(app, "Delete layout ?")) {
-                  AppMotif.deleteLayout((Node) getUserObject());
-
+                  app.model.deleteNodes(Collections.singleton((Node) getUserObject()));
                   deleted.set(true);
                }
             }
@@ -480,203 +603,5 @@ final class InformationPanel extends JPanel {
       }
    }
 
-   private final class DomainNode extends InformationNode {
-      DomainNode(Node node) {
-         super(getString(node, AppMotif.Properties.name.name()));
-         setUserObject(node);
-         outgoing(node, TemplateMotif.Relations.ENTITY).forEach(relationship -> {
-            final Node entityNode = other(node, relationship);
-            final String entityName = getString(entityNode, AppMotif.Properties.name.name());
-            add(new InformationNode(entityName) {
-               @Override
-               void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-                  pop.add(new App.TransactionAction("Show all " + entityName, app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) {
-                        final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                        app.model.graph().findNodes(org.neo4j.graphdb.Label.label(entityName)).forEachRemaining(instanceNode -> nodes.add(new AppEvents.NodeLoadEvent(instanceNode)));
-                        app.events.fireNodeLoad(nodes);
-                     }
-                  });
 
-                  pop.add(new App.TransactionAction("Delete", app) {
-
-                     private final AtomicBoolean deleted = new AtomicBoolean(false);
-
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) {
-                        if (SwingUtil.showConfirmDialog(app, "Delete '" + label + "' ?")) {
-                           entityNode.delete();
-                           deleted.set(true);
-                        }
-                     }
-
-                     @Override
-                     protected void onSuccess(ActionEvent e) {
-                        if (!deleted.get()) return;
-                        final DefaultTreeModel model = (DefaultTreeModel) (informationTree.getModel());
-                        model.removeNodeFromParent(DomainNode.this);
-                        informationTree.setSelectionPath(selectionPath.getParentPath());
-                     }
-                  });
-               }
-            });
-         });
-      }
-
-      @Override
-      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-         pop.add(new App.TransactionAction("Show", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent((Node) getUserObject()));
-            }
-         });
-
-         pop.add(new App.TransactionAction("Add Entity", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Entity name", app);
-               if (name == null || name.length() == 0) return;
-
-               final Node node = (Node) getUserObject();
-
-               final AtomicBoolean exists = new AtomicBoolean(false);
-               outgoing(node, TemplateMotif.Relations.ENTITY).forEach(relationship -> {
-                  if (name.equalsIgnoreCase(getOtherProperty(node, relationship, AppMotif.Properties.name.name()).toString()))
-                     exists.set(true);
-               });
-               if (exists.get()) {
-                  SwingUtil.showMessage(name + " already exists for domain", app);
-                  return;
-               }
-
-               final Node newNode = app.model.graph().newNode(TemplateMotif.Entities._Entity, AppMotif.Properties.name.name(), name);
-               node.createRelationshipTo(newNode, TemplateMotif.Relations.ENTITY);
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(newNode));
-            }
-         });
-
-         pop.add(new App.TransactionAction("Delete", app) {
-
-            private final AtomicBoolean deleted = new AtomicBoolean(false);
-
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) {
-               if (SwingUtil.showConfirmDialog(app, "Delete domain '" + label + "' ?")) {
-                  final Node node = (Node) getUserObject();
-                  node.delete();
-                  deleted.set(true);
-               }
-            }
-
-            @Override
-            protected void onSuccess(ActionEvent e) {
-               if (!deleted.get()) return;
-               final DefaultTreeModel model = (DefaultTreeModel) (informationTree.getModel());
-               model.removeNodeFromParent(DomainNode.this);
-               informationTree.setSelectionPath(selectionPath.getParentPath());
-            }
-         });
-      }
-   }
-
-   private final class STTGemplateNode extends InformationNode {
-
-      STTGemplateNode(Node node) {
-         super(getString(node, AppMotif.Properties.name.name()));
-         setUserObject(node);
-         outgoing(node, TemplateMotif.Relations.STTEMPLATE).forEach(relationship -> add(new STTemplateNode(other(node, relationship))));
-      }
-
-      @Override
-      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-         pop.add(new App.TransactionAction("Show Group", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent((Node) getUserObject()));
-            }
-         });
-         pop.add(new App.TransactionAction("Add template", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Template name", InformationPanel.this);
-               if (name == null || name.length() == 0) return;
-
-               final Node node = (Node) getUserObject();
-               final AtomicBoolean exists = new AtomicBoolean(false);
-               outgoing(node, TemplateMotif.Relations.ENTITY).forEach(relationship -> {
-                  if (name.equalsIgnoreCase(getOtherProperty(node, relationship, AppMotif.Properties.name.name()).toString()))
-                     exists.set(true);
-               });
-               if (exists.get()) {
-                  SwingUtil.showMessage(name + " already exists for group ", InformationPanel.this);
-                  return;
-               }
-
-               final Node newNode = app.model.graph().newNode(TemplateMotif.Entities._STTemplate, AppMotif.Properties.name.name(), name);
-               node.createRelationshipTo(newNode, TemplateMotif.Relations.STTEMPLATE);
-               addChildNode(new STTemplateNode(newNode), selectionPath, source);
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(newNode));
-            }
-         });
-      }
-   }
-
-   private final class STTemplateNode extends InformationNode {
-
-      STTemplateNode(Node node) {
-         super(getString(node, AppMotif.Properties.name.name()));
-         setUserObject(node);
-      }
-
-      @Override
-      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-         pop.add(new App.TransactionAction("Preview template", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               SwingUtil.showTextResult("Template", get((Node) getUserObject(), TemplateMotif.Properties._text.name(), ""), app);
-            }
-         });
-         pop.add(new App.TransactionAction("Show template", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent((Node) getUserObject()));
-            }
-         });
-         pop.add(new App.TransactionAction("New Instance", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final String name = SwingUtil.showInputDialog("Name", InformationPanel.this);
-               if (name == null || name.length() == 0) return;
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(TemplateMotif.newTemplateInstance(app, (Node) getUserObject(), name)));
-            }
-         });
-         pop.add(new App.TransactionAction("Show all instances", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.events.fireNodeLoad(TemplateMotif.getAllStatementsOfType(app, (Node) getUserObject()));
-            }
-         });
-      }
-   }
-
-   private final class DirectoryNode extends InformationNode {
-      DirectoryNode(Node node) {
-         super(getString(node, AppMotif.Properties.name.name()));
-         setUserObject(node);
-      }
-
-      @Override
-      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
-         pop.add(new App.TransactionAction("Show", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.events.fireNodeLoad(new AppEvents.NodeLoadEvent((Node)getUserObject()));
-            }
-         });
-      }
-   }
 }

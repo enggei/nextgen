@@ -47,7 +47,6 @@ public class GeneratedFile extends BaseEntity<TemplateEntities> {
 	}
 
 	public GeneratedFile write(Object content) throws IOException {
-		System.out.println("writing to file " + getFile().getAbsolutePath());
 		FileUtil.writeFile(content, getFile());
 		return this;
 	}

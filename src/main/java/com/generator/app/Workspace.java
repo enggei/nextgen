@@ -1,19 +1,22 @@
 package com.generator.app;
 
+import com.generator.app.plugins.DomainPlugin;
+import com.generator.app.plugins.StringTemplatePlugin;
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
-import com.generator.util.StringUtil;
+import com.generator.generators.cypher.CypherDomainGroup;
 import com.generator.util.SwingUtil;
 import com.google.common.util.concurrent.AtomicDouble;
-import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.piccolo2d.PCamera;
 import org.piccolo2d.PCanvas;
 import org.piccolo2d.PLayer;
 import org.piccolo2d.PNode;
 import org.piccolo2d.event.PBasicInputEventHandler;
 import org.piccolo2d.event.PDragSequenceEventHandler;
 import org.piccolo2d.event.PInputEvent;
-import org.piccolo2d.event.PMouseWheelZoomEventHandler;
+import org.piccolo2d.event.PInputEventFilter;
 import org.piccolo2d.nodes.PPath;
 import org.piccolo2d.nodes.PText;
 import org.piccolo2d.util.PBounds;
@@ -21,6 +24,7 @@ import org.piccolo2d.util.PBounds;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -28,21 +32,21 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
-import java.util.function.Consumer;
+import java.util.concurrent.ConcurrentHashMap;
 
+import static com.generator.app.AppEvents.*;
 import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.getNameAndLabelsFrom;
-import static com.generator.editors.NeoModel.getNameOrTypeFrom;
+import static com.generator.editors.NeoModel.*;
 
 /**
  * Created 18.07.17.
  */
-final class Workspace extends JPanel {
+public final class Workspace extends JPanel {
 
    private static final Random random = new Random(System.currentTimeMillis());
 
-   final Map<Long, NodeCanvas.NeoNode> layerNodes = new LinkedHashMap<>();
-   final Map<Long, NodeCanvas.NeoRelationship> layerRelations = new LinkedHashMap<>();
+   private final Map<Long, NodeCanvas.NeoNode> layerNodes = new LinkedHashMap<>();
+   private final Map<Long, NodeCanvas.NeoRelationship> layerRelations = new LinkedHashMap<>();
 
    private final App app;
    final NodeCanvas nodeCanvas;
@@ -62,7 +66,7 @@ final class Workspace extends JPanel {
       add(splitPane, BorderLayout.CENTER);
    }
 
-   class NodeCanvas extends PCanvas {
+   public class NodeCanvas extends PCanvas {
 
       private final Color selectedNodeColor = Color.decode("#d95f0e");
       private final Color defaultRelationColor = Color.decode("#252525");
@@ -74,6 +78,10 @@ final class Workspace extends JPanel {
       private final PLayer relationLayer = new PLayer();
       private final PLayer nodeLayer;
 
+      private final Map<Long, PropertyChangeListener> nodeChangeListeners = new ConcurrentHashMap<>();
+
+      private int currentNodeIndex = -1;
+
       NodeCanvas() {
 
          setBackground(Color.decode(app.model.getCurrentCanvasColor()));
@@ -83,7 +91,7 @@ final class Workspace extends JPanel {
 
          // install mouse wheel zoom event handler
          removeInputEventListener(getZoomEventHandler());
-         final PMouseWheelZoomEventHandler mouseWheelZoomEventHandler = new PMouseWheelZoomEventHandler();
+         final CanvasZoomHandler mouseWheelZoomEventHandler = new CanvasZoomHandler();
          mouseWheelZoomEventHandler.zoomAboutMouse();
          addInputEventListener(mouseWheelZoomEventHandler);
 
@@ -128,6 +136,75 @@ final class Workspace extends JPanel {
                   @Override
                   public void doAction(Transaction tx) throws Throwable {
 
+                     pop.add(new App.TransactionAction("New Node", app) {
+                        @Override
+                        protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                           final Set<String> existing = new TreeSet<>();
+                           app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+                              existing.add(label.name());
+                           });
+
+                           final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+                           final JTextField txtNewLabel = new JTextField();
+                           final JTextField txtSearch = new JTextField();
+
+                           final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref");
+                           editor.addLabel("Label", 1, 1);
+                           editor.add(cboExisting, 3, 1);
+                           editor.addLabel("Search", 1, 3);
+                           editor.add(txtSearch, 3, 3);
+                           editor.addLabel("New Label", 1, 5);
+                           editor.add(txtNewLabel, 3, 5);
+                           editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                           txtSearch.addKeyListener(new KeyAdapter() {
+                              @Override
+                              public void keyReleased(KeyEvent e) {
+                                 SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                       final String s = txtSearch.getText().trim().toLowerCase();
+                                       for (String lbl : existing) {
+                                          if (lbl.toLowerCase().startsWith(s)) {
+                                             cboExisting.setSelectedItem(lbl);
+                                          }
+                                       }
+                                    }
+                                 });
+                              }
+                           });
+
+                           SwingUtil.showDialog(editor, app, "New Node", new SwingUtil.OnSave() {
+                              @Override
+                              public void verifyAndSave() throws Exception {
+
+                                 final String selectedLabel = txtNewLabel.getText().trim().length() == 0 ? (String) cboExisting.getSelectedItem() : txtNewLabel.getText().trim();
+
+                                 app.model.graph().doInTransaction(new NeoModel.Committer() {
+                                    @Override
+                                    public void doAction(Transaction tx) throws Throwable {
+                                       app.events.firePropertyChange(NODE_LOAD, new AppEvents.NodeLoadEvent(app.model.graph().newNode(Label.label(selectedLabel))));
+                                    }
+
+                                    @Override
+                                    public void exception(Throwable throwable) {
+                                       SwingUtil.showExceptionNoStack(app, throwable);
+                                    }
+                                 });
+                              }
+                           });
+                        }
+                     });
+
+                     final JMenu pluginsMenu = new JMenu("Plugins");
+                     for (Plugin plugin : app.getPlugins()) {
+                        final JMenu pluginMenu = new JMenu(plugin.name);
+                        plugin.addActionsTo(pluginMenu);
+                        pluginsMenu.add(pluginMenu);
+                     }
+                     if (pluginsMenu.getMenuComponents().length > 0) pop.add(pluginsMenu);
+
                      final JMenu selectAllMenu = new JMenu("Select all..");
 
                      selectAllMenu.add(new App.TransactionAction("Nodes on canvas", app) {
@@ -142,7 +219,7 @@ final class Workspace extends JPanel {
                                     selectedNodes.add(neoNode);
                                  }
                               }
-                              app.events.fireNodesSelected(selectedNodes);
+                              app.events.firePropertyChange(NODES_SELECTED, selectedNodes);
                            });
                         }
                      });
@@ -171,7 +248,7 @@ final class Workspace extends JPanel {
                                        selectedNodes.add(neoNode);
                                     }
                                  }
-                                 app.events.fireNodesSelected(selectedNodes);
+                                 app.events.firePropertyChange(NODES_SELECTED, selectedNodes);
                               }
                            });
                         }
@@ -200,7 +277,7 @@ final class Workspace extends JPanel {
                                        }
                                     }
                                  }
-                                 app.events.fireRelationsSelected(selectedRelations);
+                                 app.events.firePropertyChange(RELATIONS_SELECTED, selectedRelations);
                               }
                            });
                         }
@@ -222,13 +299,13 @@ final class Workspace extends JPanel {
                                  for (String key : relationship.getPropertyKeys())
                                     newRelationship.setProperty(key, relationship.getProperty(key));
 
-                                 if (layerNodes.containsKey(newRelationship.getStartNode().getId()) && layerNodes.containsKey(newRelationship.getEndNode().getId())) {
-                                    final NodeCanvas.NeoNode source = layerNodes.get(newRelationship.getStartNode().getId());
-                                    final NodeCanvas.NeoNode destination = layerNodes.get(newRelationship.getEndNode().getId());
-                                    final NodeCanvas.NeoRelationship nodeRelation = new NodeCanvas.NeoRelationship(newRelationship, source, destination);
-                                    layerRelations.put(newRelationship.getId(), nodeRelation);
-                                    relationLayer.addChild(nodeRelation.path);
-                                 }
+//                                 if (layerNodes.containsKey(newRelationship.getStartNode().getId()) && layerNodes.containsKey(newRelationship.getEndNode().getId())) {
+//                                    final NodeCanvas.NeoNode source = layerNodes.get(newRelationship.getStartNode().getId());
+//                                    final NodeCanvas.NeoNode destination = layerNodes.get(newRelationship.getEndNode().getId());
+//                                    final NodeCanvas.NeoRelationship nodeRelation = new NodeCanvas.NeoRelationship(newRelationship, source, destination);
+//                                    layerRelations.put(newRelationship.getId(), nodeRelation);
+//                                    relationLayer.addChild(nodeRelation.path);
+//                                 }
                                  relationship.delete();
                               }
                            }
@@ -237,7 +314,7 @@ final class Workspace extends JPanel {
                         pop.add(new App.TransactionAction("Close selected relations", app) {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                              app.events.fireRelationsClosed(getSelectedRelations());
+                              app.events.firePropertyChange(AppEvents.RELATIONS_CLOSED, getSelectedRelations());
                            }
                         });
 
@@ -245,8 +322,10 @@ final class Workspace extends JPanel {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               if (SwingUtil.showConfirmDialog(app, "Delete " + selectedRelations.size() + " relation" + (selectedRelations.size() == 1 ? "" : "s") + " ?")) {
+                                 final Set<Relationship> relations = new LinkedHashSet<>();
                                  for (NeoRelationship selectedRelation : selectedRelations)
-                                    selectedRelation.getRelationship().delete();
+                                    relations.add(selectedRelation.getRelationship());
+                                 app.model.deleteRelations(relations);
                               }
                            }
                         });
@@ -281,7 +360,7 @@ final class Workspace extends JPanel {
                      AppMotif.getAllLayouts(app).forEach(layoutNode -> loadLayouts.add(new App.TransactionAction(getString(layoutNode, AppMotif.Properties.name.name()), app) {
                         @Override
                         protected void actionPerformed(ActionEvent e, Transaction tx1) throws Exception {
-                           app.events.fireNodeLoad(AppMotif.getLayoutNodes(layoutNode));
+                           app.events.firePropertyChange(NODE_LOAD, AppMotif.getLayoutNodes(layoutNode));
                         }
                      }));
                      pop.add(loadLayouts);
@@ -301,7 +380,7 @@ final class Workspace extends JPanel {
                         pop.add(new App.TransactionAction("Close selected nodes", app) {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                              app.events.fireNodesClosed(getSelectedNodes());
+                              app.events.firePropertyChange(NODES_CLOSED, getSelectedNodes());
                            }
                         });
 
@@ -309,16 +388,32 @@ final class Workspace extends JPanel {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               if (SwingUtil.showConfirmDialog(app, "Delete " + selectedNodes.size() + " node" + (selectedNodes.size() == 1 ? "" : "s") + " and their relations ?")) {
-
+                                 final Set<Node> nodes = new LinkedHashSet<>();
                                  for (NodeCanvas.NeoNode selectedNode : selectedNodes)
-                                    selectedNode.getNode().getRelationships().forEach(Relationship::delete);
-
-                                 for (NodeCanvas.NeoNode selectedNode : selectedNodes)
-                                    selectedNode.getNode().delete();
+                                    nodes.add(selectedNode.getNode());
+                                 app.model.deleteNodes(nodes);
                               }
                            }
                         });
                      }
+
+                     pop.add(new App.TransactionAction("Import from clipboard", app) {
+                        @Override
+                        public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                           final JTextArea textArea = new JTextArea("");
+
+                           SwingUtil.showTextInput("Cypher-import", textArea, nodeCanvas, () -> {
+                              final String query = textArea.getText().trim();
+                              if (query.length() == 0) return;
+                              final Result result = app.model.graph().query(query);
+
+                              SwingUtil.showMessage(result.resultAsString(), app);
+                           });
+                        }
+                     });
+
+
                   }
 
                   @Override
@@ -343,8 +438,8 @@ final class Workspace extends JPanel {
                         neoRelationship.unselect();
                      }
                   }
-                  app.events.fireNodesSelected(Collections.emptySet());
-                  app.events.fireRelationsSelected(Collections.emptySet());
+                  app.events.firePropertyChange(NODES_SELECTED, Collections.emptySet());
+                  app.events.firePropertyChange(RELATIONS_SELECTED, Collections.emptySet());
                });
             }
 
@@ -352,6 +447,13 @@ final class Workspace extends JPanel {
             @Override
             public void keyPressed(PInputEvent event) {
                switch (event.getKeyCode()) {
+
+                  case KeyEvent.VK_Z:
+                     SwingUtilities.invokeLater(() -> {
+                        app.undoLastTransaction();
+                     });
+                     break;
+
                   case KeyEvent.VK_A:
                      SwingUtilities.invokeLater(() -> {
                         final Set<NodeCanvas.NeoNode> selectedNodes = new LinkedHashSet<>();
@@ -362,7 +464,7 @@ final class Workspace extends JPanel {
                               selectedNodes.add(neoNode);
                            }
                         }
-                        app.events.fireNodesSelected(selectedNodes);
+                        app.events.firePropertyChange(NODES_SELECTED, selectedNodes);
                      });
                      break;
 
@@ -376,15 +478,17 @@ final class Workspace extends JPanel {
                               "N - toggle node paint\n" +
                               "L - toggle relation lines\n" +
                               "R - close all unselected nodes\n" +
+                              "W - iterate through nodes and center on screen\n" +
                               "1 - layout selected nodes vertical\n" +
                               "2 - layout selected nodes horizontal\n" +
                               "H - help" +
                               "\n\nOn mouse over node\n" +
                               "C - close node\n" +
                               "R - keep node and all selected nodes and close unselected nodes\n" +
-                              "E - expand node. Opens all outgoing relations from this node\n" +
-                              "D - Opens all incoming relations to this node\n" +
-                              "D - Opens all incoming relations to this node\n" +
+                              "E + Ctrl - Open all outgoing relations from this node\n" +
+                              "E - Select all visible outgoing nodes from this node (does not open new nodes)\n" +
+                              "D + Ctrl - Open all incoming relations to this node\n" +
+                              "D - Select all visible incoming nodes to this node (does not open new nodes)\n" +
                               "1 - layout outgoing nodes and relations in a horizontal-tree structure\n" +
                               "";
 
@@ -393,27 +497,219 @@ final class Workspace extends JPanel {
                      });
                      break;
 
-                  case KeyEvent.VK_E:
-                     SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
+                  case KeyEvent.VK_W:
+                     SwingUtilities.invokeLater(() -> {
+                        final Set<NeoNode> nodes = nodeCanvas.getAllNodes();
+                        if (nodes.isEmpty()) return;
+
+                        currentNodeIndex = currentNodeIndex == -1 ? 0 : currentNodeIndex;
+
+                        int index = 0;
+                        final Iterator<NeoNode> nodeIterator = nodes.iterator();
+                        NeoNode nodeToCenter = null;
+                        while (nodeIterator.hasNext()) {
+                           final NeoNode next = nodeIterator.next();
+                           if (index < currentNodeIndex) {
+                              index++;
+                              continue;
+                           }
+                           nodeToCenter = next;
+                           currentNodeIndex += 1;
+                           break;
+                        }
+                        if (nodeToCenter == null) {
+                           nodeToCenter = nodes.iterator().next();
+                           currentNodeIndex = 1;
+                        }
+
+                        nodeCanvas.getCamera().animateViewToCenterBounds(nodeToCenter.getGlobalFullBounds(), false, 500);
+                     });
+                     break;
+
+                  case KeyEvent.VK_F:
+
+                     if (!event.isControlDown()) break;
+
+                     SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new Committer() {
                         @Override
                         public void doAction(Transaction tx) throws Throwable {
-                           final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                           for (NodeCanvas.NeoNode selectedNode : getSelectedNodes()) {
-                              final Node node = selectedNode.getNode();
-                              outgoing(node).forEach(relationship -> nodes.add(new AppEvents.NodeLoadEvent(other(node, relationship), null)));
-                              app.events.fireNodeLoad(nodes);
-                           }
+                           final Set<String> labels = new LinkedHashSet<>();
+                           app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> labels.add(label.name()));
+                           final JComboBox<String> cboLabels = new JComboBox<>(labels.toArray(new String[labels.size()]));
+                           final JTextField txtLabelSearch = new JTextField();
+                           txtLabelSearch.addKeyListener(new KeyAdapter() {
+                              @Override
+                              public void keyReleased(KeyEvent e) {
+                                 SwingUtilities.invokeLater(() -> {
+                                    final String s = txtLabelSearch.getText().trim().toLowerCase();
+                                    for (String lbl : labels) {
+                                       if (lbl.toLowerCase().startsWith(s)) {
+                                          cboLabels.setSelectedItem(lbl);
+                                       }
+                                    }
+                                 });
+                              }
+                           });
+
+                           final Set<String> relationships = new LinkedHashSet<>();
+                           app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                           final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
+                           final JTextField txtRelationSearch = new JTextField();
+                           txtRelationSearch.addKeyListener(new KeyAdapter() {
+                              @Override
+                              public void keyReleased(KeyEvent e) {
+                                 SwingUtilities.invokeLater(() -> {
+                                    final String s = txtRelationSearch.getText().trim().toLowerCase();
+                                    for (String lbl : relationships) {
+                                       if (lbl.toLowerCase().startsWith(s)) {
+                                          cboRelationships.setSelectedItem(lbl);
+                                       }
+                                    }
+                                 });
+                              }
+                           });
+
+                           final Set<String> properties = new LinkedHashSet<>();
+                           app.model.graph().getGraphDb().getAllPropertyKeys().forEach(properties::add);
+                           final JComboBox<String> cboProperties = new JComboBox<>(properties.toArray(new String[properties.size()]));
+                           final JTextField txtPropertySearch = new JTextField();
+                           txtPropertySearch.addKeyListener(new KeyAdapter() {
+                              @Override
+                              public void keyReleased(KeyEvent e) {
+                                 SwingUtilities.invokeLater(() -> {
+                                    final String s = txtPropertySearch.getText().trim().toLowerCase();
+                                    for (String lbl : properties) {
+                                       if (lbl.toLowerCase().startsWith(s)) {
+                                          cboProperties.setSelectedItem(lbl);
+                                       }
+                                    }
+                                 });
+                              }
+                           });
+
+                           final JRadioButton radLabels = new JRadioButton("Label", true);
+                           final JRadioButton radRelationtypes = new JRadioButton("Relationtype");
+                           final ButtonGroup group = new ButtonGroup();
+                           group.add(radLabels);
+                           group.add(radRelationtypes);
+
+                           final JCheckBox chkProperty = new JCheckBox("Property");
+                           final JTextField txtValueSearch = new JTextField();
+
+                           final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow,4dlu,75dlu:grow,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref");
+                           editor.add(radLabels, 1, 1);
+                           editor.add(cboLabels, 3, 1);
+                           editor.add(txtLabelSearch, 5, 1);
+                           editor.add(radRelationtypes, 1, 3);
+                           editor.add(cboRelationships, 3, 3);
+                           editor.add(txtRelationSearch, 5, 3);
+                           editor.add(chkProperty, 1, 5);
+                           editor.add(cboProperties, 3, 5);
+                           editor.add(txtPropertySearch, 5, 5);
+                           editor.add(txtValueSearch, 7, 5);
+
+                           editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                           SwingUtil.showDialog(editor, app, "Search", () -> {
+
+                              app.model.graph().doInTransaction(new Committer() {
+                                 @Override
+                                 public void doAction(Transaction tx1) throws Throwable {
+
+                                    final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
+
+                                    final String propertySearch = (String) cboProperties.getSelectedItem();
+                                    final String valueSearch = txtValueSearch.getText().trim();
+
+                                    if (radLabels.isSelected()) {
+
+                                       final String labelSearch = (String) cboLabels.getSelectedItem();
+                                       if (chkProperty.isSelected()) {
+                                          app.model.graph().findNodes(Label.label(labelSearch), propertySearch, valueSearch).forEachRemaining(node -> nodes.add(new AppEvents.NodeLoadEvent(node)));
+                                       } else {
+                                          app.model.graph().findNodes(Label.label(labelSearch)).forEachRemaining(node -> nodes.add(new AppEvents.NodeLoadEvent(node)));
+                                       }
+
+                                    } else if (radRelationtypes.isSelected()) {
+
+                                       final String relationSearch = (String) cboRelationships.getSelectedItem();
+                                       app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+                                          if (!relationship.getType().name().equals(relationSearch)) return;
+                                          if (chkProperty.isSelected() && !relationship.hasProperty(propertySearch) && !valueSearch.equals(relationship.getProperty(propertySearch)))
+                                             return;
+                                          nodes.add(new AppEvents.NodeLoadEvent(relationship.getStartNode()));
+                                          nodes.add(new AppEvents.NodeLoadEvent(relationship.getEndNode()));
+                                       });
+
+                                    }
+
+                                    app.events.firePropertyChange(NODE_LOAD, nodes);
+                                 }
+
+                                 @Override
+                                 public void exception(Throwable throwable) {
+                                    SwingUtil.showExceptionNoStack(app, throwable);
+                                 }
+                              });
+                           });
                         }
 
                         @Override
                         public void exception(Throwable throwable) {
-                           SwingUtil.showException(NodeCanvas.this, throwable);
+                           SwingUtil.showExceptionNoStack(app, throwable);
                         }
                      }));
                      break;
 
+                  case KeyEvent.VK_E:
+
+                     if (!event.isControlDown()) {
+                        SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+                              final Set<NeoNode> nodes = new LinkedHashSet<>();
+                              for (NodeCanvas.NeoNode selectedNode : getSelectedNodes()) {
+                                 outgoing(selectedNode.getNode()).forEach(relationship -> {
+                                    if (!layerRelations.containsKey(relationship.getId())) return;
+                                    final NeoNode target = (NeoNode) layerRelations.get(relationship.getId()).path.getAttribute("target");
+                                    target.select();
+                                    nodes.add(target);
+                                 });
+                              }
+                              app.events.firePropertyChange(NODES_SELECTED, nodes);
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showException(NodeCanvas.this, throwable);
+                           }
+                        }));
+
+
+                     } else {
+
+                        SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+                              final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
+                              for (NodeCanvas.NeoNode selectedNode : getSelectedNodes()) {
+                                 final Node node = selectedNode.getNode();
+                                 outgoing(node).forEach(relationship -> nodes.add(new AppEvents.NodeLoadEvent(other(node, relationship), null)));
+                              }
+                              app.events.firePropertyChange(NODE_LOAD, nodes);
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showException(NodeCanvas.this, throwable);
+                           }
+                        }));
+                     }
+
+                     break;
+
                   case KeyEvent.VK_C:
-                     SwingUtilities.invokeLater(() -> app.events.fireNodesClosed(getSelectedNodes()));
+                     SwingUtilities.invokeLater(() -> app.events.firePropertyChange(NODES_CLOSED, getSelectedNodes()));
                      break;
 
                   case KeyEvent.VK_I:
@@ -428,8 +724,8 @@ final class Workspace extends JPanel {
                            neoNode.select();
                            newSelectedNodes.add(neoNode);
                         }
-                        app.events.fireNodesSelected(Collections.emptySet());
-                        app.events.fireNodesSelected(newSelectedNodes);
+                        app.events.firePropertyChange(NODES_SELECTED, Collections.emptySet());
+                        app.events.firePropertyChange(NODES_SELECTED, newSelectedNodes);
                      });
                      break;
 
@@ -443,10 +739,13 @@ final class Workspace extends JPanel {
                            relationPaintStrategy = AppMotif.RelationPaintStrategy.showNothing;
                            break;
                         case showNothing:
+                           relationPaintStrategy = AppMotif.RelationPaintStrategy.showLinesAndProperties;
+                           break;
+                        case showLinesAndProperties:
                            relationPaintStrategy = AppMotif.RelationPaintStrategy.showLines;
                            break;
                      }
-                     app.events.firePaintStrategyChanged(existingRelationPaintStrategy, relationPaintStrategy);
+                     app.events.firePropertyChange(RELATION_PAINTSTRATEGY_CHANGED, existingRelationPaintStrategy, relationPaintStrategy);
                      break;
 
                   case KeyEvent.VK_N:
@@ -459,10 +758,16 @@ final class Workspace extends JPanel {
                            nodePaintStrategy = AppMotif.NodePaintStrategy.showLabels;
                            break;
                         case showLabels:
+                           nodePaintStrategy = AppMotif.NodePaintStrategy.showProperties;
+                           break;
+                        case showProperties:
+                           nodePaintStrategy = AppMotif.NodePaintStrategy.showValues;
+                           break;
+                        case showValues:
                            nodePaintStrategy = AppMotif.NodePaintStrategy.showNameAndLabels;
                            break;
                      }
-                     app.events.fireNodePaintStrategyChanged(existingNodePaintStrategy, nodePaintStrategy);
+                     app.events.firePropertyChange(NODE_PAINTSTRATEGY_CHANGED, existingNodePaintStrategy, nodePaintStrategy);
                      break;
 
                   case KeyEvent.VK_L:
@@ -481,7 +786,7 @@ final class Workspace extends JPanel {
                            relationPathStrategy = AppMotif.RelationPathStrategy.straightLines;
                            break;
                      }
-                     app.events.fireRelationPathStrategyChanged(existingPathStrategy, relationPathStrategy);
+                     app.events.firePropertyChange(RELATION_PATHSTRATEGY_CHANGED, existingPathStrategy, relationPathStrategy);
                      break;
 
                   case KeyEvent.VK_R:
@@ -491,13 +796,13 @@ final class Workspace extends JPanel {
                            if (o instanceof NodeCanvas.NeoNode && !((NodeCanvas.NeoNode) o).isSelected())
                               nodesToClose.add((NodeCanvas.NeoNode) o);
                         }
-                        app.events.fireNodesClosed(nodesToClose);
+                        app.events.firePropertyChange(NODES_CLOSED, nodesToClose);
                      });
                      break;
 
                   case KeyEvent.VK_1:
                      SwingUtilities.invokeLater(() -> {
-                        final Point2D startPosition = mousePosition == null ? new Point(10, 10) : mousePosition;
+                        final Point2D startPosition = nodeCanvas.getCamera().localToView(nodeCanvas.getMousePosition());
                         final Point2D currentPosition = new Point((int) startPosition.getX(), (int) startPosition.getY());
                         int maxX = -1;
 
@@ -516,7 +821,7 @@ final class Workspace extends JPanel {
 
                   case KeyEvent.VK_2:
                      SwingUtilities.invokeLater(() -> {
-                        final Point2D startPosition = mousePosition == null ? new Point(10, 10) : mousePosition;
+                        final Point2D startPosition = nodeCanvas.getCamera().localToView(nodeCanvas.getMousePosition());
                         final Point2D currentPosition = new Point((int) startPosition.getX(), (int) startPosition.getY());
                         int maxY = -1;
                         for (NodeCanvas.NeoNode pNode : getSelectedNodes()) {
@@ -543,10 +848,23 @@ final class Workspace extends JPanel {
          };
          addInputEventListener(canvasInputListener);
 
-         app.events.addNodesLoadListener(new AppEvents.EventsTransactionHandler(getClass(), NodeCanvas.this, app.model) {
+         app.events.addPropertyChangeListener(AppEvents.UNDO_LAST_DELETE, new TransactionalPropertyChangeListener<Object, App.AppModel.TransactionHistory>(app) {
             @Override
-            public void doAction(Transaction tx) throws Throwable {
-               final Set<AppEvents.NodeLoadEvent> nodes = (Set<AppEvents.NodeLoadEvent>) evt.getNewValue();
+            protected void propertyChange(Object oldValue, App.AppModel.TransactionHistory history) {
+               final Set<NodeLoadEvent> restored = new LinkedHashSet<>();
+               for (Node node : history.restore())
+                  restored.add(new NodeLoadEvent(node));
+               app.events.firePropertyChange(NODE_LOAD, restored);
+            }
+         });
+
+         app.events.addPropertyChangeListener(NODE_LOAD, new AppEvents.TransactionalPropertyChangeListener<Object, Set<AppEvents.NodeLoadEvent>>(getClass(), NodeCanvas.this, app) {
+
+            @Override
+            protected void propertyChange(Object oldValue, Set<AppEvents.NodeLoadEvent> nodes) {
+
+               if (nodes.isEmpty()) return;
+
                for (AppEvents.NodeLoadEvent nodeLoadEvent : nodes) {
                   final Node node = nodeLoadEvent.node;
 
@@ -554,6 +872,8 @@ final class Workspace extends JPanel {
                      SwingUtilities.invokeLater(() -> {
                         final NodeCanvas.NeoNode pNode = layerNodes.get(node.getId());
                         pNode.select();
+                        if (nodeLoadEvent.centerOnScreen)
+                           nodeCanvas.getCamera().animateViewToCenterBounds(pNode.getGlobalFullBounds(), false, 500);
                      });
 
                   } else {
@@ -561,6 +881,15 @@ final class Workspace extends JPanel {
                      final NodeCanvas.NeoNode newPNode = new NodeCanvas.NeoNode(node, nodeLoadEvent.position, canvasInputListener, nodeLayer);
                      layerNodes.put(node.getId(), newPNode);
                      nodeLayer.addChild(newPNode);
+
+                     nodeChangeListeners.put(node.getId(), new AppEvents.TransactionalPropertyChangeListener<Object, Object>(getClass(), NodeCanvas.this, app) {
+                        @Override
+                        protected void propertyChange(Object oldValue, Object newValue) {
+                           newPNode.setPaintStrategy(nodePaintStrategy);
+//                           newPNode.setText(getNodeText(nodePaintStrategy, node));
+                        }
+                     });
+                     app.events.addPropertyChangeListener(NODE_CHANGED + node.getId(), nodeChangeListeners.get(node.getId()));
 
                      // link any existing nodes to the new node:
                      for (Relationship relationship : node.getRelationships(Direction.INCOMING)) {
@@ -581,19 +910,21 @@ final class Workspace extends JPanel {
                         }
                      }
                      newPNode.select();
+                     if (nodeLoadEvent.centerOnScreen)
+                        nodeCanvas.getCamera().animateViewToCenterBounds(newPNode.getGlobalFullBounds(), false, 500);
                   }
                }
 
-               app.events.fireNodesSelected(getSelectedNodes());
+               app.events.firePropertyChange(NODES_SELECTED, getSelectedNodes());
             }
          });
 
-         app.events.addRelationsAddedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeCanvas.this, app.model) {
+         app.events.addPropertyChangeListener(RELATIONS_ADDED, new AppEvents.TransactionalPropertyChangeListener<Object, Set<Relationship>>(getClass(), NodeCanvas.this, app) {
+
             @Override
-            public void doAction(Transaction tx) throws Throwable {
-               final Set<Relationship> relations = (Set<Relationship>) evt.getNewValue();
+            protected void propertyChange(Object oldValue, Set<Relationship> relations) {
                for (Relationship relationship : relations) {
-                  if (layerNodes.containsKey(relationship.getStartNode().getId()) && layerNodes.containsKey(relationship.getEndNode().getId())) {
+                  if (layerNodes.containsKey(relationship.getStartNode().getId()) && layerNodes.containsKey(relationship.getEndNode().getId()) && !layerRelations.containsKey(relationship.getId())) {
                      final NodeCanvas.NeoRelationship nodeRelation = new NodeCanvas.NeoRelationship(relationship, layerNodes.get(relationship.getStartNode().getId()), layerNodes.get(relationship.getEndNode().getId()));
                      layerRelations.put(relationship.getId(), nodeRelation);
                      relationLayer.addChild(nodeRelation.path);
@@ -602,7 +933,7 @@ final class Workspace extends JPanel {
             }
          });
 
-         app.events.addNodesClosedListener(evt -> {
+         app.events.addPropertyChangeListener(AppEvents.NODES_CLOSED, evt -> {
             for (NodeCanvas.NeoNode neoNode : (Set<NodeCanvas.NeoNode>) evt.getNewValue()) {
                final NodeCanvas.NeoNode remove = layerNodes.remove(neoNode.id());
                if (remove == null) return;
@@ -612,8 +943,8 @@ final class Workspace extends JPanel {
                   public void doAction(Transaction tx) throws Throwable {
                      // save last position
                      final Rectangle2D rectangle2D = neoNode.getFullBoundsReference().getBounds2D();
-                     remove.getNode().setProperty(AppMotif.Properties._x.name(), rectangle2D.getX());
-                     remove.getNode().setProperty(AppMotif.Properties._y.name(), rectangle2D.getY());
+                     remove.getNode().setProperty(AppMotif.Properties.x.name(), rectangle2D.getX());
+                     remove.getNode().setProperty(AppMotif.Properties.y.name(), rectangle2D.getY());
                   }
 
                   @Override
@@ -622,11 +953,13 @@ final class Workspace extends JPanel {
                   }
                });
 
+               app.events.removePropertyChangeListener(AppEvents.NODE_CHANGED + remove.id(), nodeChangeListeners.remove(remove.id()));
+
                nodeLayer.removeChild(remove);
             }
          });
 
-         app.events.addRelationsClosedListener(evt -> {
+         app.events.addPropertyChangeListener(RELATIONS_CLOSED, evt -> {
             for (NeoRelationship neoRelationship : (Set<NeoRelationship>) evt.getNewValue()) {
                final NeoRelationship remove = layerRelations.remove(neoRelationship.id());
                if (remove == null) return;
@@ -634,7 +967,7 @@ final class Workspace extends JPanel {
             }
          });
 
-         app.events.addNodesDeletedListener(evt -> {
+         app.events.addPropertyChangeListener(NODES_DELETED, evt -> {
             final Set<NodeCanvas.NeoNode> removedNodes = new LinkedHashSet<>();
             for (Long neoNode : (Set<Long>) evt.getNewValue()) {
                final NodeCanvas.NeoNode remove = layerNodes.remove(neoNode);
@@ -642,16 +975,24 @@ final class Workspace extends JPanel {
                nodeLayer.removeChild(remove);
                removedNodes.add(remove);
             }
-            System.out.println("todo: check if this is necessary, other components should listen for nodes-deleted, and not get it from canvas");
-            SwingUtilities.invokeLater(() -> app.events.fireNodesClosed(removedNodes));
          });
 
-         app.events.addRelationPaintStrategyChangedListener(evt -> {
-            relationPaintStrategy = (AppMotif.RelationPaintStrategy) evt.getNewValue();
-            layerRelations.values().forEach(neoRelationshipPath -> neoRelationshipPath.setRelationPaintStrategy(relationPaintStrategy));
+         app.events.addPropertyChangeListener(RELATIONS_DELETED, evt -> {
+            for (Long relationId : ((Set<Long>) evt.getNewValue())) {
+               final NeoRelationship relationship = layerRelations.get(relationId);
+               if (relationship == null) continue;
+               relationship.removeFromCanvas();
+            }
          });
 
-         app.events.addRelationPathStrategyChangedListener(evt -> {
+         app.events.addPropertyChangeListener(RELATION_PAINTSTRATEGY_CHANGED, new AppEvents.TransactionalPropertyChangeListener<Object, AppMotif.RelationPaintStrategy>(NodeCanvas.class, NodeCanvas.this, app) {
+            @Override
+            protected void propertyChange(Object oldValue, AppMotif.RelationPaintStrategy newValue) {
+               layerRelations.values().forEach(neoRelationshipPath -> neoRelationshipPath.setRelationPaintStrategy(newValue));
+            }
+         });
+
+         app.events.addPropertyChangeListener(RELATION_PATHSTRATEGY_CHANGED, evt -> {
             relationPathStrategy = (AppMotif.RelationPathStrategy) evt.getNewValue();
             layerRelations.values().forEach(neoRelationshipPath -> neoRelationshipPath.setRelationPathStrategy());
             SwingUtilities.invokeLater(() -> {
@@ -660,11 +1001,10 @@ final class Workspace extends JPanel {
             });
          });
 
-         app.events.addNodePaintStrategyChangedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeCanvas.this, app.model) {
+         app.events.addPropertyChangeListener(NODE_PAINTSTRATEGY_CHANGED, new AppEvents.TransactionalPropertyChangeListener<Object, AppMotif.NodePaintStrategy>(getClass(), NodeCanvas.this, app) {
             @Override
-            public void doAction(Transaction tx) throws Throwable {
-               nodePaintStrategy = (AppMotif.NodePaintStrategy) evt.getNewValue();
-               layerNodes.values().forEach(neoNode -> neoNode.setText(getNodeText(nodePaintStrategy, neoNode.getNode())));
+            protected void propertyChange(Object oldValue, AppMotif.NodePaintStrategy nodePaintStrategy) {
+               layerNodes.values().forEach(neoNode -> neoNode.setPaintStrategy(nodePaintStrategy));
                SwingUtilities.invokeLater(() -> {
                   invalidate();
                   repaint();
@@ -672,11 +1012,9 @@ final class Workspace extends JPanel {
             }
          });
 
-         app.events.addNodeColorChangedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeCanvas.this, app.model) {
+         app.events.addPropertyChangeListener(NODE_COLOR_CHANGED, new AppEvents.TransactionalPropertyChangeListener<String, Color>(getClass(), NodeCanvas.this, app) {
             @Override
-            public void doAction(Transaction tx) throws Throwable {
-               final String label = (String) evt.getOldValue();
-               final Color color = (Color) evt.getNewValue();
+            protected void propertyChange(String label, Color color) {
                for (NodeCanvas.NeoNode neoNode : layerNodes.values())
                   if (hasLabel(neoNode.getNode(), label))
                      neoNode.setColor(color);
@@ -684,37 +1022,23 @@ final class Workspace extends JPanel {
             }
          });
 
-         app.events.addGraphNewListener(evt -> {
+         app.events.addPropertyChangeListener(GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener<Object, Object>(getClass(), NodeCanvas.this, app) {
+            @Override
+            protected void propertyChange(Object oldValue, Object newValue) {
+               relationLayer.removeAllChildren();
+               nodeLayer.removeAllChildren();
+               layerNodes.clear();
+               layerRelations.clear();
+               for (Map.Entry<Long, PropertyChangeListener> entry : nodeChangeListeners.entrySet())
+                  app.events.removePropertyChangeListener(AppEvents.NODE_CHANGED + entry.getKey(), entry.getValue());
+               nodeChangeListeners.clear();
 
-            relationLayer.removeAllChildren();
-            nodeLayer.removeAllChildren();
-            layerNodes.clear();
-            layerRelations.clear();
+               final Node layoutNode = AppMotif.getLayoutNode(app, AppMotif.Properties._lastLayout.name());
+               if (layoutNode == null) return;
 
-            SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-
-                  final Node layoutNode = AppMotif.getLayoutNode(app, AppMotif.Properties._lastLayout.name());
-                  if (layoutNode == null) return;
-
-                  app.events.fireNodeLoad(AppMotif.getLayoutNodes(layoutNode));
-               }
-
-               @Override
-               public void exception(Throwable throwable) {
-                  throwable.printStackTrace();
-               }
-            }));
+               app.events.firePropertyChange(NODE_LOAD, AppMotif.getLayoutNodes(layoutNode));
+            }
          });
-      }
-
-      @Override
-      public void paint(Graphics graphics) {
-         final Graphics2D g2 = (Graphics2D) graphics;
-         for (Map.Entry<RenderingHints.Key, Object> entry : app.model.getRenderingHints().entrySet())
-            g2.setRenderingHint(entry.getKey(), entry.getValue());
-         super.paint(graphics);
       }
 
       Set<NodeCanvas.NeoNode> getSelectedNodes() {
@@ -755,12 +1079,17 @@ final class Workspace extends JPanel {
          return relations;
       }
 
-      class NeoNode extends PText {
+      public class NeoNode extends PNode {
 
+         private final PText delegate;
          private Color defaultNodeColor = Color.BLACK;
 
          NeoNode(Node node, Point2D offset, PBasicInputEventHandler canvasInputListener, PLayer nodeLayer) {
-            super(getNodeText(nodePaintStrategy, node));
+            super();
+
+            delegate = new PText(getNodeText(nodePaintStrategy, node));
+            addChild(delegate);
+
             addAttribute("id", node.getId());
             addAttribute("node", node);
 
@@ -777,7 +1106,7 @@ final class Workspace extends JPanel {
             }
             defaultNodeColor = nodeColor == null ? Color.BLACK : nodeColor;
 
-            setOffset(offset == null ? (node.hasProperty(AppMotif.Properties._x.name()) ? new Point2D.Double(getDouble(node, AppMotif.Properties._x.name()), getDouble(node, AppMotif.Properties._y.name())) : new Point2D.Double(random.nextInt(100), random.nextInt(100))) : offset);
+            setOffset(offset == null ? (node.hasProperty(AppMotif.Properties.x.name()) ? new Point2D.Double(getDouble(node, AppMotif.Properties.x.name()), getDouble(node, AppMotif.Properties.y.name())) : new Point2D.Double(random.nextInt(100), random.nextInt(100))) : offset);
 
             final PBasicInputEventHandler nodeEventListener = new PDragSequenceEventHandler() {
                @Override
@@ -805,7 +1134,7 @@ final class Workspace extends JPanel {
                public void mouseEntered(PInputEvent event) {
                   event.getInputManager().setKeyboardFocus(this);
                   highlight();
-                  app.events.fireNodeHighlighted(NodeCanvas.NeoNode.this);
+                  app.events.firePropertyChange(NODE_HIGHLIGHTED, NodeCanvas.NeoNode.this);
                }
 
                @Override
@@ -827,7 +1156,7 @@ final class Workspace extends JPanel {
 
                private void onLeftClick(PInputEvent event) {
                   toggleSelect();
-                  app.events.fireNodesSelected(getSelectedNodes());
+                  app.events.firePropertyChange(NODES_SELECTED, getSelectedNodes());
                }
 
                private void onMiddleClick(PInputEvent event) {
@@ -849,7 +1178,8 @@ final class Workspace extends JPanel {
                            app.model.graph().doInTransaction(new NeoModel.Committer() {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
-                                 new LayoutNode("", NeoNode.this, nodesAndIds).layout(getOffset());
+                                 final AppMotif.LayoutDirection direction = event.isControlDown() ? AppMotif.LayoutDirection.left : AppMotif.LayoutDirection.right;
+                                 new LayoutNode(direction, NeoNode.this, nodesAndIds).layout(direction, getOffset());
                               }
 
                               @Override
@@ -862,8 +1192,9 @@ final class Workspace extends JPanel {
 
 
                      case KeyEvent.VK_C:
-                        SwingUtilities.invokeLater(() -> app.events.fireNodesClosed(Collections.singleton(NodeCanvas.NeoNode.this)));
+                        SwingUtilities.invokeLater(() -> app.events.firePropertyChange(NODES_CLOSED, Collections.singleton(NodeCanvas.NeoNode.this)));
                         break;
+
 
                      case KeyEvent.VK_R:
                         SwingUtilities.invokeLater(() -> {
@@ -873,23 +1204,96 @@ final class Workspace extends JPanel {
                               if (o instanceof NodeCanvas.NeoNode && !((NodeCanvas.NeoNode) o).isSelected() && !NodeCanvas.NeoNode.this.equals(o))
                                  nodesToClose.add((NodeCanvas.NeoNode) o);
                            }
-                           app.events.fireNodesClosed(nodesToClose);
+                           app.events.firePropertyChange(NODES_CLOSED, nodesToClose);
                         });
                         break;
 
                      case KeyEvent.VK_E:
 
-                        if(event.isControlDown()) {
+                        if (event.isControlDown()) {
+                           SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+
+                                 final Map<String, Set<AppEvents.NodeLoadEvent>> nodesByType = new TreeMap<>();
+                                 outgoing(node).forEach(relationship -> {
+                                    final Set<AppEvents.NodeLoadEvent> eventSet = nodesByType.computeIfAbsent(relationship.getType().name(), k -> new LinkedHashSet<>());
+                                    eventSet.add(new AppEvents.NodeLoadEvent(other(node, relationship), null));
+                                 });
+
+                                 if (nodesByType.size() == 1) {
+
+                                    for (Set<AppEvents.NodeLoadEvent> nodeLoadEvents : nodesByType.values())
+                                       app.events.firePropertyChange(NODE_LOAD, nodeLoadEvents);
+
+                                 } else {
+                                    final JPopupMenu pop = new JPopupMenu();
+                                    for (Map.Entry<String, Set<AppEvents.NodeLoadEvent>> entry : nodesByType.entrySet()) {
+                                       pop.add(new App.TransactionAction(entry.getKey(), app) {
+                                          @Override
+                                          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                                             app.events.firePropertyChange(NODE_LOAD, entry.getValue());
+                                          }
+                                       });
+                                    }
+                                    pop.add(new App.TransactionAction("All", app) {
+                                       @Override
+                                       protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                                          for (Set<AppEvents.NodeLoadEvent> nodeLoadEvents : nodesByType.values()) {
+                                             app.events.firePropertyChange(NODE_LOAD, nodeLoadEvents);
+                                          }
+                                       }
+                                    });
+
+                                    final Point2D position = app.getMousePosition();
+                                    pop.show(app, (int) position.getX(), (int) position.getY());
+                                 }
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(NodeCanvas.this, throwable);
+                              }
+                           }));
+
+                        } else {
 
                            SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
                                  final Set<NeoNode> nodes = new LinkedHashSet<>();
                                  outgoing(node).forEach(relationship -> {
-                                    if(!layerRelations.containsKey(relationship.getId())) return;
-                                    nodes.add((NeoNode)layerRelations.get(relationship.getId()).path.getAttribute("target"));
+                                    if (!layerRelations.containsKey(relationship.getId())) return;
+                                    final NeoNode target = (NeoNode) layerRelations.get(relationship.getId()).path.getAttribute("target");
+                                    target.select();
+                                    nodes.add(target);
                                  });
-                                 app.events.fireNodesSelected(nodes);
+                                 app.events.firePropertyChange(NODES_SELECTED, nodes);
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(NodeCanvas.this, throwable);
+                              }
+                           }));
+                        }
+                        break;
+
+                     case KeyEvent.VK_D:
+
+                        if (!event.isControlDown()) {
+
+                           SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+                                 final Set<NeoNode> nodes = new LinkedHashSet<>();
+                                 incoming(node).forEach(relationship -> {
+                                    if (!layerRelations.containsKey(relationship.getId())) return;
+                                    final NeoNode source = (NeoNode) layerRelations.get(relationship.getId()).path.getAttribute("source");
+                                    source.select();
+                                    nodes.add(source);
+                                 });
+                                 app.events.firePropertyChange(NODES_SELECTED, nodes);
                               }
 
                               @Override
@@ -904,8 +1308,12 @@ final class Workspace extends JPanel {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
                                  final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                                 outgoing(node).forEach(relationship -> nodes.add(new AppEvents.NodeLoadEvent(other(node, relationship), null)));
-                                 app.events.fireNodeLoad(nodes);
+                                 incoming(node).forEach(relationship -> {
+                                    if (relationship.getType().name().equals(AppMotif.Relations._LAYOUT_MEMBER.name()))
+                                       return;
+                                    nodes.add(new AppEvents.NodeLoadEvent(other(node, relationship), null));
+                                 });
+                                 app.events.firePropertyChange(NODE_LOAD, nodes);
                               }
 
                               @Override
@@ -914,26 +1322,7 @@ final class Workspace extends JPanel {
                               }
                            }));
                         }
-                        break;
 
-                     case KeyEvent.VK_D:
-                        SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-                           @Override
-                           public void doAction(Transaction tx) throws Throwable {
-                              final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                              incoming(node).forEach(relationship -> {
-                                 if (relationship.getType().name().equals(AppMotif.Relations._LAYOUT_MEMBER.name()))
-                                    return;
-                                 nodes.add(new AppEvents.NodeLoadEvent(other(node, relationship), null));
-                              });
-                              app.events.fireNodeLoad(nodes);
-                           }
-
-                           @Override
-                           public void exception(Throwable throwable) {
-                              SwingUtil.showException(NodeCanvas.this, throwable);
-                           }
-                        }));
                         break;
                   }
                }
@@ -941,15 +1330,10 @@ final class Workspace extends JPanel {
 
             nodeEventListener.getEventFilter().setMarksAcceptedEventsAsHandled(true);
             addInputEventListener(nodeEventListener);
+         }
 
-            app.events.addNodeChangedListener(node.getId(), new AppEvents.EventsTransactionHandler(getClass(), NodeCanvas.this, app.model) {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  final String propertyName = (String) evt.getOldValue();
-                  if (AppMotif.Properties.name.name().equals(propertyName))
-                     setText(getNodeText(nodePaintStrategy, getNode()));
-               }
-            });
+         public void setPaintStrategy(AppMotif.NodePaintStrategy nodePaintStrategy) {
+            delegate.setText(getNodeText(nodePaintStrategy, getNode()));
          }
 
          final class LayoutNode {
@@ -958,14 +1342,14 @@ final class Workspace extends JPanel {
             private final Set<LayoutNode> children = new LinkedHashSet<>();
             private Double totalHeight;
 
-            LayoutNode(String delim, Workspace.NodeCanvas.NeoNode neoNode, Map<Long, Workspace.NodeCanvas.NeoNode> nodesAndIds) {
+            LayoutNode(AppMotif.LayoutDirection direction, Workspace.NodeCanvas.NeoNode neoNode, Map<Long, Workspace.NodeCanvas.NeoNode> nodesAndIds) {
                this.neoNode = neoNode;
 
                final AtomicDouble childrenHeight = new AtomicDouble(0);
                outgoing(neoNode.getNode()).forEach(relationship -> {
                   final long id = other(neoNode.getNode(), relationship).getId();
                   if (nodesAndIds.keySet().contains(id)) {
-                     final LayoutNode childNode = new LayoutNode(delim + "\t", nodesAndIds.remove(id), nodesAndIds);
+                     final LayoutNode childNode = new LayoutNode(direction, nodesAndIds.remove(id), nodesAndIds);
                      children.add(childNode);
                      childrenHeight.addAndGet(childNode.totalHeight);
                   }
@@ -975,13 +1359,13 @@ final class Workspace extends JPanel {
                else totalHeight = childrenHeight.get();
             }
 
-            public void layout(Point2D startPosition) {
+            public void layout(AppMotif.LayoutDirection direction, Point2D startPosition) {
                neoNode.setOffset(startPosition);
-               double x = startPosition.getX() + neoNode.getFullBounds().getWidth() + 75;
+               double x = AppMotif.LayoutDirection.right.equals(direction) ? (startPosition.getX() + neoNode.getFullBounds().getWidth() + 75) : (startPosition.getX() - neoNode.getFullBounds().getWidth() - 75);
                double y = children.size() == 1 ? startPosition.getY() : (startPosition.getY() - ((totalHeight / 2d)));
                for (LayoutNode child : children) {
-                  child.layout(new Point2D.Double(x, y));
-                  y += (totalHeight / children.size());
+                  child.layout(direction, new Point2D.Double(x, y));
+                  y += child.totalHeight + 15;
                }
             }
          }
@@ -994,288 +1378,145 @@ final class Workspace extends JPanel {
                   final JPopupMenu pop = new JPopupMenu();
 
                   final Set<NodeCanvas.NeoNode> selectedNodes = new LinkedHashSet<>();
-                  for (Object o : nodeLayer.getAllNodes()) {
+                  for (Object o : nodeLayer.getAllNodes())
                      if (o instanceof NodeCanvas.NeoNode && ((NodeCanvas.NeoNode) o).isSelected() && !NodeCanvas.NeoNode.this.equals(o))
                         selectedNodes.add((NodeCanvas.NeoNode) o);
-                  }
 
-                  TemplateMotif.onRightClick(pop, NodeCanvas.NeoNode.this, selectedNodes, app);
-                  ProjectMotif.onRightClick(pop, NodeCanvas.NeoNode.this, selectedNodes, app);
+                  // specialised node-types:
+                  for (Plugin plugin : app.plugins)
+                     plugin.handleNodeRightClick(pop, NodeCanvas.NeoNode.this, selectedNodes);
 
-                  getNode().getLabels().forEach(label -> app.model.graph().findNodes(TemplateMotif.Entities._STTemplate, AppMotif.Properties.name.name(), label.name()).forEachRemaining(templateNode -> {
-                     final JMenu assignMenu = new JMenu(getNameAndLabelsFrom(getNode()));
-                     final JMenu expandMenu = new JMenu("Show...");
+                  // Basic graph-operations:
+                  pop.add(new JSeparator());
+                  final JMenu relationsMenu = new JMenu("Relations");
+                  final JMenu showAllRelationMenu = new JMenu("Show all ");
+                  final JMenu closeAll = new JMenu("Close all ");
+                  final JMenu selectAll = new JMenu("Select all ");
+                  final Set<String> relations = new TreeSet<>();
+                  outgoing(getNode()).forEach(relationship -> relations.add(relationship.getType().name()));
 
-                     // show parameters-action
-                     outgoing(templateNode, TemplateMotif.Relations.TEMPLATE_PARAMETER).forEach(relationship -> {
-                        final Node parameterNode = other(templateNode, relationship);
-                        final String parameterName = getString(parameterNode, AppMotif.Properties.name.name());
-                        // do not use if its deprecated
-                        if (parameterNode.hasProperty(TemplateMotif.Properties._deprecated.name())) return;
-
-                        if (hasLabel(parameterNode, TemplateMotif.Entities._Single)) {
-
-                           // single-parameter
-                           assignMenu.add(new App.TransactionAction("Set " + parameterName, app) {
-                              @Override
-                              protected void actionPerformed(ActionEvent e, Transaction tx12) throws Exception {
-                                 final String newValue = SwingUtil.showInputDialog(parameterName, NodeCanvas.this);
-                                 if (newValue == null) return;
-
-                                 // remove any existing one
-                                 outgoing(getNode(), RelationshipType.withName(parameterName)).forEach(oldValueRelation -> {
-                                    final Node oldValueNode = other(getNode(), oldValueRelation);
-                                    oldValueRelation.delete();
-                                    AppMotif.tryToDeleteValueNode(oldValueNode);
-                                 });
-                                 if (newValue.trim().length() == 0) return; // empty-string
-
-                                 final Node valueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._Value);
-                                 valueNode.setProperty(AppMotif.Properties.name.name(), newValue);
-                                 app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(valueNode));
-                                 final Relationship valueRelation = getNode().createRelationshipTo(valueNode, RelationshipType.withName(parameterName));
-                                 valueRelation.setProperty(TemplateMotif.Properties._referenceType.name(), TemplateMotif.ReferenceType.PROPERTY.name());
-                                 valueRelation.setProperty(TemplateMotif.Properties._referenceProperty.name(), AppMotif.Properties.name.name());
-                                 app.events.fireNodeChanged(getNode().getId(), parameterName, newValue);
-                              }
-                           });
-
-                           if (hasOutgoing(getNode(), RelationshipType.withName(parameterName))) {
-                              expandMenu.add(new App.TransactionAction("Show " + RelationshipType.withName(parameterName), app) {
-                                 @Override
-                                 protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                                    app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(other(getNode(), singleOutgoing(getNode(), RelationshipType.withName(parameterName)))));
-                                 }
-                              });
-                           }
-
-
-                        } else if (hasLabel(parameterNode, TemplateMotif.Entities._List)) {
-                           // list-parameter
-                           assignMenu.add(new App.TransactionAction("Add " + parameterName, app) {
-                              @Override
-                              protected void actionPerformed(ActionEvent e, Transaction tx12) throws Exception {
-
-                                 final JTextField txtValue = new JTextField();
-
-                                 final JRadioButton radSingleElement = new JRadioButton("Single element", true);
-                                 final JRadioButton radSplit = new JRadioButton("Split by space");
-                                 final ButtonGroup group = new ButtonGroup();
-                                 group.add(radSingleElement);
-                                 group.add(radSplit);
-
-                                 final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref");
-                                 editor.addLabel("Value", 1, 1);
-                                 editor.add(txtValue, 3, 1);
-                                 editor.add(radSingleElement, 3, 3);
-                                 editor.add(radSplit, 3, 5);
-
-                                 editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-                                 SwingUtil.showDialog(editor, app, "Add " + parameterName, () -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-                                    @Override
-                                    public void doAction(Transaction tx) throws Throwable {
-                                       final String newElements = txtValue.getText().trim();
-                                       if (newElements.length() == 0) return;
-
-                                       if (radSingleElement.isSelected()) {
-                                          final Node valueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._Value);
-                                          valueNode.setProperty(AppMotif.Properties.name.name(), StringUtil.trimSpacesIn(newElements));
-                                          app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(valueNode));
-
-                                          final Relationship valueRelation = getNode().createRelationshipTo(valueNode, RelationshipType.withName(parameterName));
-                                          valueRelation.setProperty(TemplateMotif.Properties._referenceType.name(), TemplateMotif.ReferenceType.PROPERTY.name());
-                                          valueRelation.setProperty(TemplateMotif.Properties._referenceProperty.name(), AppMotif.Properties.name.name());
-                                          app.events.fireNodeChanged(getNode().getId(), null, getNode());
-
-                                       } else if (radSplit.isSelected()) {
-                                          final String[] newValues = newElements.split("[ ]");
-                                          for (String newValue : newValues) {
-                                             final Node valueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._Value);
-                                             valueNode.setProperty(AppMotif.Properties.name.name(), newValue);
-                                             app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(valueNode));
-
-                                             final Relationship valueRelation = getNode().createRelationshipTo(valueNode, RelationshipType.withName(parameterName));
-                                             valueRelation.setProperty(TemplateMotif.Properties._referenceType.name(), TemplateMotif.ReferenceType.PROPERTY.name());
-                                             valueRelation.setProperty(TemplateMotif.Properties._referenceProperty.name(), AppMotif.Properties.name.name());
-                                             app.events.fireNodeChanged(getNode().getId(), null, getNode());
-                                          }
-                                       }
-                                    }
-
-                                    @Override
-                                    public void exception(Throwable throwable) {
-                                       SwingUtil.showException(editor, throwable);
-
-                                    }
-                                 }));
-                              }
-                           });
-
-                           if (hasOutgoing(getNode(), RelationshipType.withName(parameterName))) {
-                              expandMenu.add(new App.TransactionAction("Show " + RelationshipType.withName(parameterName), app) {
-                                 @Override
-                                 protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                                    final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                                    outgoing(getNode(), RelationshipType.withName(parameterName)).forEach(relationship1 -> nodes.add(new AppEvents.NodeLoadEvent(other(getNode(), relationship1))));
-                                    app.events.fireNodeLoad(nodes);
-                                 }
-                              });
-                           }
-
-                        } else if (hasLabel(parameterNode, TemplateMotif.Entities._KeyValueList)) {
-
-
-
-                           // key-value parameter with values
-                           assignMenu.add(new App.TransactionAction("Add " + parameterName, app) {
-                              @Override
-                              protected void actionPerformed(ActionEvent e, Transaction tx12) throws Exception {
-                                 final java.util.List<String> keys = new ArrayList<>();
-                                 parameterNode.getPropertyKeys().forEach(s -> {
-                                    if (s.startsWith("key_")) keys.add(getString(parameterNode, s));
-                                 });
-
-//                                 final JTextField[] txtNames = new JTextField[keys.size()];
-                                 final Map<Integer, Map<Integer, JTextField>> txtNames = new LinkedHashMap<>();
-                                 final int tabs = 5;
-                                 final JTabbedPane tab = new JTabbedPane();
-                                 tab.setPreferredSize(new Dimension(600,150));
-                                 for (int j = 0; j < tabs; j++) {
-                                    final JPanel editor = new JPanel(null);
-                                    editor.setLayout(new BoxLayout(editor, BoxLayout.PAGE_AXIS));
-
-                                    txtNames.put(j, new LinkedHashMap<>());
-                                    for (int i = 0; i < keys.size(); i++) {
-                                       final SwingUtil.FormPanel row = new SwingUtil.FormPanel("50dlu,4dlu,150dlu:grow", "pref");
-                                       row.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-                                       row.addLabel(keys.get(i), 1, 1);
-                                       txtNames.get(j).put(i, new JTextField(30));
-                                       row.add(txtNames.get(j).get(i), 3, 1);
-                                       editor.add(row);
-                                    }
-                                    tab.add("KeyValue " + (j + 1), editor);
-                                 }
-
-                                 SwingUtil.showDialog(tab, NodeCanvas.this, parameterName, () -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-                                    @Override
-                                    public void doAction(Transaction tx14) throws Throwable {
-
-                                       for (int j = 0; j < tabs; j++) {
-                                          final Map<Integer, JTextField> formFields = txtNames.get(j);
-                                          final Map<String, String> newValues = new TreeMap<>();
-                                          for (int i = 0; i < formFields.size(); i++) {
-                                             final String newValue = formFields.get(i).getText().trim();
-                                             if (newValue.trim().length() == 0) continue;
-                                             newValues.put(keys.get(i), newValue.trim());
-                                          }
-                                          if (newValues.isEmpty()) return;
-
-                                          final Node keyValueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._KeyValue);
-                                          keyValueNode.setProperty(AppMotif.Properties.name.name(), parameterName);
-                                          parameterNode.createRelationshipTo(keyValueNode, TemplateMotif.Relations.KEY_VALUE);
-                                          getNode().createRelationshipTo(keyValueNode, RelationshipType.withName(parameterName));
-                                          app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(keyValueNode));
-
-                                          for (Map.Entry<String, String> kvEntry : newValues.entrySet()) {
-                                             if (kvEntry.getValue().length() == 0) continue;
-
-                                             final Node valueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._Value);
-                                             valueNode.setProperty(AppMotif.Properties.name.name(), kvEntry.getValue());
-                                             app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(valueNode));
-
-                                             final Relationship valueRelation = keyValueNode.createRelationshipTo(valueNode, RelationshipType.withName(kvEntry.getKey()));
-                                             valueRelation.setProperty(TemplateMotif.Properties._referenceType.name(), TemplateMotif.ReferenceType.PROPERTY.name());
-                                             valueRelation.setProperty(TemplateMotif.Properties._referenceProperty.name(), AppMotif.Properties.name.name());
-                                          }
-                                       }
-
-                                       app.events.fireNodeChanged(getNode().getId(), null, getNode());
-                                    }
-
-                                    @Override
-                                    public void exception(Throwable throwable) {
-                                       SwingUtil.showException(tab, throwable);
-                                    }
-                                 }));
-                              }
-                           });
-
-                           assignMenu.add(new App.TransactionAction("Add empty " + parameterName, app) {
-                              @Override
-                              protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                                 final Node keyValueNode = app.model.graph().getGraphDb().createNode(TemplateMotif.Entities._KeyValue);
-                                 keyValueNode.setProperty(AppMotif.Properties.name.name(), parameterName);
-                                 parameterNode.createRelationshipTo(keyValueNode, TemplateMotif.Relations.KEY_VALUE);
-                                 getNode().createRelationshipTo(keyValueNode, RelationshipType.withName(parameterName));
-                                 app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(keyValueNode));
-                              }
-                           });
-
-                           if (hasOutgoing(getNode(), RelationshipType.withName(parameterName))) {
-                              expandMenu.add(new App.TransactionAction("Show " + RelationshipType.withName(parameterName), app) {
-                                 @Override
-                                 protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                                    final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-                                    outgoing(getNode(), RelationshipType.withName(parameterName)).forEach(relationship1 -> nodes.add(new AppEvents.NodeLoadEvent(other(getNode(), relationship1))));
-                                    app.events.fireNodeLoad(nodes);
-                                 }
-                              });
-                           }
-                        }
-                     });
-
-                     assignMenu.add(new JSeparator());
-                     if (expandMenu.getMenuComponents().length > 0)
-                        assignMenu.add(expandMenu);
-
-                     assignMenu.add(new App.TransactionAction("Show template", app) {
+                  for (String relation : relations) {
+                     showAllRelationMenu.add(new App.TransactionAction(relation, app) {
                         @Override
                         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                           app.events.fireNodeLoad(new AppEvents.NodeLoadEvent(templateNode));
+                           final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
+                           outgoing(getNode(), RelationshipType.withName(relation)).forEach(relationship -> nodes.add(new AppEvents.NodeLoadEvent(other(getNode(), relationship))));
+                           app.events.firePropertyChange(NODE_LOAD, nodes);
                         }
                      });
 
-                     pop.add(assignMenu);
-                  }));
+                     closeAll.add(new App.TransactionAction(relation, app) {
+                        @Override
+                        protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                           final Set<NeoNode> neoNodes = new LinkedHashSet<>();
+                           outgoing(getNode(), RelationshipType.withName(relation)).forEach(relationship -> {
+                              if (!app.workspace.layerNodes.containsKey(relationship.getEndNode().getId())) return;
+                              neoNodes.add(app.workspace.layerNodes.get(relationship.getEndNode().getId()));
+                           });
 
-                  pop.add(new JSeparator());
-
-                  pop.add(new App.TransactionAction("Layout", app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                        final Map<Long, Workspace.NodeCanvas.NeoNode> nodesAndIds = new LinkedHashMap<>();
-                        for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
-                           if (id().equals(selectedNode.id())) continue;
-                           nodesAndIds.put(selectedNode.id(), selectedNode);
+                           app.events.firePropertyChange(NODES_CLOSED, neoNodes);
                         }
-                        new LayoutNode("", NeoNode.this, nodesAndIds).layout(getOffset());
-                     }
-                  });
+                     });
+
+                     selectAll.add(new App.TransactionAction(relation, app) {
+                        @Override
+                        protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                           final Set<NeoNode> neoNodes = new LinkedHashSet<>();
+                           outgoing(getNode(), RelationshipType.withName(relation)).forEach(relationship -> {
+                              if (!app.workspace.layerNodes.containsKey(relationship.getEndNode().getId())) return;
+                              final NeoNode node = app.workspace.layerNodes.get(relationship.getEndNode().getId());
+                              node.select();
+                              neoNodes.add(node);
+                           });
+
+                           app.events.firePropertyChange(NODES_SELECTED, neoNodes);
+                        }
+                     });
+                  }
+                  if (showAllRelationMenu.getMenuComponents().length > 0) {
+                     relationsMenu.add(showAllRelationMenu);
+                     relationsMenu.add(selectAll);
+                     relationsMenu.add(closeAll);
+                  }
+                  if (relationsMenu.getMenuComponents().length > 0) pop.add(relationsMenu);
 
                   pop.add(new JSeparator());
-
                   if (!selectedNodes.isEmpty()) {
                      pop.add(new App.TransactionAction("Add relationship", app) {
                         @Override
                         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
                            final Set<String> relationships = new LinkedHashSet<>();
                            app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
-                           final String selected = SwingUtil.showSelectDialog(app, relationships);
-                           if (selected == null) return;
+                           final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
 
-                           for (Workspace.NodeCanvas.NeoNode sourceNode : selectedNodes) {
-                              if (BaseDomainVisitor.isRelated(sourceNode.getNode(), getNode(), RelationshipType.withName(selected)))
-                                 continue;
-                              sourceNode.getNode().createRelationshipTo(getNode(), RelationshipType.withName(selected));
-                           }
+                           final JRadioButton radOneToMany = new JRadioButton();
+                           final JRadioButton radManyToOne = new JRadioButton("", true);
+                           final ButtonGroup group = new ButtonGroup();
+                           group.add(radOneToMany);
+                           group.add(radManyToOne);
+
+                           final JTextField txtSearch = new JTextField();
+                           txtSearch.addKeyListener(new KeyAdapter() {
+                              @Override
+                              public void keyReleased(KeyEvent e) {
+                                 SwingUtilities.invokeLater(() -> {
+                                    final String s = txtSearch.getText().trim().toLowerCase();
+                                    for (String lbl : relationships) {
+                                       if (lbl.toLowerCase().startsWith(s)) {
+                                          cboRelationships.setSelectedItem(lbl);
+                                       }
+                                    }
+                                 });
+                              }
+                           });
+
+
+                           final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref");
+                           editor.addLabel("Relationship", 1, 1);
+                           editor.add(cboRelationships, 3, 1);
+                           editor.addLabel("Search", 1, 3);
+                           editor.add(txtSearch, 3, 3);
+                           editor.addLabel("this -> " + selectedNodes.size(), 1, 5);
+                           editor.add(radOneToMany, 3, 5);
+                           editor.addLabel(selectedNodes.size() + " -> this", 1, 7);
+                           editor.add(radManyToOne, 3, 7);
+
+                           editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                           SwingUtil.showDialog(editor, app, "Add relationships", () -> {
+
+                              final String selected = (String) cboRelationships.getSelectedItem();
+
+                              app.model.graph().doInTransaction(new Committer() {
+                                 @Override
+                                 public void doAction(Transaction tx1) throws Throwable {
+                                    for (NeoNode selectedNode : selectedNodes) {
+                                       if (radOneToMany.isSelected() && BaseDomainVisitor.isRelated(getNode(), selectedNode.getNode(), RelationshipType.withName(selected)))
+                                          continue;
+                                       else if (radManyToOne.isSelected() && BaseDomainVisitor.isRelated(selectedNode.getNode(), getNode(), RelationshipType.withName(selected)))
+                                          continue;
+
+                                       if (radOneToMany.isSelected())
+                                          getNode().createRelationshipTo(selectedNode.getNode(), RelationshipType.withName(selected));
+                                       if (radManyToOne.isSelected())
+                                          selectedNode.getNode().createRelationshipTo(getNode(), RelationshipType.withName(selected));
+                                    }
+                                 }
+
+                                 @Override
+                                 public void exception(Throwable throwable) {
+                                    SwingUtil.showExceptionNoStack(app, throwable);
+                                 }
+                              });
+                           });
                         }
                      });
                   }
+                  pop.add(new App.TransactionAction("Set Node-property", app) {
 
-                  pop.add(new AbstractAction("SetProperty") {
                      @Override
-                     public void actionPerformed(ActionEvent e) {
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                         final String newProperty = SwingUtil.showInputDialog("[Property] [value]", NodeCanvas.this);
                         if (newProperty == null || newProperty.split("[ ]").length != 2) return;
@@ -1283,10 +1524,24 @@ final class Workspace extends JPanel {
                         final String property = newProperty.split("[ ]")[0];
                         final String value = newProperty.split("[ ]")[1];
                         getNode().setProperty(property, value);
-                        app.events.fireNodeChanged(getNode().getId(), property, value);
+                        app.events.firePropertyChange(NODE_CHANGED + getNode().getId(), property, value);
                      }
                   });
+                  pop.add(new App.TransactionAction("Select all " + getNameAndLabelsFrom(getNode()), app) {
 
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                        final String id = getNameAndLabelsFrom(getNode());
+                        final Set<NodeCanvas.NeoNode> nodes = new LinkedHashSet<>();
+                        for (NeoNode neoNode : nodeCanvas.getAllNodes()) {
+                           if (!id.equals(getNameAndLabelsFrom(neoNode.getNode()))) continue;
+                           neoNode.select();
+                           nodes.add(neoNode);
+                        }
+                        app.events.firePropertyChange(NODES_SELECTED, nodes);
+
+                     }
+                  });
                   pop.add(new AbstractAction("Retain") {
                      @Override
                      public void actionPerformed(ActionEvent e) {
@@ -1296,25 +1551,83 @@ final class Workspace extends JPanel {
                               if (o instanceof NodeCanvas.NeoNode && !((NodeCanvas.NeoNode) o).isSelected() && !NodeCanvas.NeoNode.this.equals(o))
                                  nodesToClose.add((NodeCanvas.NeoNode) o);
                            }
-                           app.events.fireNodesClosed(nodesToClose);
+                           app.events.firePropertyChange(NODES_CLOSED, nodesToClose);
                         });
                      }
                   });
-
                   pop.add(new App.TransactionAction("Close", app) {
                      @Override
                      protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                        app.events.fireNodesClosed(Collections.singleton(NodeCanvas.NeoNode.this));
+                        app.events.firePropertyChange(NODES_CLOSED, Collections.singleton(NodeCanvas.NeoNode.this));
                      }
                   });
-
                   pop.add(new App.TransactionAction("Delete", app) {
                      @Override
                      protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                         if (SwingUtil.showConfirmDialog(app, "Delete " + getNameAndLabelsFrom(getNode()) + " ?")) {
-                           incoming(getNode()).forEach(Relationship::delete);
-                           outgoing(getNode()).forEach(Relationship::delete);
-                           getNode().delete();
+                           app.model.deleteNodes(Collections.singleton(getNode()));
+
+                        }
+                     }
+                  });
+                  pop.add(new App.TransactionAction("Export Branch", app) {
+
+                     final CypherDomainGroup cypherGroup = new CypherDomainGroup();
+
+                     @Override
+                     public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                        final CypherDomainGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
+
+                        final LinkedHashSet<Relationship> relationships = new LinkedHashSet<>();
+                        exportNode(createNodesST, cypherGroup, getNode(), new LinkedHashSet<>(), relationships);
+
+                        // add relations at end, using node-uuids:
+                        final CypherDomainGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
+                        for (Relationship relationship : relationships) {
+                           final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
+                           final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
+                           final CypherDomainGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
+                                 setSrc(src).
+                                 setType(relationship.getType().name()).
+                                 setDst(dst);
+
+                           for (String key : relationship.getPropertyKeys())
+                              createRelationshipST.addPropertiesValue(cypherGroup.newstringProperty().setName(key).setValue(relationship.getProperty(key)));
+                           createRelationshipsST.addRelationshipsValue(createRelationshipST.toString());
+                        }
+
+                        SwingUtil.showTextResult("Export", createNodesST + (relationships.isEmpty() ? "" : ("\n" + createRelationshipsST)), nodeCanvas);
+                     }
+
+                     // todo consider creating a clone version of this
+                     private void exportNode(CypherDomainGroup.createNodesST export, CypherDomainGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
+
+                        if (visitedNodes.contains(node)) return;
+                        visitedNodes.add(node);
+
+                        final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-", "_");
+                        final CypherDomainGroup.createNodeST createNodeST = neoGroup.newcreateNode().
+                              setId(id);
+                        for (Label label : node.getLabels()) createNodeST.addLabelsValue(label);
+
+                        for (String key : node.getPropertyKeys())
+                           createNodeST.addPropertiesValue(neoGroup.newstringProperty().setName(key).setValue(node.getProperty(key)));
+                        export.addNodesValue(createNodeST.toString());
+
+                        final Set<Node> unvisitedNodes = new LinkedHashSet<>();
+                        for (Relationship relationship : node.getRelationships(Direction.OUTGOING)) {
+                           final Node endNode = relationship.getEndNode();
+                           if (!layerNodes.containsKey(endNode.getId())) continue;
+                           if (relationships.contains(relationship)) continue;
+                           relationships.add(relationship);
+
+                           if (!visitedNodes.contains(endNode)) unvisitedNodes.add(endNode);
+                        }
+
+                        for (Node unvisitedNode : unvisitedNodes) {
+                           if (visitedNodes.contains(unvisitedNode)) continue;
+                           exportNode(export, neoGroup, unvisitedNode, visitedNodes, relationships);
                         }
                      }
                   });
@@ -1363,6 +1676,10 @@ final class Workspace extends JPanel {
             setTextPaint(color);
          }
 
+         private void setTextPaint(Color color) {
+            delegate.setTextPaint(color);
+         }
+
          void highlight() {
             addAttribute("highlighted", Boolean.TRUE);
             setTextPaint(highlightedNodeColor);
@@ -1392,7 +1709,7 @@ final class Workspace extends JPanel {
             return getBooleanAttribute("selected", false);
          }
 
-         Node getNode() {
+         public Node getNode() {
             return (Node) getAttribute("node");
          }
 
@@ -1415,7 +1732,8 @@ final class Workspace extends JPanel {
          private PText pText;
 
          NeoRelationship(Relationship relationship, NodeCanvas.NeoNode source, NodeCanvas.NeoNode target) {
-            pText = new PText(relationship.getType().name());
+            //System.out.println("new relationship " + getNameAndLabelsFrom(source.getNode()) + " -> [ "+   relationship.getType() + " ] -> " + getNameAndLabelsFrom(target.getNode()));
+            pText = new PText();
             path = PPath.createLine(source.getFullBoundsReference().getCenter2D().getX(), source.getFullBoundsReference().getCenter2D().getY(), target.getFullBoundsReference().getCenter2D().getX(), target.getFullBoundsReference().getCenter2D().getY());
             path.setStrokePaint(currentPaint);
             path.addAttribute("id", relationship.getId());
@@ -1427,24 +1745,24 @@ final class Workspace extends JPanel {
 
             switch (relationPaintStrategy) {
                case showLinesAndLabels:
+                  this.pText.setText(relationship.getType().name());
+                  path.addChild(this.pText);
+                  break;
+               case showLinesAndProperties:
+                  this.pText.setText(propertiesFor(relationship));
                   path.addChild(this.pText);
                   break;
             }
 
             updatePath(source, target);
 
-            app.events.addRelationsDeletedListener(evt -> {
-               final Set<Long> relationsDeleted = (Set<Long>) evt.getNewValue();
-               if (relationsDeleted.contains(Long.valueOf(path.getAttribute("id").toString())))
-                  SwingUtilities.invokeLater(NodeCanvas.NeoRelationship.this::removeFromCanvas);
-            });
 
             final PBasicInputEventHandler relationEventListener = new PBasicInputEventHandler() {
                @Override
                public void mouseEntered(PInputEvent event) {
                   currentPaint = highlightedNodeColor;
                   repaintRelation();
-                  app.events.fireRelationHighlighted(NodeCanvas.NeoRelationship.this);
+                  app.events.firePropertyChange(RELATION_HIGHLIGHTED, NodeCanvas.NeoRelationship.this);
                }
 
                @Override
@@ -1473,40 +1791,71 @@ final class Workspace extends JPanel {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                              final Set<String> types = new TreeSet<>();
-                              app.model.graph().getGraphDb().getAllRelationshipTypes().forEach(relationshipType -> types.add(relationshipType.name()));
-                              final String newType = SwingUtil.showSelectDialog(NodeCanvas.this, types, relationship.getType().name());
-                              if (newType == null || newType.equals(relationship.getType().name())) return;
-                              final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
-                              for (String key : relationship.getPropertyKeys())
-                                 newRelationship.setProperty(key, relationship.getProperty(key));
+                              final String existingType = relationship.getType().name();
 
-                              if (layerNodes.containsKey(newRelationship.getStartNode().getId()) && layerNodes.containsKey(newRelationship.getEndNode().getId())) {
-                                 final NodeCanvas.NeoNode source = layerNodes.get(newRelationship.getStartNode().getId());
-                                 final NodeCanvas.NeoNode destination = layerNodes.get(newRelationship.getEndNode().getId());
-                                 final NodeCanvas.NeoRelationship nodeRelation = new NodeCanvas.NeoRelationship(newRelationship, source, destination);
-                                 layerRelations.put(newRelationship.getId(), nodeRelation);
-                                 relationLayer.addChild(nodeRelation.path);
-                              }
-                              relationship.delete();
+                              final Set<String> relationships = new LinkedHashSet<>();
+                              app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                              final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
+
+                              final JRadioButton radOneToMany = new JRadioButton();
+                              final JRadioButton radManyToOne = new JRadioButton("", true);
+                              final ButtonGroup group = new ButtonGroup();
+                              group.add(radOneToMany);
+                              group.add(radManyToOne);
+
+                              final JTextField txtSearch = new JTextField();
+                              txtSearch.addKeyListener(new KeyAdapter() {
+                                 @Override
+                                 public void keyReleased(KeyEvent e) {
+                                    SwingUtilities.invokeLater(() -> {
+                                       final String s = txtSearch.getText().trim().toLowerCase();
+                                       for (String lbl : relationships) {
+                                          if (lbl.toLowerCase().startsWith(s)) {
+                                             cboRelationships.setSelectedItem(lbl);
+                                          }
+                                       }
+                                    });
+                                 }
+                              });
+
+                              final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                              editor.addLabel("Relationship", 1, 1);
+                              editor.add(cboRelationships, 3, 1);
+                              editor.addLabel("Search", 1, 3);
+                              editor.add(txtSearch, 3, 3);
+                              editor.add(txtSearch, 3, 3);
+                              editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                              SwingUtil.showDialog(editor, app, "Change type", () -> {
+
+                                 final String newType = (String) cboRelationships.getSelectedItem();
+                                 if (newType == null || newType.equals(existingType)) return;
+
+                                 app.model.graph().doInTransaction(new Committer() {
+                                    @Override
+                                    public void doAction(Transaction tx1) throws Throwable {
+                                       final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
+                                       for (String key : relationship.getPropertyKeys())
+                                          newRelationship.setProperty(key, relationship.getProperty(key));
+
+                                       relationship.delete();
+                                    }
+
+                                    @Override
+                                    public void exception(Throwable throwable) {
+                                       SwingUtil.showExceptionNoStack(app, throwable);
+                                    }
+                                 });
+                              });
                            }
                         });
 
                         pop.add(new App.TransactionAction("Reverse Direction", app) {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
                               final Relationship newRelationship = relationship.getEndNode().createRelationshipTo(relationship.getStartNode(), relationship.getType());
                               for (String key : relationship.getPropertyKeys())
                                  newRelationship.setProperty(key, relationship.getProperty(key));
-
-                              if (layerNodes.containsKey(newRelationship.getStartNode().getId()) && layerNodes.containsKey(newRelationship.getEndNode().getId())) {
-                                 final NodeCanvas.NeoNode source = layerNodes.get(newRelationship.getStartNode().getId());
-                                 final NodeCanvas.NeoNode destination = layerNodes.get(newRelationship.getEndNode().getId());
-                                 final NodeCanvas.NeoRelationship nodeRelation = new NodeCanvas.NeoRelationship(newRelationship, source, destination);
-                                 layerRelations.put(newRelationship.getId(), nodeRelation);
-                                 relationLayer.addChild(nodeRelation.path);
-                              }
                               relationship.delete();
                            }
                         });
@@ -1515,7 +1864,7 @@ final class Workspace extends JPanel {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                              final String propertyValue = SwingUtil.showInputDialog("Property Value", NodeCanvas.this);
+                              final String propertyValue = SwingUtil.showInputDialog("Property Name and value", NodeCanvas.this);
                               if (propertyValue == null || propertyValue.trim().length() == 0 || propertyValue.trim().split("[ ]").length != 2)
                                  return;
 
@@ -1531,10 +1880,10 @@ final class Workspace extends JPanel {
                               if (SwingUtil.showConfirmDialog(app, "Delete " + getNameOrTypeFrom(relationship) + " ?")) {
                                  final NodeCanvas.NeoRelationship remove = layerRelations.remove(relationship.getId());
                                  if (remove != null) relationLayer.removeChild(path);
-                                 relationship.delete();
+                                 app.model.deleteRelations(Collections.singleton(relationship));
                               }
-                              app.events.fireNodeChanged(startNode);
-                              app.events.fireNodeChanged(endNode);
+                              app.events.firePropertyChange(NODE_CHANGED + startNode);
+                              app.events.firePropertyChange(NODE_CHANGED + endNode);
                            }
                         });
 
@@ -1550,7 +1899,7 @@ final class Workspace extends JPanel {
 
                private void onLeftClick() {
                   toggleSelect();
-                  app.events.fireRelationsSelected(getSelectedRelations());
+                  app.events.firePropertyChange(RELATIONS_SELECTED, getSelectedRelations());
                }
             };
             relationEventListener.getEventFilter().setMarksAcceptedEventsAsHandled(true);
@@ -1607,20 +1956,12 @@ final class Workspace extends JPanel {
          }
 
 
-
          boolean isSelected() {
             return path.getBooleanAttribute("selected", false);
          }
 
          Relationship getRelationship() {
             return (Relationship) path.getAttribute("relationship");
-         }
-
-         private void removeFromCanvas() {
-            ((NodeCanvas.NeoNode) path.getAttribute("source")).removePropertyChangeListener(NodeCanvas.NeoRelationship.this);
-            ((NodeCanvas.NeoNode) path.getAttribute("target")).removePropertyChangeListener(NodeCanvas.NeoRelationship.this);
-            layerRelations.remove(Long.valueOf(path.getAttribute("id").toString()));
-            relationLayer.removeChild(path);
          }
 
          private void updatePath(NodeCanvas.NeoNode source, NodeCanvas.NeoNode target) {
@@ -1809,10 +2150,17 @@ final class Workspace extends JPanel {
                   path.removeChild(pText);
                   break;
                case showLinesAndLabels:
+                  path.removeChild(pText);
+                  this.pText.setText(getRelationship().getType().name());
                   path.addChild(this.pText);
                   break;
                case showNothing:
                   path.removeChild(pText);
+                  break;
+               case showLinesAndProperties:
+                  path.removeChild(pText);
+                  this.pText.setText(propertiesFor(getRelationship()));
+                  path.addChild(this.pText);
                   break;
             }
 
@@ -1822,18 +2170,114 @@ final class Workspace extends JPanel {
          void setRelationPathStrategy() {
             updatePath(((NodeCanvas.NeoNode) path.getAttribute("source")), (NodeCanvas.NeoNode) path.getAttribute("target"));
          }
+
+         void removeFromCanvas() {
+            ((NodeCanvas.NeoNode) path.getAttribute("source")).removePropertyChangeListener(NeoRelationship.this);
+            ((NodeCanvas.NeoNode) path.getAttribute("target")).removePropertyChangeListener(NeoRelationship.this);
+            layerRelations.remove(Long.valueOf(path.getAttribute("id").toString()));
+            relationLayer.removeChild(path);
+         }
+      }
+   }
+
+   private static final class CanvasZoomHandler extends PBasicInputEventHandler {
+
+      static final double DEFAULT_SCALE_FACTOR = 0.1d;
+      private double scaleFactor = DEFAULT_SCALE_FACTOR;
+
+      private ZoomMode zoomMode = ZoomMode.ZOOM_ABOUT_CANVAS_CENTER;
+
+      CanvasZoomHandler() {
+         super();
+         PInputEventFilter eventFilter = new PInputEventFilter();
+         eventFilter.rejectAllEventTypes();
+         eventFilter.setAcceptsMouseWheelRotated(true);
+         setEventFilter(eventFilter);
+      }
+
+      double getScaleFactor() {
+         return scaleFactor;
+      }
+
+      void setScaleFactor(final double scaleFactor) {
+         this.scaleFactor = scaleFactor;
+      }
+
+      void zoomAboutMouse() {
+         zoomMode = ZoomMode.ZOOM_ABOUT_MOUSE;
+      }
+
+      public void zoomAboutCanvasCenter() {
+         zoomMode = ZoomMode.ZOOM_ABOUT_CANVAS_CENTER;
+      }
+
+      public void zoomAboutViewCenter() {
+         zoomMode = ZoomMode.ZOOM_ABOUT_VIEW_CENTER;
+      }
+
+      ZoomMode getZoomMode() {
+         return zoomMode;
+      }
+
+      public void mouseWheelRotated(final PInputEvent event) {
+
+         PCamera camera = event.getCamera();
+
+         // max scale min and max:
+         if ((camera.getViewScale() < 0.36d && event.getWheelRotation() < 0) || (camera.getViewScale() > 1.49d && event.getWheelRotation() > 0))
+            return;
+
+         double scale = 1.0d + event.getWheelRotation() * scaleFactor;
+         Point2D viewAboutPoint = getViewAboutPoint(event);
+         camera.scaleViewAboutPoint(scale, viewAboutPoint.getX(), viewAboutPoint.getY());
+      }
+
+      private Point2D getViewAboutPoint(final PInputEvent event) {
+         switch (zoomMode) {
+            case ZOOM_ABOUT_MOUSE:
+               return event.getPosition();
+            case ZOOM_ABOUT_CANVAS_CENTER:
+               Rectangle canvasBounds = ((PCanvas) event.getComponent()).getBounds();
+               Point2D canvasCenter = new Point2D.Double(canvasBounds.getCenterX(), canvasBounds.getCenterY());
+               event.getPath().canvasToLocal(canvasCenter, event.getCamera());
+               return event.getCamera().localToView(canvasCenter);
+            case ZOOM_ABOUT_VIEW_CENTER:
+               return event.getCamera().getBoundsReference().getCenter2D();
+         }
+         throw new IllegalArgumentException("illegal zoom mode " + zoomMode);
+      }
+
+      enum ZoomMode {
+         ZOOM_ABOUT_MOUSE, ZOOM_ABOUT_CANVAS_CENTER, ZOOM_ABOUT_VIEW_CENTER;
       }
    }
 
    private static String getNodeText(AppMotif.NodePaintStrategy nodePaintStrategy, Node node) {
       switch (nodePaintStrategy) {
          case showNameAndLabels:
-            return getNameAndLabelsFrom(node);
+            return getNameAndLabelsFrom(node) + " (" + node.getId() + ")";
          case showName:
-            return getString(node, AppMotif.Properties.name.name());
+            return getString(node, AppMotif.Properties.name.name(), "()");
          case showLabels:
             return labelsFor(node);
+         case showProperties:
+            return propertiesFor(node);
+         case showValues:
+
+            if (hasLabel(node, DomainPlugin.Entities.Value)) {
+               return getString(node, AppMotif.Properties.name.name(), "()");
+            } else {
+
+               for (Relationship instanceRelation : incoming(node, DomainPlugin.Relations.INSTANCE)) {
+                  final Node instanceNode = other(node, instanceRelation);
+                  if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+                     return StringTemplatePlugin.render(node, instanceNode);
+
+                  }
+               }
+            }
       }
+
       return "?";
    }
 }

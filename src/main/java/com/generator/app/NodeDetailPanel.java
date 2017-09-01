@@ -2,30 +2,20 @@ package com.generator.app;
 
 import com.generator.app.App.TransactionAction;
 import com.generator.editors.NeoModel;
-import com.generator.generators.templates.TemplateDomainImpl;
-import com.generator.generators.templates.domain.TemplateEntities;
-import com.generator.generators.templates.domain.TemplateParameter;
-import com.generator.generators.templates.domain.TemplateStatement;
-import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.SwingUtil;
-import org.antlr.runtime.Token;
-import org.neo4j.graphdb.*;
-import org.stringtemplate.v4.STErrorListener;
-import org.stringtemplate.v4.misc.STCompiletimeMessage;
-import org.stringtemplate.v4.misc.STMessage;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.*;
 
-import static com.generator.app.TemplateMotif.getLabelFor;
-import static com.generator.app.TemplateMotif.render;
+import static com.generator.app.AppEvents.*;
 import static com.generator.editors.BaseDomainVisitor.*;
 
 /**
@@ -36,6 +26,10 @@ class NodeDetailPanel extends JPanel {
    private App app;
    private Workspace workspace;
    private final JTabbedPane content = new JTabbedPane();
+   private LabelsPanel labelsPanel;
+   private PropertiesPanel propertiesPanel;
+   private RelationsPanel nodeRelationsPanel;
+   private RelationsPanel relationsPanel;
 
    NodeDetailPanel(App app, Workspace workspace) {
       super(new BorderLayout());
@@ -45,28 +39,58 @@ class NodeDetailPanel extends JPanel {
 
       add(content, BorderLayout.CENTER);
 
-      app.events.addNodesClosedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeDetailPanel.this, app.model) {
+      app.events.addPropertyChangeListener(GRAPH_NEW,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
-         public void doAction(Transaction tx) throws Throwable {
+         protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addNodesSelectedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeDetailPanel.this, app.model) {
+      app.events.addPropertyChangeListener(AppEvents.NODES_CLOSED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
-         public void doAction(Transaction tx) throws Throwable {
+         protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addRelationsSelectedListener(new AppEvents.EventsTransactionHandler(getClass(), NodeDetailPanel.this, app.model) {
+      app.events.addPropertyChangeListener(NODES_SELECTED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
          @Override
-         public void doAction(Transaction tx) throws Throwable {
+         protected void propertyChange(Object oldValue, Object newValue) {
             updatePanel();
          }
       });
 
-      app.events.addGraphNewListener(evt -> SwingUtilities.invokeLater(this::updatePanel));
+      app.events.addPropertyChangeListener(NODE_HIGHLIGHTED,evt -> {
+         labelsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+         propertiesPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+         nodeRelationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+         if (relationsPanel != null)
+            relationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+      });
+
+      app.events.addPropertyChangeListener(NODES_DELETED,evt -> {
+         labelsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
+         propertiesPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
+         nodeRelationsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
+      });
+
+      app.events.addPropertyChangeListener(RELATIONS_SELECTED,new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
+         @Override
+         protected void propertyChange(Object oldValue, Object newValue) {
+            updatePanel();
+         }
+      });
+
+      app.events.addPropertyChangeListener(RELATIONS_DELETED,evt -> {
+         if (relationsPanel != null)
+            relationsPanel.onRelationsDeleted((Set<Long>) evt.getNewValue());
+      });
+
+      app.events.addPropertyChangeListener(RELATION_HIGHLIGHTED,evt -> {
+         nodeRelationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
+         if (relationsPanel != null)
+            relationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
+      });
    }
 
    private void updatePanel() {
@@ -78,13 +102,13 @@ class NodeDetailPanel extends JPanel {
 
       int max = 0;
       if (!currentNodes.isEmpty()) {
-         content.add("Labels", new LabelsPanel(currentNodes));
-         content.add("Properties", new PropertiesPanel(currentNodes));
+         content.add("Labels", labelsPanel = new LabelsPanel(currentNodes));
+         content.add("Properties", propertiesPanel = new PropertiesPanel(currentNodes));
 
          final Set<Relationship> elements = new LinkedHashSet<>();
          for (Workspace.NodeCanvas.NeoNode node : currentNodes)
             node.getNode().getRelationships(Direction.OUTGOING).forEach(elements::add);
-         content.add("Node-Relations", new RelationsPanel(elements));
+         content.add("Node-Relations", nodeRelationsPanel = new RelationsPanel(elements));
          max += 3;
       }
 
@@ -92,20 +116,13 @@ class NodeDetailPanel extends JPanel {
          final Set<Relationship> elements = new LinkedHashSet<>();
          for (Workspace.NodeCanvas.NeoRelationship currentRelation : currentRelations)
             elements.add(currentRelation.getRelationship());
-         content.add("Relations", new RelationsPanel(elements));
+         content.add("Relations", relationsPanel = new RelationsPanel(elements));
          max += 1;
       }
 
       if (currentNodes.size() < 20) {
          for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes) {
-
-            if (currentNode.getNode().hasLabel(TemplateMotif.Entities._STTemplate))
-               content.add(getString(currentNode.getNode(), AppMotif.Properties.name.name()), new TemplateEditor(currentNode));
-
-            currentNode.getNode().getLabels().forEach(label -> app.model.graph().findNodes(TemplateMotif.Entities._STTemplate, AppMotif.Properties.name.name(), label.name()).forEachRemaining(templateNode -> content.add(getString(currentNode.getNode(), AppMotif.Properties.name.name()), new TemplateRenderPanel(currentNode, templateNode))));
-
-            if (currentNode.getNode().hasLabel((ProjectMotif.Entities._Directory)))
-               content.add(getString(currentNode.getNode(), AppMotif.Properties.name.name()), new DirectoryEditor(currentNode));
+            for (Plugin plugin : app.plugins) plugin.showEditorFor(currentNode, content);
          }
       }
 
@@ -122,6 +139,7 @@ class NodeDetailPanel extends JPanel {
 
       private AppMotif.PropertiesToShow propertiesToShow = app.model.getPropertiesFilter();
       private JScrollPane centerPanel;
+      private LabelsTable table;
 
       LabelsPanel(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
          super(new BorderLayout());
@@ -132,6 +150,8 @@ class NodeDetailPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                propertiesToShow = AppMotif.PropertiesToShow.all;
                app.model.setPropertiesFilter(propertiesToShow);
+               app.model.setPropertiesFilter(propertiesToShow);
+               app.model.setAppProperty("properties.filter", propertiesToShow.name());
                updateTable(currentNodes);
             }
          });
@@ -152,7 +172,7 @@ class NodeDetailPanel extends JPanel {
          filterPanel.add(radAll);
          filterPanel.add(radWithValues);
 
-         centerPanel = new JScrollPane(new LabelsTable(new LabelTableModel(currentNodes, getLabelsToShow(currentNodes))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+         centerPanel = new JScrollPane(table = new LabelsTable(new LabelTableModel(currentNodes, getLabelsToShow(currentNodes))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
          add(filterPanel, BorderLayout.NORTH);
          add(centerPanel, BorderLayout.CENTER);
@@ -184,7 +204,7 @@ class NodeDetailPanel extends JPanel {
                final LabelTableModel tableModel = new LabelTableModel(currentNodes, getLabelsToShow(currentNodes));
                SwingUtilities.invokeLater(() -> {
                   remove(centerPanel);
-                  add(centerPanel = new JScrollPane(new LabelsTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+                  add(centerPanel = new JScrollPane(table = new LabelsTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
                   revalidate();
                   repaint();
                });
@@ -196,6 +216,14 @@ class NodeDetailPanel extends JPanel {
             }
          });
       }
+
+      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         table.onNodeHighlighted(node);
+      }
+
+      void onNodesDeleted(Set<Long> nodeIds) {
+         table.onNodesDeleted(nodeIds);
+      }
    }
 
    private final class LabelsTable extends JTable {
@@ -205,13 +233,6 @@ class NodeDetailPanel extends JPanel {
          resizeColumnWidth(this);
          setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
          setRowSelectionAllowed(true);
-
-         app.events.addNodeHighlightedListener(evt -> {
-            final int index = model.getIndexOf((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
-            if (index == -1) return;
-            setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
-            scrollRectToVisible(getCellRect(index, 0, true));
-         });
 
          addMouseListener(new MouseAdapter() {
             @Override
@@ -228,6 +249,17 @@ class NodeDetailPanel extends JPanel {
             }
          });
       }
+
+      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         final int index = ((LabelTableModel) getModel()).getIndexOf(node);
+         if (index == -1) return;
+         setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
+         scrollRectToVisible(getCellRect(index, 0, true));
+      }
+
+      void onNodesDeleted(Set<Long> nodeIds) {
+         ((LabelTableModel) getModel()).onNodesDeleted(nodeIds);
+      }
    }
 
    private final class LabelTableModel extends AbstractTableModel {
@@ -242,15 +274,14 @@ class NodeDetailPanel extends JPanel {
 
          for (Workspace.NodeCanvas.NeoNode node : nodes)
             content.add(new LabelTableModel.LabelElement(node, columns));
+      }
 
-         app.events.addNodesDeletedListener(evt -> {
-            final Set<Long> nodeIds = (Set<Long>) evt.getNewValue();
-            for (int i = content.size() - 1; i >= 0; i--) {
-               if (nodeIds.contains(content.get(i).node.id()))
-                  content.remove(content.get(i));
-            }
-            fireTableDataChanged();
-         });
+      void onNodesDeleted(Set<Long> nodeIds) {
+         for (int i = content.size() - 1; i >= 0; i--) {
+            if (nodeIds.contains(content.get(i).node.id()))
+               content.remove(content.get(i));
+         }
+         fireTableDataChanged();
       }
 
       @Override
@@ -291,6 +322,7 @@ class NodeDetailPanel extends JPanel {
                final LabelTableModel.LabelElement element = content.get(rowIndex);
                if (((Boolean) aValue)) element.addLabel(columns.get(columnIndex));
                else element.removeLabel(columns.get(columnIndex));
+               app.events.firePropertyChange(NODE_CHANGED +element.node.id());
                SwingUtilities.invokeLater(() -> fireTableCellUpdated(rowIndex, columnIndex));
             }
 
@@ -351,6 +383,7 @@ class NodeDetailPanel extends JPanel {
 
       private AppMotif.PropertiesToShow propertiesToShow = app.model.getPropertiesFilter();
       private JScrollPane centerPanel;
+      private PropertiesTable table;
 
       PropertiesPanel(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
          super(new BorderLayout());
@@ -381,7 +414,7 @@ class NodeDetailPanel extends JPanel {
          filterPanel.add(radAll);
          filterPanel.add(radWithValues);
 
-         centerPanel = new JScrollPane(new PropertiesTable(new PropertyTableModel(currentNodes, getPropertiesToShow(currentNodes))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+         centerPanel = new JScrollPane(table = new PropertiesTable(new PropertyTableModel(currentNodes, getPropertiesToShow(currentNodes))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
          add(filterPanel, BorderLayout.NORTH);
          add(centerPanel, BorderLayout.CENTER);
@@ -413,7 +446,7 @@ class NodeDetailPanel extends JPanel {
                final PropertyTableModel tableModel = new PropertyTableModel(currentNodes, getPropertiesToShow(currentNodes));
                SwingUtilities.invokeLater(() -> {
                   remove(centerPanel);
-                  add(centerPanel = new JScrollPane(new PropertiesTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+                  add(centerPanel = new JScrollPane(table = new PropertiesTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
                   revalidate();
                   repaint();
                });
@@ -425,6 +458,14 @@ class NodeDetailPanel extends JPanel {
             }
          });
       }
+
+      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         table.onNodeHighlighted(node);
+      }
+
+      void onNodesDeleted(Set<Long> nodeIds) {
+         table.onNodesDeleted(nodeIds);
+      }
    }
 
    private final class PropertiesTable extends JTable {
@@ -435,13 +476,6 @@ class NodeDetailPanel extends JPanel {
          setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
          setAutoCreateRowSorter(true);
          setRowSelectionAllowed(true);
-
-         app.events.addNodeHighlightedListener(evt -> {
-            final int index = model.getIndexOf((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
-            if (index == -1) return;
-            setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
-            scrollRectToVisible(getCellRect(index, 0, true));
-         });
 
          addMouseListener(new MouseAdapter() {
             @Override
@@ -458,6 +492,17 @@ class NodeDetailPanel extends JPanel {
             }
          });
       }
+
+      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         final int index = ((PropertyTableModel) getModel()).getIndexOf(node);
+         if (index == -1) return;
+         setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
+         scrollRectToVisible(getCellRect(index, 0, true));
+      }
+
+      void onNodesDeleted(Set<Long> nodesDeleted) {
+         ((PropertyTableModel) getModel()).onNodesDeleted(nodesDeleted);
+      }
    }
 
    private final class PropertyTableModel extends AbstractTableModel {
@@ -472,14 +517,13 @@ class NodeDetailPanel extends JPanel {
 
          for (Workspace.NodeCanvas.NeoNode node : nodes)
             content.add(new PropertyTableModel.NodeElement(node, columns));
+      }
 
-         app.events.addNodesDeletedListener(evt -> {
-            final Set<Long> nodesDeleted = (Set<Long>) evt.getNewValue();
-            for (int i = content.size() - 1; i >= 0; i--)
-               if (nodesDeleted.contains(content.get(i).node.id()))
-                  content.remove(content.get(i));
-            fireTableDataChanged();
-         });
+      void onNodesDeleted(Set<Long> nodesDeleted) {
+         for (int i = content.size() - 1; i >= 0; i--)
+            if (nodesDeleted.contains(content.get(i).node.id()))
+               content.remove(content.get(i));
+         fireTableDataChanged();
       }
 
       @Override
@@ -535,7 +579,7 @@ class NodeDetailPanel extends JPanel {
                   element.setProperty(columns.get(index), aValue);
                SwingUtilities.invokeLater(() -> {
                   fireTableCellUpdated(rowIndex, columnIndex);
-                  app.events.fireNodeChanged(element.node.id(), columns.get(index), (aValue == null || aValue.toString().length() == 0) ? null : aValue);
+                  app.events.firePropertyChange(NODE_CHANGED + element.node.id(), columns.get(index), (aValue == null || aValue.toString().length() == 0) ? null : aValue);
                });
             }
 
@@ -587,384 +631,11 @@ class NodeDetailPanel extends JPanel {
       }
    }
 
-   private final class DirectoryEditor extends JPanel {
-      DirectoryEditor(Workspace.NodeCanvas.NeoNode node) {
-         super(new BorderLayout());
-
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
-         txtEditor.setTabSize(3);
-         txtEditor.setCaretPosition(0);
-
-         final File getDir = ProjectMotif.getFile(node.getNode());
-
-         final StringBuilder out = new StringBuilder();
-         listDirectory(getDir, out);
-
-         txtEditor.setText(out.toString().trim());
-
-         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
-      }
-
-      private void listDirectory(File getDir, StringBuilder out) {
-         out.append("\n").append(getDir.getAbsolutePath()).append("\n");
-         for (File file : getDir.listFiles()) {
-            if (file.isFile()) out.append(file.getAbsolutePath()).append("\n");
-            else listDirectory(file, out);
-         }
-      }
-   }
-
-   private final class TemplateEditor extends JPanel {
-      TemplateEditor(Workspace.NodeCanvas.NeoNode templateNode) {
-         super(new BorderLayout());
-
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setText(get(templateNode.getNode(), TemplateMotif.Properties._text.name(), ""));
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
-         txtEditor.setTabSize(3);
-         txtEditor.setCaretPosition(0);
-
-         txtEditor.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-               if (SwingUtilities.isRightMouseButton(e))
-                  SwingUtilities.invokeLater(() -> app.showTextProcessor(txtEditor.getText()));
-            }
-         });
-
-         final Border defaultBorder = txtEditor.getBorder();
-         final Color uneditedColor = txtEditor.getBackground();
-         final Color editedColor = Color.decode("#fc8d59");
-
-         final String statementName = getString(templateNode.getNode(), AppMotif.Properties.name.name());
-         final String delimiter = "~";
-
-         final DefaultHighlighter.DefaultHighlightPainter paramsHighlighter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 127, 0));
-         txtEditor.addKeyListener(new KeyAdapter() {
-
-            String startText = get(templateNode.getNode(), TemplateMotif.Properties._text.name(), "");
-
-            public void keyPressed(KeyEvent ke) {
-
-               if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  final int oldCaret = txtEditor.getCaretPosition();
-                  txtEditor.setBorder(defaultBorder);
-                  final String text = txtEditor.getText().trim();
-
-                  final TemplateStatement parsed;
-                  try {
-                     final StringBuilder errors = new StringBuilder("Errors");
-                     parsed = new TemplateFileParser().parse(delimiter, statementName, text, new STErrorListener() {
-                        @Override
-                        public void compileTimeError(STMessage stMessage) {
-                           if (stMessage instanceof STCompiletimeMessage) {
-                              final Token token = ((STCompiletimeMessage) stMessage).token;
-                              errors.append("\nat ").append(token.getLine()).append(" position ").append(token.getCharPositionInLine());
-                           }
-                        }
-
-                        @Override
-                        public void runTimeError(STMessage stMessage) {
-
-                        }
-
-                        @Override
-                        public void IOError(STMessage stMessage) {
-
-                        }
-
-                        @Override
-                        public void internalError(STMessage stMessage) {
-
-                        }
-                     });
-
-                     if (!"Errors".equals(errors.toString()))
-                        throw new IllegalStateException(errors.toString());
-                     else if (parsed == null)
-                        throw new IllegalStateException("Template is invalid. check syntax");
-                  } catch (Throwable e) {
-                     txtEditor.setBorder(BorderFactory.createLineBorder(Color.RED));
-                     SwingUtil.showExceptionNoStack(txtEditor, e);
-                     return;
-                  }
-
-                  SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-                     @Override
-                     public void doAction(Transaction tx) throws Throwable {
-                        final java.util.List<Node> existingParameters = new ArrayList<>();
-                        outgoing(templateNode.getNode(), TemplateMotif.Relations.TEMPLATE_PARAMETER).forEach(relationship -> existingParameters.add(other(templateNode.getNode(), relationship)));
-
-                        final java.util.List<TemplateParameter> parameters = parsed.getParameters();
-                        for (TemplateParameter templateParameter : parameters) {
-                           final String parameterType = getLabelFor(templateParameter.getDomainEntityType());
-
-                           int size = existingParameters.size();
-                           for (int i = existingParameters.size() - 1; i >= 0; i--) {
-                              final Node existingParameter = existingParameters.get(i);
-                              if (templateParameter.getPropertyName().equals(getString(existingParameter, AppMotif.Properties.name.name()))) {
-                                 if (hasLabel(existingParameter, parameterType)) {
-                                    if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY)) {
-                                       System.out.println("todo: check deprecation here, if already in use");
-                                       existingParameter.getPropertyKeys().forEach(s -> existingParameter.removeProperty("key_" + s));
-                                       templateParameter.getKvNames().forEach(s -> existingParameter.setProperty("key_" + s, s));
-                                    }
-                                    existingParameters.remove(existingParameter);
-                                    break;
-                                 }
-                              }
-                           }
-
-                           if (existingParameters.size() == size) {
-                              final Node node = app.model.graph().newNode(parameterType);
-                              node.setProperty(AppMotif.Properties.name.name(), templateParameter.getPropertyName());
-                              if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY))
-                                 templateParameter.getKvNames().forEach(s -> node.setProperty("key_" + s, s));
-                              templateNode.getNode().createRelationshipTo(node, TemplateMotif.Relations.TEMPLATE_PARAMETER);
-                           }
-                        }
-
-                        for (Node existingParameter : existingParameters) {
-                           if (hasIncoming(existingParameter, TemplateMotif.Relations.PARAMETER)) {
-                              existingParameter.setProperty(TemplateMotif.Properties._deprecated.name(), Boolean.TRUE);
-                           } else {
-                              incoming(existingParameter).forEach(Relationship::delete);
-                              existingParameter.delete();
-                           }
-                        }
-
-                        templateNode.getNode().setProperty(TemplateMotif.Properties._text.name(), txtEditor.getText().trim());
-                        txtEditor.setText(parsed.getText().trim());
-                        txtEditor.setCaretPosition(Math.min(text.length(), Math.max(0, oldCaret)));
-                        startText = get(templateNode.getNode(), TemplateMotif.Properties._text.name(), "");
-                        txtEditor.setBackground(uneditedColor);
-
-                        // re-render all statements of this template
-                        app.model.graph().findNodes(org.neo4j.graphdb.Label.label(getString(templateNode.getNode(), AppMotif.Properties.name.name()))).forEachRemaining(statementNode -> outgoing(statementNode, ProjectMotif.Relations.RENDERER).forEach(rendererRelation -> {
-                           final Node dirNode = other(statementNode, rendererRelation);
-                           final String content = render(statementNode, templateNode.getNode(), app.model.graph());
-                           ProjectMotif.renderToFile(rendererRelation, statementNode, content, dirNode, app);
-                        }));
-                     }
-
-                     @Override
-                     public void exception(Throwable throwable) {
-                        SwingUtil.showException(txtEditor, throwable);
-                     }
-                  }));
-
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_L && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  insertListProperty();
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_I && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  insertIf();
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_SPACE && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  insertSimpleProperty();
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_R && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  replaceAndInsertProperty();
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_M && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  makeMethod();
-
-               } else if (ke.getKeyCode() == KeyEvent.VK_DELETE && ke.getModifiers() == KeyEvent.SHIFT_MASK) {
-                  deleteCurrentLine();
-
-               } else {
-                  SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
-               }
-            }
-
-            private void makeMethod() {
-               final String selected = txtEditor.getSelectedText();
-               if (selected == null || selected.length() < 1) return;
-               System.out.println(selected);
-            }
-
-            private void replaceAndInsertProperty() {
-               final String selected = txtEditor.getSelectedText();
-               if (selected == null || selected.length() < 1) return;
-
-               final String propertyName = SwingUtil.showInputDialog("propertyName", txtEditor);
-               if (propertyName == null) return;
-
-               final String replacement = delimiter + propertyName + delimiter;
-               txtEditor.setText(txtEditor.getText().replaceAll(selected, (delimiter.equals("$") ? replacement.replaceAll("\\$", "\\\\\\$") : replacement)));
-               SwingUtil.tryToHighlight(txtEditor, Collections.singletonList(replacement), paramsHighlighter);
-            }
-
-            private void insertSimpleProperty() {
-               SwingUtilities.invokeLater(() -> {
-
-                  removeSelectedTextIfAny();
-
-                  final int caretPosition = txtEditor.getCaretPosition();
-                  txtEditor.insert(delimiter + "" + delimiter, caretPosition);
-                  txtEditor.setCaretPosition(caretPosition + 1);
-               });
-            }
-
-            private void insertListProperty() {
-
-               final String input = SwingUtil.showInputDialog(TemplateDomainImpl.Properties.name.name(), txtEditor);
-               if (input == null) return;
-
-               final String name = input.contains(" ") ? input.split(" ")[0] : input.trim();
-               final String separator = input.contains(" ") ? input.split(" ")[1] : null;
-
-               SwingUtilities.invokeLater(() -> {
-
-                  removeSelectedTextIfAny();
-
-                  final int caretPosition = txtEditor.getCaretPosition();
-                  final String pre = delimiter + name + ":{it|";
-                  final String sep = separator == null ? "" : ";separator=\"" + separator + "\"";
-                  final String list = pre + "}" + sep + delimiter;
-                  txtEditor.insert(list, caretPosition);
-                  txtEditor.setCaretPosition(caretPosition + pre.length());
-               });
-            }
-
-            private void removeSelectedTextIfAny() {
-               if (txtEditor.getSelectedText() != null) {
-                  final int selectionStart = txtEditor.getSelectionStart();
-                  txtEditor.replaceRange("", selectionStart, txtEditor.getSelectionEnd());
-                  txtEditor.setCaretPosition(selectionStart);
-               }
-            }
-
-            private void insertIf() {
-
-               final String input = SwingUtil.showInputDialog("condition", txtEditor);
-               if (input == null) return;
-
-               final String name = input.trim();
-
-               SwingUtilities.invokeLater(() -> {
-
-                  removeSelectedTextIfAny();
-
-                  final int caretPosition = txtEditor.getCaretPosition();
-                  final String pre = delimiter + "if(" + name + ")" + delimiter;
-                  final String list = pre + delimiter + "endif" + delimiter;
-                  txtEditor.insert(list, caretPosition);
-                  txtEditor.setCaretPosition(caretPosition + pre.length());
-               });
-            }
-
-            private void deleteCurrentLine() {
-               final String txt = txtEditor.getText();
-               int startOfLine = txtEditor.getCaretPosition();
-               while (startOfLine > 0) {
-
-                  startOfLine--;
-
-                  if (startOfLine < 0) {
-                     startOfLine++;
-                     break;
-                  }
-
-                  if (txt.charAt(startOfLine) == '\n') {
-                     startOfLine++;
-                     break;
-                  }
-               }
-
-               int endOfLine = startOfLine;
-               while (endOfLine < txt.length()) {
-
-                  if (endOfLine >= txt.length()) {
-                     endOfLine = txt.length() - 1;
-                     break;
-                  }
-
-                  if (txt.charAt(endOfLine) == '\n') {
-                     break;
-                  }
-
-                  endOfLine++;
-               }
-
-               if (endOfLine == startOfLine) {
-                  endOfLine++;
-                  if (endOfLine >= txt.length())
-                     endOfLine = txt.length() - 1;
-               }
-
-               if (endOfLine <= startOfLine) return;
-
-               txtEditor.replaceRange("", startOfLine, endOfLine);
-            }
-         });
-
-         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
-      }
-   }
-
-   private final class TemplateRenderPanel extends JPanel {
-      TemplateRenderPanel(Workspace.NodeCanvas.NeoNode statementNode, Node templateNode) {
-         super(new BorderLayout());
-
-         final JTextArea txtEditor = new JTextArea(25, 85);
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
-         txtEditor.setTabSize(3);
-         txtEditor.setEditable(false);
-         txtEditor.setText(render(statementNode.getNode(), templateNode, app.model.graph()));
-         txtEditor.setCaretPosition(0);
-
-         txtEditor.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-               if (SwingUtilities.isLeftMouseButton(e)) {
-                  onLeftClick(txtEditor, statementNode, templateNode);
-               } else if (SwingUtilities.isRightMouseButton(e)) {
-                  onRightClick(txtEditor, statementNode, templateNode);
-               }
-            }
-         });
-
-         app.events.addNodeChangedListener(statementNode.id(), new AppEvents.EventsTransactionHandler(getClass(), TemplateRenderPanel.this, app.model) {
-            @Override
-            public void doAction(Transaction tx) throws Throwable {
-               txtEditor.setText(render(statementNode.getNode(), templateNode, app.model.graph()));
-               txtEditor.setCaretPosition(0);
-            }
-         });
-
-         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
-      }
-
-      private void onLeftClick(JTextArea txtEditor, Workspace.NodeCanvas.NeoNode statementNode, Node templateNode) {
-         SwingUtilities.invokeLater(() -> app.model.graph().doInTransaction(new NeoModel.Committer() {
-            @Override
-            public void doAction(Transaction tx) throws Throwable {
-               txtEditor.setText(render(statementNode.getNode(), templateNode, app.model.graph()));
-               txtEditor.setCaretPosition(0);
-            }
-
-            @Override
-            public void exception(Throwable throwable) {
-               final StringBuilder stack = new StringBuilder("ERROR: " + throwable.getMessage() + "\n");
-               for (StackTraceElement stackTraceElement : throwable.getStackTrace())
-                  stack.append(stackTraceElement.toString()).append("\n");
-               txtEditor.setText(stack.toString());
-               txtEditor.setCaretPosition(0);
-            }
-         }));
-      }
-
-      private void onRightClick(JTextArea txtEditor, Workspace.NodeCanvas.NeoNode statementNode, Node templateNode) {
-         SwingUtil.toClipboard(txtEditor.getText());
-      }
-   }
-
    private final class RelationsPanel extends JPanel {
 
       private AppMotif.PropertiesToShow propertiesToShow = app.model.getPropertiesFilter();
       private JScrollPane centerPanel;
+      private RelationsTable table;
 
       RelationsPanel(final Set<Relationship> elements) {
          super(new BorderLayout());
@@ -996,7 +667,7 @@ class NodeDetailPanel extends JPanel {
          filterPanel.add(radWithValues);
 
          add(filterPanel, BorderLayout.NORTH);
-         add(centerPanel = new JScrollPane(new RelationsTable(new RelationTableModel(elements, getPropertiesToShow(elements))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+         add(centerPanel = new JScrollPane(table = new RelationsTable(new RelationTableModel(elements, getPropertiesToShow(elements))), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
       }
 
       private Set<String> getPropertiesToShow(final Set<Relationship> elements) {
@@ -1026,7 +697,7 @@ class NodeDetailPanel extends JPanel {
                final RelationTableModel tableModel = new RelationTableModel(elements, getPropertiesToShow(elements));
                SwingUtilities.invokeLater(() -> {
                   remove(centerPanel);
-                  add(centerPanel = new JScrollPane(new RelationsTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
+                  add(centerPanel = new JScrollPane(table = new RelationsTable(tableModel), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
                   revalidate();
                   repaint();
                });
@@ -1037,6 +708,22 @@ class NodeDetailPanel extends JPanel {
                SwingUtil.showException(NodeDetailPanel.this, throwable);
             }
          });
+      }
+
+      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         table.onNodeHighlighted(node);
+      }
+
+      void onRelationsHighlighted(Workspace.NodeCanvas.NeoRelationship relationship) {
+         table.onRelationsHighlighted(relationship);
+      }
+
+      void onNodesDeleted(Set<Long> nodes) {
+         table.onNodesDeleted(nodes);
+      }
+
+      void onRelationsDeleted(Set<Long> relations) {
+         table.onRelationsDeleted(relations);
       }
    }
 
@@ -1049,26 +736,6 @@ class NodeDetailPanel extends JPanel {
          setAutoCreateRowSorter(true);
          setRowSelectionAllowed(true);
          setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-
-         app.events.addNodeHighlightedListener(evt -> {
-            final Set<Integer> indices = tableModel.getIndicesFor((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
-            final ListSelectionModel selectionModel = getSelectionModel();
-            selectionModel.clearSelection();
-            if (indices.isEmpty()) return;
-            for (Integer index : indices)
-               selectionModel.addSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
-            scrollRectToVisible(getCellRect(indices.iterator().next(), 0, true));
-         });
-
-         app.events.addRelationsHighlightedListener(evt -> {
-            final Set<Integer> indices = tableModel.getIndicesFor((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
-            final ListSelectionModel selectionModel = getSelectionModel();
-            selectionModel.clearSelection();
-            if (indices.isEmpty()) return;
-            for (Integer index : indices)
-               selectionModel.addSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
-            scrollRectToVisible(getCellRect(indices.iterator().next(), 0, true));
-         });
 
          addMouseListener(new MouseAdapter() {
             @Override
@@ -1092,8 +759,10 @@ class NodeDetailPanel extends JPanel {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      if (SwingUtil.showConfirmDialog(app, "Delete relation" + (elements.size() == 1 ? "" : "s") + " ?")) {
+                        final Set<Relationship> relations = new LinkedHashSet<>();
                         for (RelationTableModel.RelationElement element : elements)
-                           element.relationship.delete();
+                           relations.add(element.relationship);
+                        app.model.deleteRelations(relations);
                      }
                   }
                });
@@ -1135,8 +804,10 @@ class NodeDetailPanel extends JPanel {
                            app.model.graph().doInTransaction(new NeoModel.Committer() {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
+                                 final Set<Relationship> relations = new LinkedHashSet<>();
                                  for (RelationTableModel.RelationElement element : elements)
-                                    element.relationship.delete();
+                                    relations.add(element.relationship);
+                                 app.model.deleteRelations(relations);
                               }
 
                               @Override
@@ -1150,6 +821,34 @@ class NodeDetailPanel extends JPanel {
                }
             }
          });
+      }
+
+      private void onRelationsHighlighted(Workspace.NodeCanvas.NeoRelationship node) {
+         final Set<Integer> indices = ((RelationTableModel) getModel()).getIndicesFor(node);
+         final ListSelectionModel selectionModel = getSelectionModel();
+         selectionModel.clearSelection();
+         if (indices.isEmpty()) return;
+         for (Integer index : indices)
+            selectionModel.addSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
+         scrollRectToVisible(getCellRect(indices.iterator().next(), 0, true));
+      }
+
+      private void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+         final Set<Integer> indices = ((RelationTableModel) getModel()).getIndicesFor(node);
+         final ListSelectionModel selectionModel = getSelectionModel();
+         selectionModel.clearSelection();
+         if (indices.isEmpty()) return;
+         for (Integer index : indices)
+            selectionModel.addSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
+         scrollRectToVisible(getCellRect(indices.iterator().next(), 0, true));
+      }
+
+      void onRelationsDeleted(Set<Long> relations) {
+         ((RelationTableModel) getModel()).onRelationsDeleted(relations);
+      }
+
+      void onNodesDeleted(Set<Long> nodes) {
+         ((RelationTableModel) getModel()).onNodesDeleted(nodes);
       }
    }
 
@@ -1165,22 +864,20 @@ class NodeDetailPanel extends JPanel {
 
          for (Relationship element : elements)
             content.add(new RelationElement(element, element.getStartNode(), columns));
+      }
 
-         app.events.addNodesDeletedListener(evt -> {
-            final Set<Long> nodesDeleted = (Set<Long>) evt.getNewValue();
-            for (int i = content.size() - 1; i >= 0; i--)
-               if (content.get(i).referencesNodes(nodesDeleted))
-                  content.remove(content.get(i));
-            fireTableDataChanged();
-         });
+      void onRelationsDeleted(Set<Long> relations) {
+         for (int i = content.size() - 1; i >= 0; i--)
+            if (relations.contains(content.get(i).id))
+               content.remove(content.get(i));
+         fireTableDataChanged();
+      }
 
-         app.events.addRelationsDeletedListener(evt -> {
-            final Set<Long> relations = (Set<Long>) evt.getNewValue();
-            for (int i = content.size() - 1; i >= 0; i--)
-               if (relations.contains(content.get(i).id))
-                  content.remove(content.get(i));
-            fireTableDataChanged();
-         });
+      void onNodesDeleted(Set<Long> nodesDeleted) {
+         for (int i = content.size() - 1; i >= 0; i--)
+            if (content.get(i).referencesNodes(nodesDeleted))
+               content.remove(content.get(i));
+         fireTableDataChanged();
       }
 
       @Override

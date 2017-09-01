@@ -8,7 +8,6 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.StaticHandler;
 
-import static com.generator.util.VertxWebUtil.debug;
 import static io.netty.handler.codec.http.HttpResponseStatus.BAD_REQUEST;
 
 /**
@@ -26,7 +25,6 @@ public abstract class GenericRegexpVerticle extends AbstractVerticle {
       router.route().handler(BodyHandler.create());
 
       router.get("/genericRegexp/start").handler(routingContext -> {
-         log.debug(debug(routingContext));
 
          onStart(routingContext);
       });

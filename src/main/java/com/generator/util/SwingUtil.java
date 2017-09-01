@@ -117,6 +117,10 @@ public class SwingUtil {
    }
 
    public static void showTextResult(String title, String text, Component parentComponent) {
+      showTextResult(title, text, parentComponent, new Dimension(800, 600));
+   }
+
+   public static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize) {
       final JPanel panel = new JPanel(new BorderLayout());
       panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
 
@@ -127,10 +131,12 @@ public class SwingUtil {
       txtEditor.setEditable(false);
 
       final JScrollPane content = new JScrollPane(txtEditor);
-      content.setMaximumSize(new Dimension(800, 600));
-      content.setPreferredSize(new Dimension(800, 600));
-      content.setMinimumSize(new Dimension(800, 600));
-      content.setSize(new Dimension(800, 600));
+      if (defaultSize != null) {
+         content.setMaximumSize(defaultSize);
+         content.setPreferredSize(defaultSize);
+         content.setMinimumSize(defaultSize);
+         content.setSize(defaultSize);
+      }
       panel.add(content, BorderLayout.CENTER);
       JOptionPane.showMessageDialog(parentComponent, panel, "Result", JOptionPane.INFORMATION_MESSAGE);
    }
@@ -799,7 +805,7 @@ public class SwingUtil {
       }
    }
 
-   public static void setClosestSelected(JComboBox<Object> comboBox, Object[] values, String value) {
+   public static void selectByLevensthein(JComboBox<Object> comboBox, Object[] values, String value) {
       int min = Integer.MAX_VALUE;
       String defaultValue = null;
       for (Object property : values) {
@@ -919,15 +925,17 @@ public class SwingUtil {
          int row = 1;
          for (Component component : components) {
             add(component, column, row);
-            column+=2;
+            column += 2;
             if (column > columnCount) {
                column = 1;
-               row+=2;
+               row += 2;
             }
          }
       }
 
-      public static Component filler() { return new JLabel(""); }
+      public static Component filler() {
+         return new JLabel("");
+      }
 
       public FormPanel(String columns, String rows, CellConstraints.Alignment colAlign, CellConstraints.Alignment rowAlign) {
          this.cc = new CellConstraints();

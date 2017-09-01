@@ -1,4 +1,4 @@
-// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/java/parser/Java.g4 by ANTLR 4.6
+// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/java/parser/Java.g4 by ANTLR 4.7
 package com.generator.generators.java.parser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 

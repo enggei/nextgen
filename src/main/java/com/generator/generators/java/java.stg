@@ -95,8 +95,6 @@ ca(action,finally,predicate) ::= <<case~predicate~:~action~ ~finally~;>>
 class(abstract,comment,comparable,equality,extends,final,implement,imports,innerClasses,lexical,methods,name,package,properties,scope,test) ::= <<~package(package)~
 ~imports(imports)~
 
-import java.util.*;
-
 ~classComment(text=comment)~
 ~classDeclaration(scope=scope,abstract=abstract,final=final,name=name,extends=extends,implement=implement,comparable=comparable)~
 

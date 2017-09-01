@@ -20,7 +20,6 @@ import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.type.ClassOrInterfaceType;
-import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -37,10 +36,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.generator.editors.BaseDomainVisitor.*;
 import static com.generator.generators.java.JavaDomain.Relations.FIELD;
-import static com.generator.generators.javareflection.JavaBuilderDomain.Entities.*;
-import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.*;
-import static com.generator.generators.javareflection.JavaBuilderDomain.Properties.*;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Entities.CLASS;
 import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.PACKAGE;
+import static com.generator.generators.javareflection.JavaBuilderDomain.Relations.PARENT;
 
 
 public class JavaparserTests {
@@ -52,6 +50,8 @@ public class JavaparserTests {
    public static void setup() {
       System.setProperty("generator.path", "src/main/java/com/generator/generators");
    }
+
+
 
    @Test
    public void testJavaParsingVisitor() throws IOException, ParseException {

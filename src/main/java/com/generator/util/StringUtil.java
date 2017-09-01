@@ -217,6 +217,10 @@ public final class StringUtil {
       return v0[s2.length()];
    }
 
+   public static String trimEnds(int offset, String text) {
+      return text.substring(offset, text.length()-offset);
+   }
+
    public interface Concatenate<T> {
 
       String concatenate(T item, boolean isFirst);

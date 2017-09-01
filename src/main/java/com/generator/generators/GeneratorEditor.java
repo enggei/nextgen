@@ -14,7 +14,6 @@ import com.generator.generators.javareflection.JavaBuilderDomainImpl;
 import com.generator.generators.json.JsonDomainImpl;
 import com.generator.generators.maven.MavenDomainImpl;
 import com.generator.generators.meta.MetaDomainImpl;
-import com.generator.generators.mysql.MysqlDomainImpl;
 import com.generator.generators.neo.NeoDomainImpl;
 import com.generator.generators.project.ProjectDomainImpl;
 import com.generator.generators.templates.TemplateDomainImpl;
@@ -129,7 +128,6 @@ public class GeneratorEditor extends NeoEditor {
       domains.add(new VertxDomainImpl());
       domains.add(new ProjectDomainImpl());
       domains.add(new MavenDomainImpl());
-      domains.add(new MysqlDomainImpl());
       domains.add(new JsonDomainImpl());
       domains.add(new JavaDomainImpl());
       domains.add(new NeoDomainImpl());

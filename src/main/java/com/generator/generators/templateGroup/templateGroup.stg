@@ -119,7 +119,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Wraps STGroup-methods based on '~domain~.stg' file<br/>
  */
 public final class ~name;format="capitalize"~ {
-   // old ~domain~
+
    private final STGroup stGroup;
    private final char delimiter;
 

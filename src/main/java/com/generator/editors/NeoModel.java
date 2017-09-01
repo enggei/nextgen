@@ -7,6 +7,12 @@ import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+import static com.generator.editors.BaseDomainVisitor.getString;
+import static com.generator.editors.BaseDomainVisitor.other;
+import static com.generator.editors.BaseDomainVisitor.outgoing;
 
 /**
  * User: goe
@@ -19,6 +25,9 @@ public class NeoModel {
 
    private final GraphDatabaseService graphDb;
    private final Index<Node> uuids;
+   private final NeoModelListener listener;
+
+   private final AtomicBoolean isShutdown = new AtomicBoolean(false);
 
    public interface NeoModelListener {
 
@@ -38,9 +47,9 @@ public class NeoModel {
          tx.success();
       }
 
+      this.listener = listener;
       Runtime.getRuntime().addShutdownHook(new Thread(() -> {
          close();
-         if (listener != null) listener.closed(NeoModel.this);
       }));
    }
 
@@ -49,7 +58,9 @@ public class NeoModel {
    }
 
    public void close() {
+      if (listener != null && !isShutdown.get()) listener.closed(NeoModel.this);
       graphDb.shutdown();
+      isShutdown.set(true);
    }
 
    public Result query(String query) {
@@ -90,7 +101,7 @@ public class NeoModel {
       }
 
       for (int i = 0; i < kv.length; i += 2)
-         if (kv[i + 1] != null && !kv[i + 1].equals("[]")) {
+         if (kv[i + 1] != null) {
             node.setProperty(kv[i], kv[i + 1]);
          }
 
@@ -121,7 +132,12 @@ public class NeoModel {
       if (node == null) {
          lbl.append("NULL");
       } else {
-         final String name = BaseDomainVisitor.getString(node, "name", "");
+         String name = BaseDomainVisitor.getString(node, "name", "");
+         if (name.length() == 0) {
+            // check if there is an outgoing "name" relation and use this if it exists
+            final Node nameNode = other(node, BaseDomainVisitor.singleOutgoing(node, RelationshipType.withName("name")));
+            name = nameNode == null ? "" : getString(nameNode, "name");
+         }
          lbl.append(name);
          lbl.append(name.length() == 0 ? "(" : " (");
          for (Label label : node.getLabels()) lbl.append(label).append(" ");
@@ -244,6 +260,30 @@ public class NeoModel {
    public Node findNode(Label label, String key, Object value) {
       final ResourceIterator<Node> iterator = graphDb.findNodes(label, key, value);
       return iterator.hasNext() ? iterator.next() : null;
+   }
+
+   public static void relate(Node source, Node target, RelationshipType relationshipType) {
+      // if already related, do nothing
+      for (Relationship relationship : outgoing(source, relationshipType))
+         if (target.equals(other(source, relationship)))
+            return;
+
+      source.createRelationshipTo(target, relationshipType);
+   }
+
+   public Node findOrCreate(Label label, String key, Object value, Object ... properties) {
+
+      if (properties.length % 2 != 0)
+         throw new IllegalArgumentException("Properties in findOrCreate must be key-value pairs");
+
+      Node node = findNode(label, key, value);
+      if (node == null)
+         node = newNode(label, key, value.toString());
+
+      for (int i = 0; i < properties.length; i += 2)
+         node.setProperty(properties[i].toString(), properties[i + 1]);
+
+      return node;
    }
 
    public interface Committer {

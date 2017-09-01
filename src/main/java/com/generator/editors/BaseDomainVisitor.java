@@ -65,6 +65,7 @@ public abstract class BaseDomainVisitor {
    }
 
    public static boolean hasLabel(Node node, org.neo4j.graphdb.Label label) {
+      if (node == null) return false;
       for (org.neo4j.graphdb.Label lbl : node.getLabels())
          if (lbl.name().equals(label.name())) return true;
       return false;
@@ -72,6 +73,17 @@ public abstract class BaseDomainVisitor {
 
    public static String labelsFor(Node node) {
       return labelsFor(node, " ");
+   }
+
+   public static String propertiesFor(PropertyContainer propertyContainer) {
+      final StringBuilder out = new StringBuilder();
+      boolean first = true;
+      for (String key : propertyContainer.getPropertyKeys()) {
+         if (!first) out.append(", ");
+         out.append(key).append(": '").append(propertyContainer.getProperty(key)).append("'");
+         first = false;
+      }
+      return out.toString();
    }
 
    public static String labelsFor(Node node, String delimiter) {
@@ -130,7 +142,7 @@ public abstract class BaseDomainVisitor {
    }
 
    public static Double getDouble(PropertyContainer node, String property) {
-      return has(node, property) ? Double.valueOf(getString(node,property)) : null;
+      return has(node, property) ? Double.valueOf(getString(node, property)) : null;
    }
 
    public static String getString(PropertyContainer node, String property, String defaultValue) {
@@ -146,7 +158,7 @@ public abstract class BaseDomainVisitor {
    }
 
    public static boolean has(PropertyContainer node, String property) {
-      return node != null && node.hasProperty(property) && (!"[]".equals(node.getProperty(property)) && (!"null".equals(node.getProperty(property))));
+      return node != null && node.hasProperty(property) && (!"null".equals(node.getProperty(property)));
    }
 
    public static String types(Iterable<Relationship> relationships) {

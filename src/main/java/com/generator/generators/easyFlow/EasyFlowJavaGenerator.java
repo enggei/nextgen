@@ -28,7 +28,7 @@ public class EasyFlowJavaGenerator extends EasyFlowDomain.EasyFlowDomainVisitor 
    }
 
    @Override
-   <T> T visitFlow(Node node) {
+   public <T> T visitFlow(Node node) {
 
       final String name = get(node, EasyFlowDomain.Properties.name.name());
       final String packageName = get(node, EasyFlowDomain.Properties.packageName.name());
