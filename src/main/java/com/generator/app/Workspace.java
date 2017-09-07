@@ -1,7 +1,7 @@
 package com.generator.app;
 
-import com.generator.app.plugins.DomainPlugin;
-import com.generator.app.plugins.StringTemplatePlugin;
+import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.editors.BaseDomainVisitor;
 import com.generator.editors.NeoModel;
 import com.generator.generators.cypher.CypherDomainGroup;
@@ -2261,7 +2261,19 @@ public final class Workspace extends JPanel {
          case showLabels:
             return labelsFor(node);
          case showProperties:
-            return propertiesFor(node);
+            final StringBuilder out = new StringBuilder();
+            boolean first = true;
+            for (String key : node.getPropertyKeys()) {
+               if(AppMotif.Properties.x.name().equals(key)) continue;
+               if(AppMotif.Properties.y.name().equals(key)) continue;
+               if(AppMotif.Properties._color.name().equals(key)) continue;
+               if(AppMotif.Properties._lastLayout.name().equals(key)) continue;
+               if(NeoModel.TAG_UUID.equals(key)) continue;
+               if (!first) out.append(", ");
+               out.append(key).append(": '").append(node.getProperty(key)).append("'");
+               first = false;
+            }
+            return out.toString();
          case showValues:
 
             if (hasLabel(node, DomainPlugin.Entities.Value)) {

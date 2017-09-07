@@ -1,8 +1,7 @@
 package com.generator.app;
 
-import com.generator.app.plugins.DomainPlugin;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.editors.NeoModel;
-import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -60,6 +59,11 @@ public class DomainMotif {
       for (Node dstEntity : dstEntities) newRelationNode.createRelationshipTo(dstEntity, DomainPlugin.Relations.DST);
 
       return newRelationNode;
+   }
+
+   public static boolean hasPropertyValue(Node node, String propertyName) {
+      final Relationship valueRelation = singleOutgoing(node, RelationshipType.withName(propertyName));
+      return valueRelation != null && getString(other(node, valueRelation), AppMotif.Properties.name.name()) != null;
    }
 
    public static String getPropertyValue(Node node, String propertyName) {

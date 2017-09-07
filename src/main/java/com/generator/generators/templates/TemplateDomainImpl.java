@@ -5,8 +5,7 @@ import com.generator.editors.NeoModel;
 import com.generator.editors.canvas.NeoPNodeRenderPanel;
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
-import com.generator.generators.project.ProjectDomain;
-import com.generator.generators.templateGroup.TemplateGroupDomainGroup;
+import com.generator.generators.stringtemplate.TemplateGroupGroup;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.domain.TemplateStatement;
 import com.generator.generators.templates.parser.TemplateFileParser;
@@ -3355,12 +3354,12 @@ public class TemplateDomainImpl extends TemplateDomain {
          final String groupName = StringUtil.capitalize(BaseDomainVisitor.getString(templateGroupPNode.node, Properties.name.name())) + "DomainGroup";
          final String root = BaseDomainVisitor.getString(templateGroupPNode.node, Properties.root.name());
 
-         final TemplateGroupDomainGroup group = new TemplateGroupDomainGroup();
+         final TemplateGroupGroup group = new TemplateGroupGroup();
 
          new TemplateGroupVisitor() {
 
-            private TemplateGroupDomainGroup.GroupClassDeclarationST groupClassDeclaration;
-            private TemplateGroupDomainGroup.NewStatementDeclarationST declarationST;
+            private TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration;
+            private TemplateGroupGroup.NewStatementDeclarationST declarationST;
             private String statementName;
             private Object setter;
 
@@ -3369,7 +3368,7 @@ public class TemplateDomainImpl extends TemplateDomain {
                groupClassDeclaration = group.newGroupClassDeclaration().
                      setName(groupName).
                      setDomain(name).
-                     setResourcePath(GeneratedFile.packageToPath(packageName)).
+//                     setResourcePath(GeneratedFile.packageToPath(packageName)).
                      setPackageName(packageName);
             }
 
@@ -3396,7 +3395,7 @@ public class TemplateDomainImpl extends TemplateDomain {
 
             @Override
             protected void onKeyValueTemplateParameter(String name, String keys, Node parameterNode) {
-               final TemplateGroupDomainGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
+               final TemplateGroupGroup.StatementKeyValueListPropertySetterST kvSetter = group.newStatementKeyValueListPropertySetter().
                      setPropertyName(name).
                      setStatementName(statementName);
                for (String key : keys.split(" ")) kvSetter.addKvNamesValue(key);

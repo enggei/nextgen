@@ -156,7 +156,7 @@ class NodeDetailPanel extends JPanel {
             }
          });
          if (propertiesToShow.equals(AppMotif.PropertiesToShow.all)) radAll.setSelected(true);
-         final JRadioButton radWithValues = new JRadioButton(new AbstractAction("Has values") {
+         final JRadioButton radWithValues = new JRadioButton(new AbstractAction("With values") {
             @Override
             public void actionPerformed(ActionEvent e) {
                propertiesToShow = AppMotif.PropertiesToShow.hasValue;
@@ -398,7 +398,7 @@ class NodeDetailPanel extends JPanel {
             }
          });
          if (propertiesToShow.equals(AppMotif.PropertiesToShow.all)) radAll.setSelected(true);
-         final JRadioButton radWithValues = new JRadioButton(new AbstractAction("Has values") {
+         final JRadioButton radWithValues = new JRadioButton(new AbstractAction("With values") {
             @Override
             public void actionPerformed(ActionEvent e) {
                propertiesToShow = AppMotif.PropertiesToShow.hasValue;
@@ -743,7 +743,7 @@ class NodeDetailPanel extends JPanel {
                if (SwingUtilities.isRightMouseButton(event))
                   SwingUtilities.invokeLater(() -> onRightClick(event));
                else if (SwingUtilities.isLeftMouseButton(event))
-                  SwingUtilities.invokeLater(this::onLeftClick);
+                  SwingUtilities.invokeLater(() -> onLeftClick(event));
             }
 
             private void onRightClick(MouseEvent event) {
@@ -780,7 +780,7 @@ class NodeDetailPanel extends JPanel {
                pop.show(RelationsTable.this, event.getX(), event.getY());
             }
 
-            private void onLeftClick() {
+            private void onLeftClick(MouseEvent event) {
                final Set<Long> selected = asSet(getSelectedRows());
                for (Workspace.NodeCanvas.NeoRelationship neoRelationship : workspace.nodeCanvas.getAllRelations()) {
                   if (selected.contains(neoRelationship.id())) {

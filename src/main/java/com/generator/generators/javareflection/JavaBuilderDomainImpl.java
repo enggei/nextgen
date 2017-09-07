@@ -2,20 +2,12 @@ package com.generator.generators.javareflection;
 
 import com.generator.editors.canvas.neo.NeoEditor;
 import com.generator.editors.canvas.neo.NeoPNode;
-import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
 import org.piccolo2d.event.PInputEvent;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.uuidOf;
 
 /**
  * Created 23.05.17.
@@ -24,7 +16,7 @@ public class JavaBuilderDomainImpl extends JavaBuilderDomain {
 
    @Override
    public void addToDomainMenu(PInputEvent event, NeoEditor editor, JMenu domainMenu) {
-      domainMenu.add(new AddClassAction(editor));
+
    }
 
    @Override

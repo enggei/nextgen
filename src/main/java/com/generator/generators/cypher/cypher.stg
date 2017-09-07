@@ -1,5 +1,4 @@
-/* cypher 289a30b0-ab74-4e09-9c00-57132ba8459a*/
-delimiters "~", "~"
+delimiters "~","~"
 
 eom() ::= <<}>>
 

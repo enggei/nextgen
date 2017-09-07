@@ -1,7 +1,14 @@
 package com.generator.app;
 
-import com.generator.app.plugins.*;
 import com.generator.editors.NeoModel;
+import com.generator.generators.antlr.ANTLRPlugin;
+import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.maven.MavenPlugin;
+import com.generator.generators.mysql.MySQLPlugin;
+import com.generator.generators.project.ProjectPlugin;
+import com.generator.generators.ssh.SSHPlugin;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;

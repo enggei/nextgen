@@ -211,7 +211,7 @@ public class RelationPath<S extends BasePNode, T extends BasePNode> implements P
             break;
 
          case PNode.PROPERTY_PARENT:
-            if (evt.getOldValue() != null) SwingUtilities.invokeLater(this::removePath);
+            if (evt.getOldValue() != null) SwingUtilities.invokeLater(() -> removePath());
             break;
       }
    }

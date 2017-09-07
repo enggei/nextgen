@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.app.plugins.DomainPlugin;
+import com.generator.generators.domain.DomainPlugin;
 import org.neo4j.graphdb.*;
 
 import java.awt.geom.Point2D;

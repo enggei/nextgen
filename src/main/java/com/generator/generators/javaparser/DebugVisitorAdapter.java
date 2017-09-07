@@ -1,18 +1,18 @@
 package com.generator.generators.javaparser;
-import com.generator.generators.templates.domain.GeneratedFile;
-import com.generator.util.FileUtil;
+
 import com.generator.util.StringUtil;
-import com.github.javaparser.ast.*;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.PackageDeclaration;
+import com.github.javaparser.ast.TypeParameter;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.comments.*;
+import com.github.javaparser.ast.comments.BlockComment;
+import com.github.javaparser.ast.comments.JavadocComment;
+import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.stmt.*;
 import com.github.javaparser.ast.type.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
-import java.io.IOException;
-import java.util.Stack;;
-
-import java.util.*;
 
 class DebugVisitorAdapter extends VoidVisitorAdapter<Object>  {
 

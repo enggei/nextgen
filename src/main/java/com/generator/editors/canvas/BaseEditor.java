@@ -293,7 +293,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
             break;
 
          case KeyEvent.VK_V:
-            SwingUtilities.invokeLater(this::toggleRelationLabels);
+            SwingUtilities.invokeLater(() -> toggleRelationLabels());
             break;
       }
    }
@@ -596,7 +596,7 @@ public abstract class BaseEditor<N extends BasePNode, R extends RelationPath<N, 
          isShowing.set(true);
 
          nodeLayer.addChild(mousePointNode.pNode);
-         selectedNodes.values().forEach(this::addRelationToNode);
+         selectedNodes.values().forEach(n -> addRelationToNode(n));
          canvas.addInputEventListener(this);
       }
 

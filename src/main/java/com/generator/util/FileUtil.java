@@ -451,9 +451,7 @@ public final class FileUtil {
 
    public static File tryToCreateFileIfNotExists(File f) {
       if (!f.exists()) {
-
          tryToCreateDirIfNotExists(f.getParentFile());
-
          try {
             if (!f.createNewFile()) throw new RuntimeException("Could not create file " + f.getName());
          } catch (IOException e) {
