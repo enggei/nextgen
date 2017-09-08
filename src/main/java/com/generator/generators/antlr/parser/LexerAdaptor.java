@@ -12,9 +12,9 @@ public abstract class LexerAdaptor extends Lexer {
    }
 
    /**
-    * Track whether we are inside of a rule and whether it is lexical parser. _currentRuleType==Token.INVALID_TYPE
+    * Track whether we are inside of a rule and whether it is lexical parserg4. _currentRuleType==Token.INVALID_TYPE
     * means that we are outside of a rule. At the first sign of a rule name reference and _currentRuleType==invalid, we
-    * can assume that we are starting a parser rule. Similarly, seeing a token reference when not already in rule means
+    * can assume that we are starting a parserg4 rule. Similarly, seeing a token reference when not already in rule means
     * starting a token rule. The terminating ';' of a rule, flips this back to invalid type.
     *
     * This is not perfect logic but works. For example, "grammar T;" means that we start and stop a lexical rule for
@@ -67,7 +67,7 @@ public abstract class LexerAdaptor extends Lexer {
          }
 
          if (_currentRuleType == Token.INVALID_TYPE) { // if outside of rule def
-            _currentRuleType = _type; // set to inside lexer or parser rule
+            _currentRuleType = _type; // set to inside lexer or parserg4 rule
          }
       } else if (_type == ANTLRv4Lexer.SEMI) { // exit rule def
          _currentRuleType = Token.INVALID_TYPE;

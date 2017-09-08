@@ -47,8 +47,6 @@ public class App extends JFrame {
    public App() throws HeadlessException {
       super("App");
 
-      System.setProperty("generator.path", model.getAppStringProperty("generator.path"));
-
       addComponentListener(new ComponentAdapter() {
          @Override
          public void componentResized(ComponentEvent e) {

@@ -26,7 +26,7 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-/** XML parser derived from ANTLR v4 ref guide book example */
+/** XML parserg4 derived from ANTLR v4 ref guide book example */
 parser grammar XMLParser;
 
 options { tokenVocab=XMLLexer; }

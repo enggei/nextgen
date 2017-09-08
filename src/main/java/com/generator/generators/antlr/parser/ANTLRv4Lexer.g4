@@ -338,11 +338,11 @@ WS
 // lexer specification. It matches a single character of any value and being
 // the last rule in the file will match when no other rule knows what to do
 // about the character. It is reported as an error but is not passed on to the
-// parser. This means that the parser to deal with the gramamr file anyway
+// parserg4. This means that the parserg4 to deal with the gramamr file anyway
 // but we will not try to analyse or code generate from a file with lexical
 // errors.
 //
-// Comment this rule out to allow the error to be propagated to the parser
+// Comment this rule out to allow the error to be propagated to the parserg4
 
 ERRCHAR
    : . -> channel (HIDDEN)

@@ -1,7 +1,7 @@
 package com.generator.generators.project;
 
 import com.generator.ProjectConstants;
-import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import org.junit.Test;
 
 import java.io.IOException;

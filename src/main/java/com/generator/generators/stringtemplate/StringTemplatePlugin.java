@@ -7,8 +7,8 @@ import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.templates.domain.*;
-import com.generator.generators.templates.parser.TemplateFileParser;
+import com.generator.generators.stringtemplate.domain.*;
+import com.generator.generators.stringtemplate.parser.TemplateFileParser;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.runtime.Token;
@@ -78,9 +78,38 @@ public class StringTemplatePlugin extends DomainPlugin {
             final File file = SwingUtil.showOpenFile(app, getAppProperty("generator.path"));
             if (file == null || !file.getName().toLowerCase().endsWith(".stg")) return;
 
-            final TemplateFile templateFile = new TemplateFileParser().parse(file);
+            final StringBuilder errors = new StringBuilder("Errors");
+
+            final TemplateFile templateFile = TemplateFileParser.parse(file, new STErrorListener() {
+               @Override
+               public void compileTimeError(STMessage stMessage) {
+                  if (stMessage instanceof STCompiletimeMessage) {
+                     final Token token = ((STCompiletimeMessage) stMessage).token;
+                     errors.append("\nat ").append(token.getLine()).append(" position ").append(token.getCharPositionInLine()).append(token.getText());
+                  }
+               }
+
+               @Override
+               public void runTimeError(STMessage stMessage) {
+
+               }
+
+               @Override
+               public void IOError(STMessage stMessage) {
+
+               }
+
+               @Override
+               public void internalError(STMessage stMessage) {
+
+               }
+            });
+
             if (templateFile == null) {
-               SwingUtil.showMessage("Could not parse " + file.getAbsolutePath(), app);
+               if (errors.toString().length() > 7) {
+                  SwingUtil.showTextResult("Errors", errors.toString(), app);
+               } else
+                  SwingUtil.showMessage("Could not parse " + file.getAbsolutePath(), app);
                return;
             }
 
@@ -582,7 +611,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                   final TemplateStatement parsed;
                   try {
                      final StringBuilder errors = new StringBuilder("Errors");
-                     parsed = new TemplateFileParser().parse(delimiter, statementName, text, new STErrorListener() {
+                     parsed = TemplateFileParser.parse(delimiter, statementName, text, new STErrorListener() {
                         @Override
                         public void compileTimeError(STMessage stMessage) {
                            if (stMessage instanceof STCompiletimeMessage) {

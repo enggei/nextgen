@@ -151,7 +151,7 @@ public class ECMAScriptParser extends Parser {
 
 
 	    /**
-	     * Returns {@code true} iff on the current index of the parser's
+	     * Returns {@code true} iff on the current index of the parserg4's
 	     * token stream a token of the given {@code type} exists on the
 	     * {@code HIDDEN} channel.
 	     *
@@ -159,7 +159,7 @@ public class ECMAScriptParser extends Parser {
 	     *         the type of the token on the {@code HIDDEN} channel
 	     *         to check.
 	     *
-	     * @return {@code true} iff on the current index of the parser's
+	     * @return {@code true} iff on the current index of the parserg4's
 	     * token stream a token of the given {@code type} exists on the
 	     * {@code HIDDEN} channel.
 	     */
@@ -175,12 +175,12 @@ public class ECMAScriptParser extends Parser {
 	    }
 
 	    /**
-	     * Returns {@code true} iff on the current index of the parser's
+	     * Returns {@code true} iff on the current index of the parserg4's
 	     * token stream a token exists on the {@code HIDDEN} channel which
 	     * either is a line terminator, or is a multi line comment that
 	     * contains a line terminator.
 	     *
-	     * @return {@code true} iff on the current index of the parser's
+	     * @return {@code true} iff on the current index of the parserg4's
 	     * token stream a token exists on the {@code HIDDEN} channel which
 	     * either is a line terminator, or is a multi line comment that
 	     * contains a line terminator.

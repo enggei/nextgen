@@ -18,7 +18,7 @@ import com.generator.generators.mysql.parser.MySqlParserListener;
 import com.generator.generators.mysql.parser.MySqlParserVisitor;
 import com.generator.generators.protobuf.parser.ProtobufListener;
 import com.generator.generators.protobuf.parser.ProtobufVisitor;
-import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.generators.xml.parser.XMLParserListener;
 import com.generator.generators.xml.parser.XMLParserVisitor;
 
@@ -32,15 +32,15 @@ import java.lang.reflect.Parameter;
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".antlr.parserg4", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".cpp.parserg4", "CPP14", CPP14Visitor.class, CPP14Listener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".ecmascript.parserg4", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".html5.parserg4", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".java.parserg4", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".json.parserg4", "JSON", JSONVisitor.class, JSONListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".mysql.parserg4", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".protobuf.parserg4", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".xml.parserg4", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
 
    }
 

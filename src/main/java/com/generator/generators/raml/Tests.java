@@ -11,7 +11,6 @@ public class Tests {
 	@Test
 	public void testRamlGroup() {
 
-		//System.setProperty("generator.path", "src/main/java/com/generator/generators");
 		final RamlGroup group = new RamlGroup();
 
 		final RamlGroup.fileST loopsi = group.newfile().

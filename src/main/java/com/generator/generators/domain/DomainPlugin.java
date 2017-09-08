@@ -5,7 +5,7 @@ import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
-import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -288,13 +288,13 @@ public class DomainPlugin extends Plugin {
 
          if (hasLabel(instanceNode, Entities.Entity)) {
 
-            incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
-                  renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
-               }
-            }));
+//            incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
+//               @Override
+//               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//                  final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
+//                  renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
+//               }
+//            }));
 
             final JMenu referenceMenu = new JMenu(getNameAndLabelsFrom(instanceNode));
 

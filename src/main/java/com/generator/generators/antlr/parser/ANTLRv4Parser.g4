@@ -104,7 +104,7 @@ idList
    : identifier (COMMA identifier)* COMMA?
    ;
 
-// Match stuff like @parser::members {int i;}
+// Match stuff like @parserg4::members {int i;}
 action
    : AT (actionScopeName COLONCOLON)? identifier actionBlock
    ;

@@ -39,10 +39,10 @@ public class Tests {
    public void testParser() throws IOException {
 
       final String[] filenames = new String[]{
-//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/antlr/parser/ANTLRv4Parser.g4",
-//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/mysql/parser/MySqlParser.g4",
-//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4",
-            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/java/parser/JavaParser.g4"
+//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/antlr/parserg4/ANTLRv4Parser.g4",
+//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/mysql/parserg4/MySqlParser.g4",
+//            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/protobuf/parserg4/Protobuf.g4",
+            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/java/parserg4/JavaParser.g4"
       };
 
       for (String fileName : filenames) {

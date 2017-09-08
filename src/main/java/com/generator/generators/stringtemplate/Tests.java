@@ -1,11 +1,5 @@
 package com.generator.generators.stringtemplate;
 
-import com.generator.generators.stringtemplate.parser.STGBaseListener;
-import com.generator.generators.stringtemplate.parser.STGParser;
-import com.generator.generators.stringtemplate.parser.STLexer;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -22,7 +16,10 @@ public class Tests {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
-      System.out.println(templateGroupGroup.newstg().setDelimiter("~").
+
+      // must close template with >> because of stringtemplate-issue
+      System.out.println(templateGroupGroup.newstg().
+            setDelimiter("~").
             addTemplatesValue(templateGroupGroup.newtemplate().
                   setName("enum").
                   addParamsValue("comments").
@@ -32,19 +29,7 @@ public class Tests {
                   "~endif~\n" +
                   "enum ~name~ {\n" +
                   "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
-                  "} \n")));
-
-      final StringBuilder stg = new StringBuilder("private static final String stg = new StringBuilder()");
-      stg.append("\n\t.append(\"").append(escape("delimiters \"~\", \"~\"")).append("\\n\")");
-      stg.append("\n\t.append(\"").append(escape("eom() ::= <<}>>")).append("\\n\")");
-      stg.append("\n\t.append(\"").append(escape("gt() ::= <<> >>")).append("\\n\")");
-
-      final TemplateGroupGroup.stgBuilderST stgBuilderST = templateGroupGroup.newstgBuilder().setDelimiter("~");
-
-      System.out.println(stg);
-      System.out.println(stgBuilderST);
-
-
+                  "} \n>>")));
 
    }
 
@@ -57,23 +42,23 @@ public class Tests {
             "/home/goe/projects/nextgen/src/main/java/com/generator/generators/cypher/cypher.stg",
       };
 
-      for (String fileName : filenames) {
-//         final STGParser parser = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromFileName(fileName, Charset.forName("UTF-8")))));
-         final STGParser parser = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromString("delimiters \"~\",\"~\"\n" +
-               "\n" +
-               "eom() ::= <<}>>"))));
-
-         final STGBaseListener listener = new STGBaseListener();
-         new ParseTreeWalker().walk(listener, parser.group());
-
-         visitAll("", listener.getRoot());
-      }
+//      for (String fileName : filenames) {
+////         final STGParser parserg4 = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromFileName(fileName, Charset.forName("UTF-8")))));
+//         final STGParser parser = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromString("delimiters \"~\",\"~\"\n" +
+//               "\n" +
+//               "eom() ::= <<}>>"))));
+//
+//         final STGBaseListener listener = new STGBaseListener();
+//         new ParseTreeWalker().walk(listener, parser.group());
+//
+//         visitAll("", listener.getRoot());
+//      }
    }
 
-   private void visitAll(String delim, STGBaseListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.startToken + ")");
-      for (STGBaseListener.Node child : node.children) {
-         visitAll(delim + "\t", child);
-      }
-   }
+//   private void visitAll(String delim, STGBaseListener.Node node) {
+//      System.out.println(delim + node.name + " (" + node.startToken + ")");
+//      for (STGBaseListener.Node child : node.children) {
+//         visitAll(delim + "\t", child);
+//      }
+//   }
 }

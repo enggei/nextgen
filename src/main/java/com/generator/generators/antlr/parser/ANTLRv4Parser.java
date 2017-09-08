@@ -66,7 +66,7 @@ public class ANTLRv4Parser extends Parser {
 	private static final String[] _LITERAL_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		"'options'", "'tokens'", "'channels'", "'import'", "'fragment'", "'lexer'", 
-		"'parser'", "'grammar'", "'protected'", "'public'", "'private'", "'returns'", 
+		"'parserg4'", "'grammar'", "'protected'", "'public'", "'private'", "'returns'",
 		"'locals'", "'throws'", "'catch'", "'finally'", "'mode'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {

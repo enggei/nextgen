@@ -4,11 +4,12 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Workspace;
+import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.templates.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -113,7 +114,7 @@ public class ProjectPlugin extends DomainPlugin {
 
       if (hasLabel(neoNode.getNode(), Entities.Project)) {
 
-         pop.add(new App.TransactionAction("Render All", app) {
+         pop.add(new App.TransactionAction("Render All directories", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -143,7 +144,7 @@ public class ProjectPlugin extends DomainPlugin {
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                   return;
 
-               pop.add(new App.TransactionAction("Create group file for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               pop.add(new App.TransactionAction("Add renderer for STGroup " + getNameOrLabelFrom(selectedNode.getNode()), app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -160,12 +161,34 @@ public class ProjectPlugin extends DomainPlugin {
                });
             }
 
+            if (BaseDomainVisitor.hasLabel(selectedNode.getNode(), EasyFlowPlugin.Entities.Flow)) {
+
+               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+                  return;
+
+               pop.add(new App.TransactionAction("Add renderer for FSM", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final String packageName = SwingUtil.showInputDialog("Package", app);
+                     if (packageName == null) return;
+
+                     final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+
+                     final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
+                     rendererRelationship.setProperty("package", packageName);
+                     rendererRelationship.setProperty(Properties.className.name(), className);
+                  }
+               });
+            }
+
             if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Domain)) {
 
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                   return;
 
-               pop.add(new App.TransactionAction("Create visitor for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               pop.add(new App.TransactionAction("Add renderer for visitor " + getNameOrLabelFrom(selectedNode.getNode()), app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -335,6 +358,8 @@ public class ProjectPlugin extends DomainPlugin {
             StringTemplatePlugin.renderSTGGroup(nodeToRender, rendererRelationship);
          } else if (hasLabel(nodeToRender, DomainPlugin.Entities.Domain)) {
             DomainPlugin.renderDomainVisitor(rendererRelationship, nodeToRender);
+         } else if (hasLabel(nodeToRender, EasyFlowPlugin.Entities.Flow)) {
+            EasyFlowPlugin.renderEasyFlow(rendererRelationship, nodeToRender);
          } else {
             final Node templateNode = other(nodeToRender, singleIncoming(nodeToRender, DomainPlugin.Relations.INSTANCE));
             if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate)) {

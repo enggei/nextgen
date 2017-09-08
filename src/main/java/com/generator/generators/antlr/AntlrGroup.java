@@ -71,7 +71,7 @@ public final class AntlrGroup {
          return this;
       } 
       public NeoVisitorST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parser");   
+      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
          return this;
       } 
       public NeoVisitorST addMethodsValue(Object name_, Object param_) {
@@ -116,7 +116,7 @@ public final class AntlrGroup {
          return this;
       } 
       public BaseNodeVisitorST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parser");   
+      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
          return this;
       } 
 
@@ -152,7 +152,7 @@ public final class AntlrGroup {
          return this;
       } 
       public BaseParserListenerST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parser");   
+      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
          return this;
       } 
 
@@ -299,13 +299,13 @@ public final class AntlrGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
+			.append("NeoVisitor(packageName,parserg4,methods,name) ::= <<package ~packageName~;\n" +
 		"\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 
 		"import org.neo4j.graphdb.Label;\n" + 
 		"import org.neo4j.graphdb.RelationshipType;\n" + 
 		"\n" + 
-		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
+		"public class ~name~ extends ~parserg4~BaseVisitor<Node> {\n" +
 		"\n" + 
 		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	private final com.generator.editors.NeoModel model;\n" + 
@@ -340,9 +340,9 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"} >> \n")
-			.append("BaseNodeVisitor(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
+			.append("BaseNodeVisitor(methods,name,packageName,parserg4) ::= <<package ~packageName~;\n" +
 		"\n" + 
-		"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
+		"public class ~name~ extends ~parserg4~BaseVisitor<~name~.Node> {\n" +
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -383,9 +383,9 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"} >> \n")
-			.append("BaseParserListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
+			.append("BaseParserListener(methods,name,packageName,parserg4) ::= <<package ~packageName~;\n" +
 		"\n" + 
-		"public class ~name~ extends ~parser~BaseListener {\n" + 
+		"public class ~name~ extends ~parserg4~BaseListener {\n" +
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
