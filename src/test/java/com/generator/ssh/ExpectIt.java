@@ -1,4 +1,4 @@
-package com.ssh;
+package com.generator.ssh;
 
 import com.jcraft.jsch.*;
 import net.sf.expectit.Expect;

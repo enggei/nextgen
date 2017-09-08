@@ -1,4 +1,4 @@
-package com.chronicle;
+package com.generator.chronicle;
 
 import io.vertx.ext.unit.TestContext;
 import org.slf4j.Logger;

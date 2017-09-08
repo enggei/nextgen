@@ -1,4 +1,4 @@
-package com.chronicle;
+package com.generator.chronicle;
 
 public class MarketData {
 

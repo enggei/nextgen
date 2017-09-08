@@ -19,7 +19,7 @@ public class Loopsi extends Domain {
 
    public static void main(String[] args) throws IOException {
 
-      new Loopsi().generateRamlFile(ProjectConstants.TEST_ROOT + "/raml/loopsi.raml");
+      new Loopsi().generateRamlFile(ProjectConstants.TEST_ROOT + "/com/generator/raml/loopsi.raml");
    }
 
    final class APIEntity {

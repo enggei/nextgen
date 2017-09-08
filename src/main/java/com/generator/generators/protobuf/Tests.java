@@ -59,7 +59,7 @@ public class Tests {
                   addPropertiesValue(protobufGroup.newmessageField().setFieldConstraint("repeated").setType("string").setName("snippets").setOrdinal(innerOrdinal++)).
                   addPropertiesValue(protobufGroup.newmessageField().setFieldConstraint("repeated").setType("int32").setName("values").setPackedValue("true").setOrdinal(innerOrdinal))));
 
-      FileUtil.write(test, new File(ProjectConstants.TEST_ROOT + "/protobuf", "test.proto"));
+      FileUtil.write(test, new File(ProjectConstants.TEST_ROOT + "/com/generator/protobuf", "test.proto"));
 
       // test2.proto
       final ProtobufGroup.protobufPackageST test2 = protobufGroup.newprotobufPackage().
@@ -72,6 +72,6 @@ public class Tests {
                   setType("String").
                   setFieldConstraint("required").setOrdinal(1)));
 
-      FileUtil.write(test2, new File(ProjectConstants.TEST_ROOT + "/protobuf", "test2.proto"));
+      FileUtil.write(test2, new File(ProjectConstants.TEST_ROOT + "/com/generator/protobuf", "test2.proto"));
    }
 }

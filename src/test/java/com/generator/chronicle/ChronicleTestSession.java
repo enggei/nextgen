@@ -1,4 +1,4 @@
-package com.chronicle;
+package com.generator.chronicle;
 
 import io.vertx.core.Handler;
 import io.vertx.ext.unit.Async;
@@ -29,7 +29,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
-import static com.chronicle.ChronicleUtil.*;
+import static com.generator.chronicle.ChronicleUtil.*;
 
 public class ChronicleTestSession {
 

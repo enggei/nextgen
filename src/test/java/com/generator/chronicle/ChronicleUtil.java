@@ -1,4 +1,4 @@
-package com.chronicle;
+package com.generator.chronicle;
 
 import net.openhft.chronicle.queue.ExcerptTailer;
 import net.openhft.chronicle.queue.RollCycle;
