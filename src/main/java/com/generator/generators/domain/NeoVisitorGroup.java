@@ -44,11 +44,11 @@ public final class NeoVisitorGroup {
 
    public DomainVisitorST newDomainVisitor() {
       return new DomainVisitorST(stGroup);
-   }
+   } 
 
    public entityVisitST newentityVisit() {
       return new entityVisitST(stGroup);
-   }
+   } 
 
    public final class DomainVisitorST implements NeoVisitorGroupTemplate {
 
@@ -64,22 +64,22 @@ public final class NeoVisitorGroup {
       public DomainVisitorST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public DomainVisitorST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      }
+      } 
       public DomainVisitorST addEntitiesValue(Object name_, Object visit_) {
          entitiesIsSet.set(true);
          template.addAggr("entities.{name, visit}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (visit_==null || visit_.toString().length()==0) ? null : visit_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class entityVisitST implements NeoVisitorGroupTemplate {
 
@@ -94,17 +94,17 @@ public final class NeoVisitorGroup {
       public entityVisitST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public entityVisitST addOutgoingValue(Object value) {
       	tryToSetListProperty(template, value, outgoingIsSet, "outgoing");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -221,7 +221,7 @@ public final class NeoVisitorGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -234,13 +234,17 @@ public final class NeoVisitorGroup {
 		return list.toString() + delimiter;
 	}
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"DomainVisitor(name,packageName,entities) ::= <<package ~packageName~;\n" + 
+	public static void toSTGFile(java.io.File dir) throws java.io.IOException {
+		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new java.io.File(dir, "NeoVisitorGroup.stg")));
+		out.write(stg);
+		out.close();
+   }
+
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("DomainVisitor(name,packageName,entities) ::= <<package ~packageName~;\n" + 
 	"\n" + 
 	"import org.neo4j.graphdb.*;\n" + 
 	"\n" + 
@@ -249,11 +253,10 @@ public final class NeoVisitorGroup {
 	"      final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();\n" + 
 	"\n" + 
 	"      public void visit(Node node) {\n" + 
-	"         if (node == null) return;\n" + 
-	"			~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\n\"~\n" + 
+	"			~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\\n\"~\n" + 
 	"      }\n" + 
 	"\n" + 
-	"		~entities:{it|~it.visit~};separator=\"\n\n\"~\n" + 
+	"		~entities:{it|~it.visit~};separator=\"\\n\\n\"~\n" + 
 	"\n" + 
 	"		private boolean hasLabel(Node node, String label) {\n" + 
 	"      	for (org.neo4j.graphdb.Label lbl : node.getLabels())\n" + 
@@ -268,15 +271,10 @@ public final class NeoVisitorGroup {
 	"		private Node other(Node node, Relationship relationship) {\n" + 
 	"      	return relationship == null ? null : relationship.getOtherNode(node);\n" + 
 	"   	}\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"entityVisit(name,outgoing) ::= <<void visit~name;format=\"capitalize\"~(Node node) {\n" + 
+	"} >>\n")
+		.append("entityVisit(name,outgoing) ::= <<void visit~name;format=\"capitalize\"~(Node node) {\n" + 
 	"	if (visited.contains(node)) return;\n" + 
 	"   visited.add(node);\n" + 
-	"	~outgoing:{it|outgoing(node, RelationshipType.withName(\"~it~\")).forEach(relationship -> visit(other(node, relationship)));};separator=\"\n\"~\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"	~outgoing:{it|outgoing(node, RelationshipType.withName(\"~it~\")).forEach(relationship -> visit(other(node, relationship)));};separator=\"\\n\"~\n" + 
+	"} >>\n").toString();
+} 

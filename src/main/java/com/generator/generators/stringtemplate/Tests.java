@@ -10,6 +10,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.generator.generators.stringtemplate.StringTemplatePlugin.escape;
+
 /**
  * Created 07.09.17.
  */
@@ -20,7 +22,7 @@ public class Tests {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
-      System.out.println(templateGroupGroup.newstg().
+      System.out.println(templateGroupGroup.newstg().setDelimiter("~").
             addTemplatesValue(templateGroupGroup.newtemplate().
                   setName("enum").
                   addParamsValue("comments").
@@ -31,6 +33,18 @@ public class Tests {
                   "enum ~name~ {\n" +
                   "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
                   "} \n")));
+
+      final StringBuilder stg = new StringBuilder("private static final String stg = new StringBuilder()");
+      stg.append("\n\t.append(\"").append(escape("delimiters \"~\", \"~\"")).append("\\n\")");
+      stg.append("\n\t.append(\"").append(escape("eom() ::= <<}>>")).append("\\n\")");
+      stg.append("\n\t.append(\"").append(escape("gt() ::= <<> >>")).append("\\n\")");
+
+      final TemplateGroupGroup.stgBuilderST stgBuilderST = templateGroupGroup.newstgBuilder().setDelimiter("~");
+
+      System.out.println(stg);
+      System.out.println(stgBuilderST);
+
+
 
    }
 

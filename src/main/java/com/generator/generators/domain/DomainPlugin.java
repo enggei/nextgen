@@ -106,55 +106,10 @@ public class DomainPlugin extends Plugin {
             }
          });
 
-         incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
+         incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render Domain visitor", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String packageName = getString(rendererRelationship, "package");
-               final String groupName = getString(node, AppMotif.Properties.name.name()) + "Visitor";
-               final File targetDir = getFile(other(node, rendererRelationship));
-
-               final Set<Node> visitedNodes = new LinkedHashSet<>();
-
-               final NeoVisitorGroup visitorGroup = new NeoVisitorGroup();
-
-               final NeoVisitorGroup.DomainVisitorST domainVisitorST = visitorGroup.newDomainVisitor().
-                     setName(groupName).
-                     setPackageName(packageName);
-
-               for (Relationship relationship : outgoing(node, Relations.ENTITY))
-                  visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, other(node, relationship));
-
-               try {
-                  GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(domainVisitorST);
-               } catch (IOException ex) {
-                  ex.printStackTrace();
-               }
-            }
-
-            private void visitEntityNode(Set<Node> visitedNodes, NeoVisitorGroup visitorGroup, NeoVisitorGroup.DomainVisitorST domainVisitorST, Node entityNode) {
-
-               if (visitedNodes.contains(entityNode)) return;
-               visitedNodes.add(entityNode);
-
-               final String entityName = getString(entityNode, AppMotif.Properties.name.name());
-
-               final NeoVisitorGroup.entityVisitST visitST = visitorGroup.newentityVisit().
-                     setName(entityName);
-
-               final Iterator<Relationship> src = outgoing(entityNode, Relations.SRC).iterator();
-               while (src.hasNext()) {
-                  final Node relationNode = other(entityNode, src.next());
-                  visitST.addOutgoingValue(getString(relationNode, AppMotif.Properties.name.name()));
-
-                  final Iterator<Relationship> dst = outgoing(relationNode, Relations.DST).iterator();
-                  while (dst.hasNext()) {
-                     final Node dstNode = other(relationNode, dst.next());
-                     visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, dstNode);
-                  }
-               }
-
-               domainVisitorST.addEntitiesValue(entityName, visitST);
+               renderDomainVisitor(rendererRelationship, node);
             }
          }));
 
@@ -612,11 +567,60 @@ public class DomainPlugin extends Plugin {
       });
    }
 
-
    @Override
    public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
+
+
+   public static void renderDomainVisitor(Relationship rendererRelationship, Node node) {
+      final String packageName = getString(rendererRelationship, "package");
+      final String groupName = getString(node, AppMotif.Properties.name.name()) + "Visitor";
+      final File targetDir = getFile(other(node, rendererRelationship));
+
+      final Set<Node> visitedNodes = new LinkedHashSet<>();
+
+      final NeoVisitorGroup visitorGroup = new NeoVisitorGroup();
+
+      final NeoVisitorGroup.DomainVisitorST domainVisitorST = visitorGroup.newDomainVisitor().
+            setName(groupName).
+            setPackageName(packageName);
+
+      for (Relationship relationship : outgoing(node, Relations.ENTITY))
+         visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, other(node, relationship));
+
+      try {
+         GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(domainVisitorST);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+
+   private static void visitEntityNode(Set<Node> visitedNodes, NeoVisitorGroup visitorGroup, NeoVisitorGroup.DomainVisitorST domainVisitorST, Node entityNode) {
+
+      if (visitedNodes.contains(entityNode)) return;
+      visitedNodes.add(entityNode);
+
+      final String entityName = getString(entityNode, AppMotif.Properties.name.name());
+
+      final NeoVisitorGroup.entityVisitST visitST = visitorGroup.newentityVisit().
+            setName(entityName);
+
+      final Iterator<Relationship> src = outgoing(entityNode, Relations.SRC).iterator();
+      while (src.hasNext()) {
+         final Node relationNode = other(entityNode, src.next());
+         visitST.addOutgoingValue(getString(relationNode, AppMotif.Properties.name.name()));
+
+         final Iterator<Relationship> dst = outgoing(relationNode, Relations.DST).iterator();
+         while (dst.hasNext()) {
+            final Node dstNode = other(relationNode, dst.next());
+            visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, dstNode);
+         }
+      }
+
+      domainVisitorST.addEntitiesValue(entityName, visitST);
+   }
+
 
    // todo make these static in DomainMotif
 

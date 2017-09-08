@@ -44,35 +44,35 @@ public final class CypherGroup {
 
    public createNodeST newcreateNode() {
       return new createNodeST(stGroup);
-   }
+   } 
 
    public createNodesST newcreateNodes() {
       return new createNodesST(stGroup);
-   }
+   } 
 
    public createRelationshipST newcreateRelationship() {
       return new createRelationshipST(stGroup);
-   }
+   } 
 
    public createRelationshipsST newcreateRelationships() {
       return new createRelationshipsST(stGroup);
-   }
+   } 
 
    public matchLabelST newmatchLabel() {
       return new matchLabelST(stGroup);
-   }
+   } 
 
    public queryST newquery() {
       return new queryST(stGroup);
-   }
+   } 
 
    public stringPropertyST newstringProperty() {
       return new stringPropertyST(stGroup);
-   }
+   } 
 
    public valuePropertyST newvalueProperty() {
       return new valuePropertyST(stGroup);
-   }
+   } 
 
    public final class createNodeST implements CypherGroupTemplate {
 
@@ -88,21 +88,21 @@ public final class CypherGroup {
       public createNodeST setId(Object value) {
       	tryToSetStringProperty(template, value, idIsSet, "id");   
          return this;
-      }
+      } 
       public createNodeST addLabelsValue(Object value) {
       	tryToSetListProperty(template, value, labelsIsSet, "labels");
          return this;
-      }
+      } 
       public createNodeST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class createNodesST implements CypherGroupTemplate {
 
@@ -116,13 +116,13 @@ public final class CypherGroup {
       public createNodesST addNodesValue(Object value) {
       	tryToSetListProperty(template, value, nodesIsSet, "nodes");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class createRelationshipST implements CypherGroupTemplate {
 
@@ -139,25 +139,25 @@ public final class CypherGroup {
       public createRelationshipST setDst(Object value) {
       	tryToSetStringProperty(template, value, dstIsSet, "dst");   
          return this;
-      }
+      } 
       public createRelationshipST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
-      }
+      } 
       public createRelationshipST setSrc(Object value) {
       	tryToSetStringProperty(template, value, srcIsSet, "src");   
          return this;
-      }
+      } 
       public createRelationshipST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class createRelationshipsST implements CypherGroupTemplate {
 
@@ -171,13 +171,13 @@ public final class CypherGroup {
       public createRelationshipsST addRelationshipsValue(Object value) {
       	tryToSetListProperty(template, value, relationshipsIsSet, "relationships");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class matchLabelST implements CypherGroupTemplate {
 
@@ -192,17 +192,17 @@ public final class CypherGroup {
       public matchLabelST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public matchLabelST setLabel(Object value) {
       	tryToSetStringProperty(template, value, labelIsSet, "label");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class queryST implements CypherGroupTemplate {
 
@@ -216,7 +216,7 @@ public final class CypherGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class stringPropertyST implements CypherGroupTemplate {
 
@@ -231,17 +231,17 @@ public final class CypherGroup {
       public stringPropertyST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      }
+      } 
       public stringPropertyST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class valuePropertyST implements CypherGroupTemplate {
 
@@ -255,7 +255,7 @@ public final class CypherGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -372,7 +372,7 @@ public final class CypherGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -391,35 +391,16 @@ public final class CypherGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"createNode(id,labels,properties) ::= <<(~if(id)~_~id~~endif~~if(labels)~:~labels:{it|~it~};separator=\":\"~~endif~~if(properties)~ {~properties:{it|~it~};separator=\", \"~}~endif~)\n" + 
-	">>\n" + 
-	"\n" + 
-	"createNodes(nodes) ::= <<CREATE ~nodes:{it|~it~};separator=\",\\n\"~\n" + 
-	">>\n" + 
-	"\n" + 
-	"createRelationship(dst,properties,src,type) ::= <<(_~src~)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=\", \"~}~endif~]->(_~dst~)\n" + 
-	">>\n" + 
-	"\n" + 
-	"createRelationships(relationships) ::= <<CREATE ~relationships:{it|~it~};separator=\",\\n\"~\n" + 
-	">>\n" + 
-	"\n" + 
-	"matchLabel(name,label) ::= <<(~name~:~label~)\n" + 
-	">>\n" + 
-	"\n" + 
-	"query() ::= <<MATCH ~match~ WHERE ~where~ RETURN ~return~\n" + 
-	">>\n" + 
-	"\n" + 
-	"stringProperty(value,name) ::= <<~name~:'~value~'\n" + 
-	">>\n" + 
-	"\n" + 
-	"valueProperty() ::= <<~name~:~value~\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("createNode(id,labels,properties) ::= <<(~if(id)~_~id~~endif~~if(labels)~:~labels:{it|~it~};separator=\":\"~~endif~~if(properties)~ {~properties:{it|~it~};separator=\", \"~}~endif~) >>\n")
+		.append("createNodes(nodes) ::= <<CREATE ~nodes:{it|~it~};separator=\",\\n\"~ >>\n")
+		.append("createRelationship(dst,properties,src,type) ::= <<(_~src~)-[:~type~~if(properties)~ {~properties:{it|~it~};separator=\", \"~}~endif~]->(_~dst~) >>\n")
+		.append("createRelationships(relationships) ::= <<CREATE ~relationships:{it|~it~};separator=\",\\n\"~ >>\n")
+		.append("matchLabel(name,label) ::= <<(~name~:~label~) >>\n")
+		.append("query() ::= <<MATCH ~match~ WHERE ~where~ RETURN ~return~ >>\n")
+		.append("stringProperty(value,name) ::= <<~name~:'~value~' >>\n")
+		.append("valueProperty() ::= <<~name~:~value~ >>\n").toString();
+} 

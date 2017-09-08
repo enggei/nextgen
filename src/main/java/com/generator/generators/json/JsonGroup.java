@@ -44,23 +44,23 @@ public final class JsonGroup {
 
    public arrayST newarray() {
       return new arrayST(stGroup);
-   }
+   } 
 
    public documentST newdocument() {
       return new documentST(stGroup);
-   }
+   } 
 
    public objectST newobject() {
       return new objectST(stGroup);
-   }
+   } 
 
    public primitiveST newprimitive() {
       return new primitiveST(stGroup);
-   }
+   } 
 
    public primitiveStringST newprimitiveString() {
       return new primitiveStringST(stGroup);
-   }
+   } 
 
    public final class arrayST implements JsonGroupTemplate {
 
@@ -74,13 +74,13 @@ public final class JsonGroup {
       public arrayST addElementsValue(Object value) {
       	tryToSetListProperty(template, value, elementsIsSet, "elements");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class documentST implements JsonGroupTemplate {
 
@@ -94,13 +94,13 @@ public final class JsonGroup {
       public documentST addContentValue(Object value) {
       	tryToSetListProperty(template, value, contentIsSet, "content");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class objectST implements JsonGroupTemplate {
 
@@ -116,18 +116,18 @@ public final class JsonGroup {
          functionsIsSet.set(true);
          template.addAggr("functions.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
-      }
+      } 
       public objectST addPairsValue(Object name_, Object value_) {
          pairsIsSet.set(true);
          template.addAggr("pairs.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class primitiveST implements JsonGroupTemplate {
 
@@ -141,13 +141,13 @@ public final class JsonGroup {
       public primitiveST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class primitiveStringST implements JsonGroupTemplate {
 
@@ -161,13 +161,13 @@ public final class JsonGroup {
       public primitiveStringST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -284,7 +284,7 @@ public final class JsonGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -317,4 +317,4 @@ public final class JsonGroup {
 	"} >>\n")
 		.append("primitive(value) ::= <<~value~ >>\n")
 		.append("primitiveString(value) ::= <<\"~value~\" >>\n").toString();
-}
+} 

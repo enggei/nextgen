@@ -44,39 +44,39 @@ public final class DurandalGroup {
 
    public modelST newmodel() {
       return new modelST(stGroup);
-   }
+   } 
 
    public moduleJSST newmoduleJS() {
       return new moduleJSST(stGroup);
-   }
+   } 
 
    public shellHTMLST newshellHTML() {
       return new shellHTMLST(stGroup);
-   }
+   } 
 
    public shellJSST newshellJS() {
       return new shellJSST(stGroup);
-   }
+   } 
 
    public appHTMLST newappHTML() {
       return new appHTMLST(stGroup);
-   }
+   } 
 
    public bugfix2ST newbugfix2() {
       return new bugfix2ST(stGroup);
-   }
+   } 
 
    public eomST neweom() {
       return new eomST(stGroup);
-   }
+   } 
 
    public gtST newgt() {
       return new gtST(stGroup);
-   }
+   } 
 
    public mainJSST newmainJS() {
       return new mainJSST(stGroup);
-   }
+   } 
 
    public final class modelST implements DurandalGroupTemplate {
 
@@ -91,17 +91,17 @@ public final class DurandalGroup {
       public modelST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public modelST addStatementsValue(Object value) {
       	tryToSetListProperty(template, value, statementsIsSet, "statements");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class moduleJSST implements DurandalGroupTemplate {
 
@@ -117,22 +117,22 @@ public final class DurandalGroup {
       public moduleJSST setReturnValue(Object value) {
       	tryToSetStringProperty(template, value, returnValueIsSet, "returnValue");   
          return this;
-      }
+      } 
       public moduleJSST addStatementsValue(Object value) {
       	tryToSetListProperty(template, value, statementsIsSet, "statements");
          return this;
-      }
+      } 
       public moduleJSST addDependenciesValue(Object importName_, Object refName_) {
          dependenciesIsSet.set(true);
          template.addAggr("dependencies.{importName, refName}", ( (importName_==null || importName_.toString().length()==0) ? null : importName_), ( (refName_==null || refName_.toString().length()==0) ? null : refName_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class shellHTMLST implements DurandalGroupTemplate {
 
@@ -146,7 +146,7 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class shellJSST implements DurandalGroupTemplate {
 
@@ -161,13 +161,13 @@ public final class DurandalGroup {
          routesIsSet.set(true);
          template.addAggr("routes.{title, moduleId, nav, route}", ( (title_==null || title_.toString().length()==0) ? null : title_), ( (moduleId_==null || moduleId_.toString().length()==0) ? null : moduleId_), ( (nav_==null || nav_.toString().length()==0) ? null : nav_), ( (route_==null || route_.toString().length()==0) ? null : route_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class appHTMLST implements DurandalGroupTemplate {
 
@@ -182,17 +182,17 @@ public final class DurandalGroup {
       public appHTMLST setAppStylesheetPath(Object value) {
       	tryToSetStringProperty(template, value, appStylesheetPathIsSet, "appStylesheetPath");   
          return this;
-      }
+      } 
       public appHTMLST setSplashTitle(Object value) {
       	tryToSetStringProperty(template, value, splashTitleIsSet, "splashTitle");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class bugfix2ST implements DurandalGroupTemplate {
 
@@ -206,7 +206,7 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class eomST implements DurandalGroupTemplate {
 
@@ -220,7 +220,7 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class gtST implements DurandalGroupTemplate {
 
@@ -234,7 +234,7 @@ public final class DurandalGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class mainJSST implements DurandalGroupTemplate {
 
@@ -251,22 +251,22 @@ public final class DurandalGroup {
          pluginsIsSet.set(true);
          template.addAggr("plugins.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
-      }
+      } 
       public mainJSST setAppTitle(Object value) {
       	tryToSetStringProperty(template, value, appTitleIsSet, "appTitle");   
          return this;
-      }
+      } 
       public mainJSST addPathsValue(Object name_, Object path_) {
          pathsIsSet.set(true);
          template.addAggr("paths.{name, path}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (path_==null || path_.toString().length()==0) ? null : path_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -383,7 +383,7 @@ public final class DurandalGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -402,28 +402,22 @@ public final class DurandalGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"model(name,statements) ::= <<var ~name~ = function () {\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("model(name,statements) ::= <<var ~name~ = function () {\n" + 
 	"	var self = this;\n" + 
 	"\n" + 
 	"	~statements:{it|~it~;};separator=\"\\n\\n\"~\n" + 
-	"};\n" + 
-	">>\n" + 
-	"\n" + 
-	"moduleJS(returnValue,statements,dependencies) ::= <<define([~dependencies:{it|'~it.importName~'};separator=\", \"~], function (~dependencies:{it|~it.refName~};separator=\", \"~) {\n" + 
+	"}; >>\n")
+		.append("moduleJS(returnValue,statements,dependencies) ::= <<define([~dependencies:{it|'~it.importName~'};separator=\", \"~], function (~dependencies:{it|~it.refName~};separator=\", \"~) {\n" + 
 	"\n" + 
 	"   ~statements:{it|~it~};separator=\"\\n\"~\n" + 
 	"\n" + 
 	"	return ~returnValue~;\n" + 
-	"});\n" + 
-	">>\n" + 
-	"\n" + 
-	"shellHTML() ::= <<<div>\n" + 
+	"}); >>\n")
+		.append("shellHTML() ::= <<<div>\n" + 
 	"    <nav class=\"navbar navbar-default navbar-fixed-top\" role=\"navigation\">\n" + 
 	"        <div class=\"navbar-header\">\n" + 
 	"            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">\n" + 
@@ -460,10 +454,8 @@ public final class DurandalGroup {
 	"    </nav>\n" + 
 	"\n" + 
 	"    <div class=\"page-host\" data-bind=\"router: { transition:'entrance' }\"></div>\n" + 
-	"</div>\n" + 
-	">>\n" + 
-	"\n" + 
-	"shellJS(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {\n" + 
+	"</div> >>\n")
+		.append("shellJS(routes) ::= <<define(['plugins/router', 'durandal/app', 'material', 'knockout'], function (router, app, material, ko) {\n" + 
 	"\n" + 
 	"    return {\n" + 
 	"\n" + 
@@ -491,10 +483,8 @@ public final class DurandalGroup {
 	"                activate();\n" + 
 	"        }\n" + 
 	"    };\n" + 
-	"});\n" + 
-	">>\n" + 
-	"\n" + 
-	"appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>\n" + 
+	"}); >>\n")
+		.append("appHTML(appStylesheetPath,splashTitle) ::= <<<!DOCTYPE html>\n" + 
 	"<html>\n" + 
 	"<head>\n" + 
 	"\n" + 
@@ -543,19 +533,11 @@ public final class DurandalGroup {
 	"</div>\n" + 
 	"<script src=\"./lib/require/require.js\" data-main=\"./main.js\"></script>\n" + 
 	"</body>\n" + 
-	"</html>\n" + 
-	">>\n" + 
-	"\n" + 
-	"bugfix2() ::= <<}\n" + 
-	">>\n" + 
-	"\n" + 
-	"eom() ::= <<}\n" + 
-	">>\n" + 
-	"\n" + 
-	"gt() ::= <<>\n" + 
-	">>\n" + 
-	"\n" + 
-	"mainJS(plugins,appTitle,paths) ::= <<requirejs.config({\n" + 
+	"</html> >>\n")
+		.append("bugfix2() ::= <<} >>\n")
+		.append("eom() ::= <<} >>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("mainJS(plugins,appTitle,paths) ::= <<requirejs.config({\n" + 
 	"    paths: {\n" + 
 	"		'durandal': 'lib/durandal/js',\n" + 
 	"        'plugins': 'lib/durandal/js/plugins',\n" + 
@@ -591,8 +573,5 @@ public final class DurandalGroup {
 	"    app.start().then(function () {\n" + 
 	"        app.setRoot('shell', 'entrance');\n" + 
 	"    });\n" + 
-	"});\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"}); >>\n").toString();
+} 

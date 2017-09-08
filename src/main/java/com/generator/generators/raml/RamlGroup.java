@@ -44,83 +44,83 @@ public final class RamlGroup {
 
    public numberParamST newnumberParam() {
       return new numberParamST(stGroup);
-   }
+   } 
 
    public binaryResponseST newbinaryResponse() {
       return new binaryResponseST(stGroup);
-   }
+   } 
 
    public booleanParamST newbooleanParam() {
       return new booleanParamST(stGroup);
-   }
+   } 
 
    public dateParamST newdateParam() {
       return new dateParamST(stGroup);
-   }
+   } 
 
    public deleteActionST newdeleteAction() {
       return new deleteActionST(stGroup);
-   }
+   } 
 
    public endpointST newendpoint() {
       return new endpointST(stGroup);
-   }
+   } 
 
    public errorResponseST newerrorResponse() {
       return new errorResponseST(stGroup);
-   }
+   } 
 
    public fileST newfile() {
       return new fileST(stGroup);
-   }
+   } 
 
    public fileParamST newfileParam() {
       return new fileParamST(stGroup);
-   }
+   } 
 
    public formBodyST newformBody() {
       return new formBodyST(stGroup);
-   }
+   } 
 
    public getActionST newgetAction() {
       return new getActionST(stGroup);
-   }
+   } 
 
    public headerST newheader() {
       return new headerST(stGroup);
-   }
+   } 
 
    public headerParamsST newheaderParams() {
       return new headerParamsST(stGroup);
-   }
+   } 
 
    public integerParamST newintegerParam() {
       return new integerParamST(stGroup);
-   }
+   } 
 
    public jsonResponseST newjsonResponse() {
       return new jsonResponseST(stGroup);
-   }
+   } 
 
    public postActionST newpostAction() {
       return new postActionST(stGroup);
-   }
+   } 
 
    public putActionST newputAction() {
       return new putActionST(stGroup);
-   }
+   } 
 
    public queryParamsST newqueryParams() {
       return new queryParamsST(stGroup);
-   }
+   } 
 
    public stringParamST newstringParam() {
       return new stringParamST(stGroup);
-   }
+   } 
 
    public uriParamsST newuriParams() {
       return new uriParamsST(stGroup);
-   }
+   } 
 
    public final class numberParamST implements RamlGroupTemplate {
 
@@ -141,41 +141,41 @@ public final class RamlGroup {
       public numberParamST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      }
+      } 
       public numberParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public numberParamST setExample(Object value) {
       	tryToSetStringProperty(template, value, exampleIsSet, "example");   
          return this;
-      }
+      } 
       public numberParamST setMaximum(Object value) {
       	tryToSetStringProperty(template, value, maximumIsSet, "maximum");   
          return this;
-      }
+      } 
       public numberParamST setMinimum(Object value) {
       	tryToSetStringProperty(template, value, minimumIsSet, "minimum");   
          return this;
-      }
+      } 
       public numberParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public numberParamST setRepeat(Object value) {
       	tryToSetStringProperty(template, value, repeatIsSet, "repeat");   
          return this;
-      }
+      } 
       public numberParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class binaryResponseST implements RamlGroupTemplate {
 
@@ -189,13 +189,13 @@ public final class RamlGroup {
       public binaryResponseST setContentType(Object value) {
       	tryToSetStringProperty(template, value, contentTypeIsSet, "contentType");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class booleanParamST implements RamlGroupTemplate {
 
@@ -212,25 +212,25 @@ public final class RamlGroup {
       public booleanParamST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      }
+      } 
       public booleanParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public booleanParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public booleanParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class dateParamST implements RamlGroupTemplate {
 
@@ -249,33 +249,33 @@ public final class RamlGroup {
       public dateParamST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      }
+      } 
       public dateParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public dateParamST setExample(Object value) {
       	tryToSetStringProperty(template, value, exampleIsSet, "example");   
          return this;
-      }
+      } 
       public dateParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public dateParamST setPattern(Object value) {
       	tryToSetStringProperty(template, value, patternIsSet, "pattern");   
          return this;
-      }
+      } 
       public dateParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class deleteActionST implements RamlGroupTemplate {
 
@@ -292,25 +292,25 @@ public final class RamlGroup {
       public deleteActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public deleteActionST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      }
+      } 
       public deleteActionST setQuery(Object value) {
       	tryToSetStringProperty(template, value, queryIsSet, "query");   
          return this;
-      }
+      } 
       public deleteActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class endpointST implements RamlGroupTemplate {
 
@@ -326,21 +326,21 @@ public final class RamlGroup {
       public endpointST addActionsValue(Object value) {
       	tryToSetListProperty(template, value, actionsIsSet, "actions");
          return this;
-      }
+      } 
       public endpointST setUri(Object value) {
       	tryToSetStringProperty(template, value, uriIsSet, "uri");   
          return this;
-      }
+      } 
       public endpointST setUriParams(Object value) {
       	tryToSetStringProperty(template, value, uriParamsIsSet, "uriParams");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class errorResponseST implements RamlGroupTemplate {
 
@@ -355,17 +355,17 @@ public final class RamlGroup {
       public errorResponseST setCode(Object value) {
       	tryToSetStringProperty(template, value, codeIsSet, "code");   
          return this;
-      }
+      } 
       public errorResponseST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class fileST implements RamlGroupTemplate {
 
@@ -384,33 +384,33 @@ public final class RamlGroup {
       public fileST setBaseUri(Object value) {
       	tryToSetStringProperty(template, value, baseUriIsSet, "baseUri");   
          return this;
-      }
+      } 
       public fileST addEndpointsValue(Object value) {
       	tryToSetListProperty(template, value, endpointsIsSet, "endpoints");
          return this;
-      }
+      } 
       public fileST setHttp(Object value) {
       	tryToSetStringProperty(template, value, httpIsSet, "http");   
          return this;
-      }
+      } 
       public fileST setHttps(Object value) {
       	tryToSetStringProperty(template, value, httpsIsSet, "https");   
          return this;
-      }
+      } 
       public fileST setTitle(Object value) {
       	tryToSetStringProperty(template, value, titleIsSet, "title");   
          return this;
-      }
+      } 
       public fileST setVersion(Object value) {
       	tryToSetStringProperty(template, value, versionIsSet, "version");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class fileParamST implements RamlGroupTemplate {
 
@@ -426,21 +426,21 @@ public final class RamlGroup {
       public fileParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public fileParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public fileParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class formBodyST implements RamlGroupTemplate {
 
@@ -455,17 +455,17 @@ public final class RamlGroup {
       public formBodyST addFormParamsValue(Object value) {
       	tryToSetListProperty(template, value, formParamsIsSet, "formParams");
          return this;
-      }
+      } 
       public formBodyST setMultipart(Object value) {
       	tryToSetStringProperty(template, value, multipartIsSet, "multipart");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class getActionST implements RamlGroupTemplate {
 
@@ -482,25 +482,25 @@ public final class RamlGroup {
       public getActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public getActionST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      }
+      } 
       public getActionST setQuery(Object value) {
       	tryToSetStringProperty(template, value, queryIsSet, "query");   
          return this;
-      }
+      } 
       public getActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class headerST implements RamlGroupTemplate {
 
@@ -518,29 +518,29 @@ public final class RamlGroup {
       public headerST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public headerST addEnumsValue(Object value) {
       	tryToSetListProperty(template, value, enumsIsSet, "enums");
          return this;
-      }
+      } 
       public headerST setExample(Object value) {
       	tryToSetStringProperty(template, value, exampleIsSet, "example");   
          return this;
-      }
+      } 
       public headerST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public headerST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class headerParamsST implements RamlGroupTemplate {
 
@@ -554,13 +554,13 @@ public final class RamlGroup {
       public headerParamsST addHeaderParamsValue(Object value) {
       	tryToSetListProperty(template, value, headerParamsIsSet, "headerParams");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class integerParamST implements RamlGroupTemplate {
 
@@ -581,41 +581,41 @@ public final class RamlGroup {
       public integerParamST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      }
+      } 
       public integerParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public integerParamST setExample(Object value) {
       	tryToSetStringProperty(template, value, exampleIsSet, "example");   
          return this;
-      }
+      } 
       public integerParamST setMaximum(Object value) {
       	tryToSetStringProperty(template, value, maximumIsSet, "maximum");   
          return this;
-      }
+      } 
       public integerParamST setMinimum(Object value) {
       	tryToSetStringProperty(template, value, minimumIsSet, "minimum");   
          return this;
-      }
+      } 
       public integerParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public integerParamST setRepeat(Object value) {
       	tryToSetStringProperty(template, value, repeatIsSet, "repeat");   
          return this;
-      }
+      } 
       public integerParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class jsonResponseST implements RamlGroupTemplate {
 
@@ -631,22 +631,22 @@ public final class RamlGroup {
       public jsonResponseST setSchemaDescription(Object value) {
       	tryToSetStringProperty(template, value, schemaDescriptionIsSet, "schemaDescription");   
          return this;
-      }
+      } 
       public jsonResponseST addPropertiesValue(Object name_, Object type_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
       public jsonResponseST addRequiredValue(Object value) {
       	tryToSetListProperty(template, value, requiredIsSet, "required");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class postActionST implements RamlGroupTemplate {
 
@@ -664,29 +664,29 @@ public final class RamlGroup {
       public postActionST setBody(Object value) {
       	tryToSetStringProperty(template, value, bodyIsSet, "body");   
          return this;
-      }
+      } 
       public postActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public postActionST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      }
+      } 
       public postActionST setQuery(Object value) {
       	tryToSetStringProperty(template, value, queryIsSet, "query");   
          return this;
-      }
+      } 
       public postActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class putActionST implements RamlGroupTemplate {
 
@@ -704,29 +704,29 @@ public final class RamlGroup {
       public putActionST setBody(Object value) {
       	tryToSetStringProperty(template, value, bodyIsSet, "body");   
          return this;
-      }
+      } 
       public putActionST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public putActionST setHeaders(Object value) {
       	tryToSetStringProperty(template, value, headersIsSet, "headers");   
          return this;
-      }
+      } 
       public putActionST setQuery(Object value) {
       	tryToSetStringProperty(template, value, queryIsSet, "query");   
          return this;
-      }
+      } 
       public putActionST addResponsesValue(Object value) {
       	tryToSetListProperty(template, value, responsesIsSet, "responses");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class queryParamsST implements RamlGroupTemplate {
 
@@ -740,13 +740,13 @@ public final class RamlGroup {
       public queryParamsST addQueryParamsValue(Object value) {
       	tryToSetListProperty(template, value, queryParamsIsSet, "queryParams");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class stringParamST implements RamlGroupTemplate {
 
@@ -769,49 +769,49 @@ public final class RamlGroup {
       public stringParamST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      }
+      } 
       public stringParamST setDescription(Object value) {
       	tryToSetStringProperty(template, value, descriptionIsSet, "description");   
          return this;
-      }
+      } 
       public stringParamST addEnumsValue(Object value) {
       	tryToSetListProperty(template, value, enumsIsSet, "enums");
          return this;
-      }
+      } 
       public stringParamST setExample(Object value) {
       	tryToSetStringProperty(template, value, exampleIsSet, "example");   
          return this;
-      }
+      } 
       public stringParamST setMaxLength(Object value) {
       	tryToSetStringProperty(template, value, maxLengthIsSet, "maxLength");   
          return this;
-      }
+      } 
       public stringParamST setMinLength(Object value) {
       	tryToSetStringProperty(template, value, minLengthIsSet, "minLength");   
          return this;
-      }
+      } 
       public stringParamST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public stringParamST setPattern(Object value) {
       	tryToSetStringProperty(template, value, patternIsSet, "pattern");   
          return this;
-      }
+      } 
       public stringParamST setRepeat(Object value) {
       	tryToSetStringProperty(template, value, repeatIsSet, "repeat");   
          return this;
-      }
+      } 
       public stringParamST setRequired(Object value) {
       	tryToSetStringProperty(template, value, requiredIsSet, "required");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class uriParamsST implements RamlGroupTemplate {
 
@@ -825,13 +825,13 @@ public final class RamlGroup {
       public uriParamsST addUriParamsValue(Object value) {
       	tryToSetListProperty(template, value, uriParamsIsSet, "uriParams");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -948,7 +948,7 @@ public final class RamlGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -1096,4 +1096,4 @@ public final class RamlGroup {
 	"  ~if(defaultValue)~default: ~defaultValue~~else~# no default ~endif~ >>\n")
 		.append("uriParams(uriParams) ::= <<uriParameters:\n" + 
 	"  ~uriParams:{it|~it~};separator=\"\\n\"~ >>\n").toString();
-}
+} 

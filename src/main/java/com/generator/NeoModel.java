@@ -6,11 +6,11 @@ import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static com.generator.BaseDomainVisitor.getString;
-import static com.generator.BaseDomainVisitor.outgoing;
 
 /**
  * User: goe
@@ -45,9 +45,7 @@ public class NeoModel {
       }
 
       this.listener = listener;
-      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-         close();
-      }));
+      Runtime.getRuntime().addShutdownHook(new Thread(this::close));
    }
 
    public GraphDatabaseService getGraphDb() {
@@ -105,7 +103,7 @@ public class NeoModel {
       return node;
    }
 
-   public static UUID uuidOf(Node node) {
+   static UUID uuidOf(Node node) {
       return node == null ? null : hasUUID(node) ? UUID.fromString(node.getProperty(TAG_UUID).toString()) : null;
    }
 
@@ -156,10 +154,6 @@ public class NeoModel {
       return node.hasProperty(name) ? node.getProperty(name) : defaultValue;
    }
 
-   public static boolean hasOutgoing(Node node, RelationshipType relationship) {
-      return node.getRelationships(Direction.OUTGOING, relationship).iterator().hasNext();
-   }
-
    public Node getNode(final UUID uuid) {
       final IndexHits<Node> indexHits = uuids.get(TAG_UUID, uuid);
       if (indexHits.size() == 0) {
@@ -167,11 +161,6 @@ public class NeoModel {
          if (it.hasNext()) return it.next();
       }
       return indexHits.getSingle();
-   }
-
-   public Node mergeNode(final UUID uuid) {
-      final IndexHits<Node> indexHits = uuids.get(TAG_UUID, uuid);
-      return indexHits.size() == 0 ? newNode(uuid) : indexHits.getSingle();
    }
 
    // NODES
@@ -193,39 +182,7 @@ public class NeoModel {
       return result;
    }
 
-   public Set<Node> allByLabel(String label) {
-
-      final String query = "MATCH (entity:" + label + ") RETURN entity";
-
-      final Set<Node> result = new LinkedHashSet<>();
-      try {
-
-         final Result res = query(query);
-         final Iterator<Node> n_column = res.columnAs("entity");
-         for (Node node : Iterators.asIterable(n_column))
-            result.add(node);
-
-      } catch (Exception e) {
-         e.printStackTrace();
-      }
-
-      return result;
-   }
-
-   public Set<Node> getAll(String label, String property, String value) {
-      final ST cypher = new ST("MATCH (entity:~label~) WHERE entity.~property~ = \"~value~\" RETURN entity", '~', '~');
-      cypher.add("label", label);
-      cypher.add("property", property);
-      cypher.add("value", value);
-      final Result res = query(cypher.render());
-      final Iterator<Node> n_column = res.columnAs("entity");
-      final Set<Node> result = new LinkedHashSet<>();
-      for (Node node : Iterators.asIterable(n_column))
-         result.add(node);
-      return result;
-   }
-
-   public Set<Node> getAll(String property, String value) {
+   private Set<Node> getAll(String property, String value) {
       final ST cypher = new ST("MATCH (entity) WHERE entity.~property~ = \"~value~\" RETURN entity", '~', '~');
       cypher.add("property", property);
       cypher.add("value", value);
@@ -242,7 +199,6 @@ public class NeoModel {
       cypher.add("property", property);
       final Result res = query(cypher.render());
       final Iterator<Node> n_column = res.columnAs("entity");
-      final Set<Node> result = new LinkedHashSet<>();
       return Iterators.asIterable(n_column);
    }
 
@@ -300,10 +256,6 @@ public class NeoModel {
             tx.failure();
          }
       }
-   }
-
-   public static String debugNode(Node node) {
-      return NeoModel.uuidOf(node) + " (" + BaseDomainVisitor.labelsFor(node) + ") [" + BaseDomainVisitor.printPropertiesFor(node, " ") + "]";
    }
 
    private static boolean hasUUID(Node node) {

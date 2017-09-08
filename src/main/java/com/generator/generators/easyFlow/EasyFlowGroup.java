@@ -44,39 +44,39 @@ public final class EasyFlowGroup {
 
    public implST newimpl() {
       return new implST(stGroup);
-   }
+   } 
 
    public mvnST newmvn() {
       return new mvnST(stGroup);
-   }
+   } 
 
    public stateDeclarationST newstateDeclaration() {
       return new stateDeclarationST(stGroup);
-   }
+   } 
 
    public statefulContextST newstatefulContext() {
       return new statefulContextST(stGroup);
-   }
+   } 
 
    public statesST newstates() {
       return new statesST(stGroup);
-   }
+   } 
 
    public declarationST newdeclaration() {
       return new declarationST(stGroup);
-   }
+   } 
 
    public easyFlowST neweasyFlow() {
       return new easyFlowST(stGroup);
-   }
+   } 
 
    public eventsST newevents() {
       return new eventsST(stGroup);
-   }
+   } 
 
    public transitST newtransit() {
       return new transitST(stGroup);
-   }
+   } 
 
    public final class implST implements EasyFlowGroupTemplate {
 
@@ -91,17 +91,17 @@ public final class EasyFlowGroup {
       public implST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public implST setState(Object value) {
       	tryToSetStringProperty(template, value, stateIsSet, "state");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class mvnST implements EasyFlowGroupTemplate {
 
@@ -115,7 +115,7 @@ public final class EasyFlowGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class stateDeclarationST implements EasyFlowGroupTemplate {
 
@@ -130,17 +130,17 @@ public final class EasyFlowGroup {
       public stateDeclarationST setComment(Object value) {
       	tryToSetStringProperty(template, value, commentIsSet, "comment");   
          return this;
-      }
+      } 
       public stateDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class statefulContextST implements EasyFlowGroupTemplate {
 
@@ -156,22 +156,22 @@ public final class EasyFlowGroup {
       public statefulContextST setContextGeneric(Object value) {
       	tryToSetStringProperty(template, value, contextGenericIsSet, "contextGeneric");   
          return this;
-      }
+      } 
       public statefulContextST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public statefulContextST addPropertiesValue(Object comment_, Object modifier_, Object name_, Object type_, Object value_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{comment, modifier, name, type, value}", ( (comment_==null || comment_.toString().length()==0) ? null : comment_), ( (modifier_==null || modifier_.toString().length()==0) ? null : modifier_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class statesST implements EasyFlowGroupTemplate {
 
@@ -185,13 +185,13 @@ public final class EasyFlowGroup {
       public statesST addStatesValue(Object value) {
       	tryToSetListProperty(template, value, statesIsSet, "states");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class declarationST implements EasyFlowGroupTemplate {
 
@@ -206,17 +206,17 @@ public final class EasyFlowGroup {
       public declarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public declarationST setState(Object value) {
       	tryToSetStringProperty(template, value, stateIsSet, "state");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class easyFlowST implements EasyFlowGroupTemplate {
 
@@ -238,47 +238,47 @@ public final class EasyFlowGroup {
       public easyFlowST setContext(Object value) {
       	tryToSetStringProperty(template, value, contextIsSet, "context");   
          return this;
-      }
+      } 
       public easyFlowST setEvents(Object value) {
       	tryToSetStringProperty(template, value, eventsIsSet, "events");   
          return this;
-      }
+      } 
       public easyFlowST addBindingsValue(Object declaration_, Object impl_) {
          bindingsIsSet.set(true);
          template.addAggr("bindings.{declaration, impl}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (impl_==null || impl_.toString().length()==0) ? null : impl_));
          return this;
-      }
+      } 
       public easyFlowST setExtends(Object value) {
       	tryToSetStringProperty(template, value, extendsIsSet, "extends");   
          return this;
-      }
+      } 
       public easyFlowST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public easyFlowST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
-      }
+      } 
       public easyFlowST setStates(Object value) {
       	tryToSetStringProperty(template, value, statesIsSet, "states");   
          return this;
-      }
+      } 
       public easyFlowST addSuperParamsValue(Object name_, Object type_) {
          superParamsIsSet.set(true);
          template.addAggr("superParams.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
       public easyFlowST setTransit(Object value) {
       	tryToSetStringProperty(template, value, transitIsSet, "transit");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class eventsST implements EasyFlowGroupTemplate {
 
@@ -292,13 +292,13 @@ public final class EasyFlowGroup {
       public eventsST addEventsValue(Object value) {
       	tryToSetListProperty(template, value, eventsIsSet, "events");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class transitST implements EasyFlowGroupTemplate {
 
@@ -316,29 +316,29 @@ public final class EasyFlowGroup {
       public transitST setEvent(Object value) {
       	tryToSetStringProperty(template, value, eventIsSet, "event");   
          return this;
-      }
+      } 
       public transitST setIsFinish(Object value) {
       	tryToSetStringProperty(template, value, isFinishIsSet, "isFinish");   
          return this;
-      }
+      } 
       public transitST setIsInit(Object value) {
       	tryToSetStringProperty(template, value, isInitIsSet, "isInit");   
          return this;
-      }
+      } 
       public transitST setState(Object value) {
       	tryToSetStringProperty(template, value, stateIsSet, "state");   
          return this;
-      }
+      } 
       public transitST addTransitsValue(Object value) {
       	tryToSetListProperty(template, value, transitsIsSet, "transits");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -455,7 +455,7 @@ public final class EasyFlowGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -575,4 +575,4 @@ public final class EasyFlowGroup {
 		.append("transit(event,isFinish,isInit,state,transits) ::= <<~if(isInit)~from(~state~)~else~on(~event~).~if(isFinish)~finish~else~to~endif~(~state~)~endif~~if(transits)~.transit(\n" + 
 	"~transits:{it|~it~};separator=\",\\n\"~\n" + 
 	")~endif~ >>\n").toString();
-}
+} 

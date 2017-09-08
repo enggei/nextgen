@@ -44,35 +44,35 @@ public final class BerkeleyDBGroup {
 
    public secondaryIndexDefinitionST newsecondaryIndexDefinition() {
       return new secondaryIndexDefinitionST(stGroup);
-   }
+   } 
 
    public secondaryIndexInitializationST newsecondaryIndexInitialization() {
       return new secondaryIndexInitializationST(stGroup);
-   }
+   } 
 
    public secondaryIndexAccessorST newsecondaryIndexAccessor() {
       return new secondaryIndexAccessorST(stGroup);
-   }
+   } 
 
    public secondaryIndexCloseST newsecondaryIndexClose() {
       return new secondaryIndexCloseST(stGroup);
-   }
+   } 
 
    public secondaryIndexDeclarationST newsecondaryIndexDeclaration() {
       return new secondaryIndexDeclarationST(stGroup);
-   }
+   } 
 
    public DBEntityST newDBEntity() {
       return new DBEntityST(stGroup);
-   }
+   } 
 
    public BerkeleyDBST newBerkeleyDB() {
       return new BerkeleyDBST(stGroup);
-   }
+   } 
 
    public ViewClassDeclST newViewClassDecl() {
       return new ViewClassDeclST(stGroup);
-   }
+   } 
 
    public final class secondaryIndexDefinitionST implements BerkeleyDBGroupTemplate {
 
@@ -87,17 +87,17 @@ public final class BerkeleyDBGroup {
       public secondaryIndexDefinitionST setEntity(Object value) {
       	tryToSetStringProperty(template, value, entityIsSet, "entity");   
          return this;
-      }
+      } 
       public secondaryIndexDefinitionST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class secondaryIndexInitializationST implements BerkeleyDBGroupTemplate {
 
@@ -111,13 +111,13 @@ public final class BerkeleyDBGroup {
       public secondaryIndexInitializationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class secondaryIndexAccessorST implements BerkeleyDBGroupTemplate {
 
@@ -131,13 +131,13 @@ public final class BerkeleyDBGroup {
       public secondaryIndexAccessorST setEntity(Object value) {
       	tryToSetStringProperty(template, value, entityIsSet, "entity");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class secondaryIndexCloseST implements BerkeleyDBGroupTemplate {
 
@@ -151,7 +151,7 @@ public final class BerkeleyDBGroup {
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class secondaryIndexDeclarationST implements BerkeleyDBGroupTemplate {
 
@@ -165,13 +165,13 @@ public final class BerkeleyDBGroup {
       public secondaryIndexDeclarationST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class DBEntityST implements BerkeleyDBGroupTemplate {
 
@@ -190,35 +190,35 @@ public final class BerkeleyDBGroup {
       public DBEntityST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public DBEntityST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      }
+      } 
       public DBEntityST setPrimaryName(Object value) {
       	tryToSetStringProperty(template, value, primaryNameIsSet, "primaryName");   
          return this;
-      }
+      } 
       public DBEntityST setPrimaryType(Object value) {
       	tryToSetStringProperty(template, value, primaryTypeIsSet, "primaryType");   
          return this;
-      }
+      } 
       public DBEntityST addPropertiesValue(Object name_, Object type_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
       public DBEntityST addSecondaryKeysValue(Object name_, Object relate_, Object relatedEntity_, Object type_) {
          secondaryKeysIsSet.set(true);
          template.addAggr("secondaryKeys.{name, relate, relatedEntity, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (relate_==null || relate_.toString().length()==0) ? null : relate_), ( (relatedEntity_==null || relatedEntity_.toString().length()==0) ? null : relatedEntity_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class BerkeleyDBST implements BerkeleyDBGroupTemplate {
 
@@ -235,21 +235,21 @@ public final class BerkeleyDBGroup {
          viewsIsSet.set(true);
          template.addAggr("views.{classDecl, name}", ( (classDecl_==null || classDecl_.toString().length()==0) ? null : classDecl_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
-      }
+      } 
       public BerkeleyDBST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public BerkeleyDBST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class ViewClassDeclST implements BerkeleyDBGroupTemplate {
 
@@ -264,18 +264,18 @@ public final class BerkeleyDBGroup {
       public ViewClassDeclST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public ViewClassDeclST addSecondaryIndicesValue(Object accessor_, Object close_, Object declaration_, Object definition_, Object initalization_) {
          secondaryIndicesIsSet.set(true);
          template.addAggr("secondaryIndices.{accessor, close, declaration, definition, initalization}", ( (accessor_==null || accessor_.toString().length()==0) ? null : accessor_), ( (close_==null || close_.toString().length()==0) ? null : close_), ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (definition_==null || definition_.toString().length()==0) ? null : definition_), ( (initalization_==null || initalization_.toString().length()==0) ? null : initalization_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -392,7 +392,7 @@ public final class BerkeleyDBGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -411,13 +411,11 @@ public final class BerkeleyDBGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"secondaryIndexDefinition(entity,name) ::= <<private final class ~name~ {\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("secondaryIndexDefinition(entity,name) ::= <<private final class ~name~ {\n" + 
 	"\n" + 
 	"    // secondary indices:\n" + 
 	"    private SecondaryDatabase supplierByCityDb;\n" + 
@@ -485,26 +483,16 @@ public final class BerkeleyDBGroup {
 	"    public void close() {\n" + 
 	"        supplierByCityIndex.close();\n" + 
 	"    }\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"secondaryIndexInitialization(name) ::= <<supplierByCityIndex = new ~name~(env);\n" + 
-	">>\n" + 
-	"\n" + 
-	"secondaryIndexAccessor(entity) ::= <<public Set<~entity~> listNodeJobsByNode(String key) {\n" + 
+	"} >>\n")
+		.append("secondaryIndexInitialization(name) ::= <<supplierByCityIndex = new ~name~(env); >>\n")
+		.append("secondaryIndexAccessor(entity) ::= <<public Set<~entity~> listNodeJobsByNode(String key) {\n" + 
 	"     final Set<~entity~> set = new LinkedHashSet<~entity~>();\n" + 
 	"     for (~entity~ nodeJob : supplierByCityMap.duplicates(key)) set.add(nodeJob);\n" + 
 	"     return set;\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"secondaryIndexClose() ::= <<supplierByCityDb.close();\n" + 
-	">>\n" + 
-	"\n" + 
-	"secondaryIndexDeclaration(name) ::= <<private final ~name~ supplierByCityIndex;\n" + 
-	">>\n" + 
-	"\n" + 
-	"DBEntity(name,packageName,primaryName,primaryType,properties,secondaryKeys) ::= <<package ~packageName~;\n" + 
+	"} >>\n")
+		.append("secondaryIndexClose() ::= <<supplierByCityDb.close(); >>\n")
+		.append("secondaryIndexDeclaration(name) ::= <<private final ~name~ supplierByCityIndex; >>\n")
+		.append("DBEntity(name,packageName,primaryName,primaryType,properties,secondaryKeys) ::= <<package ~packageName~;\n" + 
 	"\n" + 
 	"@com.sleepycat.persist.model.Entity\n" + 
 	"public class ~name~ {\n" + 
@@ -524,10 +512,8 @@ public final class BerkeleyDBGroup {
 	"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
 	"~endif~\n" + 
 	"	}\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"BerkeleyDB(views,name,packageName) ::= <<package ~packageName~;\n" + 
+	"} >>\n")
+		.append("BerkeleyDB(views,name,packageName) ::= <<package ~packageName~;\n" + 
 	"\n" + 
 	"import com.sleepycat.bind.EntryBinding;\n" + 
 	"import com.sleepycat.bind.serial.StoredClassCatalog;\n" + 
@@ -620,10 +606,8 @@ public final class BerkeleyDBGroup {
 	"		}\n" + 
 	"      return f;\n" + 
 	"	}\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"ViewClassDecl(name,secondaryIndices) ::= <<public final class ~name~View {\n" + 
+	"} >>\n")
+		.append("ViewClassDecl(name,secondaryIndices) ::= <<public final class ~name~View {\n" + 
 	"\n" + 
 	"     private final com.sleepycat.je.Database database;\n" + 
 	"     private final StoredMap<String, ~name~> map;\n" + 
@@ -725,8 +709,5 @@ public final class BerkeleyDBGroup {
 	"\n" + 
 	"   ~secondaryIndices:{it|~it.definition~};separator=\"\\n\"~\n" + 
 	"\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"} >>\n").toString();
+} 

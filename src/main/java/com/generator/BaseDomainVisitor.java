@@ -4,7 +4,7 @@ import org.neo4j.graphdb.*;
 
 import java.util.*;
 
-import static java.util.Comparator.*;
+import static java.util.Comparator.comparingLong;
 import static org.neo4j.graphdb.Direction.INCOMING;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
@@ -12,12 +12,6 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  * goe on 4/23/15.
  */
 public abstract class BaseDomainVisitor {
-
-   protected static java.util.List<String> split(Node node, String propertyName, String delim) {
-      final String deps = getString(node, propertyName);
-      if (deps != null) return Arrays.asList(deps.split(delim));
-      return Collections.emptyList();
-   }
 
    public static void tryToDeleteNode(Node node) throws IllegalStateException {
 
@@ -46,14 +40,6 @@ public abstract class BaseDomainVisitor {
       return false;
    }
 
-   public static Relationship getRelationship(Node node, Node target, RelationshipType relationshipType) {
-      final Object targetUUID = NeoModel.uuidOf(target);
-      for (Relationship relationship : outgoing(node, relationshipType)) {
-         if (targetUUID.equals(NeoModel.uuidOf(other(node, relationship)))) return relationship;
-      }
-      return null;
-   }
-
    public static boolean hasOutgoing(Node node, RelationshipType type) {
       return node != null && node.hasRelationship(type, OUTGOING);
    }
@@ -71,10 +57,6 @@ public abstract class BaseDomainVisitor {
       return false;
    }
 
-   public static String labelsFor(Node node) {
-      return labelsFor(node, " ");
-   }
-
    public static String propertiesFor(PropertyContainer propertyContainer) {
       final StringBuilder out = new StringBuilder();
       boolean first = true;
@@ -86,9 +68,9 @@ public abstract class BaseDomainVisitor {
       return out.toString();
    }
 
-   public static String labelsFor(Node node, String delimiter) {
+   public static String labelsFor(Node node) {
       final StringBuilder lbl = new StringBuilder();
-      for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(delimiter);
+      for (org.neo4j.graphdb.Label label : node.getLabels()) lbl.append(label).append(" ");
       return lbl.toString().trim();
    }
 
@@ -110,10 +92,6 @@ public abstract class BaseDomainVisitor {
 
    public static Iterable<Relationship> incoming(Node node) {
       return sort(node.getRelationships(INCOMING));
-   }
-
-   public static boolean hasIncoming(Node node, RelationshipType type) {
-      return node != null && node.hasRelationship(type, INCOMING);
    }
 
    public static Relationship singleIncoming(Node node, RelationshipType type) {
@@ -172,28 +150,10 @@ public abstract class BaseDomainVisitor {
       return out.toString();
    }
 
-   public static String printPropertiesFor(PropertyContainer node) {
-      return printPropertiesFor(node, " ");
-   }
-
-   public static String printPropertiesFor(PropertyContainer node, String delimiter) {
-      final StringBuilder out = new StringBuilder();
-      boolean first = true;
-      for (String k : node.getPropertyKeys()) {
-         if (!first) out.append(delimiter);
-         out.append(k).append("=").append(node.getProperty(k));
-         first = false;
-      }
-      return out.toString().trim();
-   }
-
    private static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
-
       final Set<Relationship> relations = new TreeSet<>(comparingLong(Relationship::getId));
-
       for (Relationship relationship : relationships)
          relations.add(relationship);
-
       return relations;
    }
 }

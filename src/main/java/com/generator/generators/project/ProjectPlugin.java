@@ -330,12 +330,16 @@ public class ProjectPlugin extends DomainPlugin {
 
    private void renderDirectory(Node node) {
       outgoing(node, Relations.RENDERER).forEach(rendererRelationship -> {
-         final Node statementNode = other(node, rendererRelationship);
-         final Node templateNode = other(statementNode, singleIncoming(statementNode, DomainPlugin.Relations.INSTANCE));
-         if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate)) {
-            renderToFile(rendererRelationship, statementNode, StringTemplatePlugin.renderStatement(statementNode, templateNode), node, app);
-         } else if (hasLabel(templateNode, StringTemplatePlugin.Entities.STGroup)) {
-            StringTemplatePlugin.renderSTGGroup(statementNode, rendererRelationship, false);
+         final Node nodeToRender = other(node, rendererRelationship);
+         if (hasLabel(nodeToRender, StringTemplatePlugin.Entities.STGroup)) {
+            StringTemplatePlugin.renderSTGGroup(nodeToRender, rendererRelationship);
+         } else if (hasLabel(nodeToRender, DomainPlugin.Entities.Domain)) {
+            DomainPlugin.renderDomainVisitor(rendererRelationship, nodeToRender);
+         } else {
+            final Node templateNode = other(nodeToRender, singleIncoming(nodeToRender, DomainPlugin.Relations.INSTANCE));
+            if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate)) {
+               renderToFile(rendererRelationship, nodeToRender, StringTemplatePlugin.renderStatement(nodeToRender, templateNode), node, app);
+            }
          }
       });
 

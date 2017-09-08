@@ -44,35 +44,35 @@ public final class CppGroup {
 
    public HeaderFileST newHeaderFile() {
       return new HeaderFileST(stGroup);
-   }
+   } 
 
    public MemberST newMember() {
       return new MemberST(stGroup);
-   }
+   } 
 
    public NamespaceST newNamespace() {
       return new NamespaceST(stGroup);
-   }
+   } 
 
    public StructST newStruct() {
       return new StructST(stGroup);
-   }
+   } 
 
    public TypeST newType() {
       return new TypeST(stGroup);
-   }
+   } 
 
    public ClassST newClass() {
       return new ClassST(stGroup);
-   }
+   } 
 
    public MethodST newMethod() {
       return new MethodST(stGroup);
-   }
+   } 
 
    public TypedefST newTypedef() {
       return new TypedefST(stGroup);
-   }
+   } 
 
    public final class HeaderFileST implements CppGroupTemplate {
 
@@ -89,26 +89,26 @@ public final class CppGroup {
       public HeaderFileST addEntryValue(Object value) {
       	tryToSetListProperty(template, value, entryIsSet, "entry");
          return this;
-      }
+      } 
       public HeaderFileST addIncludesValue(Object name_, Object system_) {
          includesIsSet.set(true);
          template.addAggr("includes.{name, system}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (system_==null || system_.toString().length()==0) ? null : system_));
          return this;
-      }
+      } 
       public HeaderFileST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public HeaderFileST addNamespaceValue(Object value) {
       	tryToSetListProperty(template, value, namespaceIsSet, "namespace");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class MemberST implements CppGroupTemplate {
 
@@ -124,21 +124,21 @@ public final class CppGroup {
       public MemberST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public MemberST setStatic(Object value) {
       	tryToSetStringProperty(template, value, staticIsSet, "static");   
          return this;
-      }
+      } 
       public MemberST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class NamespaceST implements CppGroupTemplate {
 
@@ -153,17 +153,17 @@ public final class CppGroup {
       public NamespaceST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      }
+      } 
       public NamespaceST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class StructST implements CppGroupTemplate {
 
@@ -180,25 +180,25 @@ public final class CppGroup {
       public StructST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public StructST addPrivateValue(Object value) {
       	tryToSetListProperty(template, value, privateIsSet, "private");
          return this;
-      }
+      } 
       public StructST addProtectedValue(Object value) {
       	tryToSetListProperty(template, value, protectedIsSet, "protected");
          return this;
-      }
+      } 
       public StructST addPublicValue(Object value) {
       	tryToSetListProperty(template, value, publicIsSet, "public");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class TypeST implements CppGroupTemplate {
 
@@ -216,29 +216,29 @@ public final class CppGroup {
       public TypeST setConst(Object value) {
       	tryToSetStringProperty(template, value, constIsSet, "const");   
          return this;
-      }
+      } 
       public TypeST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public TypeST setNamespace(Object value) {
       	tryToSetStringProperty(template, value, namespaceIsSet, "namespace");   
          return this;
-      }
+      } 
       public TypeST setPointer(Object value) {
       	tryToSetStringProperty(template, value, pointerIsSet, "pointer");   
          return this;
-      }
+      } 
       public TypeST setReference(Object value) {
       	tryToSetStringProperty(template, value, referenceIsSet, "reference");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class ClassST implements CppGroupTemplate {
 
@@ -255,25 +255,25 @@ public final class CppGroup {
       public ClassST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public ClassST addPrivateValue(Object value) {
       	tryToSetListProperty(template, value, privateIsSet, "private");
          return this;
-      }
+      } 
       public ClassST addProtectedValue(Object value) {
       	tryToSetListProperty(template, value, protectedIsSet, "protected");
          return this;
-      }
+      } 
       public ClassST addPublicValue(Object value) {
       	tryToSetListProperty(template, value, publicIsSet, "public");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class MethodST implements CppGroupTemplate {
 
@@ -292,29 +292,29 @@ public final class CppGroup {
          parametersIsSet.set(true);
          template.addAggr("parameters.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
       public MethodST setReturnType(Object value) {
       	tryToSetStringProperty(template, value, returnTypeIsSet, "returnType");   
          return this;
-      }
+      } 
       public MethodST setStatic(Object value) {
       	tryToSetStringProperty(template, value, staticIsSet, "static");   
          return this;
-      }
+      } 
       public MethodST setConst(Object value) {
       	tryToSetStringProperty(template, value, constIsSet, "const");   
          return this;
-      }
+      } 
       public MethodST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class TypedefST implements CppGroupTemplate {
 
@@ -329,17 +329,17 @@ public final class CppGroup {
       public TypedefST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public TypedefST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -456,7 +456,7 @@ public final class CppGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -475,30 +475,22 @@ public final class CppGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"HeaderFile(entry,includes,name,namespace) ::= <<#ifndef __~name;format=\"toUpper\"~_HPP__\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("HeaderFile(entry,includes,name,namespace) ::= <<#ifndef __~name;format=\"toUpper\"~_HPP__\n" + 
 	"#define __~name;format=\"toUpper\"~_HPP__\n" + 
 	"~if(includes)~~includes:{it|#include ~if(it.system)~<~else~\"~endif~~it.name~~if(it.system)~>~else~\"~endif~};separator=\"\\n\"~~endif~\n" + 
 	"~if(namespace)~namespace ~namespace:{it|~it;format=\"lowFirst\"~ {};separator=\"\\n\"~~endif~\n" + 
 	"~entry:{it|~entry~}~\n" + 
 	"~if(namespace)~~namespace:{it|\\} // namespace ~it;format=\"lowFirst\"~};separator=\"\\n\"~~endif~\n" + 
-	"#endif // __~name;format=\"toUpper\"~_HPP__\n" + 
-	">>\n" + 
-	"\n" + 
-	"Member(name,static,type) ::= <<~if(static)~static ~endif~~if(type)~~type~~else~void~endif~ ~name;format=\"lowFirst\"~;\n" + 
-	">>\n" + 
-	"\n" + 
-	"Namespace(content,name) ::= <<namespace ~name~ {\n" + 
+	"#endif // __~name;format=\"toUpper\"~_HPP__ >>\n")
+		.append("Member(name,static,type) ::= <<~if(static)~static ~endif~~if(type)~~type~~else~void~endif~ ~name;format=\"lowFirst\"~; >>\n")
+		.append("Namespace(content,name) ::= <<namespace ~name~ {\n" + 
 	"~content~\n" + 
-	"} // namespace ~name~\n" + 
-	">>\n" + 
-	"\n" + 
-	"Struct(name,private,protected,public) ::= <<struct ~name;format=\"capitalize\"~ {\n" + 
+	"} // namespace ~name~ >>\n")
+		.append("Struct(name,private,protected,public) ::= <<struct ~name;format=\"capitalize\"~ {\n" + 
 	"~if(public)~public:\n" + 
 	"~public:{it|~it~}; separator=\"\\n\"~\n" + 
 	"~endif~\n" + 
@@ -510,13 +502,9 @@ public final class CppGroup {
 	"~if(private)~private:\n" + 
 	"~private:{it|~it~}; separator=\"\\n\"~\n" + 
 	"~endif~\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"Type(const,name,namespace,pointer,reference) ::= <<~if(const)~const ~endif~~if(namespace)~~namespace~::~endif~~name;format=\"lowFirst\"~~if(pointer)~*~endif~~if(reference)~&~endif~\n" + 
-	">>\n" + 
-	"\n" + 
-	"Class(name,private,protected,public) ::= <<class ~name;format=\"capitalize\"~ {\n" + 
+	"} >>\n")
+		.append("Type(const,name,namespace,pointer,reference) ::= <<~if(const)~const ~endif~~if(namespace)~~namespace~::~endif~~name;format=\"lowFirst\"~~if(pointer)~*~endif~~if(reference)~&~endif~ >>\n")
+		.append("Class(name,private,protected,public) ::= <<class ~name;format=\"capitalize\"~ {\n" + 
 	"~if(public)~public:\n" + 
 	"~public:{it|~it~}; separator=\"\\n\"~\n" + 
 	"~endif~\n" + 
@@ -528,14 +516,7 @@ public final class CppGroup {
 	"~if(private)~private:\n" + 
 	"~private:{it|~it~}; separator=\"\\n\"~\n" + 
 	"~endif~\n" + 
-	"}; // class ~name;format=\"capitalize\"~\n" + 
-	">>\n" + 
-	"\n" + 
-	"Method(parameters,returnType,static,const,name) ::= <<~if(static)~static ~endif~~if(returnType)~~returnType~~else~void~endif~ ~name;format=\"lowFirst\"~(~parameters:{it|~it.type~ ~it.name;format=\"lowFirst\"~}; separator=\", \"~)~if(const)~ const~endif~;\n" + 
-	">>\n" + 
-	"\n" + 
-	"Typedef(name,type) ::= <<typedef ~type~ ~name~;\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"}; // class ~name;format=\"capitalize\"~ >>\n")
+		.append("Method(parameters,returnType,static,const,name) ::= <<~if(static)~static ~endif~~if(returnType)~~returnType~~else~void~endif~ ~name;format=\"lowFirst\"~(~parameters:{it|~it.type~ ~it.name;format=\"lowFirst\"~}; separator=\", \"~)~if(const)~ const~endif~; >>\n")
+		.append("Typedef(name,type) ::= <<typedef ~type~ ~name~; >>\n").toString();
+} 

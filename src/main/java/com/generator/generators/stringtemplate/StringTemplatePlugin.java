@@ -1,15 +1,14 @@
 package com.generator.generators.stringtemplate;
 
+import com.generator.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
-import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.runtime.Token;
@@ -33,9 +32,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.BaseDomainVisitor.*;
 import static com.generator.NeoModel.getNameAndLabelsFrom;
+import static com.generator.generators.project.ProjectPlugin.getFile;
 
 /**
  * Created 06.08.17.
@@ -159,7 +158,7 @@ public class StringTemplatePlugin extends DomainPlugin {
          incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render " + getString(rendererRelationship, ProjectPlugin.Properties.fileType.name()), app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               renderSTGGroup(neoNode.getNode(), rendererRelationship, false);
+               renderSTGGroup(neoNode.getNode(), rendererRelationship);
             }
          }));
 
@@ -202,7 +201,7 @@ public class StringTemplatePlugin extends DomainPlugin {
    public static String renderStatement(Node node, Node templateNode) {
 
       // eom() and gt() are templates that will be available to all templates by default (they are bugfixes from StringTemplate)
-      final STGroupString group = new STGroupString("wrapper", "eom() ::= <<}>>\ngt() ::= <<> >>", '~', '~');
+      final STGroupString group = new STGroupString("wrapper", "eom() ::= <<}>>\ngt() ::= \">\"", '~', '~');
       group.registerRenderer(String.class, new DefaultAttributeRenderer());
       group.setListener(new STErrorListener() {
          @Override
@@ -326,22 +325,21 @@ public class StringTemplatePlugin extends DomainPlugin {
       }
    }
 
-   private static final String escape(String text) {
+   public static String escape(String text) {
       return text.
             replaceAll("\\\\", "\\\\\\\\").
             replaceAll("\"", "\\\\\"");
    }
 
-   public static void renderSTGGroup(Node node, Relationship rendererRelationship, boolean createStgFile) {
+   public static void renderSTGGroup(Node node, Relationship rendererRelationship) {
       final String packageName = getString(rendererRelationship, "package");
       final String groupName = StringUtil.capitalize(getString(node, AppMotif.Properties.name.name())) + "Group";
       final File targetDir = getFile(other(node, rendererRelationship));
 
       final TemplateGroupGroup group = new TemplateGroupGroup();
-      final StringBuilder stg = new StringBuilder("private static final String stg = new StringBuilder()");
-      stg.append("\n\t.append(\"").append(escape("delimiters \"~\", \"~\"")).append("\\n\")");
-      stg.append("\n\t.append(\"").append(escape("eom() ::= <<}>>")).append("\\n\")");
-      stg.append("\n\t.append(\"").append(escape("gt() ::= <<> >>")).append("\\n\")");
+
+      final TemplateGroupGroup.stgBuilderST stgBuilderST = group.newstgBuilder().
+            setDelimiter("~");
 
       final TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration = group.newGroupClassDeclaration().
             setName(groupName).
@@ -354,14 +352,16 @@ public class StringTemplatePlugin extends DomainPlugin {
          final Node templateNode = other(node, groupStatementRelation);
          final String statementName = getString(templateNode, AppMotif.Properties.name.name());
 
-         stg.append("\n\t.append(\"").append(statementName).append("(");
+         final TemplateGroupGroup.templateST templateST = group.newtemplate().
+               setName(statementName);
 
          final AtomicBoolean firstParam = new AtomicBoolean(true);
          new EntityRelationVisitor() {
             @Override
             public void onSingle(Node relationNode, Node dstNode) {
                final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
-               stg.append(firstParam.getAndSet(false) ? "" : ",").append(parameterName);
+               templateST.addParamsValue(parameterName);
+
                declarationST.addPropertiesValue(parameterName, group.newStatementStringPropertySetter().
                      setPropertyName(parameterName).
                      setStatementName(statementName));
@@ -370,7 +370,7 @@ public class StringTemplatePlugin extends DomainPlugin {
             @Override
             public void onList(Node relationNode, Node dstNode) {
                final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
-               stg.append(firstParam.getAndSet(false) ? "" : ",").append(parameterName);
+               templateST.addParamsValue(parameterName);
 
                // list property
                if (hasLabel(dstNode, DomainPlugin.Entities.Property)) {
@@ -417,18 +417,16 @@ public class StringTemplatePlugin extends DomainPlugin {
             }
          }.visit(templateNode);
 
-         stg.append(") ::= <<").append(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"")).append(" >>").append("\\n\")");
+         templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"") + ">>");
+
+         stgBuilderST.addAppendsValue(templateST);
 
          groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), group.newNewStatementInstance().setName(statementName));
       });
 
-      // todo split this if it is too long:
-      stg.append(".toString();");
-      groupClassDeclaration.setStg(stg);
+      groupClassDeclaration.setStg(stgBuilderST);
 
       try {
-         if (createStgFile)
-            FileUtil.writeString(stg.toString(), new File(targetDir.getAbsoluteFile(), GeneratedFile.packageToPath(packageName) + groupName + ".stg"));
          GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(groupClassDeclaration);
       } catch (IOException e) {
          e.printStackTrace();

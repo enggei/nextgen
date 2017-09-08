@@ -44,11 +44,11 @@ public final class MavenGroup {
 
    public pomST newpom() {
       return new pomST(stGroup);
-   }
+   } 
 
    public pluginST newplugin() {
       return new pluginST(stGroup);
-   }
+   } 
 
    public final class pomST implements MavenGroupTemplate {
 
@@ -68,38 +68,38 @@ public final class MavenGroup {
       public pomST setArtifactId(Object value) {
       	tryToSetStringProperty(template, value, artifactIdIsSet, "artifactId");   
          return this;
-      }
+      } 
       public pomST addDependenciesValue(Object artifactId_, Object groupId_, Object scope_, Object version_) {
          dependenciesIsSet.set(true);
          template.addAggr("dependencies.{artifactId, groupId, scope, version}", ( (artifactId_==null || artifactId_.toString().length()==0) ? null : artifactId_), ( (groupId_==null || groupId_.toString().length()==0) ? null : groupId_), ( (scope_==null || scope_.toString().length()==0) ? null : scope_), ( (version_==null || version_.toString().length()==0) ? null : version_));
          return this;
-      }
+      } 
       public pomST setGroupId(Object value) {
       	tryToSetStringProperty(template, value, groupIdIsSet, "groupId");   
          return this;
-      }
+      } 
       public pomST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public pomST setPackaging(Object value) {
       	tryToSetStringProperty(template, value, packagingIsSet, "packaging");   
          return this;
-      }
+      } 
       public pomST addPluginValue(Object value) {
       	tryToSetListProperty(template, value, pluginIsSet, "plugin");
          return this;
-      }
+      } 
       public pomST setVersion(Object value) {
       	tryToSetStringProperty(template, value, versionIsSet, "version");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class pluginST implements MavenGroupTemplate {
 
@@ -117,25 +117,25 @@ public final class MavenGroup {
          configurationIsSet.set(true);
          template.addAggr("configuration.{value, name}", ( (value_==null || value_.toString().length()==0) ? null : value_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
-      }
+      } 
       public pluginST setGroupId(Object value) {
       	tryToSetStringProperty(template, value, groupIdIsSet, "groupId");   
          return this;
-      }
+      } 
       public pluginST setVersion(Object value) {
       	tryToSetStringProperty(template, value, versionIsSet, "version");   
          return this;
-      }
+      } 
       public pluginST setArtifactId(Object value) {
       	tryToSetStringProperty(template, value, artifactIdIsSet, "artifactId");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -252,7 +252,7 @@ public final class MavenGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -271,13 +271,11 @@ public final class MavenGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"pom(artifactId,dependencies,groupId,name,packaging,plugin,version) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("pom(artifactId,dependencies,groupId,name,packaging,plugin,version) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
 	"<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" + 
 	"    \n" + 
 	"	<modelVersion>4.0.0</modelVersion>\n" + 
@@ -341,18 +339,13 @@ public final class MavenGroup {
 	"            <url>http://repo1.maven.org/maven2/</url>\n" + 
 	"        </repository>\n" + 
 	"    </repositories>\n" + 
-	"</project>\n" + 
-	">>\n" + 
-	"\n" + 
-	"plugin(configuration,groupId,version,artifactId) ::= <<<plugin>\n" + 
+	"</project> >>\n")
+		.append("plugin(configuration,groupId,version,artifactId) ::= <<<plugin>\n" + 
 	"	<groupId>~groupId~</groupId>\n" + 
 	"   <artifactId>~artifactId~</artifactId>\n" + 
 	"   <version>~version~</version>\n" + 
 	"   <configuration>\n" + 
 	"   		~configuration:{it|<~it.name~>~it.value~</~it.name~>};separator=\"\\n\"~\n" + 
 	"	</configuration>\n" + 
-	"</plugin>\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"</plugin> >>\n").toString();
+} 

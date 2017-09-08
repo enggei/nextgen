@@ -44,7 +44,7 @@ public final class ProjectGroup {
 
    public ProjectST newProject() {
       return new ProjectST(stGroup);
-   }
+   } 
 
    public final class ProjectST implements ProjectGroupTemplate {
 
@@ -66,41 +66,41 @@ public final class ProjectGroup {
          generatorsIsSet.set(true);
          template.addAggr("generators.{name, packageName}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (packageName_==null || packageName_.toString().length()==0) ? null : packageName_));
          return this;
-      }
+      } 
       public ProjectST setVersion(Object value) {
       	tryToSetStringProperty(template, value, versionIsSet, "version");   
          return this;
-      }
+      } 
       public ProjectST setArtifactId(Object value) {
       	tryToSetStringProperty(template, value, artifactIdIsSet, "artifactId");   
          return this;
-      }
+      } 
       public ProjectST setGroupId(Object value) {
       	tryToSetStringProperty(template, value, groupIdIsSet, "groupId");   
          return this;
-      }
+      } 
       public ProjectST setRoot(Object value) {
       	tryToSetStringProperty(template, value, rootIsSet, "root");   
          return this;
-      }
+      } 
       public ProjectST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      }
+      } 
       public ProjectST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public ProjectST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -217,7 +217,7 @@ public final class ProjectGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -236,13 +236,11 @@ public final class ProjectGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"Project(generators,version,artifactId,groupId,root,comments,name,packageName) ::= <<package ~packageName~;\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("Project(generators,version,artifactId,groupId,root,comments,name,packageName) ::= <<package ~packageName~;\n" + 
 	"\n" + 
 	"import java.io.BufferedWriter;\n" + 
 	"import java.io.File;\n" + 
@@ -297,8 +295,5 @@ public final class ProjectGroup {
 	"      out.write(content.toString());\n" + 
 	"      out.close();\n" + 
 	"   }\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"} >>\n").toString();
+} 

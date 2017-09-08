@@ -44,19 +44,19 @@ public final class JavaGroup {
 
    public BeanST newBean() {
       return new BeanST(stGroup);
-   }
+   } 
 
    public PojoST newPojo() {
       return new PojoST(stGroup);
-   }
+   } 
 
    public methodST newmethod() {
       return new methodST(stGroup);
-   }
+   } 
 
    public EnumST newEnum() {
       return new EnumST(stGroup);
-   }
+   } 
 
    public final class BeanST implements JavaGroupTemplate {
 
@@ -74,30 +74,30 @@ public final class JavaGroup {
       public BeanST addEqhaValue(Object value) {
       	tryToSetListProperty(template, value, eqhaIsSet, "eqha");
          return this;
-      }
+      } 
       public BeanST addLexicalValue(Object value) {
       	tryToSetListProperty(template, value, lexicalIsSet, "lexical");
          return this;
-      }
+      } 
       public BeanST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public BeanST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
-      }
+      } 
       public BeanST addPropertiesValue(Object init_, Object name_, Object type_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{init, name, type}", ( (init_==null || init_.toString().length()==0) ? null : init_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class PojoST implements JavaGroupTemplate {
 
@@ -120,46 +120,46 @@ public final class JavaGroup {
          classPropertiesIsSet.set(true);
          template.addAggr("classProperties.{type, init, name}", ( (type_==null || type_.toString().length()==0) ? null : type_), ( (init_==null || init_.toString().length()==0) ? null : init_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
-      }
+      } 
       public PojoST addEqhaValue(Object value) {
       	tryToSetListProperty(template, value, eqhaIsSet, "eqha");
          return this;
-      }
+      } 
       public PojoST setExtends(Object value) {
       	tryToSetStringProperty(template, value, extendsIsSet, "extends");   
          return this;
-      }
+      } 
       public PojoST addImplementValue(Object value) {
       	tryToSetListProperty(template, value, implementIsSet, "implement");
          return this;
-      }
+      } 
       public PojoST addLexicalValue(Object value) {
       	tryToSetListProperty(template, value, lexicalIsSet, "lexical");
          return this;
-      }
+      } 
       public PojoST addMethodsValue(Object value) {
       	tryToSetListProperty(template, value, methodsIsSet, "methods");
          return this;
-      }
+      } 
       public PojoST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public PojoST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
-      }
+      } 
       public PojoST addPropertiesValue(Object init_, Object type_, Object name_) {
          propertiesIsSet.set(true);
          template.addAggr("properties.{init, type, name}", ( (init_==null || init_.toString().length()==0) ? null : init_), ( (type_==null || type_.toString().length()==0) ? null : type_), ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class methodST implements JavaGroupTemplate {
 
@@ -178,34 +178,34 @@ public final class JavaGroup {
       public methodST addAnnotationsValue(Object value) {
       	tryToSetListProperty(template, value, annotationsIsSet, "annotations");
          return this;
-      }
+      } 
       public methodST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public methodST addParametersValue(Object name_, Object type_) {
          parametersIsSet.set(true);
          template.addAggr("parameters.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
       public methodST setReturnValue(Object value) {
       	tryToSetStringProperty(template, value, returnValueIsSet, "returnValue");   
          return this;
-      }
+      } 
       public methodST setScope(Object value) {
       	tryToSetStringProperty(template, value, scopeIsSet, "scope");   
          return this;
-      }
+      } 
       public methodST addStatementsValue(Object value) {
       	tryToSetListProperty(template, value, statementsIsSet, "statements");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class EnumST implements JavaGroupTemplate {
 
@@ -221,21 +221,21 @@ public final class JavaGroup {
       public EnumST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public EnumST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
-      }
+      } 
       public EnumST addValuesValue(Object value) {
       	tryToSetListProperty(template, value, valuesIsSet, "values");
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -352,7 +352,7 @@ public final class JavaGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -371,13 +371,11 @@ public final class JavaGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;\n" + 
 	"\n" + 
 	"public class ~name~ {\n" + 
 	"\n" + 
@@ -422,10 +420,8 @@ public final class JavaGroup {
 	"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
 	"   }\n" + 
 	"~endif~\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
+	"} >>\n")
+		.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
 	"\n" + 
 	"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
 	"~if(classProperties)~\n" + 
@@ -483,21 +479,14 @@ public final class JavaGroup {
 	"   }\n" + 
 	"~endif~\n" + 
 	"\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
+	"} >>\n")
+		.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
 	"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
 	"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"Enum(name,package,values) ::= <<package ~package~;\n" + 
+	"} >>\n")
+		.append("Enum(name,package,values) ::= <<package ~package~;\n" + 
 	"\n" + 
 	"public enum ~name~ {\n" + 
 	"   ~values:{it|~it~};separator=\", \"~\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"} >>\n").toString();
+} 

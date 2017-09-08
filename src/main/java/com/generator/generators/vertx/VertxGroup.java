@@ -42,9 +42,67 @@ public final class VertxGroup {
 
 	}
 
+   public socksJSBridgeST newsocksJSBridge() {
+      return new socksJSBridgeST(stGroup);
+   } 
+
+   public socksJSHandlerST newsocksJSHandler() {
+      return new socksJSHandlerST(stGroup);
+   } 
+
    public BaseVerticleST newBaseVerticle() {
       return new BaseVerticleST(stGroup);
-   }
+   } 
+
+   public final class socksJSBridgeST implements VertxGroupTemplate {
+
+      private final AtomicBoolean inboundIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean outboundIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean routeIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private socksJSBridgeST(STGroup group) {
+   		template = group.getInstanceOf("socksJSBridge");
+   	}
+
+      public socksJSBridgeST addInboundValue(Object value) {
+      	tryToSetListProperty(template, value, inboundIsSet, "inbound");
+         return this;
+      } 
+      public socksJSBridgeST addOutboundValue(Object value) {
+      	tryToSetListProperty(template, value, outboundIsSet, "outbound");
+         return this;
+      } 
+      public socksJSBridgeST setRoute(Object value) {
+      	tryToSetStringProperty(template, value, routeIsSet, "route");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
+
+   public final class socksJSHandlerST implements VertxGroupTemplate {
+
+      private final AtomicBoolean routeIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private socksJSHandlerST(STGroup group) {
+   		template = group.getInstanceOf("socksJSHandler");
+   	}
+
+      public socksJSHandlerST setRoute(Object value) {
+      	tryToSetStringProperty(template, value, routeIsSet, "route");   
+         return this;
+      } 
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   } 
 
    public final class BaseVerticleST implements VertxGroupTemplate {
 
@@ -64,35 +122,35 @@ public final class VertxGroup {
          endpointsIsSet.set(true);
          template.addAggr("endpoints.{action, name, uri}", ( (action_==null || action_.toString().length()==0) ? null : action_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (uri_==null || uri_.toString().length()==0) ? null : uri_));
          return this;
-      }
+      } 
       public BaseVerticleST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public BaseVerticleST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      }
+      } 
       public BaseVerticleST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      }
+      } 
       public BaseVerticleST addMessageHandlersValue(Object name_, Object type_, Object address_) {
          messageHandlersIsSet.set(true);
          template.addAggr("messageHandlers.{name, type, address}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_), ( (address_==null || address_.toString().length()==0) ? null : address_));
          return this;
-      }
+      } 
       public BaseVerticleST addPublishMessagesValue(Object address_, Object name_, Object type_) {
          publishMessagesIsSet.set(true);
          template.addAggr("publishMessages.{address, name, type}", ( (address_==null || address_.toString().length()==0) ? null : address_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -209,7 +267,7 @@ public final class VertxGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -228,13 +286,39 @@ public final class VertxGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("socksJSBridge(inbound,outbound,route) ::= <<final BridgeOptions bridgeOptions = new BridgeOptions()\n" + 
+	"    ~outbound:{it|.addOutboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~\n" + 
+	"    ~inbound:{it|.addInboundPermitted(new PermittedOptions().setAddress(\"~it~\"))};separator=\"\\n\"~;\n" + 
 	"\n" + 
-	"eom() ::= <<}>>\n" + 
+	"router.route(\"~route~\").handler(SockJSHandler.create(vertx).bridge(bridgeOptions, event -> {\n" + 
 	"\n" + 
-	"gt() ::= <<> >>\n" + 
+	"  // You can also optionally provide a handler like this which will be passed any events that occur on the bridge\n" + 
+	"  // You can use this for monitoring or logging, or to change the raw messages in-flight.\n" + 
+	"  // It can also be used for fine grained access control.\n" + 
 	"\n" + 
-	"BaseVerticle(endpoints,name,packageName,comments,messageHandlers,publishMessages) ::= <<package ~packageName~;\n" + 
+	"  if (event.type() == BridgeEvent.Type.SOCKET_CREATED) {\n" + 
+	"    System.out.println(\"A socket was created\");\n" + 
+	"  }\n" + 
+	"\n" + 
+	"  // This signals that it's ok to process the event\n" + 
+	"  event.complete(true);\n" + 
+	"})); >>\n")
+		.append("socksJSHandler(route) ::= <<// options\n" + 
+	"io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions options = new io.vertx.ext.web.handler.sockjs.SockJSHandlerOptions().\n" + 
+	"    setHeartbeatInterval(2000);\n" + 
+	"\n" + 
+	"BridgeOptions bridgeOptions = new BridgeOptions();\n" + 
+	"sockJSHandler.bridge(bridgeOptions);\n" + 
+	"\n" + 
+	"io.vertx.ext.web.handler.sockjs.SockJSHandler sockJSHandler = io.vertx.ext.web.handler.sockjs.SockJSHandler.\n" + 
+	"    create(vertx, bridgeOptions);\n" + 
+	"\n" + 
+	"router.route(\"~route~\").handler(sockJSHandler); >>\n")
+		.append("BaseVerticle(endpoints,name,packageName,comments,messageHandlers,publishMessages) ::= <<package ~packageName~;\n" + 
 	"\n" + 
 	"import io.vertx.core.AbstractVerticle;\n" + 
 	"import io.vertx.core.Future;\n" + 
@@ -311,8 +395,5 @@ public final class VertxGroup {
 	"         out.append(param.getKey()).append(\"=\").append(param.getValue()).append(\"\\n\");\n" + 
 	"      return request.request().uri() + \" \" + out.toString().trim();\n" + 
 	"   }\n" + 
-	"}\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"} >>\n").toString();
+} 

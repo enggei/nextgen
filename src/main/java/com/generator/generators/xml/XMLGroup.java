@@ -44,15 +44,15 @@ public final class XMLGroup {
 
    public CDATAST newCDATA() {
       return new CDATAST(stGroup);
-   }
+   } 
 
    public documentST newdocument() {
       return new documentST(stGroup);
-   }
+   } 
 
    public elementST newelement() {
       return new elementST(stGroup);
-   }
+   } 
 
    public final class CDATAST implements XMLGroupTemplate {
 
@@ -66,13 +66,13 @@ public final class XMLGroup {
       public CDATAST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class documentST implements XMLGroupTemplate {
 
@@ -86,13 +86,13 @@ public final class XMLGroup {
       public documentST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
    public final class elementST implements XMLGroupTemplate {
 
@@ -108,22 +108,22 @@ public final class XMLGroup {
       public elementST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      }
+      } 
       public elementST addChildrenValue(Object value) {
       	tryToSetListProperty(template, value, childrenIsSet, "children");
          return this;
-      }
+      } 
       public elementST addAttributesValue(Object name_, Object value_) {
          attributesIsSet.set(true);
          template.addAggr("attributes.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
-      }
+      } 
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   }
+   } 
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -240,7 +240,7 @@ public final class XMLGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   }
+	   } 
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -259,23 +259,14 @@ public final class XMLGroup {
 		out.close();
    }
 
-	private static final String stg = "delimiters \"~\", \"~\"\n" + 
-	"\n" + 
-	"eom() ::= <<}>>\n" + 
-	"\n" + 
-	"gt() ::= <<> >>\n" + 
-	"\n" + 
-	"CDATA(content) ::= <<<![CDATA[~content~]]>\n" + 
-	">>\n" + 
-	"\n" + 
-	"document(content) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
-	"~content~\n" + 
-	">>\n" + 
-	"\n" + 
-	"element(name,children,attributes) ::= <<<~name~~attributes:{it|  ~it.name~=\"~it.value~\"}~>\n" + 
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("CDATA(content) ::= <<<![CDATA[~content~]]> >>\n")
+		.append("document(content) ::= <<<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + 
+	"~content~ >>\n")
+		.append("element(name,children,attributes) ::= <<<~name~~attributes:{it|  ~it.name~=\"~it.value~\"}~>\n" + 
 	"	~children:{it|~it~};separator=\"\\n\"~\n" + 
-	"</~name~>\n" + 
-	">>\n" + 
-	"\n" + 
-	"";
-}
+	"</~name~> >>\n").toString();
+} 
