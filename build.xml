@@ -4,6 +4,7 @@
         <buildParser grammarFile="src/main/java/com/generator/generators/mysql/parser/MySQL.g4"
                      packageName="com.generator.generators.mysql.parser"/>
     </target>
+
     <target name="build.parsers" description="generate parsers from .g4 files">
 
         <buildParser grammarFile="src/main/java/com/generator/generators/json/parser/JSON.g4"

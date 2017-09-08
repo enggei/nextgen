@@ -1,4 +1,4 @@
-package com.generator.domain;
+package com.generator.generators.templates.domain;
 
 import java.util.UUID;
 

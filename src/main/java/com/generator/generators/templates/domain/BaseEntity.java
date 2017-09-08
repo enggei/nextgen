@@ -1,7 +1,5 @@
 package com.generator.generators.templates.domain;
 
-import com.generator.domain.DomainEntity;
-
 import java.util.UUID;
 
 /**
