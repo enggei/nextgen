@@ -3,10 +3,10 @@ package com.generator.generators.antlr;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
-import com.generator.generators.antlr.parser.ANTLRv4NeoVisitor;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
+import com.generator.generators.antlr.parser.ANTLRv4ParserNeoVisitor;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Set;
 
-import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.BaseDomainVisitor.*;
 
 /**
  * Created 25.08.17.
@@ -45,7 +45,7 @@ public class ANTLRPlugin extends DomainPlugin {
             if (grammarFile == null || !grammarFile.getName().toLowerCase().endsWith(".g4")) return;
 
             final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath()))));
-            final ANTLRv4NeoVisitor visitor = new ANTLRv4NeoVisitor(getGraph());
+            final ANTLRv4ParserNeoVisitor visitor = new ANTLRv4ParserNeoVisitor(getGraph());
             visitor.visit(parser.grammarSpec());
             if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
          }

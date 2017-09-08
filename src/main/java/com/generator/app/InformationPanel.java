@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.editors.NeoModel;
+import com.generator.NeoModel;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
@@ -14,10 +14,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.BaseDomainVisitor.*;
 
 /**
  * Created 18.07.17.

@@ -5,7 +5,7 @@ import org.neo4j.graphdb.*;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.BaseDomainVisitor.*;
 import static com.generator.generators.templates.TemplatesNeo.TemplatesLabels.*;
 
 /**

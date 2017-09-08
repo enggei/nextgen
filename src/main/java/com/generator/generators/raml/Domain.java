@@ -1,7 +1,5 @@
 package com.generator.generators.raml;
 
-import com.generator.generators.loopsi.LoopsiGroup;
-
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -21,7 +19,6 @@ public class Domain {
 	public static final String REGEX_DATE = "^\\d{4}-\\d{2}-\\d{2}$";
 
 	protected final RamlGroup ramlGroup = new RamlGroup();
-	protected final LoopsiGroup loopsiGroup = new LoopsiGroup();
 
 	RamlGroup.fileST newRamlTemplate(String title, String baseURI, boolean isHttps, String version) {
 		return ramlGroup.newfile().

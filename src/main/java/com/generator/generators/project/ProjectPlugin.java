@@ -5,8 +5,8 @@ import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Workspace;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.editors.BaseDomainVisitor;
-import com.generator.editors.NeoModel;
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.FileUtil;
@@ -27,10 +27,10 @@ import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
 import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.getNameAndLabelsFrom;
-import static com.generator.editors.NeoModel.getNameOrLabelFrom;
-import static com.generator.editors.NeoModel.relate;
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.getNameAndLabelsFrom;
+import static com.generator.NeoModel.getNameOrLabelFrom;
+import static com.generator.NeoModel.relate;
 
 /**
  * Created 06.08.17.

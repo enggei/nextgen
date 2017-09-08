@@ -1,7 +1,7 @@
 package com.generator.app;
 
 import com.generator.app.App.TransactionAction;
-import com.generator.editors.NeoModel;
+import com.generator.NeoModel;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -16,7 +16,7 @@ import java.awt.event.*;
 import java.util.*;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.editors.BaseDomainVisitor.*;
+import static com.generator.BaseDomainVisitor.*;
 
 /**
  * Created 18.07.17.

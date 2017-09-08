@@ -1,0 +1,2223 @@
+package com.generator.generators.cpp.parser;
+
+public class CPP14NodeListener extends CPP14BaseListener {
+
+   public static class Node {
+
+      public final String name;
+      public final String value;
+      public final String startToken;
+      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
+
+      public Node(String name, String value, String startToken) {
+         this.name = name;
+         this.value = value;
+			this.startToken = startToken;
+      }
+   }
+
+   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+
+   void onEnter(Node node) {
+      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+      nodeStack.push(node);
+   }
+
+   void onExit() {
+      if (nodeStack.size() > 1) nodeStack.pop();
+   }
+
+   public Node getRoot() {
+      return nodeStack.peek();
+   }
+
+	@Override
+	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		 //System.out.println("Translationunit");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		 //System.out.println("Primaryexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		 //System.out.println("Idexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		 //System.out.println("Unqualifiedid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		 //System.out.println("Qualifiedid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		 //System.out.println("Nestednamespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		 //System.out.println("Lambdaexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		 //System.out.println("Lambdaintroducer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		 //System.out.println("Lambdacapture");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		 //System.out.println("Capturedefault");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		 //System.out.println("Capturelist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		 //System.out.println("Capture");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		 //System.out.println("Simplecapture");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		 //System.out.println("Initcapture");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		 //System.out.println("Lambdadeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		 //System.out.println("Postfixexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		 //System.out.println("Expressionlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		 //System.out.println("Pseudodestructorname");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		 //System.out.println("Unaryexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		 //System.out.println("Unaryoperator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		 //System.out.println("Newexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		 //System.out.println("Newplacement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		 //System.out.println("Newtypeid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		 //System.out.println("Newdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		 //System.out.println("Noptrnewdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		 //System.out.println("Newinitializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		 //System.out.println("Deleteexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		 //System.out.println("Noexceptexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		 //System.out.println("Castexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		 //System.out.println("Pmexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		 //System.out.println("Multiplicativeexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		 //System.out.println("Additiveexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		 //System.out.println("Shiftexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		 //System.out.println("Relationalexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		 //System.out.println("Equalityexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		 //System.out.println("Andexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		 //System.out.println("Expression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		 //System.out.println("Exclusiveorexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Exclusiveorexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		 //System.out.println("Inclusiveorexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Inclusiveorexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		 //System.out.println("Logicalandexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Logicalandexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		 //System.out.println("Logicalorexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Logicalorexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		 //System.out.println("Conditionalexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Conditionalexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		 //System.out.println("Assignmentexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Assignmentexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		 //System.out.println("Assignmentoperator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Assignmentoperator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		 //System.out.println("Constantexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Constantexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		 //System.out.println("Statement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		 //System.out.println("Labeledstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Labeledstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		 //System.out.println("Expressionstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Expressionstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		 //System.out.println("Compoundstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Compoundstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		 //System.out.println("Statementseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Statementseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		 //System.out.println("Selectionstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Selectionstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		 //System.out.println("Condition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Condition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
+		 //System.out.println("Iterationstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Iterationstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
+		 //System.out.println("Forinitstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Forinitstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
+		 //System.out.println("Forrangedeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Forrangedeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
+		 //System.out.println("Forrangeinitializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Forrangeinitializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
+		 //System.out.println("Jumpstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Jumpstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
+		 //System.out.println("Declarationstatement");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declarationstatement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
+		 //System.out.println("Declarationseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declarationseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		 //System.out.println("Declaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
+		 //System.out.println("Blockdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Blockdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
+		 //System.out.println("Aliasdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Aliasdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
+		 //System.out.println("Simpledeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Simpledeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
+		 //System.out.println("Static_assertdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Static_assertdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
+		 //System.out.println("Emptydeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Emptydeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
+		 //System.out.println("Attributedeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributedeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
+		 //System.out.println("Declspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
+		 //System.out.println("Declspecifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declspecifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
+		 //System.out.println("Storageclassspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Storageclassspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
+		 //System.out.println("Functionspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Functionspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
+		 //System.out.println("Typedefname");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typedefname", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
+		 //System.out.println("Typespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
+		 //System.out.println("Trailingtypespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Trailingtypespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
+		 //System.out.println("Typespecifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typespecifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
+		 //System.out.println("Trailingtypespecifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Trailingtypespecifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
+		 //System.out.println("Simpletypespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Simpletypespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
+		 //System.out.println("Typename");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typename", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
+		 //System.out.println("Decltypespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Decltypespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
+		 //System.out.println("Elaboratedtypespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Elaboratedtypespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
+		 //System.out.println("Enumname");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumname", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
+		 //System.out.println("Enumspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
+		 //System.out.println("Enumhead");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumhead", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
+		 //System.out.println("Opaqueenumdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Opaqueenumdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
+		 //System.out.println("Enumkey");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumkey", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
+		 //System.out.println("Enumbase");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumbase", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
+		 //System.out.println("Enumeratorlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumeratorlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
+		 //System.out.println("Enumeratordefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumeratordefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
+		 //System.out.println("Enumerator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Enumerator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
+		 //System.out.println("Namespacename");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namespacename", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOriginalnamespacename(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacenameContext arg) {
+		 //System.out.println("Originalnamespacename");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Originalnamespacename", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOriginalnamespacename(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacenameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacedefinitionContext arg) {
+		 //System.out.println("Namespacedefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namespacedefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacedefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamednamespacedefinitionContext arg) {
+		 //System.out.println("Namednamespacedefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namednamespacedefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamednamespacedefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOriginalnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacedefinitionContext arg) {
+		 //System.out.println("Originalnamespacedefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Originalnamespacedefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOriginalnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacedefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExtensionnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.ExtensionnamespacedefinitionContext arg) {
+		 //System.out.println("Extensionnamespacedefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Extensionnamespacedefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExtensionnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.ExtensionnamespacedefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUnnamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.UnnamednamespacedefinitionContext arg) {
+		 //System.out.println("Unnamednamespacedefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Unnamednamespacedefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUnnamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.UnnamednamespacedefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamespacebody(com.generator.generators.cpp.parser.CPP14Parser.NamespacebodyContext arg) {
+		 //System.out.println("Namespacebody");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namespacebody", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamespacebody(com.generator.generators.cpp.parser.CPP14Parser.NamespacebodyContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamespacealias(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasContext arg) {
+		 //System.out.println("Namespacealias");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namespacealias", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamespacealias(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNamespacealiasdefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasdefinitionContext arg) {
+		 //System.out.println("Namespacealiasdefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Namespacealiasdefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNamespacealiasdefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasdefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterQualifiednamespacespecifier(com.generator.generators.cpp.parser.CPP14Parser.QualifiednamespacespecifierContext arg) {
+		 //System.out.println("Qualifiednamespacespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Qualifiednamespacespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitQualifiednamespacespecifier(com.generator.generators.cpp.parser.CPP14Parser.QualifiednamespacespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUsingdeclaration(com.generator.generators.cpp.parser.CPP14Parser.UsingdeclarationContext arg) {
+		 //System.out.println("Usingdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Usingdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUsingdeclaration(com.generator.generators.cpp.parser.CPP14Parser.UsingdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUsingdirective(com.generator.generators.cpp.parser.CPP14Parser.UsingdirectiveContext arg) {
+		 //System.out.println("Usingdirective");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Usingdirective", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUsingdirective(com.generator.generators.cpp.parser.CPP14Parser.UsingdirectiveContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAsmdefinition(com.generator.generators.cpp.parser.CPP14Parser.AsmdefinitionContext arg) {
+		 //System.out.println("Asmdefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Asmdefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAsmdefinition(com.generator.generators.cpp.parser.CPP14Parser.AsmdefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLinkagespecification(com.generator.generators.cpp.parser.CPP14Parser.LinkagespecificationContext arg) {
+		 //System.out.println("Linkagespecification");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Linkagespecification", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLinkagespecification(com.generator.generators.cpp.parser.CPP14Parser.LinkagespecificationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierseqContext arg) {
+		 //System.out.println("Attributespecifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributespecifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributespecifier(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierContext arg) {
+		 //System.out.println("Attributespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributespecifier(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAlignmentspecifier(com.generator.generators.cpp.parser.CPP14Parser.AlignmentspecifierContext arg) {
+		 //System.out.println("Alignmentspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Alignmentspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAlignmentspecifier(com.generator.generators.cpp.parser.CPP14Parser.AlignmentspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
+		 //System.out.println("Attributelist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributelist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
+		 //System.out.println("Attribute");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributetoken(com.generator.generators.cpp.parser.CPP14Parser.AttributetokenContext arg) {
+		 //System.out.println("Attributetoken");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributetoken", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributetoken(com.generator.generators.cpp.parser.CPP14Parser.AttributetokenContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributescopedtoken(com.generator.generators.cpp.parser.CPP14Parser.AttributescopedtokenContext arg) {
+		 //System.out.println("Attributescopedtoken");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributescopedtoken", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributescopedtoken(com.generator.generators.cpp.parser.CPP14Parser.AttributescopedtokenContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributenamespace(com.generator.generators.cpp.parser.CPP14Parser.AttributenamespaceContext arg) {
+		 //System.out.println("Attributenamespace");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributenamespace", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributenamespace(com.generator.generators.cpp.parser.CPP14Parser.AttributenamespaceContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAttributeargumentclause(com.generator.generators.cpp.parser.CPP14Parser.AttributeargumentclauseContext arg) {
+		 //System.out.println("Attributeargumentclause");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Attributeargumentclause", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAttributeargumentclause(com.generator.generators.cpp.parser.CPP14Parser.AttributeargumentclauseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBalancedtokenseq(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenseqContext arg) {
+		 //System.out.println("Balancedtokenseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Balancedtokenseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBalancedtokenseq(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBalancedtoken(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenContext arg) {
+		 //System.out.println("Balancedtoken");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Balancedtoken", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBalancedtoken(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorlistContext arg) {
+		 //System.out.println("Initdeclaratorlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initdeclaratorlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitdeclarator(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorContext arg) {
+		 //System.out.println("Initdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitdeclarator(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
+		 //System.out.println("Declarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPtrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrdeclaratorContext arg) {
+		 //System.out.println("Ptrdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Ptrdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPtrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoptrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrdeclaratorContext arg) {
+		 //System.out.println("Noptrdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noptrdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoptrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterParametersandqualifiers(com.generator.generators.cpp.parser.CPP14Parser.ParametersandqualifiersContext arg) {
+		 //System.out.println("Parametersandqualifiers");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Parametersandqualifiers", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitParametersandqualifiers(com.generator.generators.cpp.parser.CPP14Parser.ParametersandqualifiersContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTrailingreturntype(com.generator.generators.cpp.parser.CPP14Parser.TrailingreturntypeContext arg) {
+		 //System.out.println("Trailingreturntype");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Trailingreturntype", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTrailingreturntype(com.generator.generators.cpp.parser.CPP14Parser.TrailingreturntypeContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPtroperator(com.generator.generators.cpp.parser.CPP14Parser.PtroperatorContext arg) {
+		 //System.out.println("Ptroperator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Ptroperator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPtroperator(com.generator.generators.cpp.parser.CPP14Parser.PtroperatorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCvqualifierseq(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierseqContext arg) {
+		 //System.out.println("Cvqualifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Cvqualifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCvqualifierseq(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCvqualifier(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierContext arg) {
+		 //System.out.println("Cvqualifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Cvqualifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCvqualifier(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRefqualifier(com.generator.generators.cpp.parser.CPP14Parser.RefqualifierContext arg) {
+		 //System.out.println("Refqualifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Refqualifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRefqualifier(com.generator.generators.cpp.parser.CPP14Parser.RefqualifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDeclaratorid(com.generator.generators.cpp.parser.CPP14Parser.DeclaratoridContext arg) {
+		 //System.out.println("Declaratorid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Declaratorid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDeclaratorid(com.generator.generators.cpp.parser.CPP14Parser.DeclaratoridContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypeid(com.generator.generators.cpp.parser.CPP14Parser.TypeidContext arg) {
+		 //System.out.println("Typeid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typeid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypeid(com.generator.generators.cpp.parser.CPP14Parser.TypeidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAbstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractdeclaratorContext arg) {
+		 //System.out.println("Abstractdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Abstractdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAbstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPtrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrabstractdeclaratorContext arg) {
+		 //System.out.println("Ptrabstractdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Ptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPtrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrabstractdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoptrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractdeclaratorContext arg) {
+		 //System.out.println("Noptrabstractdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoptrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAbstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractpackdeclaratorContext arg) {
+		 //System.out.println("Abstractpackdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Abstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAbstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractpackdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoptrabstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractpackdeclaratorContext arg) {
+		 //System.out.println("Noptrabstractpackdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noptrabstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoptrabstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractpackdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterParameterdeclarationclause(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationclauseContext arg) {
+		 //System.out.println("Parameterdeclarationclause");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Parameterdeclarationclause", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitParameterdeclarationclause(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationclauseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterParameterdeclarationlist(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationlistContext arg) {
+		 //System.out.println("Parameterdeclarationlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Parameterdeclarationlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitParameterdeclarationlist(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterParameterdeclaration(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationContext arg) {
+		 //System.out.println("Parameterdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Parameterdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitParameterdeclaration(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterFunctiondefinition(com.generator.generators.cpp.parser.CPP14Parser.FunctiondefinitionContext arg) {
+		 //System.out.println("Functiondefinition");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Functiondefinition", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitFunctiondefinition(com.generator.generators.cpp.parser.CPP14Parser.FunctiondefinitionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterFunctionbody(com.generator.generators.cpp.parser.CPP14Parser.FunctionbodyContext arg) {
+		 //System.out.println("Functionbody");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Functionbody", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitFunctionbody(com.generator.generators.cpp.parser.CPP14Parser.FunctionbodyContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitializer(com.generator.generators.cpp.parser.CPP14Parser.InitializerContext arg) {
+		 //System.out.println("Initializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitializer(com.generator.generators.cpp.parser.CPP14Parser.InitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBraceorequalinitializer(com.generator.generators.cpp.parser.CPP14Parser.BraceorequalinitializerContext arg) {
+		 //System.out.println("Braceorequalinitializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Braceorequalinitializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBraceorequalinitializer(com.generator.generators.cpp.parser.CPP14Parser.BraceorequalinitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
+		 //System.out.println("Initializerclause");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initializerclause", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterInitializerlist(com.generator.generators.cpp.parser.CPP14Parser.InitializerlistContext arg) {
+		 //System.out.println("Initializerlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Initializerlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitInitializerlist(com.generator.generators.cpp.parser.CPP14Parser.InitializerlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBracedinitlist(com.generator.generators.cpp.parser.CPP14Parser.BracedinitlistContext arg) {
+		 //System.out.println("Bracedinitlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Bracedinitlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBracedinitlist(com.generator.generators.cpp.parser.CPP14Parser.BracedinitlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClassname(com.generator.generators.cpp.parser.CPP14Parser.ClassnameContext arg) {
+		 //System.out.println("Classname");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classname", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClassname(com.generator.generators.cpp.parser.CPP14Parser.ClassnameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClassspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassspecifierContext arg) {
+		 //System.out.println("Classspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClassspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClasshead(com.generator.generators.cpp.parser.CPP14Parser.ClassheadContext arg) {
+		 //System.out.println("Classhead");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classhead", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClasshead(com.generator.generators.cpp.parser.CPP14Parser.ClassheadContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClassheadname(com.generator.generators.cpp.parser.CPP14Parser.ClassheadnameContext arg) {
+		 //System.out.println("Classheadname");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classheadname", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClassheadname(com.generator.generators.cpp.parser.CPP14Parser.ClassheadnameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClassvirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassvirtspecifierContext arg) {
+		 //System.out.println("Classvirtspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classvirtspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClassvirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassvirtspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClasskey(com.generator.generators.cpp.parser.CPP14Parser.ClasskeyContext arg) {
+		 //System.out.println("Classkey");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classkey", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClasskey(com.generator.generators.cpp.parser.CPP14Parser.ClasskeyContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMemberspecification(com.generator.generators.cpp.parser.CPP14Parser.MemberspecificationContext arg) {
+		 //System.out.println("Memberspecification");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Memberspecification", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMemberspecification(com.generator.generators.cpp.parser.CPP14Parser.MemberspecificationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMemberdeclaration(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclarationContext arg) {
+		 //System.out.println("Memberdeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Memberdeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMemberdeclaration(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMemberdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorlistContext arg) {
+		 //System.out.println("Memberdeclaratorlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Memberdeclaratorlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMemberdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMemberdeclarator(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorContext arg) {
+		 //System.out.println("Memberdeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Memberdeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMemberdeclarator(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterVirtspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierseqContext arg) {
+		 //System.out.println("Virtspecifierseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Virtspecifierseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitVirtspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterVirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierContext arg) {
+		 //System.out.println("Virtspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Virtspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitVirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPurespecifier(com.generator.generators.cpp.parser.CPP14Parser.PurespecifierContext arg) {
+		 //System.out.println("Purespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Purespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPurespecifier(com.generator.generators.cpp.parser.CPP14Parser.PurespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBaseclause(com.generator.generators.cpp.parser.CPP14Parser.BaseclauseContext arg) {
+		 //System.out.println("Baseclause");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Baseclause", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBaseclause(com.generator.generators.cpp.parser.CPP14Parser.BaseclauseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBasespecifierlist(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierlistContext arg) {
+		 //System.out.println("Basespecifierlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Basespecifierlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBasespecifierlist(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBasespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierContext arg) {
+		 //System.out.println("Basespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Basespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBasespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterClassordecltype(com.generator.generators.cpp.parser.CPP14Parser.ClassordecltypeContext arg) {
+		 //System.out.println("Classordecltype");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Classordecltype", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitClassordecltype(com.generator.generators.cpp.parser.CPP14Parser.ClassordecltypeContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBasetypespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasetypespecifierContext arg) {
+		 //System.out.println("Basetypespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Basetypespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBasetypespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasetypespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAccessspecifier(com.generator.generators.cpp.parser.CPP14Parser.AccessspecifierContext arg) {
+		 //System.out.println("Accessspecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Accessspecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAccessspecifier(com.generator.generators.cpp.parser.CPP14Parser.AccessspecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterConversionfunctionid(com.generator.generators.cpp.parser.CPP14Parser.ConversionfunctionidContext arg) {
+		 //System.out.println("Conversionfunctionid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Conversionfunctionid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitConversionfunctionid(com.generator.generators.cpp.parser.CPP14Parser.ConversionfunctionidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterConversiontypeid(com.generator.generators.cpp.parser.CPP14Parser.ConversiontypeidContext arg) {
+		 //System.out.println("Conversiontypeid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Conversiontypeid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitConversiontypeid(com.generator.generators.cpp.parser.CPP14Parser.ConversiontypeidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterConversiondeclarator(com.generator.generators.cpp.parser.CPP14Parser.ConversiondeclaratorContext arg) {
+		 //System.out.println("Conversiondeclarator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Conversiondeclarator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitConversiondeclarator(com.generator.generators.cpp.parser.CPP14Parser.ConversiondeclaratorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCtorinitializer(com.generator.generators.cpp.parser.CPP14Parser.CtorinitializerContext arg) {
+		 //System.out.println("Ctorinitializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Ctorinitializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCtorinitializer(com.generator.generators.cpp.parser.CPP14Parser.CtorinitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMeminitializerlist(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerlistContext arg) {
+		 //System.out.println("Meminitializerlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Meminitializerlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMeminitializerlist(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMeminitializer(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerContext arg) {
+		 //System.out.println("Meminitializer");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Meminitializer", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMeminitializer(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterMeminitializerid(com.generator.generators.cpp.parser.CPP14Parser.MeminitializeridContext arg) {
+		 //System.out.println("Meminitializerid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Meminitializerid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitMeminitializerid(com.generator.generators.cpp.parser.CPP14Parser.MeminitializeridContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOperatorfunctionid(com.generator.generators.cpp.parser.CPP14Parser.OperatorfunctionidContext arg) {
+		 //System.out.println("Operatorfunctionid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Operatorfunctionid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOperatorfunctionid(com.generator.generators.cpp.parser.CPP14Parser.OperatorfunctionidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLiteraloperatorid(com.generator.generators.cpp.parser.CPP14Parser.LiteraloperatoridContext arg) {
+		 //System.out.println("Literaloperatorid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Literaloperatorid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLiteraloperatorid(com.generator.generators.cpp.parser.CPP14Parser.LiteraloperatoridContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplatedeclaration(com.generator.generators.cpp.parser.CPP14Parser.TemplatedeclarationContext arg) {
+		 //System.out.println("Templatedeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templatedeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplatedeclaration(com.generator.generators.cpp.parser.CPP14Parser.TemplatedeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplateparameterlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterlistContext arg) {
+		 //System.out.println("Templateparameterlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templateparameterlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplateparameterlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplateparameter(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterContext arg) {
+		 //System.out.println("Templateparameter");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templateparameter", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplateparameter(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
+		 //System.out.println("Typeparameter");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typeparameter", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
+		 //System.out.println("Simpletemplateid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Simpletemplateid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
+		 //System.out.println("Templateid");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templateid", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplatename(com.generator.generators.cpp.parser.CPP14Parser.TemplatenameContext arg) {
+		 //System.out.println("Templatename");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templatename", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplatename(com.generator.generators.cpp.parser.CPP14Parser.TemplatenameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplateargumentlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentlistContext arg) {
+		 //System.out.println("Templateargumentlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templateargumentlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplateargumentlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTemplateargument(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentContext arg) {
+		 //System.out.println("Templateargument");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Templateargument", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTemplateargument(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypenamespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypenamespecifierContext arg) {
+		 //System.out.println("Typenamespecifier");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typenamespecifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypenamespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypenamespecifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExplicitinstantiation(com.generator.generators.cpp.parser.CPP14Parser.ExplicitinstantiationContext arg) {
+		 //System.out.println("Explicitinstantiation");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Explicitinstantiation", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExplicitinstantiation(com.generator.generators.cpp.parser.CPP14Parser.ExplicitinstantiationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExplicitspecialization(com.generator.generators.cpp.parser.CPP14Parser.ExplicitspecializationContext arg) {
+		 //System.out.println("Explicitspecialization");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Explicitspecialization", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExplicitspecialization(com.generator.generators.cpp.parser.CPP14Parser.ExplicitspecializationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTryblock(com.generator.generators.cpp.parser.CPP14Parser.TryblockContext arg) {
+		 //System.out.println("Tryblock");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Tryblock", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTryblock(com.generator.generators.cpp.parser.CPP14Parser.TryblockContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterFunctiontryblock(com.generator.generators.cpp.parser.CPP14Parser.FunctiontryblockContext arg) {
+		 //System.out.println("Functiontryblock");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Functiontryblock", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitFunctiontryblock(com.generator.generators.cpp.parser.CPP14Parser.FunctiontryblockContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHandlerseq(com.generator.generators.cpp.parser.CPP14Parser.HandlerseqContext arg) {
+		 //System.out.println("Handlerseq");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Handlerseq", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHandlerseq(com.generator.generators.cpp.parser.CPP14Parser.HandlerseqContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHandler(com.generator.generators.cpp.parser.CPP14Parser.HandlerContext arg) {
+		 //System.out.println("Handler");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Handler", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHandler(com.generator.generators.cpp.parser.CPP14Parser.HandlerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExceptiondeclaration(com.generator.generators.cpp.parser.CPP14Parser.ExceptiondeclarationContext arg) {
+		 //System.out.println("Exceptiondeclaration");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Exceptiondeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExceptiondeclaration(com.generator.generators.cpp.parser.CPP14Parser.ExceptiondeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterThrowexpression(com.generator.generators.cpp.parser.CPP14Parser.ThrowexpressionContext arg) {
+		 //System.out.println("Throwexpression");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Throwexpression", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitThrowexpression(com.generator.generators.cpp.parser.CPP14Parser.ThrowexpressionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
+		 //System.out.println("Exceptionspecification");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Exceptionspecification", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
+		 //System.out.println("Dynamicexceptionspecification");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Dynamicexceptionspecification", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypeidlist(com.generator.generators.cpp.parser.CPP14Parser.TypeidlistContext arg) {
+		 //System.out.println("Typeidlist");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Typeidlist", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypeidlist(com.generator.generators.cpp.parser.CPP14Parser.TypeidlistContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterNoexceptspecification(com.generator.generators.cpp.parser.CPP14Parser.NoexceptspecificationContext arg) {
+		 //System.out.println("Noexceptspecification");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Noexceptspecification", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitNoexceptspecification(com.generator.generators.cpp.parser.CPP14Parser.NoexceptspecificationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRightShift(com.generator.generators.cpp.parser.CPP14Parser.RightShiftContext arg) {
+		 //System.out.println("RightShift");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("RightShift", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRightShift(com.generator.generators.cpp.parser.CPP14Parser.RightShiftContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRightShiftAssign(com.generator.generators.cpp.parser.CPP14Parser.RightShiftAssignContext arg) {
+		 //System.out.println("RightShiftAssign");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("RightShiftAssign", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRightShiftAssign(com.generator.generators.cpp.parser.CPP14Parser.RightShiftAssignContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOperator(com.generator.generators.cpp.parser.CPP14Parser.OperatorContext arg) {
+		 //System.out.println("Operator");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Operator", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOperator(com.generator.generators.cpp.parser.CPP14Parser.OperatorContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		 //System.out.println("Literal");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterBooleanliteral(com.generator.generators.cpp.parser.CPP14Parser.BooleanliteralContext arg) {
+		 //System.out.println("Booleanliteral");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Booleanliteral", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitBooleanliteral(com.generator.generators.cpp.parser.CPP14Parser.BooleanliteralContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPointerliteral(com.generator.generators.cpp.parser.CPP14Parser.PointerliteralContext arg) {
+		 //System.out.println("Pointerliteral");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Pointerliteral", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPointerliteral(com.generator.generators.cpp.parser.CPP14Parser.PointerliteralContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
+		 //System.out.println("Userdefinedliteral");
+		 //System.out.println("\t"+ arg.getText());
+		 onEnter(new Node("Userdefinedliteral", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
+		 onExit();
+	}
+
+}

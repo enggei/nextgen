@@ -272,7 +272,7 @@ public final class XMLGroup {
 	"~content~\n" + 
 	">>\n" + 
 	"\n" + 
-	"element(name,children,attributes) ::= <<<~name~ ~attributes:{it|~it.name~=\"~it.value~\"};separator=\" \"~>\n" + 
+	"element(name,children,attributes) ::= <<<~name~~attributes:{it|  ~it.name~=\"~it.value~\"}~>\n" + 
 	"	~children:{it|~it~};separator=\"\\n\"~\n" + 
 	"</~name~>\n" + 
 	">>\n" + 

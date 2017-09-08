@@ -1,6 +1,5 @@
-// Generated from src/com/generator/generators/html/parser/HTMLParser.g4 by ANTLR 4.1
+// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/html5/parser/HTMLParser.g4 by ANTLR 4.7
 package com.generator.generators.html5.parser;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
 /**
@@ -14,137 +13,121 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 public class HTMLParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements HTMLParserVisitor<T> {
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlAttributeValue(@NotNull HTMLParser.HtmlAttributeValueContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlDocument(HTMLParser.HtmlDocumentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitXhtmlCDATA(@NotNull HTMLParser.XhtmlCDATAContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlElements(HTMLParser.HtmlElementsContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlDocument(@NotNull HTMLParser.HtmlDocumentContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlElement(HTMLParser.HtmlElementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlTagName(@NotNull HTMLParser.HtmlTagNameContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlContent(HTMLParser.HtmlContentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlMisc(@NotNull HTMLParser.HtmlMiscContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlAttribute(HTMLParser.HtmlAttributeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitXml(@NotNull HTMLParser.XmlContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlAttributeName(HTMLParser.HtmlAttributeNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitScript(@NotNull HTMLParser.ScriptContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlAttributeValue(HTMLParser.HtmlAttributeValueContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitScriptlet(@NotNull HTMLParser.ScriptletContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlTagName(HTMLParser.HtmlTagNameContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlContent(@NotNull HTMLParser.HtmlContentContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlChardata(HTMLParser.HtmlChardataContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlAttributeName(@NotNull HTMLParser.HtmlAttributeNameContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlMisc(HTMLParser.HtmlMiscContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlElements(@NotNull HTMLParser.HtmlElementsContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitHtmlComment(HTMLParser.HtmlCommentContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlElement(@NotNull HTMLParser.HtmlElementContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitXhtmlCDATA(HTMLParser.XhtmlCDATAContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlAttribute(@NotNull HTMLParser.HtmlAttributeContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitDtd(HTMLParser.DtdContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlComment(@NotNull HTMLParser.HtmlCommentContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitXml(HTMLParser.XmlContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitStyle(@NotNull HTMLParser.StyleContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitScriptlet(HTMLParser.ScriptletContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitHtmlChardata(@NotNull HTMLParser.HtmlChardataContext ctx) { return visitChildren(ctx); }
-
+	@Override public T visitScript(HTMLParser.ScriptContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
-	 * <p/>
-	 * The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitDtd(@NotNull HTMLParser.DtdContext ctx) { return visitChildren(ctx); }
+	@Override public T visitStyle(HTMLParser.StyleContext ctx) { return visitChildren(ctx); }
 }

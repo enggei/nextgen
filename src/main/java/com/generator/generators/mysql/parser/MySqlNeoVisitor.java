@@ -1,5 +1,6 @@
 package com.generator.generators.mysql.parser;
 
+import com.generator.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -7,15 +8,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class MySqlNeoVisitor extends MySqlParserBaseVisitor<Node> {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final com.generator.editors.NeoModel model;
+	private final NeoModel model;
 
-	public MySqlNeoVisitor(com.generator.editors.NeoModel model) {
+	public MySqlNeoVisitor(NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.editors.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 

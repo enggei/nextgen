@@ -2,11 +2,12 @@ package com.generator.generators.protobuf;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupString;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'ProtobufGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'Protobuf.stg' file<br/>
  */
 public final class ProtobufGroup {
 
@@ -14,18 +15,7 @@ public final class ProtobufGroup {
    private final char delimiter;
 
 	public ProtobufGroup() {
-
-		final String generatorPath = System.getProperty("generator.path");
-
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "protobuf" + java.io.File.separator + "Protobuf.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(ProtobufGroup.class.getResource("/com/generator/generators/protobuf/Protobuf.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
+		this(new STGroupString(stg));
    }
 
    public ProtobufGroup(STGroup stGroup) {
@@ -52,40 +42,33 @@ public final class ProtobufGroup {
 
 	}
 
-
    public enumST newenum() {
       return new enumST(stGroup);
-   } 
-
+   }
 
    public extendST newextend() {
       return new extendST(stGroup);
-   } 
-
+   }
 
    public extensionsST newextensions() {
       return new extensionsST(stGroup);
-   } 
-
+   }
 
    public groupMessagesModelST newgroupMessagesModel() {
       return new groupMessagesModelST(stGroup);
-   } 
-
+   }
 
    public messageST newmessage() {
       return new messageST(stGroup);
-   } 
-
+   }
 
    public messageFieldST newmessageField() {
       return new messageFieldST(stGroup);
-   } 
-
+   }
 
    public protobufPackageST newprotobufPackage() {
       return new protobufPackageST(stGroup);
-   } 
+   }
 
    public final class enumST implements ProtobufGroupTemplate {
 
@@ -98,14 +81,14 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("enum");
    	}
 
-       public enumST setComments(Object value) {
+      public enumST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      } 
-       public enumST setName(Object value) {
+      }
+      public enumST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public enumST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
@@ -115,7 +98,7 @@ public final class ProtobufGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class extendST implements ProtobufGroupTemplate {
 
@@ -128,14 +111,14 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("extend");
    	}
 
-       public extendST setComments(Object value) {
+      public extendST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      } 
-       public extendST setName(Object value) {
+      }
+      public extendST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public extendST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
@@ -145,7 +128,7 @@ public final class ProtobufGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class extensionsST implements ProtobufGroupTemplate {
 
@@ -157,20 +140,20 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("extensions");
    	}
 
-       public extensionsST setMax(Object value) {
+      public extensionsST setMax(Object value) {
       	tryToSetStringProperty(template, value, maxIsSet, "max");   
          return this;
-      } 
-       public extensionsST setMin(Object value) {
+      }
+      public extensionsST setMin(Object value) {
       	tryToSetStringProperty(template, value, minIsSet, "min");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class groupMessagesModelST implements ProtobufGroupTemplate {
 
@@ -183,25 +166,25 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("groupMessagesModel");
    	}
 
-       public groupMessagesModelST setGroupName(Object value) {
+      public groupMessagesModelST setGroupName(Object value) {
       	tryToSetStringProperty(template, value, groupNameIsSet, "groupName");   
          return this;
-      } 
+      }
       public groupMessagesModelST addMessagesValue(Object name_) {
          messagesIsSet.set(true);
          template.addAggr("messages.{name}", ( (name_==null || name_.toString().length()==0) ? null : name_));
          return this;
       }
-       public groupMessagesModelST setPackageName(Object value) {
+      public groupMessagesModelST setPackageName(Object value) {
       	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class messageST implements ProtobufGroupTemplate {
 
@@ -214,14 +197,14 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("message");
    	}
 
-       public messageST setComments(Object value) {
+      public messageST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      } 
-       public messageST setName(Object value) {
+      }
+      public messageST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public messageST addPropertiesValue(Object value) {
       	tryToSetListProperty(template, value, propertiesIsSet, "properties");
          return this;
@@ -231,7 +214,7 @@ public final class ProtobufGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class messageFieldST implements ProtobufGroupTemplate {
 
@@ -248,40 +231,40 @@ public final class ProtobufGroup {
    		template = group.getInstanceOf("messageField");
    	}
 
-       public messageFieldST setComments(Object value) {
+      public messageFieldST setComments(Object value) {
       	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
          return this;
-      } 
-       public messageFieldST setDefaultValue(Object value) {
+      }
+      public messageFieldST setDefaultValue(Object value) {
       	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
          return this;
-      } 
-       public messageFieldST setFieldConstraint(Object value) {
+      }
+      public messageFieldST setFieldConstraint(Object value) {
       	tryToSetStringProperty(template, value, fieldConstraintIsSet, "fieldConstraint");   
          return this;
-      } 
-       public messageFieldST setName(Object value) {
+      }
+      public messageFieldST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public messageFieldST setOrdinal(Object value) {
+      }
+      public messageFieldST setOrdinal(Object value) {
       	tryToSetStringProperty(template, value, ordinalIsSet, "ordinal");   
          return this;
-      } 
-       public messageFieldST setPackedValue(Object value) {
+      }
+      public messageFieldST setPackedValue(Object value) {
       	tryToSetStringProperty(template, value, packedValueIsSet, "packedValue");   
          return this;
-      } 
-       public messageFieldST setType(Object value) {
+      }
+      public messageFieldST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class protobufPackageST implements ProtobufGroupTemplate {
 
@@ -308,16 +291,16 @@ public final class ProtobufGroup {
          template.addAggr("options.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
          return this;
       }
-       public protobufPackageST setPackage(Object value) {
+      public protobufPackageST setPackage(Object value) {
       	tryToSetStringProperty(template, value, packageIsSet, "package");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -434,7 +417,7 @@ public final class ProtobufGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -446,4 +429,56 @@ public final class ProtobufGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+
+	public static void toSTGFile(java.io.File dir) throws java.io.IOException {
+		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new java.io.File(dir, "ProtobufGroup.stg")));
+		out.write(stg);
+		out.close();
+   }
+
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("enum(comments,name,properties) ::= <<~if(comments)~\n" + 
+	"//~comments~\n" + 
+	"~endif~\n" + 
+	"enum ~name~ {\n" + 
+	"	~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" + 
+	"} >>\n")
+		.append("extend(comments,name,properties) ::= <<~if(comments)~\n" + 
+	"//~comments~\n" + 
+	"~endif~\n" + 
+	"extend ~name;format=\"capitalize\"~ {\n" + 
+	"  ~properties:{it|~it~}; separator=\"\\n\"~\n" + 
+	"} >>\n")
+		.append("extensions(max,min) ::= <<extensions ~min~ to ~max~; >>\n")
+		.append("groupMessagesModel(groupName,messages,packageName) ::= <<define(['ProtoBuf'], function (ProtoBuf) {\n" + 
+	"\n" + 
+	"    // package : ~packageName~\n" + 
+	"    var builder = ProtoBuf.loadProtoFile(\"~groupName~.proto\");\n" + 
+	"\n" + 
+	"    ~messages:{it|var ~it.name~ = builder.build(\"~packageName~.~it.name~\");};separator=\"\\n\"~\n" + 
+	"\n" + 
+	"    return {\n" + 
+	"        ~messages:{it|~it.name~: ~it.name~};separator=\",\\n\"~\n" + 
+	"    };\n" + 
+	"}); >>\n")
+		.append("message(comments,name,properties) ::= <<~if(comments)~\n" + 
+	"//~comments~\n" + 
+	"~endif~\n" + 
+	"message ~name;format=\"capitalize\"~ {\n" + 
+	"   ~properties:{it|~it~}; separator=\"\\n\"~\n" + 
+	"} >>\n")
+		.append("messageField(comments,defaultValue,fieldConstraint,name,ordinal,packedValue,type) ::= <<~fieldConstraint~ ~type~ ~name~ = ~ordinal~~if(defaultValue)~ [default = ~defaultValue~]~elseif(packedValue)~ [packed = ~packedValue~]~endif~;~if(comments)~ //~comments~~endif~ >>\n")
+		.append("protobufPackage(deliverables,imports,options,package) ::= <<package ~package~;\n" + 
+	"\n" + 
+	"~if(options)~\n" + 
+	"~options:{it|option ~it.name~ = ~it.value~;};separator=\"\\n\"~~endif~\n" + 
+	"\n" + 
+	"~if(imports)~\n" + 
+	"~imports:{it|import \"~it~.proto\";};separator=\"\\n\"~~endif~\n" + 
+	"\n" + 
+	"\n" + 
+	"~deliverables:{it|~it~}; separator=\"\\n\\n\"~ >>\n").toString();
+}

@@ -3,7 +3,7 @@ package com.generator.generators.easyFlow;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.editors.BaseDomainVisitor;
+import com.generator.BaseDomainVisitor;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.StringUtil;
@@ -25,8 +25,8 @@ import static com.generator.generators.easyFlow.EasyFlowPlugin.Entities.*;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Properties.packageName;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Properties.root;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Relations.*;
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.relate;
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.relate;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**

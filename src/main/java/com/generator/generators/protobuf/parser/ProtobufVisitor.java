@@ -1,4 +1,4 @@
-// Generated from src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.5.3
+// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/protobuf/parser/Protobuf.g4 by ANTLR 4.7
 package com.generator.generators.protobuf.parser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 

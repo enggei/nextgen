@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.editors.NeoModel;
+import com.generator.NeoModel;
 import com.generator.generators.antlr.ANTLRPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -28,9 +28,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.editors.BaseDomainVisitor.getString;
-import static com.generator.editors.BaseDomainVisitor.incoming;
-import static com.generator.editors.BaseDomainVisitor.outgoing;
+import static com.generator.BaseDomainVisitor.getString;
+import static com.generator.BaseDomainVisitor.incoming;
+import static com.generator.BaseDomainVisitor.outgoing;
 
 /**
  * Created 06.07.17.

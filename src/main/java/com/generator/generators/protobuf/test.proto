@@ -1,9 +1,6 @@
 package com.generator.generators.protobuf;
 
-// AUTO-GENERATED - edit 'Protobuf.stg' to make output-changes
-
 option optimize_for = SPEED;
-import "test2.proto";
 
 message MessageOne {
    required string node = 1;

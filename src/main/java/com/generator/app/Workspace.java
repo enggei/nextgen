@@ -2,9 +2,9 @@ package com.generator.app;
 
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.editors.BaseDomainVisitor;
-import com.generator.editors.NeoModel;
-import com.generator.generators.cypher.CypherDomainGroup;
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
+import com.generator.generators.cypher.CypherGroup;
 import com.generator.util.SwingUtil;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.neo4j.graphdb.*;
@@ -35,8 +35,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.*;
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.*;
 
 /**
  * Created 18.07.17.
@@ -1572,22 +1572,22 @@ public final class Workspace extends JPanel {
                   });
                   pop.add(new App.TransactionAction("Export Branch", app) {
 
-                     final CypherDomainGroup cypherGroup = new CypherDomainGroup();
+                     final CypherGroup cypherGroup = new CypherGroup();
 
                      @Override
                      public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                        final CypherDomainGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
+                        final CypherGroup.createNodesST createNodesST = cypherGroup.newcreateNodes();
 
                         final LinkedHashSet<Relationship> relationships = new LinkedHashSet<>();
                         exportNode(createNodesST, cypherGroup, getNode(), new LinkedHashSet<>(), relationships);
 
                         // add relations at end, using node-uuids:
-                        final CypherDomainGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
+                        final CypherGroup.createRelationshipsST createRelationshipsST = cypherGroup.newcreateRelationships();
                         for (Relationship relationship : relationships) {
                            final Object src = relationship.getStartNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
                            final Object dst = relationship.getEndNode().getProperty(TAG_UUID).toString().replaceAll("-", "_");
-                           final CypherDomainGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
+                           final CypherGroup.createRelationshipST createRelationshipST = cypherGroup.newcreateRelationship().
                                  setSrc(src).
                                  setType(relationship.getType().name()).
                                  setDst(dst);
@@ -1601,13 +1601,13 @@ public final class Workspace extends JPanel {
                      }
 
                      // todo consider creating a clone version of this
-                     private void exportNode(CypherDomainGroup.createNodesST export, CypherDomainGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
+                     private void exportNode(CypherGroup.createNodesST export, CypherGroup neoGroup, Node node, Set<Node> visitedNodes, Set<Relationship> relationships) {
 
                         if (visitedNodes.contains(node)) return;
                         visitedNodes.add(node);
 
                         final Object id = node.getProperty(TAG_UUID).toString().replaceAll("-", "_");
-                        final CypherDomainGroup.createNodeST createNodeST = neoGroup.newcreateNode().
+                        final CypherGroup.createNodeST createNodeST = neoGroup.newcreateNode().
                               setId(id);
                         for (Label label : node.getLabels()) createNodeST.addLabelsValue(label);
 

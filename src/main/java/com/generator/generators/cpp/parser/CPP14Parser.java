@@ -1,4 +1,4 @@
-// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/cpp/parser/CPP14.g4 by ANTLR 4.6
+// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/cpp/parser/CPP14.g4 by ANTLR 4.7
 package com.generator.generators.cpp.parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class CPP14Parser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.6", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -17129,7 +17129,7 @@ public class CPP14Parser extends Parser {
 
 	private static final int _serializedATNSegments = 2;
 	private static final String _serializedATNSegment0 =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\u008f\u09a6\4\2\t"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\u008f\u09a6\4\2\t"+
 		"\2\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -17358,11 +17358,11 @@ public class CPP14Parser extends Parser {
 		"\u016c\u016e\u0170\u0172\u0174\u0176\u0178\u017a\u017c\u017e\u0180\u0182"+
 		"\u0184\u0186\u0188\u018a\u018c\u018e\2\r\4\2[[__\4\2UW[^\7\2\36\36))\63"+
 		"\6399@@\5\2\34\34&&JJ\4\2\20\20LL\4\2[[pp\5\2\17\17<<GG\4\2  //\3\2\60"+
-		"\62\4\2\37\37BB\3\2\u0088\u008b\u0ac7\2\u0191\3\2\2\2\4\u019d\3\2\2\2"+
-		"\6\u01a1\3\2\2\2\b\u01ac\3\2\2\2\n\u01ae\3\2\2\2\f\u01bf\3\2\2\2\16\u01d0"+
-		"\3\2\2\2\20\u01d6\3\2\2\2\22\u01e2\3\2\2\2\24\u01e4\3\2\2\2\26\u01e6\3"+
-		"\2\2\2\30\u01f8\3\2\2\2\32\u01fe\3\2\2\2\34\u0205\3\2\2\2\36\u0207\3\2"+
-		"\2\2 \u0256\3\2\2\2\"\u0283\3\2\2\2$\u029b\3\2\2\2&\u02b9\3\2\2\2(\u02bb"+
+		"\62\4\2\37\37BB\3\2\u0088\u008b\2\u0ac7\2\u0191\3\2\2\2\4\u019d\3\2\2"+
+		"\2\6\u01a1\3\2\2\2\b\u01ac\3\2\2\2\n\u01ae\3\2\2\2\f\u01bf\3\2\2\2\16"+
+		"\u01d0\3\2\2\2\20\u01d6\3\2\2\2\22\u01e2\3\2\2\2\24\u01e4\3\2\2\2\26\u01e6"+
+		"\3\2\2\2\30\u01f8\3\2\2\2\32\u01fe\3\2\2\2\34\u0205\3\2\2\2\36\u0207\3"+
+		"\2\2\2 \u0256\3\2\2\2\"\u0283\3\2\2\2$\u029b\3\2\2\2&\u02b9\3\2\2\2(\u02bb"+
 		"\3\2\2\2*\u02d5\3\2\2\2,\u02d7\3\2\2\2.\u02db\3\2\2\2\60\u02e4\3\2\2\2"+
 		"\62\u02e6\3\2\2\2\64\u02ff\3\2\2\2\66\u030d\3\2\2\28\u030f\3\2\2\2:\u031a"+
 		"\3\2\2\2<\u031c\3\2\2\2>\u032a\3\2\2\2@\u033b\3\2\2\2B\u0349\3\2\2\2D"+
@@ -18134,10 +18134,10 @@ public class CPP14Parser extends Parser {
 		"\u0966\3\2\2\2\u0994\u0969\3\2\2\2\u0994\u096c\3\2\2\2\u0994\u096d\3\2"+
 		"\2\2\u0994\u096e\3\2\2\2\u0994\u096f\3\2\2\2\u0994\u0970\3\2\2\2\u0994"+
 		"\u0971\3\2\2\2\u0994\u0972\3\2\2\2\u0994\u0973\3\2\2\2\u0994\u0974\3\2"+
-		"\2\2\u0994\u0975\3\2\2\2\u0994\u0976\3\2\2\2\u0994";
+		"\2\2\u0994\u0975\3\2\2\2\u0994\u0976\3\2\2\2";
 	private static final String _serializedATNSegment1 =
-		"\u0977\3\2\2\2\u0994\u0978\3\2\2\2\u0994\u0979\3\2\2\2\u0994\u097a\3\2"+
-		"\2\2\u0994\u097b\3\2\2\2\u0994\u097c\3\2\2\2\u0994\u097d\3\2\2\2\u0994"+
+		"\u0994\u0977\3\2\2\2\u0994\u0978\3\2\2\2\u0994\u0979\3\2\2\2\u0994\u097a"+
+		"\3\2\2\2\u0994\u097b\3\2\2\2\u0994\u097c\3\2\2\2\u0994\u097d\3\2\2\2\u0994"+
 		"\u097e\3\2\2\2\u0994\u097f\3\2\2\2\u0994\u0980\3\2\2\2\u0994\u0981\3\2"+
 		"\2\2\u0994\u0982\3\2\2\2\u0994\u0983\3\2\2\2\u0994\u0984\3\2\2\2\u0994"+
 		"\u0985\3\2\2\2\u0994\u0986\3\2\2\2\u0994\u0987\3\2\2\2\u0994\u0988\3\2"+

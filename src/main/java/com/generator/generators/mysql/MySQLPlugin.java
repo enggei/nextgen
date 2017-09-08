@@ -3,11 +3,13 @@ package com.generator.generators.mysql;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.editors.BaseDomainVisitor;
-import com.generator.editors.NeoModel;
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.mysql.MySQLSession;
-import com.generator.generators.mysql.parser.*;
+import com.generator.generators.mysql.parser.MySqlLexer;
+import com.generator.generators.mysql.parser.MySqlNeoVisitor;
+import com.generator.generators.mysql.parser.MySqlNodeListener;
+import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
@@ -21,7 +23,7 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.function.Consumer;
 
-import static com.generator.editors.NeoModel.relate;
+import static com.generator.NeoModel.relate;
 
 /**
  * Created 23.08.17.

@@ -4,7 +4,6 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupString;
 
-import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -79,12 +78,12 @@ public final class TemplateGroupGroup {
       return new bugfixST(stGroup);
    }
 
-   public eomST neweom() {
-      return new eomST(stGroup);
+   public stgST newstg() {
+      return new stgST(stGroup);
    }
 
-   public gtST newgt() {
-      return new gtST(stGroup);
+   public templateST newtemplate() {
+      return new templateST(stGroup);
    }
 
    public final class AttributeRendererDeclarationST implements TemplateGroupGroupTemplate {
@@ -312,13 +311,19 @@ public final class TemplateGroupGroup {
    	}
    }
 
-   public final class eomST implements TemplateGroupGroupTemplate {
+   public final class stgST implements TemplateGroupGroupTemplate {
 
+      private final AtomicBoolean templatesIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private eomST(STGroup group) {
-   		template = group.getInstanceOf("eom");
+      private stgST(STGroup group) {
+   		template = group.getInstanceOf("stg");
    	}
+
+      public stgST addTemplatesValue(Object value) {
+      	tryToSetListProperty(template, value, templatesIsSet, "templates");
+         return this;
+      }
 
       @Override
    	public String toString() {
@@ -326,13 +331,29 @@ public final class TemplateGroupGroup {
    	}
    }
 
-   public final class gtST implements TemplateGroupGroupTemplate {
+   public final class templateST implements TemplateGroupGroupTemplate {
 
+      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean paramsIsSet = new AtomicBoolean(false);
       private final ST template;
 
-      private gtST(STGroup group) {
-   		template = group.getInstanceOf("gt");
+      private templateST(STGroup group) {
+   		template = group.getInstanceOf("template");
    	}
+
+      public templateST setContent(Object value) {
+      	tryToSetStringProperty(template, value, contentIsSet, "content");   
+         return this;
+      }
+      public templateST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+      public templateST addParamsValue(Object value) {
+      	tryToSetListProperty(template, value, paramsIsSet, "params");
+         return this;
+      }
 
       @Override
    	public String toString() {
@@ -469,7 +490,7 @@ public final class TemplateGroupGroup {
 	}
 
 	public static void toSTGFile(java.io.File dir) throws java.io.IOException {
-		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new File(dir, "TemplateGroupGroup.stg")));
+		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new java.io.File(dir, "TemplateGroupGroup.stg")));
 		out.write(stg);
 		out.close();
    }
@@ -665,7 +686,7 @@ public final class TemplateGroupGroup {
 	"		out.close();\n" + 
 	"   }\n" + 
 	"	\n" + 
-	"	~if(stg)~private static final String stg = \"~stg~\";~endif~\n" + 
+	"	~if(stg)~~stg~~endif~\n" + 
 	"}\n" + 
 	">>\n" + 
 	"\n" + 
@@ -721,10 +742,12 @@ public final class TemplateGroupGroup {
 	"bugfix() ::= <<>\n" + 
 	">>\n" + 
 	"\n" + 
-	"eom() ::= <<}\n" + 
+	"stg(templates) ::= <<delimiters \"~\", \"~\"\n" + 
+	"\n" + 
+	"~templates:{it|~it~};separator=\"\\n\"~\n" + 
 	">>\n" + 
 	"\n" + 
-	"gt() ::= <<>\n" + 
+	"template(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~gt()~>\n" + 
 	">>\n" + 
 	"\n" + 
 	"";

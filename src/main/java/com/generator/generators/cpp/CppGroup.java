@@ -2,11 +2,12 @@ package com.generator.generators.cpp;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupString;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'CppGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'cpp.stg' file<br/>
  */
 public final class CppGroup {
 
@@ -14,20 +15,7 @@ public final class CppGroup {
    private final char delimiter;
 
 	public CppGroup() {
-
-		final String generatorPath = System.getProperty("generator.path");
-
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "cpp" + java.io.File.separator + "cpp.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(CppGroup.class.getResource("/com/generator/generators/cpp/cpp.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "cpp" + java.io.File.separator + "cpp.stg"));
+		this(new STGroupString(stg));
    }
 
    public CppGroup(STGroup stGroup) {
@@ -50,82 +38,43 @@ public final class CppGroup {
       return delimiter;
    }
 
+	public interface CppGroupTemplate {
 
-   public ClassST newClass() {
-      return new ClassST(stGroup);
-   } 
-
+	}
 
    public HeaderFileST newHeaderFile() {
       return new HeaderFileST(stGroup);
-   } 
-
+   }
 
    public MemberST newMember() {
       return new MemberST(stGroup);
-   } 
-
-
-   public MethodST newMethod() {
-      return new MethodST(stGroup);
-   } 
-
+   }
 
    public NamespaceST newNamespace() {
       return new NamespaceST(stGroup);
-   } 
-
+   }
 
    public StructST newStruct() {
       return new StructST(stGroup);
-   } 
-
+   }
 
    public TypeST newType() {
       return new TypeST(stGroup);
-   } 
+   }
 
+   public ClassST newClass() {
+      return new ClassST(stGroup);
+   }
+
+   public MethodST newMethod() {
+      return new MethodST(stGroup);
+   }
 
    public TypedefST newTypedef() {
       return new TypedefST(stGroup);
-   } 
+   }
 
-    public final class ClassST {
-
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean privateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean protectedIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean publicIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private ClassST(STGroup group) {
-   		template = group.getInstanceOf("Class");
-   	}
-
-       public ClassST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-      public ClassST addPrivateValue(Object value) {
-      	tryToSetListProperty(template, value, privateIsSet, "private");
-         return this;
-      }
-      public ClassST addProtectedValue(Object value) {
-      	tryToSetListProperty(template, value, protectedIsSet, "protected");
-         return this;
-      }
-      public ClassST addPublicValue(Object value) {
-      	tryToSetListProperty(template, value, publicIsSet, "public");
-         return this;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class HeaderFileST {
+   public final class HeaderFileST implements CppGroupTemplate {
 
       private final AtomicBoolean entryIsSet = new AtomicBoolean(false);
       private final AtomicBoolean includesIsSet = new AtomicBoolean(false);
@@ -146,10 +95,10 @@ public final class CppGroup {
          template.addAggr("includes.{name, system}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (system_==null || system_.toString().length()==0) ? null : system_));
          return this;
       }
-       public HeaderFileST setName(Object value) {
+      public HeaderFileST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public HeaderFileST addNamespaceValue(Object value) {
       	tryToSetListProperty(template, value, namespaceIsSet, "namespace");
          return this;
@@ -159,9 +108,9 @@ public final class CppGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class MemberST {
+   public final class MemberST implements CppGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean staticIsSet = new AtomicBoolean(false);
@@ -172,67 +121,26 @@ public final class CppGroup {
    		template = group.getInstanceOf("Member");
    	}
 
-       public MemberST setName(Object value) {
+      public MemberST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-       public MemberST setStatic(Object value) {
-      	tryToSetStringProperty(template, value, staticIsSet, "static");   
-         return this;
-      } 
-       public MemberST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      } 
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   } 
-
-    public final class MethodST {
-
-      private final AtomicBoolean constIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean parametersIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean returnTypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean staticIsSet = new AtomicBoolean(false);
-      private final ST template;
-
-      private MethodST(STGroup group) {
-   		template = group.getInstanceOf("Method");
-   	}
-
-       public MethodST setConst(Object value) {
-      	tryToSetStringProperty(template, value, constIsSet, "const");   
-         return this;
-      } 
-       public MethodST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
-      public MethodST addParametersValue(Object name_, Object type_) {
-         parametersIsSet.set(true);
-         template.addAggr("parameters.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
          return this;
       }
-       public MethodST setReturnType(Object value) {
-      	tryToSetStringProperty(template, value, returnTypeIsSet, "returnType");   
-         return this;
-      } 
-       public MethodST setStatic(Object value) {
+      public MemberST setStatic(Object value) {
       	tryToSetStringProperty(template, value, staticIsSet, "static");   
          return this;
-      } 
+      }
+      public MemberST setType(Object value) {
+      	tryToSetStringProperty(template, value, typeIsSet, "type");   
+         return this;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class NamespaceST {
+   public final class NamespaceST implements CppGroupTemplate {
 
       private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -242,22 +150,22 @@ public final class CppGroup {
    		template = group.getInstanceOf("Namespace");
    	}
 
-       public NamespaceST setContent(Object value) {
+      public NamespaceST setContent(Object value) {
       	tryToSetStringProperty(template, value, contentIsSet, "content");   
          return this;
-      } 
-       public NamespaceST setName(Object value) {
+      }
+      public NamespaceST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class StructST {
+   public final class StructST implements CppGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean privateIsSet = new AtomicBoolean(false);
@@ -269,10 +177,10 @@ public final class CppGroup {
    		template = group.getInstanceOf("Struct");
    	}
 
-       public StructST setName(Object value) {
+      public StructST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
+      }
       public StructST addPrivateValue(Object value) {
       	tryToSetListProperty(template, value, privateIsSet, "private");
          return this;
@@ -290,9 +198,9 @@ public final class CppGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class TypeST {
+   public final class TypeST implements CppGroupTemplate {
 
       private final AtomicBoolean constIsSet = new AtomicBoolean(false);
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
@@ -305,34 +213,110 @@ public final class CppGroup {
    		template = group.getInstanceOf("Type");
    	}
 
-       public TypeST setConst(Object value) {
+      public TypeST setConst(Object value) {
       	tryToSetStringProperty(template, value, constIsSet, "const");   
          return this;
-      } 
-       public TypeST setName(Object value) {
+      }
+      public TypeST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public TypeST setNamespace(Object value) {
+      }
+      public TypeST setNamespace(Object value) {
       	tryToSetStringProperty(template, value, namespaceIsSet, "namespace");   
          return this;
-      } 
-       public TypeST setPointer(Object value) {
+      }
+      public TypeST setPointer(Object value) {
       	tryToSetStringProperty(template, value, pointerIsSet, "pointer");   
          return this;
-      } 
-       public TypeST setReference(Object value) {
+      }
+      public TypeST setReference(Object value) {
       	tryToSetStringProperty(template, value, referenceIsSet, "reference");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class TypedefST {
+   public final class ClassST implements CppGroupTemplate {
+
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean privateIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean protectedIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean publicIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private ClassST(STGroup group) {
+   		template = group.getInstanceOf("Class");
+   	}
+
+      public ClassST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+      public ClassST addPrivateValue(Object value) {
+      	tryToSetListProperty(template, value, privateIsSet, "private");
+         return this;
+      }
+      public ClassST addProtectedValue(Object value) {
+      	tryToSetListProperty(template, value, protectedIsSet, "protected");
+         return this;
+      }
+      public ClassST addPublicValue(Object value) {
+      	tryToSetListProperty(template, value, publicIsSet, "public");
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class MethodST implements CppGroupTemplate {
+
+      private final AtomicBoolean parametersIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean returnTypeIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean staticIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean constIsSet = new AtomicBoolean(false);
+      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private final ST template;
+
+      private MethodST(STGroup group) {
+   		template = group.getInstanceOf("Method");
+   	}
+
+      public MethodST addParametersValue(Object name_, Object type_) {
+         parametersIsSet.set(true);
+         template.addAggr("parameters.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
+         return this;
+      }
+      public MethodST setReturnType(Object value) {
+      	tryToSetStringProperty(template, value, returnTypeIsSet, "returnType");   
+         return this;
+      }
+      public MethodST setStatic(Object value) {
+      	tryToSetStringProperty(template, value, staticIsSet, "static");   
+         return this;
+      }
+      public MethodST setConst(Object value) {
+      	tryToSetStringProperty(template, value, constIsSet, "const");   
+         return this;
+      }
+      public MethodST setName(Object value) {
+      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+         return this;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class TypedefST implements CppGroupTemplate {
 
       private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
       private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
@@ -342,20 +326,20 @@ public final class CppGroup {
    		template = group.getInstanceOf("Typedef");
    	}
 
-       public TypedefST setName(Object value) {
+      public TypedefST setName(Object value) {
       	tryToSetStringProperty(template, value, nameIsSet, "name");   
          return this;
-      } 
-       public TypedefST setType(Object value) {
+      }
+      public TypedefST setType(Object value) {
       	tryToSetStringProperty(template, value, typeIsSet, "type");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -472,7 +456,7 @@ public final class CppGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -484,4 +468,74 @@ public final class CppGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+
+	public static void toSTGFile(java.io.File dir) throws java.io.IOException {
+		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new java.io.File(dir, "CppGroup.stg")));
+		out.write(stg);
+		out.close();
+   }
+
+	private static final String stg = "delimiters \"~\", \"~\"\n" + 
+	"\n" + 
+	"eom() ::= <<}>>\n" + 
+	"\n" + 
+	"gt() ::= <<> >>\n" + 
+	"\n" + 
+	"HeaderFile(entry,includes,name,namespace) ::= <<#ifndef __~name;format=\"toUpper\"~_HPP__\n" + 
+	"#define __~name;format=\"toUpper\"~_HPP__\n" + 
+	"~if(includes)~~includes:{it|#include ~if(it.system)~<~else~\"~endif~~it.name~~if(it.system)~>~else~\"~endif~};separator=\"\\n\"~~endif~\n" + 
+	"~if(namespace)~namespace ~namespace:{it|~it;format=\"lowFirst\"~ {};separator=\"\\n\"~~endif~\n" + 
+	"~entry:{it|~entry~}~\n" + 
+	"~if(namespace)~~namespace:{it|\\} // namespace ~it;format=\"lowFirst\"~};separator=\"\\n\"~~endif~\n" + 
+	"#endif // __~name;format=\"toUpper\"~_HPP__\n" + 
+	">>\n" + 
+	"\n" + 
+	"Member(name,static,type) ::= <<~if(static)~static ~endif~~if(type)~~type~~else~void~endif~ ~name;format=\"lowFirst\"~;\n" + 
+	">>\n" + 
+	"\n" + 
+	"Namespace(content,name) ::= <<namespace ~name~ {\n" + 
+	"~content~\n" + 
+	"} // namespace ~name~\n" + 
+	">>\n" + 
+	"\n" + 
+	"Struct(name,private,protected,public) ::= <<struct ~name;format=\"capitalize\"~ {\n" + 
+	"~if(public)~public:\n" + 
+	"~public:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"\n" + 
+	"~if(protected)~protected:\n" + 
+	"~protected:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"\n" + 
+	"~if(private)~private:\n" + 
+	"~private:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"}\n" + 
+	">>\n" + 
+	"\n" + 
+	"Type(const,name,namespace,pointer,reference) ::= <<~if(const)~const ~endif~~if(namespace)~~namespace~::~endif~~name;format=\"lowFirst\"~~if(pointer)~*~endif~~if(reference)~&~endif~\n" + 
+	">>\n" + 
+	"\n" + 
+	"Class(name,private,protected,public) ::= <<class ~name;format=\"capitalize\"~ {\n" + 
+	"~if(public)~public:\n" + 
+	"~public:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"\n" + 
+	"~if(protected)~protected:\n" + 
+	"~protected:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"\n" + 
+	"~if(private)~private:\n" + 
+	"~private:{it|~it~}; separator=\"\\n\"~\n" + 
+	"~endif~\n" + 
+	"}; // class ~name;format=\"capitalize\"~\n" + 
+	">>\n" + 
+	"\n" + 
+	"Method(parameters,returnType,static,const,name) ::= <<~if(static)~static ~endif~~if(returnType)~~returnType~~else~void~endif~ ~name;format=\"lowFirst\"~(~parameters:{it|~it.type~ ~it.name;format=\"lowFirst\"~}; separator=\", \"~)~if(const)~ const~endif~;\n" + 
+	">>\n" + 
+	"\n" + 
+	"Typedef(name,type) ::= <<typedef ~type~ ~name~;\n" + 
+	">>\n" + 
+	"\n" + 
+	"";
+}

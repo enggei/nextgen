@@ -4,10 +4,9 @@ import com.generator.app.App;
 import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.editors.NeoModel;
+import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.templates.TemplateDomainImpl;
 import com.generator.generators.templates.domain.*;
 import com.generator.generators.templates.parser.TemplateFileParser;
 import com.generator.util.FileUtil;
@@ -35,8 +34,8 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.getNameAndLabelsFrom;
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.getNameAndLabelsFrom;
 
 /**
  * Created 06.08.17.
@@ -327,21 +326,27 @@ public class StringTemplatePlugin extends DomainPlugin {
       }
    }
 
+   private static final String escape(String text) {
+      return text.
+            replaceAll("\\\\", "\\\\\\\\").
+            replaceAll("\"", "\\\\\"");
+   }
+
    public static void renderSTGGroup(Node node, Relationship rendererRelationship, boolean createStgFile) {
       final String packageName = getString(rendererRelationship, "package");
       final String groupName = StringUtil.capitalize(getString(node, AppMotif.Properties.name.name())) + "Group";
       final File targetDir = getFile(other(node, rendererRelationship));
 
       final TemplateGroupGroup group = new TemplateGroupGroup();
-      final StringBuilder stg = new StringBuilder("delimiters \"~\", \"~\"\n\n");
-
-      stg.append("eom() ::= <<}>>\n\ngt() ::= <<> >>\n\n");
+      final StringBuilder stg = new StringBuilder("private static final String stg = new StringBuilder()");
+      stg.append("\n\t.append(\"").append(escape("delimiters \"~\", \"~\"")).append("\\n\")");
+      stg.append("\n\t.append(\"").append(escape("eom() ::= <<}>>")).append("\\n\")");
+      stg.append("\n\t.append(\"").append(escape("gt() ::= <<> >>")).append("\\n\")");
 
       final TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration = group.newGroupClassDeclaration().
             setName(groupName).
             setDomain(getString(node, AppMotif.Properties.name.name())).
-//            setResourcePath(GeneratedFile.packageToPath(packageName)).
-      setPackageName(packageName);
+            setPackageName(packageName);
 
       outgoing(node, Relations.ENTITY).forEach(groupStatementRelation -> {
 
@@ -349,7 +354,7 @@ public class StringTemplatePlugin extends DomainPlugin {
          final Node templateNode = other(node, groupStatementRelation);
          final String statementName = getString(templateNode, AppMotif.Properties.name.name());
 
-         stg.append(statementName).append("(");
+         stg.append("\n\t.append(\"").append(statementName).append("(");
 
          final AtomicBoolean firstParam = new AtomicBoolean(true);
          new EntityRelationVisitor() {
@@ -412,15 +417,14 @@ public class StringTemplatePlugin extends DomainPlugin {
             }
          }.visit(templateNode);
 
-         stg.append(") ::= <<").append(getString(templateNode, Properties.text.name())).append("\n>>\n\n");
+         stg.append(") ::= <<").append(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"")).append(" >>").append("\\n\")");
 
          groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), group.newNewStatementInstance().setName(statementName));
       });
 
-      groupClassDeclaration.setStg(stg.toString().
-            replaceAll("\\\\", "\\\\\\\\").
-            replaceAll("\"", "\\\\\"").
-            replaceAll("\n", "\\\\n\" + \n\""));
+      // todo split this if it is too long:
+      stg.append(".toString();");
+      groupClassDeclaration.setStg(stg);
 
       try {
          if (createStgFile)
@@ -784,7 +788,7 @@ public class StringTemplatePlugin extends DomainPlugin {
 
             private void insertListProperty() {
 
-               final String input = SwingUtil.showInputDialog(TemplateDomainImpl.Properties.name.name(), txtEditor);
+               final String input = SwingUtil.showInputDialog(AppMotif.Properties.name.name(), txtEditor);
                if (input == null) return;
 
                final String name = input.contains(" ") ? input.split(" ")[0] : input.trim();

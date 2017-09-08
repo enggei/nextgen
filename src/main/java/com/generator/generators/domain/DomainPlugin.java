@@ -3,8 +3,8 @@ package com.generator.generators.domain;
 import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.editors.BaseDomainVisitor;
-import com.generator.editors.NeoModel;
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
 import com.generator.generators.templates.domain.GeneratedFile;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
@@ -19,9 +19,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.generators.project.ProjectPlugin.renderToFile;
-import static com.generator.editors.BaseDomainVisitor.*;
-import static com.generator.editors.NeoModel.getNameAndLabelsFrom;
-import static com.generator.editors.NeoModel.relate;
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.getNameAndLabelsFrom;
+import static com.generator.NeoModel.relate;
 
 /**
  * Created 06.08.17.

@@ -1,1 +1,0 @@
-all classes and interfaces in this domain-package is auto-generated from meta-domain builder

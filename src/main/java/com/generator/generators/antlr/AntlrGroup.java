@@ -308,18 +308,18 @@ public final class AntlrGroup {
 	"import org.neo4j.graphdb.Label;\n" + 
 	"import org.neo4j.graphdb.RelationshipType;\n" + 
 	"\n" + 
-	"public class ~name~ extends ~parser~ParserBaseVisitor<Node> {\n" + 
+	"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 	"\n" + 
 	"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
-	"	private final com.generator.editors.NeoModel model;\n" + 
+	"	private final com.generator.NeoModel model;\n" +
 	"\n" + 
-	"	public ~name~(com.generator.editors.NeoModel model) {\n" + 
+	"	public ~name~(com.generator.NeoModel model) {\n" +
 	"		this.model = model;\n" + 
 	"	}\n" + 
 	"\n" + 
 	"   protected void onEnter(Node node) {\n" + 
 	"      if (!nodeStack.isEmpty())\n" + 
-	"         com.generator.editors.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+	"         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" +
 	"      nodeStack.push(node);\n" + 
 	"   }\n" + 
 	"\n" + 
@@ -347,7 +347,7 @@ public final class AntlrGroup {
 	"\n" + 
 	"BaseNodeVisitor(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
 	"\n" + 
-	"public class ~name~ extends ~parser~ParserBaseVisitor<~name~.Node> {\n" + 
+	"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
 	"\n" + 
 	"   public static class Node {\n" + 
 	"\n" + 
@@ -392,7 +392,7 @@ public final class AntlrGroup {
 	"\n" + 
 	"BaseParserListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
 	"\n" + 
-	"public class ~name~ extends ~parser~ParserBaseListener {\n" + 
+	"public class ~name~ extends ~parser~BaseListener {\n" + 
 	"\n" + 
 	"   public static class Node {\n" + 
 	"\n" + 

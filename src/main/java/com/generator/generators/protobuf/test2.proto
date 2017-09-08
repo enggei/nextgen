@@ -1,7 +1,0 @@
-package com.generator.generators.protobuf;
-
-// AUTO-GENERATED - edit 'Protobuf.stg' to make output-changes
-
-message ImportedMessage {
-    required string node = 1;
-}

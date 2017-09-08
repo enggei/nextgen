@@ -2,11 +2,12 @@ package com.generator.generators.json;
 
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupString;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Wraps STGroup-methods based on 'JsonGroup.stg' file<br/>
+ * Wraps STGroup-methods based on 'json.stg' file<br/>
  */
 public final class JsonGroup {
 
@@ -14,20 +15,7 @@ public final class JsonGroup {
    private final char delimiter;
 
 	public JsonGroup() {
-
-		final String generatorPath = System.getProperty("generator.path");
-
-		if (generatorPath != null) {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(generatorPath + java.io.File.separator + "json" + java.io.File.separator + "json.stg");
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		} else {
-			this.stGroup = new org.stringtemplate.v4.STGroupFile(JsonGroup.class.getResource("/com/generator/generators/json/json.stg"), "UTF-8", '~', '~');
-			this.stGroup.registerRenderer(String.class, new DefaultAttributeRenderer());
-			this.delimiter = stGroup.delimiterStartChar;
-		}
-
-		//this(new org.stringtemplate.v4.STGroupFile(System.getProperty("generator.path") + java.io.File.separator + "json" + java.io.File.separator + "json.stg"));
+		this(new STGroupString(stg));
    }
 
    public JsonGroup(STGroup stGroup) {
@@ -50,32 +38,31 @@ public final class JsonGroup {
       return delimiter;
    }
 
+	public interface JsonGroupTemplate {
+
+	}
 
    public arrayST newarray() {
       return new arrayST(stGroup);
-   } 
-
+   }
 
    public documentST newdocument() {
       return new documentST(stGroup);
-   } 
-
+   }
 
    public objectST newobject() {
       return new objectST(stGroup);
-   } 
-
+   }
 
    public primitiveST newprimitive() {
       return new primitiveST(stGroup);
-   } 
-
+   }
 
    public primitiveStringST newprimitiveString() {
       return new primitiveStringST(stGroup);
-   } 
+   }
 
-    public final class arrayST {
+   public final class arrayST implements JsonGroupTemplate {
 
       private final AtomicBoolean elementsIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -93,9 +80,9 @@ public final class JsonGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class documentST {
+   public final class documentST implements JsonGroupTemplate {
 
       private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -113,9 +100,9 @@ public final class JsonGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class objectST {
+   public final class objectST implements JsonGroupTemplate {
 
       private final AtomicBoolean functionsIsSet = new AtomicBoolean(false);
       private final AtomicBoolean pairsIsSet = new AtomicBoolean(false);
@@ -140,9 +127,9 @@ public final class JsonGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class primitiveST {
+   public final class primitiveST implements JsonGroupTemplate {
 
       private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -151,18 +138,18 @@ public final class JsonGroup {
    		template = group.getInstanceOf("primitive");
    	}
 
-       public primitiveST setValue(Object value) {
+      public primitiveST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
-    public final class primitiveStringST {
+   public final class primitiveStringST implements JsonGroupTemplate {
 
       private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
       private final ST template;
@@ -171,16 +158,16 @@ public final class JsonGroup {
    		template = group.getInstanceOf("primitiveString");
    	}
 
-       public primitiveStringST setValue(Object value) {
+      public primitiveStringST setValue(Object value) {
       	tryToSetStringProperty(template, value, valueIsSet, "value");   
          return this;
-      } 
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
 	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (alreadySet.get()) return;
@@ -297,7 +284,7 @@ public final class JsonGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -309,4 +296,25 @@ public final class JsonGroup {
 		}
 		return list.toString() + delimiter;
 	}
-} 
+
+	public static void toSTGFile(java.io.File dir) throws java.io.IOException {
+		final java.io.BufferedWriter out = new java.io.BufferedWriter(new java.io.FileWriter(new java.io.File(dir, "JsonGroup.stg")));
+		out.write(stg);
+		out.close();
+   }
+
+	private static final String stg = new StringBuilder()
+		.append("delimiters \"~\", \"~\"\n")
+		.append("eom() ::= <<}>>\n")
+		.append("gt() ::= <<> >>\n")
+		.append("array(elements) ::= <<[\n" + 
+	"  ~elements:{it|~it~};separator=\",\\n\"~\n" + 
+	"] >>\n")
+		.append("document(content) ::= <<~content:{it|~it~};separator=\"\\n\"~ >>\n")
+		.append("object(functions,pairs) ::= <<{\n" + 
+	"  ~pairs:{it|\"~it.name~\": ~it.value~};separator=\",\\n\"~~if(pairs)~,~endif~\n" + 
+	"  ~functions:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
+	"} >>\n")
+		.append("primitive(value) ::= <<~value~ >>\n")
+		.append("primitiveString(value) ::= <<\"~value~\" >>\n").toString();
+}
