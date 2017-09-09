@@ -24,11 +24,21 @@ import java.util.Stack;
 import java.util.function.Consumer;
 
 import static com.generator.NeoModel.relate;
+import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 
 /**
  * Created 23.08.17.
  */
 public class MySQLPlugin extends DomainPlugin {
+
+   public enum Entities implements Label {
+      Database
+   }
+
+   public enum Relations implements RelationshipType {
+      TABLE
+   }
+
    public MySQLPlugin(App app) {
       super(app, "MySQL");
    }
@@ -110,6 +120,9 @@ public class MySQLPlugin extends DomainPlugin {
 
                   final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getText());
                   final Set<String> tables = db.getTables();
+
+                  final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase());
+
                   for (String table : tables) {
                      System.out.println(table);
 

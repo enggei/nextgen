@@ -141,13 +141,12 @@ public class App extends JFrame {
          add(projectMenu);
 
          final JMenu utilsMenu = new JMenu("Utilities");
-         utilsMenu.add(new AbstractAction("TextProcessor") {
+         utilsMenu.add(new AbstractAction("Regexp") {
             @Override
             public void actionPerformed(ActionEvent e) {
                SwingUtilities.invokeLater(() -> showTextProcessor(""));
             }
          });
-
          add(utilsMenu);
 
          events.addPropertyChangeListener(AppEvents.GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(App.this) {

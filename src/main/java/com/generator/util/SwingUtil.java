@@ -117,10 +117,18 @@ public class SwingUtil {
    }
 
    public static void showTextResult(String title, String text, Component parentComponent) {
-      showTextResult(title, text, parentComponent, new Dimension(800, 600));
+      showTextResult(title, text, parentComponent, true);
+   }
+
+   public static void showTextResult(String title, String text, Component parentComponent, boolean modal) {
+      showTextResult(title, text, parentComponent, new Dimension(800, 600), modal);
    }
 
    public static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize) {
+      showTextResult(title, text, parentComponent, defaultSize, true);
+   }
+
+   public static void showTextResult(String title, String text, Component parentComponent, Dimension defaultSize, boolean modal) {
       final JPanel panel = new JPanel(new BorderLayout());
       panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
 
@@ -138,7 +146,11 @@ public class SwingUtil {
          content.setSize(defaultSize);
       }
       panel.add(content, BorderLayout.CENTER);
-      JOptionPane.showMessageDialog(parentComponent, panel, "Result", JOptionPane.INFORMATION_MESSAGE);
+
+      if (modal)
+         showDialog(txtEditor, parentComponent, "Text", null, true);
+      else
+         JOptionPane.showMessageDialog(parentComponent, panel, "Text", JOptionPane.INFORMATION_MESSAGE);
    }
 
    public static void showTextInput(String title, JTextArea textArea, Component component, OnSave onSave) {
@@ -204,7 +216,11 @@ public class SwingUtil {
    // todo: combine showDialog and showDialogNoDefaultButton
 
    public static void showDialog(final Component content, final Component owner, String title, final OnSave onSave) {
-      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, true);
+      showDialog(content, owner, title, onSave, true);
+   }
+
+   public static void showDialog(final Component content, final Component owner, String title, final OnSave onSave, boolean modal) {
+      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, modal);
       dialog.add(content, BorderLayout.CENTER);
       final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
@@ -302,11 +318,11 @@ public class SwingUtil {
    }
 
    public static void showApplySaveDialog(final Component content, final Component owner, String title, final OnSave onSave) {
-      showDialog(content, owner, title, onSave, true);
+      showDialog(content, owner, title, onSave, true, true);
    }
 
-   public static void showDialog(final Component content, final Component owner, String title, final OnSave onSave, boolean showApplyButton) {
-      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, true);
+   public static void showDialog(final Component content, final Component owner, String title, final OnSave onSave, boolean showApplyButton, boolean modal) {
+      final JDialog dialog = new JDialog(SwingUtil.getFrame(owner), title, modal);
       dialog.add(content, BorderLayout.CENTER);
       final JPanel commandPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 

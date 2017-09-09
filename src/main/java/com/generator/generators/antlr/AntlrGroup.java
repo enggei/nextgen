@@ -50,8 +50,8 @@ public final class AntlrGroup {
       return new BaseNodeVisitorST(stGroup);
    }
 
-   public BaseParserListenerST newBaseParserListener() {
-      return new BaseParserListenerST(stGroup);
+   public BaseNodeListenerST newBaseNodeListener() {
+      return new BaseNodeListenerST(stGroup);
    }
 
    public final class NeoVisitorST implements AntlrGroupTemplate {
@@ -216,7 +216,7 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class BaseParserListenerST implements AntlrGroupTemplate {
+   public final class BaseNodeListenerST implements AntlrGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
       private Object _name;
@@ -225,11 +225,11 @@ public final class AntlrGroup {
 
       private final ST template;
 
-      private BaseParserListenerST(STGroup group) {
-   		template = group.getInstanceOf("BaseParserListener");
+      private BaseNodeListenerST(STGroup group) {
+   		template = group.getInstanceOf("BaseNodeListener");
    	}
 
-      public BaseParserListenerST addMethodsValue(Object param_, Object name_) {
+      public BaseNodeListenerST addMethodsValue(Object param_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
       	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
       	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
@@ -243,7 +243,7 @@ public final class AntlrGroup {
       	return this._methods;
       }
 
-      public BaseParserListenerST setName(Object value) {
+      public BaseNodeListenerST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -259,7 +259,7 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public BaseParserListenerST setPackageName(Object value) {
+      public BaseNodeListenerST setPackageName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -275,7 +275,7 @@ public final class AntlrGroup {
       	return (String) this._packageName;
       }
 
-      public BaseParserListenerST setParser(Object value) {
+      public BaseNodeListenerST setParser(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -525,7 +525,7 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("BaseParserListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
+			.append("BaseNodeListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
@@ -555,14 +555,14 @@ public final class AntlrGroup {
 		"		this.debug = debug;\n" + 
 		"	}\n" + 
 		"\n" + 
-		"   void onEnter(Node node) {\n" + 
+		"   private void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
 		"		if (debug) System.out.println(delim.toString() + node.name);\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   void onExit() {\n" + 
+		"   private void onExit() {\n" + 
 		"      if (nodeStack.size() > 1) {\n" + 
 		"			nodeStack.pop();\n" + 
 		"         delim.deleteCharAt(delim.length() - 1);\n" + 
@@ -574,13 +574,17 @@ public final class AntlrGroup {
 		"   }\n" + 
 		"\n" + 
 		"~methods:{it|\n" + 
+		"	protected boolean in~it.name~ = false;\n" + 
+		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		 onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText()));\n" + 
+		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText()));\n" + 
+		"		this.in~it.name~ = true;\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public void exit~it.name~(~it.param~ arg) {\n" + 
-		"		 onExit();\n" + 
+		"		onExit();\n" + 
+		"		this.in~it.name~ = false;\n" + 
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")

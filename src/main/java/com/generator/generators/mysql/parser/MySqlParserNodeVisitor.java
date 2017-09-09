@@ -54,8 +54,26 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
+	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		final Node node = new Node("Root", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
 		final Node node = new Node("Sql_statements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		final Node node = new Node("Sql_statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -110,24 +128,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
 		final Node node = new Node("Create_view", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		final Node node = new Node("Root", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		final Node node = new Node("Sql_statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -216,6 +216,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
+	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
+		final Node node = new Node("Column_def_table_constraints", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitCreate_function(com.generator.generators.mysql.parser.MySqlParser.Create_functionContext arg) {
 		final Node node = new Node("Create_function", arg.getText());
 		onEnter(node);
@@ -254,15 +263,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitColCreateTable(com.generator.generators.mysql.parser.MySqlParser.ColCreateTableContext arg) {
 		final Node node = new Node("ColCreateTable", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
-		final Node node = new Node("Index_type", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -360,6 +360,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
+	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
+		final Node node = new Node("Index_type", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitIndex_option(com.generator.generators.mysql.parser.MySqlParser.Index_optionContext arg) {
 		final Node node = new Node("Index_option", arg.getText());
 		onEnter(node);
@@ -434,15 +443,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
 		final Node node = new Node("Server_option", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
-		final Node node = new Node("Column_def_table_constraints", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

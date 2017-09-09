@@ -28,14 +28,14 @@ public class JSONNodeListener extends JSONBaseListener {
 		this.debug = debug;
 	}
 
-   void onEnter(Node node) {
+   private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name);
 		delim.append("\t");
    }
 
-   void onExit() {
+   private void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -46,49 +46,69 @@ public class JSONNodeListener extends JSONBaseListener {
       return nodeStack.peek();
    }
 
-	@Override
-	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		 onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		 onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		 onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		 onExit();
-	}
+	protected boolean inJson = false;
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		 onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
+		this.inJson = true;
 	}
 
 	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		 onExit();
+		onExit();
+		this.inJson = false;
 	}
+
+	protected boolean inArray = false;
+
+	@Override
+	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
+		this.inArray = true;
+	}
+
+	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		onExit();
+		this.inArray = false;
+	}
+
+	protected boolean inValue = false;
+
+	@Override
+	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
+		this.inValue = true;
+	}
+
+	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		onExit();
+		this.inValue = false;
+	}
+
+	protected boolean inPair = false;
+
+	@Override
+	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
+		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
+		this.inPair = true;
+	}
+
+	public void exitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
+		onExit();
+		this.inPair = false;
+	}
+
+	protected boolean inObj = false;
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		 onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
+		this.inObj = true;
 	}
 
 	public void exitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		 onExit();
+		onExit();
+		this.inObj = false;
 	}
 
 }

@@ -45,42 +45,6 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
    }
 
 	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		final Node node = new Node("Document", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		final Node node = new Node("Element", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		final Node node = new Node("Attribute", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = new Node("Prolog", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
 		final Node node = new Node("Content", arg.getText());
 		onEnter(node);
@@ -110,6 +74,42 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
 	@Override
 	public Node visitMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		final Node node = new Node("Misc", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		final Node node = new Node("Element", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		final Node node = new Node("Attribute", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		final Node node = new Node("Document", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		final Node node = new Node("Prolog", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

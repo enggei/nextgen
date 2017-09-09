@@ -1,6 +1,5 @@
 package com.generator.generators.antlr;
 
-import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
 import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
 import com.generator.generators.cpp.parser.CPP14Listener;
@@ -26,22 +25,24 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
+import static com.generator.ProjectConstants.MAIN_ROOT;
+
 /**
  * Created 08.09.17.
  */
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
-      AntlrGenerator.generateVisitorAndListener(ProjectConstants.MAIN_ROOT, ProjectConstants.GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
-
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
    }
 
    private static void generateVisitorAndListener(String root, String packageName, String parserName, Class visitorInterface, Class listenerInterface) {
@@ -55,14 +56,14 @@ public class AntlrGenerator {
       private final String packageName;
       private final String baseVisitorName;
 
-      private final AntlrGroup.BaseParserListenerST baseParserListenerST;
+      private final AntlrGroup.BaseNodeListenerST baseParserListenerST;
 
       ParserNodeListenerGenerator(String root, String packageName, String parserName) {
          this.root = root;
          this.packageName = packageName;
          this.baseVisitorName = parserName + "NodeListener";
 
-         this.baseParserListenerST = new AntlrGroup().newBaseParserListener().
+         this.baseParserListenerST = new AntlrGroup().newBaseNodeListener().
                setPackageName(packageName).
                setName(baseVisitorName).
                setParser(parserName);

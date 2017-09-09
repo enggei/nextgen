@@ -10,13 +10,19 @@ import java.util.TreeSet;
 public class MySQLSession {
 
    private final Connection connection;
+   private final String database;
 
-   public MySQLSession(String host, String database, String username, String password) throws ClassNotFoundException, SQLException {
+   MySQLSession(String host, String database, String username, String password) throws ClassNotFoundException, SQLException {
       Class.forName("com.mysql.jdbc.Driver");
+      this.database = database;
       connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + password);
    }
 
-   public void executeQuery(Statement statement, String query, ResultSetHandler handler) throws Exception {
+   public String getDatabase() {
+      return database;
+   }
+
+   private void executeQuery(Statement statement, String query, ResultSetHandler handler) throws Exception {
       final ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next())
          handler.handle(resultSet);
@@ -28,30 +34,29 @@ public class MySQLSession {
    }
 
    public Set<String> getTables() throws Exception {
-
       final Set<String> tables = new TreeSet<>();
-
       final Statement statement = connection.createStatement();
-      executeQuery(statement, "show tables", new ResultSetHandler() {
-         @Override
-         public void handle(ResultSet resultSet) throws Exception {
-            final String tablename = resultSet.getString(1);
-            try (PreparedStatement createTableStatement = connection.prepareStatement("show create table " + tablename)) {
-               try (ResultSet createTableResultSet = createTableStatement.executeQuery()) {
-                  if (createTableResultSet.next()) {
-                     tables.add(preprocessSQL(createTableResultSet.getString(2)));
-                  }
+      executeQuery(statement, "show tables", resultSet -> {
+         final String tablename = resultSet.getString(1);
+         try (PreparedStatement createTableStatement = connection.prepareStatement("show create table " + tablename)) {
+            try (ResultSet createTableResultSet = createTableStatement.executeQuery()) {
+               if (createTableResultSet.next()) {
+                  tables.add(preprocessSQL(createTableResultSet.getString(2)));
                }
             }
          }
       });
-
       statement.close();
-
       return tables;
    }
 
-   public static String preprocessSQL(String string) {
+   /**
+    * turns everything but `[name]` to upper case (antlr is case sensitive)
+    *
+    * @param string the sql to process
+    * @return sql in upper-case
+    */
+   static String preprocessSQL(String string) {
       if (string == null || string.trim().length() == 0) return "";
 
       boolean name = false;

@@ -492,7 +492,7 @@ public final class Workspace extends JPanel {
                               "1 - layout outgoing nodes and relations in a horizontal-tree structure\n" +
                               "";
 
-                        SwingUtil.showTextResult("Help", text, NodeCanvas.this);
+                        SwingUtil.showTextResult("Help", text, NodeCanvas.this, false);
 
                      });
                      break;
