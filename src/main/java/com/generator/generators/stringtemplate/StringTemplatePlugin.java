@@ -384,7 +384,6 @@ public class StringTemplatePlugin extends DomainPlugin {
          final TemplateGroupGroup.templateST templateST = group.newtemplate().
                setName(statementName);
 
-         final AtomicBoolean firstParam = new AtomicBoolean(true);
          new EntityRelationVisitor() {
             @Override
             public void onSingle(Node relationNode, Node dstNode) {
@@ -393,7 +392,7 @@ public class StringTemplatePlugin extends DomainPlugin {
 
                declarationST.addPropertiesValue(parameterName, group.newStatementStringPropertySetter().
                      setPropertyName(parameterName).
-                     setStatementName(statementName));
+                     setStatementName(statementName), "Object", null);
             }
 
             @Override
@@ -407,8 +406,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                   final TemplateGroupGroup.StatementListPropertySetterST listPropertySetterST = group.newStatementListPropertySetter().
                         setPropertyName(parameterName).
                         setStatementName(statementName);
-                  declarationST.addPropertiesValue(parameterName, listPropertySetterST);
-
+                  declarationST.addPropertiesValue(parameterName, listPropertySetterST, "java.util.Set<Object>", "new java.util.LinkedHashSet<>()");
 
                } else if (hasLabel(dstNode, DomainPlugin.Entities.Entity)) {
 
@@ -418,7 +416,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                      final TemplateGroupGroup.StatementListPropertySetterST listPropertySetterST = group.newStatementListPropertySetter().
                            setPropertyName(parameterName).
                            setStatementName(statementName);
-                     declarationST.addPropertiesValue(parameterName, listPropertySetterST);
+                     declarationST.addPropertiesValue(parameterName, listPropertySetterST, "java.util.Set<Object>", "new java.util.LinkedHashSet<>()");
 
                   } else {
 
@@ -440,17 +438,19 @@ public class StringTemplatePlugin extends DomainPlugin {
                         }
                      }.visit(dstNode);
 
-                     declarationST.addPropertiesValue(parameterName, kvSetter);
+                     // todo use set of maps
+                     declarationST.addPropertiesValue(parameterName, kvSetter, "java.util.Set<java.util.Map<String, Object>>", "new java.util.LinkedHashSet<>()");
                   }
                }
             }
          }.visit(templateNode);
 
-         templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"") + ">>");
-
-         stgBuilderST.addAppendsValue(templateST);
-
-         groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), group.newNewStatementInstance().setName(statementName));
+         stgBuilderST.addAppendsValue(templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"") + ">>"));
+         groupClassDeclaration.addStatementsValue(
+               declarationST.
+                     setName(statementName),
+               group.newNewStatementInstance().
+                     setName(statementName));
       });
 
       groupClassDeclaration.setStg(stgBuilderST);

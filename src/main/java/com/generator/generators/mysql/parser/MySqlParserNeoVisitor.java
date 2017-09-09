@@ -1,6 +1,5 @@
 package com.generator.generators.mysql.parser;
 
-import com.generator.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -8,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final NeoModel model;
+	private final com.generator.NeoModel model;
 
-	public MySqlParserNeoVisitor(NeoModel model) {
+	public MySqlParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -39,9 +38,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		System.out.println("Root");
-		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		System.out.println("Sql_statements");
+		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -49,9 +48,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		System.out.println("Sql_statements");
-		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
+	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		System.out.println("Root");
+		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,26 +71,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
 		System.out.println("Empty_statement");
 		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
-		System.out.println("Server_option");
-		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
-		System.out.println("ColConstrPK");
-		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -479,6 +458,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
+		System.out.println("Server_option");
+		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
 		System.out.println("Column_def_table_constraints");
 		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText());
@@ -552,6 +541,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitColConstrAuInc(com.generator.generators.mysql.parser.MySqlParser.ColConstrAuIncContext arg) {
 		System.out.println("ColConstrAuInc");
 		final Node node = model.findOrCreate(Label.label("ColConstrAuInc"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
+		System.out.println("ColConstrPK");
+		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2159,6 +2158,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
+		System.out.println("From_clause");
+		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSelectIntoVars(com.generator.generators.mysql.parser.MySqlParser.SelectIntoVarsContext arg) {
 		System.out.println("SelectIntoVars");
 		final Node node = model.findOrCreate(Label.label("SelectIntoVars"), "text", arg.getText());
@@ -2182,16 +2191,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitSelectIntoOutfile(com.generator.generators.mysql.parser.MySqlParser.SelectIntoOutfileContext arg) {
 		System.out.println("SelectIntoOutfile");
 		final Node node = model.findOrCreate(Label.label("SelectIntoOutfile"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
-		System.out.println("From_clause");
-		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

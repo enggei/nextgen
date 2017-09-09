@@ -1,6 +1,5 @@
 package com.generator.generators.java.parser;
 
-import com.generator.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -8,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final NeoModel model;
+	private final com.generator.NeoModel model;
 
-	public JavaParserNeoVisitor(NeoModel model) {
+	public JavaParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -32,6 +31,26 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	public Node visitBlock(com.generator.generators.java.parser.JavaParser.BlockContext arg) {
 		System.out.println("Block");
 		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		System.out.println("FormalParameterList");
+		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
+		System.out.println("Arguments");
+		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -62,6 +81,296 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	public Node visitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
 		System.out.println("Statement");
 		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
+		System.out.println("Resources");
+		final Node node = model.findOrCreate(Label.label("Resources"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
+		System.out.println("Resource");
+		final Node node = model.findOrCreate(Label.label("Resource"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
+		System.out.println("SwitchBlockStatementGroup");
+		final Node node = model.findOrCreate(Label.label("SwitchBlockStatementGroup"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
+		System.out.println("SwitchLabel");
+		final Node node = model.findOrCreate(Label.label("SwitchLabel"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
+		System.out.println("ForControl");
+		final Node node = model.findOrCreate(Label.label("ForControl"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
+		System.out.println("ForInit");
+		final Node node = model.findOrCreate(Label.label("ForInit"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
+		System.out.println("EnhancedForControl");
+		final Node node = model.findOrCreate(Label.label("EnhancedForControl"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
+		System.out.println("ParExpression");
+		final Node node = model.findOrCreate(Label.label("ParExpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
+		System.out.println("ExpressionList");
+		final Node node = model.findOrCreate(Label.label("ExpressionList"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
+		System.out.println("LambdaExpression");
+		final Node node = model.findOrCreate(Label.label("LambdaExpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
+		System.out.println("LambdaParameters");
+		final Node node = model.findOrCreate(Label.label("LambdaParameters"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
+		System.out.println("LambdaBody");
+		final Node node = model.findOrCreate(Label.label("LambdaBody"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
+		System.out.println("Primary");
+		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
+		System.out.println("MethodReference");
+		final Node node = model.findOrCreate(Label.label("MethodReference"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
+		System.out.println("ClassType");
+		final Node node = model.findOrCreate(Label.label("ClassType"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
+		System.out.println("Creator");
+		final Node node = model.findOrCreate(Label.label("Creator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
+		System.out.println("CreatedName");
+		final Node node = model.findOrCreate(Label.label("CreatedName"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
+		System.out.println("InnerCreator");
+		final Node node = model.findOrCreate(Label.label("InnerCreator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
+		System.out.println("ArrayCreatorRest");
+		final Node node = model.findOrCreate(Label.label("ArrayCreatorRest"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
+		System.out.println("ClassCreatorRest");
+		final Node node = model.findOrCreate(Label.label("ClassCreatorRest"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
+		System.out.println("ExplicitGenericInvocation");
+		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocation"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
+		System.out.println("TypeArgumentsOrDiamond");
+		final Node node = model.findOrCreate(Label.label("TypeArgumentsOrDiamond"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
+		System.out.println("NonWildcardTypeArguments");
+		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArguments"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
+		System.out.println("TypeList");
+		final Node node = model.findOrCreate(Label.label("TypeList"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
+		System.out.println("TypeType");
+		final Node node = model.findOrCreate(Label.label("TypeType"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
+		System.out.println("PrimitiveType");
+		final Node node = model.findOrCreate(Label.label("PrimitiveType"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
+		System.out.println("TypeArguments");
+		final Node node = model.findOrCreate(Label.label("TypeArguments"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
+		System.out.println("SuperSuffix");
+		final Node node = model.findOrCreate(Label.label("SuperSuffix"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
+		System.out.println("ExplicitGenericInvocationSuffix");
+		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocationSuffix"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -499,16 +808,6 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		System.out.println("FormalParameterList");
-		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitFormalParameter(com.generator.generators.java.parser.JavaParser.FormalParameterContext arg) {
 		System.out.println("FormalParameter");
 		final Node node = model.findOrCreate(Label.label("FormalParameter"), "text", arg.getText());
@@ -739,309 +1038,9 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
-		System.out.println("Resources");
-		final Node node = model.findOrCreate(Label.label("Resources"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
-		System.out.println("Resource");
-		final Node node = model.findOrCreate(Label.label("Resource"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
-		System.out.println("SwitchBlockStatementGroup");
-		final Node node = model.findOrCreate(Label.label("SwitchBlockStatementGroup"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
-		System.out.println("SwitchLabel");
-		final Node node = model.findOrCreate(Label.label("SwitchLabel"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
-		System.out.println("ForControl");
-		final Node node = model.findOrCreate(Label.label("ForControl"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
-		System.out.println("ForInit");
-		final Node node = model.findOrCreate(Label.label("ForInit"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
-		System.out.println("EnhancedForControl");
-		final Node node = model.findOrCreate(Label.label("EnhancedForControl"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
-		System.out.println("ParExpression");
-		final Node node = model.findOrCreate(Label.label("ParExpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
-		System.out.println("ExpressionList");
-		final Node node = model.findOrCreate(Label.label("ExpressionList"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
-		System.out.println("LambdaExpression");
-		final Node node = model.findOrCreate(Label.label("LambdaExpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
-		System.out.println("LambdaParameters");
-		final Node node = model.findOrCreate(Label.label("LambdaParameters"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
-		System.out.println("LambdaBody");
-		final Node node = model.findOrCreate(Label.label("LambdaBody"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
-		System.out.println("Primary");
-		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
-		System.out.println("MethodReference");
-		final Node node = model.findOrCreate(Label.label("MethodReference"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
-		System.out.println("ClassType");
-		final Node node = model.findOrCreate(Label.label("ClassType"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
-		System.out.println("Creator");
-		final Node node = model.findOrCreate(Label.label("Creator"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
-		System.out.println("CreatedName");
-		final Node node = model.findOrCreate(Label.label("CreatedName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
-		System.out.println("InnerCreator");
-		final Node node = model.findOrCreate(Label.label("InnerCreator"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
-		System.out.println("ArrayCreatorRest");
-		final Node node = model.findOrCreate(Label.label("ArrayCreatorRest"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
-		System.out.println("ClassCreatorRest");
-		final Node node = model.findOrCreate(Label.label("ClassCreatorRest"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
-		System.out.println("ExplicitGenericInvocation");
-		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocation"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
-		System.out.println("TypeArgumentsOrDiamond");
-		final Node node = model.findOrCreate(Label.label("TypeArgumentsOrDiamond"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitNonWildcardTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsOrDiamondContext arg) {
 		System.out.println("NonWildcardTypeArgumentsOrDiamond");
 		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArgumentsOrDiamond"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
-		System.out.println("NonWildcardTypeArguments");
-		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArguments"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
-		System.out.println("TypeList");
-		final Node node = model.findOrCreate(Label.label("TypeList"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
-		System.out.println("TypeType");
-		final Node node = model.findOrCreate(Label.label("TypeType"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
-		System.out.println("PrimitiveType");
-		final Node node = model.findOrCreate(Label.label("PrimitiveType"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
-		System.out.println("TypeArguments");
-		final Node node = model.findOrCreate(Label.label("TypeArguments"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
-		System.out.println("SuperSuffix");
-		final Node node = model.findOrCreate(Label.label("SuperSuffix"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
-		System.out.println("ExplicitGenericInvocationSuffix");
-		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocationSuffix"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		System.out.println("Arguments");
-		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

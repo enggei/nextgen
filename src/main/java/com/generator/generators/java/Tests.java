@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 public class Tests {
 
@@ -41,16 +42,29 @@ public class Tests {
    @Test
    public void testJavaGroup() {
       final JavaGroup group = new JavaGroup();
-      System.out.println(group.newBean().
+      final JavaGroup.BeanST beanST = group.newBean().
             setPackage("com.test.java").
             setName("User").
-            addPropertiesValue(null,"id","Long").
-            addPropertiesValue(null,"firstName","String").
-            addPropertiesValue(null,"lastName","String").
-            addPropertiesValue(null,"password","String").
+            addPropertiesValue(null, "id", "Long").
+            addPropertiesValue(null, "firstName", "String").
+            addPropertiesValue(null, "lastName", "String").
+            addPropertiesValue(null, "password", "String").
             addLexicalValue("lastName").
             addLexicalValue("firstName").
-            addEqhaValue("id"));
+            addEqhaValue("id");
+      System.out.println(beanST);
+
+      System.out.println(beanST.getPackage() + " " + beanST.getName());
+      for (Object o : beanST.getLexicalValues()) {
+         System.out.println("lexical " + o);
+      }
+
+      for (Map<String, Object> map : beanST.getProperties()) {
+         System.out.println("property ");
+         for (Map.Entry<String, Object> entry : map.entrySet()) {
+            System.out.println("\t" + entry.getKey() + " " + entry.getValue());
+         }
+      }
 
       // todo add JavaGroup- tests here;
    }

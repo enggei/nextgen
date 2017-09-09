@@ -88,8 +88,9 @@ public final class TemplateGroupGroup {
 
    public final class stgBuilderST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean appendsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean delimiterIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _appends = new java.util.LinkedHashSet<>();
+      private Object _delimiter;
+
       private final ST template;
 
       private stgBuilderST(STGroup group) {
@@ -97,12 +98,33 @@ public final class TemplateGroupGroup {
    	}
 
       public stgBuilderST addAppendsValue(Object value) {
-      	tryToSetListProperty(template, value, appendsIsSet, "appends");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._appends.add(value);
+      	template.add("appends", value);
+
          return this;
       }
+
+      public java.util.Set<Object> getAppendsValues() {
+      	return this._appends;
+      }
+
       public stgBuilderST setDelimiter(Object value) {
-      	tryToSetStringProperty(template, value, delimiterIsSet, "delimiter");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._delimiter == null) {
+            this._delimiter = value;
+         	template.add("delimiter", value);
+         }
+
+      	return this;
+      }
+
+      public String getDelimiter() {
+      	return (String) this._delimiter;
       }
 
       @Override
@@ -112,6 +134,7 @@ public final class TemplateGroupGroup {
    }
 
    public final class AttributeRendererDeclarationST implements TemplateGroupGroupTemplate {
+
 
       private final ST template;
 
@@ -127,11 +150,12 @@ public final class TemplateGroupGroup {
 
    public final class GroupClassDeclarationST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean domainIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean stgIsSet = new AtomicBoolean(false);
+      private Object _domain;
+      private Object _name;
+      private Object _packageName;
+      private java.util.Set<java.util.Map<String, Object>> _statements = new java.util.LinkedHashSet<>();
+      private Object _stg;
+
       private final ST template;
 
       private GroupClassDeclarationST(STGroup group) {
@@ -139,25 +163,81 @@ public final class TemplateGroupGroup {
    	}
 
       public GroupClassDeclarationST setDomain(Object value) {
-      	tryToSetStringProperty(template, value, domainIsSet, "domain");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._domain == null) {
+            this._domain = value;
+         	template.add("domain", value);
+         }
+
+      	return this;
       }
+
+      public String getDomain() {
+      	return (String) this._domain;
+      }
+
       public GroupClassDeclarationST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
       }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public GroupClassDeclarationST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
       }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
       public GroupClassDeclarationST addStatementsValue(Object declaration_, Object newInstance_) {
-         statementsIsSet.set(true);
-         template.addAggr("statements.{declaration, newInstance}", ( (declaration_==null || declaration_.toString().length()==0) ? null : declaration_), ( (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("declaration", (declaration_==null || declaration_.toString().length()==0) ? null : declaration_);
+      	map.put("newInstance", (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_);
+      	this._statements.add(map);
+
+         template.addAggr("statements.{declaration, newInstance}", map.get("declaration"), map.get("newInstance"));
          return this;
       }
+
+      public java.util.Set<java.util.Map<String, Object>> getStatements() {
+      	return this._statements;
+      }
+
       public GroupClassDeclarationST setStg(Object value) {
-      	tryToSetStringProperty(template, value, stgIsSet, "stg");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._stg == null) {
+            this._stg = value;
+         	template.add("stg", value);
+         }
+
+      	return this;
+      }
+
+      public String getStg() {
+      	return (String) this._stg;
       }
 
       @Override
@@ -168,8 +248,9 @@ public final class TemplateGroupGroup {
 
    public final class NewGroupInstanceST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean filenameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private Object _filename;
+      private Object _name;
+
       private final ST template;
 
       private NewGroupInstanceST(STGroup group) {
@@ -177,12 +258,35 @@ public final class TemplateGroupGroup {
    	}
 
       public NewGroupInstanceST setFilename(Object value) {
-      	tryToSetStringProperty(template, value, filenameIsSet, "filename");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._filename == null) {
+            this._filename = value;
+         	template.add("filename", value);
+         }
+
+      	return this;
       }
+
+      public String getFilename() {
+      	return (String) this._filename;
+      }
+
       public NewGroupInstanceST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
       }
 
       @Override
@@ -193,9 +297,10 @@ public final class TemplateGroupGroup {
 
    public final class NewStatementDeclarationST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean groupnameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private Object _groupname;
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private NewStatementDeclarationST(STGroup group) {
@@ -203,17 +308,51 @@ public final class TemplateGroupGroup {
    	}
 
       public NewStatementDeclarationST setGroupname(Object value) {
-      	tryToSetStringProperty(template, value, groupnameIsSet, "groupname");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._groupname == null) {
+            this._groupname = value;
+         	template.add("groupname", value);
+         }
+
+      	return this;
       }
+
+      public String getGroupname() {
+      	return (String) this._groupname;
+      }
+
       public NewStatementDeclarationST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public NewStatementDeclarationST addPropertiesValue(Object name_, Object setter_, Object type_, Object init_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("setter", (setter_==null || setter_.toString().length()==0) ? null : setter_);
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	map.put("init", (init_==null || init_.toString().length()==0) ? null : init_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{name, setter, type, init}", map.get("name"), map.get("setter"), map.get("type"), map.get("init"));
          return this;
       }
-      public NewStatementDeclarationST addPropertiesValue(Object name_, Object setter_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{name, setter}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (setter_==null || setter_.toString().length()==0) ? null : setter_));
-         return this;
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
       }
 
       @Override
@@ -224,7 +363,8 @@ public final class TemplateGroupGroup {
 
    public final class NewStatementInstanceST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private Object _name;
+
       private final ST template;
 
       private NewStatementInstanceST(STGroup group) {
@@ -232,8 +372,19 @@ public final class TemplateGroupGroup {
    	}
 
       public NewStatementInstanceST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
       }
 
       @Override
@@ -244,9 +395,10 @@ public final class TemplateGroupGroup {
 
    public final class StatementKeyValueListPropertySetterST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean kvNamesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _kvNames = new java.util.LinkedHashSet<>();
+      private Object _propertyName;
+      private Object _statementName;
+
       private final ST template;
 
       private StatementKeyValueListPropertySetterST(STGroup group) {
@@ -254,16 +406,49 @@ public final class TemplateGroupGroup {
    	}
 
       public StatementKeyValueListPropertySetterST addKvNamesValue(Object value) {
-      	tryToSetListProperty(template, value, kvNamesIsSet, "kvNames");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._kvNames.add(value);
+      	template.add("kvNames", value);
+
          return this;
       }
+
+      public java.util.Set<Object> getKvNamesValues() {
+      	return this._kvNames;
+      }
+
       public StatementKeyValueListPropertySetterST setPropertyName(Object value) {
-      	tryToSetStringProperty(template, value, propertyNameIsSet, "propertyName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._propertyName == null) {
+            this._propertyName = value;
+         	template.add("propertyName", value);
+         }
+
+      	return this;
       }
+
+      public String getPropertyName() {
+      	return (String) this._propertyName;
+      }
+
       public StatementKeyValueListPropertySetterST setStatementName(Object value) {
-      	tryToSetStringProperty(template, value, statementNameIsSet, "statementName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._statementName == null) {
+            this._statementName = value;
+         	template.add("statementName", value);
+         }
+
+      	return this;
+      }
+
+      public String getStatementName() {
+      	return (String) this._statementName;
       }
 
       @Override
@@ -274,8 +459,9 @@ public final class TemplateGroupGroup {
 
    public final class StatementListPropertySetterST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
+      private Object _propertyName;
+      private Object _statementName;
+
       private final ST template;
 
       private StatementListPropertySetterST(STGroup group) {
@@ -283,12 +469,35 @@ public final class TemplateGroupGroup {
    	}
 
       public StatementListPropertySetterST setPropertyName(Object value) {
-      	tryToSetStringProperty(template, value, propertyNameIsSet, "propertyName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._propertyName == null) {
+            this._propertyName = value;
+         	template.add("propertyName", value);
+         }
+
+      	return this;
       }
+
+      public String getPropertyName() {
+      	return (String) this._propertyName;
+      }
+
       public StatementListPropertySetterST setStatementName(Object value) {
-      	tryToSetStringProperty(template, value, statementNameIsSet, "statementName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._statementName == null) {
+            this._statementName = value;
+         	template.add("statementName", value);
+         }
+
+      	return this;
+      }
+
+      public String getStatementName() {
+      	return (String) this._statementName;
       }
 
       @Override
@@ -299,8 +508,9 @@ public final class TemplateGroupGroup {
 
    public final class StatementStringPropertySetterST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean propertyNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean statementNameIsSet = new AtomicBoolean(false);
+      private Object _propertyName;
+      private Object _statementName;
+
       private final ST template;
 
       private StatementStringPropertySetterST(STGroup group) {
@@ -308,12 +518,35 @@ public final class TemplateGroupGroup {
    	}
 
       public StatementStringPropertySetterST setPropertyName(Object value) {
-      	tryToSetStringProperty(template, value, propertyNameIsSet, "propertyName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._propertyName == null) {
+            this._propertyName = value;
+         	template.add("propertyName", value);
+         }
+
+      	return this;
       }
+
+      public String getPropertyName() {
+      	return (String) this._propertyName;
+      }
+
       public StatementStringPropertySetterST setStatementName(Object value) {
-      	tryToSetStringProperty(template, value, statementNameIsSet, "statementName");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._statementName == null) {
+            this._statementName = value;
+         	template.add("statementName", value);
+         }
+
+      	return this;
+      }
+
+      public String getStatementName() {
+      	return (String) this._statementName;
       }
 
       @Override
@@ -324,8 +557,9 @@ public final class TemplateGroupGroup {
 
    public final class stgST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean templatesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean delimiterIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _templates = new java.util.LinkedHashSet<>();
+      private Object _delimiter;
+
       private final ST template;
 
       private stgST(STGroup group) {
@@ -333,12 +567,33 @@ public final class TemplateGroupGroup {
    	}
 
       public stgST addTemplatesValue(Object value) {
-      	tryToSetListProperty(template, value, templatesIsSet, "templates");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._templates.add(value);
+      	template.add("templates", value);
+
          return this;
       }
+
+      public java.util.Set<Object> getTemplatesValues() {
+      	return this._templates;
+      }
+
       public stgST setDelimiter(Object value) {
-      	tryToSetStringProperty(template, value, delimiterIsSet, "delimiter");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._delimiter == null) {
+            this._delimiter = value;
+         	template.add("delimiter", value);
+         }
+
+      	return this;
+      }
+
+      public String getDelimiter() {
+      	return (String) this._delimiter;
       }
 
       @Override
@@ -349,9 +604,10 @@ public final class TemplateGroupGroup {
 
    public final class templateST implements TemplateGroupGroupTemplate {
 
-      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean paramsIsSet = new AtomicBoolean(false);
+      private Object _content;
+      private Object _name;
+      private java.util.Set<Object> _params = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private templateST(STGroup group) {
@@ -359,16 +615,49 @@ public final class TemplateGroupGroup {
    	}
 
       public templateST setContent(Object value) {
-      	tryToSetStringProperty(template, value, contentIsSet, "content");   
-         return this;
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._content == null) {
+            this._content = value;
+         	template.add("content", value);
+         }
+
+      	return this;
       }
+
+      public String getContent() {
+      	return (String) this._content;
+      }
+
       public templateST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public templateST addParamsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._params.add(value);
+      	template.add("params", value);
+
          return this;
       }
-      public templateST addParamsValue(Object value) {
-      	tryToSetListProperty(template, value, paramsIsSet, "params");
-         return this;
+
+      public java.util.Set<Object> getParamsValues() {
+      	return this._params;
       }
 
       @Override
@@ -376,13 +665,6 @@ public final class TemplateGroupGroup {
    		return template.render();
    	}
    }
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -669,13 +951,6 @@ public final class TemplateGroupGroup {
 		"\n" + 
 		"   ~statements:{it|~it.declaration~};separator=\"\\r\\n\\r\\n\"~\n" + 
 		"\n" + 
-		"	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {\n" + 
-		"		if (alreadySet.get()) return;\n" + 
-		"		if (value == null || value.toString().length() == 0) return;\n" + 
-		"		alreadySet.set(true);\n" + 
-		"		template.add(name, value);\n" + 
-		"	}\n" + 
-		"\n" + 
 		"	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {\n" + 
 		"		if (value == null || value.toString().length() == 0) return true;\n" + 
 		"		alreadySet.set(true);\n" + 
@@ -709,7 +984,8 @@ public final class TemplateGroupGroup {
 		"}>>\n")
 			.append("NewStatementDeclaration(groupname,name,properties) ::= <<public final class ~name~ST implements ~groupname~Template {\n" + 
 		"\n" + 
-		"   ~properties:{it|private final AtomicBoolean ~it.name~IsSet = new AtomicBoolean(false);};separator=\"\\n\"~\n" + 
+		"   ~properties:{it|private ~it.type~ _~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"\n" + 
 		"   private final ST template;\n" + 
 		"\n" + 
 		"   private ~name~ST(STGroup group) {\n" + 
@@ -717,7 +993,7 @@ public final class TemplateGroupGroup {
 		"	}\n" + 
 		"\n" + 
 		"~if(properties)~\n" + 
-		"   ~properties:{it|~it.setter~};separator=\"\\n\"~\n" + 
+		"   ~properties:{it|~it.setter~};separator=\"\\n\\n\"~\n" + 
 		"~endif~\n" + 
 		"\n" + 
 		"   @Override\n" + 
@@ -729,17 +1005,44 @@ public final class TemplateGroupGroup {
 		"   return new ~name~ST(stGroup);\n" + 
 		"}>>\n")
 			.append("StatementKeyValueListPropertySetter(kvNames,propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format=\"capitalize\"~Value(~kvNames:{it|Object ~it~_};separator=\", \"~) {\n" + 
-		"   ~propertyName~IsSet.set(true);\n" + 
-		"   template.addAggr(\"~propertyName~.{~kvNames:{it|~it~};separator=\", \"~}\", ~kvNames:{it|( (~it~_==null || ~it~_.toString().length()==0) ? null : ~it~_)};separator=\", \"~);\n" + 
+		"	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();\n" + 
+		"	~kvNames:{it|map.put(\"~it~\", (~it~_==null || ~it~_.toString().length()==0) ? null : ~it~_);};separator=\"\\n\"~\n" + 
+		"	this._~propertyName~.add(map);\n" + 
+		"\n" + 
+		"   template.addAggr(\"~propertyName~.{~kvNames:{it|~it~};separator=\", \"~}\", ~kvNames:{it|map.get(\"~it~\")};separator=\", \"~);\n" + 
 		"   return this;\n" + 
+		"}\n" + 
+		"\n" + 
+		"public java.util.Set<java.util.Map<String, Object>~gt()~ get~propertyName;format=\"capitalize\"~() {\n" + 
+		"	return this._~propertyName~;\n" + 
 		"}>>\n")
 			.append("StatementListPropertySetter(propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format=\"capitalize\"~Value(Object value) {\n" + 
-		"	tryToSetListProperty(template, value, ~propertyName~IsSet, \"~propertyName~\");\n" + 
+		"	if (value == null || value.toString().length() == 0)\n" + 
+		"   	return this;\n" + 
+		"\n" + 
+		"	this._~propertyName~.add(value);\n" + 
+		"	template.add(\"~propertyName~\", value);\n" + 
+		"\n" + 
 		"   return this;\n" + 
+		"}\n" + 
+		"\n" + 
+		"public java.util.Set<Object> get~propertyName;format=\"capitalize\"~Values() {\n" + 
+		"	return this._~propertyName~;\n" + 
 		"}>>\n")
 			.append("StatementStringPropertySetter(propertyName,statementName) ::= <<public ~statementName~ST set~propertyName;format=\"capitalize\"~(Object value) {\n" + 
-		"	tryToSetStringProperty(template, value, ~propertyName~IsSet, \"~propertyName~\");   \n" + 
-		"   return this;\n" + 
+		"	if (value == null || value.toString().length() == 0)\n" + 
+		"   	return this;\n" + 
+		"\n" + 
+		"	if (this._~propertyName~ == null) {\n" + 
+		"      this._~propertyName~ = value;\n" + 
+		"   	template.add(\"~propertyName~\", value);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	return this;\n" + 
+		"}\n" + 
+		"\n" + 
+		"public String get~propertyName;format=\"capitalize\"~() {\n" + 
+		"	return (String) this._~propertyName~;\n" + 
 		"}>>\n")
 			.append("stg(templates,delimiter) ::= <<delimiters \"~delimiter~\", \"~delimiter~\"\n" + 
 		"\n" + 

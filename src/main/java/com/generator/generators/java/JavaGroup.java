@@ -44,27 +44,28 @@ public final class JavaGroup {
 
    public BeanST newBean() {
       return new BeanST(stGroup);
-   } 
+   }
 
    public PojoST newPojo() {
       return new PojoST(stGroup);
-   } 
+   }
 
    public methodST newmethod() {
       return new methodST(stGroup);
-   } 
+   }
 
    public EnumST newEnum() {
       return new EnumST(stGroup);
-   } 
+   }
 
    public final class BeanST implements JavaGroupTemplate {
 
-      private final AtomicBoolean eqhaIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean lexicalIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _lexical = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private BeanST(STGroup group) {
@@ -72,44 +73,98 @@ public final class JavaGroup {
    	}
 
       public BeanST addEqhaValue(Object value) {
-      	tryToSetListProperty(template, value, eqhaIsSet, "eqha");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._eqha.add(value);
+      	template.add("eqha", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getEqhaValues() {
+      	return this._eqha;
+      }
+
       public BeanST addLexicalValue(Object value) {
-      	tryToSetListProperty(template, value, lexicalIsSet, "lexical");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._lexical.add(value);
+      	template.add("lexical", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getLexicalValues() {
+      	return this._lexical;
+      }
+
       public BeanST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public BeanST setPackage(Object value) {
-      	tryToSetStringProperty(template, value, packageIsSet, "package");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
       public BeanST addPropertiesValue(Object init_, Object name_, Object type_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{init, name, type}", ( (init_==null || init_.toString().length()==0) ? null : init_), ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("init", (init_==null || init_.toString().length()==0) ? null : init_);
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{init, name, type}", map.get("init"), map.get("name"), map.get("type"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class PojoST implements JavaGroupTemplate {
 
-      private final AtomicBoolean classPropertiesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean eqhaIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean extendsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean implementIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean lexicalIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean methodsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean propertiesIsSet = new AtomicBoolean(false);
+      private java.util.Set<java.util.Map<String, Object>> _classProperties = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _eqha = new java.util.LinkedHashSet<>();
+      private Object _extends;
+      private java.util.Set<Object> _implement = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _lexical = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _methods = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private PojoST(STGroup group) {
@@ -117,58 +172,154 @@ public final class JavaGroup {
    	}
 
       public PojoST addClassPropertiesValue(Object type_, Object init_, Object name_) {
-         classPropertiesIsSet.set(true);
-         template.addAggr("classProperties.{type, init, name}", ( (type_==null || type_.toString().length()==0) ? null : type_), ( (init_==null || init_.toString().length()==0) ? null : init_), ( (name_==null || name_.toString().length()==0) ? null : name_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	map.put("init", (init_==null || init_.toString().length()==0) ? null : init_);
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	this._classProperties.add(map);
+
+         template.addAggr("classProperties.{type, init, name}", map.get("type"), map.get("init"), map.get("name"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getClassProperties() {
+      	return this._classProperties;
+      }
+
       public PojoST addEqhaValue(Object value) {
-      	tryToSetListProperty(template, value, eqhaIsSet, "eqha");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._eqha.add(value);
+      	template.add("eqha", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getEqhaValues() {
+      	return this._eqha;
+      }
+
       public PojoST setExtends(Object value) {
-      	tryToSetStringProperty(template, value, extendsIsSet, "extends");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._extends == null) {
+            this._extends = value;
+         	template.add("extends", value);
+         }
+
+      	return this;
+      }
+
+      public String getExtends() {
+      	return (String) this._extends;
+      }
+
       public PojoST addImplementValue(Object value) {
-      	tryToSetListProperty(template, value, implementIsSet, "implement");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._implement.add(value);
+      	template.add("implement", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getImplementValues() {
+      	return this._implement;
+      }
+
       public PojoST addLexicalValue(Object value) {
-      	tryToSetListProperty(template, value, lexicalIsSet, "lexical");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._lexical.add(value);
+      	template.add("lexical", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getLexicalValues() {
+      	return this._lexical;
+      }
+
       public PojoST addMethodsValue(Object value) {
-      	tryToSetListProperty(template, value, methodsIsSet, "methods");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._methods.add(value);
+      	template.add("methods", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getMethodsValues() {
+      	return this._methods;
+      }
+
       public PojoST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public PojoST setPackage(Object value) {
-      	tryToSetStringProperty(template, value, packageIsSet, "package");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
       public PojoST addPropertiesValue(Object init_, Object type_, Object name_) {
-         propertiesIsSet.set(true);
-         template.addAggr("properties.{init, type, name}", ( (init_==null || init_.toString().length()==0) ? null : init_), ( (type_==null || type_.toString().length()==0) ? null : type_), ( (name_==null || name_.toString().length()==0) ? null : name_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("init", (init_==null || init_.toString().length()==0) ? null : init_);
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{init, type, name}", map.get("init"), map.get("type"), map.get("name"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class methodST implements JavaGroupTemplate {
 
-      private final AtomicBoolean annotationsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean parametersIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean returnValueIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean scopeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean statementsIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _annotations = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _parameters = new java.util.LinkedHashSet<>();
+      private Object _returnValue;
+      private Object _scope;
+      private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private methodST(STGroup group) {
@@ -176,42 +327,107 @@ public final class JavaGroup {
    	}
 
       public methodST addAnnotationsValue(Object value) {
-      	tryToSetListProperty(template, value, annotationsIsSet, "annotations");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._annotations.add(value);
+      	template.add("annotations", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getAnnotationsValues() {
+      	return this._annotations;
+      }
+
       public methodST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public methodST addParametersValue(Object name_, Object type_) {
-         parametersIsSet.set(true);
-         template.addAggr("parameters.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	this._parameters.add(map);
+
+         template.addAggr("parameters.{name, type}", map.get("name"), map.get("type"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getParameters() {
+      	return this._parameters;
+      }
+
       public methodST setReturnValue(Object value) {
-      	tryToSetStringProperty(template, value, returnValueIsSet, "returnValue");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._returnValue == null) {
+            this._returnValue = value;
+         	template.add("returnValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getReturnValue() {
+      	return (String) this._returnValue;
+      }
+
       public methodST setScope(Object value) {
-      	tryToSetStringProperty(template, value, scopeIsSet, "scope");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._scope == null) {
+            this._scope = value;
+         	template.add("scope", value);
+         }
+
+      	return this;
+      }
+
+      public String getScope() {
+      	return (String) this._scope;
+      }
+
       public methodST addStatementsValue(Object value) {
-      	tryToSetListProperty(template, value, statementsIsSet, "statements");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._statements.add(value);
+      	template.add("statements", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getStatementsValues() {
+      	return this._statements;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class EnumST implements JavaGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean valuesIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _package;
+      private java.util.Set<Object> _values = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private EnumST(STGroup group) {
@@ -219,30 +435,56 @@ public final class JavaGroup {
    	}
 
       public EnumST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public EnumST setPackage(Object value) {
-      	tryToSetStringProperty(template, value, packageIsSet, "package");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
       public EnumST addValuesValue(Object value) {
-      	tryToSetListProperty(template, value, valuesIsSet, "values");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._values.add(value);
+      	template.add("values", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getValuesValues() {
+      	return this._values;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
+   }
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -352,7 +594,7 @@ public final class JavaGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -371,122 +613,122 @@ public final class JavaGroup {
 		out.close();
    }
 
-	private static final String stg = new StringBuilder()
-		.append("delimiters \"~\", \"~\"\n")
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
-		.append("gt() ::= <<> >>\n")
-		.append("Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;\n" + 
-	"\n" + 
-	"public class ~name~ {\n" + 
-	"\n" + 
-	"   ~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-	"\n" + 
-	"	public ~name~() {\n" + 
-	"	}\n" + 
-	"\n" + 
-	"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-	"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-	"	}\n" + 
-	"\n" + 
-	"~properties:{it|\n" + 
-	"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
-	"		return ~it.name~;\n" + 
-	"	~eom()~\n" + 
-	"\n" + 
-	"	public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
-	"   	this.~it.name~ = ~it.name~;\n" + 
-	"	~eom()~\n" + 
-	"};separator=\"\\n\"~\n" + 
-	"~if(eqha)~\n" + 
-	"	@Override\n" + 
-	"	public boolean equals(Object o) {\n" + 
-	"   	if(this==o) return true;\n" + 
-	"	   if(o==null||getClass()!=o.getClass()) return false;\n" + 
-	"	   ~name~ that = (~name~) o;\n" + 
-	"	   ~eqha:{it | if(~it~!=null ? !~it~.equals(that.~it~) : that.~it~!=null) return false;~\\n~}~		return true;\n" + 
-	"	}\n" + 
-	"\n" + 
-	"	@Override\n" + 
-	"	public int hashCode() {\n" + 
-	"   	int result;\n" + 
-	"	   result = ~first(eqha):{it | (~it~!=null ? ~it~.hashCode() : 0)}~;\n" + 
-	"	   ~rest(eqha):{it | result = 31*result+(~it~!=null ? ~it~.hashCode() : 0);~\\n~}~      return result;\n" + 
-	"	}\n" + 
-	"	\n" + 
-	"~endif~\n" + 
-	"~if(lexical)~\n" + 
-	"	@Override\n" + 
-	"   public String toString() {\n" + 
-	"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
-	"   }\n" + 
-	"~endif~\n" + 
-	"} >>\n")
-		.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
-	"\n" + 
-	"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
-	"~if(classProperties)~\n" + 
-	"	\n" + 
-	"	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-	"~endif~\n" + 
-	"~if(properties)~\n" + 
-	"\n" + 
-	"	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-	"~endif~\n" + 
-	"\n" + 
-	"	public ~name~() {\n" + 
-	"	}\n" + 
-	"~if(properties)~\n" + 
-	"\n" + 
-	"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
-	"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-	"	}\n" + 
-	"~endif~\n" + 
-	"\n" + 
-	"~properties:{it|\n" + 
-	"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
-	"		return ~it.name~;\n" + 
-	"	~eom()~\n" + 
-	"\n" + 
-	"	public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
-	"   	this.~it.name~ = ~it.name~;\n" + 
-	"	~eom()~\n" + 
-	"};separator=\"\\n\"~\n" + 
-	"~if(methods)~\n" + 
-	"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
-	"\n" + 
-	"~endif~\n" + 
-	"~if(eqha)~\n" + 
-	"	@Override\n" + 
-	"	public boolean equals(Object o) {\n" + 
-	"   	if (this == o) return true;\n" + 
-	"	   if (o == null || !(o instanceof ~name~)) return false;\n" + 
-	"	   ~name~ that = (~name~) o;\n" + 
-	"	   ~eqha:{it | if (~it~ != null ? !~it~.equals(that.~it~) : that.~it~ != null) return false;~\\n~}~		return true;\n" + 
-	"	}\n" + 
-	"\n" + 
-	"	@Override\n" + 
-	"	public int hashCode() {\n" + 
-	"   	int result;\n" + 
-	"	   result = ~first(eqha):{it | (~it~ !=null ? ~it~.hashCode() : 0)}~;\n" + 
-	"	   ~rest(eqha):{it | result = 31*result+(~it~ != null ? ~it~.hashCode() : 0);~\\n~}~      return result;\n" + 
-	"	}\n" + 
-	"	\n" + 
-	"~endif~\n" + 
-	"~if(lexical)~\n" + 
-	"	@Override\n" + 
-	"   public String toString() {\n" + 
-	"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
-	"   }\n" + 
-	"~endif~\n" + 
-	"\n" + 
-	"} >>\n")
-		.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
-	"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-	"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
-	"} >>\n")
-		.append("Enum(name,package,values) ::= <<package ~package~;\n" + 
-	"\n" + 
-	"public enum ~name~ {\n" + 
-	"   ~values:{it|~it~};separator=\", \"~\n" + 
-	"} >>\n").toString();
-} 
+		.append("gt() ::= \">\"\n")
+			.append("Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"public class ~name~ {\n" + 
+		"\n" + 
+		"   ~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	public ~name~() {\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+		"	}\n" + 
+		"\n" + 
+		"~properties:{it|\n" + 
+		"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
+		"		return ~it.name~;\n" + 
+		"	~eom()~\n" + 
+		"\n" + 
+		"	public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
+		"   	this.~it.name~ = ~it.name~;\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"~if(eqha)~\n" + 
+		"	@Override\n" + 
+		"	public boolean equals(Object o) {\n" + 
+		"   	if(this==o) return true;\n" + 
+		"	   if(o==null||getClass()!=o.getClass()) return false;\n" + 
+		"	   ~name~ that = (~name~) o;\n" + 
+		"	   ~eqha:{it | if(~it~!=null ? !~it~.equals(that.~it~) : that.~it~!=null) return false;~\\n~}~		return true;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public int hashCode() {\n" + 
+		"   	int result;\n" + 
+		"	   result = ~first(eqha):{it | (~it~!=null ? ~it~.hashCode() : 0)}~;\n" + 
+		"	   ~rest(eqha):{it | result = 31*result+(~it~!=null ? ~it~.hashCode() : 0);~\\n~}~      return result;\n" + 
+		"	}\n" + 
+		"	\n" + 
+		"~endif~\n" + 
+		"~if(lexical)~\n" + 
+		"	@Override\n" + 
+		"   public String toString() {\n" + 
+		"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
+		"}>>\n")
+			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
+		"~if(classProperties)~\n" + 
+		"	\n" + 
+		"	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"~endif~\n" + 
+		"~if(properties)~\n" + 
+		"\n" + 
+		"	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"~endif~\n" + 
+		"\n" + 
+		"	public ~name~() {\n" + 
+		"	}\n" + 
+		"~if(properties)~\n" + 
+		"\n" + 
+		"	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=\", \"~) {\n" + 
+		"		~properties:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
+		"	}\n" + 
+		"~endif~\n" + 
+		"\n" + 
+		"~properties:{it|\n" + 
+		"	public ~it.type~ get~it.name;format=\"capitalize\"~() {\n" + 
+		"		return ~it.name~;\n" + 
+		"	~eom()~\n" + 
+		"\n" + 
+		"	public void set~it.name;format=\"capitalize\"~(~it.type~ ~it.name~) {\n" + 
+		"      this.~it.name~ = ~it.name~;\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"~if(methods)~\n" + 
+		"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"~if(eqha)~\n" + 
+		"	@Override\n" + 
+		"	public boolean equals(Object o) {\n" + 
+		"   	if (this == o) return true;\n" + 
+		"	   if (o == null || !(o instanceof ~name~)) return false;\n" + 
+		"	   ~name~ that = (~name~) o;\n" + 
+		"	   ~eqha:{it | if (~it~ != null ? !~it~.equals(that.~it~) : that.~it~ != null) return false;~\\n~}~		return true;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public int hashCode() {\n" + 
+		"   	int result;\n" + 
+		"	   result = ~first(eqha):{it | (~it~ !=null ? ~it~.hashCode() : 0)}~;\n" + 
+		"	   ~rest(eqha):{it | result = 31*result+(~it~ != null ? ~it~.hashCode() : 0);~\\n~}~      return result;\n" + 
+		"	}\n" + 
+		"	\n" + 
+		"~endif~\n" + 
+		"~if(lexical)~\n" + 
+		"	@Override\n" + 
+		"   public String toString() {\n" + 
+		"       return ~lexical:{it|\"~it~=\" + ~it~ };separator=\" + \\\" \\\" + \"~;\n" + 
+		"   }\n" + 
+		"~endif~\n" + 
+		"\n" + 
+		"}>>\n")
+			.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
+		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
+		"}>>\n")
+			.append("Enum(name,package,values) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"public enum ~name~ {\n" + 
+		"   ~values:{it|~it~};separator=\", \"~\n" + 
+		"}>>\n")
+		.toString();
+}

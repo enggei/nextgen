@@ -44,22 +44,23 @@ public final class AntlrGroup {
 
    public NeoVisitorST newNeoVisitor() {
       return new NeoVisitorST(stGroup);
-   } 
+   }
 
    public BaseNodeVisitorST newBaseNodeVisitor() {
       return new BaseNodeVisitorST(stGroup);
-   } 
+   }
 
    public BaseParserListenerST newBaseParserListener() {
       return new BaseParserListenerST(stGroup);
-   } 
+   }
 
    public final class NeoVisitorST implements AntlrGroupTemplate {
 
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean parserIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean methodsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private Object _packageName;
+      private Object _parser;
+      private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
+      private Object _name;
+
       private final ST template;
 
       private NeoVisitorST(STGroup group) {
@@ -67,35 +68,80 @@ public final class AntlrGroup {
    	}
 
       public NeoVisitorST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
       public NeoVisitorST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parser == null) {
+            this._parser = value;
+         	template.add("parser", value);
+         }
+
+      	return this;
+      }
+
+      public String getParser() {
+      	return (String) this._parser;
+      }
+
       public NeoVisitorST addMethodsValue(Object name_, Object param_) {
-         methodsIsSet.set(true);
-         template.addAggr("methods.{name, param}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (param_==null || param_.toString().length()==0) ? null : param_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	this._methods.add(map);
+
+         template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getMethods() {
+      	return this._methods;
+      }
+
       public NeoVisitorST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class BaseNodeVisitorST implements AntlrGroupTemplate {
 
-      private final AtomicBoolean methodsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean parserIsSet = new AtomicBoolean(false);
+      private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _packageName;
+      private Object _parser;
+
       private final ST template;
 
       private BaseNodeVisitorST(STGroup group) {
@@ -103,35 +149,80 @@ public final class AntlrGroup {
    	}
 
       public BaseNodeVisitorST addMethodsValue(Object name_, Object param_) {
-         methodsIsSet.set(true);
-         template.addAggr("methods.{name, param}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (param_==null || param_.toString().length()==0) ? null : param_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	this._methods.add(map);
+
+         template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getMethods() {
+      	return this._methods;
+      }
+
       public BaseNodeVisitorST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public BaseNodeVisitorST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
       public BaseNodeVisitorST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parser == null) {
+            this._parser = value;
+         	template.add("parser", value);
+         }
+
+      	return this;
+      }
+
+      public String getParser() {
+      	return (String) this._parser;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class BaseParserListenerST implements AntlrGroupTemplate {
 
-      private final AtomicBoolean methodsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean parserIsSet = new AtomicBoolean(false);
+      private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _packageName;
+      private Object _parser;
+
       private final ST template;
 
       private BaseParserListenerST(STGroup group) {
@@ -139,35 +230,72 @@ public final class AntlrGroup {
    	}
 
       public BaseParserListenerST addMethodsValue(Object param_, Object name_) {
-         methodsIsSet.set(true);
-         template.addAggr("methods.{param, name}", ( (param_==null || param_.toString().length()==0) ? null : param_), ( (name_==null || name_.toString().length()==0) ? null : name_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	this._methods.add(map);
+
+         template.addAggr("methods.{param, name}", map.get("param"), map.get("name"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getMethods() {
+      	return this._methods;
+      }
+
       public BaseParserListenerST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public BaseParserListenerST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
       public BaseParserListenerST setParser(Object value) {
-      	tryToSetStringProperty(template, value, parserIsSet, "parserg4");
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parser == null) {
+            this._parser = value;
+         	template.add("parser", value);
+         }
+
+      	return this;
+      }
+
+      public String getParser() {
+      	return (String) this._parser;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
+   }
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -277,7 +405,7 @@ public final class AntlrGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -299,24 +427,24 @@ public final class AntlrGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("NeoVisitor(packageName,parserg4,methods,name) ::= <<package ~packageName~;\n" +
+			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 
 		"import org.neo4j.graphdb.Label;\n" + 
 		"import org.neo4j.graphdb.RelationshipType;\n" + 
 		"\n" + 
-		"public class ~name~ extends ~parserg4~BaseVisitor<Node> {\n" +
+		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
 		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
-		"	private final com.generator.editors.NeoModel model;\n" + 
+		"	private final com.generator.NeoModel model;\n" + 
 		"\n" + 
-		"	public ~name~(com.generator.editors.NeoModel model) {\n" + 
+		"	public ~name~(com.generator.NeoModel model) {\n" + 
 		"		this.model = model;\n" + 
 		"	}\n" + 
 		"\n" + 
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty())\n" + 
-		"         com.generator.editors.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -339,10 +467,10 @@ public final class AntlrGroup {
 		"      return node;\n" + 
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
-		"} >> \n")
-			.append("BaseNodeVisitor(methods,name,packageName,parserg4) ::= <<package ~packageName~;\n" +
+		"}>>\n")
+			.append("BaseNodeVisitor(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"public class ~name~ extends ~parserg4~BaseVisitor<~name~.Node> {\n" +
+		"public class ~name~ extends ~parser~BaseVisitor<~name~.Node> {\n" + 
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -357,14 +485,29 @@ public final class AntlrGroup {
 		"   }\n" + 
 		"\n" + 
 		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
+		"	protected final boolean debug;\n" + 
+		"	\n" + 
+		"	public ~name~() {\n" + 
+		"		this(false);\n" + 
+		"	}\n" + 
 		"\n" + 
-		"   void onEnter(Node node) {\n" + 
+		"	public ~name~(boolean debug) {\n" + 
+		"		this.debug = debug;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"   private void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
+		"		delim.append(\"\\t\");\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.name);\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   void onExit() {\n" + 
-		"      if (nodeStack.size() > 1) nodeStack.pop();\n" + 
+		"   private void onExit() {\n" + 
+		"      if (nodeStack.size() > 1) {\n" + 
+		"         nodeStack.pop();\n" + 
+		"         delim.deleteCharAt(delim.length() - 1);\n" + 
+		"      }\n" + 
 		"   }\n" + 
 		"\n" + 
 		"   public Node getRoot() {\n" + 
@@ -374,18 +517,17 @@ public final class AntlrGroup {
 		"~methods:{it|\n" + 
 		"	@Override\n" + 
 		"	public Node visit~it.name~(~it.param~ arg) {\n" + 
-		"		System.out.println(\"~it.name~\");\n" + 
-		"		final Node node = new Node(\"GrammarSpec\", arg.getText());\n" + 
+		"		final Node node = new Node(\"~it.name~\", arg.getText());\n" + 
 		"		onEnter(node);\n" + 
 		"      visitChildren(arg);\n" + 
 		"      onExit();\n" + 
 		"      return node;\n" + 
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
-		"} >> \n")
-			.append("BaseParserListener(methods,name,packageName,parserg4) ::= <<package ~packageName~;\n" +
+		"}>>\n")
+			.append("BaseParserListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
 		"\n" + 
-		"public class ~name~ extends ~parserg4~BaseListener {\n" +
+		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
 		"   public static class Node {\n" + 
 		"\n" + 
@@ -402,14 +544,29 @@ public final class AntlrGroup {
 		"   }\n" + 
 		"\n" + 
 		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
+		"	protected final boolean debug;\n" + 
+		"	\n" + 
+		"	public ~name~() {\n" + 
+		"		this(false);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(boolean debug) {\n" + 
+		"		this.debug = debug;\n" + 
+		"	}\n" + 
 		"\n" + 
 		"   void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
+		"		delim.append(\"\\t\");\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.name);\n" + 
 		"   }\n" + 
 		"\n" + 
 		"   void onExit() {\n" + 
-		"      if (nodeStack.size() > 1) nodeStack.pop();\n" + 
+		"      if (nodeStack.size() > 1) {\n" + 
+		"			nodeStack.pop();\n" + 
+		"         delim.deleteCharAt(delim.length() - 1);\n" + 
+		"		}\n" + 
 		"   }\n" + 
 		"\n" + 
 		"   public Node getRoot() {\n" + 
@@ -419,8 +576,6 @@ public final class AntlrGroup {
 		"~methods:{it|\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		 //System.out.println(\"~it.name~\");\n" + 
-		"		 //System.out.println(\"\\t\"+ arg.getText());\n" + 
 		"		 onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText()));\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
@@ -428,6 +583,6 @@ public final class AntlrGroup {
 		"		 onExit();\n" + 
 		"	~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
-		"} >> \n")
-		.toString(); 
-} 
+		"}>>\n")
+		.toString();
+}

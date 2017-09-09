@@ -1,8 +1,8 @@
 package com.generator.generators.mysql;
 
+import com.generator.ProjectConstants;
 import com.generator.generators.mysql.parser.MySqlLexer;
-import com.generator.generators.mysql.parser.MySqlNodeListener;
-import com.generator.generators.mysql.parser.MySqlNodeVisitor;
+import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.generators.mysql.parser.MySqlParser;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,7 +17,27 @@ import java.util.Stack;
  */
 public class Tests {
 
-   private final Stack<StringBuilder> output = new Stack<>();
+   @Test
+   public void testTablesToJavaPojos() throws Exception {
+
+      final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
+
+      final Set<String> tables = session.getTables();
+
+      final MySqlToPojoGenerator generator = new MySqlToPojoGenerator(false);
+      for (String table : tables) new ParseTreeWalker().walk(generator, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).sql_statements());
+      generator.done(ProjectConstants.TEST_ROOT, "com.ud.tr");
+
+      final StringBuilder selects = new StringBuilder();
+      while (!currentSelects.isEmpty()) {
+         final MysqlGroup.selectST selectST = currentSelects.pop();
+         selects.append(selectST.toString()).append("\n");
+      }
+      System.out.println(selects);
+   }
+
+   final MysqlGroup mysqlGroup = new MysqlGroup();
+   private final Stack<MysqlGroup.selectST> currentSelects = new Stack<>();
 
    @Test
    public void testMysqlGroup() {
@@ -47,43 +67,15 @@ public class Tests {
       for (String table : tables) {
          final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table))));
 
-         final MySqlNodeListener listener = new MySqlNodeListener();
+         final MySqlParserNodeListener listener = new MySqlParserNodeListener();
          new ParseTreeWalker().walk(listener, parser.root());
          visit("", listener.getRoot());
       }
-
-      for (StringBuilder stringBuilder : output) {
-         System.out.println(stringBuilder.toString());
-      }
    }
 
-   private void visit(String delim, MySqlNodeListener.Node node) {
+   private void visit(String delim, MySqlParserNodeListener.Node node) {
       System.out.println(delim + node.name + " (" + node.value + ")");
-
-      if ("ColCreateTable".equals(node.name)) {
-         output.push(new StringBuilder("CREATE TABLE "));
-      } else if ("Table_name".equals(node.name)) {
-         output.peek().append(node.children.iterator().next().value).append(" {");
-      } else if ("ColumnDefinition".equals(node.name)) {
-         output.peek().append("\n\t").append(node.children.iterator().next().value);
-      } else if ("Column_definition".equals(node.name)) {
-         for (MySqlNodeListener.Node child : node.children) {
-            if ("DimensionDatatype".equals(child.name)) {
-               output.peek().append(child.value);
-            }
-         }
-         output.peek().append(" ");
-      }
-
-      for (MySqlNodeListener.Node child : node.children) {
+      for (MySqlParserNodeListener.Node child : node.children)
          visit(delim + "\t", child);
-      }
-   }
-
-   private void visit(String delim, MySqlNodeVisitor.Node node) {
-      System.out.println(delim + node.name + " (" + node.value + ")");
-      for (MySqlNodeVisitor.Node child : node.children) {
-         visit(delim + "\t", child);
-      }
    }
 }

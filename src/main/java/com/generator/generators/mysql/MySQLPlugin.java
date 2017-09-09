@@ -7,8 +7,8 @@ import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.mysql.parser.MySqlLexer;
-import com.generator.generators.mysql.parser.MySqlNeoVisitor;
-import com.generator.generators.mysql.parser.MySqlNodeListener;
+import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
+import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
@@ -71,7 +71,7 @@ public class MySQLPlugin extends DomainPlugin {
                   @Override
                   public void doAction(Transaction tx1) throws Throwable {
                      final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(MySQLSession.preprocessSQL(sql)))));
-                     final MySqlNeoVisitor visitor = new MySqlNeoVisitor(getGraph());
+                     final MySqlParserNeoVisitor visitor = new MySqlParserNeoVisitor(getGraph());
                      visitor.visit(parser.sql_statements());
                      if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
                   }
@@ -115,7 +115,7 @@ public class MySQLPlugin extends DomainPlugin {
 
                      final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table))));
 
-                     final MySqlNodeListener listener = new MySqlNodeListener() {
+                     final MySqlParserNodeListener listener = new MySqlParserNodeListener() {
 
                         private final Stack<org.neo4j.graphdb.Node> nodes = new Stack<>();
 

@@ -1,6 +1,5 @@
 package com.generator.generators.cpp.parser;
 
-import com.generator.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -8,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final NeoModel model;
+	private final com.generator.NeoModel model;
 
-	public CPP14NeoVisitor(NeoModel model) {
+	public CPP14NeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -27,6 +26,116 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
    public Node getRoot() {
       return nodeStack.peek();
    }
+
+	@Override
+	public Node visitDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
+		System.out.println("Decltypespecifier");
+		final Node node = model.findOrCreate(Label.label("Decltypespecifier"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
+		System.out.println("Elaboratedtypespecifier");
+		final Node node = model.findOrCreate(Label.label("Elaboratedtypespecifier"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
+		System.out.println("Enumname");
+		final Node node = model.findOrCreate(Label.label("Enumname"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
+		System.out.println("Enumspecifier");
+		final Node node = model.findOrCreate(Label.label("Enumspecifier"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
+		System.out.println("Enumhead");
+		final Node node = model.findOrCreate(Label.label("Enumhead"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
+		System.out.println("Opaqueenumdeclaration");
+		final Node node = model.findOrCreate(Label.label("Opaqueenumdeclaration"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
+		System.out.println("Enumkey");
+		final Node node = model.findOrCreate(Label.label("Enumkey"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
+		System.out.println("Enumbase");
+		final Node node = model.findOrCreate(Label.label("Enumbase"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
+		System.out.println("Enumeratorlist");
+		final Node node = model.findOrCreate(Label.label("Enumeratorlist"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
+		System.out.println("Enumeratordefinition");
+		final Node node = model.findOrCreate(Label.label("Enumeratordefinition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
+		System.out.println("Enumerator");
+		final Node node = model.findOrCreate(Label.label("Enumerator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
 
 	@Override
 	public Node visitNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
@@ -212,16 +321,6 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	public Node visitAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
 		System.out.println("Attributelist");
 		final Node node = model.findOrCreate(Label.label("Attributelist"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
-		System.out.println("Attribute");
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -542,6 +641,16 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	public Node visitInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
 		System.out.println("Initializerclause");
 		final Node node = model.findOrCreate(Label.label("Initializerclause"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
+		System.out.println("Dynamicexceptionspecification");
+		final Node node = model.findOrCreate(Label.label("Dynamicexceptionspecification"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -879,16 +988,6 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
-		System.out.println("Templateid");
-		final Node node = model.findOrCreate(Label.label("Templateid"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
 		System.out.println("Typeparameter");
 		final Node node = model.findOrCreate(Label.label("Typeparameter"), "text", arg.getText());
@@ -902,6 +1001,16 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	public Node visitSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
 		System.out.println("Simpletemplateid");
 		final Node node = model.findOrCreate(Label.label("Simpletemplateid"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
+		System.out.println("Templateid");
+		final Node node = model.findOrCreate(Label.label("Templateid"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1032,16 +1141,6 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	public Node visitExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
 		System.out.println("Exceptionspecification");
 		final Node node = model.findOrCreate(Label.label("Exceptionspecification"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
-		System.out.println("Dynamicexceptionspecification");
-		final Node node = model.findOrCreate(Label.label("Dynamicexceptionspecification"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1269,436 +1368,6 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		System.out.println("Newtypeid");
-		final Node node = model.findOrCreate(Label.label("Newtypeid"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		System.out.println("Newdeclarator");
-		final Node node = model.findOrCreate(Label.label("Newdeclarator"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		System.out.println("Noptrnewdeclarator");
-		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		System.out.println("Newinitializer");
-		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		System.out.println("Deleteexpression");
-		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		System.out.println("Noexceptexpression");
-		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		System.out.println("Translationunit");
-		final Node node = model.findOrCreate(Label.label("Translationunit"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		System.out.println("Primaryexpression");
-		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		System.out.println("Idexpression");
-		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		System.out.println("Unqualifiedid");
-		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		System.out.println("Qualifiedid");
-		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		System.out.println("Nestednamespecifier");
-		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		System.out.println("Lambdaexpression");
-		final Node node = model.findOrCreate(Label.label("Lambdaexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		System.out.println("Lambdaintroducer");
-		final Node node = model.findOrCreate(Label.label("Lambdaintroducer"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		System.out.println("Lambdacapture");
-		final Node node = model.findOrCreate(Label.label("Lambdacapture"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		System.out.println("Pmexpression");
-		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		System.out.println("Multiplicativeexpression");
-		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		System.out.println("Additiveexpression");
-		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		System.out.println("Shiftexpression");
-		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		System.out.println("Relationalexpression");
-		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		System.out.println("Equalityexpression");
-		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		System.out.println("Andexpression");
-		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		System.out.println("Exclusiveorexpression");
-		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		System.out.println("Inclusiveorexpression");
-		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		System.out.println("Logicalandexpression");
-		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		System.out.println("Logicalorexpression");
-		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		System.out.println("Conditionalexpression");
-		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		System.out.println("Assignmentexpression");
-		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		System.out.println("Assignmentoperator");
-		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		System.out.println("Constantexpression");
-		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		System.out.println("Statement");
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		System.out.println("Labeledstatement");
-		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		System.out.println("Expressionstatement");
-		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		System.out.println("Compoundstatement");
-		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		System.out.println("Statementseq");
-		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		System.out.println("Selectionstatement");
-		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		System.out.println("Condition");
-		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
-		System.out.println("Iterationstatement");
-		final Node node = model.findOrCreate(Label.label("Iterationstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
-		System.out.println("Forinitstatement");
-		final Node node = model.findOrCreate(Label.label("Forinitstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
-		System.out.println("Forrangedeclaration");
-		final Node node = model.findOrCreate(Label.label("Forrangedeclaration"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
-		System.out.println("Forrangeinitializer");
-		final Node node = model.findOrCreate(Label.label("Forrangeinitializer"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
-		System.out.println("Jumpstatement");
-		final Node node = model.findOrCreate(Label.label("Jumpstatement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
 		System.out.println("Declarationstatement");
 		final Node node = model.findOrCreate(Label.label("Declarationstatement"), "text", arg.getText());
@@ -1899,9 +1568,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
-		System.out.println("Decltypespecifier");
-		final Node node = model.findOrCreate(Label.label("Decltypespecifier"), "text", arg.getText());
+	public Node visitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		System.out.println("Qualifiedid");
+		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1909,9 +1578,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
-		System.out.println("Elaboratedtypespecifier");
-		final Node node = model.findOrCreate(Label.label("Elaboratedtypespecifier"), "text", arg.getText());
+	public Node visitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		System.out.println("Translationunit");
+		final Node node = model.findOrCreate(Label.label("Translationunit"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1919,9 +1588,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
-		System.out.println("Enumname");
-		final Node node = model.findOrCreate(Label.label("Enumname"), "text", arg.getText());
+	public Node visitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		System.out.println("Primaryexpression");
+		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1929,9 +1598,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
-		System.out.println("Enumspecifier");
-		final Node node = model.findOrCreate(Label.label("Enumspecifier"), "text", arg.getText());
+	public Node visitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		System.out.println("Idexpression");
+		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1939,9 +1608,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
-		System.out.println("Enumhead");
-		final Node node = model.findOrCreate(Label.label("Enumhead"), "text", arg.getText());
+	public Node visitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		System.out.println("Unqualifiedid");
+		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1949,9 +1618,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
-		System.out.println("Opaqueenumdeclaration");
-		final Node node = model.findOrCreate(Label.label("Opaqueenumdeclaration"), "text", arg.getText());
+	public Node visitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		System.out.println("Lambdaexpression");
+		final Node node = model.findOrCreate(Label.label("Lambdaexpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1959,9 +1628,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
-		System.out.println("Enumkey");
-		final Node node = model.findOrCreate(Label.label("Enumkey"), "text", arg.getText());
+	public Node visitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		System.out.println("Lambdaintroducer");
+		final Node node = model.findOrCreate(Label.label("Lambdaintroducer"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1969,9 +1638,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
-		System.out.println("Enumbase");
-		final Node node = model.findOrCreate(Label.label("Enumbase"), "text", arg.getText());
+	public Node visitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		System.out.println("Lambdacapture");
+		final Node node = model.findOrCreate(Label.label("Lambdacapture"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1979,9 +1648,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
-		System.out.println("Enumeratorlist");
-		final Node node = model.findOrCreate(Label.label("Enumeratorlist"), "text", arg.getText());
+	public Node visitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		System.out.println("Nestednamespecifier");
+		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1989,9 +1658,9 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
-		System.out.println("Enumeratordefinition");
-		final Node node = model.findOrCreate(Label.label("Enumeratordefinition"), "text", arg.getText());
+	public Node visitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		System.out.println("Newtypeid");
+		final Node node = model.findOrCreate(Label.label("Newtypeid"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1999,9 +1668,49 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
-		System.out.println("Enumerator");
-		final Node node = model.findOrCreate(Label.label("Enumerator"), "text", arg.getText());
+	public Node visitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		System.out.println("Newdeclarator");
+		final Node node = model.findOrCreate(Label.label("Newdeclarator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		System.out.println("Noptrnewdeclarator");
+		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		System.out.println("Newinitializer");
+		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		System.out.println("Deleteexpression");
+		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		System.out.println("Noexceptexpression");
+		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2012,6 +1721,296 @@ public class CPP14NeoVisitor extends CPP14BaseVisitor<Node> {
 	public Node visitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
 		System.out.println("Castexpression");
 		final Node node = model.findOrCreate(Label.label("Castexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		System.out.println("Pmexpression");
+		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		System.out.println("Multiplicativeexpression");
+		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		System.out.println("Additiveexpression");
+		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		System.out.println("Shiftexpression");
+		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		System.out.println("Relationalexpression");
+		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		System.out.println("Equalityexpression");
+		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		System.out.println("Andexpression");
+		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		System.out.println("Exclusiveorexpression");
+		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		System.out.println("Inclusiveorexpression");
+		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
+		System.out.println("Attribute");
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		System.out.println("Logicalandexpression");
+		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		System.out.println("Logicalorexpression");
+		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		System.out.println("Conditionalexpression");
+		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		System.out.println("Assignmentexpression");
+		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		System.out.println("Assignmentoperator");
+		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		System.out.println("Constantexpression");
+		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		System.out.println("Statement");
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		System.out.println("Labeledstatement");
+		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		System.out.println("Expressionstatement");
+		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		System.out.println("Compoundstatement");
+		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		System.out.println("Statementseq");
+		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		System.out.println("Selectionstatement");
+		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		System.out.println("Condition");
+		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
+		System.out.println("Iterationstatement");
+		final Node node = model.findOrCreate(Label.label("Iterationstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
+		System.out.println("Forinitstatement");
+		final Node node = model.findOrCreate(Label.label("Forinitstatement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
+		System.out.println("Forrangedeclaration");
+		final Node node = model.findOrCreate(Label.label("Forrangedeclaration"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
+		System.out.println("Forrangeinitializer");
+		final Node node = model.findOrCreate(Label.label("Forrangeinitializer"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
+		System.out.println("Jumpstatement");
+		final Node node = model.findOrCreate(Label.label("Jumpstatement"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -17,14 +17,29 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
    }
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final StringBuilder delim = new StringBuilder("");
+	protected final boolean debug;
+
+	public XMLParserNodeListener() {
+		this(false);
+	}
+
+	public XMLParserNodeListener(boolean debug) {
+		this.debug = debug;
+	}
 
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
+		delim.append("\t");
+		if (debug) System.out.println(delim.toString() + node.name);
    }
 
    void onExit() {
-      if (nodeStack.size() > 1) nodeStack.pop();
+      if (nodeStack.size() > 1) {
+			nodeStack.pop();
+         delim.deleteCharAt(delim.length() - 1);
+		}
    }
 
    public Node getRoot() {
@@ -33,8 +48,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		 //System.out.println("Element");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -44,8 +57,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		 //System.out.println("Attribute");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -55,8 +66,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		 //System.out.println("Document");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -66,8 +75,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		 //System.out.println("Prolog");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -77,8 +84,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		 //System.out.println("Content");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Content", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -88,8 +93,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		 //System.out.println("Reference");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Reference", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -99,8 +102,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		 //System.out.println("Chardata");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -110,8 +111,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
-		 //System.out.println("Misc");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Misc", arg.getText(), arg.getStart().getText()));
 	}
 

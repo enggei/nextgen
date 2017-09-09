@@ -1,6 +1,5 @@
 package com.generator.generators.xml.parser;
 
-import com.generator.NeoModel;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -8,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final NeoModel model;
+	private final com.generator.NeoModel model;
 
-	public XMLParserNeoVisitor(NeoModel model) {
+	public XMLParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 

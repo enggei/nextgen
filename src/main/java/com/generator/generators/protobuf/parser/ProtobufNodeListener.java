@@ -17,14 +17,29 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
    }
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final StringBuilder delim = new StringBuilder("");
+	protected final boolean debug;
+
+	public ProtobufNodeListener() {
+		this(false);
+	}
+
+	public ProtobufNodeListener(boolean debug) {
+		this.debug = debug;
+	}
 
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
+		delim.append("\t");
+		if (debug) System.out.println(delim.toString() + node.name);
    }
 
    void onExit() {
-      if (nodeStack.size() > 1) nodeStack.pop();
+      if (nodeStack.size() > 1) {
+			nodeStack.pop();
+         delim.deleteCharAt(delim.length() - 1);
+		}
    }
 
    public Node getRoot() {
@@ -33,8 +48,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
-		 //System.out.println("Option");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -44,8 +57,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		 //System.out.println("PropertyName");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -55,8 +66,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		 //System.out.println("DefaultValue");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -66,8 +75,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		 //System.out.println("File");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -77,8 +84,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		 //System.out.println("PackageDecl");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -88,8 +93,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		 //System.out.println("PackageName");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("PackageName", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -99,8 +102,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
-		 //System.out.println("Imports");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Imports", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -110,8 +111,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
-		 //System.out.println("Message");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Message", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -121,8 +120,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
-		 //System.out.println("EnumName");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("EnumName", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -132,8 +129,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
-		 //System.out.println("MessageContent");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("MessageContent", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -143,8 +138,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
-		 //System.out.println("Property");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Property", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -154,8 +147,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
-		 //System.out.println("PackedValue");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("PackedValue", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -165,8 +156,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
-		 //System.out.println("Extensions");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Extensions", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -176,8 +165,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
-		 //System.out.println("PropertyType");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("PropertyType", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -187,8 +174,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
-		 //System.out.println("ExtensionMax");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("ExtensionMax", arg.getText(), arg.getStart().getText()));
 	}
 

@@ -15,14 +15,29 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
    }
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final StringBuilder delim = new StringBuilder("");
+	protected final boolean debug;
 
-   void onEnter(Node node) {
+	public JSONNodeVisitor() {
+		this(false);
+	}
+
+	public JSONNodeVisitor(boolean debug) {
+		this.debug = debug;
+	}
+
+   private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
+		delim.append("\t");
+		if (debug) System.out.println(delim.toString() + node.name);
    }
 
-   void onExit() {
-      if (nodeStack.size() > 1) nodeStack.pop();
+   private void onExit() {
+      if (nodeStack.size() > 1) {
+         nodeStack.pop();
+         delim.deleteCharAt(delim.length() - 1);
+      }
    }
 
    public Node getRoot() {
@@ -31,8 +46,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
 	@Override
 	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		System.out.println("Json");
-		final Node node = new Node("GrammarSpec", arg.getText());
+		final Node node = new Node("Json", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -41,8 +55,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
 	@Override
 	public Node visitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		System.out.println("Obj");
-		final Node node = new Node("GrammarSpec", arg.getText());
+		final Node node = new Node("Obj", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -51,8 +64,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
 	@Override
 	public Node visitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		System.out.println("Pair");
-		final Node node = new Node("GrammarSpec", arg.getText());
+		final Node node = new Node("Pair", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -61,8 +73,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
 	@Override
 	public Node visitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		System.out.println("Array");
-		final Node node = new Node("GrammarSpec", arg.getText());
+		final Node node = new Node("Array", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -71,8 +82,7 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 
 	@Override
 	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = new Node("GrammarSpec", arg.getText());
+		final Node node = new Node("Value", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

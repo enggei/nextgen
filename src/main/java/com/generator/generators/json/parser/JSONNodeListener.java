@@ -17,14 +17,29 @@ public class JSONNodeListener extends JSONBaseListener {
    }
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final StringBuilder delim = new StringBuilder("");
+	protected final boolean debug;
+
+	public JSONNodeListener() {
+		this(false);
+	}
+
+	public JSONNodeListener(boolean debug) {
+		this.debug = debug;
+	}
 
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
+		delim.append("\t");
+		if (debug) System.out.println(delim.toString() + node.name);
    }
 
    void onExit() {
-      if (nodeStack.size() > 1) nodeStack.pop();
+      if (nodeStack.size() > 1) {
+			nodeStack.pop();
+         delim.deleteCharAt(delim.length() - 1);
+		}
    }
 
    public Node getRoot() {
@@ -32,42 +47,7 @@ public class JSONNodeListener extends JSONBaseListener {
    }
 
 	@Override
-	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		 //System.out.println("Pair");
-		 //System.out.println("\t"+ arg.getText());
-		 onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		 //System.out.println("Array");
-		 //System.out.println("\t"+ arg.getText());
-		 onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		 //System.out.println("Value");
-		 //System.out.println("\t"+ arg.getText());
-		 onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		 onExit();
-	}
-
-	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		 //System.out.println("Json");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
 	}
 
@@ -77,12 +57,37 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		 //System.out.println("Obj");
-		 //System.out.println("\t"+ arg.getText());
 		 onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
 	}
 
 	public void exitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
+		 onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		 onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		 onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
 		 onExit();
 	}
 
