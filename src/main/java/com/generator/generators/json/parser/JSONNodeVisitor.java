@@ -29,8 +29,8 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    private void onExit() {

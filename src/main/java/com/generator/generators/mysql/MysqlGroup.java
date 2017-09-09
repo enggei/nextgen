@@ -44,132 +44,133 @@ public final class MysqlGroup {
 
    public tableFooterST newtableFooter() {
       return new tableFooterST(stGroup);
-   } 
+   }
 
    public alterTableAddForeignKeyConstraintST newalterTableAddForeignKeyConstraint() {
       return new alterTableAddForeignKeyConstraintST(stGroup);
-   } 
+   }
 
    public alterTableAddColumnST newalterTableAddColumn() {
       return new alterTableAddColumnST(stGroup);
-   } 
+   }
 
    public createColumnST newcreateColumn() {
       return new createColumnST(stGroup);
-   } 
+   }
 
    public createDatabaseST newcreateDatabase() {
       return new createDatabaseST(stGroup);
-   } 
+   }
 
    public createForeignConstraintsST newcreateForeignConstraints() {
       return new createForeignConstraintsST(stGroup);
-   } 
+   }
 
    public createKeyST newcreateKey() {
       return new createKeyST(stGroup);
-   } 
+   }
 
    public createPrimaryKeyST newcreatePrimaryKey() {
       return new createPrimaryKeyST(stGroup);
-   } 
+   }
 
    public alterTableDropColumnST newalterTableDropColumn() {
       return new alterTableDropColumnST(stGroup);
-   } 
+   }
 
    public alterTableDropForeignKeyConstraintST newalterTableDropForeignKeyConstraint() {
       return new alterTableDropForeignKeyConstraintST(stGroup);
-   } 
+   }
 
    public alterTableDropIndexST newalterTableDropIndex() {
       return new alterTableDropIndexST(stGroup);
-   } 
+   }
 
    public alterTableDropUniqueKeyST newalterTableDropUniqueKey() {
       return new alterTableDropUniqueKeyST(stGroup);
-   } 
+   }
 
    public alterTableModifyColumnST newalterTableModifyColumn() {
       return new alterTableModifyColumnST(stGroup);
-   } 
+   }
 
    public alterTableUpdateForeignKeyConstraintST newalterTableUpdateForeignKeyConstraint() {
       return new alterTableUpdateForeignKeyConstraintST(stGroup);
-   } 
+   }
 
    public joinST newjoin() {
       return new joinST(stGroup);
-   } 
+   }
 
    public createTableST newcreateTable() {
       return new createTableST(stGroup);
-   } 
+   }
 
    public createUniqueKeyST newcreateUniqueKey() {
       return new createUniqueKeyST(stGroup);
-   } 
+   }
 
    public disableKeysST newdisableKeys() {
       return new disableKeysST(stGroup);
-   } 
+   }
 
    public dropTableST newdropTable() {
       return new dropTableST(stGroup);
-   } 
+   }
 
    public enableKeysST newenableKeys() {
       return new enableKeysST(stGroup);
-   } 
+   }
 
    public preparedStatementST newpreparedStatement() {
       return new preparedStatementST(stGroup);
-   } 
+   }
 
    public updateST newupdate() {
       return new updateST(stGroup);
-   } 
+   }
 
    public insertST newinsert() {
       return new insertST(stGroup);
-   } 
+   }
 
    public alterTableAddUniqueKeyST newalterTableAddUniqueKey() {
       return new alterTableAddUniqueKeyST(stGroup);
-   } 
+   }
 
    public alterTableUpdateIndexST newalterTableUpdateIndex() {
       return new alterTableUpdateIndexST(stGroup);
-   } 
+   }
 
    public alterTableUpdateUniqueKeyST newalterTableUpdateUniqueKey() {
       return new alterTableUpdateUniqueKeyST(stGroup);
-   } 
+   }
 
    public recreateDatabaseST newrecreateDatabase() {
       return new recreateDatabaseST(stGroup);
-   } 
+   }
 
    public alterTableAddIndexST newalterTableAddIndex() {
       return new alterTableAddIndexST(stGroup);
-   } 
+   }
 
    public selectST newselect() {
       return new selectST(stGroup);
-   } 
+   }
 
    public final class tableFooterST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean autoIncrementIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean rowFormatIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean avgRowLengthIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean charsetIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean commentsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean connectionIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean engineIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean maxRowsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean minRowsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packKeysIsSet = new AtomicBoolean(false);
+      private Object _autoIncrement;
+      private Object _rowFormat;
+      private Object _avgRowLength;
+      private Object _charset;
+      private Object _comments;
+      private Object _connection;
+      private Object _engine;
+      private Object _maxRows;
+      private Object _minRows;
+      private Object _packKeys;
+
       private final ST template;
 
       private tableFooterST(STGroup group) {
@@ -177,61 +178,181 @@ public final class MysqlGroup {
    	}
 
       public tableFooterST setAutoIncrement(Object value) {
-      	tryToSetStringProperty(template, value, autoIncrementIsSet, "autoIncrement");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._autoIncrement == null) {
+            this._autoIncrement = value;
+         	template.add("autoIncrement", value);
+         }
+
+      	return this;
+      }
+
+      public String getAutoIncrement() {
+      	return (String) this._autoIncrement;
+      }
+
       public tableFooterST setRowFormat(Object value) {
-      	tryToSetStringProperty(template, value, rowFormatIsSet, "rowFormat");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._rowFormat == null) {
+            this._rowFormat = value;
+         	template.add("rowFormat", value);
+         }
+
+      	return this;
+      }
+
+      public String getRowFormat() {
+      	return (String) this._rowFormat;
+      }
+
       public tableFooterST setAvgRowLength(Object value) {
-      	tryToSetStringProperty(template, value, avgRowLengthIsSet, "avgRowLength");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._avgRowLength == null) {
+            this._avgRowLength = value;
+         	template.add("avgRowLength", value);
+         }
+
+      	return this;
+      }
+
+      public String getAvgRowLength() {
+      	return (String) this._avgRowLength;
+      }
+
       public tableFooterST setCharset(Object value) {
-      	tryToSetStringProperty(template, value, charsetIsSet, "charset");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._charset == null) {
+            this._charset = value;
+         	template.add("charset", value);
+         }
+
+      	return this;
+      }
+
+      public String getCharset() {
+      	return (String) this._charset;
+      }
+
       public tableFooterST setComments(Object value) {
-      	tryToSetStringProperty(template, value, commentsIsSet, "comments");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._comments == null) {
+            this._comments = value;
+         	template.add("comments", value);
+         }
+
+      	return this;
+      }
+
+      public String getComments() {
+      	return (String) this._comments;
+      }
+
       public tableFooterST setConnection(Object value) {
-      	tryToSetStringProperty(template, value, connectionIsSet, "connection");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._connection == null) {
+            this._connection = value;
+         	template.add("connection", value);
+         }
+
+      	return this;
+      }
+
+      public String getConnection() {
+      	return (String) this._connection;
+      }
+
       public tableFooterST setEngine(Object value) {
-      	tryToSetStringProperty(template, value, engineIsSet, "engine");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._engine == null) {
+            this._engine = value;
+         	template.add("engine", value);
+         }
+
+      	return this;
+      }
+
+      public String getEngine() {
+      	return (String) this._engine;
+      }
+
       public tableFooterST setMaxRows(Object value) {
-      	tryToSetStringProperty(template, value, maxRowsIsSet, "maxRows");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._maxRows == null) {
+            this._maxRows = value;
+         	template.add("maxRows", value);
+         }
+
+      	return this;
+      }
+
+      public String getMaxRows() {
+      	return (String) this._maxRows;
+      }
+
       public tableFooterST setMinRows(Object value) {
-      	tryToSetStringProperty(template, value, minRowsIsSet, "minRows");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._minRows == null) {
+            this._minRows = value;
+         	template.add("minRows", value);
+         }
+
+      	return this;
+      }
+
+      public String getMinRows() {
+      	return (String) this._minRows;
+      }
+
       public tableFooterST setPackKeys(Object value) {
-      	tryToSetStringProperty(template, value, packKeysIsSet, "packKeys");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packKeys == null) {
+            this._packKeys = value;
+         	template.add("packKeys", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackKeys() {
+      	return (String) this._packKeys;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableAddForeignKeyConstraintST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onDeleteIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onUpdateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean refColumnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean refTableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _column;
+      private Object _name;
+      private Object _onDelete;
+      private Object _onUpdate;
+      private Object _refColumn;
+      private Object _refTable;
+      private Object _table;
+
       private final ST template;
 
       private alterTableAddForeignKeyConstraintST(STGroup group) {
@@ -239,45 +360,129 @@ public final class MysqlGroup {
    	}
 
       public alterTableAddForeignKeyConstraintST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public alterTableAddForeignKeyConstraintST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableAddForeignKeyConstraintST setOnDelete(Object value) {
-      	tryToSetStringProperty(template, value, onDeleteIsSet, "onDelete");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onDelete == null) {
+            this._onDelete = value;
+         	template.add("onDelete", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnDelete() {
+      	return (String) this._onDelete;
+      }
+
       public alterTableAddForeignKeyConstraintST setOnUpdate(Object value) {
-      	tryToSetStringProperty(template, value, onUpdateIsSet, "onUpdate");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onUpdate == null) {
+            this._onUpdate = value;
+         	template.add("onUpdate", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnUpdate() {
+      	return (String) this._onUpdate;
+      }
+
       public alterTableAddForeignKeyConstraintST setRefColumn(Object value) {
-      	tryToSetStringProperty(template, value, refColumnIsSet, "refColumn");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refColumn == null) {
+            this._refColumn = value;
+         	template.add("refColumn", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefColumn() {
+      	return (String) this._refColumn;
+      }
+
       public alterTableAddForeignKeyConstraintST setRefTable(Object value) {
-      	tryToSetStringProperty(template, value, refTableIsSet, "refTable");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refTable == null) {
+            this._refTable = value;
+         	template.add("refTable", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefTable() {
+      	return (String) this._refTable;
+      }
+
       public alterTableAddForeignKeyConstraintST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableAddColumnST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean beforeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _before;
+      private Object _column;
+      private Object _table;
+
       private final ST template;
 
       private alterTableAddColumnST(STGroup group) {
@@ -285,33 +490,69 @@ public final class MysqlGroup {
    	}
 
       public alterTableAddColumnST setBefore(Object value) {
-      	tryToSetStringProperty(template, value, beforeIsSet, "before");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._before == null) {
+            this._before = value;
+         	template.add("before", value);
+         }
+
+      	return this;
+      }
+
+      public String getBefore() {
+      	return (String) this._before;
+      }
+
       public alterTableAddColumnST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public alterTableAddColumnST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createColumnST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean autoIncrementIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean commentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nullableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onUpdateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
+      private Object _autoIncrement;
+      private Object _comment;
+      private Object _defaultValue;
+      private Object _name;
+      private Object _nullable;
+      private Object _onUpdate;
+      private Object _type;
+
       private final ST template;
 
       private createColumnST(STGroup group) {
@@ -319,44 +560,128 @@ public final class MysqlGroup {
    	}
 
       public createColumnST setAutoIncrement(Object value) {
-      	tryToSetStringProperty(template, value, autoIncrementIsSet, "autoIncrement");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._autoIncrement == null) {
+            this._autoIncrement = value;
+         	template.add("autoIncrement", value);
+         }
+
+      	return this;
+      }
+
+      public String getAutoIncrement() {
+      	return (String) this._autoIncrement;
+      }
+
       public createColumnST setComment(Object value) {
-      	tryToSetStringProperty(template, value, commentIsSet, "comment");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._comment == null) {
+            this._comment = value;
+         	template.add("comment", value);
+         }
+
+      	return this;
+      }
+
+      public String getComment() {
+      	return (String) this._comment;
+      }
+
       public createColumnST setDefaultValue(Object value) {
-      	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._defaultValue == null) {
+            this._defaultValue = value;
+         	template.add("defaultValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getDefaultValue() {
+      	return (String) this._defaultValue;
+      }
+
       public createColumnST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public createColumnST setNullable(Object value) {
-      	tryToSetStringProperty(template, value, nullableIsSet, "nullable");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._nullable == null) {
+            this._nullable = value;
+         	template.add("nullable", value);
+         }
+
+      	return this;
+      }
+
+      public String getNullable() {
+      	return (String) this._nullable;
+      }
+
       public createColumnST setOnUpdate(Object value) {
-      	tryToSetStringProperty(template, value, onUpdateIsSet, "onUpdate");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onUpdate == null) {
+            this._onUpdate = value;
+         	template.add("onUpdate", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnUpdate() {
+      	return (String) this._onUpdate;
+      }
+
       public createColumnST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._type == null) {
+            this._type = value;
+         	template.add("type", value);
+         }
+
+      	return this;
+      }
+
+      public String getType() {
+      	return (String) this._type;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createDatabaseST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean scriptIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _script;
+
       private final ST template;
 
       private createDatabaseST(STGroup group) {
@@ -364,28 +689,52 @@ public final class MysqlGroup {
    	}
 
       public createDatabaseST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public createDatabaseST setScript(Object value) {
-      	tryToSetStringProperty(template, value, scriptIsSet, "script");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._script == null) {
+            this._script = value;
+         	template.add("script", value);
+         }
+
+      	return this;
+      }
+
+      public String getScript() {
+      	return (String) this._script;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createForeignConstraintsST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onDeleteIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onUpdateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean refColumnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean refTableIsSet = new AtomicBoolean(false);
+      private Object _column;
+      private Object _name;
+      private Object _onDelete;
+      private Object _onUpdate;
+      private Object _refColumn;
+      private Object _refTable;
+
       private final ST template;
 
       private createForeignConstraintsST(STGroup group) {
@@ -393,41 +742,113 @@ public final class MysqlGroup {
    	}
 
       public createForeignConstraintsST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public createForeignConstraintsST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public createForeignConstraintsST setOnDelete(Object value) {
-      	tryToSetStringProperty(template, value, onDeleteIsSet, "onDelete");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onDelete == null) {
+            this._onDelete = value;
+         	template.add("onDelete", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnDelete() {
+      	return (String) this._onDelete;
+      }
+
       public createForeignConstraintsST setOnUpdate(Object value) {
-      	tryToSetStringProperty(template, value, onUpdateIsSet, "onUpdate");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onUpdate == null) {
+            this._onUpdate = value;
+         	template.add("onUpdate", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnUpdate() {
+      	return (String) this._onUpdate;
+      }
+
       public createForeignConstraintsST setRefColumn(Object value) {
-      	tryToSetStringProperty(template, value, refColumnIsSet, "refColumn");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refColumn == null) {
+            this._refColumn = value;
+         	template.add("refColumn", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefColumn() {
+      	return (String) this._refColumn;
+      }
+
       public createForeignConstraintsST setRefTable(Object value) {
-      	tryToSetStringProperty(template, value, refTableIsSet, "refTable");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refTable == null) {
+            this._refTable = value;
+         	template.add("refTable", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefTable() {
+      	return (String) this._refTable;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean key_IsSet = new AtomicBoolean(false);
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _key_ = new java.util.LinkedHashSet<>();
+      private Object _indexType;
+      private Object _name;
+
       private final ST template;
 
       private createKeyST(STGroup group) {
@@ -435,28 +856,62 @@ public final class MysqlGroup {
    	}
 
       public createKeyST addKey_Value(Object value) {
-      	tryToSetListProperty(template, value, key_IsSet, "key_");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._key_.add(value);
+      	template.add("key_", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getKey_Values() {
+      	return this._key_;
+      }
+
       public createKeyST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
+
       public createKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createPrimaryKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean primariesIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private java.util.Set<Object> _primaries = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private createPrimaryKeyST(STGroup group) {
@@ -464,24 +919,46 @@ public final class MysqlGroup {
    	}
 
       public createPrimaryKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public createPrimaryKeyST addPrimariesValue(Object value) {
-      	tryToSetListProperty(template, value, primariesIsSet, "primaries");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._primaries.add(value);
+      	template.add("primaries", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getPrimariesValues() {
+      	return this._primaries;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableDropColumnST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _column;
+      private Object _table;
+
       private final ST template;
 
       private alterTableDropColumnST(STGroup group) {
@@ -489,24 +966,48 @@ public final class MysqlGroup {
    	}
 
       public alterTableDropColumnST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public alterTableDropColumnST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableDropForeignKeyConstraintST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _table;
+
       private final ST template;
 
       private alterTableDropForeignKeyConstraintST(STGroup group) {
@@ -514,24 +1015,48 @@ public final class MysqlGroup {
    	}
 
       public alterTableDropForeignKeyConstraintST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableDropForeignKeyConstraintST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableDropIndexST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _table;
+
       private final ST template;
 
       private alterTableDropIndexST(STGroup group) {
@@ -539,24 +1064,48 @@ public final class MysqlGroup {
    	}
 
       public alterTableDropIndexST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableDropIndexST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableDropUniqueKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _table;
+
       private final ST template;
 
       private alterTableDropUniqueKeyST(STGroup group) {
@@ -564,30 +1113,54 @@ public final class MysqlGroup {
    	}
 
       public alterTableDropUniqueKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableDropUniqueKeyST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableModifyColumnST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean autoIncrementIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean commentIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean defaultValueIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nullableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onUpdateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean typeIsSet = new AtomicBoolean(false);
+      private Object _autoIncrement;
+      private Object _column;
+      private Object _comment;
+      private Object _defaultValue;
+      private Object _nullable;
+      private Object _onUpdate;
+      private Object _table;
+      private Object _type;
+
       private final ST template;
 
       private alterTableModifyColumnST(STGroup group) {
@@ -595,53 +1168,149 @@ public final class MysqlGroup {
    	}
 
       public alterTableModifyColumnST setAutoIncrement(Object value) {
-      	tryToSetStringProperty(template, value, autoIncrementIsSet, "autoIncrement");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._autoIncrement == null) {
+            this._autoIncrement = value;
+         	template.add("autoIncrement", value);
+         }
+
+      	return this;
+      }
+
+      public String getAutoIncrement() {
+      	return (String) this._autoIncrement;
+      }
+
       public alterTableModifyColumnST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public alterTableModifyColumnST setComment(Object value) {
-      	tryToSetStringProperty(template, value, commentIsSet, "comment");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._comment == null) {
+            this._comment = value;
+         	template.add("comment", value);
+         }
+
+      	return this;
+      }
+
+      public String getComment() {
+      	return (String) this._comment;
+      }
+
       public alterTableModifyColumnST setDefaultValue(Object value) {
-      	tryToSetStringProperty(template, value, defaultValueIsSet, "defaultValue");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._defaultValue == null) {
+            this._defaultValue = value;
+         	template.add("defaultValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getDefaultValue() {
+      	return (String) this._defaultValue;
+      }
+
       public alterTableModifyColumnST setNullable(Object value) {
-      	tryToSetStringProperty(template, value, nullableIsSet, "nullable");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._nullable == null) {
+            this._nullable = value;
+         	template.add("nullable", value);
+         }
+
+      	return this;
+      }
+
+      public String getNullable() {
+      	return (String) this._nullable;
+      }
+
       public alterTableModifyColumnST setOnUpdate(Object value) {
-      	tryToSetStringProperty(template, value, onUpdateIsSet, "onUpdate");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onUpdate == null) {
+            this._onUpdate = value;
+         	template.add("onUpdate", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnUpdate() {
+      	return (String) this._onUpdate;
+      }
+
       public alterTableModifyColumnST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public alterTableModifyColumnST setType(Object value) {
-      	tryToSetStringProperty(template, value, typeIsSet, "type");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._type == null) {
+            this._type = value;
+         	template.add("type", value);
+         }
+
+      	return this;
+      }
+
+      public String getType() {
+      	return (String) this._type;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableUpdateForeignKeyConstraintST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean refTableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onDeleteIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean onUpdateIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean refColumnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _refTable;
+      private Object _column;
+      private Object _name;
+      private Object _onDelete;
+      private Object _onUpdate;
+      private Object _refColumn;
+      private Object _table;
+
       private final ST template;
 
       private alterTableUpdateForeignKeyConstraintST(STGroup group) {
@@ -649,46 +1318,130 @@ public final class MysqlGroup {
    	}
 
       public alterTableUpdateForeignKeyConstraintST setRefTable(Object value) {
-      	tryToSetStringProperty(template, value, refTableIsSet, "refTable");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refTable == null) {
+            this._refTable = value;
+         	template.add("refTable", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefTable() {
+      	return (String) this._refTable;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setColumn(Object value) {
-      	tryToSetStringProperty(template, value, columnIsSet, "column");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._column == null) {
+            this._column = value;
+         	template.add("column", value);
+         }
+
+      	return this;
+      }
+
+      public String getColumn() {
+      	return (String) this._column;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setOnDelete(Object value) {
-      	tryToSetStringProperty(template, value, onDeleteIsSet, "onDelete");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onDelete == null) {
+            this._onDelete = value;
+         	template.add("onDelete", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnDelete() {
+      	return (String) this._onDelete;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setOnUpdate(Object value) {
-      	tryToSetStringProperty(template, value, onUpdateIsSet, "onUpdate");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._onUpdate == null) {
+            this._onUpdate = value;
+         	template.add("onUpdate", value);
+         }
+
+      	return this;
+      }
+
+      public String getOnUpdate() {
+      	return (String) this._onUpdate;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setRefColumn(Object value) {
-      	tryToSetStringProperty(template, value, refColumnIsSet, "refColumn");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._refColumn == null) {
+            this._refColumn = value;
+         	template.add("refColumn", value);
+         }
+
+      	return this;
+      }
+
+      public String getRefColumn() {
+      	return (String) this._refColumn;
+      }
+
       public alterTableUpdateForeignKeyConstraintST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class joinST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean tablesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean joinsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean orderIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _tables = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _joins = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _order = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private joinST(STGroup group) {
@@ -696,35 +1449,74 @@ public final class MysqlGroup {
    	}
 
       public joinST addTablesValue(Object value) {
-      	tryToSetListProperty(template, value, tablesIsSet, "tables");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._tables.add(value);
+      	template.add("tables", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getTablesValues() {
+      	return this._tables;
+      }
+
       public joinST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public joinST addJoinsValue(Object fk_, Object source_) {
-         joinsIsSet.set(true);
-         template.addAggr("joins.{fk, source}", ( (fk_==null || fk_.toString().length()==0) ? null : fk_), ( (source_==null || source_.toString().length()==0) ? null : source_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("fk", (fk_==null || fk_.toString().length()==0) ? null : fk_);
+      	map.put("source", (source_==null || source_.toString().length()==0) ? null : source_);
+      	this._joins.add(map);
+
+         template.addAggr("joins.{fk, source}", map.get("fk"), map.get("source"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getJoins() {
+      	return this._joins;
+      }
+
       public joinST addOrderValue(Object value) {
-      	tryToSetListProperty(template, value, orderIsSet, "order");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._order.add(value);
+      	template.add("order", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getOrderValues() {
+      	return this._order;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createTableST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean footerIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean keysIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _footer;
+      private java.util.Set<Object> _keys = new java.util.LinkedHashSet<>();
+      private Object _name;
+
       private final ST template;
 
       private createTableST(STGroup group) {
@@ -732,33 +1524,77 @@ public final class MysqlGroup {
    	}
 
       public createTableST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public createTableST setFooter(Object value) {
-      	tryToSetStringProperty(template, value, footerIsSet, "footer");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._footer == null) {
+            this._footer = value;
+         	template.add("footer", value);
+         }
+
+      	return this;
+      }
+
+      public String getFooter() {
+      	return (String) this._footer;
+      }
+
       public createTableST addKeysValue(Object value) {
-      	tryToSetListProperty(template, value, keysIsSet, "keys");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._keys.add(value);
+      	template.add("keys", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getKeysValues() {
+      	return this._keys;
+      }
+
       public createTableST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class createUniqueKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean key_IsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private Object _indexType;
+      private java.util.Set<Object> _key_ = new java.util.LinkedHashSet<>();
+      private Object _name;
+
       private final ST template;
 
       private createUniqueKeyST(STGroup group) {
@@ -766,25 +1602,59 @@ public final class MysqlGroup {
    	}
 
       public createUniqueKeyST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
+
       public createUniqueKeyST addKey_Value(Object value) {
-      	tryToSetListProperty(template, value, key_IsSet, "key_");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._key_.add(value);
+      	template.add("key_", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getKey_Values() {
+      	return this._key_;
+      }
+
       public createUniqueKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class disableKeysST implements MysqlGroupTemplate {
+
 
       private final ST template;
 
@@ -796,11 +1666,12 @@ public final class MysqlGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class dropTableST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private Object _table;
+
       private final ST template;
 
       private dropTableST(STGroup group) {
@@ -808,17 +1679,29 @@ public final class MysqlGroup {
    	}
 
       public dropTableST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class enableKeysST implements MysqlGroupTemplate {
+
 
       private final ST template;
 
@@ -830,12 +1713,13 @@ public final class MysqlGroup {
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class preparedStatementST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean paramsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean sqlIsSet = new AtomicBoolean(false);
+      private java.util.Set<java.util.Map<String, Object>> _params = new java.util.LinkedHashSet<>();
+      private Object _sql;
+
       private final ST template;
 
       private preparedStatementST(STGroup group) {
@@ -843,26 +1727,47 @@ public final class MysqlGroup {
    	}
 
       public preparedStatementST addParamsValue(Object name_, Object type_) {
-         paramsIsSet.set(true);
-         template.addAggr("params.{name, type}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (type_==null || type_.toString().length()==0) ? null : type_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	this._params.add(map);
+
+         template.addAggr("params.{name, type}", map.get("name"), map.get("type"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getParams() {
+      	return this._params;
+      }
+
       public preparedStatementST setSql(Object value) {
-      	tryToSetStringProperty(template, value, sqlIsSet, "sql");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._sql == null) {
+            this._sql = value;
+         	template.add("sql", value);
+         }
+
+      	return this;
+      }
+
+      public String getSql() {
+      	return (String) this._sql;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class updateST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean primaryColumnIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _primaryColumn;
+      private Object _table;
+
       private final ST template;
 
       private updateST(STGroup group) {
@@ -870,29 +1775,63 @@ public final class MysqlGroup {
    	}
 
       public updateST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public updateST setPrimaryColumn(Object value) {
-      	tryToSetStringProperty(template, value, primaryColumnIsSet, "primaryColumn");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._primaryColumn == null) {
+            this._primaryColumn = value;
+         	template.add("primaryColumn", value);
+         }
+
+      	return this;
+      }
+
+      public String getPrimaryColumn() {
+      	return (String) this._primaryColumn;
+      }
+
       public updateST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class insertST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean valuesIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
+      private Object _table;
+      private java.util.Set<Object> _values = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private insertST(STGroup group) {
@@ -900,30 +1839,62 @@ public final class MysqlGroup {
    	}
 
       public insertST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public insertST addValuesValue(Object value) {
-      	tryToSetListProperty(template, value, valuesIsSet, "values");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._values.add(value);
+      	template.add("values", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getValuesValues() {
+      	return this._values;
+      }
+
       public insertST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableAddUniqueKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
+      private Object _table;
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _indexType;
+      private Object _name;
+
       private final ST template;
 
       private alterTableAddUniqueKeyST(STGroup group) {
@@ -931,34 +1902,80 @@ public final class MysqlGroup {
    	}
 
       public alterTableAddUniqueKeyST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public alterTableAddUniqueKeyST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public alterTableAddUniqueKeyST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
+
       public alterTableAddUniqueKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableUpdateIndexST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _indexType;
+      private Object _name;
+      private Object _table;
+
       private final ST template;
 
       private alterTableUpdateIndexST(STGroup group) {
@@ -966,34 +1983,80 @@ public final class MysqlGroup {
    	}
 
       public alterTableUpdateIndexST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public alterTableUpdateIndexST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
+
       public alterTableUpdateIndexST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableUpdateIndexST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableUpdateUniqueKeyST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _table;
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _indexType;
+
       private final ST template;
 
       private alterTableUpdateUniqueKeyST(STGroup group) {
@@ -1001,32 +2064,78 @@ public final class MysqlGroup {
    	}
 
       public alterTableUpdateUniqueKeyST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableUpdateUniqueKeyST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public alterTableUpdateUniqueKeyST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public alterTableUpdateUniqueKeyST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class recreateDatabaseST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean scriptIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _script;
+
       private final ST template;
 
       private recreateDatabaseST(STGroup group) {
@@ -1034,26 +2143,50 @@ public final class MysqlGroup {
    	}
 
       public recreateDatabaseST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public recreateDatabaseST setScript(Object value) {
-      	tryToSetStringProperty(template, value, scriptIsSet, "script");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._script == null) {
+            this._script = value;
+         	template.add("script", value);
+         }
+
+      	return this;
+      }
+
+      public String getScript() {
+      	return (String) this._script;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class alterTableAddIndexST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean indexTypeIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _table;
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private Object _indexType;
+
       private final ST template;
 
       private alterTableAddIndexST(STGroup group) {
@@ -1061,33 +2194,79 @@ public final class MysqlGroup {
    	}
 
       public alterTableAddIndexST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public alterTableAddIndexST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public alterTableAddIndexST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public alterTableAddIndexST setIndexType(Object value) {
-      	tryToSetStringProperty(template, value, indexTypeIsSet, "indexType");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._indexType == null) {
+            this._indexType = value;
+         	template.add("indexType", value);
+         }
+
+      	return this;
+      }
+
+      public String getIndexType() {
+      	return (String) this._indexType;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class selectST implements MysqlGroupTemplate {
 
-      private final AtomicBoolean tableIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean columnsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean orderIsSet = new AtomicBoolean(false);
+      private Object _table;
+      private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _order = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private selectST(STGroup group) {
@@ -1095,30 +2274,54 @@ public final class MysqlGroup {
    	}
 
       public selectST setTable(Object value) {
-      	tryToSetStringProperty(template, value, tableIsSet, "table");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._table == null) {
+            this._table = value;
+         	template.add("table", value);
+         }
+
+      	return this;
+      }
+
+      public String getTable() {
+      	return (String) this._table;
+      }
+
       public selectST addColumnsValue(Object value) {
-      	tryToSetListProperty(template, value, columnsIsSet, "columns");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._columns.add(value);
+      	template.add("columns", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getColumnsValues() {
+      	return this._columns;
+      }
+
       public selectST addOrderValue(Object value) {
-      	tryToSetListProperty(template, value, orderIsSet, "order");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._order.add(value);
+      	template.add("order", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getOrderValues() {
+      	return this._order;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
+   }
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -1228,7 +2431,7 @@ public final class MysqlGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -1247,61 +2450,61 @@ public final class MysqlGroup {
 		out.close();
    }
 
-	private static final String stg = new StringBuilder()
-		.append("delimiters \"~\", \"~\"\n")
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
-		.append("gt() ::= <<> >>\n")
-		.append("tableFooter(autoIncrement,rowFormat,avgRowLength,charset,comments,connection,engine,maxRows,minRows,packKeys) ::= <<~if(engine)~ ENGINE=~engine~~endif~~if(autoIncrement)~ AUTO_INCREMENT=~autoIncrement~~endif~~if(charset)~ COLLATE='~charset~'~endif~~if(connection)~ CONNECTION=~connection~~endif~~if(packKeys)~ PACK_KEYS=~packKeys~~endif~~if(rowFormat)~ ROW_FORMAT=~rowFormat~~endif~~if(avgRowLength)~ AVG_ROW_LENGTH=~avgRowLength~~endif~~if(minRows)~ MIN_ROWS=~minRows~~endif~~if(maxRows)~ MAX_ROWS=~maxRows~~endif~~if(comments)~ COMMENT='~comments~'~endif~ >>\n")
-		.append("alterTableAddForeignKeyConstraint(column,name,onDelete,onUpdate,refColumn,refTable,table) ::= <<ALTER TABLE `~table~` ADD CONSTRAINT `~name~` FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~; >>\n")
-		.append("alterTableAddColumn(before,column,table) ::= <<ALTER TABLE `~table~` ADD COLUMN ~column~~if(before)~ BEFORE ~before~~endif~; >>\n")
-		.append("createColumn(autoIncrement,comment,defaultValue,name,nullable,onUpdate,type) ::= <<`~name~` ~type~~if(nullable)~~else~ NOT NULL~endif~~if(autoIncrement)~ auto_increment~endif~~if(defaultValue)~ default ~defaultValue~~endif~~if(onUpdate)~ on update ~onUpdate~~endif~~if(comment)~ COMMENT '~comment~'~endif~ >>\n")
-		.append("createDatabase(name,script) ::= <<create database ~name~;\n" + 
-	"use ~name~;\n" + 
-	"~script~ >>\n")
-		.append("createForeignConstraints(column,name,onDelete,onUpdate,refColumn,refTable) ::= <<CONSTRAINT ~if(name)~`~name~`~endif~ FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~ >>\n")
-		.append("createKey(key_,indexType,name) ::= <<KEY ~if(name)~`~name~` ~endif~~if(indexType)~USING ~indexType~ ~endif~(~key_:{it|`~it~`}; separator=\",\"~) >>\n")
-		.append("createPrimaryKey(name,primaries) ::= <<PRIMARY KEY ~if(name)~`~name~`~endif~ (~primaries:{it|`~it~`}; separator=\",\"~) >>\n")
-		.append("alterTableDropColumn(column,table) ::= <<ALTER TABLE `~table~` DROP COLUMN `~column~`; >>\n")
-		.append("alterTableDropForeignKeyConstraint(name,table) ::= <<ALTER TABLE `~table~` DROP FOREIGN KEY `~name~`; >>\n")
-		.append("alterTableDropIndex(name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`; >>\n")
-		.append("alterTableDropUniqueKey(name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`; >>\n")
-		.append("alterTableModifyColumn(autoIncrement,column,comment,defaultValue,nullable,onUpdate,table,type) ::= <<ALTER TABLE `~table~` MODIFY COLUMN `~column~` ~type~~if(nullable)~~else~ NOT NULL~endif~~if(autoIncrement)~ auto_increment~endif~~if(defaultValue)~ default ~defaultValue~~endif~~if(onUpdate)~ on update ~onUpdate~~endif~~if(comment)~ COMMENT '~comment~'~endif~; >>\n")
-		.append("alterTableUpdateForeignKeyConstraint(refTable,column,name,onDelete,onUpdate,refColumn,table) ::= <<ALTER TABLE `~table~` DROP FOREIGN KEY `~name~`, ADD CONSTRAINT `~name~` FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~; >>\n")
-		.append("join(tables,columns,joins,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~\n" + 
-	"FROM ~tables:{it|~it~};separator=\", \"~~if(joins)~\n" + 
-	"\n" + 
-	"WHERE ~joins:{it|~it.source~=~it.fk~};separator=\" AND \"~~endif~~if(order)~\n" + 
-	"ORDER BY ~order:{it|~it~};separator=\",\"~~endif~; >>\n")
-		.append("createTable(columns,footer,keys,name) ::= <<CREATE TABLE `~name~` (~if(columns)~\n" + 
-	"~columns:{it| ~it~};separator=\",\\n\"~~if(keys)~,~endif~~endif~~if(keys)~\n" + 
-	"~keys:{it|~it~};separator=\",\\n\"~~endif~)~if(footer)~\n" + 
-	"~footer~~endif~; >>\n")
-		.append("createUniqueKey(indexType,key_,name) ::= <<UNIQUE KEY ~if(name)~`~name~` ~endif~~if(indexType)~USING ~indexType~ ~endif~(~key_:{it|`~it~`}; separator=\",\"~) >>\n")
-		.append("disableKeys() ::= <</*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n" + 
-	"/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n" + 
-	"/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n" + 
-	"/*!40101 SET NAMES utf8 */;\n" + 
-	"/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n" + 
-	"/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n" + 
-	"/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n" + 
-	"/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */; >>\n")
-		.append("dropTable(table) ::= <<DROP TABLE `~table~`; >>\n")
-		.append("enableKeys() ::= <</*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n" + 
-	"/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n" + 
-	"/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n" + 
-	"/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n" + 
-	"/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n" + 
-	"/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n" + 
-	"/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */; >>\n")
-		.append("preparedStatement(params,sql) ::= <<final PreparedStatement stmt = connection.prepareStatement(\"~sql~\");\n" + 
-	"~params:{it|set~it.type~(stmt, ~i~, siteWeather.get~it.name;format=\"capitalize\"~());};separator=\"\\n\"~ >>\n")
-		.append("update(columns,primaryColumn,table) ::= <<UPDATE ~table~ SET ~columns:{it|~it~ = ?};separator=\", \"~ WHERE ~primaryColumn~=?; >>\n")
-		.append("insert(table,values,columns) ::= <<INSERT INTO TABLE ~table~ (~columns:{it|~it~};separator=\",\"~) VALUES (~values:{it|~it~};separator=\",\"~); >>\n")
-		.append("alterTableAddUniqueKey(table,columns,indexType,name) ::= <<ALTER TABLE `~table~` ADD UNIQUE INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~); >>\n")
-		.append("alterTableUpdateIndex(columns,indexType,name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`, ADD INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~); >>\n")
-		.append("alterTableUpdateUniqueKey(name,table,columns,indexType) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`, ADD UNIQUE INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~); >>\n")
-		.append("recreateDatabase(name,script) ::= <<drop database if exists ~name~;\n" + 
-	"~createDatabase(name=name,script=script)~ >>\n")
-		.append("alterTableAddIndex(name,table,columns,indexType) ::= <<ALTER TABLE `~table~` ADD INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~); >>\n")
-		.append("select(table,columns,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~ FROM ~table~~if(order)~ ORDER BY ~order:{it|~it~};separator=\",\"~~endif~; >>\n").toString();
-} 
+		.append("gt() ::= \">\"\n")
+			.append("tableFooter(autoIncrement,rowFormat,avgRowLength,charset,comments,connection,engine,maxRows,minRows,packKeys) ::= <<~if(engine)~ ENGINE=~engine~~endif~~if(autoIncrement)~ AUTO_INCREMENT=~autoIncrement~~endif~~if(charset)~ COLLATE='~charset~'~endif~~if(connection)~ CONNECTION=~connection~~endif~~if(packKeys)~ PACK_KEYS=~packKeys~~endif~~if(rowFormat)~ ROW_FORMAT=~rowFormat~~endif~~if(avgRowLength)~ AVG_ROW_LENGTH=~avgRowLength~~endif~~if(minRows)~ MIN_ROWS=~minRows~~endif~~if(maxRows)~ MAX_ROWS=~maxRows~~endif~~if(comments)~ COMMENT='~comments~'~endif~>>\n")
+			.append("alterTableAddForeignKeyConstraint(column,name,onDelete,onUpdate,refColumn,refTable,table) ::= <<ALTER TABLE `~table~` ADD CONSTRAINT `~name~` FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~;>>\n")
+			.append("alterTableAddColumn(before,column,table) ::= <<ALTER TABLE `~table~` ADD COLUMN ~column~~if(before)~ BEFORE ~before~~endif~;>>\n")
+			.append("createColumn(autoIncrement,comment,defaultValue,name,nullable,onUpdate,type) ::= <<`~name~` ~type~~if(nullable)~~else~ NOT NULL~endif~~if(autoIncrement)~ auto_increment~endif~~if(defaultValue)~ default ~defaultValue~~endif~~if(onUpdate)~ on update ~onUpdate~~endif~~if(comment)~ COMMENT '~comment~'~endif~>>\n")
+			.append("createDatabase(name,script) ::= <<create database ~name~;\n" + 
+		"use ~name~;\n" + 
+		"~script~>>\n")
+			.append("createForeignConstraints(column,name,onDelete,onUpdate,refColumn,refTable) ::= <<CONSTRAINT ~if(name)~`~name~`~endif~ FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~>>\n")
+			.append("createKey(key_,indexType,name) ::= <<KEY ~if(name)~`~name~` ~endif~~if(indexType)~USING ~indexType~ ~endif~(~key_:{it|`~it~`}; separator=\",\"~)>>\n")
+			.append("createPrimaryKey(name,primaries) ::= <<PRIMARY KEY ~if(name)~`~name~`~endif~ (~primaries:{it|`~it~`}; separator=\",\"~)>>\n")
+			.append("alterTableDropColumn(column,table) ::= <<ALTER TABLE `~table~` DROP COLUMN `~column~`;>>\n")
+			.append("alterTableDropForeignKeyConstraint(name,table) ::= <<ALTER TABLE `~table~` DROP FOREIGN KEY `~name~`;>>\n")
+			.append("alterTableDropIndex(name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`;>>\n")
+			.append("alterTableDropUniqueKey(name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`;>>\n")
+			.append("alterTableModifyColumn(autoIncrement,column,comment,defaultValue,nullable,onUpdate,table,type) ::= <<ALTER TABLE `~table~` MODIFY COLUMN `~column~` ~type~~if(nullable)~~else~ NOT NULL~endif~~if(autoIncrement)~ auto_increment~endif~~if(defaultValue)~ default ~defaultValue~~endif~~if(onUpdate)~ on update ~onUpdate~~endif~~if(comment)~ COMMENT '~comment~'~endif~;>>\n")
+			.append("alterTableUpdateForeignKeyConstraint(refTable,column,name,onDelete,onUpdate,refColumn,table) ::= <<ALTER TABLE `~table~` DROP FOREIGN KEY `~name~`, ADD CONSTRAINT `~name~` FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~;>>\n")
+			.append("join(tables,columns,joins,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~\n" + 
+		"FROM ~tables:{it|~it~};separator=\", \"~~if(joins)~\n" + 
+		"\n" + 
+		"WHERE ~joins:{it|~it.source~=~it.fk~};separator=\" AND \"~~endif~~if(order)~\n" + 
+		"ORDER BY ~order:{it|~it~};separator=\",\"~~endif~;>>\n")
+			.append("createTable(columns,footer,keys,name) ::= <<CREATE TABLE `~name~` (~if(columns)~\n" + 
+		"~columns:{it| ~it~};separator=\",\\n\"~~if(keys)~,~endif~~endif~~if(keys)~\n" + 
+		"~keys:{it|~it~};separator=\",\\n\"~~endif~)~if(footer)~\n" + 
+		"~footer~~endif~;>>\n")
+			.append("createUniqueKey(indexType,key_,name) ::= <<UNIQUE KEY ~if(name)~`~name~` ~endif~~if(indexType)~USING ~indexType~ ~endif~(~key_:{it|`~it~`}; separator=\",\"~)>>\n")
+			.append("disableKeys() ::= <</*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;\n" + 
+		"/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;\n" + 
+		"/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;\n" + 
+		"/*!40101 SET NAMES utf8 */;\n" + 
+		"/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;\n" + 
+		"/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;\n" + 
+		"/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;\n" + 
+		"/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;>>\n")
+			.append("dropTable(table) ::= <<DROP TABLE `~table~`;>>\n")
+			.append("enableKeys() ::= <</*!40101 SET SQL_MODE=@OLD_SQL_MODE */;\n" + 
+		"/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n" + 
+		"/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;\n" + 
+		"/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;\n" + 
+		"/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;\n" + 
+		"/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;\n" + 
+		"/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;>>\n")
+			.append("preparedStatement(params,sql) ::= <<final PreparedStatement stmt = connection.prepareStatement(\"~sql~\");\n" + 
+		"~params:{it|set~it.type~(stmt, ~i~, siteWeather.get~it.name;format=\"capitalize\"~());};separator=\"\\n\"~>>\n")
+			.append("update(columns,primaryColumn,table) ::= <<UPDATE ~table~ SET ~columns:{it|~it~ = ?};separator=\", \"~ WHERE ~primaryColumn~=?;>>\n")
+			.append("insert(table,values,columns) ::= <<INSERT INTO TABLE ~table~ (~columns:{it|~it~};separator=\",\"~) VALUES (~values:{it|~it~};separator=\",\"~);>>\n")
+			.append("alterTableAddUniqueKey(table,columns,indexType,name) ::= <<ALTER TABLE `~table~` ADD UNIQUE INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~);>>\n")
+			.append("alterTableUpdateIndex(columns,indexType,name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`, ADD INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~);>>\n")
+			.append("alterTableUpdateUniqueKey(name,table,columns,indexType) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`, ADD UNIQUE INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~);>>\n")
+			.append("recreateDatabase(name,script) ::= <<drop database if exists ~name~;\n" + 
+		"~createDatabase(name=name,script=script)~>>\n")
+			.append("alterTableAddIndex(name,table,columns,indexType) ::= <<ALTER TABLE `~table~` ADD INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~);>>\n")
+			.append("select(table,columns,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~ FROM ~table~~if(order)~ ORDER BY ~order:{it|~it~};separator=\",\"~~endif~;>>\n")
+		.toString();
+}

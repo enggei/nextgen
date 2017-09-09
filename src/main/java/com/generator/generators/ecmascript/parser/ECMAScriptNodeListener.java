@@ -31,8 +31,8 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -56,15 +56,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	}
 
 	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		 onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		 onExit();
-	}
-
-	@Override
 	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
 		 onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
 	}
@@ -74,38 +65,20 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	}
 
 	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		 onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		 onExit();
+	}
+
+	@Override
 	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
 		 onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
 	}
 
 	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		 onEnter(new Node("SourceElements", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		 onEnter(new Node("SourceElement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		 onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
 		 onExit();
 	}
 
@@ -187,6 +160,42 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	}
 
 	public void exitWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		 onEnter(new Node("SourceElements", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		 onEnter(new Node("SourceElement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		 onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPropertyExpressionAssignment(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyExpressionAssignmentContext arg) {
+		 onEnter(new Node("PropertyExpressionAssignment", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPropertyExpressionAssignment(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyExpressionAssignmentContext arg) {
 		 onExit();
 	}
 
@@ -430,15 +439,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	}
 
 	public void exitPropertyNameAndValueList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyNameAndValueListContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterPropertyExpressionAssignment(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyExpressionAssignmentContext arg) {
-		 onEnter(new Node("PropertyExpressionAssignment", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPropertyExpressionAssignment(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyExpressionAssignmentContext arg) {
 		 onExit();
 	}
 

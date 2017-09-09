@@ -38,6 +38,16 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		System.out.println("File");
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
 		System.out.println("PropertyName");
 		final Node node = model.findOrCreate(Label.label("PropertyName"), "text", arg.getText());
@@ -51,26 +61,6 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
 		System.out.println("DefaultValue");
 		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		System.out.println("File");
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		System.out.println("PackageDecl");
-		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -171,6 +161,16 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	public Node visitExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
 		System.out.println("ExtensionMax");
 		final Node node = model.findOrCreate(Label.label("ExtensionMax"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		System.out.println("PackageDecl");
+		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

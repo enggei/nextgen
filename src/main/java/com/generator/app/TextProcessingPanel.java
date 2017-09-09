@@ -1,7 +1,6 @@
 package com.generator.app;
 
 import com.generator.util.SwingUtil;
-import com.google.googlejavaformat.java.JavaFormatterOptions;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -212,17 +211,6 @@ class TextProcessingPanel extends JPanel {
                   @Override
                   public void actionPerformed(ActionEvent e) {
                      SwingUtil.toClipboard(txtOutput.getText().trim());
-                  }
-               });
-
-               pop.add(new AbstractAction("Prettify") {
-                  @Override
-                  public void actionPerformed(ActionEvent e) {
-                     try {
-                        txtOutput.setText(new com.google.googlejavaformat.java.Formatter().formatSource(txtInput.getText()));
-                     } catch (Throwable e1) {
-                        txtOutput.setText(SwingUtil.printStackTrace(e1));
-                     }
                   }
                });
 

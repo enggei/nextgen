@@ -31,8 +31,8 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -52,51 +52,6 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 	}
 
 	public void exitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		 onEnter(new Node("Root", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		 onEnter(new Node("Sql_statements", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		 onEnter(new Node("Sql_statement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		 onEnter(new Node("Empty_statement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
-		 onEnter(new Node("Ddl_statement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
 		 onExit();
 	}
 
@@ -182,11 +137,65 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 	}
 
 	@Override
+	public void enterRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		 onEnter(new Node("Root", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		 onEnter(new Node("Sql_statements", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		 onEnter(new Node("Sql_statement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
+		 onEnter(new Node("Empty_statement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
+		 onEnter(new Node("Ddl_statement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
+		 onExit();
+	}
+
+	@Override
 	public void enterCreate_index(com.generator.generators.mysql.parser.MySqlParser.Create_indexContext arg) {
 		 onEnter(new Node("Create_index", arg.getText(), arg.getStart().getText()));
 	}
 
 	public void exitCreate_index(com.generator.generators.mysql.parser.MySqlParser.Create_indexContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		 onEnter(new Node("Create_view", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
 		 onExit();
 	}
 
@@ -277,15 +286,6 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 	}
 
 	public void exitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		 onEnter(new Node("Create_view", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
 		 onExit();
 	}
 

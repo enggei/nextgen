@@ -28,16 +28,6 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		System.out.println("HtmlElements");
-		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
 		System.out.println("HtmlElement");
 		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText());
@@ -51,6 +41,26 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	public Node visitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
 		System.out.println("HtmlContent");
 		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		System.out.println("HtmlDocument");
+		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		System.out.println("HtmlElements");
+		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -181,16 +191,6 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	public Node visitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
 		System.out.println("Style");
 		final Node node = model.findOrCreate(Label.label("Style"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		System.out.println("HtmlDocument");
-		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

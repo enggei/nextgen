@@ -31,8 +31,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -45,51 +45,6 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		 onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		 onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		 onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		 onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		 onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		 onExit();
-	}
 
 	@Override
 	public void enterHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
@@ -196,6 +151,51 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public void exitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		 onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		 onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
+		 onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		 onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
+		 onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
 		 onExit();
 	}
 

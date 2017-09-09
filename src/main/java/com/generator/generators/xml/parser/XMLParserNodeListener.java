@@ -31,8 +31,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -45,6 +45,15 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
    public Node getRoot() {
       return nodeStack.peek();
    }
+
+	@Override
+	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		 onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		 onExit();
+	}
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
@@ -61,15 +70,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		 onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		 onExit();
 	}
 

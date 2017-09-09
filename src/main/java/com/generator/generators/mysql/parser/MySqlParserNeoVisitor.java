@@ -48,26 +48,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		System.out.println("Root");
-		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		System.out.println("Sql_statement");
-		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
 		System.out.println("Empty_statement");
 		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText());
@@ -111,6 +91,36 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitReplication_statement(com.generator.generators.mysql.parser.MySqlParser.Replication_statementContext arg) {
 		System.out.println("Replication_statement");
 		final Node node = model.findOrCreate(Label.label("Replication_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		System.out.println("Create_view");
+		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		System.out.println("Root");
+		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		System.out.println("Sql_statement");
+		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -258,6 +268,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
+		System.out.println("Index_type");
+		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitCreate_tablespace_innodb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_innodbContext arg) {
 		System.out.println("Create_tablespace_innodb");
 		final Node node = model.findOrCreate(Label.label("Create_tablespace_innodb"), "text", arg.getText());
@@ -281,16 +301,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
 		System.out.println("Create_trigger");
 		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		System.out.println("Create_view");
-		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -361,16 +371,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitInterval_type(com.generator.generators.mysql.parser.MySqlParser.Interval_typeContext arg) {
 		System.out.println("Interval_type");
 		final Node node = model.findOrCreate(Label.label("Interval_type"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
-		System.out.println("Index_type");
-		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2158,16 +2158,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
-		System.out.println("From_clause");
-		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSelectIntoVars(com.generator.generators.mysql.parser.MySqlParser.SelectIntoVarsContext arg) {
 		System.out.println("SelectIntoVars");
 		final Node node = model.findOrCreate(Label.label("SelectIntoVars"), "text", arg.getText());
@@ -2191,6 +2181,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitSelectIntoOutfile(com.generator.generators.mysql.parser.MySqlParser.SelectIntoOutfileContext arg) {
 		System.out.println("SelectIntoOutfile");
 		final Node node = model.findOrCreate(Label.label("SelectIntoOutfile"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
+		System.out.println("From_clause");
+		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

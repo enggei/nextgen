@@ -31,8 +31,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -45,213 +45,6 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		 onEnter(new Node("GrammarType", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		 onEnter(new Node("PrequelConstruct", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		 onEnter(new Node("OptionsSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		 onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		 onEnter(new Node("OptionValue", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		 onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		 onEnter(new Node("DelegateGrammar", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		 onEnter(new Node("TokensSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		 onEnter(new Node("ChannelsSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		 onEnter(new Node("IdList", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		 onEnter(new Node("Action", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		 onEnter(new Node("ActionScopeName", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		 onEnter(new Node("ActionBlock", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		 onEnter(new Node("ArgActionBlock", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		 onEnter(new Node("ModeSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		 onEnter(new Node("Rules", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		 onEnter(new Node("RuleSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		 onEnter(new Node("ParserRuleSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		 onEnter(new Node("ExceptionGroup", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		 onEnter(new Node("ExceptionHandler", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		 onEnter(new Node("FinallyClause", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		 onEnter(new Node("RulePrequel", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		 onEnter(new Node("RuleReturns", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		 onExit();
-	}
 
 	@Override
 	public void enterThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
@@ -322,15 +115,6 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 	}
 
 	public void exitLabeledAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledAltContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		 onEnter(new Node("GrammarSpec", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
 		 onExit();
 	}
 
@@ -610,6 +394,222 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 	}
 
 	public void exitIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		 onEnter(new Node("GrammarSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		 onEnter(new Node("GrammarType", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		 onEnter(new Node("PrequelConstruct", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		 onEnter(new Node("OptionsSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		 onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		 onEnter(new Node("OptionValue", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		 onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
+		 onEnter(new Node("DelegateGrammar", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		 onEnter(new Node("TokensSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		 onEnter(new Node("ChannelsSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		 onEnter(new Node("IdList", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		 onEnter(new Node("Action", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		 onEnter(new Node("ActionScopeName", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		 onEnter(new Node("ActionBlock", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
+		 onEnter(new Node("ArgActionBlock", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		 onEnter(new Node("ModeSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		 onEnter(new Node("Rules", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		 onEnter(new Node("RuleSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
+		 onEnter(new Node("ParserRuleSpec", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
+		 onEnter(new Node("ExceptionGroup", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
+		 onEnter(new Node("ExceptionHandler", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
+		 onEnter(new Node("FinallyClause", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
+		 onEnter(new Node("RulePrequel", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
+		 onEnter(new Node("RuleReturns", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
 		 onExit();
 	}
 

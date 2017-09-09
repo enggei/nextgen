@@ -29,8 +29,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    private void onExit() {
@@ -56,24 +56,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
 		final Node node = new Node("Sql_statements", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		final Node node = new Node("Root", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		final Node node = new Node("Sql_statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -119,6 +101,33 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitReplication_statement(com.generator.generators.mysql.parser.MySqlParser.Replication_statementContext arg) {
 		final Node node = new Node("Replication_statement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		final Node node = new Node("Create_view", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		final Node node = new Node("Root", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		final Node node = new Node("Sql_statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -252,6 +261,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
+	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
+		final Node node = new Node("Index_type", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitCreate_tablespace_innodb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_innodbContext arg) {
 		final Node node = new Node("Create_tablespace_innodb", arg.getText());
 		onEnter(node);
@@ -272,15 +290,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
 		final Node node = new Node("Create_trigger", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		final Node node = new Node("Create_view", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -344,15 +353,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitInterval_type(com.generator.generators.mysql.parser.MySqlParser.Interval_typeContext arg) {
 		final Node node = new Node("Interval_type", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
-		final Node node = new Node("Index_type", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1962,15 +1962,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
-		final Node node = new Node("From_clause", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSelectIntoVars(com.generator.generators.mysql.parser.MySqlParser.SelectIntoVarsContext arg) {
 		final Node node = new Node("SelectIntoVars", arg.getText());
 		onEnter(node);
@@ -1991,6 +1982,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitSelectIntoOutfile(com.generator.generators.mysql.parser.MySqlParser.SelectIntoOutfileContext arg) {
 		final Node node = new Node("SelectIntoOutfile", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
+		final Node node = new Node("From_clause", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

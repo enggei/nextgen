@@ -32,13 +32,6 @@ public class Tests {
 //         visit("", listener.getRoot());
    }
 
-   private void visit(String delim, JavaParserNodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.value + ")");
-      for (JavaParserNodeListener.Node child : node.children) {
-         visit(delim + "\t", child);
-      }
-   }
-
    @Test
    public void testJavaGroup() {
       final JavaGroup group = new JavaGroup();
@@ -66,6 +59,9 @@ public class Tests {
          }
       }
 
-      // todo add JavaGroup- tests here;
+      final JavaParser parser = new JavaParser(new CommonTokenStream(new JavaLexer(CharStreams.fromString(beanST.toString()))));
+
+      final JavaParserNodeListener listener = new JavaParserNodeListener(true);
+      new ParseTreeWalker().walk(listener, parser.compilationUnit());
    }
 }

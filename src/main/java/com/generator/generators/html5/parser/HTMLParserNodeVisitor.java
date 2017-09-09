@@ -29,8 +29,8 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    private void onExit() {
@@ -45,15 +45,6 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
    }
 
 	@Override
-	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		final Node node = new Node("HtmlElements", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
 		final Node node = new Node("HtmlElement", arg.getText());
 		onEnter(node);
@@ -65,6 +56,24 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	@Override
 	public Node visitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
 		final Node node = new Node("HtmlContent", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		final Node node = new Node("HtmlDocument", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		final Node node = new Node("HtmlElements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -182,15 +191,6 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	@Override
 	public Node visitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
 		final Node node = new Node("Style", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		final Node node = new Node("HtmlDocument", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

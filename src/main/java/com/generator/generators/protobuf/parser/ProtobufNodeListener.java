@@ -31,8 +31,8 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -83,24 +83,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	@Override
-	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		 onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		 onEnter(new Node("PackageName", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		 onExit();
-	}
-
-	@Override
 	public void enterImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
 		 onEnter(new Node("Imports", arg.getText(), arg.getStart().getText()));
 	}
@@ -142,6 +124,24 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public void exitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		 onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
+		 onEnter(new Node("PackageName", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
 		 onExit();
 	}
 

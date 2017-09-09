@@ -31,8 +31,8 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
    void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		delim.append("\t");
 		if (debug) System.out.println(delim.toString() + node.name);
+		delim.append("\t");
    }
 
    void onExit() {
@@ -56,6 +56,24 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	}
 
 	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		 onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		 onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		 onExit();
+	}
+
+	@Override
 	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		 onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
 	}
@@ -74,15 +92,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	}
 
 	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		 onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		 onExit();
-	}
-
-	@Override
 	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
 		 onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
 	}
@@ -97,51 +106,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	}
 
 	public void exitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		 onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		 onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		 onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		 onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		 onExit();
-	}
-
-	@Override
-	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		 onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText()));
-	}
-
-	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
 		 onExit();
 	}
 
@@ -232,6 +196,42 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	}
 
 	public void exitEnumBodyDeclarations(com.generator.generators.java.parser.JavaParser.EnumBodyDeclarationsContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		 onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		 onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		 onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		 onExit();
+	}
+
+	@Override
+	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
+		 onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText()));
+	}
+
+	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
 		 onExit();
 	}
 
