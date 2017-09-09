@@ -332,11 +332,16 @@ public class App extends JFrame {
 
          transactionHistory.clear();
 
-         graph = new NeoModel(new GraphDatabaseFactory().
-               newEmbeddedDatabaseBuilder(new File(dir)).
-               setConfig(GraphDatabaseSettings.allow_store_upgrade, "true").
-               newGraphDatabase(),
-               model -> System.out.println("graph closed"));
+         GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector("0");
+
+         graph = new NeoModel(new GraphDatabaseFactory()
+            .newEmbeddedDatabaseBuilder(new File(dir))
+            .setConfig(bolt.type, "BOLT")
+            .setConfig(bolt.enabled, "true")
+            .setConfig(bolt.address, "localhost:7687")
+            .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
+            .newGraphDatabase(),
+            model -> System.out.println("graph closed"));
 
          graph.getGraphDb().registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
 
