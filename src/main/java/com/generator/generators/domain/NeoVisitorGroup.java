@@ -44,17 +44,18 @@ public final class NeoVisitorGroup {
 
    public DomainVisitorST newDomainVisitor() {
       return new DomainVisitorST(stGroup);
-   } 
+   }
 
    public entityVisitST newentityVisit() {
       return new entityVisitST(stGroup);
-   } 
+   }
 
    public final class DomainVisitorST implements NeoVisitorGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean packageNameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean entitiesIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private Object _packageName;
+      private java.util.Set<java.util.Map<String, Object>> _entities = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private DomainVisitorST(STGroup group) {
@@ -62,29 +63,62 @@ public final class NeoVisitorGroup {
    	}
 
       public DomainVisitorST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public DomainVisitorST setPackageName(Object value) {
-      	tryToSetStringProperty(template, value, packageNameIsSet, "packageName");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
       public DomainVisitorST addEntitiesValue(Object name_, Object visit_) {
-         entitiesIsSet.set(true);
-         template.addAggr("entities.{name, visit}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (visit_==null || visit_.toString().length()==0) ? null : visit_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("visit", (visit_==null || visit_.toString().length()==0) ? null : visit_);
+      	this._entities.add(map);
+
+         template.addAggr("entities.{name, visit}", map.get("name"), map.get("visit"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getEntities() {
+      	return this._entities;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class entityVisitST implements NeoVisitorGroupTemplate {
 
-      private final AtomicBoolean nameIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean outgoingIsSet = new AtomicBoolean(false);
+      private Object _name;
+      private java.util.Set<Object> _outgoing = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private entityVisitST(STGroup group) {
@@ -92,26 +126,40 @@ public final class NeoVisitorGroup {
    	}
 
       public entityVisitST setName(Object value) {
-      	tryToSetStringProperty(template, value, nameIsSet, "name");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
       public entityVisitST addOutgoingValue(Object value) {
-      	tryToSetListProperty(template, value, outgoingIsSet, "outgoing");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._outgoing.add(value);
+      	template.add("outgoing", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getOutgoingValues() {
+      	return this._outgoing;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
+   }
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -221,7 +269,7 @@ public final class NeoVisitorGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -240,41 +288,41 @@ public final class NeoVisitorGroup {
 		out.close();
    }
 
-	private static final String stg = new StringBuilder()
-		.append("delimiters \"~\", \"~\"\n")
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
-		.append("gt() ::= <<> >>\n")
-		.append("DomainVisitor(name,packageName,entities) ::= <<package ~packageName~;\n" + 
-	"\n" + 
-	"import org.neo4j.graphdb.*;\n" + 
-	"\n" + 
-	"public abstract class ~name~ {\n" + 
-	"\n" + 
-	"      final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();\n" + 
-	"\n" + 
-	"      public void visit(Node node) {\n" + 
-	"			~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\\n\"~\n" + 
-	"      }\n" + 
-	"\n" + 
-	"		~entities:{it|~it.visit~};separator=\"\\n\\n\"~\n" + 
-	"\n" + 
-	"		private boolean hasLabel(Node node, String label) {\n" + 
-	"      	for (org.neo4j.graphdb.Label lbl : node.getLabels())\n" + 
-	"         	if (lbl.name().equals(label)) return true;\n" + 
-	"      	return false;\n" + 
-	"   	}\n" + 
-	"\n" + 
-	"		private Iterable<Relationship> outgoing(Node node, RelationshipType type) {\n" + 
-	"      	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);\n" + 
-	"   	}\n" + 
-	"\n" + 
-	"		private Node other(Node node, Relationship relationship) {\n" + 
-	"      	return relationship == null ? null : relationship.getOtherNode(node);\n" + 
-	"   	}\n" + 
-	"} >>\n")
-		.append("entityVisit(name,outgoing) ::= <<void visit~name;format=\"capitalize\"~(Node node) {\n" + 
-	"	if (visited.contains(node)) return;\n" + 
-	"   visited.add(node);\n" + 
-	"	~outgoing:{it|outgoing(node, RelationshipType.withName(\"~it~\")).forEach(relationship -> visit(other(node, relationship)));};separator=\"\\n\"~\n" + 
-	"} >>\n").toString();
-} 
+		.append("gt() ::= \">\"\n")
+			.append("DomainVisitor(name,packageName,entities) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import org.neo4j.graphdb.*;\n" + 
+		"\n" + 
+		"public abstract class ~name~ {\n" + 
+		"\n" + 
+		"	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();\n" + 
+		"\n" + 
+		"   public void visit(Node node) {\n" + 
+		"		~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\\n\"~\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	~entities:{it|~it.visit~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"	private boolean hasLabel(Node node, String label) {\n" + 
+		"   	for (org.neo4j.graphdb.Label lbl : node.getLabels())\n" + 
+		"      	if (lbl.name().equals(label)) return true;\n" + 
+		"      return false;\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	private Iterable<Relationship> outgoing(Node node, RelationshipType type) {\n" + 
+		"     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	private Node other(Node node, Relationship relationship) {\n" + 
+		"     	return relationship == null ? null : relationship.getOtherNode(node);\n" + 
+		"   }\n" + 
+		"}>>\n")
+			.append("entityVisit(name,outgoing) ::= <<void visit~name;format=\"capitalize\"~(Node node) {\n" + 
+		"	if (visited.contains(node)) return;\n" + 
+		"   visited.add(node);\n" + 
+		"	~outgoing:{it|outgoing(node, RelationshipType.withName(\"~it~\")).forEach(relationship -> visit(other(node, relationship)));};separator=\"\\n\"~\n" + 
+		"}>>\n")
+		.toString();
+}

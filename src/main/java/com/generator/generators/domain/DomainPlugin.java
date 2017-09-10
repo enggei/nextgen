@@ -2,7 +2,6 @@ package com.generator.generators.domain;
 
 import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -18,7 +17,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
-import static com.generator.generators.project.ProjectPlugin.renderToFile;
 import static com.generator.BaseDomainVisitor.*;
 import static com.generator.NeoModel.getNameAndLabelsFrom;
 import static com.generator.NeoModel.relate;
@@ -241,7 +239,7 @@ public class DomainPlugin extends Plugin {
 
                         // remove old DST
                         System.out.println("removing existing DST");
-                        outgoing(selectedNode.getNode(),Relations.DST).forEach(Relationship::delete);
+                        outgoing(selectedNode.getNode(), Relations.DST).forEach(Relationship::delete);
 
                         relate(selectedNode.getNode(), node, Relations.DST);
                      }
@@ -579,15 +577,19 @@ public class DomainPlugin extends Plugin {
       final File targetDir = getFile(other(node, rendererRelationship));
 
       final Set<Node> visitedNodes = new LinkedHashSet<>();
+      final Map<String, NeoVisitorGroup.entityVisitST> visitorMethods = new LinkedHashMap<>();
 
       final NeoVisitorGroup visitorGroup = new NeoVisitorGroup();
+
+      for (Relationship relationship : outgoing(node, Relations.ENTITY))
+         visitEntityNode(visitorMethods, visitedNodes, visitorGroup, other(node, relationship));
 
       final NeoVisitorGroup.DomainVisitorST domainVisitorST = visitorGroup.newDomainVisitor().
             setName(groupName).
             setPackageName(packageName);
 
-      for (Relationship relationship : outgoing(node, Relations.ENTITY))
-         visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, other(node, relationship));
+      for (Map.Entry<String, NeoVisitorGroup.entityVisitST> visitSTEntry : visitorMethods.entrySet())
+         domainVisitorST.addEntitiesValue(visitSTEntry.getKey(), visitSTEntry.getValue());
 
       try {
          GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(domainVisitorST);
@@ -596,31 +598,38 @@ public class DomainPlugin extends Plugin {
       }
    }
 
-   private static void visitEntityNode(Set<Node> visitedNodes, NeoVisitorGroup visitorGroup, NeoVisitorGroup.DomainVisitorST domainVisitorST, Node entityNode) {
+   private static void visitEntityNode(Map<String, NeoVisitorGroup.entityVisitST> visitorMethods, Set<Node> visitedNodes, NeoVisitorGroup visitorGroup, Node entityNode) {
 
       if (visitedNodes.contains(entityNode)) return;
       visitedNodes.add(entityNode);
 
       final String entityName = getString(entityNode, AppMotif.Properties.name.name());
 
-      final NeoVisitorGroup.entityVisitST visitST = visitorGroup.newentityVisit().
+      final NeoVisitorGroup.entityVisitST newEntityVisitorST = visitorGroup.newentityVisit().
             setName(entityName);
 
-      final Iterator<Relationship> src = outgoing(entityNode, Relations.SRC).iterator();
-      while (src.hasNext()) {
-         final Node relationNode = other(entityNode, src.next());
-         visitST.addOutgoingValue(getString(relationNode, AppMotif.Properties.name.name()));
+      for (Relationship srcRelation : outgoing(entityNode, Relations.SRC)) {
+         final Node relationNode = other(entityNode, srcRelation);
+         newEntityVisitorST.addOutgoingValue(getString(relationNode, AppMotif.Properties.name.name()));
 
-         final Iterator<Relationship> dst = outgoing(relationNode, Relations.DST).iterator();
-         while (dst.hasNext()) {
-            final Node dstNode = other(relationNode, dst.next());
-            visitEntityNode(visitedNodes, visitorGroup, domainVisitorST, dstNode);
+         for (Relationship dstRelation : outgoing(relationNode, Relations.DST)) {
+            final Node dstNode = other(relationNode, dstRelation);
+            visitEntityNode(visitorMethods, visitedNodes, visitorGroup, dstNode);
          }
       }
 
-      domainVisitorST.addEntitiesValue(entityName, visitST);
-   }
+      final NeoVisitorGroup.entityVisitST existingVisitorST = visitorMethods.get(entityName);
+      if (existingVisitorST == null) {
+         visitorMethods.put(entityName, newEntityVisitorST);
+         return;
+      }
 
+      // add any new outgoings:
+      for (Object newOutgoing : newEntityVisitorST.getOutgoingValues()) {
+         if (existingVisitorST.getOutgoingValues().contains(newOutgoing)) continue;
+         existingVisitorST.addOutgoingValue(newOutgoing);
+      }
+   }
 
    // todo make these static in DomainMotif
 
