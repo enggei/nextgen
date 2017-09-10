@@ -21,6 +21,7 @@ public class Tests {
             "http://svn.example.com:9834/repos",
             "http://localhost:8080/demo/my-demo-servlet?param1=hello&param2=goodbye",
             "http://localhost:8080/demo/my-demo-servlet?value=hello%20world",
+            "https://github.com/dpaukov/combinatoricslib3#3-simple-permutations",
       };
 
       for (String url : urls) {
