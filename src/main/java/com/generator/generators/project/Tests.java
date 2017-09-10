@@ -24,7 +24,7 @@ public class Tests {
             setRoot(ProjectConstants.TEST_ROOT).
             addGeneratorsValue("Java", ProjectConstants.GENERATORS_PACKAGE + ".java").
             addGeneratorsValue("Maven", ProjectConstants.GENERATORS_PACKAGE + ".maven").
-            addGeneratorsValue("BerkeleyDB", ProjectConstants.GENERATORS_PACKAGE + ".berkeley").
+            addGeneratorsValue("BerkeleyDB", ProjectConstants.GENERATORS_PACKAGE + ".berkeleyDB").
             addGeneratorsValue("Html5", ProjectConstants.GENERATORS_PACKAGE + ".html5");
       System.out.println(projectST);
       GeneratedFile.newJavaFile(ProjectConstants.TEST_ROOT, ProjectConstants.TEST_PACKAGE + ".project", "TestProject").write(projectST);

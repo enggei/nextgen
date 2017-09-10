@@ -17,7 +17,7 @@ public class Tests {
    public void testParser() {
 
       final String[] urls = new String[]{
-            "ftps://user:password@example.com/pub/file.txt",
+            "ftps://geirove:password@example.com/pub/file.txt",
             "http://svn.example.com:9834/repos",
             "http://localhost:8080/demo/my-demo-servlet?param1=hello&param2=goodbye",
             "http://localhost:8080/demo/my-demo-servlet?value=hello%20world",
@@ -25,7 +25,13 @@ public class Tests {
       };
 
       for (String url : urls) {
-         final urlNodeListener listener = new urlNodeListener(true);
+         final urlNodeListener listener = new urlNodeListener(true) {
+            @Override
+            public void enterUser(urlParser.UserContext arg) {
+               super.enterUser(arg);
+               System.out.println(delim + arg.getText());
+            }
+         };
          new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
       }
    }
