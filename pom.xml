@@ -144,8 +144,6 @@
             <version>${easyflow.version}</version>
         </dependency>
 
-
-
         <!-- user interface -->
         <!--http://manual.openestate.org/extern/forms-1.2.1/tutorial/introduction.html-->
         <dependency>
@@ -186,7 +184,7 @@
             <version>${jsch.version}</version>
         </dependency>
 
-        <!-- https://github.com/dpaukov/combinatoricslib3 -->
+        <!-- combinatorics (permutations and combinations) -->
         <dependency>
             <groupId>com.github.dpaukov</groupId>
             <artifactId>combinatoricslib3</artifactId>
@@ -207,7 +205,7 @@
             <version>1.10.2</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.sleepycat/je -->
+        <!-- berkeley db  -->
         <dependency>
             <groupId>com.sleepycat</groupId>
             <artifactId>je</artifactId>
