@@ -92,7 +92,7 @@ password
    ;
 
 fragmentid
-   : STRING
+   : (DIGITS)? STRING
    ;
 
 HEX
@@ -100,7 +100,7 @@ HEX
     ;
 
 STRING
-   : ([a-zA-Z~] |HEX) ([a-zA-Z0-9.-] | HEX)*
+   : ([a-zA-Z~-] |HEX) ([a-zA-Z0-9.-] | HEX)*
    ;
 
 DIGITS

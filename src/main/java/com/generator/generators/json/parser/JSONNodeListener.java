@@ -16,7 +16,7 @@ public class JSONNodeListener extends JSONBaseListener {
       }
    }
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 

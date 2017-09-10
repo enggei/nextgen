@@ -6,8 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final com.generator.NeoModel model;
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final com.generator.NeoModel model;
 
 	public ANTLRv4ParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
@@ -38,16 +38,6 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		System.out.println("PrequelConstruct");
-		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
 		System.out.println("OptionsSpec");
 		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
@@ -58,9 +48,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		System.out.println("Option");
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -68,9 +58,19 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+	public Node visitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		System.out.println("PrequelConstruct");
+		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		System.out.println("Option");
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

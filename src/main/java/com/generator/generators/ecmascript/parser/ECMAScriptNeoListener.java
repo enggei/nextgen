@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 	private final com.generator.NeoModel model;
@@ -53,18 +53,18 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inBlock = false;
 	}
 
-	protected boolean inStatement = false;
+	protected boolean inProgram = false;
 
 	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
 		onEnter(node);
-		this.inStatement = true;
+		this.inProgram = true;
 	}
 
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
 		onExit();
-		this.inStatement = false;
+		this.inProgram = false;
 	}
 
 	protected boolean inLiteral = false;
@@ -81,18 +81,74 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inLiteral = false;
 	}
 
-	protected boolean inProgram = false;
+	protected boolean inIfStatement = false;
 
 	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
+	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText());
 		onEnter(node);
-		this.inProgram = true;
+		this.inIfStatement = true;
 	}
 
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
 		onExit();
-		this.inProgram = false;
+		this.inIfStatement = false;
+	}
+
+	protected boolean inDoStatement = false;
+
+	@Override
+	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inDoStatement = true;
+	}
+
+	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		onExit();
+		this.inDoStatement = false;
+	}
+
+	protected boolean inCaseBlock = false;
+
+	@Override
+	public void enterCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
+		final Node node = model.findOrCreate(Label.label("CaseBlock"), "text", arg.getText());
+		onEnter(node);
+		this.inCaseBlock = true;
+	}
+
+	public void exitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
+		onExit();
+		this.inCaseBlock = false;
+	}
+
+	protected boolean inInitialiser = false;
+
+	@Override
+	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
+		onEnter(node);
+		this.inInitialiser = true;
+	}
+
+	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		onExit();
+		this.inInitialiser = false;
+	}
+
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
 	}
 
 	protected boolean inSourceElements = false;
@@ -179,20 +235,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inVariableDeclaration = false;
 	}
 
-	protected boolean inInitialiser = false;
-
-	@Override
-	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
-		onEnter(node);
-		this.inInitialiser = true;
-	}
-
-	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		onExit();
-		this.inInitialiser = false;
-	}
-
 	protected boolean inEmptyStatement = false;
 
 	@Override
@@ -219,34 +261,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 	public void exitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
 		onExit();
 		this.inExpressionStatement = false;
-	}
-
-	protected boolean inIfStatement = false;
-
-	@Override
-	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inIfStatement = true;
-	}
-
-	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		onExit();
-		this.inIfStatement = false;
-	}
-
-	protected boolean inDoStatement = false;
-
-	@Override
-	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inDoStatement = true;
-	}
-
-	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		onExit();
-		this.inDoStatement = false;
 	}
 
 	protected boolean inWhileStatement = false;
@@ -387,20 +401,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 	public void exitSwitchStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SwitchStatementContext arg) {
 		onExit();
 		this.inSwitchStatement = false;
-	}
-
-	protected boolean inCaseBlock = false;
-
-	@Override
-	public void enterCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseBlock"), "text", arg.getText());
-		onEnter(node);
-		this.inCaseBlock = true;
-	}
-
-	public void exitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		onExit();
-		this.inCaseBlock = false;
 	}
 
 	protected boolean inCaseClauses = false;
@@ -697,20 +697,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inPropertyName = false;
 	}
 
-	protected boolean inPropertySetParameterList = false;
-
-	@Override
-	public void enterPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertySetParameterList"), "text", arg.getText());
-		onEnter(node);
-		this.inPropertySetParameterList = true;
-	}
-
-	public void exitPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
-		onExit();
-		this.inPropertySetParameterList = false;
-	}
-
 	protected boolean inArguments = false;
 
 	@Override
@@ -723,6 +709,20 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 	public void exitArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
 		onExit();
 		this.inArguments = false;
+	}
+
+	protected boolean inPropertySetParameterList = false;
+
+	@Override
+	public void enterPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
+		final Node node = model.findOrCreate(Label.label("PropertySetParameterList"), "text", arg.getText());
+		onEnter(node);
+		this.inPropertySetParameterList = true;
+	}
+
+	public void exitPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
+		onExit();
+		this.inPropertySetParameterList = false;
 	}
 
 	protected boolean inArgumentList = false;

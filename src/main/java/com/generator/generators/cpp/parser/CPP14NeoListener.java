@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class CPP14NeoListener extends CPP14BaseListener {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 	private final com.generator.NeoModel model;
@@ -38,398 +38,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	protected boolean inNoptrnewdeclarator = false;
-
-	@Override
-	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText());
-		onEnter(node);
-		this.inNoptrnewdeclarator = true;
-	}
-
-	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onExit();
-		this.inNoptrnewdeclarator = false;
-	}
-
-	protected boolean inNewinitializer = false;
-
-	@Override
-	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText());
-		onEnter(node);
-		this.inNewinitializer = true;
-	}
-
-	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onExit();
-		this.inNewinitializer = false;
-	}
-
-	protected boolean inDeleteexpression = false;
-
-	@Override
-	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inDeleteexpression = true;
-	}
-
-	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onExit();
-		this.inDeleteexpression = false;
-	}
-
-	protected boolean inNoexceptexpression = false;
-
-	@Override
-	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inNoexceptexpression = true;
-	}
-
-	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onExit();
-		this.inNoexceptexpression = false;
-	}
-
-	protected boolean inCastexpression = false;
-
-	@Override
-	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Castexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inCastexpression = true;
-	}
-
-	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onExit();
-		this.inCastexpression = false;
-	}
-
-	protected boolean inPmexpression = false;
-
-	@Override
-	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inPmexpression = true;
-	}
-
-	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onExit();
-		this.inPmexpression = false;
-	}
-
-	protected boolean inMultiplicativeexpression = false;
-
-	@Override
-	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inMultiplicativeexpression = true;
-	}
-
-	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onExit();
-		this.inMultiplicativeexpression = false;
-	}
-
-	protected boolean inAdditiveexpression = false;
-
-	@Override
-	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAdditiveexpression = true;
-	}
-
-	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onExit();
-		this.inAdditiveexpression = false;
-	}
-
-	protected boolean inShiftexpression = false;
-
-	@Override
-	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inShiftexpression = true;
-	}
-
-	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onExit();
-		this.inShiftexpression = false;
-	}
-
-	protected boolean inRelationalexpression = false;
-
-	@Override
-	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inRelationalexpression = true;
-	}
-
-	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onExit();
-		this.inRelationalexpression = false;
-	}
-
-	protected boolean inEqualityexpression = false;
-
-	@Override
-	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inEqualityexpression = true;
-	}
-
-	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onExit();
-		this.inEqualityexpression = false;
-	}
-
-	protected boolean inAndexpression = false;
-
-	@Override
-	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAndexpression = true;
-	}
-
-	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onExit();
-		this.inAndexpression = false;
-	}
-
-	protected boolean inExclusiveorexpression = false;
-
-	@Override
-	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inExclusiveorexpression = true;
-	}
-
-	public void exitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		onExit();
-		this.inExclusiveorexpression = false;
-	}
-
-	protected boolean inInclusiveorexpression = false;
-
-	@Override
-	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inInclusiveorexpression = true;
-	}
-
-	public void exitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		onExit();
-		this.inInclusiveorexpression = false;
-	}
-
-	protected boolean inLogicalandexpression = false;
-
-	@Override
-	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inLogicalandexpression = true;
-	}
-
-	public void exitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		onExit();
-		this.inLogicalandexpression = false;
-	}
-
-	protected boolean inLogicalorexpression = false;
-
-	@Override
-	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inLogicalorexpression = true;
-	}
-
-	public void exitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		onExit();
-		this.inLogicalorexpression = false;
-	}
-
-	protected boolean inConditionalexpression = false;
-
-	@Override
-	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inConditionalexpression = true;
-	}
-
-	public void exitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		onExit();
-		this.inConditionalexpression = false;
-	}
-
-	protected boolean inAssignmentexpression = false;
-
-	@Override
-	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAssignmentexpression = true;
-	}
-
-	public void exitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		onExit();
-		this.inAssignmentexpression = false;
-	}
-
-	protected boolean inAssignmentoperator = false;
-
-	@Override
-	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText());
-		onEnter(node);
-		this.inAssignmentoperator = true;
-	}
-
-	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		onExit();
-		this.inAssignmentoperator = false;
-	}
-
-	protected boolean inExpression = false;
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression = true;
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression = false;
-	}
-
-	protected boolean inConstantexpression = false;
-
-	@Override
-	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText());
-		onEnter(node);
-		this.inConstantexpression = true;
-	}
-
-	public void exitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		onExit();
-		this.inConstantexpression = false;
-	}
-
-	protected boolean inStatement = false;
-
-	@Override
-	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
-	protected boolean inLabeledstatement = false;
-
-	@Override
-	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText());
-		onEnter(node);
-		this.inLabeledstatement = true;
-	}
-
-	public void exitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		onExit();
-		this.inLabeledstatement = false;
-	}
-
-	protected boolean inExpressionstatement = false;
-
-	@Override
-	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText());
-		onEnter(node);
-		this.inExpressionstatement = true;
-	}
-
-	public void exitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		onExit();
-		this.inExpressionstatement = false;
-	}
-
-	protected boolean inCompoundstatement = false;
-
-	@Override
-	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText());
-		onEnter(node);
-		this.inCompoundstatement = true;
-	}
-
-	public void exitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		onExit();
-		this.inCompoundstatement = false;
-	}
-
-	protected boolean inStatementseq = false;
-
-	@Override
-	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText());
-		onEnter(node);
-		this.inStatementseq = true;
-	}
-
-	public void exitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		onExit();
-		this.inStatementseq = false;
-	}
-
-	protected boolean inSelectionstatement = false;
-
-	@Override
-	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText());
-		onEnter(node);
-		this.inSelectionstatement = true;
-	}
-
-	public void exitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		onExit();
-		this.inSelectionstatement = false;
-	}
-
-	protected boolean inCondition = false;
-
-	@Override
-	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText());
-		onEnter(node);
-		this.inCondition = true;
-	}
-
-	public void exitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		onExit();
-		this.inCondition = false;
-	}
 
 	protected boolean inIterationstatement = false;
 
@@ -527,20 +135,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 	public void exitDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
 		onExit();
 		this.inDeclarationseq = false;
-	}
-
-	protected boolean inDeclaration = false;
-
-	@Override
-	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declaration"), "text", arg.getText());
-		onEnter(node);
-		this.inDeclaration = true;
-	}
-
-	public void exitDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		onExit();
-		this.inDeclaration = false;
 	}
 
 	protected boolean inBlockdeclaration = false;
@@ -2823,6 +2417,412 @@ public class CPP14NeoListener extends CPP14BaseListener {
 	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
 		onExit();
 		this.inNewdeclarator = false;
+	}
+
+	protected boolean inNoptrnewdeclarator = false;
+
+	@Override
+	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText());
+		onEnter(node);
+		this.inNoptrnewdeclarator = true;
+	}
+
+	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		onExit();
+		this.inNoptrnewdeclarator = false;
+	}
+
+	protected boolean inNewinitializer = false;
+
+	@Override
+	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText());
+		onEnter(node);
+		this.inNewinitializer = true;
+	}
+
+	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		onExit();
+		this.inNewinitializer = false;
+	}
+
+	protected boolean inDeleteexpression = false;
+
+	@Override
+	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inDeleteexpression = true;
+	}
+
+	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		onExit();
+		this.inDeleteexpression = false;
+	}
+
+	protected boolean inNoexceptexpression = false;
+
+	@Override
+	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inNoexceptexpression = true;
+	}
+
+	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		onExit();
+		this.inNoexceptexpression = false;
+	}
+
+	protected boolean inCastexpression = false;
+
+	@Override
+	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Castexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inCastexpression = true;
+	}
+
+	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		onExit();
+		this.inCastexpression = false;
+	}
+
+	protected boolean inPmexpression = false;
+
+	@Override
+	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inPmexpression = true;
+	}
+
+	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		onExit();
+		this.inPmexpression = false;
+	}
+
+	protected boolean inMultiplicativeexpression = false;
+
+	@Override
+	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inMultiplicativeexpression = true;
+	}
+
+	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		onExit();
+		this.inMultiplicativeexpression = false;
+	}
+
+	protected boolean inAdditiveexpression = false;
+
+	@Override
+	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAdditiveexpression = true;
+	}
+
+	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		onExit();
+		this.inAdditiveexpression = false;
+	}
+
+	protected boolean inShiftexpression = false;
+
+	@Override
+	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inShiftexpression = true;
+	}
+
+	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		onExit();
+		this.inShiftexpression = false;
+	}
+
+	protected boolean inRelationalexpression = false;
+
+	@Override
+	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inRelationalexpression = true;
+	}
+
+	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		onExit();
+		this.inRelationalexpression = false;
+	}
+
+	protected boolean inEqualityexpression = false;
+
+	@Override
+	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inEqualityexpression = true;
+	}
+
+	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		onExit();
+		this.inEqualityexpression = false;
+	}
+
+	protected boolean inAndexpression = false;
+
+	@Override
+	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAndexpression = true;
+	}
+
+	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		onExit();
+		this.inAndexpression = false;
+	}
+
+	protected boolean inExclusiveorexpression = false;
+
+	@Override
+	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inExclusiveorexpression = true;
+	}
+
+	public void exitExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
+		onExit();
+		this.inExclusiveorexpression = false;
+	}
+
+	protected boolean inInclusiveorexpression = false;
+
+	@Override
+	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inInclusiveorexpression = true;
+	}
+
+	public void exitInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
+		onExit();
+		this.inInclusiveorexpression = false;
+	}
+
+	protected boolean inLogicalandexpression = false;
+
+	@Override
+	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inLogicalandexpression = true;
+	}
+
+	public void exitLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
+		onExit();
+		this.inLogicalandexpression = false;
+	}
+
+	protected boolean inLogicalorexpression = false;
+
+	@Override
+	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inLogicalorexpression = true;
+	}
+
+	public void exitLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
+		onExit();
+		this.inLogicalorexpression = false;
+	}
+
+	protected boolean inConditionalexpression = false;
+
+	@Override
+	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inConditionalexpression = true;
+	}
+
+	public void exitConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
+		onExit();
+		this.inConditionalexpression = false;
+	}
+
+	protected boolean inAssignmentexpression = false;
+
+	@Override
+	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentexpression = true;
+	}
+
+	public void exitAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
+		onExit();
+		this.inAssignmentexpression = false;
+	}
+
+	protected boolean inAssignmentoperator = false;
+
+	@Override
+	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentoperator = true;
+	}
+
+	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
+		onExit();
+		this.inAssignmentoperator = false;
+	}
+
+	protected boolean inExpression = false;
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression = true;
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression = false;
+	}
+
+	protected boolean inConstantexpression = false;
+
+	@Override
+	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText());
+		onEnter(node);
+		this.inConstantexpression = true;
+	}
+
+	public void exitConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
+		onExit();
+		this.inConstantexpression = false;
+	}
+
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
+	}
+
+	protected boolean inLabeledstatement = false;
+
+	@Override
+	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText());
+		onEnter(node);
+		this.inLabeledstatement = true;
+	}
+
+	public void exitLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
+		onExit();
+		this.inLabeledstatement = false;
+	}
+
+	protected boolean inExpressionstatement = false;
+
+	@Override
+	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText());
+		onEnter(node);
+		this.inExpressionstatement = true;
+	}
+
+	public void exitExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
+		onExit();
+		this.inExpressionstatement = false;
+	}
+
+	protected boolean inCompoundstatement = false;
+
+	@Override
+	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText());
+		onEnter(node);
+		this.inCompoundstatement = true;
+	}
+
+	public void exitCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
+		onExit();
+		this.inCompoundstatement = false;
+	}
+
+	protected boolean inStatementseq = false;
+
+	@Override
+	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText());
+		onEnter(node);
+		this.inStatementseq = true;
+	}
+
+	public void exitStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
+		onExit();
+		this.inStatementseq = false;
+	}
+
+	protected boolean inSelectionstatement = false;
+
+	@Override
+	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText());
+		onEnter(node);
+		this.inSelectionstatement = true;
+	}
+
+	public void exitSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
+		onExit();
+		this.inSelectionstatement = false;
+	}
+
+	protected boolean inCondition = false;
+
+	@Override
+	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText());
+		onEnter(node);
+		this.inCondition = true;
+	}
+
+	public void exitCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
+		onExit();
+		this.inCondition = false;
+	}
+
+	protected boolean inDeclaration = false;
+
+	@Override
+	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("Declaration"), "text", arg.getText());
+		onEnter(node);
+		this.inDeclaration = true;
+	}
+
+	public void exitDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
+		onExit();
+		this.inDeclaration = false;
 	}
 
 }

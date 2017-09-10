@@ -6,8 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final com.generator.NeoModel model;
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final com.generator.NeoModel model;
 
 	public urlNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;

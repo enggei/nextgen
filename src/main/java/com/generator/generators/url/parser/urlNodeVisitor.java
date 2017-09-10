@@ -14,7 +14,7 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
       }
    }
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 

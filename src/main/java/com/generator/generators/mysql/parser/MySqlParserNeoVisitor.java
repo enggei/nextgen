@@ -6,8 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final com.generator.NeoModel model;
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final com.generator.NeoModel model;
 
 	public MySqlParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;

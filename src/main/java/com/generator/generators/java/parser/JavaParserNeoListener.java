@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class JavaParserNeoListener extends JavaParserBaseListener {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 	private final com.generator.NeoModel model;
@@ -53,6 +53,20 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
 	protected boolean inExpression = false;
 
 	@Override
@@ -79,20 +93,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
 		onExit();
 		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
 	}
 
 	protected boolean inFormalParameterList = false;

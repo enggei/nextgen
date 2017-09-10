@@ -6,8 +6,8 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	private final com.generator.NeoModel model;
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+	protected final com.generator.NeoModel model;
 
 	public XMLParserNeoVisitor(com.generator.NeoModel model) {
 		this.model = model;
@@ -28,6 +28,16 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		System.out.println("Document");
+		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
 		System.out.println("Element");
 		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
@@ -41,16 +51,6 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		System.out.println("Attribute");
 		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		System.out.println("Document");
-		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

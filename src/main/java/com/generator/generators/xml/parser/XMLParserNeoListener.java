@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class XMLParserNeoListener extends XMLParserBaseListener {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 	private final com.generator.NeoModel model;
@@ -67,6 +67,20 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 		this.inAttribute = false;
 	}
 
+	protected boolean inProlog = false;
+
+	@Override
+	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
+		onEnter(node);
+		this.inProlog = true;
+	}
+
+	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onExit();
+		this.inProlog = false;
+	}
+
 	protected boolean inContent = false;
 
 	@Override
@@ -95,20 +109,6 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 		this.inReference = false;
 	}
 
-	protected boolean inChardata = false;
-
-	@Override
-	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText());
-		onEnter(node);
-		this.inChardata = true;
-	}
-
-	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onExit();
-		this.inChardata = false;
-	}
-
 	protected boolean inDocument = false;
 
 	@Override
@@ -123,18 +123,18 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 		this.inDocument = false;
 	}
 
-	protected boolean inProlog = false;
+	protected boolean inChardata = false;
 
 	@Override
-	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
+	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
+		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText());
 		onEnter(node);
-		this.inProlog = true;
+		this.inChardata = true;
 	}
 
-	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		onExit();
-		this.inProlog = false;
+		this.inChardata = false;
 	}
 
 	protected boolean inMisc = false;

@@ -520,7 +520,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseListener {\n" + 
 		"\n" + 
-		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
 		"	protected final boolean debug;\n" + 
 		"	private final com.generator.NeoModel model;\n" + 
@@ -577,8 +577,8 @@ public final class AntlrGroup {
 		"\n" + 
 		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
-		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
-		"	private final com.generator.NeoModel model;\n" + 
+		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"	protected final com.generator.NeoModel model;\n" + 
 		"\n" + 
 		"	public ~name~(com.generator.NeoModel model) {\n" + 
 		"		this.model = model;\n" + 
@@ -626,7 +626,7 @@ public final class AntlrGroup {
 		"      }\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
 		"	protected final boolean debug;\n" + 
 		"	\n" + 
@@ -685,7 +685,7 @@ public final class AntlrGroup {
 		"      }\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
 		"	protected final boolean debug;\n" + 
 		"	\n" + 

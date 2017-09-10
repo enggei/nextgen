@@ -21,11 +21,18 @@ public class Tests {
             "http://svn.example.com:9834/repos",
             "http://localhost:8080/demo/my-demo-servlet?param1=hello&param2=goodbye",
             "http://localhost:8080/demo/my-demo-servlet?value=hello%20world",
-            "https://github.com/dpaukov/combinatoricslib3#3-simple-permutations",
+            "https://github.com/dpaukov/combinatoricslib3#3-simple-permutations",   // this does not currently work
       };
 
       for (String url : urls) {
-         new ParseTreeWalker().walk(new urlNodeListener(true), new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
+         final urlNodeListener listener = new urlNodeListener(true) {
+            @Override
+            public void enterFragmentid(urlParser.FragmentidContext arg) {
+               super.enterFragmentid(arg);
+               System.out.println(delim + nodeStack.peek().value);
+            }
+         };
+         new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
       }
 
    }

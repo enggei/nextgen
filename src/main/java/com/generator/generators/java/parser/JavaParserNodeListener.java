@@ -16,7 +16,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       }
    }
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 
@@ -59,6 +59,19 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
 	protected boolean inExpression = false;
 
 	@Override
@@ -83,19 +96,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
 		onExit();
 		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
 	}
 
 	protected boolean inFormalParameterList = false;

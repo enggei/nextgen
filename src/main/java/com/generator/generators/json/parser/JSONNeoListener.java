@@ -6,7 +6,7 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class JSONNeoListener extends JSONBaseListener {
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 	private final com.generator.NeoModel model;

@@ -16,7 +16,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
       }
    }
 
-   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
+   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
 
@@ -72,6 +72,19 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 		this.inAttribute = false;
 	}
 
+	protected boolean inProlog = false;
+
+	@Override
+	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
+		this.inProlog = true;
+	}
+
+	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onExit();
+		this.inProlog = false;
+	}
+
 	protected boolean inContent = false;
 
 	@Override
@@ -98,19 +111,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 		this.inReference = false;
 	}
 
-	protected boolean inChardata = false;
-
-	@Override
-	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText()));
-		this.inChardata = true;
-	}
-
-	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onExit();
-		this.inChardata = false;
-	}
-
 	protected boolean inDocument = false;
 
 	@Override
@@ -124,17 +124,17 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 		this.inDocument = false;
 	}
 
-	protected boolean inProlog = false;
+	protected boolean inChardata = false;
 
 	@Override
-	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
-		this.inProlog = true;
+	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
+		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText()));
+		this.inChardata = true;
 	}
 
-	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		onExit();
-		this.inProlog = false;
+		this.inChardata = false;
 	}
 
 	protected boolean inMisc = false;
