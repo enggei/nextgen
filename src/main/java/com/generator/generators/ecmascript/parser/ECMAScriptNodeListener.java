@@ -59,6 +59,32 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
+	}
+
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
 	protected boolean inProgram = false;
 
 	@Override
@@ -605,19 +631,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inPropertyGetter = false;
 	}
 
-	protected boolean inInExpression = false;
-
-	@Override
-	public void enterInExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InExpressionContext arg) {
-		onEnter(new Node("InExpression", arg.getText(), arg.getStart().getText()));
-		this.inInExpression = true;
-	}
-
-	public void exitInExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InExpressionContext arg) {
-		onExit();
-		this.inInExpression = false;
-	}
-
 	protected boolean inPropertySetter = false;
 
 	@Override
@@ -746,6 +759,19 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitObjectLiteralExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ObjectLiteralExpressionContext arg) {
 		onExit();
 		this.inObjectLiteralExpression = false;
+	}
+
+	protected boolean inInExpression = false;
+
+	@Override
+	public void enterInExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InExpressionContext arg) {
+		onEnter(new Node("InExpression", arg.getText(), arg.getStart().getText()));
+		this.inInExpression = true;
+	}
+
+	public void exitInExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InExpressionContext arg) {
+		onExit();
+		this.inInExpression = false;
 	}
 
 	protected boolean inLogicalOrExpression = false;
@@ -1292,32 +1318,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitEof(com.generator.generators.ecmascript.parser.ECMAScriptParser.EofContext arg) {
 		onExit();
 		this.inEof = false;
-	}
-
-	protected boolean inStatement = false;
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
 	}
 
 }

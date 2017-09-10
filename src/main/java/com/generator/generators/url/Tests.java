@@ -1,0 +1,31 @@
+package com.generator.generators.url;
+
+import com.generator.generators.url.parser.urlLexer;
+import com.generator.generators.url.parser.urlParser;
+import com.generator.generators.url.parser.urlNodeListener;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.junit.Test;
+
+/**
+ * Created 10.09.17.
+ */
+public class Tests {
+
+   @Test
+   public void testParser() {
+
+      final String[] urls = new String[]{
+            "ftps://user:password@example.com/pub/file.txt",
+            "http://svn.example.com:9834/repos",
+            "http://localhost:8080/demo/my-demo-servlet?param1=hello&param2=goodbye",
+            "http://localhost:8080/demo/my-demo-servlet?value=hello%20world",
+      };
+
+      for (String url : urls) {
+         new ParseTreeWalker().walk(new urlNodeListener(true), new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
+      }
+
+   }
+}

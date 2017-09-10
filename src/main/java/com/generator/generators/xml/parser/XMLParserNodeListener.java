@@ -72,32 +72,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 		this.inAttribute = false;
 	}
 
-	protected boolean inDocument = false;
-
-	@Override
-	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
-		this.inDocument = true;
-	}
-
-	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onExit();
-		this.inDocument = false;
-	}
-
-	protected boolean inProlog = false;
-
-	@Override
-	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
-		this.inProlog = true;
-	}
-
-	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onExit();
-		this.inProlog = false;
-	}
-
 	protected boolean inContent = false;
 
 	@Override
@@ -135,6 +109,32 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		onExit();
 		this.inChardata = false;
+	}
+
+	protected boolean inDocument = false;
+
+	@Override
+	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
+		this.inDocument = true;
+	}
+
+	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		onExit();
+		this.inDocument = false;
+	}
+
+	protected boolean inProlog = false;
+
+	@Override
+	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
+		this.inProlog = true;
+	}
+
+	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onExit();
+		this.inProlog = false;
 	}
 
 	protected boolean inMisc = false;

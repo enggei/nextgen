@@ -67,34 +67,6 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 		this.inAttribute = false;
 	}
 
-	protected boolean inDocument = false;
-
-	@Override
-	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
-		onEnter(node);
-		this.inDocument = true;
-	}
-
-	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onExit();
-		this.inDocument = false;
-	}
-
-	protected boolean inProlog = false;
-
-	@Override
-	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
-		onEnter(node);
-		this.inProlog = true;
-	}
-
-	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onExit();
-		this.inProlog = false;
-	}
-
 	protected boolean inContent = false;
 
 	@Override
@@ -135,6 +107,34 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		onExit();
 		this.inChardata = false;
+	}
+
+	protected boolean inDocument = false;
+
+	@Override
+	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
+		onEnter(node);
+		this.inDocument = true;
+	}
+
+	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		onExit();
+		this.inDocument = false;
+	}
+
+	protected boolean inProlog = false;
+
+	@Override
+	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
+		onEnter(node);
+		this.inProlog = true;
+	}
+
+	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onExit();
+		this.inProlog = false;
 	}
 
 	protected boolean inMisc = false;

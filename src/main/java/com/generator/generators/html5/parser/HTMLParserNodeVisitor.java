@@ -45,35 +45,8 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
    }
 
 	@Override
-	public Node visitXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
-		final Node node = new Node("Xml", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
-		final Node node = new Node("Scriptlet", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
-		final Node node = new Node("Script", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
-		final Node node = new Node("Style", arg.getText());
+	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		final Node node = new Node("HtmlDocument", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -83,6 +56,15 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	@Override
 	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
 		final Node node = new Node("HtmlElements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		final Node node = new Node("HtmlElement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -180,8 +162,8 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	}
 
 	@Override
-	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		final Node node = new Node("HtmlElement", arg.getText());
+	public Node visitXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
+		final Node node = new Node("Xml", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -189,8 +171,26 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	}
 
 	@Override
-	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		final Node node = new Node("HtmlDocument", arg.getText());
+	public Node visitScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
+		final Node node = new Node("Scriptlet", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
+		final Node node = new Node("Script", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
+		final Node node = new Node("Style", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

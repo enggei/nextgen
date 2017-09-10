@@ -59,32 +59,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 		this.inBlock = false;
 	}
 
-	protected boolean inFormalParameterList = false;
-
-	@Override
-	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
-		this.inFormalParameterList = true;
-	}
-
-	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		onExit();
-		this.inFormalParameterList = false;
-	}
-
-	protected boolean inArguments = false;
-
-	@Override
-	public void enterArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText()));
-		this.inArguments = true;
-	}
-
-	public void exitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		onExit();
-		this.inArguments = false;
-	}
-
 	protected boolean inExpression = false;
 
 	@Override
@@ -122,6 +96,32 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
 		onExit();
 		this.inLiteral = false;
+	}
+
+	protected boolean inFormalParameterList = false;
+
+	@Override
+	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
+		this.inFormalParameterList = true;
+	}
+
+	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		onExit();
+		this.inFormalParameterList = false;
+	}
+
+	protected boolean inArguments = false;
+
+	@Override
+	public void enterArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
+		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText()));
+		this.inArguments = true;
+	}
+
+	public void exitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
+		onExit();
+		this.inArguments = false;
 	}
 
 	protected boolean inCompilationUnit = false;

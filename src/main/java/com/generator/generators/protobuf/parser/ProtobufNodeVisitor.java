@@ -63,8 +63,8 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
-	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		final Node node = new Node("File", arg.getText());
+	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		final Node node = new Node("DefaultValue", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,8 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
-	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		final Node node = new Node("DefaultValue", arg.getText());
+	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		final Node node = new Node("File", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

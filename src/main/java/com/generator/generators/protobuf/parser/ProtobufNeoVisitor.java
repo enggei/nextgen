@@ -48,9 +48,9 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		System.out.println("File");
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
+	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		System.out.println("DefaultValue");
+		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +58,9 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		System.out.println("DefaultValue");
-		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText());
+	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		System.out.println("File");
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

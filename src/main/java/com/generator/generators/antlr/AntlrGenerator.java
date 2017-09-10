@@ -18,6 +18,8 @@ import com.generator.generators.mysql.parser.MySqlParserVisitor;
 import com.generator.generators.protobuf.parser.ProtobufListener;
 import com.generator.generators.protobuf.parser.ProtobufVisitor;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.url.parser.urlListener;
+import com.generator.generators.url.parser.urlVisitor;
 import com.generator.generators.xml.parser.XMLParserListener;
 import com.generator.generators.xml.parser.XMLParserVisitor;
 
@@ -42,12 +44,13 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
    }
 
-   private static void generateVisitorAndListener(String root, String packageName, String parserName, Class visitorInterface, Class listenerInterface) {
-      new ParserNodeVisitorGenerator(root, packageName, parserName).visit(visitorInterface);
-      new ParserNodeListenerGenerator(root, packageName, parserName).visit(listenerInterface);
+   private static void generateVisitorAndListener(String root, String packageName, String g4Name, Class visitorInterface, Class listenerInterface) {
+      new ParserNodeVisitorGenerator(root, packageName, g4Name).visit(visitorInterface);
+      new ParserNodeListenerGenerator(root, packageName, g4Name).visit(listenerInterface);
    }
 
    private static final class ParserNodeListenerGenerator extends BaseClassVisitor {
@@ -137,7 +140,7 @@ public class AntlrGenerator {
          // only has one parameter (Context)
          final Parameter parameter = method.getParameters()[0];
          final String param = parameter.getType().getCanonicalName();
-         // remove 'visit' from method-name (its added for overridden method in template:
+         // remove 'visit' from method-name ('visit' is in template):
          this.neoVisitorST.addMethodsValue(method.getName().substring(5), param);
          this.baseVisitorST.addMethodsValue(method.getName().substring(5), param);
       }

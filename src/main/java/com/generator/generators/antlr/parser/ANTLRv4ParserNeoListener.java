@@ -39,20 +39,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inOption = false;
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
-		onEnter(node);
-		this.inOption = true;
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption = false;
-	}
-
 	protected boolean inOptionValue = false;
 
 	@Override
@@ -781,6 +767,20 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inRuleref = false;
+
+	@Override
+	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
+		final Node node = model.findOrCreate(Label.label("Ruleref"), "text", arg.getText());
+		onEnter(node);
+		this.inRuleref = true;
+	}
+
+	public void exitRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
+		onExit();
+		this.inRuleref = false;
+	}
+
 	protected boolean inCharacterRange = false;
 
 	@Override
@@ -907,18 +907,18 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 		this.inOptionsSpec = false;
 	}
 
-	protected boolean inRuleref = false;
+	protected boolean inOption = false;
 
 	@Override
-	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ruleref"), "text", arg.getText());
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
 		onEnter(node);
-		this.inRuleref = true;
+		this.inOption = true;
 	}
 
-	public void exitRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
 		onExit();
-		this.inRuleref = false;
+		this.inOption = false;
 	}
 
 }

@@ -46,318 +46,6 @@ public class CPP14NodeListener extends CPP14BaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inTranslationunit = false;
-
-	@Override
-	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
-		this.inTranslationunit = true;
-	}
-
-	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onExit();
-		this.inTranslationunit = false;
-	}
-
-	protected boolean inPrimaryexpression = false;
-
-	@Override
-	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
-		this.inPrimaryexpression = true;
-	}
-
-	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onExit();
-		this.inPrimaryexpression = false;
-	}
-
-	protected boolean inIdexpression = false;
-
-	@Override
-	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
-		this.inIdexpression = true;
-	}
-
-	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onExit();
-		this.inIdexpression = false;
-	}
-
-	protected boolean inUnqualifiedid = false;
-
-	@Override
-	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
-		this.inUnqualifiedid = true;
-	}
-
-	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onExit();
-		this.inUnqualifiedid = false;
-	}
-
-	protected boolean inQualifiedid = false;
-
-	@Override
-	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
-		this.inQualifiedid = true;
-	}
-
-	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onExit();
-		this.inQualifiedid = false;
-	}
-
-	protected boolean inNestednamespecifier = false;
-
-	@Override
-	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
-		this.inNestednamespecifier = true;
-	}
-
-	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onExit();
-		this.inNestednamespecifier = false;
-	}
-
-	protected boolean inLambdaexpression = false;
-
-	@Override
-	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
-		this.inLambdaexpression = true;
-	}
-
-	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onExit();
-		this.inLambdaexpression = false;
-	}
-
-	protected boolean inLambdaintroducer = false;
-
-	@Override
-	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
-		this.inLambdaintroducer = true;
-	}
-
-	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onExit();
-		this.inLambdaintroducer = false;
-	}
-
-	protected boolean inLambdacapture = false;
-
-	@Override
-	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
-		this.inLambdacapture = true;
-	}
-
-	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onExit();
-		this.inLambdacapture = false;
-	}
-
-	protected boolean inCapturedefault = false;
-
-	@Override
-	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
-		this.inCapturedefault = true;
-	}
-
-	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onExit();
-		this.inCapturedefault = false;
-	}
-
-	protected boolean inCapturelist = false;
-
-	@Override
-	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
-		this.inCapturelist = true;
-	}
-
-	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onExit();
-		this.inCapturelist = false;
-	}
-
-	protected boolean inCapture = false;
-
-	@Override
-	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
-		this.inCapture = true;
-	}
-
-	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onExit();
-		this.inCapture = false;
-	}
-
-	protected boolean inSimplecapture = false;
-
-	@Override
-	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
-		this.inSimplecapture = true;
-	}
-
-	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onExit();
-		this.inSimplecapture = false;
-	}
-
-	protected boolean inInitcapture = false;
-
-	@Override
-	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
-		this.inInitcapture = true;
-	}
-
-	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onExit();
-		this.inInitcapture = false;
-	}
-
-	protected boolean inLambdadeclarator = false;
-
-	@Override
-	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
-		this.inLambdadeclarator = true;
-	}
-
-	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onExit();
-		this.inLambdadeclarator = false;
-	}
-
-	protected boolean inPostfixexpression = false;
-
-	@Override
-	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
-		this.inPostfixexpression = true;
-	}
-
-	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onExit();
-		this.inPostfixexpression = false;
-	}
-
-	protected boolean inExpressionlist = false;
-
-	@Override
-	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
-		this.inExpressionlist = true;
-	}
-
-	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onExit();
-		this.inExpressionlist = false;
-	}
-
-	protected boolean inPseudodestructorname = false;
-
-	@Override
-	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
-		this.inPseudodestructorname = true;
-	}
-
-	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onExit();
-		this.inPseudodestructorname = false;
-	}
-
-	protected boolean inUnaryexpression = false;
-
-	@Override
-	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
-		this.inUnaryexpression = true;
-	}
-
-	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onExit();
-		this.inUnaryexpression = false;
-	}
-
-	protected boolean inUnaryoperator = false;
-
-	@Override
-	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
-		this.inUnaryoperator = true;
-	}
-
-	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onExit();
-		this.inUnaryoperator = false;
-	}
-
-	protected boolean inNewexpression = false;
-
-	@Override
-	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
-		this.inNewexpression = true;
-	}
-
-	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onExit();
-		this.inNewexpression = false;
-	}
-
-	protected boolean inNewplacement = false;
-
-	@Override
-	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
-		this.inNewplacement = true;
-	}
-
-	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onExit();
-		this.inNewplacement = false;
-	}
-
-	protected boolean inNewtypeid = false;
-
-	@Override
-	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
-		this.inNewtypeid = true;
-	}
-
-	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onExit();
-		this.inNewtypeid = false;
-	}
-
-	protected boolean inNewdeclarator = false;
-
-	@Override
-	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
-		this.inNewdeclarator = true;
-	}
-
-	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onExit();
-		this.inNewdeclarator = false;
-	}
-
 	protected boolean inNoptrnewdeclarator = false;
 
 	@Override
@@ -514,19 +202,6 @@ public class CPP14NodeListener extends CPP14BaseListener {
 		this.inAndexpression = false;
 	}
 
-	protected boolean inExpression = false;
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
-		this.inExpression = true;
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression = false;
-	}
-
 	protected boolean inExclusiveorexpression = false;
 
 	@Override
@@ -616,6 +291,19 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	public void exitAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
 		onExit();
 		this.inAssignmentoperator = false;
+	}
+
+	protected boolean inExpression = false;
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+		this.inExpression = true;
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression = false;
 	}
 
 	protected boolean inConstantexpression = false;
@@ -2631,6 +2319,318 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	public void exitUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
 		onExit();
 		this.inUserdefinedliteral = false;
+	}
+
+	protected boolean inTranslationunit = false;
+
+	@Override
+	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
+		this.inTranslationunit = true;
+	}
+
+	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		onExit();
+		this.inTranslationunit = false;
+	}
+
+	protected boolean inPrimaryexpression = false;
+
+	@Override
+	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
+		this.inPrimaryexpression = true;
+	}
+
+	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onExit();
+		this.inPrimaryexpression = false;
+	}
+
+	protected boolean inIdexpression = false;
+
+	@Override
+	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
+		this.inIdexpression = true;
+	}
+
+	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onExit();
+		this.inIdexpression = false;
+	}
+
+	protected boolean inUnqualifiedid = false;
+
+	@Override
+	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
+		this.inUnqualifiedid = true;
+	}
+
+	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onExit();
+		this.inUnqualifiedid = false;
+	}
+
+	protected boolean inQualifiedid = false;
+
+	@Override
+	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
+		this.inQualifiedid = true;
+	}
+
+	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onExit();
+		this.inQualifiedid = false;
+	}
+
+	protected boolean inNestednamespecifier = false;
+
+	@Override
+	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
+		this.inNestednamespecifier = true;
+	}
+
+	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onExit();
+		this.inNestednamespecifier = false;
+	}
+
+	protected boolean inLambdaexpression = false;
+
+	@Override
+	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
+		this.inLambdaexpression = true;
+	}
+
+	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		onExit();
+		this.inLambdaexpression = false;
+	}
+
+	protected boolean inLambdaintroducer = false;
+
+	@Override
+	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
+		this.inLambdaintroducer = true;
+	}
+
+	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		onExit();
+		this.inLambdaintroducer = false;
+	}
+
+	protected boolean inLambdacapture = false;
+
+	@Override
+	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
+		this.inLambdacapture = true;
+	}
+
+	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		onExit();
+		this.inLambdacapture = false;
+	}
+
+	protected boolean inCapturedefault = false;
+
+	@Override
+	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
+		this.inCapturedefault = true;
+	}
+
+	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		onExit();
+		this.inCapturedefault = false;
+	}
+
+	protected boolean inCapturelist = false;
+
+	@Override
+	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
+		this.inCapturelist = true;
+	}
+
+	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		onExit();
+		this.inCapturelist = false;
+	}
+
+	protected boolean inCapture = false;
+
+	@Override
+	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
+		this.inCapture = true;
+	}
+
+	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		onExit();
+		this.inCapture = false;
+	}
+
+	protected boolean inSimplecapture = false;
+
+	@Override
+	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
+		this.inSimplecapture = true;
+	}
+
+	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		onExit();
+		this.inSimplecapture = false;
+	}
+
+	protected boolean inInitcapture = false;
+
+	@Override
+	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
+		this.inInitcapture = true;
+	}
+
+	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		onExit();
+		this.inInitcapture = false;
+	}
+
+	protected boolean inLambdadeclarator = false;
+
+	@Override
+	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
+		this.inLambdadeclarator = true;
+	}
+
+	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		onExit();
+		this.inLambdadeclarator = false;
+	}
+
+	protected boolean inPostfixexpression = false;
+
+	@Override
+	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
+		this.inPostfixexpression = true;
+	}
+
+	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		onExit();
+		this.inPostfixexpression = false;
+	}
+
+	protected boolean inExpressionlist = false;
+
+	@Override
+	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
+		this.inExpressionlist = true;
+	}
+
+	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		onExit();
+		this.inExpressionlist = false;
+	}
+
+	protected boolean inPseudodestructorname = false;
+
+	@Override
+	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
+		this.inPseudodestructorname = true;
+	}
+
+	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		onExit();
+		this.inPseudodestructorname = false;
+	}
+
+	protected boolean inUnaryexpression = false;
+
+	@Override
+	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
+		this.inUnaryexpression = true;
+	}
+
+	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		onExit();
+		this.inUnaryexpression = false;
+	}
+
+	protected boolean inUnaryoperator = false;
+
+	@Override
+	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
+		this.inUnaryoperator = true;
+	}
+
+	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		onExit();
+		this.inUnaryoperator = false;
+	}
+
+	protected boolean inNewexpression = false;
+
+	@Override
+	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
+		this.inNewexpression = true;
+	}
+
+	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		onExit();
+		this.inNewexpression = false;
+	}
+
+	protected boolean inNewplacement = false;
+
+	@Override
+	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
+		this.inNewplacement = true;
+	}
+
+	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		onExit();
+		this.inNewplacement = false;
+	}
+
+	protected boolean inNewtypeid = false;
+
+	@Override
+	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
+		this.inNewtypeid = true;
+	}
+
+	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		onExit();
+		this.inNewtypeid = false;
+	}
+
+	protected boolean inNewdeclarator = false;
+
+	@Override
+	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
+		this.inNewdeclarator = true;
+	}
+
+	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		onExit();
+		this.inNewdeclarator = false;
 	}
 
 }
