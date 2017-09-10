@@ -17,8 +17,6 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    private final JavaGroup javaGroup = new JavaGroup();
    private final Stack<JavaGroup.PojoST> currentPojos = new Stack<>();
 
-   private boolean tableName = false;
-   private boolean columnDefinition = false;
    private String propertyName;
    private String propertyType;
 
@@ -44,31 +42,14 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    }
 
    @Override
-   public void enterTable_name(MySqlParser.Table_nameContext arg) {
-      super.enterTable_name(arg);
-      this.tableName = true;
-   }
-
-   @Override
-   public void exitTable_name(MySqlParser.Table_nameContext arg) {
-      super.exitTable_name(arg);
-      this.tableName = false;
-   }
-
-   @Override
    public void enterId_(MySqlParser.Id_Context arg) {
       super.enterId_(arg);
-      if (tableName) {
+
+      if (inTable_name && !inConstraintDefinition) {
          currentPojos.peek().setName(StringUtil.capitalize(StringUtil.trimEnds(1, arg.getText())));
-      } else if (columnDefinition) {
+      } else if (inColumnDefinition) {
          this.propertyName = StringUtil.trimEnds(1, arg.getText());
       }
-   }
-
-   @Override
-   public void enterColumnDefinition(MySqlParser.ColumnDefinitionContext arg) {
-      super.enterColumnDefinition(arg);
-      this.columnDefinition = true;
    }
 
    @Override
@@ -91,7 +72,6 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    @Override
    public void enterCharDatatype(MySqlParser.CharDatatypeContext arg) {
       super.enterCharDatatype(arg);
-
       this.propertyType = "String";
    }
 
@@ -100,7 +80,7 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
       super.enterSimpleDatatype(arg);
 
       final String type = arg.getText();
-      if(type.toUpperCase().startsWith("DATE")) {
+      if (type.toUpperCase().startsWith("DATE")) {
          this.propertyType = "java.util.Date";
       } else
          System.out.println("unsupported DimensionDatatype " + delim + "'" + arg.getText() + "'");
@@ -109,7 +89,6 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    @Override
    public void exitColumnDefinition(MySqlParser.ColumnDefinitionContext arg) {
       super.exitColumnDefinition(arg);
-      this.columnDefinition = false;
       currentPojos.peek().addPropertiesValue(null, propertyType, propertyName);
       this.propertyType = null;
       this.propertyName = null;

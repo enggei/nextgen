@@ -1572,6 +1572,35 @@ public final class Workspace extends JPanel {
                   });
                   pop.add(new App.TransactionAction("Export Branch", app) {
 
+                     // to avoid escaping etc in cypher, just use parameters from
+                     // http://neo4j.com/docs/developer-manual/current/cypher/syntax/parameters/
+
+                     /***
+                      *
+                      * 3.2.4.7. Setting all properties on a node
+
+                      Note that this will replace all the current properties.
+
+                      Parameters.
+                      todo export like this
+                      {
+                      "props" : {
+                      "name" : "Andres",
+                      "position" : "Developer"
+                      }
+                      }
+
+                      todo import using data above, and _uuid:
+                      Query.
+
+                      MATCH (n:Person)
+                      WHERE n.name='Michaela'
+                      SET n = $props
+                      *
+                      */
+
+
+
                      final CypherGroup cypherGroup = new CypherGroup();
 
                      @Override

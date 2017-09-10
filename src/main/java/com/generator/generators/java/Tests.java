@@ -15,6 +15,11 @@ import java.util.Map;
 
 public class Tests {
 
+   @Test
+   public void writeSTG() throws IOException {
+
+      JavaGroup.toSTGFile(new File("/home/goe/projects/nextgen/src/main/java/com/generator/generators/java"));
+   }
 
    @Test
    public void testParseJava() throws IOException {

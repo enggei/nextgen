@@ -18,6 +18,12 @@ public class MySQLSession {
       connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + password);
    }
 
+   MySQLSession(String host, String database, String username, char[] password) throws ClassNotFoundException, SQLException {
+      Class.forName("com.mysql.jdbc.Driver");
+      this.database = database;
+      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password));
+   }
+
    public String getDatabase() {
       return database;
    }

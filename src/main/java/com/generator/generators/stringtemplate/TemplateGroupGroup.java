@@ -1006,7 +1006,7 @@ public final class TemplateGroupGroup {
 		"}>>\n")
 			.append("StatementKeyValueListPropertySetter(kvNames,propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format=\"capitalize\"~Value(~kvNames:{it|Object ~it~_};separator=\", \"~) {\n" + 
 		"	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();\n" + 
-		"	~kvNames:{it|map.put(\"~it~\", (~it~_==null || ~it~_.toString().length()==0) ? null : ~it~_);};separator=\"\\n\"~\n" + 
+		"	~kvNames:{it|map.put(\"~it~\", (~it~_ == null || ~it~_.toString().length() == 0) ? null : ~it~_);};separator=\"\\n\"~\n" + 
 		"	this._~propertyName~.add(map);\n" + 
 		"\n" + 
 		"   template.addAggr(\"~propertyName~.{~kvNames:{it|~it~};separator=\", \"~}\", ~kvNames:{it|map.get(\"~it~\")};separator=\", \"~);\n" + 

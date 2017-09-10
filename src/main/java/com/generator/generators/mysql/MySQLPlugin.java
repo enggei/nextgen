@@ -1,16 +1,15 @@
 package com.generator.generators.mysql;
 
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.mysql.parser.MySqlLexer;
-import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
-import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.generators.mysql.parser.MySqlParser;
-import com.generator.util.StringUtil;
+import com.generator.generators.mysql.parser.MySqlParserNeoListener;
+import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -20,11 +19,9 @@ import org.neo4j.graphdb.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.Set;
-import java.util.Stack;
 import java.util.function.Consumer;
 
 import static com.generator.NeoModel.relate;
-import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 
 /**
  * Created 23.08.17.
@@ -32,11 +29,15 @@ import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 public class MySQLPlugin extends DomainPlugin {
 
    public enum Entities implements Label {
-      Database
+      Database, Table, Column
    }
 
    public enum Relations implements RelationshipType {
-      TABLE
+      TABLE, COLUMN
+   }
+
+   public enum Properties {
+      columnType
    }
 
    public MySQLPlugin(App app) {
@@ -102,7 +103,7 @@ public class MySQLPlugin extends DomainPlugin {
             final JTextField txtHost = new JTextField("127.0.0.1");
             final JTextField txtDatabase = new JTextField("tr");
             final JTextField txtUsername = new JTextField("root");
-            final JTextField txtPassword = new JTextField("root");
+            final JPasswordField txtPassword = new JPasswordField("");
 
             SwingUtil.FormPanel login = new SwingUtil.FormPanel("pref, 4dlu, 75dlu:grow", "pref, 4dlu, pref, 4dlu, pref, 4dlu, pref");
             login.addLabel("Host", 1, 1);
@@ -114,90 +115,26 @@ public class MySQLPlugin extends DomainPlugin {
             login.addLabel("Password", 1, 7);
             login.add(txtPassword, 3, 7);
 
-            SwingUtil.showDialog(login, app, "Connect to database", () -> getGraph().doInTransaction(new NeoModel.Committer() {
+            SwingUtil.showDialog(login, app, "Database", () -> getGraph().doInTransaction(new NeoModel.Committer() {
                @Override
                public void doAction(Transaction tx12) throws Throwable {
 
-                  final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getText());
-                  final Set<String> tables = db.getTables();
+                  if (txtHost.getText().length() == 0) throw new IllegalArgumentException("host must be set");
+                  if (txtDatabase.getText().length() == 0) throw new IllegalArgumentException("database must be set");
+                  if (txtUsername.getText().length() == 0) throw new IllegalArgumentException("username must be set");
+                  if (txtPassword.getPassword().length == 0) throw new IllegalArgumentException("password must be set");
+
+                  final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getPassword());
 
                   final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase());
 
-                  for (String table : tables) {
-                     System.out.println(table);
-
-                     final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table))));
-
-                     final MySqlParserNodeListener listener = new MySqlParserNodeListener() {
-
-                        private final Stack<org.neo4j.graphdb.Node> nodes = new Stack<>();
-
-                        @Override
-                        public void enterColCreateTable(MySqlParser.ColCreateTableContext arg0) {
-                           nodes.push(getGraph().newNode(Label.label("MySqlTable")));
-                        }
-
-                        @Override
-                        public void exitColCreateTable(MySqlParser.ColCreateTableContext arg0) {
-                           final org.neo4j.graphdb.Node node = nodes.pop();
-                           fireNodesLoaded(node);
-                        }
-
-                        @Override
-                        public void enterId_(MySqlParser.Id_Context arg0) {
-                           // todo remove this when all cases are complete
-                           if (nodes.size() > 0)
-                              relate(nodes.peek(), newValueNode(StringUtil.trimEnds(1, arg0.getText())), RelationshipType.withName("NAME"));
-                        }
-
-                        @Override
-                        public void enterColumnDefinition(MySqlParser.ColumnDefinitionContext arg0) {
-                           final org.neo4j.graphdb.Node mySQLColumn = getGraph().newNode(Label.label("MySQLColumn"));
-                           relate(nodes.peek(), mySQLColumn, RelationshipType.withName("COLUMN"));
-                           nodes.push(mySQLColumn);
-                        }
-
-                        @Override
-                        public void exitColumnDefinition(MySqlParser.ColumnDefinitionContext arg0) {
-                           nodes.pop();
-                        }
-
-                        @Override
-                        public void enterDimensionDatatype(MySqlParser.DimensionDatatypeContext arg0) {
-                           final org.neo4j.graphdb.Node columnType = getGraph().findOrCreate(Label.label("ColumnType"), AppMotif.Properties.name.name(), arg0.getText());
-                           relate(nodes.peek(), columnType, RelationshipType.withName("TYPE"));
-                           nodes.push(columnType);
-                        }
-
-                        @Override
-                        public void exitDimensionDatatype(MySqlParser.DimensionDatatypeContext arg0) {
-                           nodes.pop();
-                        }
-
-                        @Override
-                        public void enterColConstrNull(MySqlParser.ColConstrNullContext arg0) {
-                           relate(nodes.peek(), getGraph().findOrCreate(Label.label("Nullable"), AppMotif.Properties.name.name(), arg0.getText()), RelationshipType.withName("NULLABLE"));
-                        }
-
-                        @Override
-                        public void enterCharDatatype(MySqlParser.CharDatatypeContext arg0) {
-                           final org.neo4j.graphdb.Node columnType = getGraph().findOrCreate(Label.label("ColumnType"), AppMotif.Properties.name.name(), arg0.getText());
-                           nodes.peek().createRelationshipTo(columnType, RelationshipType.withName("TYPE"));
-                           nodes.push(columnType);
-                        }
-
-                        @Override
-                        public void exitCharDatatype(MySqlParser.CharDatatypeContext arg0) {
-                           nodes.peek();
-                        }
-
-                        @Override
-                        public void enterTblConstrFK(MySqlParser.TblConstrFKContext arg0) {
-
-                        }
-                     };
-                     new ParseTreeWalker().walk(listener, parser.root());
+                  for (String table : db.getTables()) {
+                     final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
+                     new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+                     relate(databaseNode, neoListener.done(), Relations.TABLE);
                   }
+
+                  fireNodesLoaded(databaseNode);
 
                   db.close();
                }

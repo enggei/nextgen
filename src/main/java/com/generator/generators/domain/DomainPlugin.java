@@ -4,6 +4,7 @@ import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
@@ -20,6 +21,7 @@ import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.BaseDomainVisitor.*;
 import static com.generator.NeoModel.getNameAndLabelsFrom;
 import static com.generator.NeoModel.relate;
+import static com.generator.generators.project.ProjectPlugin.renderToFile;
 
 /**
  * Created 06.08.17.
@@ -286,13 +288,16 @@ public class DomainPlugin extends Plugin {
 
          if (hasLabel(instanceNode, Entities.Entity)) {
 
-//            incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
-//               @Override
-//               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-//                  final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
-//                  renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
-//               }
-//            }));
+            if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+               incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
+                     renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
+                  }
+               }));
+            }
+
 
             final JMenu referenceMenu = new JMenu(getNameAndLabelsFrom(instanceNode));
 

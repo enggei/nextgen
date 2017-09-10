@@ -25,15 +25,8 @@ public class Tests {
       };
 
       for (String url : urls) {
-         final urlNodeListener listener = new urlNodeListener(true) {
-            @Override
-            public void enterFragmentid(urlParser.FragmentidContext arg) {
-               super.enterFragmentid(arg);
-               System.out.println(delim + nodeStack.peek().value);
-            }
-         };
+         final urlNodeListener listener = new urlNodeListener(true);
          new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
       }
-
    }
 }
