@@ -59,19 +59,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 		this.inOption = false;
 	}
 
-	protected boolean inFile = false;
-
-	@Override
-	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
-		this.inFile = true;
-	}
-
-	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onExit();
-		this.inFile = false;
-	}
-
 	protected boolean inPropertyName = false;
 
 	@Override
@@ -96,6 +83,32 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
 		onExit();
 		this.inDefaultValue = false;
+	}
+
+	protected boolean inFile = false;
+
+	@Override
+	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
+		this.inFile = true;
+	}
+
+	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onExit();
+		this.inFile = false;
+	}
+
+	protected boolean inPackageDecl = false;
+
+	@Override
+	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
+		this.inPackageDecl = true;
+	}
+
+	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		onExit();
+		this.inPackageDecl = false;
 	}
 
 	protected boolean inPackageName = false;
@@ -148,19 +161,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	public void exitEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
 		onExit();
 		this.inEnumName = false;
-	}
-
-	protected boolean inPackageDecl = false;
-
-	@Override
-	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
-		this.inPackageDecl = true;
-	}
-
-	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onExit();
-		this.inPackageDecl = false;
 	}
 
 	protected boolean inMessageContent = false;

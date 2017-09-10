@@ -54,18 +54,28 @@ public class AntlrGenerator {
 
       private final String root;
       private final String packageName;
-      private final String baseVisitorName;
+      private final String neoListenerName;
+      private final String baseListenerName;
 
       private final AntlrGroup.BaseNodeListenerST baseParserListenerST;
+      private final AntlrGroup.NeoListenerST neoListenerST;
 
       ParserNodeListenerGenerator(String root, String packageName, String parserName) {
          this.root = root;
          this.packageName = packageName;
-         this.baseVisitorName = parserName + "NodeListener";
+         this.baseListenerName = parserName + "NodeListener";
+         this.neoListenerName = parserName + "NeoListener";
 
-         this.baseParserListenerST = new AntlrGroup().newBaseNodeListener().
+         final AntlrGroup antlrGroup = new AntlrGroup();
+
+         this.neoListenerST = antlrGroup.newNeoListener().
                setPackageName(packageName).
-               setName(baseVisitorName).
+               setName(neoListenerName).
+               setParser(parserName);
+
+         this.baseParserListenerST = antlrGroup.newBaseNodeListener().
+               setPackageName(packageName).
+               setName(baseListenerName).
                setParser(parserName);
       }
 
@@ -76,14 +86,17 @@ public class AntlrGenerator {
          final Parameter parameter = method.getParameters()[0];
          final String param = parameter.getType().getCanonicalName();
 
-         if (method.getName().startsWith("enter"))
+         if (method.getName().startsWith("enter")) {
             baseParserListenerST.addMethodsValue(param, method.getName().substring(5));
+            neoListenerST.addMethodsValue(method.getName().substring(5), param);
+         }
       }
 
       @Override
       public void done() {
          try {
-            GeneratedFile.newJavaFile(root, packageName, baseVisitorName).write(baseParserListenerST);
+            GeneratedFile.newJavaFile(root, packageName, neoListenerName).write(neoListenerST);
+            GeneratedFile.newJavaFile(root, packageName, baseListenerName).write(baseParserListenerST);
          } catch (IOException e) {
             e.printStackTrace();
          }

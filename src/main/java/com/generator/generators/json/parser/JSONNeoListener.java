@@ -1,37 +1,30 @@
 package com.generator.generators.json.parser;
 
-public class JSONNodeListener extends JSONBaseListener {
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
 
-   public static class Node {
-
-      public final String name;
-      public final String value;
-      public final String startToken;
-      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
-
-      public Node(String name, String value, String startToken) {
-         this.name = name;
-         this.value = value;
-			this.startToken = startToken;
-      }
-   }
+public class JSONNeoListener extends JSONBaseListener {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
+	private final com.generator.NeoModel model;
 
-	public JSONNodeListener() {
-		this(false);
+	public JSONNeoListener(com.generator.NeoModel model) {
+		this(model, false);
 	}
 
-	public JSONNodeListener(boolean debug) {
+	public JSONNeoListener(com.generator.NeoModel model, boolean debug) {
+		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+		if (!nodeStack.isEmpty())
+      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -50,7 +43,8 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText());
+		onEnter(node);
 		this.inJson = true;
 	}
 
@@ -63,7 +57,8 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText());
+		onEnter(node);
 		this.inObj = true;
 	}
 
@@ -76,7 +71,8 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText());
+		onEnter(node);
 		this.inPair = true;
 	}
 
@@ -89,7 +85,8 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Array"), "text", arg.getText());
+		onEnter(node);
 		this.inArray = true;
 	}
 
@@ -102,7 +99,8 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+		onEnter(node);
 		this.inValue = true;
 	}
 

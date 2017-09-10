@@ -1,37 +1,30 @@
 package com.generator.generators.cpp.parser;
 
-public class CPP14NodeListener extends CPP14BaseListener {
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
 
-   public static class Node {
-
-      public final String name;
-      public final String value;
-      public final String startToken;
-      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
-
-      public Node(String name, String value, String startToken) {
-         this.name = name;
-         this.value = value;
-			this.startToken = startToken;
-      }
-   }
+public class CPP14NeoListener extends CPP14BaseListener {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
+	private final com.generator.NeoModel model;
 
-	public CPP14NodeListener() {
-		this(false);
+	public CPP14NeoListener(com.generator.NeoModel model) {
+		this(model, false);
 	}
 
-	public CPP14NodeListener(boolean debug) {
+	public CPP14NeoListener(com.generator.NeoModel model, boolean debug) {
+		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+		if (!nodeStack.isEmpty())
+      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -50,7 +43,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Translationunit"), "text", arg.getText());
+		onEnter(node);
 		this.inTranslationunit = true;
 	}
 
@@ -63,7 +57,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inPrimaryexpression = true;
 	}
 
@@ -76,7 +71,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inIdexpression = true;
 	}
 
@@ -89,7 +85,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText());
+		onEnter(node);
 		this.inUnqualifiedid = true;
 	}
 
@@ -102,7 +99,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText());
+		onEnter(node);
 		this.inQualifiedid = true;
 	}
 
@@ -115,7 +113,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inNestednamespecifier = true;
 	}
 
@@ -128,7 +127,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Lambdaexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inLambdaexpression = true;
 	}
 
@@ -141,7 +141,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Lambdaintroducer"), "text", arg.getText());
+		onEnter(node);
 		this.inLambdaintroducer = true;
 	}
 
@@ -154,7 +155,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Lambdacapture"), "text", arg.getText());
+		onEnter(node);
 		this.inLambdacapture = true;
 	}
 
@@ -167,7 +169,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Capturedefault"), "text", arg.getText());
+		onEnter(node);
 		this.inCapturedefault = true;
 	}
 
@@ -180,7 +183,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Capturelist"), "text", arg.getText());
+		onEnter(node);
 		this.inCapturelist = true;
 	}
 
@@ -193,7 +197,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Capture"), "text", arg.getText());
+		onEnter(node);
 		this.inCapture = true;
 	}
 
@@ -206,7 +211,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Simplecapture"), "text", arg.getText());
+		onEnter(node);
 		this.inSimplecapture = true;
 	}
 
@@ -219,7 +225,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initcapture"), "text", arg.getText());
+		onEnter(node);
 		this.inInitcapture = true;
 	}
 
@@ -232,7 +239,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Lambdadeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inLambdadeclarator = true;
 	}
 
@@ -245,7 +253,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Postfixexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inPostfixexpression = true;
 	}
 
@@ -258,7 +267,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Expressionlist"), "text", arg.getText());
+		onEnter(node);
 		this.inExpressionlist = true;
 	}
 
@@ -271,7 +281,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Pseudodestructorname"), "text", arg.getText());
+		onEnter(node);
 		this.inPseudodestructorname = true;
 	}
 
@@ -284,7 +295,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Unaryexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inUnaryexpression = true;
 	}
 
@@ -297,7 +309,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Unaryoperator"), "text", arg.getText());
+		onEnter(node);
 		this.inUnaryoperator = true;
 	}
 
@@ -310,7 +323,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Newexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inNewexpression = true;
 	}
 
@@ -323,7 +337,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Newplacement"), "text", arg.getText());
+		onEnter(node);
 		this.inNewplacement = true;
 	}
 
@@ -336,7 +351,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Newtypeid"), "text", arg.getText());
+		onEnter(node);
 		this.inNewtypeid = true;
 	}
 
@@ -349,7 +365,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Newdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inNewdeclarator = true;
 	}
 
@@ -362,7 +379,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noptrnewdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inNoptrnewdeclarator = true;
 	}
 
@@ -375,7 +393,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Newinitializer"), "text", arg.getText());
+		onEnter(node);
 		this.inNewinitializer = true;
 	}
 
@@ -388,7 +407,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Deleteexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inDeleteexpression = true;
 	}
 
@@ -401,7 +421,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noexceptexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inNoexceptexpression = true;
 	}
 
@@ -414,7 +435,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Castexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inCastexpression = true;
 	}
 
@@ -427,7 +449,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Pmexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inPmexpression = true;
 	}
 
@@ -440,7 +463,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Multiplicativeexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inMultiplicativeexpression = true;
 	}
 
@@ -453,7 +477,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Additiveexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inAdditiveexpression = true;
 	}
 
@@ -466,7 +491,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Shiftexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inShiftexpression = true;
 	}
 
@@ -479,7 +505,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Relationalexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inRelationalexpression = true;
 	}
 
@@ -492,7 +519,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Equalityexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inEqualityexpression = true;
 	}
 
@@ -505,7 +533,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Andexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inAndexpression = true;
 	}
 
@@ -518,7 +547,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
 		this.inExpression = true;
 	}
 
@@ -531,7 +561,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		onEnter(new Node("Exclusiveorexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Exclusiveorexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inExclusiveorexpression = true;
 	}
 
@@ -544,7 +575,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		onEnter(new Node("Inclusiveorexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Inclusiveorexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inInclusiveorexpression = true;
 	}
 
@@ -557,7 +589,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		onEnter(new Node("Logicalandexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Logicalandexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inLogicalandexpression = true;
 	}
 
@@ -570,7 +603,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		onEnter(new Node("Logicalorexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Logicalorexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inLogicalorexpression = true;
 	}
 
@@ -583,7 +617,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		onEnter(new Node("Conditionalexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Conditionalexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inConditionalexpression = true;
 	}
 
@@ -596,7 +631,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		onEnter(new Node("Assignmentexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Assignmentexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inAssignmentexpression = true;
 	}
 
@@ -609,7 +645,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		onEnter(new Node("Assignmentoperator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Assignmentoperator"), "text", arg.getText());
+		onEnter(node);
 		this.inAssignmentoperator = true;
 	}
 
@@ -622,7 +659,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		onEnter(new Node("Constantexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Constantexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inConstantexpression = true;
 	}
 
@@ -635,7 +673,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
 		this.inStatement = true;
 	}
 
@@ -648,7 +687,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		onEnter(new Node("Labeledstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Labeledstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inLabeledstatement = true;
 	}
 
@@ -661,7 +701,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		onEnter(new Node("Expressionstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Expressionstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inExpressionstatement = true;
 	}
 
@@ -674,7 +715,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		onEnter(new Node("Compoundstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Compoundstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inCompoundstatement = true;
 	}
 
@@ -687,7 +729,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		onEnter(new Node("Statementseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Statementseq"), "text", arg.getText());
+		onEnter(node);
 		this.inStatementseq = true;
 	}
 
@@ -700,7 +743,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		onEnter(new Node("Selectionstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Selectionstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inSelectionstatement = true;
 	}
 
@@ -713,7 +757,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		onEnter(new Node("Condition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Condition"), "text", arg.getText());
+		onEnter(node);
 		this.inCondition = true;
 	}
 
@@ -726,7 +771,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
-		onEnter(new Node("Iterationstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Iterationstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inIterationstatement = true;
 	}
 
@@ -739,7 +785,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
-		onEnter(new Node("Forinitstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Forinitstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inForinitstatement = true;
 	}
 
@@ -752,7 +799,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
-		onEnter(new Node("Forrangedeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Forrangedeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inForrangedeclaration = true;
 	}
 
@@ -765,7 +813,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
-		onEnter(new Node("Forrangeinitializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Forrangeinitializer"), "text", arg.getText());
+		onEnter(node);
 		this.inForrangeinitializer = true;
 	}
 
@@ -778,7 +827,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
-		onEnter(new Node("Jumpstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Jumpstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inJumpstatement = true;
 	}
 
@@ -791,7 +841,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
-		onEnter(new Node("Declarationstatement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declarationstatement"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclarationstatement = true;
 	}
 
@@ -804,7 +855,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
-		onEnter(new Node("Declarationseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declarationseq"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclarationseq = true;
 	}
 
@@ -817,7 +869,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declaration"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclaration = true;
 	}
 
@@ -830,7 +883,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
-		onEnter(new Node("Blockdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Blockdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inBlockdeclaration = true;
 	}
 
@@ -843,7 +897,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
-		onEnter(new Node("Aliasdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Aliasdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inAliasdeclaration = true;
 	}
 
@@ -856,7 +911,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
-		onEnter(new Node("Simpledeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Simpledeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inSimpledeclaration = true;
 	}
 
@@ -869,7 +925,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
-		onEnter(new Node("Static_assertdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Static_assertdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inStatic_assertdeclaration = true;
 	}
 
@@ -882,7 +939,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
-		onEnter(new Node("Emptydeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Emptydeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inEmptydeclaration = true;
 	}
 
@@ -895,7 +953,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
-		onEnter(new Node("Attributedeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributedeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributedeclaration = true;
 	}
 
@@ -908,7 +967,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
-		onEnter(new Node("Declspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclspecifier = true;
 	}
 
@@ -921,7 +981,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
-		onEnter(new Node("Declspecifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declspecifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclspecifierseq = true;
 	}
 
@@ -934,7 +995,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
-		onEnter(new Node("Storageclassspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Storageclassspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inStorageclassspecifier = true;
 	}
 
@@ -947,7 +1009,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
-		onEnter(new Node("Functionspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Functionspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inFunctionspecifier = true;
 	}
 
@@ -960,7 +1023,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
-		onEnter(new Node("Typedefname", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typedefname"), "text", arg.getText());
+		onEnter(node);
 		this.inTypedefname = true;
 	}
 
@@ -973,7 +1037,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
-		onEnter(new Node("Typespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inTypespecifier = true;
 	}
 
@@ -986,7 +1051,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
-		onEnter(new Node("Trailingtypespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Trailingtypespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inTrailingtypespecifier = true;
 	}
 
@@ -999,7 +1065,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
-		onEnter(new Node("Typespecifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typespecifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inTypespecifierseq = true;
 	}
 
@@ -1012,7 +1079,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
-		onEnter(new Node("Trailingtypespecifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Trailingtypespecifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inTrailingtypespecifierseq = true;
 	}
 
@@ -1025,7 +1093,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
-		onEnter(new Node("Simpletypespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Simpletypespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inSimpletypespecifier = true;
 	}
 
@@ -1038,7 +1107,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
-		onEnter(new Node("Typename", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typename"), "text", arg.getText());
+		onEnter(node);
 		this.inTypename = true;
 	}
 
@@ -1051,7 +1121,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
-		onEnter(new Node("Decltypespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Decltypespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inDecltypespecifier = true;
 	}
 
@@ -1064,7 +1135,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
-		onEnter(new Node("Elaboratedtypespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Elaboratedtypespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inElaboratedtypespecifier = true;
 	}
 
@@ -1077,7 +1149,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
-		onEnter(new Node("Enumname", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumname"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumname = true;
 	}
 
@@ -1090,7 +1163,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
-		onEnter(new Node("Enumspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumspecifier = true;
 	}
 
@@ -1103,7 +1177,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
-		onEnter(new Node("Enumhead", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumhead"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumhead = true;
 	}
 
@@ -1116,7 +1191,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
-		onEnter(new Node("Opaqueenumdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Opaqueenumdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inOpaqueenumdeclaration = true;
 	}
 
@@ -1129,7 +1205,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
-		onEnter(new Node("Enumkey", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumkey"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumkey = true;
 	}
 
@@ -1142,7 +1219,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
-		onEnter(new Node("Enumbase", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumbase"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumbase = true;
 	}
 
@@ -1155,7 +1233,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
-		onEnter(new Node("Enumeratorlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumeratorlist"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumeratorlist = true;
 	}
 
@@ -1168,7 +1247,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
-		onEnter(new Node("Enumeratordefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumeratordefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumeratordefinition = true;
 	}
 
@@ -1181,7 +1261,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
-		onEnter(new Node("Enumerator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Enumerator"), "text", arg.getText());
+		onEnter(node);
 		this.inEnumerator = true;
 	}
 
@@ -1194,7 +1275,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
-		onEnter(new Node("Namespacename", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namespacename"), "text", arg.getText());
+		onEnter(node);
 		this.inNamespacename = true;
 	}
 
@@ -1207,7 +1289,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacename(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacenameContext arg) {
-		onEnter(new Node("Originalnamespacename", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Originalnamespacename"), "text", arg.getText());
+		onEnter(node);
 		this.inOriginalnamespacename = true;
 	}
 
@@ -1220,7 +1303,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacedefinitionContext arg) {
-		onEnter(new Node("Namespacedefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namespacedefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inNamespacedefinition = true;
 	}
 
@@ -1233,7 +1317,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamednamespacedefinitionContext arg) {
-		onEnter(new Node("Namednamespacedefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namednamespacedefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inNamednamespacedefinition = true;
 	}
 
@@ -1246,7 +1331,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacedefinitionContext arg) {
-		onEnter(new Node("Originalnamespacedefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Originalnamespacedefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inOriginalnamespacedefinition = true;
 	}
 
@@ -1259,7 +1345,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExtensionnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.ExtensionnamespacedefinitionContext arg) {
-		onEnter(new Node("Extensionnamespacedefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Extensionnamespacedefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inExtensionnamespacedefinition = true;
 	}
 
@@ -1272,7 +1359,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnnamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.UnnamednamespacedefinitionContext arg) {
-		onEnter(new Node("Unnamednamespacedefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Unnamednamespacedefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inUnnamednamespacedefinition = true;
 	}
 
@@ -1285,7 +1373,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacebody(com.generator.generators.cpp.parser.CPP14Parser.NamespacebodyContext arg) {
-		onEnter(new Node("Namespacebody", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namespacebody"), "text", arg.getText());
+		onEnter(node);
 		this.inNamespacebody = true;
 	}
 
@@ -1298,7 +1387,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealias(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasContext arg) {
-		onEnter(new Node("Namespacealias", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namespacealias"), "text", arg.getText());
+		onEnter(node);
 		this.inNamespacealias = true;
 	}
 
@@ -1311,7 +1401,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealiasdefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasdefinitionContext arg) {
-		onEnter(new Node("Namespacealiasdefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Namespacealiasdefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inNamespacealiasdefinition = true;
 	}
 
@@ -1324,7 +1415,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterQualifiednamespacespecifier(com.generator.generators.cpp.parser.CPP14Parser.QualifiednamespacespecifierContext arg) {
-		onEnter(new Node("Qualifiednamespacespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Qualifiednamespacespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inQualifiednamespacespecifier = true;
 	}
 
@@ -1337,7 +1429,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdeclaration(com.generator.generators.cpp.parser.CPP14Parser.UsingdeclarationContext arg) {
-		onEnter(new Node("Usingdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Usingdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inUsingdeclaration = true;
 	}
 
@@ -1350,7 +1443,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdirective(com.generator.generators.cpp.parser.CPP14Parser.UsingdirectiveContext arg) {
-		onEnter(new Node("Usingdirective", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Usingdirective"), "text", arg.getText());
+		onEnter(node);
 		this.inUsingdirective = true;
 	}
 
@@ -1363,7 +1457,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAsmdefinition(com.generator.generators.cpp.parser.CPP14Parser.AsmdefinitionContext arg) {
-		onEnter(new Node("Asmdefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Asmdefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inAsmdefinition = true;
 	}
 
@@ -1376,7 +1471,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLinkagespecification(com.generator.generators.cpp.parser.CPP14Parser.LinkagespecificationContext arg) {
-		onEnter(new Node("Linkagespecification", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Linkagespecification"), "text", arg.getText());
+		onEnter(node);
 		this.inLinkagespecification = true;
 	}
 
@@ -1389,7 +1485,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierseqContext arg) {
-		onEnter(new Node("Attributespecifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributespecifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributespecifierseq = true;
 	}
 
@@ -1402,7 +1499,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifier(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierContext arg) {
-		onEnter(new Node("Attributespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributespecifier = true;
 	}
 
@@ -1415,7 +1513,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAlignmentspecifier(com.generator.generators.cpp.parser.CPP14Parser.AlignmentspecifierContext arg) {
-		onEnter(new Node("Alignmentspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Alignmentspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inAlignmentspecifier = true;
 	}
 
@@ -1428,7 +1527,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
-		onEnter(new Node("Attributelist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributelist"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributelist = true;
 	}
 
@@ -1441,7 +1541,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
+		onEnter(node);
 		this.inAttribute = true;
 	}
 
@@ -1454,7 +1555,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributetoken(com.generator.generators.cpp.parser.CPP14Parser.AttributetokenContext arg) {
-		onEnter(new Node("Attributetoken", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributetoken"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributetoken = true;
 	}
 
@@ -1467,7 +1569,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributescopedtoken(com.generator.generators.cpp.parser.CPP14Parser.AttributescopedtokenContext arg) {
-		onEnter(new Node("Attributescopedtoken", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributescopedtoken"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributescopedtoken = true;
 	}
 
@@ -1480,7 +1583,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributenamespace(com.generator.generators.cpp.parser.CPP14Parser.AttributenamespaceContext arg) {
-		onEnter(new Node("Attributenamespace", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributenamespace"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributenamespace = true;
 	}
 
@@ -1493,7 +1597,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributeargumentclause(com.generator.generators.cpp.parser.CPP14Parser.AttributeargumentclauseContext arg) {
-		onEnter(new Node("Attributeargumentclause", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attributeargumentclause"), "text", arg.getText());
+		onEnter(node);
 		this.inAttributeargumentclause = true;
 	}
 
@@ -1506,7 +1611,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBalancedtokenseq(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenseqContext arg) {
-		onEnter(new Node("Balancedtokenseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Balancedtokenseq"), "text", arg.getText());
+		onEnter(node);
 		this.inBalancedtokenseq = true;
 	}
 
@@ -1519,7 +1625,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBalancedtoken(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenContext arg) {
-		onEnter(new Node("Balancedtoken", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Balancedtoken"), "text", arg.getText());
+		onEnter(node);
 		this.inBalancedtoken = true;
 	}
 
@@ -1532,7 +1639,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorlistContext arg) {
-		onEnter(new Node("Initdeclaratorlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initdeclaratorlist"), "text", arg.getText());
+		onEnter(node);
 		this.inInitdeclaratorlist = true;
 	}
 
@@ -1545,7 +1653,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclarator(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorContext arg) {
-		onEnter(new Node("Initdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inInitdeclarator = true;
 	}
 
@@ -1558,7 +1667,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
-		onEnter(new Node("Declarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declarator"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclarator = true;
 	}
 
@@ -1571,7 +1681,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrdeclaratorContext arg) {
-		onEnter(new Node("Ptrdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ptrdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inPtrdeclarator = true;
 	}
 
@@ -1584,7 +1695,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrdeclaratorContext arg) {
-		onEnter(new Node("Noptrdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noptrdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inNoptrdeclarator = true;
 	}
 
@@ -1597,7 +1709,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParametersandqualifiers(com.generator.generators.cpp.parser.CPP14Parser.ParametersandqualifiersContext arg) {
-		onEnter(new Node("Parametersandqualifiers", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Parametersandqualifiers"), "text", arg.getText());
+		onEnter(node);
 		this.inParametersandqualifiers = true;
 	}
 
@@ -1610,7 +1723,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingreturntype(com.generator.generators.cpp.parser.CPP14Parser.TrailingreturntypeContext arg) {
-		onEnter(new Node("Trailingreturntype", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Trailingreturntype"), "text", arg.getText());
+		onEnter(node);
 		this.inTrailingreturntype = true;
 	}
 
@@ -1623,7 +1737,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtroperator(com.generator.generators.cpp.parser.CPP14Parser.PtroperatorContext arg) {
-		onEnter(new Node("Ptroperator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ptroperator"), "text", arg.getText());
+		onEnter(node);
 		this.inPtroperator = true;
 	}
 
@@ -1636,7 +1751,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifierseq(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierseqContext arg) {
-		onEnter(new Node("Cvqualifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Cvqualifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inCvqualifierseq = true;
 	}
 
@@ -1649,7 +1765,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifier(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierContext arg) {
-		onEnter(new Node("Cvqualifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Cvqualifier"), "text", arg.getText());
+		onEnter(node);
 		this.inCvqualifier = true;
 	}
 
@@ -1662,7 +1779,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRefqualifier(com.generator.generators.cpp.parser.CPP14Parser.RefqualifierContext arg) {
-		onEnter(new Node("Refqualifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Refqualifier"), "text", arg.getText());
+		onEnter(node);
 		this.inRefqualifier = true;
 	}
 
@@ -1675,7 +1793,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclaratorid(com.generator.generators.cpp.parser.CPP14Parser.DeclaratoridContext arg) {
-		onEnter(new Node("Declaratorid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Declaratorid"), "text", arg.getText());
+		onEnter(node);
 		this.inDeclaratorid = true;
 	}
 
@@ -1688,7 +1807,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeid(com.generator.generators.cpp.parser.CPP14Parser.TypeidContext arg) {
-		onEnter(new Node("Typeid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typeid"), "text", arg.getText());
+		onEnter(node);
 		this.inTypeid = true;
 	}
 
@@ -1701,7 +1821,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractdeclaratorContext arg) {
-		onEnter(new Node("Abstractdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Abstractdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inAbstractdeclarator = true;
 	}
 
@@ -1714,7 +1835,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrabstractdeclaratorContext arg) {
-		onEnter(new Node("Ptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ptrabstractdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inPtrabstractdeclarator = true;
 	}
 
@@ -1727,7 +1849,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractdeclaratorContext arg) {
-		onEnter(new Node("Noptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noptrabstractdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inNoptrabstractdeclarator = true;
 	}
 
@@ -1740,7 +1863,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractpackdeclaratorContext arg) {
-		onEnter(new Node("Abstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Abstractpackdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inAbstractpackdeclarator = true;
 	}
 
@@ -1753,7 +1877,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractpackdeclaratorContext arg) {
-		onEnter(new Node("Noptrabstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noptrabstractpackdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inNoptrabstractpackdeclarator = true;
 	}
 
@@ -1766,7 +1891,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationclause(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationclauseContext arg) {
-		onEnter(new Node("Parameterdeclarationclause", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Parameterdeclarationclause"), "text", arg.getText());
+		onEnter(node);
 		this.inParameterdeclarationclause = true;
 	}
 
@@ -1779,7 +1905,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationlist(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationlistContext arg) {
-		onEnter(new Node("Parameterdeclarationlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Parameterdeclarationlist"), "text", arg.getText());
+		onEnter(node);
 		this.inParameterdeclarationlist = true;
 	}
 
@@ -1792,7 +1919,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclaration(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationContext arg) {
-		onEnter(new Node("Parameterdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Parameterdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inParameterdeclaration = true;
 	}
 
@@ -1805,7 +1933,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiondefinition(com.generator.generators.cpp.parser.CPP14Parser.FunctiondefinitionContext arg) {
-		onEnter(new Node("Functiondefinition", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Functiondefinition"), "text", arg.getText());
+		onEnter(node);
 		this.inFunctiondefinition = true;
 	}
 
@@ -1818,7 +1947,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctionbody(com.generator.generators.cpp.parser.CPP14Parser.FunctionbodyContext arg) {
-		onEnter(new Node("Functionbody", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Functionbody"), "text", arg.getText());
+		onEnter(node);
 		this.inFunctionbody = true;
 	}
 
@@ -1831,7 +1961,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializer(com.generator.generators.cpp.parser.CPP14Parser.InitializerContext arg) {
-		onEnter(new Node("Initializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initializer"), "text", arg.getText());
+		onEnter(node);
 		this.inInitializer = true;
 	}
 
@@ -1844,7 +1975,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBraceorequalinitializer(com.generator.generators.cpp.parser.CPP14Parser.BraceorequalinitializerContext arg) {
-		onEnter(new Node("Braceorequalinitializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Braceorequalinitializer"), "text", arg.getText());
+		onEnter(node);
 		this.inBraceorequalinitializer = true;
 	}
 
@@ -1857,7 +1989,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
-		onEnter(new Node("Initializerclause", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initializerclause"), "text", arg.getText());
+		onEnter(node);
 		this.inInitializerclause = true;
 	}
 
@@ -1870,7 +2003,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerlist(com.generator.generators.cpp.parser.CPP14Parser.InitializerlistContext arg) {
-		onEnter(new Node("Initializerlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Initializerlist"), "text", arg.getText());
+		onEnter(node);
 		this.inInitializerlist = true;
 	}
 
@@ -1883,7 +2017,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBracedinitlist(com.generator.generators.cpp.parser.CPP14Parser.BracedinitlistContext arg) {
-		onEnter(new Node("Bracedinitlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Bracedinitlist"), "text", arg.getText());
+		onEnter(node);
 		this.inBracedinitlist = true;
 	}
 
@@ -1896,7 +2031,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassname(com.generator.generators.cpp.parser.CPP14Parser.ClassnameContext arg) {
-		onEnter(new Node("Classname", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classname"), "text", arg.getText());
+		onEnter(node);
 		this.inClassname = true;
 	}
 
@@ -1909,7 +2045,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassspecifierContext arg) {
-		onEnter(new Node("Classspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inClassspecifier = true;
 	}
 
@@ -1922,7 +2059,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasshead(com.generator.generators.cpp.parser.CPP14Parser.ClassheadContext arg) {
-		onEnter(new Node("Classhead", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classhead"), "text", arg.getText());
+		onEnter(node);
 		this.inClasshead = true;
 	}
 
@@ -1935,7 +2073,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassheadname(com.generator.generators.cpp.parser.CPP14Parser.ClassheadnameContext arg) {
-		onEnter(new Node("Classheadname", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classheadname"), "text", arg.getText());
+		onEnter(node);
 		this.inClassheadname = true;
 	}
 
@@ -1948,7 +2087,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassvirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassvirtspecifierContext arg) {
-		onEnter(new Node("Classvirtspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classvirtspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inClassvirtspecifier = true;
 	}
 
@@ -1961,7 +2101,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasskey(com.generator.generators.cpp.parser.CPP14Parser.ClasskeyContext arg) {
-		onEnter(new Node("Classkey", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classkey"), "text", arg.getText());
+		onEnter(node);
 		this.inClasskey = true;
 	}
 
@@ -1974,7 +2115,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberspecification(com.generator.generators.cpp.parser.CPP14Parser.MemberspecificationContext arg) {
-		onEnter(new Node("Memberspecification", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Memberspecification"), "text", arg.getText());
+		onEnter(node);
 		this.inMemberspecification = true;
 	}
 
@@ -1987,7 +2129,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaration(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclarationContext arg) {
-		onEnter(new Node("Memberdeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Memberdeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inMemberdeclaration = true;
 	}
 
@@ -2000,7 +2143,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorlistContext arg) {
-		onEnter(new Node("Memberdeclaratorlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Memberdeclaratorlist"), "text", arg.getText());
+		onEnter(node);
 		this.inMemberdeclaratorlist = true;
 	}
 
@@ -2013,7 +2157,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclarator(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorContext arg) {
-		onEnter(new Node("Memberdeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Memberdeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inMemberdeclarator = true;
 	}
 
@@ -2026,7 +2171,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierseqContext arg) {
-		onEnter(new Node("Virtspecifierseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Virtspecifierseq"), "text", arg.getText());
+		onEnter(node);
 		this.inVirtspecifierseq = true;
 	}
 
@@ -2039,7 +2185,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierContext arg) {
-		onEnter(new Node("Virtspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Virtspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inVirtspecifier = true;
 	}
 
@@ -2052,7 +2199,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPurespecifier(com.generator.generators.cpp.parser.CPP14Parser.PurespecifierContext arg) {
-		onEnter(new Node("Purespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Purespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inPurespecifier = true;
 	}
 
@@ -2065,7 +2213,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBaseclause(com.generator.generators.cpp.parser.CPP14Parser.BaseclauseContext arg) {
-		onEnter(new Node("Baseclause", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Baseclause"), "text", arg.getText());
+		onEnter(node);
 		this.inBaseclause = true;
 	}
 
@@ -2078,7 +2227,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifierlist(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierlistContext arg) {
-		onEnter(new Node("Basespecifierlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Basespecifierlist"), "text", arg.getText());
+		onEnter(node);
 		this.inBasespecifierlist = true;
 	}
 
@@ -2091,7 +2241,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierContext arg) {
-		onEnter(new Node("Basespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Basespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inBasespecifier = true;
 	}
 
@@ -2104,7 +2255,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassordecltype(com.generator.generators.cpp.parser.CPP14Parser.ClassordecltypeContext arg) {
-		onEnter(new Node("Classordecltype", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Classordecltype"), "text", arg.getText());
+		onEnter(node);
 		this.inClassordecltype = true;
 	}
 
@@ -2117,7 +2269,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasetypespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasetypespecifierContext arg) {
-		onEnter(new Node("Basetypespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Basetypespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inBasetypespecifier = true;
 	}
 
@@ -2130,7 +2283,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAccessspecifier(com.generator.generators.cpp.parser.CPP14Parser.AccessspecifierContext arg) {
-		onEnter(new Node("Accessspecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Accessspecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inAccessspecifier = true;
 	}
 
@@ -2143,7 +2297,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversionfunctionid(com.generator.generators.cpp.parser.CPP14Parser.ConversionfunctionidContext arg) {
-		onEnter(new Node("Conversionfunctionid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Conversionfunctionid"), "text", arg.getText());
+		onEnter(node);
 		this.inConversionfunctionid = true;
 	}
 
@@ -2156,7 +2311,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiontypeid(com.generator.generators.cpp.parser.CPP14Parser.ConversiontypeidContext arg) {
-		onEnter(new Node("Conversiontypeid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Conversiontypeid"), "text", arg.getText());
+		onEnter(node);
 		this.inConversiontypeid = true;
 	}
 
@@ -2169,7 +2325,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiondeclarator(com.generator.generators.cpp.parser.CPP14Parser.ConversiondeclaratorContext arg) {
-		onEnter(new Node("Conversiondeclarator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Conversiondeclarator"), "text", arg.getText());
+		onEnter(node);
 		this.inConversiondeclarator = true;
 	}
 
@@ -2182,7 +2339,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCtorinitializer(com.generator.generators.cpp.parser.CPP14Parser.CtorinitializerContext arg) {
-		onEnter(new Node("Ctorinitializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ctorinitializer"), "text", arg.getText());
+		onEnter(node);
 		this.inCtorinitializer = true;
 	}
 
@@ -2195,7 +2353,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerlist(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerlistContext arg) {
-		onEnter(new Node("Meminitializerlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Meminitializerlist"), "text", arg.getText());
+		onEnter(node);
 		this.inMeminitializerlist = true;
 	}
 
@@ -2208,7 +2367,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializer(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerContext arg) {
-		onEnter(new Node("Meminitializer", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Meminitializer"), "text", arg.getText());
+		onEnter(node);
 		this.inMeminitializer = true;
 	}
 
@@ -2221,7 +2381,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerid(com.generator.generators.cpp.parser.CPP14Parser.MeminitializeridContext arg) {
-		onEnter(new Node("Meminitializerid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Meminitializerid"), "text", arg.getText());
+		onEnter(node);
 		this.inMeminitializerid = true;
 	}
 
@@ -2234,7 +2395,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperatorfunctionid(com.generator.generators.cpp.parser.CPP14Parser.OperatorfunctionidContext arg) {
-		onEnter(new Node("Operatorfunctionid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Operatorfunctionid"), "text", arg.getText());
+		onEnter(node);
 		this.inOperatorfunctionid = true;
 	}
 
@@ -2247,7 +2409,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLiteraloperatorid(com.generator.generators.cpp.parser.CPP14Parser.LiteraloperatoridContext arg) {
-		onEnter(new Node("Literaloperatorid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Literaloperatorid"), "text", arg.getText());
+		onEnter(node);
 		this.inLiteraloperatorid = true;
 	}
 
@@ -2260,7 +2423,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatedeclaration(com.generator.generators.cpp.parser.CPP14Parser.TemplatedeclarationContext arg) {
-		onEnter(new Node("Templatedeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templatedeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplatedeclaration = true;
 	}
 
@@ -2273,7 +2437,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameterlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterlistContext arg) {
-		onEnter(new Node("Templateparameterlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templateparameterlist"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplateparameterlist = true;
 	}
 
@@ -2286,7 +2451,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameter(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterContext arg) {
-		onEnter(new Node("Templateparameter", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templateparameter"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplateparameter = true;
 	}
 
@@ -2299,7 +2465,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
-		onEnter(new Node("Typeparameter", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typeparameter"), "text", arg.getText());
+		onEnter(node);
 		this.inTypeparameter = true;
 	}
 
@@ -2312,7 +2479,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
-		onEnter(new Node("Simpletemplateid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Simpletemplateid"), "text", arg.getText());
+		onEnter(node);
 		this.inSimpletemplateid = true;
 	}
 
@@ -2325,7 +2493,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
-		onEnter(new Node("Templateid", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templateid"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplateid = true;
 	}
 
@@ -2338,7 +2507,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatename(com.generator.generators.cpp.parser.CPP14Parser.TemplatenameContext arg) {
-		onEnter(new Node("Templatename", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templatename"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplatename = true;
 	}
 
@@ -2351,7 +2521,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargumentlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentlistContext arg) {
-		onEnter(new Node("Templateargumentlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templateargumentlist"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplateargumentlist = true;
 	}
 
@@ -2364,7 +2535,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargument(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentContext arg) {
-		onEnter(new Node("Templateargument", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Templateargument"), "text", arg.getText());
+		onEnter(node);
 		this.inTemplateargument = true;
 	}
 
@@ -2377,7 +2549,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypenamespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypenamespecifierContext arg) {
-		onEnter(new Node("Typenamespecifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typenamespecifier"), "text", arg.getText());
+		onEnter(node);
 		this.inTypenamespecifier = true;
 	}
 
@@ -2390,7 +2563,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitinstantiation(com.generator.generators.cpp.parser.CPP14Parser.ExplicitinstantiationContext arg) {
-		onEnter(new Node("Explicitinstantiation", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Explicitinstantiation"), "text", arg.getText());
+		onEnter(node);
 		this.inExplicitinstantiation = true;
 	}
 
@@ -2403,7 +2577,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitspecialization(com.generator.generators.cpp.parser.CPP14Parser.ExplicitspecializationContext arg) {
-		onEnter(new Node("Explicitspecialization", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Explicitspecialization"), "text", arg.getText());
+		onEnter(node);
 		this.inExplicitspecialization = true;
 	}
 
@@ -2416,7 +2591,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTryblock(com.generator.generators.cpp.parser.CPP14Parser.TryblockContext arg) {
-		onEnter(new Node("Tryblock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Tryblock"), "text", arg.getText());
+		onEnter(node);
 		this.inTryblock = true;
 	}
 
@@ -2429,7 +2605,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiontryblock(com.generator.generators.cpp.parser.CPP14Parser.FunctiontryblockContext arg) {
-		onEnter(new Node("Functiontryblock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Functiontryblock"), "text", arg.getText());
+		onEnter(node);
 		this.inFunctiontryblock = true;
 	}
 
@@ -2442,7 +2619,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandlerseq(com.generator.generators.cpp.parser.CPP14Parser.HandlerseqContext arg) {
-		onEnter(new Node("Handlerseq", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Handlerseq"), "text", arg.getText());
+		onEnter(node);
 		this.inHandlerseq = true;
 	}
 
@@ -2455,7 +2633,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandler(com.generator.generators.cpp.parser.CPP14Parser.HandlerContext arg) {
-		onEnter(new Node("Handler", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Handler"), "text", arg.getText());
+		onEnter(node);
 		this.inHandler = true;
 	}
 
@@ -2468,7 +2647,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptiondeclaration(com.generator.generators.cpp.parser.CPP14Parser.ExceptiondeclarationContext arg) {
-		onEnter(new Node("Exceptiondeclaration", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Exceptiondeclaration"), "text", arg.getText());
+		onEnter(node);
 		this.inExceptiondeclaration = true;
 	}
 
@@ -2481,7 +2661,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterThrowexpression(com.generator.generators.cpp.parser.CPP14Parser.ThrowexpressionContext arg) {
-		onEnter(new Node("Throwexpression", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Throwexpression"), "text", arg.getText());
+		onEnter(node);
 		this.inThrowexpression = true;
 	}
 
@@ -2494,7 +2675,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
-		onEnter(new Node("Exceptionspecification", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Exceptionspecification"), "text", arg.getText());
+		onEnter(node);
 		this.inExceptionspecification = true;
 	}
 
@@ -2507,7 +2689,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
-		onEnter(new Node("Dynamicexceptionspecification", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Dynamicexceptionspecification"), "text", arg.getText());
+		onEnter(node);
 		this.inDynamicexceptionspecification = true;
 	}
 
@@ -2520,7 +2703,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeidlist(com.generator.generators.cpp.parser.CPP14Parser.TypeidlistContext arg) {
-		onEnter(new Node("Typeidlist", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Typeidlist"), "text", arg.getText());
+		onEnter(node);
 		this.inTypeidlist = true;
 	}
 
@@ -2533,7 +2717,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoexceptspecification(com.generator.generators.cpp.parser.CPP14Parser.NoexceptspecificationContext arg) {
-		onEnter(new Node("Noexceptspecification", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Noexceptspecification"), "text", arg.getText());
+		onEnter(node);
 		this.inNoexceptspecification = true;
 	}
 
@@ -2546,7 +2731,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShift(com.generator.generators.cpp.parser.CPP14Parser.RightShiftContext arg) {
-		onEnter(new Node("RightShift", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RightShift"), "text", arg.getText());
+		onEnter(node);
 		this.inRightShift = true;
 	}
 
@@ -2559,7 +2745,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShiftAssign(com.generator.generators.cpp.parser.CPP14Parser.RightShiftAssignContext arg) {
-		onEnter(new Node("RightShiftAssign", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RightShiftAssign"), "text", arg.getText());
+		onEnter(node);
 		this.inRightShiftAssign = true;
 	}
 
@@ -2572,7 +2759,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperator(com.generator.generators.cpp.parser.CPP14Parser.OperatorContext arg) {
-		onEnter(new Node("Operator", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Operator"), "text", arg.getText());
+		onEnter(node);
 		this.inOperator = true;
 	}
 
@@ -2585,7 +2773,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
 		this.inLiteral = true;
 	}
 
@@ -2598,7 +2787,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBooleanliteral(com.generator.generators.cpp.parser.CPP14Parser.BooleanliteralContext arg) {
-		onEnter(new Node("Booleanliteral", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Booleanliteral"), "text", arg.getText());
+		onEnter(node);
 		this.inBooleanliteral = true;
 	}
 
@@ -2611,7 +2801,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPointerliteral(com.generator.generators.cpp.parser.CPP14Parser.PointerliteralContext arg) {
-		onEnter(new Node("Pointerliteral", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Pointerliteral"), "text", arg.getText());
+		onEnter(node);
 		this.inPointerliteral = true;
 	}
 
@@ -2624,7 +2815,8 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
-		onEnter(new Node("Userdefinedliteral", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Userdefinedliteral"), "text", arg.getText());
+		onEnter(node);
 		this.inUserdefinedliteral = true;
 	}
 

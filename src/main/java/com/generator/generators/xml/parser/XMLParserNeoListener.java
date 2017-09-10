@@ -1,37 +1,30 @@
 package com.generator.generators.xml.parser;
 
-public class XMLParserNodeListener extends XMLParserBaseListener {
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
 
-   public static class Node {
-
-      public final String name;
-      public final String value;
-      public final String startToken;
-      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
-
-      public Node(String name, String value, String startToken) {
-         this.name = name;
-         this.value = value;
-			this.startToken = startToken;
-      }
-   }
+public class XMLParserNeoListener extends XMLParserBaseListener {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
+	private final com.generator.NeoModel model;
 
-	public XMLParserNodeListener() {
-		this(false);
+	public XMLParserNeoListener(com.generator.NeoModel model) {
+		this(model, false);
 	}
 
-	public XMLParserNodeListener(boolean debug) {
+	public XMLParserNeoListener(com.generator.NeoModel model, boolean debug) {
+		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+		if (!nodeStack.isEmpty())
+      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -50,7 +43,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
+		onEnter(node);
 		this.inElement = true;
 	}
 
@@ -63,7 +57,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
+		onEnter(node);
 		this.inAttribute = true;
 	}
 
@@ -76,7 +71,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
+		onEnter(node);
 		this.inDocument = true;
 	}
 
@@ -89,7 +85,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
+		onEnter(node);
 		this.inProlog = true;
 	}
 
@@ -102,7 +99,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		onEnter(new Node("Content", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText());
+		onEnter(node);
 		this.inContent = true;
 	}
 
@@ -115,7 +113,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Reference"), "text", arg.getText());
+		onEnter(node);
 		this.inReference = true;
 	}
 
@@ -128,7 +127,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText());
+		onEnter(node);
 		this.inChardata = true;
 	}
 
@@ -141,7 +141,8 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
-		onEnter(new Node("Misc", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Misc"), "text", arg.getText());
+		onEnter(node);
 		this.inMisc = true;
 	}
 

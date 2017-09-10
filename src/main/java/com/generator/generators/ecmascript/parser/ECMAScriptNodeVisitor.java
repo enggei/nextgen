@@ -54,8 +54,26 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText());
+	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = new Node("Program", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		final Node node = new Node("SourceElements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		final Node node = new Node("SourceElement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -101,33 +119,6 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
 		final Node node = new Node("Initialiser", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		final Node node = new Node("SourceElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = new Node("Program", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = new Node("SourceElements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -920,6 +911,15 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
 		final Node node = new Node("Literal", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

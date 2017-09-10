@@ -1,37 +1,30 @@
 package com.generator.generators.antlr.parser;
 
-public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
 
-   public static class Node {
-
-      public final String name;
-      public final String value;
-      public final String startToken;
-      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
-
-      public Node(String name, String value, String startToken) {
-         this.name = name;
-         this.value = value;
-			this.startToken = startToken;
-      }
-   }
+public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
+	private final com.generator.NeoModel model;
 
-	public ANTLRv4ParserNodeListener() {
-		this(false);
+	public ANTLRv4ParserNeoListener(com.generator.NeoModel model) {
+		this(model, false);
 	}
 
-	public ANTLRv4ParserNodeListener(boolean debug) {
+	public ANTLRv4ParserNeoListener(com.generator.NeoModel model, boolean debug) {
+		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+		if (!nodeStack.isEmpty())
+      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -50,7 +43,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
+		onEnter(node);
 		this.inOption = true;
 	}
 
@@ -63,7 +57,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		onEnter(new Node("OptionValue", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText());
+		onEnter(node);
 		this.inOptionValue = true;
 	}
 
@@ -76,7 +71,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("DelegateGrammars"), "text", arg.getText());
+		onEnter(node);
 		this.inDelegateGrammars = true;
 	}
 
@@ -89,7 +85,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		onEnter(new Node("DelegateGrammar", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("DelegateGrammar"), "text", arg.getText());
+		onEnter(node);
 		this.inDelegateGrammar = true;
 	}
 
@@ -102,7 +99,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		onEnter(new Node("TokensSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("TokensSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inTokensSpec = true;
 	}
 
@@ -115,7 +113,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		onEnter(new Node("ChannelsSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inChannelsSpec = true;
 	}
 
@@ -128,7 +127,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		onEnter(new Node("IdList", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("IdList"), "text", arg.getText());
+		onEnter(node);
 		this.inIdList = true;
 	}
 
@@ -141,7 +141,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		onEnter(new Node("Action", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Action"), "text", arg.getText());
+		onEnter(node);
 		this.inAction = true;
 	}
 
@@ -154,7 +155,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		onEnter(new Node("ActionScopeName", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ActionScopeName"), "text", arg.getText());
+		onEnter(node);
 		this.inActionScopeName = true;
 	}
 
@@ -167,7 +169,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		onEnter(new Node("ActionBlock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ActionBlock"), "text", arg.getText());
+		onEnter(node);
 		this.inActionBlock = true;
 	}
 
@@ -180,7 +183,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		onEnter(new Node("ArgActionBlock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText());
+		onEnter(node);
 		this.inArgActionBlock = true;
 	}
 
@@ -193,7 +197,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		onEnter(new Node("ModeSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inModeSpec = true;
 	}
 
@@ -206,7 +211,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		onEnter(new Node("Rules", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Rules"), "text", arg.getText());
+		onEnter(node);
 		this.inRules = true;
 	}
 
@@ -219,7 +225,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		onEnter(new Node("RuleSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleSpec = true;
 	}
 
@@ -232,7 +239,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		onEnter(new Node("ParserRuleSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ParserRuleSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inParserRuleSpec = true;
 	}
 
@@ -245,7 +253,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		onEnter(new Node("ExceptionGroup", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ExceptionGroup"), "text", arg.getText());
+		onEnter(node);
 		this.inExceptionGroup = true;
 	}
 
@@ -258,7 +267,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		onEnter(new Node("ExceptionHandler", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ExceptionHandler"), "text", arg.getText());
+		onEnter(node);
 		this.inExceptionHandler = true;
 	}
 
@@ -271,7 +281,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		onEnter(new Node("FinallyClause", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("FinallyClause"), "text", arg.getText());
+		onEnter(node);
 		this.inFinallyClause = true;
 	}
 
@@ -284,7 +295,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		onEnter(new Node("RulePrequel", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText());
+		onEnter(node);
 		this.inRulePrequel = true;
 	}
 
@@ -297,7 +309,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		onEnter(new Node("RuleReturns", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleReturns = true;
 	}
 
@@ -310,7 +323,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
-		onEnter(new Node("ThrowsSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ThrowsSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inThrowsSpec = true;
 	}
 
@@ -323,7 +337,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
-		onEnter(new Node("LocalsSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LocalsSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inLocalsSpec = true;
 	}
 
@@ -336,7 +351,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
-		onEnter(new Node("RuleAction", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleAction"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleAction = true;
 	}
 
@@ -349,7 +365,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		onEnter(new Node("RuleModifiers", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleModifiers"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleModifiers = true;
 	}
 
@@ -362,7 +379,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
-		onEnter(new Node("RuleModifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleModifier"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleModifier = true;
 	}
 
@@ -375,7 +393,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleBlockContext arg) {
-		onEnter(new Node("RuleBlock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleBlock"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleBlock = true;
 	}
 
@@ -388,7 +407,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleAltListContext arg) {
-		onEnter(new Node("RuleAltList", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("RuleAltList"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleAltList = true;
 	}
 
@@ -401,7 +421,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledAltContext arg) {
-		onEnter(new Node("LabeledAlt", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LabeledAlt"), "text", arg.getText());
+		onEnter(node);
 		this.inLabeledAlt = true;
 	}
 
@@ -414,7 +435,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
-		onEnter(new Node("LexerRuleSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerRuleSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerRuleSpec = true;
 	}
 
@@ -427,7 +449,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
-		onEnter(new Node("LexerRuleBlock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerRuleBlock"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerRuleBlock = true;
 	}
 
@@ -440,7 +463,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
-		onEnter(new Node("LexerAltList", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerAltList"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerAltList = true;
 	}
 
@@ -453,7 +477,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
-		onEnter(new Node("LexerAlt", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerAlt"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerAlt = true;
 	}
 
@@ -466,7 +491,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
-		onEnter(new Node("LexerElements", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerElements"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerElements = true;
 	}
 
@@ -479,7 +505,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
-		onEnter(new Node("LexerElement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerElement"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerElement = true;
 	}
 
@@ -492,7 +519,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
-		onEnter(new Node("LabeledLexerElement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LabeledLexerElement"), "text", arg.getText());
+		onEnter(node);
 		this.inLabeledLexerElement = true;
 	}
 
@@ -505,7 +533,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
-		onEnter(new Node("LexerBlock", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerBlock"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerBlock = true;
 	}
 
@@ -518,7 +547,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
-		onEnter(new Node("LexerCommands", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerCommands"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerCommands = true;
 	}
 
@@ -531,7 +561,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
-		onEnter(new Node("LexerCommand", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerCommand"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerCommand = true;
 	}
 
@@ -544,7 +575,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
-		onEnter(new Node("LexerCommandName", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerCommandName"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerCommandName = true;
 	}
 
@@ -557,7 +589,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
-		onEnter(new Node("LexerCommandExpr", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerCommandExpr"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerCommandExpr = true;
 	}
 
@@ -570,7 +603,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
-		onEnter(new Node("AltList", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("AltList"), "text", arg.getText());
+		onEnter(node);
 		this.inAltList = true;
 	}
 
@@ -583,7 +617,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
-		onEnter(new Node("Alternative", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Alternative"), "text", arg.getText());
+		onEnter(node);
 		this.inAlternative = true;
 	}
 
@@ -596,7 +631,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
+		onEnter(node);
 		this.inElement = true;
 	}
 
@@ -609,7 +645,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
-		onEnter(new Node("LabeledElement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LabeledElement"), "text", arg.getText());
+		onEnter(node);
 		this.inLabeledElement = true;
 	}
 
@@ -622,7 +659,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
-		onEnter(new Node("Ebnf", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ebnf"), "text", arg.getText());
+		onEnter(node);
 		this.inEbnf = true;
 	}
 
@@ -635,7 +673,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
-		onEnter(new Node("BlockSuffix", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("BlockSuffix"), "text", arg.getText());
+		onEnter(node);
 		this.inBlockSuffix = true;
 	}
 
@@ -648,7 +687,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
-		onEnter(new Node("EbnfSuffix", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("EbnfSuffix"), "text", arg.getText());
+		onEnter(node);
 		this.inEbnfSuffix = true;
 	}
 
@@ -661,7 +701,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
-		onEnter(new Node("LexerAtom", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("LexerAtom"), "text", arg.getText());
+		onEnter(node);
 		this.inLexerAtom = true;
 	}
 
@@ -674,7 +715,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
-		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Atom"), "text", arg.getText());
+		onEnter(node);
 		this.inAtom = true;
 	}
 
@@ -687,7 +729,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
-		onEnter(new Node("NotSet", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("NotSet"), "text", arg.getText());
+		onEnter(node);
 		this.inNotSet = true;
 	}
 
@@ -700,7 +743,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
-		onEnter(new Node("BlockSet", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("BlockSet"), "text", arg.getText());
+		onEnter(node);
 		this.inBlockSet = true;
 	}
 
@@ -713,7 +757,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
-		onEnter(new Node("SetElement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("SetElement"), "text", arg.getText());
+		onEnter(node);
 		this.inSetElement = true;
 	}
 
@@ -726,7 +771,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
+		onEnter(node);
 		this.inBlock = true;
 	}
 
@@ -739,7 +785,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterCharacterRange(com.generator.generators.antlr.parser.ANTLRv4Parser.CharacterRangeContext arg) {
-		onEnter(new Node("CharacterRange", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("CharacterRange"), "text", arg.getText());
+		onEnter(node);
 		this.inCharacterRange = true;
 	}
 
@@ -752,7 +799,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
-		onEnter(new Node("Terminal", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Terminal"), "text", arg.getText());
+		onEnter(node);
 		this.inTerminal = true;
 	}
 
@@ -765,7 +813,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
-		onEnter(new Node("ElementOptions", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ElementOptions"), "text", arg.getText());
+		onEnter(node);
 		this.inElementOptions = true;
 	}
 
@@ -778,7 +827,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
-		onEnter(new Node("ElementOption", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("ElementOption"), "text", arg.getText());
+		onEnter(node);
 		this.inElementOption = true;
 	}
 
@@ -791,7 +841,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
-		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText());
+		onEnter(node);
 		this.inIdentifier = true;
 	}
 
@@ -804,7 +855,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onEnter(new Node("GrammarSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inGrammarSpec = true;
 	}
 
@@ -817,7 +869,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onEnter(new Node("GrammarType", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+		onEnter(node);
 		this.inGrammarType = true;
 	}
 
@@ -830,7 +883,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onEnter(new Node("PrequelConstruct", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
+		onEnter(node);
 		this.inPrequelConstruct = true;
 	}
 
@@ -843,7 +897,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onEnter(new Node("OptionsSpec", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
+		onEnter(node);
 		this.inOptionsSpec = true;
 	}
 
@@ -856,7 +911,8 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	@Override
 	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
-		onEnter(new Node("Ruleref", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Ruleref"), "text", arg.getText());
+		onEnter(node);
 		this.inRuleref = true;
 	}
 

@@ -54,26 +54,8 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
-	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		final Node node = new Node("PackageDecl", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		final Node node = new Node("DefaultValue", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		final Node node = new Node("PackageName", arg.getText());
+	public Node visitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
+		final Node node = new Node("PropertyName", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -90,8 +72,26 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
-	public Node visitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		final Node node = new Node("PropertyName", arg.getText());
+	public Node visitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		final Node node = new Node("DefaultValue", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		final Node node = new Node("PackageDecl", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
+		final Node node = new Node("PackageName", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

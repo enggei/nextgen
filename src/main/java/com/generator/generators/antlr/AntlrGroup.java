@@ -42,6 +42,10 @@ public final class AntlrGroup {
 
 	}
 
+   public NeoListenerST newNeoListener() {
+      return new NeoListenerST(stGroup);
+   }
+
    public NeoVisitorST newNeoVisitor() {
       return new NeoVisitorST(stGroup);
    }
@@ -52,6 +56,87 @@ public final class AntlrGroup {
 
    public BaseNodeListenerST newBaseNodeListener() {
       return new BaseNodeListenerST(stGroup);
+   }
+
+   public final class NeoListenerST implements AntlrGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _packageName;
+      private Object _parser;
+
+      private final ST template;
+
+      private NeoListenerST(STGroup group) {
+   		template = group.getInstanceOf("NeoListener");
+   	}
+
+      public NeoListenerST addMethodsValue(Object name_, Object param_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	this._methods.add(map);
+
+         template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getMethods() {
+      	return this._methods;
+      }
+
+      public NeoListenerST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public NeoListenerST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
+
+      public NeoListenerST setParser(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._parser == null) {
+            this._parser = value;
+         	template.add("parser", value);
+         }
+
+      	return this;
+      }
+
+      public String getParser() {
+      	return (String) this._parser;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    }
 
    public final class NeoVisitorST implements AntlrGroupTemplate {
@@ -427,6 +512,63 @@ public final class AntlrGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
+			.append("NeoListener(methods,name,packageName,parser) ::= <<package ~packageName~;\n" + 
+		"\n" + 
+		"import org.neo4j.graphdb.Node;\n" + 
+		"import org.neo4j.graphdb.Label;\n" + 
+		"import org.neo4j.graphdb.RelationshipType;\n" + 
+		"\n" + 
+		"public class ~name~ extends ~parser~BaseListener {\n" + 
+		"\n" + 
+		"   private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
+		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
+		"	protected final boolean debug;\n" + 
+		"	private final com.generator.NeoModel model;\n" + 
+		"\n" + 
+		"	public ~name~(com.generator.NeoModel model) {\n" + 
+		"		this(model, false);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(com.generator.NeoModel model, boolean debug) {\n" + 
+		"		this.model = model;\n" + 
+		"		this.debug = debug;\n" + 
+		"	}\n" + 
+		"\n" + 
+		"   private void onEnter(Node node) {\n" + 
+		"		if (!nodeStack.isEmpty())\n" + 
+		"      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"      nodeStack.push(node);\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.getProperty(\"text\"));\n" + 
+		"		delim.append(\"\\t\");\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   private void onExit() {\n" + 
+		"      if (nodeStack.size() > 1) {\n" + 
+		"			nodeStack.pop();\n" + 
+		"         delim.deleteCharAt(delim.length() - 1);\n" + 
+		"		}\n" + 
+		"   }\n" + 
+		"\n" + 
+		"   public Node getRoot() {\n" + 
+		"      return nodeStack.peek();\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~methods:{it|\n" + 
+		"	protected boolean in~it.name~ = false;\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public void enter~it.name~(~it.param~ arg) {\n" + 
+		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText());\n" + 
+		"		onEnter(node);\n" + 
+		"		this.in~it.name~ = true;\n" + 
+		"	~eom()~\n" + 
+		"\n" + 
+		"	public void exit~it.name~(~it.param~ arg) {\n" + 
+		"		onExit();\n" + 
+		"		this.in~it.name~ = false;\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"}>>\n")
 			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 

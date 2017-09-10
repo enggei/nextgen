@@ -1,37 +1,30 @@
 package com.generator.generators.html5.parser;
 
-public class HTMLParserNodeListener extends HTMLParserBaseListener {
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
 
-   public static class Node {
-
-      public final String name;
-      public final String value;
-      public final String startToken;
-      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
-
-      public Node(String name, String value, String startToken) {
-         this.name = name;
-         this.value = value;
-			this.startToken = startToken;
-      }
-   }
+public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
    private final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
+	private final com.generator.NeoModel model;
 
-	public HTMLParserNodeListener() {
-		this(false);
+	public HTMLParserNeoListener(com.generator.NeoModel model) {
+		this(model, false);
 	}
 
-	public HTMLParserNodeListener(boolean debug) {
+	public HTMLParserNeoListener(com.generator.NeoModel model, boolean debug) {
+		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
+		if (!nodeStack.isEmpty())
+      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
    }
 
@@ -50,7 +43,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlDocument = true;
 	}
 
@@ -63,7 +57,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlElements = true;
 	}
 
@@ -76,7 +71,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlElement = true;
 	}
 
@@ -89,7 +85,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlContent = true;
 	}
 
@@ -102,7 +99,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlAttribute"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlAttribute = true;
 	}
 
@@ -115,7 +113,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
-		onEnter(new Node("HtmlAttributeName", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlAttributeName"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlAttributeName = true;
 	}
 
@@ -128,7 +127,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
-		onEnter(new Node("HtmlAttributeValue", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlAttributeValue"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlAttributeValue = true;
 	}
 
@@ -141,7 +141,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
-		onEnter(new Node("HtmlTagName", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlTagName"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlTagName = true;
 	}
 
@@ -154,7 +155,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
-		onEnter(new Node("HtmlChardata", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlChardata"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlChardata = true;
 	}
 
@@ -167,7 +169,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
-		onEnter(new Node("HtmlMisc", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlMisc"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlMisc = true;
 	}
 
@@ -180,7 +183,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
-		onEnter(new Node("HtmlComment", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("HtmlComment"), "text", arg.getText());
+		onEnter(node);
 		this.inHtmlComment = true;
 	}
 
@@ -193,7 +197,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
-		onEnter(new Node("XhtmlCDATA", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("XhtmlCDATA"), "text", arg.getText());
+		onEnter(node);
 		this.inXhtmlCDATA = true;
 	}
 
@@ -206,7 +211,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
-		onEnter(new Node("Dtd", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Dtd"), "text", arg.getText());
+		onEnter(node);
 		this.inDtd = true;
 	}
 
@@ -219,7 +225,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
-		onEnter(new Node("Xml", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Xml"), "text", arg.getText());
+		onEnter(node);
 		this.inXml = true;
 	}
 
@@ -232,7 +239,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
-		onEnter(new Node("Scriptlet", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Scriptlet"), "text", arg.getText());
+		onEnter(node);
 		this.inScriptlet = true;
 	}
 
@@ -245,7 +253,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
-		onEnter(new Node("Script", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Script"), "text", arg.getText());
+		onEnter(node);
 		this.inScript = true;
 	}
 
@@ -258,7 +267,8 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
-		onEnter(new Node("Style", arg.getText(), arg.getStart().getText()));
+		final Node node = model.findOrCreate(Label.label("Style"), "text", arg.getText());
+		onEnter(node);
 		this.inStyle = true;
 	}
 
