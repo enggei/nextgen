@@ -39,62 +39,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inGrammarType = false;
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarType = true;
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onExit();
-		this.inGrammarType = false;
-	}
-
-	protected boolean inPrequelConstruct = false;
-
-	@Override
-	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
-		onEnter(node);
-		this.inPrequelConstruct = true;
-	}
-
-	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onExit();
-		this.inPrequelConstruct = false;
-	}
-
-	protected boolean inOptionsSpec = false;
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inOptionsSpec = true;
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec = false;
-	}
-
-	protected boolean inOption = false;
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
-		onEnter(node);
-		this.inOption = true;
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption = false;
-	}
-
 	protected boolean inOptionValue = false;
 
 	@Override
@@ -473,20 +417,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 		this.inLabeledAlt = false;
 	}
 
-	protected boolean inGrammarSpec = false;
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarSpec = true;
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onExit();
-		this.inGrammarSpec = false;
-	}
-
 	protected boolean inLexerRuleSpec = false;
 
 	@Override
@@ -513,6 +443,76 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 	public void exitLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
 		onExit();
 		this.inLexerRuleBlock = false;
+	}
+
+	protected boolean inGrammarSpec = false;
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarSpec = true;
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec = false;
+	}
+
+	protected boolean inGrammarType = false;
+
+	@Override
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarType = true;
+	}
+
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		onExit();
+		this.inGrammarType = false;
+	}
+
+	protected boolean inPrequelConstruct = false;
+
+	@Override
+	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
+		onEnter(node);
+		this.inPrequelConstruct = true;
+	}
+
+	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		onExit();
+		this.inPrequelConstruct = false;
+	}
+
+	protected boolean inOptionsSpec = false;
+
+	@Override
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inOptionsSpec = true;
+	}
+
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		onExit();
+		this.inOptionsSpec = false;
+	}
+
+	protected boolean inOption = false;
+
+	@Override
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
+		onEnter(node);
+		this.inOption = true;
+	}
+
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		onExit();
+		this.inOption = false;
 	}
 
 	protected boolean inLexerAltList = false;

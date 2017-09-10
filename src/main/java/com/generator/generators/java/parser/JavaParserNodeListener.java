@@ -59,19 +59,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 		this.inBlock = false;
 	}
 
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
-	}
-
 	protected boolean inExpression = false;
 
 	@Override
@@ -83,6 +70,19 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 	public void exitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		onExit();
 		this.inExpression = false;
+	}
+
+	protected boolean inFormalParameterList = false;
+
+	@Override
+	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
+		this.inFormalParameterList = true;
+	}
+
+	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		onExit();
+		this.inFormalParameterList = false;
 	}
 
 	protected boolean inStatement = false;
@@ -98,17 +98,17 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 		this.inStatement = false;
 	}
 
-	protected boolean inFormalParameterList = false;
+	protected boolean inLiteral = false;
 
 	@Override
-	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
-		this.inFormalParameterList = true;
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral = true;
 	}
 
-	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
 		onExit();
-		this.inFormalParameterList = false;
+		this.inLiteral = false;
 	}
 
 	protected boolean inArguments = false;

@@ -2673,8 +2673,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitCreateUserMysql57(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql57Context arg) {
-		final Node node = new Node("CreateUserMysql57", arg.getText());
+	public Node visitDrop_user(com.generator.generators.mysql.parser.MySqlParser.Drop_userContext arg) {
+		final Node node = new Node("Drop_user", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2682,8 +2682,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitDrop_user(com.generator.generators.mysql.parser.MySqlParser.Drop_userContext arg) {
-		final Node node = new Node("Drop_user", arg.getText());
+	public Node visitCreateUserMysql57(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql57Context arg) {
+		final Node node = new Node("CreateUserMysql57", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

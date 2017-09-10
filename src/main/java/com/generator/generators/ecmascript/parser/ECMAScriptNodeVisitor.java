@@ -54,8 +54,8 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
-		final Node node = new Node("VariableDeclarationList", arg.getText());
+	public Node visitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		final Node node = new Node("Literal", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -63,17 +63,8 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		final Node node = new Node("Initialiser", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = new Node("Program", arg.getText());
+	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,8 +99,26 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
+	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = new Node("Program", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
 		final Node node = new Node("VariableStatement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
+		final Node node = new Node("VariableDeclarationList", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -126,17 +135,8 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		final Node node = new Node("Literal", arg.getText());
+	public Node visitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		final Node node = new Node("Initialiser", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -225,6 +225,15 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
+	public Node visitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
+		final Node node = new Node("CaseBlock", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitContinueStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ContinueStatementContext arg) {
 		final Node node = new Node("ContinueStatement", arg.getText());
 		onEnter(node);
@@ -263,15 +272,6 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitSwitchStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SwitchStatementContext arg) {
 		final Node node = new Node("SwitchStatement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		final Node node = new Node("CaseBlock", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

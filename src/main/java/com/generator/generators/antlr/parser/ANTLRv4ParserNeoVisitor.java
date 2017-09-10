@@ -28,6 +28,16 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
 		System.out.println("GrammarType");
 		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
@@ -48,9 +58,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+	public Node visitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		System.out.println("Option");
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -61,16 +71,6 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	public Node visitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
 		System.out.println("PrequelConstruct");
 		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		System.out.println("Option");
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -4,6 +4,8 @@ import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
 import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
 import com.generator.generators.cpp.parser.CPP14Listener;
 import com.generator.generators.cpp.parser.CPP14Visitor;
+import com.generator.generators.csv.parser.CSVListener;
+import com.generator.generators.csv.parser.CSVVisitor;
 import com.generator.generators.ecmascript.parser.ECMAScriptListener;
 import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
 import com.generator.generators.html5.parser.HTMLParserListener;
@@ -38,6 +40,7 @@ public class AntlrGenerator {
    public static void main(String[] args) {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);

@@ -2948,9 +2948,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitCreateUserMysql57(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql57Context arg) {
-		System.out.println("CreateUserMysql57");
-		final Node node = model.findOrCreate(Label.label("CreateUserMysql57"), "text", arg.getText());
+	public Node visitDrop_user(com.generator.generators.mysql.parser.MySqlParser.Drop_userContext arg) {
+		System.out.println("Drop_user");
+		final Node node = model.findOrCreate(Label.label("Drop_user"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2958,9 +2958,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDrop_user(com.generator.generators.mysql.parser.MySqlParser.Drop_userContext arg) {
-		System.out.println("Drop_user");
-		final Node node = model.findOrCreate(Label.label("Drop_user"), "text", arg.getText());
+	public Node visitCreateUserMysql57(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql57Context arg) {
+		System.out.println("CreateUserMysql57");
+		final Node node = model.findOrCreate(Label.label("CreateUserMysql57"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

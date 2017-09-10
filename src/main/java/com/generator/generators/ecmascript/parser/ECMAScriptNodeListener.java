@@ -59,97 +59,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inBlock = false;
 	}
 
-	protected boolean inProgram = false;
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
-		this.inProgram = true;
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
-	}
-
-	protected boolean inIfStatement = false;
-
-	@Override
-	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		onEnter(new Node("IfStatement", arg.getText(), arg.getStart().getText()));
-		this.inIfStatement = true;
-	}
-
-	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		onExit();
-		this.inIfStatement = false;
-	}
-
-	protected boolean inDoStatement = false;
-
-	@Override
-	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		onEnter(new Node("DoStatement", arg.getText(), arg.getStart().getText()));
-		this.inDoStatement = true;
-	}
-
-	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		onExit();
-		this.inDoStatement = false;
-	}
-
-	protected boolean inCaseBlock = false;
-
-	@Override
-	public void enterCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		onEnter(new Node("CaseBlock", arg.getText(), arg.getStart().getText()));
-		this.inCaseBlock = true;
-	}
-
-	public void exitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		onExit();
-		this.inCaseBlock = false;
-	}
-
-	protected boolean inInitialiser = false;
-
-	@Override
-	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		onEnter(new Node("Initialiser", arg.getText(), arg.getStart().getText()));
-		this.inInitialiser = true;
-	}
-
-	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		onExit();
-		this.inInitialiser = false;
-	}
-
-	protected boolean inStatement = false;
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
 	protected boolean inSourceElements = false;
 
 	@Override
@@ -228,6 +137,19 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inVariableDeclaration = false;
 	}
 
+	protected boolean inInitialiser = false;
+
+	@Override
+	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		onEnter(new Node("Initialiser", arg.getText(), arg.getStart().getText()));
+		this.inInitialiser = true;
+	}
+
+	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		onExit();
+		this.inInitialiser = false;
+	}
+
 	protected boolean inEmptyStatement = false;
 
 	@Override
@@ -252,6 +174,32 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
 		onExit();
 		this.inExpressionStatement = false;
+	}
+
+	protected boolean inIfStatement = false;
+
+	@Override
+	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
+		onEnter(new Node("IfStatement", arg.getText(), arg.getStart().getText()));
+		this.inIfStatement = true;
+	}
+
+	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
+		onExit();
+		this.inIfStatement = false;
+	}
+
+	protected boolean inDoStatement = false;
+
+	@Override
+	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		onEnter(new Node("DoStatement", arg.getText(), arg.getStart().getText()));
+		this.inDoStatement = true;
+	}
+
+	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		onExit();
+		this.inDoStatement = false;
 	}
 
 	protected boolean inWhileStatement = false;
@@ -382,6 +330,19 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitSwitchStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SwitchStatementContext arg) {
 		onExit();
 		this.inSwitchStatement = false;
+	}
+
+	protected boolean inCaseBlock = false;
+
+	@Override
+	public void enterCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
+		onEnter(new Node("CaseBlock", arg.getText(), arg.getStart().getText()));
+		this.inCaseBlock = true;
+	}
+
+	public void exitCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
+		onExit();
+		this.inCaseBlock = false;
 	}
 
 	protected boolean inCaseClauses = false;
@@ -644,6 +605,45 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inPropertySetter = false;
 	}
 
+	protected boolean inProgram = false;
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
+		this.inProgram = true;
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram = false;
+	}
+
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
+	}
+
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
 	protected boolean inPropertyName = false;
 
 	@Override
@@ -657,19 +657,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inPropertyName = false;
 	}
 
-	protected boolean inArguments = false;
-
-	@Override
-	public void enterArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
-		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText()));
-		this.inArguments = true;
-	}
-
-	public void exitArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
-		onExit();
-		this.inArguments = false;
-	}
-
 	protected boolean inPropertySetParameterList = false;
 
 	@Override
@@ -681,6 +668,19 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
 		onExit();
 		this.inPropertySetParameterList = false;
+	}
+
+	protected boolean inArguments = false;
+
+	@Override
+	public void enterArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
+		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText()));
+		this.inArguments = true;
+	}
+
+	public void exitArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
+		onExit();
+		this.inArguments = false;
 	}
 
 	protected boolean inArgumentList = false;
