@@ -17,11 +17,8 @@ public class Tests {
 
    @Test
    public void testParser() throws IOException {
-
-         final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/csv/test.csv"))));
-
-         final CSVNodeListener listener = new CSVNodeListener(true);
-         new ParseTreeWalker().walk(listener, parser.csvFile());
-
+      final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/csv/test.csv"))));
+      final CSVNodeListener listener = new CSVNodeListener(true);
+      new ParseTreeWalker().walk(listener, parser.csvFile());
    }
 }

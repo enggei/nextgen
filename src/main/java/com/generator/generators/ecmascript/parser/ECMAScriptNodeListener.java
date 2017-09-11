@@ -59,6 +59,45 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
+	}
+
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
+	protected boolean inProgram = false;
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
+		this.inProgram = true;
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram = false;
+	}
+
 	protected boolean inSourceElements = false;
 
 	@Override
@@ -592,6 +631,19 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.inPropertyGetter = false;
 	}
 
+	protected boolean inAssignmentOperatorExpression = false;
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onEnter(new Node("AssignmentOperatorExpression", arg.getText(), arg.getStart().getText()));
+		this.inAssignmentOperatorExpression = true;
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression = false;
+	}
+
 	protected boolean inPropertySetter = false;
 
 	@Override
@@ -603,45 +655,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitPropertySetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetterContext arg) {
 		onExit();
 		this.inPropertySetter = false;
-	}
-
-	protected boolean inProgram = false;
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
-		this.inProgram = true;
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram = false;
-	}
-
-	protected boolean inStatement = false;
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
 	}
 
 	protected boolean inPropertyName = false;
@@ -1162,19 +1175,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 	public void exitBitOrExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitOrExpressionContext arg) {
 		onExit();
 		this.inBitOrExpression = false;
-	}
-
-	protected boolean inAssignmentOperatorExpression = false;
-
-	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onEnter(new Node("AssignmentOperatorExpression", arg.getText(), arg.getStart().getText()));
-		this.inAssignmentOperatorExpression = true;
-	}
-
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onExit();
-		this.inAssignmentOperatorExpression = false;
 	}
 
 	protected boolean inVoidExpression = false;

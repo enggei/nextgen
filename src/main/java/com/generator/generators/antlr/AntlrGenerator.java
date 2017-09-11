@@ -19,6 +19,8 @@ import com.generator.generators.mysql.parser.MySqlParserListener;
 import com.generator.generators.mysql.parser.MySqlParserVisitor;
 import com.generator.generators.protobuf.parser.ProtobufListener;
 import com.generator.generators.protobuf.parser.ProtobufVisitor;
+import com.generator.generators.stacktrace.parser.StackTraceListener;
+import com.generator.generators.stacktrace.parser.StackTraceVisitor;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.generators.url.parser.urlListener;
 import com.generator.generators.url.parser.urlVisitor;
@@ -47,6 +49,7 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
    }

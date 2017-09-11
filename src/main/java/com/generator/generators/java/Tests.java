@@ -1,19 +1,41 @@
 package com.generator.generators.java;
 
 import com.generator.generators.java.parser.JavaLexer;
-import com.generator.generators.java.parser.JavaParserNodeListener;
 import com.generator.generators.java.parser.JavaParser;
+import com.generator.generators.java.parser.JavaParserNodeListener;
 import com.generator.util.FileUtil;
+import com.generator.util.Reflect;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
+import javax.tools.DiagnosticCollector;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 public class Tests {
+
+   @Test
+   public void testCompile() {
+
+      final JavaGroup.PojoST pojoST = new JavaGroup().newPojo().
+            setPackage("com.test").
+            setName("Hello").
+            addPropertiesValue(null, "String", "name").
+            addPropertiesValue(null, "String", "yolo").
+            addLexicalValue("name").
+            addLexicalValue("yolo");
+
+      final Object instance = new SourceToInstanceGenerator().newInstance("com.test.Hello", pojoST, new DiagnosticCollector<>());
+      System.out.println("instance " + instance.toString());
+
+      final Reflect pojoInstance = Reflect.on(instance);
+      pojoInstance.call("setName", "NICE Gary!");
+
+      System.out.println("instance " + instance.toString());
+   }
 
    @Test
    public void writeSTG() throws IOException {

@@ -1,0 +1,117 @@
+delimiters "~", "~"
+eom() ::= <<}>>
+gt() ::= ">"
+Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;
+
+public class ~name~ {
+
+   ~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+
+	public ~name~() {
+	}
+
+	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=","~) {
+		~properties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+
+~properties:{it|
+	public ~it.type~ get~it.name;format="capitalize"~() {
+		return ~it.name~;
+	~eom()~
+
+	public void set~it.name;format="capitalize"~(~it.type~ ~it.name~) {
+   	this.~it.name~ = ~it.name~;
+	~eom()~
+};separator="\n"~
+~if(eqha)~
+	@Override
+	public boolean equals(Object o) {
+   	if(this==o) return true;
+	   if(o==null||getClass()!=o.getClass()) return false;
+	   ~name~ that = (~name~) o;
+	   ~eqha:{it | if(~it~!=null ? !~it~.equals(that.~it~) : that.~it~!=null) return false;~\n~}~		return true;
+	}
+
+	@Override
+	public int hashCode() {
+   	int result;
+	   result = ~first(eqha):{it | (~it~!=null ? ~it~.hashCode() : 0)}~;
+	   ~rest(eqha):{it | result = 31*result+(~it~!=null ? ~it~.hashCode() : 0);~\n~}~      return result;
+	}
+	
+~endif~
+~if(lexical)~
+	@Override
+   public String toString() {
+       return ~lexical:{it|"~it~=" + ~it~ };separator=" + \" \" + "~;
+   }
+~endif~
+}>>
+Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;
+
+public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=", "~~endif~ {
+~if(classProperties)~
+	
+	~classProperties:{it|private static final ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+~endif~
+~if(properties)~
+
+	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
+~endif~
+
+	public ~name~() {
+	}
+~if(properties)~
+
+	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=", "~) {
+		~properties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
+	}
+~endif~
+
+~properties:{it|
+	public ~it.type~ get~it.name;format="capitalize"~() {
+		return ~it.name~;
+	~eom()~
+
+	public void set~it.name;format="capitalize"~(~it.type~ ~it.name~) {
+      this.~it.name~ = ~it.name~;
+	~eom()~
+};separator="\n"~
+~if(methods)~
+	~methods:{it|~it~};separator="\n\n"~
+
+~endif~
+~if(eqha)~
+	@Override
+	public boolean equals(Object o) {
+   	if (this == o) return true;
+	   if (o == null || !(o instanceof ~name~)) return false;
+	   ~name~ that = (~name~) o;
+	   ~eqha:{it | if (~it~ != null ? !~it~.equals(that.~it~) : that.~it~ != null) return false;~\n~}~		return true;
+	}
+
+	@Override
+	public int hashCode() {
+   	int result;
+	   result = ~first(eqha):{it | (~it~ !=null ? ~it~.hashCode() : 0)}~;
+	   ~rest(eqha):{it | result = 31*result+(~it~ != null ? ~it~.hashCode() : 0);~\n~}~      return result;
+	}
+	
+~endif~
+~if(lexical)~
+	@Override
+   public String toString() {
+       return ~lexical:{it|"~it~=" + ~it~ };separator=" + \" \" + "~;
+   }
+~endif~
+
+}>>
+method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator="\n"~
+~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=","~) {
+	~statements:{it|~it~};separator="\n"~
+}>>
+Enum(name,package,values) ::= <<package ~package~;
+
+public enum ~name~ {
+   ~values:{it|~it~};separator=", "~
+}>>

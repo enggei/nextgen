@@ -53,34 +53,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 		this.inBlock = false;
 	}
 
-	protected boolean inExpression = false;
-
-	@Override
-	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression = true;
-	}
-
-	public void exitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
-		onExit();
-		this.inExpression = false;
-	}
-
-	protected boolean inFormalParameterList = false;
-
-	@Override
-	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText());
-		onEnter(node);
-		this.inFormalParameterList = true;
-	}
-
-	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		onExit();
-		this.inFormalParameterList = false;
-	}
-
 	protected boolean inStatement = false;
 
 	@Override
@@ -107,6 +79,34 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
 		onExit();
 		this.inLiteral = false;
+	}
+
+	protected boolean inExpression = false;
+
+	@Override
+	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression = true;
+	}
+
+	public void exitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
+		onExit();
+		this.inExpression = false;
+	}
+
+	protected boolean inFormalParameterList = false;
+
+	@Override
+	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText());
+		onEnter(node);
+		this.inFormalParameterList = true;
+	}
+
+	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
+		onExit();
+		this.inFormalParameterList = false;
 	}
 
 	protected boolean inArguments = false;

@@ -72,19 +72,6 @@ public class CSVNodeListener extends CSVBaseListener {
 		this.inHdr = false;
 	}
 
-	protected boolean inField = false;
-
-	@Override
-	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText()));
-		this.inField = true;
-	}
-
-	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		onExit();
-		this.inField = false;
-	}
-
 	protected boolean inRow = false;
 
 	@Override
@@ -96,6 +83,19 @@ public class CSVNodeListener extends CSVBaseListener {
 	public void exitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
 		onExit();
 		this.inRow = false;
+	}
+
+	protected boolean inField = false;
+
+	@Override
+	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText()));
+		this.inField = true;
+	}
+
+	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		onExit();
+		this.inField = false;
 	}
 
 }

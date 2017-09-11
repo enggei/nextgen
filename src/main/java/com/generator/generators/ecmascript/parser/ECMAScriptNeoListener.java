@@ -53,6 +53,48 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inBlock = false;
 	}
 
+	protected boolean inStatement = false;
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement = true;
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement = false;
+	}
+
+	protected boolean inLiteral = false;
+
+	@Override
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral = true;
+	}
+
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral = false;
+	}
+
+	protected boolean inProgram = false;
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
+		onEnter(node);
+		this.inProgram = true;
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram = false;
+	}
+
 	protected boolean inSourceElements = false;
 
 	@Override
@@ -627,6 +669,20 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 		this.inPropertyGetter = false;
 	}
 
+	protected boolean inAssignmentOperatorExpression = false;
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentOperatorExpression = true;
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression = false;
+	}
+
 	protected boolean inPropertySetter = false;
 
 	@Override
@@ -639,48 +695,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 	public void exitPropertySetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetterContext arg) {
 		onExit();
 		this.inPropertySetter = false;
-	}
-
-	protected boolean inProgram = false;
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
-		onEnter(node);
-		this.inProgram = true;
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram = false;
-	}
-
-	protected boolean inStatement = false;
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
-
-	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral = true;
-	}
-
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral = false;
 	}
 
 	protected boolean inPropertyName = false;
@@ -1241,20 +1255,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 	public void exitBitOrExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitOrExpressionContext arg) {
 		onExit();
 		this.inBitOrExpression = false;
-	}
-
-	protected boolean inAssignmentOperatorExpression = false;
-
-	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAssignmentOperatorExpression = true;
-	}
-
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onExit();
-		this.inAssignmentOperatorExpression = false;
 	}
 
 	protected boolean inVoidExpression = false;

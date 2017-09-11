@@ -72,6 +72,19 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 		this.inAttribute = false;
 	}
 
+	protected boolean inDocument = false;
+
+	@Override
+	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
+		this.inDocument = true;
+	}
+
+	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		onExit();
+		this.inDocument = false;
+	}
+
 	protected boolean inProlog = false;
 
 	@Override
@@ -109,19 +122,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	public void exitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		onExit();
 		this.inReference = false;
-	}
-
-	protected boolean inDocument = false;
-
-	@Override
-	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
-		this.inDocument = true;
-	}
-
-	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onExit();
-		this.inDocument = false;
 	}
 
 	protected boolean inChardata = false;
