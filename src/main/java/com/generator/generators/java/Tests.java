@@ -33,6 +33,7 @@ public class Tests {
 
       final Reflect pojoInstance = Reflect.on(instance);
       pojoInstance.call("setName", "NICE Gary!");
+      pojoInstance.call("setYolo", "DONE");
 
       System.out.println("instance " + instance.toString());
    }
