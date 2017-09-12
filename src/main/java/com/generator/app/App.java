@@ -4,6 +4,7 @@ import com.generator.NeoModel;
 import com.generator.generators.antlr.ANTLRPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.java.JavaPlugin;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
@@ -161,6 +162,7 @@ public class App extends JFrame {
                   plugins.add(new MavenPlugin(App.this));
                   plugins.add(new MySQLPlugin(App.this));
                   plugins.add(new ANTLRPlugin(App.this));
+                  plugins.add(new JavaPlugin(App.this));
                }
             }
          });
