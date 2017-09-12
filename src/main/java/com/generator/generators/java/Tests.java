@@ -3,6 +3,7 @@ package com.generator.generators.java;
 import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNodeListener;
+import com.generator.util.ClasspathUtil;
 import com.generator.util.FileUtil;
 import com.generator.util.Reflect;
 import org.antlr.v4.runtime.CharStreams;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import javax.tools.DiagnosticCollector;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 public class Tests {
@@ -36,6 +38,29 @@ public class Tests {
       pojoInstance.call("setYolo", "DONE");
 
       System.out.println("instance " + instance.toString());
+   }
+
+   @Test
+   public void testReflection() throws IOException {
+
+      ClasspathUtil.findClasses(s -> {
+         try {
+            new BaseClassVisitor() {
+               @Override
+               public void onClass(Package classPackage, String className, Class superClass) {
+                  System.out.println(classPackage.getName() + "\n\t" + className);
+               }
+
+               @Override
+               public void onPublicMethod(Method method) {
+                  System.out.println("\t\t" + method.getName());
+               }
+            }.visit(Class.forName(s));
+         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+         }
+         return true;
+      });
    }
 
    @Test

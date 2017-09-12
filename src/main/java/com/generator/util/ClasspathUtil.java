@@ -11,11 +11,9 @@ import java.util.jar.JarFile;
 public class ClasspathUtil {
 
    public interface Visitor<T> {
-      /**
-       * @return {@code true} if the algorithm should visit more results,
-       * {@code false} if it should terminate now.
-       */
-      public boolean visit(T t);
+
+      boolean visit(T t);
+
    }
 
    public static void findClasses(Visitor<String> visitor) {
@@ -23,61 +21,53 @@ public class ClasspathUtil {
       String[] paths = classpath.split(System.getProperty("path.separator"));
       File file;
 
-//      String javaHome = System.getProperty("java.home");
-//      File file = new File(javaHome + File.separator + "lib");
-//      if (file.exists()) {
-//         findClasses(file, file, true, visitor);
-//      }
-
       for (String path : paths) {
          file = new File(path);
-         if (file.exists()) {
-            findClasses(file, file, false, visitor);
-         }
+         if (file.exists()) findClasses(file, file, false, visitor);
       }
    }
 
    private static boolean findClasses(File root, File file, boolean includeJars, Visitor<String> visitor) {
-      if (file.isDirectory()) {
-         for (File child : file.listFiles()) {
-            if (!findClasses(root, child, includeJars, visitor)) {
-               return false;
-            }
-         }
-      } else {
-         if (file.getName().toLowerCase().endsWith(".jar") && includeJars) {
-            JarFile jar = null;
-            try {
-               jar = new JarFile(file);
-            } catch (Exception ex) {
 
-            }
-            if (jar != null) {
-               Enumeration<JarEntry> entries = jar.entries();
+      try {
+
+         if (file.isDirectory()) {
+
+            final File[] files = file.listFiles();
+            if (files == null) return false;
+            for (File child : files)
+               if (!findClasses(root, child, includeJars, visitor))
+                  return false;
+
+         } else {
+
+            if (file.getName().toLowerCase().endsWith(".jar") && includeJars) {
+               final JarFile jar = new JarFile(file);
+               final Enumeration<JarEntry> entries = jar.entries();
                while (entries.hasMoreElements()) {
-                  JarEntry entry = entries.nextElement();
-                  String name = entry.getName();
-                  int extIndex = name.lastIndexOf(".class");
-                  if (extIndex > 0) {
-                     if (!visitor.visit(name.substring(0, extIndex).replace("/", "."))) {
+                  final JarEntry entry = entries.nextElement();
+                  final String name = entry.getName();
+                  final int extIndex = name.lastIndexOf(".class");
+                  if (extIndex > 0)
+                     if (!visitor.visit(name.substring(0, extIndex).replace("/", ".")))
                         return false;
-                     }
-                  }
                }
-            }
-         } else if (file.getName().toLowerCase().endsWith(".class")) {
-            if (!visitor.visit(createClassName(root, file))) {
-               return false;
+
+            } else if (file.getName().toLowerCase().endsWith(".class")) {
+               if (!visitor.visit(createClassName(root, file))) return false;
             }
          }
+
+      } catch (Exception ex) {
+         System.out.println("findClasses exception " + ex);
       }
 
       return true;
    }
 
    private static String createClassName(File root, File file) {
-      StringBuffer sb = new StringBuffer();
-      String fileName = file.getName();
+      final StringBuilder sb = new StringBuilder();
+      final String fileName = file.getName();
       sb.append(fileName.substring(0, fileName.lastIndexOf(".class")));
       file = file.getParentFile();
       while (file != null && !file.equals(root)) {

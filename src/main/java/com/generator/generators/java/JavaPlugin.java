@@ -7,7 +7,6 @@ import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
 import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.javareflection.BaseClassVisitor;
 import com.generator.util.Reflect;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -99,43 +98,48 @@ public class JavaPlugin extends DomainPlugin {
             @Override
             public void onPublicMethod(Method method) {
 
-               pop.add(new App.TransactionAction("Call " + method.getName(), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final Class<?> returnType = method.getReturnType();
 
-                     final Parameter[] parameters = method.getParameters();
-                     final Object[] args = new Object[parameters.length];
+               if ("void".equals(returnType.getName())) {
+                  pop.add(new App.TransactionAction("Call " + method.getName(), app) {
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                     for (int i = 0; i < parameters.length; i++) {
-                        Parameter parameter = parameters[i];
+                        final Parameter[] parameters = method.getParameters();
+                        final Object[] args = new Object[parameters.length];
 
-                        if ("java.lang.String".equals(parameter.getType().getName())) {
+                        for (int i = 0; i < parameters.length; i++) {
+                           Parameter parameter = parameters[i];
 
-                           final String value = SwingUtil.showInputDialog(parameter.getName(), app);
-                           if (value == null) return;
+                           // todo: generify this to support any arbitrary parameter, and remove if-else
+                           if ("java.lang.String".equals(parameter.getType().getName())) {
 
-                           final Reflect param = Reflect.on(parameter.getType());
-                           args[i] = param.create(value).get();
+                              final String value = SwingUtil.showInputDialog(parameter.getName(), app);
+                              if (value == null) return;
 
-                        } else if ("java.lang.Integer".equals(parameter.getType().getName())) {
+                              final Reflect param = Reflect.on(parameter.getType());
+                              args[i] = param.create(value).get();
 
-                           final String value = SwingUtil.showInputDialog(parameter.getName(), app);
-                           if (value == null) return;
+                           } else if ("java.lang.Integer".equals(parameter.getType().getName())) {
 
-                           final Reflect param = Reflect.on(parameter.getType());
-                           args[i] = param.create(Integer.parseInt(value.trim())).get();
+                              final String value = SwingUtil.showInputDialog(parameter.getName(), app);
+                              if (value == null) return;
 
-                        } else {
-                           System.out.println("\t" + parameter.getType().getName());
-                           args[i] = parameter.getType().newInstance();
+                              final Reflect param = Reflect.on(parameter.getType());
+                              args[i] = param.create(Integer.parseInt(value.trim())).get();
+
+                           } else {
+                              System.out.println("\t" + parameter.getType().getName());
+                              args[i] = parameter.getType().newInstance();
+                           }
+
                         }
 
+                        Reflect.on(instance).call(method.getName(), args);
+                        fireNodeChanged(neoNode.getNode());
                      }
-
-                     Reflect.on(instance).call(method.getName(), args);
-                     fireNodeChanged(neoNode.getNode());
-                  }
-               });
+                  });
+               }
             }
          }.visit(instance.getClass());
       }
@@ -202,6 +206,14 @@ public class JavaPlugin extends DomainPlugin {
             @Override
             public void onProtectedField(String name, Class<?> returnType) {
                renderField(name, returnType);
+            }
+
+            @Override
+            public void onPublicMethod(Method method) {
+               final Class<?> returnType = method.getReturnType();
+               if ("void".equals(returnType.getName())) return;
+               final Reflect result = Reflect.on(instance).call(method.getName());
+               text.append("\n\n\t").append(method.getName()).append(" = ").append(result.isNull() ? "null" : result.get().toString());
             }
 
             private void renderField(String name, Class<?> returnType) {

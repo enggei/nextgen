@@ -12,7 +12,7 @@ import com.generator.generators.html5.parser.HTMLParserListener;
 import com.generator.generators.html5.parser.HTMLParserVisitor;
 import com.generator.generators.java.parser.JavaParserListener;
 import com.generator.generators.java.parser.JavaParserVisitor;
-import com.generator.generators.javareflection.BaseClassVisitor;
+import com.generator.generators.java.BaseClassVisitor;
 import com.generator.generators.json.parser.JSONListener;
 import com.generator.generators.json.parser.JSONVisitor;
 import com.generator.generators.mysql.parser.MySqlParserListener;

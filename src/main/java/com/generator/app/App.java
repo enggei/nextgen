@@ -154,15 +154,15 @@ public class App extends JFrame {
             @Override
             protected void propertyChange(Object oldValue, Object newValue) {
                if (plugins.isEmpty()) {
-                  plugins.add(new DomainPlugin(App.this));
                   plugins.add(new StringTemplatePlugin(App.this));
                   plugins.add(new ProjectPlugin(App.this));
-                  plugins.add(new SSHPlugin(App.this));
+                  plugins.add(new JavaPlugin(App.this));
+                  plugins.add(new MySQLPlugin(App.this));
                   plugins.add(new EasyFlowPlugin(App.this));
                   plugins.add(new MavenPlugin(App.this));
-                  plugins.add(new MySQLPlugin(App.this));
                   plugins.add(new ANTLRPlugin(App.this));
-                  plugins.add(new JavaPlugin(App.this));
+                  plugins.add(new SSHPlugin(App.this));
+                  plugins.add(new DomainPlugin(App.this));
                }
             }
          });
