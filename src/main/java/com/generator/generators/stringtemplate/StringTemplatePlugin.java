@@ -75,7 +75,7 @@ public class StringTemplatePlugin extends DomainPlugin {
          @Override
          public void actionPerformed(ActionEvent e) {
 
-            final File file = SwingUtil.showOpenFile(app, getAppProperty("generator.path"));
+            final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
             if (file == null || !file.getName().toLowerCase().endsWith(".stg")) return;
 
             final StringBuilder errors = new StringBuilder("Errors");

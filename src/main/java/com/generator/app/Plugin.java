@@ -1,7 +1,6 @@
 package com.generator.app;
 
 import com.generator.NeoModel;
-import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
@@ -30,10 +29,6 @@ public abstract class Plugin {
    protected abstract void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes);
 
    public abstract void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane);
-
-   protected String getAppProperty(String property) {
-      return app.model.getAppStringProperty(property);
-   }
 
    public NeoModel getGraph() {
       return app.model.graph();
@@ -70,14 +65,11 @@ public abstract class Plugin {
    }
 
    protected void fireNodeChanged(Node node) {
-      app.events.firePropertyChange(NODE_CHANGED + node, node.getId());
+      app.events.firePropertyChange(NODE_CHANGED + node.getId());
    }
 
    protected void addNodeChangedListener(Workspace.NodeCanvas.NeoNode neoNode, AppEvents.TransactionalPropertyChangeListener transactionHandler) {
+      System.out.println("added nodeChange listener " + transactionHandler.parent.getClass());
       app.events.addPropertyChangeListener(NODE_CHANGED + neoNode.id(), transactionHandler);
-   }
-
-   protected void showException(Throwable throwable) {
-      SwingUtil.showExceptionNoStack(app, throwable);
    }
 }

@@ -1029,8 +1029,11 @@ public final class Workspace extends JPanel {
                nodeLayer.removeAllChildren();
                layerNodes.clear();
                layerRelations.clear();
+
+               System.out.println("nodeChange listeners before " + nodeChangeListeners.size());
                for (Map.Entry<Long, PropertyChangeListener> entry : nodeChangeListeners.entrySet())
                   app.events.removePropertyChangeListener(AppEvents.NODE_CHANGED + entry.getKey(), entry.getValue());
+               System.out.println("nodeChange listeners after");
                nodeChangeListeners.clear();
 
                final Node layoutNode = AppMotif.getLayoutNode(app, AppMotif.Properties._lastLayout.name());
@@ -1598,7 +1601,6 @@ public final class Workspace extends JPanel {
                       SET n = $props
                       *
                       */
-
 
 
                      final CypherGroup cypherGroup = new CypherGroup();
@@ -2293,11 +2295,11 @@ public final class Workspace extends JPanel {
             final StringBuilder out = new StringBuilder();
             boolean first = true;
             for (String key : node.getPropertyKeys()) {
-               if(AppMotif.Properties.x.name().equals(key)) continue;
-               if(AppMotif.Properties.y.name().equals(key)) continue;
-               if(AppMotif.Properties._color.name().equals(key)) continue;
-               if(AppMotif.Properties._lastLayout.name().equals(key)) continue;
-               if(NeoModel.TAG_UUID.equals(key)) continue;
+               if (AppMotif.Properties.x.name().equals(key)) continue;
+               if (AppMotif.Properties.y.name().equals(key)) continue;
+               if (AppMotif.Properties._color.name().equals(key)) continue;
+               if (AppMotif.Properties._lastLayout.name().equals(key)) continue;
+               if (NeoModel.TAG_UUID.equals(key)) continue;
                if (!first) out.append(", ");
                out.append(key).append(": '").append(node.getProperty(key)).append("'");
                first = false;
