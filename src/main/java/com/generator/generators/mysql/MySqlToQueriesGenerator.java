@@ -32,9 +32,9 @@ public class MySqlToQueriesGenerator extends MySqlParserNodeListener {
    @Override
    public void enterId_(MySqlParser.Id_Context arg) {
       super.enterId_(arg);
-      if (inTable_name && !inConstraintDefinition) {
+      if (inTable_name() && !inConstraintDefinition()) {
          this.tableName = StringUtil.trimEnds(1, arg.getText());
-      } else if (inColumnDefinition) {
+      } else if (inColumnDefinition()) {
          tableColumns.add(StringUtil.trimEnds(1, arg.getText()));
       }
    }

@@ -28,9 +28,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
-		System.out.println("Fragmentaddress");
-		final Node node = model.findOrCreate(Label.label("Fragmentaddress"), "text", arg.getText());
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		System.out.println("Uri");
+		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		System.out.println("Uri");
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
+	public Node visitFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
+		System.out.println("Fragmentaddress");
+		final Node node = model.findOrCreate(Label.label("Fragmentaddress"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

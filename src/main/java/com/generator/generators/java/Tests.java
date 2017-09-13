@@ -12,13 +12,6 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.MethodParameterNamesScanner;
-import org.reflections.scanners.MethodParameterScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import javax.tools.DiagnosticCollector;
 import java.io.File;
@@ -30,9 +23,52 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
+
+   @Test
+   public void testParser() {
+
+      final JavaGroup javaGroup = new JavaGroup();
+
+      final JavaGroup.BeanST beanST = javaGroup.newBean().
+            setPackage("com.test").
+            setName("Hello").
+            addPropertiesValue(null, "String", "name").
+            addLexicalValue("name");
+      beanST.addMethodsValue(javaGroup.newmethod().
+            setReturnValue("void").
+            setName("add").
+            addParametersValue("one", "Integer").
+            addParametersValue("two", "Integer").
+            addStatementsValue("Integer three = one + two;").
+            addStatementsValue("System.out.println(\"three = \" + three);"));
+      beanST.addMethodsValue(javaGroup.newBean().
+            setName("InnerBean").
+            setScope("private").
+            addMethodsValue(javaGroup.newmethod().
+                  setName("calculate").
+                  addParametersValue("test","Integer").
+                  addStatementsValue("test++;")));
+
+      final JavaParser parser = new JavaParser(new CommonTokenStream(new JavaLexer(CharStreams.fromString(beanST.toString()))));
+      final JavaParserNodeListener listener = new JavaParserNodeListener(true) {
+
+         @Override
+         public void enterQualifiedName(JavaParser.QualifiedNameContext arg) {
+            super.enterQualifiedName(arg);
+
+            if (inPackageDeclaration()) {
+               System.out.println("package " + arg.getText());
+            }
+         }
+      };
+      new ParseTreeWalker().walk(listener, parser.compilationUnit());
+
+      System.out.println(beanST.toString());
+   }
 
    @Test
    public void testCompile() {
@@ -93,7 +129,7 @@ public class Tests {
          System.out.println(subType.getName());
       }
 
-      Set<Method> getters = getAllMethods(DomainPlugin.class,withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
+      Set<Method> getters = getAllMethods(DomainPlugin.class, withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
       for (Method getter : getters) {
          System.out.println(getter.getName());
       }
@@ -125,8 +161,7 @@ public class Tests {
 
    private static void parseFile(File file) throws IOException {
       final JavaParser parser = new JavaParser(new CommonTokenStream(new JavaLexer(CharStreams.fromFileName(file.getAbsolutePath()))));
-
-      final JavaParserNodeListener listener = new JavaParserNodeListener();
+      final JavaParserNodeListener listener = new JavaParserNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.compilationUnit());
 //         visit("", listener.getRoot());
    }

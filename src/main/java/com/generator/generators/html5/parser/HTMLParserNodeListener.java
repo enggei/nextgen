@@ -46,225 +46,293 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inHtmlDocument = false;
+	protected java.util.Stack<Boolean> inHtmlDocument = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
 		onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText()));
-		this.inHtmlDocument = true;
+		this.inHtmlDocument.push(true);
 	}
 
 	public void exitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
 		onExit();
-		this.inHtmlDocument = false;
+		this.inHtmlDocument.pop();
 	}
 
-	protected boolean inHtmlElements = false;
+	public boolean inHtmlDocument() {
+      return inHtmlDocument.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlElements = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
 		onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText()));
-		this.inHtmlElements = true;
+		this.inHtmlElements.push(true);
 	}
 
 	public void exitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
 		onExit();
-		this.inHtmlElements = false;
+		this.inHtmlElements.pop();
 	}
 
-	protected boolean inHtmlElement = false;
+	public boolean inHtmlElements() {
+      return inHtmlElements.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlElement = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
 		onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText()));
-		this.inHtmlElement = true;
+		this.inHtmlElement.push(true);
 	}
 
 	public void exitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
 		onExit();
-		this.inHtmlElement = false;
+		this.inHtmlElement.pop();
 	}
 
-	protected boolean inHtmlContent = false;
+	public boolean inHtmlElement() {
+      return inHtmlElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlContent = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
 		onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText()));
-		this.inHtmlContent = true;
+		this.inHtmlContent.push(true);
 	}
 
 	public void exitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
 		onExit();
-		this.inHtmlContent = false;
+		this.inHtmlContent.pop();
 	}
 
-	protected boolean inHtmlAttribute = false;
+	public boolean inHtmlContent() {
+      return inHtmlContent.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlAttribute = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
 		onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText()));
-		this.inHtmlAttribute = true;
+		this.inHtmlAttribute.push(true);
 	}
 
 	public void exitHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
 		onExit();
-		this.inHtmlAttribute = false;
+		this.inHtmlAttribute.pop();
 	}
 
-	protected boolean inHtmlAttributeName = false;
+	public boolean inHtmlAttribute() {
+      return inHtmlAttribute.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlAttributeName = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
 		onEnter(new Node("HtmlAttributeName", arg.getText(), arg.getStart().getText()));
-		this.inHtmlAttributeName = true;
+		this.inHtmlAttributeName.push(true);
 	}
 
 	public void exitHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
 		onExit();
-		this.inHtmlAttributeName = false;
+		this.inHtmlAttributeName.pop();
 	}
 
-	protected boolean inHtmlAttributeValue = false;
+	public boolean inHtmlAttributeName() {
+      return inHtmlAttributeName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlAttributeValue = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
 		onEnter(new Node("HtmlAttributeValue", arg.getText(), arg.getStart().getText()));
-		this.inHtmlAttributeValue = true;
+		this.inHtmlAttributeValue.push(true);
 	}
 
 	public void exitHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
 		onExit();
-		this.inHtmlAttributeValue = false;
+		this.inHtmlAttributeValue.pop();
 	}
 
-	protected boolean inHtmlTagName = false;
+	public boolean inHtmlAttributeValue() {
+      return inHtmlAttributeValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlTagName = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
 		onEnter(new Node("HtmlTagName", arg.getText(), arg.getStart().getText()));
-		this.inHtmlTagName = true;
+		this.inHtmlTagName.push(true);
 	}
 
 	public void exitHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
 		onExit();
-		this.inHtmlTagName = false;
+		this.inHtmlTagName.pop();
 	}
 
-	protected boolean inHtmlChardata = false;
+	public boolean inHtmlTagName() {
+      return inHtmlTagName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlChardata = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
 		onEnter(new Node("HtmlChardata", arg.getText(), arg.getStart().getText()));
-		this.inHtmlChardata = true;
+		this.inHtmlChardata.push(true);
 	}
 
 	public void exitHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
 		onExit();
-		this.inHtmlChardata = false;
+		this.inHtmlChardata.pop();
 	}
 
-	protected boolean inHtmlMisc = false;
+	public boolean inHtmlChardata() {
+      return inHtmlChardata.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlMisc = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
 		onEnter(new Node("HtmlMisc", arg.getText(), arg.getStart().getText()));
-		this.inHtmlMisc = true;
+		this.inHtmlMisc.push(true);
 	}
 
 	public void exitHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
 		onExit();
-		this.inHtmlMisc = false;
+		this.inHtmlMisc.pop();
 	}
 
-	protected boolean inHtmlComment = false;
+	public boolean inHtmlMisc() {
+      return inHtmlMisc.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHtmlComment = new java.util.Stack<>();
 
 	@Override
 	public void enterHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
 		onEnter(new Node("HtmlComment", arg.getText(), arg.getStart().getText()));
-		this.inHtmlComment = true;
+		this.inHtmlComment.push(true);
 	}
 
 	public void exitHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
 		onExit();
-		this.inHtmlComment = false;
+		this.inHtmlComment.pop();
 	}
 
-	protected boolean inXhtmlCDATA = false;
+	public boolean inHtmlComment() {
+      return inHtmlComment.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inXhtmlCDATA = new java.util.Stack<>();
 
 	@Override
 	public void enterXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
 		onEnter(new Node("XhtmlCDATA", arg.getText(), arg.getStart().getText()));
-		this.inXhtmlCDATA = true;
+		this.inXhtmlCDATA.push(true);
 	}
 
 	public void exitXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
 		onExit();
-		this.inXhtmlCDATA = false;
+		this.inXhtmlCDATA.pop();
 	}
 
-	protected boolean inDtd = false;
+	public boolean inXhtmlCDATA() {
+      return inXhtmlCDATA.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDtd = new java.util.Stack<>();
 
 	@Override
 	public void enterDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
 		onEnter(new Node("Dtd", arg.getText(), arg.getStart().getText()));
-		this.inDtd = true;
+		this.inDtd.push(true);
 	}
 
 	public void exitDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
 		onExit();
-		this.inDtd = false;
+		this.inDtd.pop();
 	}
 
-	protected boolean inXml = false;
+	public boolean inDtd() {
+      return inDtd.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inXml = new java.util.Stack<>();
 
 	@Override
 	public void enterXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
 		onEnter(new Node("Xml", arg.getText(), arg.getStart().getText()));
-		this.inXml = true;
+		this.inXml.push(true);
 	}
 
 	public void exitXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
 		onExit();
-		this.inXml = false;
+		this.inXml.pop();
 	}
 
-	protected boolean inScriptlet = false;
+	public boolean inXml() {
+      return inXml.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScriptlet = new java.util.Stack<>();
 
 	@Override
 	public void enterScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
 		onEnter(new Node("Scriptlet", arg.getText(), arg.getStart().getText()));
-		this.inScriptlet = true;
+		this.inScriptlet.push(true);
 	}
 
 	public void exitScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
 		onExit();
-		this.inScriptlet = false;
+		this.inScriptlet.pop();
 	}
 
-	protected boolean inScript = false;
+	public boolean inScriptlet() {
+      return inScriptlet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScript = new java.util.Stack<>();
 
 	@Override
 	public void enterScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
 		onEnter(new Node("Script", arg.getText(), arg.getStart().getText()));
-		this.inScript = true;
+		this.inScript.push(true);
 	}
 
 	public void exitScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
 		onExit();
-		this.inScript = false;
+		this.inScript.pop();
 	}
 
-	protected boolean inStyle = false;
+	public boolean inScript() {
+      return inScript.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStyle = new java.util.Stack<>();
 
 	@Override
 	public void enterStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
 		onEnter(new Node("Style", arg.getText(), arg.getStart().getText()));
-		this.inStyle = true;
+		this.inStyle.push(true);
 	}
 
 	public void exitStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
 		onExit();
-		this.inStyle = false;
+		this.inStyle.pop();
 	}
+
+	public boolean inStyle() {
+      return inStyle.isEmpty(); 
+   }
 
 }

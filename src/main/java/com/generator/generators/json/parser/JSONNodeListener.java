@@ -46,69 +46,89 @@ public class JSONNodeListener extends JSONBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inJson = false;
+	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
 		onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
-		this.inJson = true;
+		this.inJson.push(true);
 	}
 
 	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
 		onExit();
-		this.inJson = false;
+		this.inJson.pop();
 	}
 
-	protected boolean inObj = false;
+	public boolean inJson() {
+      return inJson.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inObj = new java.util.Stack<>();
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
 		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
-		this.inObj = true;
+		this.inObj.push(true);
 	}
 
 	public void exitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
 		onExit();
-		this.inObj = false;
+		this.inObj.pop();
 	}
 
-	protected boolean inPair = false;
+	public boolean inObj() {
+      return inObj.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPair = new java.util.Stack<>();
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
 		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
-		this.inPair = true;
+		this.inPair.push(true);
 	}
 
 	public void exitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
 		onExit();
-		this.inPair = false;
+		this.inPair.pop();
 	}
 
-	protected boolean inArray = false;
+	public boolean inPair() {
+      return inPair.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArray = new java.util.Stack<>();
 
 	@Override
 	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
 		onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
-		this.inArray = true;
+		this.inArray.push(true);
 	}
 
 	public void exitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
 		onExit();
-		this.inArray = false;
+		this.inArray.pop();
 	}
 
-	protected boolean inValue = false;
+	public boolean inArray() {
+      return inArray.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
 		onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
-		this.inValue = true;
+		this.inValue.push(true);
 	}
 
 	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
 		onExit();
-		this.inValue = false;
+		this.inValue.pop();
 	}
+
+	public boolean inValue() {
+      return inValue.isEmpty(); 
+   }
 
 }

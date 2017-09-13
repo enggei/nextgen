@@ -39,214 +39,274 @@ public class ProtobufNeoListener extends ProtobufBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inOption = false;
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
 
 	@Override
 	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
 		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
 		onEnter(node);
-		this.inOption = true;
+		this.inOption.push(true);
 	}
 
 	public void exitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
 		onExit();
-		this.inOption = false;
+		this.inOption.pop();
 	}
 
-	protected boolean inPropertyName = false;
+	public boolean inOption() {
+      return inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
 
 	@Override
 	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
 		final Node node = model.findOrCreate(Label.label("PropertyName"), "text", arg.getText());
 		onEnter(node);
-		this.inPropertyName = true;
+		this.inPropertyName.push(true);
 	}
 
 	public void exitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
 		onExit();
-		this.inPropertyName = false;
+		this.inPropertyName.pop();
 	}
 
-	protected boolean inDefaultValue = false;
+	public boolean inPropertyName() {
+      return inPropertyName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
 
 	@Override
 	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
 		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText());
 		onEnter(node);
-		this.inDefaultValue = true;
+		this.inDefaultValue.push(true);
 	}
 
 	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
 		onExit();
-		this.inDefaultValue = false;
+		this.inDefaultValue.pop();
 	}
 
-	protected boolean inFile = false;
+	public boolean inDefaultValue() {
+      return inDefaultValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
 
 	@Override
 	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
 		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
 		onEnter(node);
-		this.inFile = true;
+		this.inFile.push(true);
 	}
 
 	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
 		onExit();
-		this.inFile = false;
+		this.inFile.pop();
 	}
 
-	protected boolean inPackageDecl = false;
+	public boolean inFile() {
+      return inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
 
 	@Override
 	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
 		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
 		onEnter(node);
-		this.inPackageDecl = true;
+		this.inPackageDecl.push(true);
 	}
 
 	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
 		onExit();
-		this.inPackageDecl = false;
+		this.inPackageDecl.pop();
 	}
 
-	protected boolean inPackageName = false;
+	public boolean inPackageDecl() {
+      return inPackageDecl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageName = new java.util.Stack<>();
 
 	@Override
 	public void enterPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
 		final Node node = model.findOrCreate(Label.label("PackageName"), "text", arg.getText());
 		onEnter(node);
-		this.inPackageName = true;
+		this.inPackageName.push(true);
 	}
 
 	public void exitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
 		onExit();
-		this.inPackageName = false;
+		this.inPackageName.pop();
 	}
 
-	protected boolean inImports = false;
+	public boolean inPackageName() {
+      return inPackageName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
 
 	@Override
 	public void enterImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
 		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
 		onEnter(node);
-		this.inImports = true;
+		this.inImports.push(true);
 	}
 
 	public void exitImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
 		onExit();
-		this.inImports = false;
+		this.inImports.pop();
 	}
 
-	protected boolean inMessage = false;
+	public boolean inImports() {
+      return inImports.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
 
 	@Override
 	public void enterMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
 		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
 		onEnter(node);
-		this.inMessage = true;
+		this.inMessage.push(true);
 	}
 
 	public void exitMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
 		onExit();
-		this.inMessage = false;
+		this.inMessage.pop();
 	}
 
-	protected boolean inEnumName = false;
+	public boolean inMessage() {
+      return inMessage.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumName = new java.util.Stack<>();
 
 	@Override
 	public void enterEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnumName"), "text", arg.getText());
 		onEnter(node);
-		this.inEnumName = true;
+		this.inEnumName.push(true);
 	}
 
 	public void exitEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
 		onExit();
-		this.inEnumName = false;
+		this.inEnumName.pop();
 	}
 
-	protected boolean inMessageContent = false;
+	public boolean inEnumName() {
+      return inEnumName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMessageContent = new java.util.Stack<>();
 
 	@Override
 	public void enterMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
 		final Node node = model.findOrCreate(Label.label("MessageContent"), "text", arg.getText());
 		onEnter(node);
-		this.inMessageContent = true;
+		this.inMessageContent.push(true);
 	}
 
 	public void exitMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
 		onExit();
-		this.inMessageContent = false;
+		this.inMessageContent.pop();
 	}
 
-	protected boolean inProperty = false;
+	public boolean inMessageContent() {
+      return inMessageContent.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProperty = new java.util.Stack<>();
 
 	@Override
 	public void enterProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
 		final Node node = model.findOrCreate(Label.label("Property"), "text", arg.getText());
 		onEnter(node);
-		this.inProperty = true;
+		this.inProperty.push(true);
 	}
 
 	public void exitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
 		onExit();
-		this.inProperty = false;
+		this.inProperty.pop();
 	}
 
-	protected boolean inPackedValue = false;
+	public boolean inProperty() {
+      return inProperty.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackedValue = new java.util.Stack<>();
 
 	@Override
 	public void enterPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
 		final Node node = model.findOrCreate(Label.label("PackedValue"), "text", arg.getText());
 		onEnter(node);
-		this.inPackedValue = true;
+		this.inPackedValue.push(true);
 	}
 
 	public void exitPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
 		onExit();
-		this.inPackedValue = false;
+		this.inPackedValue.pop();
 	}
 
-	protected boolean inExtensions = false;
+	public boolean inPackedValue() {
+      return inPackedValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExtensions = new java.util.Stack<>();
 
 	@Override
 	public void enterExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
 		final Node node = model.findOrCreate(Label.label("Extensions"), "text", arg.getText());
 		onEnter(node);
-		this.inExtensions = true;
+		this.inExtensions.push(true);
 	}
 
 	public void exitExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
 		onExit();
-		this.inExtensions = false;
+		this.inExtensions.pop();
 	}
 
-	protected boolean inPropertyType = false;
+	public boolean inExtensions() {
+      return inExtensions.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertyType = new java.util.Stack<>();
 
 	@Override
 	public void enterPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("PropertyType"), "text", arg.getText());
 		onEnter(node);
-		this.inPropertyType = true;
+		this.inPropertyType.push(true);
 	}
 
 	public void exitPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
 		onExit();
-		this.inPropertyType = false;
+		this.inPropertyType.pop();
 	}
 
-	protected boolean inExtensionMax = false;
+	public boolean inPropertyType() {
+      return inPropertyType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExtensionMax = new java.util.Stack<>();
 
 	@Override
 	public void enterExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
 		final Node node = model.findOrCreate(Label.label("ExtensionMax"), "text", arg.getText());
 		onEnter(node);
-		this.inExtensionMax = true;
+		this.inExtensionMax.push(true);
 	}
 
 	public void exitExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
 		onExit();
-		this.inExtensionMax = false;
+		this.inExtensionMax.pop();
 	}
+
+	public boolean inExtensionMax() {
+      return inExtensionMax.isEmpty(); 
+   }
 
 }

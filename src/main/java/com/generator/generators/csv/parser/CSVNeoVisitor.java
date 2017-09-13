@@ -28,16 +28,6 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
-		System.out.println("Row");
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
 		System.out.println("CsvFile");
 		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText());
@@ -51,6 +41,16 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
 		System.out.println("Hdr");
 		final Node node = model.findOrCreate(Label.label("Hdr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
+		System.out.println("Row");
+		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

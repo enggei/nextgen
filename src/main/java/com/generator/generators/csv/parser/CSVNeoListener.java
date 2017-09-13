@@ -39,60 +39,76 @@ public class CSVNeoListener extends CSVBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inCsvFile = false;
+	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
 
 	@Override
 	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
 		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText());
 		onEnter(node);
-		this.inCsvFile = true;
+		this.inCsvFile.push(true);
 	}
 
 	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
 		onExit();
-		this.inCsvFile = false;
+		this.inCsvFile.pop();
 	}
 
-	protected boolean inHdr = false;
+	public boolean inCsvFile() {
+      return inCsvFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
 
 	@Override
 	public void enterHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
 		final Node node = model.findOrCreate(Label.label("Hdr"), "text", arg.getText());
 		onEnter(node);
-		this.inHdr = true;
+		this.inHdr.push(true);
 	}
 
 	public void exitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
 		onExit();
-		this.inHdr = false;
+		this.inHdr.pop();
 	}
 
-	protected boolean inRow = false;
+	public boolean inHdr() {
+      return inHdr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
 
 	@Override
 	public void enterRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
 		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
 		onEnter(node);
-		this.inRow = true;
+		this.inRow.push(true);
 	}
 
 	public void exitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
 		onExit();
-		this.inRow = false;
+		this.inRow.pop();
 	}
 
-	protected boolean inField = false;
+	public boolean inRow() {
+      return inRow.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
 
 	@Override
 	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
 		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText());
 		onEnter(node);
-		this.inField = true;
+		this.inField.push(true);
 	}
 
 	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
 		onExit();
-		this.inField = false;
+		this.inField.pop();
 	}
+
+	public boolean inField() {
+      return inField.isEmpty(); 
+   }
 
 }

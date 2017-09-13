@@ -34,19 +34,19 @@ public class Tests {
             public void enterId_(MySqlParser.Id_Context arg) {
                super.enterId_(arg);
 
-               if (inConstraintDefinition && inTblConstrFK && inIndex_colname_list && inIndex_col_name) {
+               if (inConstraintDefinition() && inTblConstrFK() && inIndex_colname_list() && inIndex_col_name()) {
                   output.append(" column ").append(arg.getText());
 
-               } else if (inConstraintDefinition && inReference_definition && inTable_name) {
+               } else if (inConstraintDefinition() && inReference_definition() && inTable_name()) {
                   output.append(" reference table ").append(arg.getText());
 
-               } else if (inConstraintDefinition && inTblConstrFK) {
+               } else if (inConstraintDefinition() && inTblConstrFK()) {
                   output.append("\n\tforeign key ").append(arg.getText());
-               } else if (!inConstraintDefinition && inColCreateTable && inTable_name) {
+               } else if (!inConstraintDefinition() && inColCreateTable() && inTable_name()) {
                   output.append("\n").append(arg.getText());
-               } else if (inTblConstrPK && inIndex_col_name) {
+               } else if (inTblConstrPK() && inIndex_col_name()) {
                   output.append("\n\tprimary key ").append(arg.getText());
-               } else if (inColumnDefinition) {
+               } else if (inColumnDefinition()) {
                   output.append("\n\tcolumn ").append(arg.getText());
                }
             }

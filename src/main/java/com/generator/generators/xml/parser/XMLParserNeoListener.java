@@ -39,116 +39,148 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inElement = false;
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
 		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
 		onEnter(node);
-		this.inElement = true;
+		this.inElement.push(true);
 	}
 
 	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
 		onExit();
-		this.inElement = false;
+		this.inElement.pop();
 	}
 
-	protected boolean inAttribute = false;
+	public boolean inElement() {
+      return inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
 		onEnter(node);
-		this.inAttribute = true;
+		this.inAttribute.push(true);
 	}
 
 	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		onExit();
-		this.inAttribute = false;
+		this.inAttribute.pop();
 	}
 
-	protected boolean inDocument = false;
+	public boolean inAttribute() {
+      return inAttribute.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
 		onEnter(node);
-		this.inDocument = true;
+		this.inDocument.push(true);
 	}
 
 	public void exitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		onExit();
-		this.inDocument = false;
+		this.inDocument.pop();
 	}
 
-	protected boolean inProlog = false;
+	public boolean inDocument() {
+      return inDocument.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProlog = new java.util.Stack<>();
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
 		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
 		onEnter(node);
-		this.inProlog = true;
+		this.inProlog.push(true);
 	}
 
 	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
 		onExit();
-		this.inProlog = false;
+		this.inProlog.pop();
 	}
 
-	protected boolean inContent = false;
+	public boolean inProlog() {
+      return inProlog.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inContent = new java.util.Stack<>();
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
 		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText());
 		onEnter(node);
-		this.inContent = true;
+		this.inContent.push(true);
 	}
 
 	public void exitContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
 		onExit();
-		this.inContent = false;
+		this.inContent.pop();
 	}
 
-	protected boolean inReference = false;
+	public boolean inContent() {
+      return inContent.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReference = new java.util.Stack<>();
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		final Node node = model.findOrCreate(Label.label("Reference"), "text", arg.getText());
 		onEnter(node);
-		this.inReference = true;
+		this.inReference.push(true);
 	}
 
 	public void exitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		onExit();
-		this.inReference = false;
+		this.inReference.pop();
 	}
 
-	protected boolean inChardata = false;
+	public boolean inReference() {
+      return inReference.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inChardata = new java.util.Stack<>();
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText());
 		onEnter(node);
-		this.inChardata = true;
+		this.inChardata.push(true);
 	}
 
 	public void exitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		onExit();
-		this.inChardata = false;
+		this.inChardata.pop();
 	}
 
-	protected boolean inMisc = false;
+	public boolean inChardata() {
+      return inChardata.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMisc = new java.util.Stack<>();
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		final Node node = model.findOrCreate(Label.label("Misc"), "text", arg.getText());
 		onEnter(node);
-		this.inMisc = true;
+		this.inMisc.push(true);
 	}
 
 	public void exitMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		onExit();
-		this.inMisc = false;
+		this.inMisc.pop();
 	}
+
+	public boolean inMisc() {
+      return inMisc.isEmpty(); 
+   }
 
 }

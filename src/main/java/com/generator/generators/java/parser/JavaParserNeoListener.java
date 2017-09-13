@@ -39,1432 +39,1840 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected boolean inBlock = false;
+	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
 
 	@Override
 	public void enterBlock(com.generator.generators.java.parser.JavaParser.BlockContext arg) {
 		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
 		onEnter(node);
-		this.inBlock = true;
+		this.inBlock.push(true);
 	}
 
 	public void exitBlock(com.generator.generators.java.parser.JavaParser.BlockContext arg) {
 		onExit();
-		this.inBlock = false;
+		this.inBlock.pop();
 	}
 
-	protected boolean inStatement = false;
+	public boolean inBlock() {
+      return inBlock.isEmpty(); 
+   }
 
-	@Override
-	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement = true;
-	}
-
-	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		onExit();
-		this.inStatement = false;
-	}
-
-	protected boolean inLiteral = false;
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
 	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
 		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
 		onEnter(node);
-		this.inLiteral = true;
+		this.inLiteral.push(true);
 	}
 
 	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
 		onExit();
-		this.inLiteral = false;
+		this.inLiteral.pop();
 	}
 
-	protected boolean inExpression = false;
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
 		onEnter(node);
-		this.inExpression = true;
+		this.inExpression.push(true);
 	}
 
 	public void exitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		onExit();
-		this.inExpression = false;
+		this.inExpression.pop();
 	}
 
-	protected boolean inFormalParameterList = false;
+	public boolean inExpression() {
+      return inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFormalParameterList = new java.util.Stack<>();
 
 	@Override
 	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
 		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText());
 		onEnter(node);
-		this.inFormalParameterList = true;
+		this.inFormalParameterList.push(true);
 	}
 
 	public void exitFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
 		onExit();
-		this.inFormalParameterList = false;
+		this.inFormalParameterList.pop();
 	}
 
-	protected boolean inArguments = false;
+	public boolean inFormalParameterList() {
+      return inFormalParameterList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArguments = new java.util.Stack<>();
 
 	@Override
 	public void enterArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
 		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText());
 		onEnter(node);
-		this.inArguments = true;
+		this.inArguments.push(true);
 	}
 
 	public void exitArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
 		onExit();
-		this.inArguments = false;
+		this.inArguments.pop();
 	}
 
-	protected boolean inCompilationUnit = false;
+	public boolean inArguments() {
+      return inArguments.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
 
 	@Override
 	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
 		final Node node = model.findOrCreate(Label.label("CompilationUnit"), "text", arg.getText());
 		onEnter(node);
-		this.inCompilationUnit = true;
+		this.inCompilationUnit.push(true);
 	}
 
 	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
 		onExit();
-		this.inCompilationUnit = false;
+		this.inCompilationUnit.pop();
 	}
 
-	protected boolean inPackageDeclaration = false;
+	public boolean inCompilationUnit() {
+      return inCompilationUnit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("PackageDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inPackageDeclaration = true;
+		this.inPackageDeclaration.push(true);
 	}
 
 	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
 		onExit();
-		this.inPackageDeclaration = false;
+		this.inPackageDeclaration.pop();
 	}
 
-	protected boolean inImportDeclaration = false;
+	public boolean inPackageDeclaration() {
+      return inPackageDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ImportDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inImportDeclaration = true;
+		this.inImportDeclaration.push(true);
 	}
 
 	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
 		onExit();
-		this.inImportDeclaration = false;
+		this.inImportDeclaration.pop();
 	}
 
-	protected boolean inTypeDeclaration = false;
+	public boolean inImportDeclaration() {
+      return inImportDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeDeclaration = true;
+		this.inTypeDeclaration.push(true);
 	}
 
 	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
 		onExit();
-		this.inTypeDeclaration = false;
+		this.inTypeDeclaration.pop();
 	}
 
-	protected boolean inModifier = false;
+	public boolean inTypeDeclaration() {
+      return inTypeDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
 
 	@Override
 	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
 		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText());
 		onEnter(node);
-		this.inModifier = true;
+		this.inModifier.push(true);
 	}
 
 	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
 		onExit();
-		this.inModifier = false;
+		this.inModifier.pop();
 	}
 
-	protected boolean inClassOrInterfaceModifier = false;
+	public boolean inModifier() {
+      return inModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
 
 	@Override
 	public void enterClassOrInterfaceModifier(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceModifierContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassOrInterfaceModifier"), "text", arg.getText());
 		onEnter(node);
-		this.inClassOrInterfaceModifier = true;
+		this.inClassOrInterfaceModifier.push(true);
 	}
 
 	public void exitClassOrInterfaceModifier(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceModifierContext arg) {
 		onExit();
-		this.inClassOrInterfaceModifier = false;
+		this.inClassOrInterfaceModifier.pop();
 	}
 
-	protected boolean inVariableModifier = false;
+	public boolean inClassOrInterfaceModifier() {
+      return inClassOrInterfaceModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableModifier = new java.util.Stack<>();
 
 	@Override
 	public void enterVariableModifier(com.generator.generators.java.parser.JavaParser.VariableModifierContext arg) {
 		final Node node = model.findOrCreate(Label.label("VariableModifier"), "text", arg.getText());
 		onEnter(node);
-		this.inVariableModifier = true;
+		this.inVariableModifier.push(true);
 	}
 
 	public void exitVariableModifier(com.generator.generators.java.parser.JavaParser.VariableModifierContext arg) {
 		onExit();
-		this.inVariableModifier = false;
+		this.inVariableModifier.pop();
 	}
 
-	protected boolean inClassDeclaration = false;
+	public boolean inVariableModifier() {
+      return inVariableModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterClassDeclaration(com.generator.generators.java.parser.JavaParser.ClassDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inClassDeclaration = true;
+		this.inClassDeclaration.push(true);
 	}
 
 	public void exitClassDeclaration(com.generator.generators.java.parser.JavaParser.ClassDeclarationContext arg) {
 		onExit();
-		this.inClassDeclaration = false;
+		this.inClassDeclaration.pop();
 	}
 
-	protected boolean inTypeParameters = false;
+	public boolean inClassDeclaration() {
+      return inClassDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeParameters = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeParameters(com.generator.generators.java.parser.JavaParser.TypeParametersContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeParameters"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeParameters = true;
+		this.inTypeParameters.push(true);
 	}
 
 	public void exitTypeParameters(com.generator.generators.java.parser.JavaParser.TypeParametersContext arg) {
 		onExit();
-		this.inTypeParameters = false;
+		this.inTypeParameters.pop();
 	}
 
-	protected boolean inTypeParameter = false;
+	public boolean inTypeParameters() {
+      return inTypeParameters.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeParameter = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeParameter(com.generator.generators.java.parser.JavaParser.TypeParameterContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeParameter"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeParameter = true;
+		this.inTypeParameter.push(true);
 	}
 
 	public void exitTypeParameter(com.generator.generators.java.parser.JavaParser.TypeParameterContext arg) {
 		onExit();
-		this.inTypeParameter = false;
+		this.inTypeParameter.pop();
 	}
 
-	protected boolean inTypeBound = false;
+	public boolean inTypeParameter() {
+      return inTypeParameter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeBound = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeBound(com.generator.generators.java.parser.JavaParser.TypeBoundContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeBound"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeBound = true;
+		this.inTypeBound.push(true);
 	}
 
 	public void exitTypeBound(com.generator.generators.java.parser.JavaParser.TypeBoundContext arg) {
 		onExit();
-		this.inTypeBound = false;
+		this.inTypeBound.pop();
 	}
 
-	protected boolean inEnumDeclaration = false;
+	public boolean inTypeBound() {
+      return inTypeBound.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterEnumDeclaration(com.generator.generators.java.parser.JavaParser.EnumDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnumDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inEnumDeclaration = true;
+		this.inEnumDeclaration.push(true);
 	}
 
 	public void exitEnumDeclaration(com.generator.generators.java.parser.JavaParser.EnumDeclarationContext arg) {
 		onExit();
-		this.inEnumDeclaration = false;
+		this.inEnumDeclaration.pop();
 	}
 
-	protected boolean inEnumConstants = false;
+	public boolean inEnumDeclaration() {
+      return inEnumDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumConstants = new java.util.Stack<>();
 
 	@Override
 	public void enterEnumConstants(com.generator.generators.java.parser.JavaParser.EnumConstantsContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnumConstants"), "text", arg.getText());
 		onEnter(node);
-		this.inEnumConstants = true;
+		this.inEnumConstants.push(true);
 	}
 
 	public void exitEnumConstants(com.generator.generators.java.parser.JavaParser.EnumConstantsContext arg) {
 		onExit();
-		this.inEnumConstants = false;
+		this.inEnumConstants.pop();
 	}
 
-	protected boolean inEnumConstant = false;
+	public boolean inEnumConstants() {
+      return inEnumConstants.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumConstant = new java.util.Stack<>();
 
 	@Override
 	public void enterEnumConstant(com.generator.generators.java.parser.JavaParser.EnumConstantContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnumConstant"), "text", arg.getText());
 		onEnter(node);
-		this.inEnumConstant = true;
+		this.inEnumConstant.push(true);
 	}
 
 	public void exitEnumConstant(com.generator.generators.java.parser.JavaParser.EnumConstantContext arg) {
 		onExit();
-		this.inEnumConstant = false;
+		this.inEnumConstant.pop();
 	}
 
-	protected boolean inEnumBodyDeclarations = false;
+	public boolean inEnumConstant() {
+      return inEnumConstant.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnumBodyDeclarations = new java.util.Stack<>();
 
 	@Override
 	public void enterEnumBodyDeclarations(com.generator.generators.java.parser.JavaParser.EnumBodyDeclarationsContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnumBodyDeclarations"), "text", arg.getText());
 		onEnter(node);
-		this.inEnumBodyDeclarations = true;
+		this.inEnumBodyDeclarations.push(true);
 	}
 
 	public void exitEnumBodyDeclarations(com.generator.generators.java.parser.JavaParser.EnumBodyDeclarationsContext arg) {
 		onExit();
-		this.inEnumBodyDeclarations = false;
+		this.inEnumBodyDeclarations.pop();
 	}
 
-	protected boolean inInterfaceDeclaration = false;
+	public boolean inEnumBodyDeclarations() {
+      return inEnumBodyDeclarations.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceDeclaration = true;
+		this.inInterfaceDeclaration.push(true);
 	}
 
 	public void exitInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
 		onExit();
-		this.inInterfaceDeclaration = false;
+		this.inInterfaceDeclaration.pop();
 	}
 
-	protected boolean inClassBody = false;
+	public boolean inInterfaceDeclaration() {
+      return inInterfaceDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassBody = new java.util.Stack<>();
 
 	@Override
 	public void enterClassBody(com.generator.generators.java.parser.JavaParser.ClassBodyContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassBody"), "text", arg.getText());
 		onEnter(node);
-		this.inClassBody = true;
+		this.inClassBody.push(true);
 	}
 
 	public void exitClassBody(com.generator.generators.java.parser.JavaParser.ClassBodyContext arg) {
 		onExit();
-		this.inClassBody = false;
+		this.inClassBody.pop();
 	}
 
-	protected boolean inInterfaceBody = false;
+	public boolean inClassBody() {
+      return inClassBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceBody = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceBody(com.generator.generators.java.parser.JavaParser.InterfaceBodyContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceBody"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceBody = true;
+		this.inInterfaceBody.push(true);
 	}
 
 	public void exitInterfaceBody(com.generator.generators.java.parser.JavaParser.InterfaceBodyContext arg) {
 		onExit();
-		this.inInterfaceBody = false;
+		this.inInterfaceBody.pop();
 	}
 
-	protected boolean inClassBodyDeclaration = false;
+	public boolean inInterfaceBody() {
+      return inInterfaceBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassBodyDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterClassBodyDeclaration(com.generator.generators.java.parser.JavaParser.ClassBodyDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassBodyDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inClassBodyDeclaration = true;
+		this.inClassBodyDeclaration.push(true);
 	}
 
 	public void exitClassBodyDeclaration(com.generator.generators.java.parser.JavaParser.ClassBodyDeclarationContext arg) {
 		onExit();
-		this.inClassBodyDeclaration = false;
+		this.inClassBodyDeclaration.pop();
 	}
 
-	protected boolean inMemberDeclaration = false;
+	public boolean inClassBodyDeclaration() {
+      return inClassBodyDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMemberDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterMemberDeclaration(com.generator.generators.java.parser.JavaParser.MemberDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("MemberDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inMemberDeclaration = true;
+		this.inMemberDeclaration.push(true);
 	}
 
 	public void exitMemberDeclaration(com.generator.generators.java.parser.JavaParser.MemberDeclarationContext arg) {
 		onExit();
-		this.inMemberDeclaration = false;
+		this.inMemberDeclaration.pop();
 	}
 
-	protected boolean inMethodDeclaration = false;
+	public boolean inMemberDeclaration() {
+      return inMemberDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMethodDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterMethodDeclaration(com.generator.generators.java.parser.JavaParser.MethodDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("MethodDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inMethodDeclaration = true;
+		this.inMethodDeclaration.push(true);
 	}
 
 	public void exitMethodDeclaration(com.generator.generators.java.parser.JavaParser.MethodDeclarationContext arg) {
 		onExit();
-		this.inMethodDeclaration = false;
+		this.inMethodDeclaration.pop();
 	}
 
-	protected boolean inMethodBody = false;
+	public boolean inMethodDeclaration() {
+      return inMethodDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMethodBody = new java.util.Stack<>();
 
 	@Override
 	public void enterMethodBody(com.generator.generators.java.parser.JavaParser.MethodBodyContext arg) {
 		final Node node = model.findOrCreate(Label.label("MethodBody"), "text", arg.getText());
 		onEnter(node);
-		this.inMethodBody = true;
+		this.inMethodBody.push(true);
 	}
 
 	public void exitMethodBody(com.generator.generators.java.parser.JavaParser.MethodBodyContext arg) {
 		onExit();
-		this.inMethodBody = false;
+		this.inMethodBody.pop();
 	}
 
-	protected boolean inTypeTypeOrVoid = false;
+	public boolean inMethodBody() {
+      return inMethodBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeTypeOrVoid = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeTypeOrVoid(com.generator.generators.java.parser.JavaParser.TypeTypeOrVoidContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeTypeOrVoid"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeTypeOrVoid = true;
+		this.inTypeTypeOrVoid.push(true);
 	}
 
 	public void exitTypeTypeOrVoid(com.generator.generators.java.parser.JavaParser.TypeTypeOrVoidContext arg) {
 		onExit();
-		this.inTypeTypeOrVoid = false;
+		this.inTypeTypeOrVoid.pop();
 	}
 
-	protected boolean inGenericMethodDeclaration = false;
+	public boolean inTypeTypeOrVoid() {
+      return inTypeTypeOrVoid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGenericMethodDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterGenericMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericMethodDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("GenericMethodDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inGenericMethodDeclaration = true;
+		this.inGenericMethodDeclaration.push(true);
 	}
 
 	public void exitGenericMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericMethodDeclarationContext arg) {
 		onExit();
-		this.inGenericMethodDeclaration = false;
+		this.inGenericMethodDeclaration.pop();
 	}
 
-	protected boolean inGenericConstructorDeclaration = false;
+	public boolean inGenericMethodDeclaration() {
+      return inGenericMethodDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGenericConstructorDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterGenericConstructorDeclaration(com.generator.generators.java.parser.JavaParser.GenericConstructorDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("GenericConstructorDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inGenericConstructorDeclaration = true;
+		this.inGenericConstructorDeclaration.push(true);
 	}
 
 	public void exitGenericConstructorDeclaration(com.generator.generators.java.parser.JavaParser.GenericConstructorDeclarationContext arg) {
 		onExit();
-		this.inGenericConstructorDeclaration = false;
+		this.inGenericConstructorDeclaration.pop();
 	}
 
-	protected boolean inConstructorDeclaration = false;
+	public boolean inGenericConstructorDeclaration() {
+      return inGenericConstructorDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConstructorDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ConstructorDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inConstructorDeclaration = true;
+		this.inConstructorDeclaration.push(true);
 	}
 
 	public void exitConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
 		onExit();
-		this.inConstructorDeclaration = false;
+		this.inConstructorDeclaration.pop();
 	}
 
-	protected boolean inFieldDeclaration = false;
+	public boolean inConstructorDeclaration() {
+      return inConstructorDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFieldDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterFieldDeclaration(com.generator.generators.java.parser.JavaParser.FieldDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("FieldDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inFieldDeclaration = true;
+		this.inFieldDeclaration.push(true);
 	}
 
 	public void exitFieldDeclaration(com.generator.generators.java.parser.JavaParser.FieldDeclarationContext arg) {
 		onExit();
-		this.inFieldDeclaration = false;
+		this.inFieldDeclaration.pop();
 	}
 
-	protected boolean inInterfaceBodyDeclaration = false;
+	public boolean inFieldDeclaration() {
+      return inFieldDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceBodyDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceBodyDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceBodyDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceBodyDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceBodyDeclaration = true;
+		this.inInterfaceBodyDeclaration.push(true);
 	}
 
 	public void exitInterfaceBodyDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceBodyDeclarationContext arg) {
 		onExit();
-		this.inInterfaceBodyDeclaration = false;
+		this.inInterfaceBodyDeclaration.pop();
 	}
 
-	protected boolean inInterfaceMemberDeclaration = false;
+	public boolean inInterfaceBodyDeclaration() {
+      return inInterfaceBodyDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceMemberDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceMemberDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMemberDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceMemberDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceMemberDeclaration = true;
+		this.inInterfaceMemberDeclaration.push(true);
 	}
 
 	public void exitInterfaceMemberDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMemberDeclarationContext arg) {
 		onExit();
-		this.inInterfaceMemberDeclaration = false;
+		this.inInterfaceMemberDeclaration.pop();
 	}
 
-	protected boolean inConstDeclaration = false;
+	public boolean inInterfaceMemberDeclaration() {
+      return inInterfaceMemberDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConstDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterConstDeclaration(com.generator.generators.java.parser.JavaParser.ConstDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ConstDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inConstDeclaration = true;
+		this.inConstDeclaration.push(true);
 	}
 
 	public void exitConstDeclaration(com.generator.generators.java.parser.JavaParser.ConstDeclarationContext arg) {
 		onExit();
-		this.inConstDeclaration = false;
+		this.inConstDeclaration.pop();
 	}
 
-	protected boolean inConstantDeclarator = false;
+	public boolean inConstDeclaration() {
+      return inConstDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inConstantDeclarator = new java.util.Stack<>();
 
 	@Override
 	public void enterConstantDeclarator(com.generator.generators.java.parser.JavaParser.ConstantDeclaratorContext arg) {
 		final Node node = model.findOrCreate(Label.label("ConstantDeclarator"), "text", arg.getText());
 		onEnter(node);
-		this.inConstantDeclarator = true;
+		this.inConstantDeclarator.push(true);
 	}
 
 	public void exitConstantDeclarator(com.generator.generators.java.parser.JavaParser.ConstantDeclaratorContext arg) {
 		onExit();
-		this.inConstantDeclarator = false;
+		this.inConstantDeclarator.pop();
 	}
 
-	protected boolean inInterfaceMethodDeclaration = false;
+	public boolean inConstantDeclarator() {
+      return inConstantDeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceMethodDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMethodDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceMethodDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceMethodDeclaration = true;
+		this.inInterfaceMethodDeclaration.push(true);
 	}
 
 	public void exitInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMethodDeclarationContext arg) {
 		onExit();
-		this.inInterfaceMethodDeclaration = false;
+		this.inInterfaceMethodDeclaration.pop();
 	}
 
-	protected boolean inInterfaceMethodModifier = false;
+	public boolean inInterfaceMethodDeclaration() {
+      return inInterfaceMethodDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceMethodModifier = new java.util.Stack<>();
 
 	@Override
 	public void enterInterfaceMethodModifier(com.generator.generators.java.parser.JavaParser.InterfaceMethodModifierContext arg) {
 		final Node node = model.findOrCreate(Label.label("InterfaceMethodModifier"), "text", arg.getText());
 		onEnter(node);
-		this.inInterfaceMethodModifier = true;
+		this.inInterfaceMethodModifier.push(true);
 	}
 
 	public void exitInterfaceMethodModifier(com.generator.generators.java.parser.JavaParser.InterfaceMethodModifierContext arg) {
 		onExit();
-		this.inInterfaceMethodModifier = false;
+		this.inInterfaceMethodModifier.pop();
 	}
 
-	protected boolean inGenericInterfaceMethodDeclaration = false;
+	public boolean inInterfaceMethodModifier() {
+      return inInterfaceMethodModifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGenericInterfaceMethodDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterGenericInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericInterfaceMethodDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("GenericInterfaceMethodDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inGenericInterfaceMethodDeclaration = true;
+		this.inGenericInterfaceMethodDeclaration.push(true);
 	}
 
 	public void exitGenericInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericInterfaceMethodDeclarationContext arg) {
 		onExit();
-		this.inGenericInterfaceMethodDeclaration = false;
+		this.inGenericInterfaceMethodDeclaration.pop();
 	}
 
-	protected boolean inVariableDeclarators = false;
+	public boolean inGenericInterfaceMethodDeclaration() {
+      return inGenericInterfaceMethodDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableDeclarators = new java.util.Stack<>();
 
 	@Override
 	public void enterVariableDeclarators(com.generator.generators.java.parser.JavaParser.VariableDeclaratorsContext arg) {
 		final Node node = model.findOrCreate(Label.label("VariableDeclarators"), "text", arg.getText());
 		onEnter(node);
-		this.inVariableDeclarators = true;
+		this.inVariableDeclarators.push(true);
 	}
 
 	public void exitVariableDeclarators(com.generator.generators.java.parser.JavaParser.VariableDeclaratorsContext arg) {
 		onExit();
-		this.inVariableDeclarators = false;
+		this.inVariableDeclarators.pop();
 	}
 
-	protected boolean inVariableDeclarator = false;
+	public boolean inVariableDeclarators() {
+      return inVariableDeclarators.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableDeclarator = new java.util.Stack<>();
 
 	@Override
 	public void enterVariableDeclarator(com.generator.generators.java.parser.JavaParser.VariableDeclaratorContext arg) {
 		final Node node = model.findOrCreate(Label.label("VariableDeclarator"), "text", arg.getText());
 		onEnter(node);
-		this.inVariableDeclarator = true;
+		this.inVariableDeclarator.push(true);
 	}
 
 	public void exitVariableDeclarator(com.generator.generators.java.parser.JavaParser.VariableDeclaratorContext arg) {
 		onExit();
-		this.inVariableDeclarator = false;
+		this.inVariableDeclarator.pop();
 	}
 
-	protected boolean inVariableDeclaratorId = false;
+	public boolean inVariableDeclarator() {
+      return inVariableDeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableDeclaratorId = new java.util.Stack<>();
 
 	@Override
 	public void enterVariableDeclaratorId(com.generator.generators.java.parser.JavaParser.VariableDeclaratorIdContext arg) {
 		final Node node = model.findOrCreate(Label.label("VariableDeclaratorId"), "text", arg.getText());
 		onEnter(node);
-		this.inVariableDeclaratorId = true;
+		this.inVariableDeclaratorId.push(true);
 	}
 
 	public void exitVariableDeclaratorId(com.generator.generators.java.parser.JavaParser.VariableDeclaratorIdContext arg) {
 		onExit();
-		this.inVariableDeclaratorId = false;
+		this.inVariableDeclaratorId.pop();
 	}
 
-	protected boolean inVariableInitializer = false;
+	public boolean inVariableDeclaratorId() {
+      return inVariableDeclaratorId.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableInitializer = new java.util.Stack<>();
 
 	@Override
 	public void enterVariableInitializer(com.generator.generators.java.parser.JavaParser.VariableInitializerContext arg) {
 		final Node node = model.findOrCreate(Label.label("VariableInitializer"), "text", arg.getText());
 		onEnter(node);
-		this.inVariableInitializer = true;
+		this.inVariableInitializer.push(true);
 	}
 
 	public void exitVariableInitializer(com.generator.generators.java.parser.JavaParser.VariableInitializerContext arg) {
 		onExit();
-		this.inVariableInitializer = false;
+		this.inVariableInitializer.pop();
 	}
 
-	protected boolean inArrayInitializer = false;
+	public boolean inVariableInitializer() {
+      return inVariableInitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArrayInitializer = new java.util.Stack<>();
 
 	@Override
 	public void enterArrayInitializer(com.generator.generators.java.parser.JavaParser.ArrayInitializerContext arg) {
 		final Node node = model.findOrCreate(Label.label("ArrayInitializer"), "text", arg.getText());
 		onEnter(node);
-		this.inArrayInitializer = true;
+		this.inArrayInitializer.push(true);
 	}
 
 	public void exitArrayInitializer(com.generator.generators.java.parser.JavaParser.ArrayInitializerContext arg) {
 		onExit();
-		this.inArrayInitializer = false;
+		this.inArrayInitializer.pop();
 	}
 
-	protected boolean inClassOrInterfaceType = false;
+	public boolean inArrayInitializer() {
+      return inArrayInitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassOrInterfaceType = new java.util.Stack<>();
 
 	@Override
 	public void enterClassOrInterfaceType(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassOrInterfaceType"), "text", arg.getText());
 		onEnter(node);
-		this.inClassOrInterfaceType = true;
+		this.inClassOrInterfaceType.push(true);
 	}
 
 	public void exitClassOrInterfaceType(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceTypeContext arg) {
 		onExit();
-		this.inClassOrInterfaceType = false;
+		this.inClassOrInterfaceType.pop();
 	}
 
-	protected boolean inTypeArgument = false;
+	public boolean inClassOrInterfaceType() {
+      return inClassOrInterfaceType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeArgument(com.generator.generators.java.parser.JavaParser.TypeArgumentContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeArgument"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeArgument = true;
+		this.inTypeArgument.push(true);
 	}
 
 	public void exitTypeArgument(com.generator.generators.java.parser.JavaParser.TypeArgumentContext arg) {
 		onExit();
-		this.inTypeArgument = false;
+		this.inTypeArgument.pop();
 	}
 
-	protected boolean inQualifiedNameList = false;
+	public boolean inTypeArgument() {
+      return inTypeArgument.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQualifiedNameList = new java.util.Stack<>();
 
 	@Override
 	public void enterQualifiedNameList(com.generator.generators.java.parser.JavaParser.QualifiedNameListContext arg) {
 		final Node node = model.findOrCreate(Label.label("QualifiedNameList"), "text", arg.getText());
 		onEnter(node);
-		this.inQualifiedNameList = true;
+		this.inQualifiedNameList.push(true);
 	}
 
 	public void exitQualifiedNameList(com.generator.generators.java.parser.JavaParser.QualifiedNameListContext arg) {
 		onExit();
-		this.inQualifiedNameList = false;
+		this.inQualifiedNameList.pop();
 	}
 
-	protected boolean inFormalParameters = false;
+	public boolean inQualifiedNameList() {
+      return inQualifiedNameList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFormalParameters = new java.util.Stack<>();
 
 	@Override
 	public void enterFormalParameters(com.generator.generators.java.parser.JavaParser.FormalParametersContext arg) {
 		final Node node = model.findOrCreate(Label.label("FormalParameters"), "text", arg.getText());
 		onEnter(node);
-		this.inFormalParameters = true;
+		this.inFormalParameters.push(true);
 	}
 
 	public void exitFormalParameters(com.generator.generators.java.parser.JavaParser.FormalParametersContext arg) {
 		onExit();
-		this.inFormalParameters = false;
+		this.inFormalParameters.pop();
 	}
 
-	protected boolean inFormalParameter = false;
+	public boolean inFormalParameters() {
+      return inFormalParameters.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFormalParameter = new java.util.Stack<>();
 
 	@Override
 	public void enterFormalParameter(com.generator.generators.java.parser.JavaParser.FormalParameterContext arg) {
 		final Node node = model.findOrCreate(Label.label("FormalParameter"), "text", arg.getText());
 		onEnter(node);
-		this.inFormalParameter = true;
+		this.inFormalParameter.push(true);
 	}
 
 	public void exitFormalParameter(com.generator.generators.java.parser.JavaParser.FormalParameterContext arg) {
 		onExit();
-		this.inFormalParameter = false;
+		this.inFormalParameter.pop();
 	}
 
-	protected boolean inLastFormalParameter = false;
+	public boolean inFormalParameter() {
+      return inFormalParameter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLastFormalParameter = new java.util.Stack<>();
 
 	@Override
 	public void enterLastFormalParameter(com.generator.generators.java.parser.JavaParser.LastFormalParameterContext arg) {
 		final Node node = model.findOrCreate(Label.label("LastFormalParameter"), "text", arg.getText());
 		onEnter(node);
-		this.inLastFormalParameter = true;
+		this.inLastFormalParameter.push(true);
 	}
 
 	public void exitLastFormalParameter(com.generator.generators.java.parser.JavaParser.LastFormalParameterContext arg) {
 		onExit();
-		this.inLastFormalParameter = false;
+		this.inLastFormalParameter.pop();
 	}
 
-	protected boolean inQualifiedName = false;
+	public boolean inLastFormalParameter() {
+      return inLastFormalParameter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQualifiedName = new java.util.Stack<>();
 
 	@Override
 	public void enterQualifiedName(com.generator.generators.java.parser.JavaParser.QualifiedNameContext arg) {
 		final Node node = model.findOrCreate(Label.label("QualifiedName"), "text", arg.getText());
 		onEnter(node);
-		this.inQualifiedName = true;
+		this.inQualifiedName.push(true);
 	}
 
 	public void exitQualifiedName(com.generator.generators.java.parser.JavaParser.QualifiedNameContext arg) {
 		onExit();
-		this.inQualifiedName = false;
+		this.inQualifiedName.pop();
 	}
 
-	protected boolean inIntegerLiteral = false;
+	public boolean inQualifiedName() {
+      return inQualifiedName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
 
 	@Override
 	public void enterIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
 		final Node node = model.findOrCreate(Label.label("IntegerLiteral"), "text", arg.getText());
 		onEnter(node);
-		this.inIntegerLiteral = true;
+		this.inIntegerLiteral.push(true);
 	}
 
 	public void exitIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
 		onExit();
-		this.inIntegerLiteral = false;
+		this.inIntegerLiteral.pop();
 	}
 
-	protected boolean inAnnotation = false;
+	public boolean inIntegerLiteral() {
+      return inIntegerLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotation = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
 		final Node node = model.findOrCreate(Label.label("Annotation"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotation = true;
+		this.inAnnotation.push(true);
 	}
 
 	public void exitAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
 		onExit();
-		this.inAnnotation = false;
+		this.inAnnotation.pop();
 	}
 
-	protected boolean inElementValuePairs = false;
+	public boolean inAnnotation() {
+      return inAnnotation.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementValuePairs = new java.util.Stack<>();
 
 	@Override
 	public void enterElementValuePairs(com.generator.generators.java.parser.JavaParser.ElementValuePairsContext arg) {
 		final Node node = model.findOrCreate(Label.label("ElementValuePairs"), "text", arg.getText());
 		onEnter(node);
-		this.inElementValuePairs = true;
+		this.inElementValuePairs.push(true);
 	}
 
 	public void exitElementValuePairs(com.generator.generators.java.parser.JavaParser.ElementValuePairsContext arg) {
 		onExit();
-		this.inElementValuePairs = false;
+		this.inElementValuePairs.pop();
 	}
 
-	protected boolean inElementValuePair = false;
+	public boolean inElementValuePairs() {
+      return inElementValuePairs.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementValuePair = new java.util.Stack<>();
 
 	@Override
 	public void enterElementValuePair(com.generator.generators.java.parser.JavaParser.ElementValuePairContext arg) {
 		final Node node = model.findOrCreate(Label.label("ElementValuePair"), "text", arg.getText());
 		onEnter(node);
-		this.inElementValuePair = true;
+		this.inElementValuePair.push(true);
 	}
 
 	public void exitElementValuePair(com.generator.generators.java.parser.JavaParser.ElementValuePairContext arg) {
 		onExit();
-		this.inElementValuePair = false;
+		this.inElementValuePair.pop();
 	}
 
-	protected boolean inElementValue = false;
+	public boolean inElementValuePair() {
+      return inElementValuePair.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementValue = new java.util.Stack<>();
 
 	@Override
 	public void enterElementValue(com.generator.generators.java.parser.JavaParser.ElementValueContext arg) {
 		final Node node = model.findOrCreate(Label.label("ElementValue"), "text", arg.getText());
 		onEnter(node);
-		this.inElementValue = true;
+		this.inElementValue.push(true);
 	}
 
 	public void exitElementValue(com.generator.generators.java.parser.JavaParser.ElementValueContext arg) {
 		onExit();
-		this.inElementValue = false;
+		this.inElementValue.pop();
 	}
 
-	protected boolean inElementValueArrayInitializer = false;
+	public boolean inElementValue() {
+      return inElementValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementValueArrayInitializer = new java.util.Stack<>();
 
 	@Override
 	public void enterElementValueArrayInitializer(com.generator.generators.java.parser.JavaParser.ElementValueArrayInitializerContext arg) {
 		final Node node = model.findOrCreate(Label.label("ElementValueArrayInitializer"), "text", arg.getText());
 		onEnter(node);
-		this.inElementValueArrayInitializer = true;
+		this.inElementValueArrayInitializer.push(true);
 	}
 
 	public void exitElementValueArrayInitializer(com.generator.generators.java.parser.JavaParser.ElementValueArrayInitializerContext arg) {
 		onExit();
-		this.inElementValueArrayInitializer = false;
+		this.inElementValueArrayInitializer.pop();
 	}
 
-	protected boolean inAnnotationTypeDeclaration = false;
+	public boolean inElementValueArrayInitializer() {
+      return inElementValueArrayInitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationTypeDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationTypeDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationTypeDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationTypeDeclaration = true;
+		this.inAnnotationTypeDeclaration.push(true);
 	}
 
 	public void exitAnnotationTypeDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeDeclarationContext arg) {
 		onExit();
-		this.inAnnotationTypeDeclaration = false;
+		this.inAnnotationTypeDeclaration.pop();
 	}
 
-	protected boolean inAnnotationTypeBody = false;
+	public boolean inAnnotationTypeDeclaration() {
+      return inAnnotationTypeDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationTypeBody = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationTypeBody(com.generator.generators.java.parser.JavaParser.AnnotationTypeBodyContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationTypeBody"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationTypeBody = true;
+		this.inAnnotationTypeBody.push(true);
 	}
 
 	public void exitAnnotationTypeBody(com.generator.generators.java.parser.JavaParser.AnnotationTypeBodyContext arg) {
 		onExit();
-		this.inAnnotationTypeBody = false;
+		this.inAnnotationTypeBody.pop();
 	}
 
-	protected boolean inAnnotationTypeElementDeclaration = false;
+	public boolean inAnnotationTypeBody() {
+      return inAnnotationTypeBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationTypeElementDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationTypeElementDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationTypeElementDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationTypeElementDeclaration = true;
+		this.inAnnotationTypeElementDeclaration.push(true);
 	}
 
 	public void exitAnnotationTypeElementDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementDeclarationContext arg) {
 		onExit();
-		this.inAnnotationTypeElementDeclaration = false;
+		this.inAnnotationTypeElementDeclaration.pop();
 	}
 
-	protected boolean inAnnotationTypeElementRest = false;
+	public boolean inAnnotationTypeElementDeclaration() {
+      return inAnnotationTypeElementDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationTypeElementRest = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationTypeElementRest(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationTypeElementRest"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationTypeElementRest = true;
+		this.inAnnotationTypeElementRest.push(true);
 	}
 
 	public void exitAnnotationTypeElementRest(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementRestContext arg) {
 		onExit();
-		this.inAnnotationTypeElementRest = false;
+		this.inAnnotationTypeElementRest.pop();
 	}
 
-	protected boolean inAnnotationMethodOrConstantRest = false;
+	public boolean inAnnotationTypeElementRest() {
+      return inAnnotationTypeElementRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationMethodOrConstantRest = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationMethodOrConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodOrConstantRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationMethodOrConstantRest"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationMethodOrConstantRest = true;
+		this.inAnnotationMethodOrConstantRest.push(true);
 	}
 
 	public void exitAnnotationMethodOrConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodOrConstantRestContext arg) {
 		onExit();
-		this.inAnnotationMethodOrConstantRest = false;
+		this.inAnnotationMethodOrConstantRest.pop();
 	}
 
-	protected boolean inAnnotationMethodRest = false;
+	public boolean inAnnotationMethodOrConstantRest() {
+      return inAnnotationMethodOrConstantRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationMethodRest = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationMethodRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationMethodRest"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationMethodRest = true;
+		this.inAnnotationMethodRest.push(true);
 	}
 
 	public void exitAnnotationMethodRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodRestContext arg) {
 		onExit();
-		this.inAnnotationMethodRest = false;
+		this.inAnnotationMethodRest.pop();
 	}
 
-	protected boolean inAnnotationConstantRest = false;
+	public boolean inAnnotationMethodRest() {
+      return inAnnotationMethodRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAnnotationConstantRest = new java.util.Stack<>();
 
 	@Override
 	public void enterAnnotationConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationConstantRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("AnnotationConstantRest"), "text", arg.getText());
 		onEnter(node);
-		this.inAnnotationConstantRest = true;
+		this.inAnnotationConstantRest.push(true);
 	}
 
 	public void exitAnnotationConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationConstantRestContext arg) {
 		onExit();
-		this.inAnnotationConstantRest = false;
+		this.inAnnotationConstantRest.pop();
 	}
 
-	protected boolean inDefaultValue = false;
+	public boolean inAnnotationConstantRest() {
+      return inAnnotationConstantRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
 
 	@Override
 	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
 		final Node node = model.findOrCreate(Label.label("DefaultValue"), "text", arg.getText());
 		onEnter(node);
-		this.inDefaultValue = true;
+		this.inDefaultValue.push(true);
 	}
 
 	public void exitDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
 		onExit();
-		this.inDefaultValue = false;
+		this.inDefaultValue.pop();
 	}
 
-	protected boolean inBlockStatement = false;
+	public boolean inDefaultValue() {
+      return inDefaultValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockStatement = new java.util.Stack<>();
 
 	@Override
 	public void enterBlockStatement(com.generator.generators.java.parser.JavaParser.BlockStatementContext arg) {
 		final Node node = model.findOrCreate(Label.label("BlockStatement"), "text", arg.getText());
 		onEnter(node);
-		this.inBlockStatement = true;
+		this.inBlockStatement.push(true);
 	}
 
 	public void exitBlockStatement(com.generator.generators.java.parser.JavaParser.BlockStatementContext arg) {
 		onExit();
-		this.inBlockStatement = false;
+		this.inBlockStatement.pop();
 	}
 
-	protected boolean inLocalVariableDeclaration = false;
+	public boolean inBlockStatement() {
+      return inBlockStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLocalVariableDeclaration = new java.util.Stack<>();
 
 	@Override
 	public void enterLocalVariableDeclaration(com.generator.generators.java.parser.JavaParser.LocalVariableDeclarationContext arg) {
 		final Node node = model.findOrCreate(Label.label("LocalVariableDeclaration"), "text", arg.getText());
 		onEnter(node);
-		this.inLocalVariableDeclaration = true;
+		this.inLocalVariableDeclaration.push(true);
 	}
 
 	public void exitLocalVariableDeclaration(com.generator.generators.java.parser.JavaParser.LocalVariableDeclarationContext arg) {
 		onExit();
-		this.inLocalVariableDeclaration = false;
+		this.inLocalVariableDeclaration.pop();
 	}
 
-	protected boolean inCatchClause = false;
+	public boolean inLocalVariableDeclaration() {
+      return inLocalVariableDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCatchClause = new java.util.Stack<>();
 
 	@Override
 	public void enterCatchClause(com.generator.generators.java.parser.JavaParser.CatchClauseContext arg) {
 		final Node node = model.findOrCreate(Label.label("CatchClause"), "text", arg.getText());
 		onEnter(node);
-		this.inCatchClause = true;
+		this.inCatchClause.push(true);
 	}
 
 	public void exitCatchClause(com.generator.generators.java.parser.JavaParser.CatchClauseContext arg) {
 		onExit();
-		this.inCatchClause = false;
+		this.inCatchClause.pop();
 	}
 
-	protected boolean inCatchType = false;
+	public boolean inCatchClause() {
+      return inCatchClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCatchType = new java.util.Stack<>();
 
 	@Override
 	public void enterCatchType(com.generator.generators.java.parser.JavaParser.CatchTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("CatchType"), "text", arg.getText());
 		onEnter(node);
-		this.inCatchType = true;
+		this.inCatchType.push(true);
 	}
 
 	public void exitCatchType(com.generator.generators.java.parser.JavaParser.CatchTypeContext arg) {
 		onExit();
-		this.inCatchType = false;
+		this.inCatchType.pop();
 	}
 
-	protected boolean inFinallyBlock = false;
+	public boolean inCatchType() {
+      return inCatchType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFinallyBlock = new java.util.Stack<>();
 
 	@Override
 	public void enterFinallyBlock(com.generator.generators.java.parser.JavaParser.FinallyBlockContext arg) {
 		final Node node = model.findOrCreate(Label.label("FinallyBlock"), "text", arg.getText());
 		onEnter(node);
-		this.inFinallyBlock = true;
+		this.inFinallyBlock.push(true);
 	}
 
 	public void exitFinallyBlock(com.generator.generators.java.parser.JavaParser.FinallyBlockContext arg) {
 		onExit();
-		this.inFinallyBlock = false;
+		this.inFinallyBlock.pop();
 	}
 
-	protected boolean inResourceSpecification = false;
+	public boolean inFinallyBlock() {
+      return inFinallyBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inResourceSpecification = new java.util.Stack<>();
 
 	@Override
 	public void enterResourceSpecification(com.generator.generators.java.parser.JavaParser.ResourceSpecificationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ResourceSpecification"), "text", arg.getText());
 		onEnter(node);
-		this.inResourceSpecification = true;
+		this.inResourceSpecification.push(true);
 	}
 
 	public void exitResourceSpecification(com.generator.generators.java.parser.JavaParser.ResourceSpecificationContext arg) {
 		onExit();
-		this.inResourceSpecification = false;
+		this.inResourceSpecification.pop();
 	}
 
-	protected boolean inResources = false;
+	public boolean inResourceSpecification() {
+      return inResourceSpecification.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inResources = new java.util.Stack<>();
 
 	@Override
 	public void enterResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
 		final Node node = model.findOrCreate(Label.label("Resources"), "text", arg.getText());
 		onEnter(node);
-		this.inResources = true;
+		this.inResources.push(true);
 	}
 
 	public void exitResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
 		onExit();
-		this.inResources = false;
+		this.inResources.pop();
 	}
 
-	protected boolean inResource = false;
+	public boolean inResources() {
+      return inResources.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inResource = new java.util.Stack<>();
 
 	@Override
 	public void enterResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
 		final Node node = model.findOrCreate(Label.label("Resource"), "text", arg.getText());
 		onEnter(node);
-		this.inResource = true;
+		this.inResource.push(true);
 	}
 
 	public void exitResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
 		onExit();
-		this.inResource = false;
+		this.inResource.pop();
 	}
 
-	protected boolean inSwitchBlockStatementGroup = false;
+	public boolean inResource() {
+      return inResource.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSwitchBlockStatementGroup = new java.util.Stack<>();
 
 	@Override
 	public void enterSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
 		final Node node = model.findOrCreate(Label.label("SwitchBlockStatementGroup"), "text", arg.getText());
 		onEnter(node);
-		this.inSwitchBlockStatementGroup = true;
+		this.inSwitchBlockStatementGroup.push(true);
 	}
 
 	public void exitSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
 		onExit();
-		this.inSwitchBlockStatementGroup = false;
+		this.inSwitchBlockStatementGroup.pop();
 	}
 
-	protected boolean inSwitchLabel = false;
+	public boolean inSwitchBlockStatementGroup() {
+      return inSwitchBlockStatementGroup.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSwitchLabel = new java.util.Stack<>();
 
 	@Override
 	public void enterSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
 		final Node node = model.findOrCreate(Label.label("SwitchLabel"), "text", arg.getText());
 		onEnter(node);
-		this.inSwitchLabel = true;
+		this.inSwitchLabel.push(true);
 	}
 
 	public void exitSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
 		onExit();
-		this.inSwitchLabel = false;
+		this.inSwitchLabel.pop();
 	}
 
-	protected boolean inForControl = false;
+	public boolean inSwitchLabel() {
+      return inSwitchLabel.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForControl = new java.util.Stack<>();
 
 	@Override
 	public void enterForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
 		final Node node = model.findOrCreate(Label.label("ForControl"), "text", arg.getText());
 		onEnter(node);
-		this.inForControl = true;
+		this.inForControl.push(true);
 	}
 
 	public void exitForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
 		onExit();
-		this.inForControl = false;
+		this.inForControl.pop();
 	}
 
-	protected boolean inForInit = false;
+	public boolean inForControl() {
+      return inForControl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForInit = new java.util.Stack<>();
 
 	@Override
 	public void enterForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
 		final Node node = model.findOrCreate(Label.label("ForInit"), "text", arg.getText());
 		onEnter(node);
-		this.inForInit = true;
+		this.inForInit.push(true);
 	}
 
 	public void exitForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
 		onExit();
-		this.inForInit = false;
+		this.inForInit.pop();
 	}
 
-	protected boolean inEnhancedForControl = false;
+	public boolean inForInit() {
+      return inForInit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEnhancedForControl = new java.util.Stack<>();
 
 	@Override
 	public void enterEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
 		final Node node = model.findOrCreate(Label.label("EnhancedForControl"), "text", arg.getText());
 		onEnter(node);
-		this.inEnhancedForControl = true;
+		this.inEnhancedForControl.push(true);
 	}
 
 	public void exitEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
 		onExit();
-		this.inEnhancedForControl = false;
+		this.inEnhancedForControl.pop();
 	}
 
-	protected boolean inParExpression = false;
+	public boolean inEnhancedForControl() {
+      return inEnhancedForControl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
 		final Node node = model.findOrCreate(Label.label("ParExpression"), "text", arg.getText());
 		onEnter(node);
-		this.inParExpression = true;
+		this.inParExpression.push(true);
 	}
 
 	public void exitParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
 		onExit();
-		this.inParExpression = false;
+		this.inParExpression.pop();
 	}
 
-	protected boolean inExpressionList = false;
+	public boolean inParExpression() {
+      return inParExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionList = new java.util.Stack<>();
 
 	@Override
 	public void enterExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
 		final Node node = model.findOrCreate(Label.label("ExpressionList"), "text", arg.getText());
 		onEnter(node);
-		this.inExpressionList = true;
+		this.inExpressionList.push(true);
 	}
 
 	public void exitExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
 		onExit();
-		this.inExpressionList = false;
+		this.inExpressionList.pop();
 	}
 
-	protected boolean inLambdaExpression = false;
+	public boolean inExpressionList() {
+      return inExpressionList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
 		final Node node = model.findOrCreate(Label.label("LambdaExpression"), "text", arg.getText());
 		onEnter(node);
-		this.inLambdaExpression = true;
+		this.inLambdaExpression.push(true);
 	}
 
 	public void exitLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
 		onExit();
-		this.inLambdaExpression = false;
+		this.inLambdaExpression.pop();
 	}
 
-	protected boolean inLambdaParameters = false;
+	public boolean inLambdaExpression() {
+      return inLambdaExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaParameters = new java.util.Stack<>();
 
 	@Override
 	public void enterLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
 		final Node node = model.findOrCreate(Label.label("LambdaParameters"), "text", arg.getText());
 		onEnter(node);
-		this.inLambdaParameters = true;
+		this.inLambdaParameters.push(true);
 	}
 
 	public void exitLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
 		onExit();
-		this.inLambdaParameters = false;
+		this.inLambdaParameters.pop();
 	}
 
-	protected boolean inLambdaBody = false;
+	public boolean inLambdaParameters() {
+      return inLambdaParameters.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaBody = new java.util.Stack<>();
 
 	@Override
 	public void enterLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
 		final Node node = model.findOrCreate(Label.label("LambdaBody"), "text", arg.getText());
 		onEnter(node);
-		this.inLambdaBody = true;
+		this.inLambdaBody.push(true);
 	}
 
 	public void exitLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
 		onExit();
-		this.inLambdaBody = false;
+		this.inLambdaBody.pop();
 	}
 
-	protected boolean inPrimary = false;
+	public boolean inLambdaBody() {
+      return inLambdaBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrimary = new java.util.Stack<>();
 
 	@Override
 	public void enterPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
 		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
 		onEnter(node);
-		this.inPrimary = true;
+		this.inPrimary.push(true);
 	}
 
 	public void exitPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
 		onExit();
-		this.inPrimary = false;
+		this.inPrimary.pop();
 	}
 
-	protected boolean inMethodReference = false;
+	public boolean inPrimary() {
+      return inPrimary.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMethodReference = new java.util.Stack<>();
 
 	@Override
 	public void enterMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
 		final Node node = model.findOrCreate(Label.label("MethodReference"), "text", arg.getText());
 		onEnter(node);
-		this.inMethodReference = true;
+		this.inMethodReference.push(true);
 	}
 
 	public void exitMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
 		onExit();
-		this.inMethodReference = false;
+		this.inMethodReference.pop();
 	}
 
-	protected boolean inClassType = false;
+	public boolean inMethodReference() {
+      return inMethodReference.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassType = new java.util.Stack<>();
 
 	@Override
 	public void enterClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassType"), "text", arg.getText());
 		onEnter(node);
-		this.inClassType = true;
+		this.inClassType.push(true);
 	}
 
 	public void exitClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
 		onExit();
-		this.inClassType = false;
+		this.inClassType.pop();
 	}
 
-	protected boolean inCreator = false;
+	public boolean inClassType() {
+      return inClassType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCreator = new java.util.Stack<>();
 
 	@Override
 	public void enterCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
 		final Node node = model.findOrCreate(Label.label("Creator"), "text", arg.getText());
 		onEnter(node);
-		this.inCreator = true;
+		this.inCreator.push(true);
 	}
 
 	public void exitCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
 		onExit();
-		this.inCreator = false;
+		this.inCreator.pop();
 	}
 
-	protected boolean inCreatedName = false;
+	public boolean inCreator() {
+      return inCreator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCreatedName = new java.util.Stack<>();
 
 	@Override
 	public void enterCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
 		final Node node = model.findOrCreate(Label.label("CreatedName"), "text", arg.getText());
 		onEnter(node);
-		this.inCreatedName = true;
+		this.inCreatedName.push(true);
 	}
 
 	public void exitCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
 		onExit();
-		this.inCreatedName = false;
+		this.inCreatedName.pop();
 	}
 
-	protected boolean inInnerCreator = false;
+	public boolean inCreatedName() {
+      return inCreatedName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInnerCreator = new java.util.Stack<>();
 
 	@Override
 	public void enterInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
 		final Node node = model.findOrCreate(Label.label("InnerCreator"), "text", arg.getText());
 		onEnter(node);
-		this.inInnerCreator = true;
+		this.inInnerCreator.push(true);
 	}
 
 	public void exitInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
 		onExit();
-		this.inInnerCreator = false;
+		this.inInnerCreator.pop();
 	}
 
-	protected boolean inArrayCreatorRest = false;
+	public boolean inInnerCreator() {
+      return inInnerCreator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArrayCreatorRest = new java.util.Stack<>();
 
 	@Override
 	public void enterArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("ArrayCreatorRest"), "text", arg.getText());
 		onEnter(node);
-		this.inArrayCreatorRest = true;
+		this.inArrayCreatorRest.push(true);
 	}
 
 	public void exitArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
 		onExit();
-		this.inArrayCreatorRest = false;
+		this.inArrayCreatorRest.pop();
 	}
 
-	protected boolean inClassCreatorRest = false;
+	public boolean inArrayCreatorRest() {
+      return inArrayCreatorRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassCreatorRest = new java.util.Stack<>();
 
 	@Override
 	public void enterClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
 		final Node node = model.findOrCreate(Label.label("ClassCreatorRest"), "text", arg.getText());
 		onEnter(node);
-		this.inClassCreatorRest = true;
+		this.inClassCreatorRest.push(true);
 	}
 
 	public void exitClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
 		onExit();
-		this.inClassCreatorRest = false;
+		this.inClassCreatorRest.pop();
 	}
 
-	protected boolean inExplicitGenericInvocation = false;
+	public boolean inClassCreatorRest() {
+      return inClassCreatorRest.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExplicitGenericInvocation = new java.util.Stack<>();
 
 	@Override
 	public void enterExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
 		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocation"), "text", arg.getText());
 		onEnter(node);
-		this.inExplicitGenericInvocation = true;
+		this.inExplicitGenericInvocation.push(true);
 	}
 
 	public void exitExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
 		onExit();
-		this.inExplicitGenericInvocation = false;
+		this.inExplicitGenericInvocation.pop();
 	}
 
-	protected boolean inTypeArgumentsOrDiamond = false;
+	public boolean inExplicitGenericInvocation() {
+      return inExplicitGenericInvocation.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeArgumentsOrDiamond = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeArgumentsOrDiamond"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeArgumentsOrDiamond = true;
+		this.inTypeArgumentsOrDiamond.push(true);
 	}
 
 	public void exitTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
 		onExit();
-		this.inTypeArgumentsOrDiamond = false;
+		this.inTypeArgumentsOrDiamond.pop();
 	}
 
-	protected boolean inNonWildcardTypeArgumentsOrDiamond = false;
+	public boolean inTypeArgumentsOrDiamond() {
+      return inTypeArgumentsOrDiamond.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNonWildcardTypeArgumentsOrDiamond = new java.util.Stack<>();
 
 	@Override
 	public void enterNonWildcardTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsOrDiamondContext arg) {
 		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArgumentsOrDiamond"), "text", arg.getText());
 		onEnter(node);
-		this.inNonWildcardTypeArgumentsOrDiamond = true;
+		this.inNonWildcardTypeArgumentsOrDiamond.push(true);
 	}
 
 	public void exitNonWildcardTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsOrDiamondContext arg) {
 		onExit();
-		this.inNonWildcardTypeArgumentsOrDiamond = false;
+		this.inNonWildcardTypeArgumentsOrDiamond.pop();
 	}
 
-	protected boolean inNonWildcardTypeArguments = false;
+	public boolean inNonWildcardTypeArgumentsOrDiamond() {
+      return inNonWildcardTypeArgumentsOrDiamond.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNonWildcardTypeArguments = new java.util.Stack<>();
 
 	@Override
 	public void enterNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
 		final Node node = model.findOrCreate(Label.label("NonWildcardTypeArguments"), "text", arg.getText());
 		onEnter(node);
-		this.inNonWildcardTypeArguments = true;
+		this.inNonWildcardTypeArguments.push(true);
 	}
 
 	public void exitNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
 		onExit();
-		this.inNonWildcardTypeArguments = false;
+		this.inNonWildcardTypeArguments.pop();
 	}
 
-	protected boolean inTypeList = false;
+	public boolean inNonWildcardTypeArguments() {
+      return inNonWildcardTypeArguments.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeList = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeList"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeList = true;
+		this.inTypeList.push(true);
 	}
 
 	public void exitTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
 		onExit();
-		this.inTypeList = false;
+		this.inTypeList.pop();
 	}
 
-	protected boolean inTypeType = false;
+	public boolean inTypeList() {
+      return inTypeList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeType = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeType"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeType = true;
+		this.inTypeType.push(true);
 	}
 
 	public void exitTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
 		onExit();
-		this.inTypeType = false;
+		this.inTypeType.pop();
 	}
 
-	protected boolean inPrimitiveType = false;
+	public boolean inTypeType() {
+      return inTypeType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrimitiveType = new java.util.Stack<>();
 
 	@Override
 	public void enterPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
 		final Node node = model.findOrCreate(Label.label("PrimitiveType"), "text", arg.getText());
 		onEnter(node);
-		this.inPrimitiveType = true;
+		this.inPrimitiveType.push(true);
 	}
 
 	public void exitPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
 		onExit();
-		this.inPrimitiveType = false;
+		this.inPrimitiveType.pop();
 	}
 
-	protected boolean inTypeArguments = false;
+	public boolean inPrimitiveType() {
+      return inPrimitiveType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeArguments = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
 		final Node node = model.findOrCreate(Label.label("TypeArguments"), "text", arg.getText());
 		onEnter(node);
-		this.inTypeArguments = true;
+		this.inTypeArguments.push(true);
 	}
 
 	public void exitTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
 		onExit();
-		this.inTypeArguments = false;
+		this.inTypeArguments.pop();
 	}
 
-	protected boolean inSuperSuffix = false;
+	public boolean inTypeArguments() {
+      return inTypeArguments.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSuperSuffix = new java.util.Stack<>();
 
 	@Override
 	public void enterSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
 		final Node node = model.findOrCreate(Label.label("SuperSuffix"), "text", arg.getText());
 		onEnter(node);
-		this.inSuperSuffix = true;
+		this.inSuperSuffix.push(true);
 	}
 
 	public void exitSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
 		onExit();
-		this.inSuperSuffix = false;
+		this.inSuperSuffix.pop();
 	}
 
-	protected boolean inExplicitGenericInvocationSuffix = false;
+	public boolean inSuperSuffix() {
+      return inSuperSuffix.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExplicitGenericInvocationSuffix = new java.util.Stack<>();
 
 	@Override
 	public void enterExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
 		final Node node = model.findOrCreate(Label.label("ExplicitGenericInvocationSuffix"), "text", arg.getText());
 		onEnter(node);
-		this.inExplicitGenericInvocationSuffix = true;
+		this.inExplicitGenericInvocationSuffix.push(true);
 	}
 
 	public void exitExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
 		onExit();
-		this.inExplicitGenericInvocationSuffix = false;
+		this.inExplicitGenericInvocationSuffix.pop();
 	}
+
+	public boolean inExplicitGenericInvocationSuffix() {
+      return inExplicitGenericInvocationSuffix.isEmpty(); 
+   }
 
 }

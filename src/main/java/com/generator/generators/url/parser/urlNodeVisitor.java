@@ -45,8 +45,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
-		final Node node = new Node("Fragmentaddress", arg.getText());
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		final Node node = new Node("Uri", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -54,8 +54,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = new Node("Uri", arg.getText());
+	public Node visitFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
+		final Node node = new Node("Fragmentaddress", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

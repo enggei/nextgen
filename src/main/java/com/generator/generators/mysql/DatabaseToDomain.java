@@ -28,10 +28,10 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
    public void enterId_(MySqlParser.Id_Context arg) {
       super.enterId_(arg);
 
-      if (inTable_name && !inConstraintDefinition) {
+      if (inTable_name() && !inConstraintDefinition()) {
          final String tableName = StringUtil.capitalize(StringUtil.trimEnds(1, arg.getText()));
          nodeStack.push(model.findOrCreate(MySQLPlugin.Entities.Table, AppMotif.Properties.name.name(), tableName));
-      } else if (inColumnDefinition) {
+      } else if (inColumnDefinition()) {
          final org.neo4j.graphdb.Node columnNode = model.findOrCreate(MySQLPlugin.Entities.Column, AppMotif.Properties.name.name(), StringUtil.trimEnds(1, arg.getText()));
          NeoModel.relate(nodeStack.peek(), columnNode, MySQLPlugin.Relations.COLUMN);
          nodeStack.push(columnNode);

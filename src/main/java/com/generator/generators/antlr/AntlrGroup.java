@@ -73,8 +73,8 @@ public final class AntlrGroup {
 
       public NeoListenerST addMethodsValue(Object name_, Object param_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("param", (param_ == null || param_.toString().length() == 0) ? null : param_);
       	this._methods.add(map);
 
          template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
@@ -186,8 +186,8 @@ public final class AntlrGroup {
 
       public NeoVisitorST addMethodsValue(Object name_, Object param_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("param", (param_ == null || param_.toString().length() == 0) ? null : param_);
       	this._methods.add(map);
 
          template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
@@ -235,8 +235,8 @@ public final class AntlrGroup {
 
       public BaseNodeVisitorST addMethodsValue(Object name_, Object param_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("param", (param_ == null || param_.toString().length() == 0) ? null : param_);
       	this._methods.add(map);
 
          template.addAggr("methods.{name, param}", map.get("name"), map.get("param"));
@@ -316,8 +316,8 @@ public final class AntlrGroup {
 
       public BaseNodeListenerST addMethodsValue(Object param_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("param", (param_==null || param_.toString().length()==0) ? null : param_);
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
+      	map.put("param", (param_ == null || param_.toString().length() == 0) ? null : param_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._methods.add(map);
 
          template.addAggr("methods.{param, name}", map.get("param"), map.get("name"));
@@ -554,19 +554,23 @@ public final class AntlrGroup {
 		"   }\n" + 
 		"\n" + 
 		"~methods:{it|\n" + 
-		"	protected boolean in~it.name~ = false;\n" + 
+		"	protected java.util.Stack<Boolean> in~it.name~ = new java.util.Stack<>();\n" + 
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
 		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText());\n" + 
 		"		onEnter(node);\n" + 
-		"		this.in~it.name~ = true;\n" + 
+		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public void exit~it.name~(~it.param~ arg) {\n" + 
 		"		onExit();\n" + 
-		"		this.in~it.name~ = false;\n" + 
+		"		this.in~it.name~.pop();\n" + 
 		"	~eom()~\n" + 
+		"\n" + 
+		"	public boolean in~it.name~() {\n" + 
+		"      return in~it.name~.isEmpty(); \n" + 
+		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
 			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
@@ -716,18 +720,22 @@ public final class AntlrGroup {
 		"   }\n" + 
 		"\n" + 
 		"~methods:{it|\n" + 
-		"	protected boolean in~it.name~ = false;\n" + 
+		"	protected java.util.Stack<Boolean> in~it.name~ = new java.util.Stack<>();\n" + 
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
 		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText()));\n" + 
-		"		this.in~it.name~ = true;\n" + 
+		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public void exit~it.name~(~it.param~ arg) {\n" + 
 		"		onExit();\n" + 
-		"		this.in~it.name~ = false;\n" + 
+		"		this.in~it.name~.pop();\n" + 
 		"	~eom()~\n" + 
+		"\n" + 
+		"	public boolean in~it.name~() {\n" + 
+		"      return in~it.name~.isEmpty(); \n" + 
+		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
 		.toString();

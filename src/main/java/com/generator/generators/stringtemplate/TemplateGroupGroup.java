@@ -62,10 +62,6 @@ public final class TemplateGroupGroup {
       return new NewStatementDeclarationST(stGroup);
    }
 
-   public NewStatementInstanceST newNewStatementInstance() {
-      return new NewStatementInstanceST(stGroup);
-   }
-
    public StatementKeyValueListPropertySetterST newStatementKeyValueListPropertySetter() {
       return new StatementKeyValueListPropertySetterST(stGroup);
    }
@@ -210,13 +206,13 @@ public final class TemplateGroupGroup {
       	return (String) this._packageName;
       }
 
-      public GroupClassDeclarationST addStatementsValue(Object declaration_, Object newInstance_) {
+      public GroupClassDeclarationST addStatementsValue(Object declaration_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("declaration", (declaration_==null || declaration_.toString().length()==0) ? null : declaration_);
-      	map.put("newInstance", (newInstance_==null || newInstance_.toString().length()==0) ? null : newInstance_);
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._statements.add(map);
 
-         template.addAggr("statements.{declaration, newInstance}", map.get("declaration"), map.get("newInstance"));
+         template.addAggr("statements.{declaration, name}", map.get("declaration"), map.get("name"));
          return this;
       }
 
@@ -341,10 +337,10 @@ public final class TemplateGroupGroup {
 
       public NewStatementDeclarationST addPropertiesValue(Object name_, Object setter_, Object type_, Object init_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("setter", (setter_==null || setter_.toString().length()==0) ? null : setter_);
-      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
-      	map.put("init", (init_==null || init_.toString().length()==0) ? null : init_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("setter", (setter_ == null || setter_.toString().length() == 0) ? null : setter_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
       	this._properties.add(map);
 
          template.addAggr("properties.{name, setter, type, init}", map.get("name"), map.get("setter"), map.get("type"), map.get("init"));
@@ -353,38 +349,6 @@ public final class TemplateGroupGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getProperties() {
       	return this._properties;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class NewStatementInstanceST implements TemplateGroupGroupTemplate {
-
-      private Object _name;
-
-      private final ST template;
-
-      private NewStatementInstanceST(STGroup group) {
-   		template = group.getInstanceOf("NewStatementInstance");
-   	}
-
-      public NewStatementInstanceST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
       }
 
       @Override
@@ -947,7 +911,9 @@ public final class TemplateGroupGroup {
 		"\n" + 
 		"	}\n" + 
 		"\n" + 
-		"   ~statements:{it|~it.newInstance~};separator=\"\\r\\n\\r\\n\"~\n" + 
+		"   ~statements:{it|public ~it.name~ST new~it.name~() {\n" + 
+		"   return new ~it.name~ST(stGroup);\n" + 
+		"~eom()~};separator=\"\\r\\n\\r\\n\"~\n" + 
 		"\n" + 
 		"   ~statements:{it|~it.declaration~};separator=\"\\r\\n\\r\\n\"~\n" + 
 		"\n" + 
@@ -1000,9 +966,6 @@ public final class TemplateGroupGroup {
 		"	public String toString() {\n" + 
 		"		return template.render();\n" + 
 		"	}\n" + 
-		"}>>\n")
-			.append("NewStatementInstance(name) ::= <<public ~name~ST new~name~() {\n" + 
-		"   return new ~name~ST(stGroup);\n" + 
 		"}>>\n")
 			.append("StatementKeyValueListPropertySetter(kvNames,propertyName,statementName) ::= <<public ~statementName~ST add~propertyName;format=\"capitalize\"~Value(~kvNames:{it|Object ~it~_};separator=\", \"~) {\n" + 
 		"	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();\n" + 

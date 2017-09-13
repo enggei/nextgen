@@ -45,9 +45,9 @@ public class MySqlToPojoGenerator extends MySqlParserNodeListener {
    public void enterId_(MySqlParser.Id_Context arg) {
       super.enterId_(arg);
 
-      if (inTable_name && !inConstraintDefinition) {
+      if (inTable_name() && !inConstraintDefinition()) {
          currentPojos.peek().setName(StringUtil.capitalize(StringUtil.trimEnds(1, arg.getText())));
-      } else if (inColumnDefinition) {
+      } else if (inColumnDefinition()) {
          this.propertyName = StringUtil.trimEnds(1, arg.getText());
       }
    }
