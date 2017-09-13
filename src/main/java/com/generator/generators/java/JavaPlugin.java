@@ -2,11 +2,9 @@ package com.generator.generators.java;
 
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
-import com.generator.app.App;
-import com.generator.app.AppEvents;
-import com.generator.app.AppMotif;
-import com.generator.app.Workspace;
+import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.Reflect;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -15,7 +13,9 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
+import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
+import javax.tools.JavaFileObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Method;
@@ -24,9 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.getString;
-import static com.generator.BaseDomainVisitor.hasLabel;
+import static com.generator.BaseDomainVisitor.*;
 import static com.generator.NeoModel.getNameAndLabelsFrom;
+import static com.generator.NeoModel.relate;
 
 /**
  * Created 12.09.17.
@@ -38,7 +38,7 @@ public class JavaPlugin extends DomainPlugin {
    }
 
    public enum Relations implements RelationshipType {
-
+      OBJECT
    }
 
    public enum Properties {
@@ -82,6 +82,51 @@ public class JavaPlugin extends DomainPlugin {
 
    @Override
    protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+
+      // get incoming INSTANCE, and if of STTemplate, allow to create instance of, similar to renderer
+
+      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
+
+         final Node instanceNode = other(neoNode.getNode(), instanceRelation);
+
+         if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+
+            pop.add(new App.TransactionAction("TEST - new instance of " + DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  // todo this should come from traversers of the graph
+                  final String name = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+                  final String packageName = DomainMotif.getPropertyValue(neoNode.getNode(), "package", "");
+
+                  final String content = StringTemplatePlugin.renderStatement(neoNode.getNode(), instanceNode);
+
+                  // compile source and create instance :
+                  final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+                  final Object instance = new SourceToInstanceGenerator().newInstance(packageName + "." + name, content, diagnostics);
+                  if(instance==null) {
+
+                     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+                        System.out.println("diagnostic.getCode() = " + diagnostic.getCode());
+                        System.out.println("diagnostic.getKind().name() = " + diagnostic.getKind().name());
+                        System.out.println("diagnostic.getLineNumber() = " + diagnostic.getLineNumber());
+                     }
+                     return;
+                  }
+
+                  // create Object-node for this instance, and use uuid for key in instance-map
+                  final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
+                  instanceMap.put(getString(node, NeoModel.TAG_UUID), instance);
+                  relate(neoNode.getNode(), node, Relations.OBJECT);
+
+                  // todo add delete-listener, so instanceMap does not fill up
+
+                  fireNodesLoaded(node);
+               }
+            });
+
+         }
+      });
 
       if (hasLabel(neoNode.getNode(), Entities.Object)) {
 

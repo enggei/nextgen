@@ -1,13 +1,16 @@
 package com.generator.app;
 
 import com.generator.NeoModel;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
 
 import javax.swing.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.generator.app.AppEvents.*;
+import static com.generator.app.AppEvents.NODE_CHANGED;
+import static com.generator.app.AppEvents.NODE_LOAD;
 
 /**
  * Created 03.08.17.

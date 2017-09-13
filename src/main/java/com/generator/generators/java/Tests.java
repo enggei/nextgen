@@ -1,5 +1,6 @@
 package com.generator.generators.java;
 
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNodeListener;
@@ -10,12 +11,26 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
+import org.reflections.Reflections;
+import org.reflections.scanners.MethodParameterNamesScanner;
+import org.reflections.scanners.MethodParameterScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
 import javax.tools.DiagnosticCollector;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
 
@@ -56,11 +71,42 @@ public class Tests {
                   System.out.println("\t\t" + method.getName());
                }
             }.visit(Class.forName(s));
+
          } catch (ClassNotFoundException e) {
             e.printStackTrace();
          }
          return true;
       });
+
+
+      testReflections();
+
+   }
+
+   @Test
+   public void testReflections() {
+      Reflections reflections = new Reflections("com.generator");
+
+      Set<Class<? extends DomainPlugin>> subTypes = reflections.getSubTypesOf(DomainPlugin.class);
+      System.out.println("classes extending DomainPlugin:");
+      for (Class<? extends DomainPlugin> subType : subTypes) {
+         System.out.println(subType.getName());
+      }
+
+      Set<Method> getters = getAllMethods(DomainPlugin.class,withModifier(Modifier.PUBLIC), withPrefix("get"), withParametersCount(0));
+      for (Method getter : getters) {
+         System.out.println(getter.getName());
+      }
+      Set<Method> listMethodsFromCollectionToBoolean = getAllMethods(List.class, withParametersAssignableTo(Collection.class), withReturnType(boolean.class));
+      for (Method method : listMethodsFromCollectionToBoolean) {
+         System.out.println(method.getName());
+      }
+
+      final Set<Field> allFields = getAllFields(DomainPlugin.class);
+      for (Field allField : allFields) {
+         System.out.println(allField.getName());
+      }
+
    }
 
    @Test

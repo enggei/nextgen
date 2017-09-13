@@ -5,6 +5,7 @@ import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.util.FileUtil;
+import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -21,10 +22,83 @@ import java.util.Stack;
 public class Tests {
 
    @Test
+   public void testMysqlWithForeignKeys() throws Exception {
+      final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
+
+      final StringBuilder output = new StringBuilder();
+      for (String table : session.getTables()) {
+         final MySqlParser mySqlParser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table))));
+         final MySqlParserNodeListener nodeListener = new MySqlParserNodeListener(true) {
+
+            @Override
+            public void enterId_(MySqlParser.Id_Context arg) {
+               super.enterId_(arg);
+
+               if (inConstraintDefinition && inTblConstrFK && inIndex_colname_list && inIndex_col_name) {
+                  output.append(" column ").append(arg.getText());
+
+               } else if (inConstraintDefinition && inReference_definition && inTable_name) {
+                  output.append(" reference table ").append(arg.getText());
+
+               } else if (inConstraintDefinition && inTblConstrFK) {
+                  output.append("\n\tforeign key ").append(arg.getText());
+               } else if (!inConstraintDefinition && inColCreateTable && inTable_name) {
+                  output.append("\n").append(arg.getText());
+               } else if (inTblConstrPK && inIndex_col_name) {
+                  output.append("\n\tprimary key ").append(arg.getText());
+               } else if (inColumnDefinition) {
+                  output.append("\n\tcolumn ").append(arg.getText());
+               }
+            }
+
+            @Override
+            public void enterDimensionDatatype(MySqlParser.DimensionDatatypeContext arg) {
+               super.enterDimensionDatatype(arg);
+               output.append(" type ").append(arg.getText());
+            }
+
+            @Override
+            public void enterCharDatatype(MySqlParser.CharDatatypeContext arg) {
+               super.enterCharDatatype(arg);
+               output.append(" type ").append(arg.getText());
+            }
+
+            @Override
+            public void enterSimpleDatatype(MySqlParser.SimpleDatatypeContext arg) {
+               super.enterSimpleDatatype(arg);
+               output.append(" type ").append(arg.getText());
+            }
+
+            @Override
+            public void enterColConstrAuInc(MySqlParser.ColConstrAuIncContext arg) {
+               super.enterColConstrAuInc(arg);
+               output.append(" autoincrement ");
+            }
+
+            @Override
+            public void enterEngine_name(MySqlParser.Engine_nameContext arg) {
+               super.enterEngine_name(arg);
+               output.append("\n\tEngine ").append(arg.getText());
+            }
+
+            @Override
+            public void enterCharset_name_base(MySqlParser.Charset_name_baseContext arg) {
+               super.enterCharset_name_base(arg);
+               output.append("\n\tCharset ").append(arg.getText());
+            }
+         };
+         new ParseTreeWalker().walk(nodeListener, mySqlParser.root());
+      }
+
+      System.out.println(output);
+   }
+
+   @Test
    public void testTablesToJavaPojos() throws Exception {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
       final MySqlToPojoGenerator javaGenerator = new MySqlToPojoGenerator(false);
-      for (String table : session.getTables()) new ParseTreeWalker().walk(javaGenerator, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+      for (String table : session.getTables())
+         new ParseTreeWalker().walk(javaGenerator, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
       javaGenerator.done(ProjectConstants.TEST_ROOT, "com.ud.tr");
    }
 
@@ -33,7 +107,8 @@ public class Tests {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
 
       final MySqlToQueriesGenerator queriesGenerator = new MySqlToQueriesGenerator(true);
-      for (String table : session.getTables()) new ParseTreeWalker().walk(queriesGenerator, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+      for (String table : session.getTables())
+         new ParseTreeWalker().walk(queriesGenerator, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
       final Stack<MysqlGroup.selectST> selectSTStack = queriesGenerator.done();
 
       // write all generated queries to file

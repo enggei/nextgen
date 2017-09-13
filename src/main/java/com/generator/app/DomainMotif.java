@@ -67,9 +67,13 @@ public class DomainMotif {
    }
 
    public static String getPropertyValue(Node node, String propertyName) {
+      return getPropertyValue(node, propertyName, null);
+   }
+
+   public static String getPropertyValue(Node node, String propertyName, String defaultValue) {
       final Relationship valueRelation = singleOutgoing(node, RelationshipType.withName(propertyName));
-      if (valueRelation == null) return null;
-      return getString(other(node, valueRelation), AppMotif.Properties.name.name());
+      if (valueRelation == null) return defaultValue;
+      return getString(other(node, valueRelation), AppMotif.Properties.name.name(), defaultValue);
    }
 
    protected Set<Node> findNodes(NeoModel graph, Label label) {
