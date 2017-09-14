@@ -1,14 +1,14 @@
 package com.generator.generators.project;
 
+import com.generator.BaseDomainVisitor;
+import com.generator.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Workspace;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
-import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
@@ -24,14 +24,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static com.generator.BaseDomainVisitor.*;
+import static com.generator.NeoModel.*;
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
 import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.getNameAndLabelsFrom;
-import static com.generator.NeoModel.getNameOrLabelFrom;
-import static com.generator.NeoModel.relate;
 
 /**
  * Created 06.08.17.
@@ -373,12 +371,10 @@ public class ProjectPlugin extends DomainPlugin {
 
    @Override
    public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
-      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
-         final Node instanceNode = other(neoNode.getNode(), instanceRelation);
-         if (hasLabel(instanceNode, Entities.Directory)) {
-            tabbedPane.add(getString(neoNode.getNode(), AppMotif.Properties.name.name()), new DirectoryEditor(neoNode));
-         }
-      });
+
+      if (hasLabel(neoNode.getNode(), Entities.Directory)) {
+         tabbedPane.add("" + getFile(neoNode.getNode()), new DirectoryEditor(neoNode));
+      }
    }
 
    public static void renderToFile(Relationship rendererRelationship, Node statementNode, String content, Node dirNode, App app) {
@@ -430,12 +426,12 @@ public class ProjectPlugin extends DomainPlugin {
          final JTextArea txtEditor = new JTextArea();
          txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
          txtEditor.setTabSize(3);
-         txtEditor.setCaretPosition(0);
 
          final StringBuilder out = new StringBuilder();
          final File getDir = ProjectPlugin.getFile(node.getNode());
          if (getDir != null) listDirectory(getDir, out);
          txtEditor.setText(out.toString().trim());
+         txtEditor.setCaretPosition(0);
 
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
