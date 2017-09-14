@@ -39,24 +39,6 @@ public class JSONNeoListener extends JSONBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
-
-	@Override
-	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
-		onEnter(node);
-		this.inValue.push(true);
-	}
-
-	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		onExit();
-		this.inValue.pop();
-	}
-
-	public boolean inValue() {
-      return inValue.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
 
 	@Override
@@ -127,6 +109,24 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	public boolean inArray() {
       return inArray.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
+
+	@Override
+	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+		onEnter(node);
+		this.inValue.push(true);
+	}
+
+	public void exitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		onExit();
+		this.inValue.pop();
+	}
+
+	public boolean inValue() {
+      return inValue.isEmpty(); 
    }
 
 }

@@ -63,23 +63,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -114,6 +97,23 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return inStatement.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inFormalParameterList = new java.util.Stack<>();
 
 	@Override
@@ -146,6 +146,40 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inArguments() {
       return inArguments.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionList = new java.util.Stack<>();
+
+	@Override
+	public void enterExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
+		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText()));
+		this.inExpressionList.push(true);
+	}
+
+	public void exitExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
+		onExit();
+		this.inExpressionList.pop();
+	}
+
+	public boolean inExpressionList() {
+      return inExpressionList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeList = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
+		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText()));
+		this.inTypeList.push(true);
+	}
+
+	public void exitTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
+		onExit();
+		this.inTypeList.pop();
+	}
+
+	public boolean inTypeList() {
+      return inTypeList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
@@ -1406,23 +1440,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return inParExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpressionList = new java.util.Stack<>();
-
-	@Override
-	public void enterExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
-		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText()));
-		this.inExpressionList.push(true);
-	}
-
-	public void exitExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
-		onExit();
-		this.inExpressionList.pop();
-	}
-
-	public boolean inExpressionList() {
-      return inExpressionList.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLambdaExpression = new java.util.Stack<>();
 
 	@Override
@@ -1676,23 +1693,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inNonWildcardTypeArguments() {
       return inNonWildcardTypeArguments.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeList = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
-		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText()));
-		this.inTypeList.push(true);
-	}
-
-	public void exitTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
-		onExit();
-		this.inTypeList.pop();
-	}
-
-	public boolean inTypeList() {
-      return inTypeList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeType = new java.util.Stack<>();

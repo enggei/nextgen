@@ -48,9 +48,9 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		System.out.println("StartRule");
-		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		System.out.println("Message");
+		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +58,39 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		System.out.println("Message");
-		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
+	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
+		System.out.println("Constructor");
+		final Node node = model.findOrCreate(Label.label("Constructor"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
+		System.out.println("MethodName");
+		final Node node = model.findOrCreate(Label.label("MethodName"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
+		System.out.println("PackagePath");
+		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		System.out.println("StartRule");
+		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -161,36 +191,6 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	public Node visitQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
 		System.out.println("QualifiedMethod");
 		final Node node = model.findOrCreate(Label.label("QualifiedMethod"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
-		System.out.println("Constructor");
-		final Node node = model.findOrCreate(Label.label("Constructor"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
-		System.out.println("MethodName");
-		final Node node = model.findOrCreate(Label.label("MethodName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
-		System.out.println("PackagePath");
-		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

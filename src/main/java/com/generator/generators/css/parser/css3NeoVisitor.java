@@ -28,6 +28,16 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		System.out.println("BadCharset");
+		final Node node = model.findOrCreate(Label.label("BadCharset"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitBlock(com.generator.generators.css.parser.css3Parser.BlockContext arg) {
 		System.out.println("Block");
 		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
@@ -48,39 +58,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		System.out.println("Number");
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		System.out.println("GoodImport");
-		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		System.out.println("BadImport");
-		final Node node = model.findOrCreate(Label.label("BadImport"), "text", arg.getText());
+	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
+		System.out.println("SupportsDeclarationCondition");
+		final Node node = model.findOrCreate(Label.label("SupportsDeclarationCondition"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -111,6 +91,16 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
 		System.out.println("NamespacePrefix");
 		final Node node = model.findOrCreate(Label.label("NamespacePrefix"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
+		System.out.println("Media");
+		final Node node = model.findOrCreate(Label.label("Media"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -198,16 +188,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		System.out.println("Selector");
-		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
 		System.out.println("Stylesheet");
 		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
@@ -218,9 +198,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		System.out.println("BadCharset");
-		final Node node = model.findOrCreate(Label.label("BadCharset"), "text", arg.getText());
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -228,9 +208,39 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		System.out.println("Media");
-		final Node node = model.findOrCreate(Label.label("Media"), "text", arg.getText());
+	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		System.out.println("BadImport");
+		final Node node = model.findOrCreate(Label.label("BadImport"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		System.out.println("Number");
+		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		System.out.println("GoodImport");
+		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
+		System.out.println("Selector");
+		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -681,16 +691,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitSupportsDisjunction(com.generator.generators.css.parser.css3Parser.SupportsDisjunctionContext arg) {
 		System.out.println("SupportsDisjunction");
 		final Node node = model.findOrCreate(Label.label("SupportsDisjunction"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
-		System.out.println("SupportsDeclarationCondition");
-		final Node node = model.findOrCreate(Label.label("SupportsDeclarationCondition"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

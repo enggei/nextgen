@@ -38,16 +38,6 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
 		System.out.println("Obj");
 		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText());
@@ -61,6 +51,16 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	public Node visitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
 		System.out.println("Pair");
 		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		System.out.println("Value");
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -63,6 +63,23 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inIdentifier.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
+
+	@Override
+	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText()));
+		this.inClassName.push(true);
+	}
+
+	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		onExit();
+		this.inClassName.pop();
+	}
+
+	public boolean inClassName() {
+      return inClassName.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
 
 	@Override
@@ -80,23 +97,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inMessage.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
-
-	@Override
-	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText()));
-		this.inStartRule.push(true);
-	}
-
-	public void exitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		onExit();
-		this.inStartRule.pop();
-	}
-
-	public boolean inStartRule() {
-      return inStartRule.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();
 
 	@Override
@@ -112,23 +112,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inStackTrace() {
       return inStackTrace.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStackTraceLine = new java.util.Stack<>();
-
-	@Override
-	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		onEnter(new Node("StackTraceLine", arg.getText(), arg.getStart().getText()));
-		this.inStackTraceLine.push(true);
-	}
-
-	public void exitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		onExit();
-		this.inStackTraceLine.pop();
-	}
-
-	public boolean inStackTraceLine() {
-      return inStackTraceLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAtLine = new java.util.Stack<>();
@@ -233,6 +216,40 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inInnerClassName.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
+
+	@Override
+	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText()));
+		this.inStartRule.push(true);
+	}
+
+	public void exitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		onExit();
+		this.inStartRule.pop();
+	}
+
+	public boolean inStartRule() {
+      return inStartRule.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStackTraceLine = new java.util.Stack<>();
+
+	@Override
+	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		onEnter(new Node("StackTraceLine", arg.getText(), arg.getStart().getText()));
+		this.inStackTraceLine.push(true);
+	}
+
+	public void exitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		onExit();
+		this.inStackTraceLine.pop();
+	}
+
+	public boolean inStackTraceLine() {
+      return inStackTraceLine.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
 
 	@Override
@@ -316,23 +333,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inPackagePath() {
       return inPackagePath.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
-
-	@Override
-	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText()));
-		this.inClassName.push(true);
-	}
-
-	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		onExit();
-		this.inClassName.pop();
-	}
-
-	public boolean inClassName() {
-      return inClassName.isEmpty(); 
    }
 
 }

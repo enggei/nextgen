@@ -80,6 +80,40 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       return inFile.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
+		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
+		this.inPropertyName.push(true);
+	}
+
+	public void exitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
+		onExit();
+		this.inPropertyName.pop();
+	}
+
+	public boolean inPropertyName() {
+      return inPropertyName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
+
+	@Override
+	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
+		this.inDefaultValue.push(true);
+	}
+
+	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		onExit();
+		this.inDefaultValue.pop();
+	}
+
+	public boolean inDefaultValue() {
+      return inDefaultValue.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
 
 	@Override
@@ -165,6 +199,23 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       return inEnumName.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inMessageContent = new java.util.Stack<>();
+
+	@Override
+	public void enterMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
+		onEnter(new Node("MessageContent", arg.getText(), arg.getStart().getText()));
+		this.inMessageContent.push(true);
+	}
+
+	public void exitMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
+		onExit();
+		this.inMessageContent.pop();
+	}
+
+	public boolean inMessageContent() {
+      return inMessageContent.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inProperty = new java.util.Stack<>();
 
 	@Override
@@ -248,57 +299,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	public boolean inExtensionMax() {
       return inExtensionMax.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
-		this.inPropertyName.push(true);
-	}
-
-	public void exitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		onExit();
-		this.inPropertyName.pop();
-	}
-
-	public boolean inPropertyName() {
-      return inPropertyName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
-
-	@Override
-	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
-		this.inDefaultValue.push(true);
-	}
-
-	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		onExit();
-		this.inDefaultValue.pop();
-	}
-
-	public boolean inDefaultValue() {
-      return inDefaultValue.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMessageContent = new java.util.Stack<>();
-
-	@Override
-	public void enterMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
-		onEnter(new Node("MessageContent", arg.getText(), arg.getStart().getText()));
-		this.inMessageContent.push(true);
-	}
-
-	public void exitMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
-		onExit();
-		this.inMessageContent.pop();
-	}
-
-	public boolean inMessageContent() {
-      return inMessageContent.isEmpty(); 
    }
 
 }

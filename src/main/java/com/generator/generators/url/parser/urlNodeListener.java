@@ -46,6 +46,40 @@ public class urlNodeListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText()));
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
+
+	@Override
+	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onEnter(new Node("Url", arg.getText(), arg.getStart().getText()));
+		this.inUrl.push(true);
+	}
+
+	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onExit();
+		this.inUrl.pop();
+	}
+
+	public boolean inUrl() {
+      return inUrl.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
 
 	@Override
@@ -282,40 +316,6 @@ public class urlNodeListener extends urlBaseListener {
 
 	public boolean inSearchparameter() {
       return inSearchparameter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText()));
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return inString.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
-
-	@Override
-	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onEnter(new Node("Url", arg.getText(), arg.getStart().getText()));
-		this.inUrl.push(true);
-	}
-
-	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onExit();
-		this.inUrl.pop();
-	}
-
-	public boolean inUrl() {
-      return inUrl.isEmpty(); 
    }
 
 }

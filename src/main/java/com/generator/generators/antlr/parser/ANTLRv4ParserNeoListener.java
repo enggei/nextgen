@@ -39,24 +39,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarSpec.push(true);
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onExit();
-		this.inGrammarSpec.pop();
-	}
-
-	public boolean inGrammarSpec() {
-      return inGrammarSpec.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
 
 	@Override
@@ -579,6 +561,42 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return inLexerRuleBlock.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarSpec.push(true);
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec.pop();
+	}
+
+	public boolean inGrammarSpec() {
+      return inGrammarSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarType.push(true);
+	}
+
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		onExit();
+		this.inGrammarType.pop();
+	}
+
+	public boolean inGrammarType() {
+      return inGrammarType.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
 
 	@Override
@@ -631,24 +649,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inOption() {
       return inOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarType.push(true);
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onExit();
-		this.inGrammarType.pop();
-	}
-
-	public boolean inGrammarType() {
-      return inGrammarType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();

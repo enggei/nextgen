@@ -63,8 +63,8 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	}
 
 	@Override
-	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		final Node node = new Node("StartRule", arg.getText());
+	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		final Node node = new Node("Message", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,35 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	}
 
 	@Override
-	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		final Node node = new Node("Message", arg.getText());
+	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
+		final Node node = new Node("Constructor", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
+		final Node node = new Node("MethodName", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
+		final Node node = new Node("PackagePath", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		final Node node = new Node("StartRule", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -164,33 +191,6 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	@Override
 	public Node visitQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
 		final Node node = new Node("QualifiedMethod", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
-		final Node node = new Node("Constructor", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
-		final Node node = new Node("MethodName", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
-		final Node node = new Node("PackagePath", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -45,8 +45,26 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
    }
 
 	@Override
-	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
-		final Node node = new Node("ColConstrPK", arg.getText());
+	public Node visitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		final Node node = new Node("NotExpression", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTblOptDefCollate(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCollateContext arg) {
+		final Node node = new Node("TblOptDefCollate", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTblOptCompr(com.generator.generators.mysql.parser.MySqlParser.TblOptComprContext arg) {
+		final Node node = new Node("TblOptCompr", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -63,8 +81,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		final Node node = new Node("NotExpression", arg.getText());
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		final Node node = new Node("Sql_statements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -83,15 +101,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
 		final Node node = new Node("Empty_statement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		final Node node = new Node("Sql_statements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -522,6 +531,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
+	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
+		final Node node = new Node("ColConstrPK", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitColConstrUK(com.generator.generators.mysql.parser.MySqlParser.ColConstrUKContext arg) {
 		final Node node = new Node("ColConstrUK", arg.getText());
 		onEnter(node);
@@ -702,26 +720,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitTblOptDefCollate(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCollateContext arg) {
-		final Node node = new Node("TblOptDefCollate", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTblOptComment(com.generator.generators.mysql.parser.MySqlParser.TblOptCommentContext arg) {
 		final Node node = new Node("TblOptComment", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTblOptCompr(com.generator.generators.mysql.parser.MySqlParser.TblOptComprContext arg) {
-		final Node node = new Node("TblOptCompr", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
