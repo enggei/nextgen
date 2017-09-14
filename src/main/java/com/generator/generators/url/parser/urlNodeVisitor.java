@@ -45,17 +45,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		final Node node = new Node("Url", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = new Node("Uri", arg.getText());
+	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -74,6 +65,24 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	@Override
 	public Node visitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
 		final Node node = new Node("Host", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		final Node node = new Node("Url", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		final Node node = new Node("Uri", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -173,15 +182,6 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	@Override
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
 		final Node node = new Node("Searchparameter", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

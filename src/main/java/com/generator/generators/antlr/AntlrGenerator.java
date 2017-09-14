@@ -2,6 +2,8 @@ package com.generator.generators.antlr;
 
 import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
 import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
+import com.generator.generators.clojure.parser.ClojureListener;
+import com.generator.generators.clojure.parser.ClojureVisitor;
 import com.generator.generators.cpp.parser.CPP14Listener;
 import com.generator.generators.cpp.parser.CPP14Visitor;
 import com.generator.generators.css.parser.css3Listener;
@@ -43,6 +45,7 @@ public class AntlrGenerator {
 
    public static void main(String[] args) {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);

@@ -38,9 +38,9 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		System.out.println("HtmlElement");
-		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText());
+	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		System.out.println("HtmlElements");
+		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -48,9 +48,9 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		System.out.println("HtmlElements");
-		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
+	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		System.out.println("HtmlElement");
+		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

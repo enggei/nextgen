@@ -39,6 +39,24 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
 
 	@Override
@@ -687,24 +705,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return inAndexpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
 
 	@Override
@@ -829,6 +829,24 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inAssignmentoperator() {
       return inAssignmentoperator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();
@@ -3547,24 +3565,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inOperator() {
       return inOperator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBooleanliteral = new java.util.Stack<>();

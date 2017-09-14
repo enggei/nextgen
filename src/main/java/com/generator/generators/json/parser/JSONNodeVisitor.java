@@ -45,8 +45,8 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		final Node node = new Node("Value", arg.getText());
+	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		final Node node = new Node("Json", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -54,8 +54,8 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		final Node node = new Node("Json", arg.getText());
+	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
+		final Node node = new Node("Value", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

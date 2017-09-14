@@ -57,24 +57,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return inIdentifier.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
-
-	@Override
-	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
-		onEnter(node);
-		this.inClassName.push(true);
-	}
-
-	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		onExit();
-		this.inClassName.pop();
-	}
-
-	public boolean inClassName() {
-      return inClassName.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
 
 	@Override
@@ -237,24 +219,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return inQualifiedClass.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
-
-	@Override
-	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText());
-		onEnter(node);
-		this.inClassFile.push(true);
-	}
-
-	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		onExit();
-		this.inClassFile.pop();
-	}
-
-	public boolean inClassFile() {
-      return inClassFile.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
 
 	@Override
@@ -271,6 +235,24 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	public boolean inInnerClassName() {
       return inInnerClassName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
+
+	@Override
+	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText());
+		onEnter(node);
+		this.inClassFile.push(true);
+	}
+
+	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		onExit();
+		this.inClassFile.pop();
+	}
+
+	public boolean inClassFile() {
+      return inClassFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedMethod = new java.util.Stack<>();
@@ -343,6 +325,24 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	public boolean inPackagePath() {
       return inPackagePath.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
+
+	@Override
+	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
+		onEnter(node);
+		this.inClassName.push(true);
+	}
+
+	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		onExit();
+		this.inClassName.pop();
+	}
+
+	public boolean inClassName() {
+      return inClassName.isEmpty(); 
    }
 
 }

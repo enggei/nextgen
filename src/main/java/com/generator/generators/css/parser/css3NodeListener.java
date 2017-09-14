@@ -63,6 +63,23 @@ public class css3NodeListener extends css3BaseListener {
       return inBlock.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText()));
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return inNumber.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -163,6 +180,23 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inBadImport() {
       return inBadImport.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		onEnter(new Node("GoodNamespace", arg.getText(), arg.getStart().getText()));
+		this.inGoodNamespace.push(true);
+	}
+
+	public void exitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		onExit();
+		this.inGoodNamespace.pop();
+	}
+
+	public boolean inGoodNamespace() {
+      return inGoodNamespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadNamespace = new java.util.Stack<>();
@@ -709,23 +743,6 @@ public class css3NodeListener extends css3BaseListener {
       return inKnownDeclaration.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		onEnter(new Node("GoodNamespace", arg.getText(), arg.getStart().getText()));
-		this.inGoodNamespace.push(true);
-	}
-
-	public void exitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		onExit();
-		this.inGoodNamespace.pop();
-	}
-
-	public boolean inGoodNamespace() {
-      return inGoodNamespace.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inUnknownDeclaration = new java.util.Stack<>();
 
 	@Override
@@ -894,23 +911,6 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inHexcolor() {
       return inHexcolor.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText()));
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return inNumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPercentage = new java.util.Stack<>();

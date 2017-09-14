@@ -63,23 +63,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -97,6 +80,40 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return inLiteral.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inKeyword = new java.util.Stack<>();
+
+	@Override
+	public void enterKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
+		onEnter(new Node("Keyword", arg.getText(), arg.getStart().getText()));
+		this.inKeyword.push(true);
+	}
+
+	public void exitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
+		onExit();
+		this.inKeyword.pop();
+	}
+
+	public boolean inKeyword() {
+      return inKeyword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
 
 	@Override
@@ -112,6 +129,23 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inProgram() {
       return inProgram.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
+
+	@Override
+	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		onEnter(new Node("SourceElements", arg.getText(), arg.getStart().getText()));
+		this.inSourceElements.push(true);
+	}
+
+	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		onExit();
+		this.inSourceElements.pop();
+	}
+
+	public boolean inSourceElements() {
+      return inSourceElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceElement = new java.util.Stack<>();
@@ -792,23 +826,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inPropertyGetter() {
       return inPropertyGetter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
-
-	@Override
-	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		onEnter(new Node("SourceElements", arg.getText(), arg.getStart().getText()));
-		this.inSourceElements.push(true);
-	}
-
-	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		onExit();
-		this.inSourceElements.pop();
-	}
-
-	public boolean inSourceElements() {
-      return inSourceElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertySetter = new java.util.Stack<>();
@@ -1608,23 +1625,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inReservedWord() {
       return inReservedWord.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inKeyword = new java.util.Stack<>();
-
-	@Override
-	public void enterKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
-		onEnter(new Node("Keyword", arg.getText(), arg.getStart().getText()));
-		this.inKeyword.push(true);
-	}
-
-	public void exitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
-		onExit();
-		this.inKeyword.pop();
-	}
-
-	public boolean inKeyword() {
-      return inKeyword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFutureReservedWord = new java.util.Stack<>();

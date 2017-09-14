@@ -54,8 +54,8 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	}
 
 	@Override
-	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		final Node node = new Node("HtmlElement", arg.getText());
+	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		final Node node = new Node("HtmlElements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -63,8 +63,8 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	}
 
 	@Override
-	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		final Node node = new Node("HtmlElements", arg.getText());
+	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		final Node node = new Node("HtmlElement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

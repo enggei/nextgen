@@ -28,19 +28,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		System.out.println("Url");
-		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		System.out.println("Uri");
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
+	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		System.out.println("String");
+		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -61,6 +51,26 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	public Node visitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
 		System.out.println("Host");
 		final Node node = model.findOrCreate(Label.label("Host"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		System.out.println("Url");
+		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		System.out.println("Uri");
+		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -171,16 +181,6 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
 		System.out.println("Searchparameter");
 		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		System.out.println("String");
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

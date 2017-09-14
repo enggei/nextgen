@@ -1,5 +1,6 @@
 package com.generator.generators.css;
 
+import com.generator.ProjectConstants;
 import com.generator.generators.css.parser.css3Lexer;
 import com.generator.generators.css.parser.css3NodeListener;
 import com.generator.generators.css.parser.css3Parser;
@@ -18,6 +19,6 @@ public class Tests {
    @Test
    public void testCss() throws IOException {
       final css3NodeListener listener = new css3NodeListener(true);
-      new ParseTreeWalker().walk(listener, new css3Parser(new CommonTokenStream(new css3Lexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/css/test.css")))).stylesheet());
+      new ParseTreeWalker().walk(listener, new css3Parser(new CommonTokenStream(new css3Lexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/css/test.css")))).stylesheet());
    }
 }

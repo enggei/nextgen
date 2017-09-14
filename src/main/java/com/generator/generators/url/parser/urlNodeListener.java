@@ -46,6 +46,40 @@ public class urlNodeListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
+
+	@Override
+	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText()));
+		this.inUri.push(true);
+	}
+
+	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onExit();
+		this.inUri.pop();
+	}
+
+	public boolean inUri() {
+      return inUri.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
+
+	@Override
+	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText()));
+		this.inScheme.push(true);
+	}
+
+	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onExit();
+		this.inScheme.pop();
+	}
+
+	public boolean inScheme() {
+      return inScheme.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
 
 	@Override
@@ -199,57 +233,6 @@ public class urlNodeListener extends urlBaseListener {
       return inFrag.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
-
-	@Override
-	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onEnter(new Node("Url", arg.getText(), arg.getStart().getText()));
-		this.inUrl.push(true);
-	}
-
-	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onExit();
-		this.inUrl.pop();
-	}
-
-	public boolean inUrl() {
-      return inUrl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
-
-	@Override
-	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText()));
-		this.inUri.push(true);
-	}
-
-	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onExit();
-		this.inUri.pop();
-	}
-
-	public boolean inUri() {
-      return inUri.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
-
-	@Override
-	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText()));
-		this.inScheme.push(true);
-	}
-
-	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onExit();
-		this.inScheme.pop();
-	}
-
-	public boolean inScheme() {
-      return inScheme.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
 
 	@Override
@@ -316,6 +299,23 @@ public class urlNodeListener extends urlBaseListener {
 
 	public boolean inString() {
       return inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
+
+	@Override
+	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onEnter(new Node("Url", arg.getText(), arg.getStart().getText()));
+		this.inUrl.push(true);
+	}
+
+	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onExit();
+		this.inUrl.pop();
+	}
+
+	public boolean inUrl() {
+      return inUrl.isEmpty(); 
    }
 
 }

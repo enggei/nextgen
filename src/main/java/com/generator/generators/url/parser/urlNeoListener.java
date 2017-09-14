@@ -39,6 +39,42 @@ public class urlNeoListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
+
+	@Override
+	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
+		onEnter(node);
+		this.inUri.push(true);
+	}
+
+	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onExit();
+		this.inUri.pop();
+	}
+
+	public boolean inUri() {
+      return inUri.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
+
+	@Override
+	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
+		onEnter(node);
+		this.inScheme.push(true);
+	}
+
+	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onExit();
+		this.inScheme.pop();
+	}
+
+	public boolean inScheme() {
+      return inScheme.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
 
 	@Override
@@ -201,60 +237,6 @@ public class urlNeoListener extends urlBaseListener {
       return inFrag.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
-
-	@Override
-	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
-		onEnter(node);
-		this.inUrl.push(true);
-	}
-
-	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onExit();
-		this.inUrl.pop();
-	}
-
-	public boolean inUrl() {
-      return inUrl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
-
-	@Override
-	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
-		onEnter(node);
-		this.inUri.push(true);
-	}
-
-	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onExit();
-		this.inUri.pop();
-	}
-
-	public boolean inUri() {
-      return inUri.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
-
-	@Override
-	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
-		onEnter(node);
-		this.inScheme.push(true);
-	}
-
-	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onExit();
-		this.inScheme.pop();
-	}
-
-	public boolean inScheme() {
-      return inScheme.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
 
 	@Override
@@ -325,6 +307,24 @@ public class urlNeoListener extends urlBaseListener {
 
 	public boolean inString() {
       return inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
+
+	@Override
+	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
+		onEnter(node);
+		this.inUrl.push(true);
+	}
+
+	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onExit();
+		this.inUrl.pop();
+	}
+
+	public boolean inUrl() {
+      return inUrl.isEmpty(); 
    }
 
 }
