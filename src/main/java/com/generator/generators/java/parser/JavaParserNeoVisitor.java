@@ -38,16 +38,6 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		System.out.println("Literal");
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		System.out.println("Expression");
 		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
@@ -61,6 +51,16 @@ public class JavaParserNeoVisitor extends JavaParserBaseVisitor<Node> {
 	public Node visitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
 		System.out.println("Statement");
 		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		System.out.println("Literal");
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

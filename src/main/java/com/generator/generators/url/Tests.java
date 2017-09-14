@@ -32,7 +32,7 @@ public class Tests {
                System.out.println(delim + arg.getText());
             }
          };
-         new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).fragmentaddress());
+         new ParseTreeWalker().walk(listener, new urlParser(new CommonTokenStream(new urlLexer(CharStreams.fromString(url)))).url());
       }
    }
 }

@@ -57,24 +57,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
 
 	@Override
@@ -93,6 +75,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return inStatement.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
 
 	@Override
@@ -109,24 +109,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inProgram() {
       return inProgram.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
-
-	@Override
-	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText());
-		onEnter(node);
-		this.inSourceElements.push(true);
-	}
-
-	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		onExit();
-		this.inSourceElements.pop();
-	}
-
-	public boolean inSourceElements() {
-      return inSourceElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceElement = new java.util.Stack<>();
@@ -849,22 +831,22 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return inPropertyGetter.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
 
 	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
+	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText());
 		onEnter(node);
-		this.inAssignmentOperatorExpression.push(true);
+		this.inSourceElements.push(true);
 	}
 
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
 		onExit();
-		this.inAssignmentOperatorExpression.pop();
+		this.inSourceElements.pop();
 	}
 
-	public boolean inAssignmentOperatorExpression() {
-      return inAssignmentOperatorExpression.isEmpty(); 
+	public boolean inSourceElements() {
+      return inSourceElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertySetter = new java.util.Stack<>();
@@ -1603,6 +1585,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inBitOrExpression() {
       return inBitOrExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentOperatorExpression.push(true);
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression.pop();
+	}
+
+	public boolean inAssignmentOperatorExpression() {
+      return inAssignmentOperatorExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVoidExpression = new java.util.Stack<>();

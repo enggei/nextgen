@@ -17,7 +17,7 @@ public class urlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ur
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFragmentaddress(urlParser.FragmentaddressContext ctx) { return visitChildren(ctx); }
+	@Override public T visitUrl(urlParser.UrlContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -31,14 +31,7 @@ public class urlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ur
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitUrl(urlParser.UrlContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitAuthority(urlParser.AuthorityContext ctx) { return visitChildren(ctx); }
+	@Override public T visitScheme(urlParser.SchemeContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -80,20 +73,6 @@ public class urlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ur
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitSearch(urlParser.SearchContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitSearchparameter(urlParser.SearchparameterContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
 	@Override public T visitUser(urlParser.UserContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -115,5 +94,33 @@ public class urlBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ur
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitFragmentid(urlParser.FragmentidContext ctx) { return visitChildren(ctx); }
+	@Override public T visitFrag(urlParser.FragContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitQuery(urlParser.QueryContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSearch(urlParser.SearchContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSearchparameter(urlParser.SearchparameterContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitString(urlParser.StringContext ctx) { return visitChildren(ctx); }
 }

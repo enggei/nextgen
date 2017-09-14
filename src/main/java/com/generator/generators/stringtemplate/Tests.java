@@ -1,6 +1,7 @@
 package com.generator.generators.stringtemplate;
 
 import org.junit.Test;
+import org.stringtemplate.v4.STGroupString;
 
 import java.io.IOException;
 
@@ -18,7 +19,7 @@ public class Tests {
 
 
       // must close template with >> because of stringtemplate-issue
-      System.out.println(templateGroupGroup.newstg().
+      final TemplateGroupGroup.stgST x = templateGroupGroup.newstg().
             setDelimiter("~").
             addTemplatesValue(templateGroupGroup.newtemplate().
                   setName("enum").
@@ -29,7 +30,28 @@ public class Tests {
                   "~endif~\n" +
                   "enum ~name~ {\n" +
                   "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
-                  "} \n>>")));
+                  "}"));
+      System.out.println(x);
+
+      final TemplateGroupGroup tmp = new TemplateGroupGroup(new STGroupString(TemplateGroupGroup.stg));
+      final TemplateGroupGroup.stgST y = tmp.newstg().
+            setDelimiter("~").
+            addTemplatesValue(templateGroupGroup.newtemplate().
+                  setName("enum").
+                  addParamsValue("comments").
+                  addParamsValue("name").
+                  addParamsValue("properties").setContent("~if(comments)~\n" +
+                  "//~comments~\n" +
+                  "~endif~\n" +
+                  "enum ~name~ {\n" +
+                  "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
+                  "}"));
+
+      System.out.println(y);
+
+      if(!x.equals(y)) {
+         System.out.println("Error");
+      }
 
    }
 

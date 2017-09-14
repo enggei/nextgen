@@ -39,78 +39,6 @@ public class urlNeoListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inFragmentaddress = new java.util.Stack<>();
-
-	@Override
-	public void enterFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
-		final Node node = model.findOrCreate(Label.label("Fragmentaddress"), "text", arg.getText());
-		onEnter(node);
-		this.inFragmentaddress.push(true);
-	}
-
-	public void exitFragmentaddress(com.generator.generators.url.parser.urlParser.FragmentaddressContext arg) {
-		onExit();
-		this.inFragmentaddress.pop();
-	}
-
-	public boolean inFragmentaddress() {
-      return inFragmentaddress.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
-
-	@Override
-	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
-		onEnter(node);
-		this.inUri.push(true);
-	}
-
-	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onExit();
-		this.inUri.pop();
-	}
-
-	public boolean inUri() {
-      return inUri.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
-
-	@Override
-	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
-		onEnter(node);
-		this.inUrl.push(true);
-	}
-
-	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onExit();
-		this.inUrl.pop();
-	}
-
-	public boolean inUrl() {
-      return inUrl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAuthority = new java.util.Stack<>();
-
-	@Override
-	public void enterAuthority(com.generator.generators.url.parser.urlParser.AuthorityContext arg) {
-		final Node node = model.findOrCreate(Label.label("Authority"), "text", arg.getText());
-		onEnter(node);
-		this.inAuthority.push(true);
-	}
-
-	public void exitAuthority(com.generator.generators.url.parser.urlParser.AuthorityContext arg) {
-		onExit();
-		this.inAuthority.pop();
-	}
-
-	public boolean inAuthority() {
-      return inAuthority.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
 
 	@Override
@@ -201,42 +129,6 @@ public class urlNeoListener extends urlBaseListener {
       return inPath.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inSearch = new java.util.Stack<>();
-
-	@Override
-	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		final Node node = model.findOrCreate(Label.label("Search"), "text", arg.getText());
-		onEnter(node);
-		this.inSearch.push(true);
-	}
-
-	public void exitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		onExit();
-		this.inSearch.pop();
-	}
-
-	public boolean inSearch() {
-      return inSearch.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSearchparameter = new java.util.Stack<>();
-
-	@Override
-	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
-		onEnter(node);
-		this.inSearchparameter.push(true);
-	}
-
-	public void exitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		onExit();
-		this.inSearchparameter.pop();
-	}
-
-	public boolean inSearchparameter() {
-      return inSearchparameter.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inUser = new java.util.Stack<>();
 
 	@Override
@@ -291,22 +183,148 @@ public class urlNeoListener extends urlBaseListener {
       return inPassword.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inFragmentid = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inFrag = new java.util.Stack<>();
 
 	@Override
-	public void enterFragmentid(com.generator.generators.url.parser.urlParser.FragmentidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Fragmentid"), "text", arg.getText());
+	public void enterFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
+		final Node node = model.findOrCreate(Label.label("Frag"), "text", arg.getText());
 		onEnter(node);
-		this.inFragmentid.push(true);
+		this.inFrag.push(true);
 	}
 
-	public void exitFragmentid(com.generator.generators.url.parser.urlParser.FragmentidContext arg) {
+	public void exitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
 		onExit();
-		this.inFragmentid.pop();
+		this.inFrag.pop();
 	}
 
-	public boolean inFragmentid() {
-      return inFragmentid.isEmpty(); 
+	public boolean inFrag() {
+      return inFrag.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
+
+	@Override
+	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
+		onEnter(node);
+		this.inUrl.push(true);
+	}
+
+	public void exitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		onExit();
+		this.inUrl.pop();
+	}
+
+	public boolean inUrl() {
+      return inUrl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
+
+	@Override
+	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
+		onEnter(node);
+		this.inUri.push(true);
+	}
+
+	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onExit();
+		this.inUri.pop();
+	}
+
+	public boolean inUri() {
+      return inUri.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
+
+	@Override
+	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
+		onEnter(node);
+		this.inScheme.push(true);
+	}
+
+	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onExit();
+		this.inScheme.pop();
+	}
+
+	public boolean inScheme() {
+      return inScheme.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText());
+		onEnter(node);
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSearch = new java.util.Stack<>();
+
+	@Override
+	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		final Node node = model.findOrCreate(Label.label("Search"), "text", arg.getText());
+		onEnter(node);
+		this.inSearch.push(true);
+	}
+
+	public void exitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		onExit();
+		this.inSearch.pop();
+	}
+
+	public boolean inSearch() {
+      return inSearch.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSearchparameter = new java.util.Stack<>();
+
+	@Override
+	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
+		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
+		onEnter(node);
+		this.inSearchparameter.push(true);
+	}
+
+	public void exitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
+		onExit();
+		this.inSearchparameter.pop();
+	}
+
+	public boolean inSearchparameter() {
+      return inSearchparameter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
+		onEnter(node);
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return inString.isEmpty(); 
    }
 
 }

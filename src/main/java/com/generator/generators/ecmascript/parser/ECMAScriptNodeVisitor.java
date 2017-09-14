@@ -54,8 +54,8 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = new Node("Program", arg.getText());
+	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = new Node("Statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,44 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
-	public Node visitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = new Node("Statement", arg.getText());
+	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = new Node("Program", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		final Node node = new Node("SourceElements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		final Node node = new Node("SourceElement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		final Node node = new Node("StatementList", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
+		final Node node = new Node("VariableStatement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -110,6 +146,15 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
 		final Node node = new Node("EmptyStatement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
+		final Node node = new Node("ExpressionStatement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -182,51 +227,6 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitContinueStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ContinueStatementContext arg) {
 		final Node node = new Node("ContinueStatement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
-		final Node node = new Node("ExpressionStatement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = new Node("SourceElements", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		final Node node = new Node("SourceElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		final Node node = new Node("StatementList", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
-		final Node node = new Node("VariableStatement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

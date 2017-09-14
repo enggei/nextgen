@@ -54,15 +54,6 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	}
 
 	@Override
-	public Node visitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = new Node("Literal", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
 		final Node node = new Node("Expression", arg.getText());
 		onEnter(node);
@@ -74,6 +65,15 @@ public class JavaParserNodeVisitor extends JavaParserBaseVisitor<JavaParserNodeV
 	@Override
 	public Node visitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
 		final Node node = new Node("Statement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		final Node node = new Node("Literal", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

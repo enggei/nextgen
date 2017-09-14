@@ -54,10 +54,6 @@ public final class TemplateGroupGroup {
       return new GroupClassDeclarationST(stGroup);
    }
 
-   public NewGroupInstanceST newNewGroupInstance() {
-      return new NewGroupInstanceST(stGroup);
-   }
-
    public NewStatementDeclarationST newNewStatementDeclaration() {
       return new NewStatementDeclarationST(stGroup);
    }
@@ -74,12 +70,16 @@ public final class TemplateGroupGroup {
       return new StatementStringPropertySetterST(stGroup);
    }
 
-   public stgST newstg() {
-      return new stgST(stGroup);
-   }
-
    public templateST newtemplate() {
       return new templateST(stGroup);
+   }
+
+   public eotST neweot() {
+      return new eotST(stGroup);
+   }
+
+   public stgST newstg() {
+      return new stgST(stGroup);
    }
 
    public final class stgBuilderST implements TemplateGroupGroupTemplate {
@@ -234,55 +234,6 @@ public final class TemplateGroupGroup {
 
       public String getStg() {
       	return (String) this._stg;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class NewGroupInstanceST implements TemplateGroupGroupTemplate {
-
-      private Object _filename;
-      private Object _name;
-
-      private final ST template;
-
-      private NewGroupInstanceST(STGroup group) {
-   		template = group.getInstanceOf("NewGroupInstance");
-   	}
-
-      public NewGroupInstanceST setFilename(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._filename == null) {
-            this._filename = value;
-         	template.add("filename", value);
-         }
-
-      	return this;
-      }
-
-      public String getFilename() {
-      	return (String) this._filename;
-      }
-
-      public NewGroupInstanceST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
       }
 
       @Override
@@ -519,53 +470,6 @@ public final class TemplateGroupGroup {
    	}
    }
 
-   public final class stgST implements TemplateGroupGroupTemplate {
-
-      private java.util.Set<Object> _templates = new java.util.LinkedHashSet<>();
-      private Object _delimiter;
-
-      private final ST template;
-
-      private stgST(STGroup group) {
-   		template = group.getInstanceOf("stg");
-   	}
-
-      public stgST addTemplatesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._templates.add(value);
-      	template.add("templates", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getTemplatesValues() {
-      	return this._templates;
-      }
-
-      public stgST setDelimiter(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._delimiter == null) {
-            this._delimiter = value;
-         	template.add("delimiter", value);
-         }
-
-      	return this;
-      }
-
-      public String getDelimiter() {
-      	return (String) this._delimiter;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
    public final class templateST implements TemplateGroupGroupTemplate {
 
       private Object _content;
@@ -622,6 +526,68 @@ public final class TemplateGroupGroup {
 
       public java.util.Set<Object> getParamsValues() {
       	return this._params;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class eotST implements TemplateGroupGroupTemplate {
+
+
+      private final ST template;
+
+      private eotST(STGroup group) {
+   		template = group.getInstanceOf("eot");
+   	}
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class stgST implements TemplateGroupGroupTemplate {
+
+      private Object _delimiter;
+      private java.util.Set<Object> _templates = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private stgST(STGroup group) {
+   		template = group.getInstanceOf("stg");
+   	}
+
+      public stgST setDelimiter(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._delimiter == null) {
+            this._delimiter = value;
+         	template.add("delimiter", value);
+         }
+
+      	return this;
+      }
+
+      public String getDelimiter() {
+      	return (String) this._delimiter;
+      }
+
+      public stgST addTemplatesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._templates.add(value);
+      	template.add("templates", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getTemplatesValues() {
+      	return this._templates;
       }
 
       @Override
@@ -757,11 +723,11 @@ public final class TemplateGroupGroup {
 		out.close();
    }
 
-	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	public static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
 			.append("stgBuilder(appends,delimiter) ::= <<private static final String stg = new StringBuilder(\"delimiters \\\"~delimiter~\\\", \\\"~delimiter~\\\"\\\\n\")\n" + 
-		"	.append(\"eom() ::= <<}~gt()~>\\\\n\")\n" + 
+		"	.append(\"eom() ::= <<}~eot()~\\\\n\")\n" + 
 		"	.append(\"gt() ::= \\\">\\\"\\\\n\")\n" + 
 		"	~appends:{it|		.append(\"~it~\\\\n\")};separator=\"\\n\"~\n" + 
 		"	.toString();>>\n")
@@ -945,9 +911,6 @@ public final class TemplateGroupGroup {
 		"	\n" + 
 		"	~if(stg)~~stg~~endif~\n" + 
 		"}>>\n")
-			.append("NewGroupInstance(filename,name) ::= <<public ~name~ new~name~() {\n" + 
-		"   return new ~name~(get(\"~filename~\"), renderer);\n" + 
-		"}>>\n")
 			.append("NewStatementDeclaration(groupname,name,properties) ::= <<public final class ~name~ST implements ~groupname~Template {\n" + 
 		"\n" + 
 		"   ~properties:{it|private ~it.type~ _~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
@@ -1007,9 +970,10 @@ public final class TemplateGroupGroup {
 		"public String get~propertyName;format=\"capitalize\"~() {\n" + 
 		"	return (String) this._~propertyName~;\n" + 
 		"}>>\n")
-			.append("stg(templates,delimiter) ::= <<delimiters \"~delimiter~\", \"~delimiter~\"\n" + 
+			.append("template(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~eot()~>>\n")
+			.append("eot() ::= <<~gt()~~gt()~>>\n")
+			.append("stg(delimiter,templates) ::= <<delimiters \"~delimiter~\" \"~delimiter~\"\n" + 
 		"\n" + 
 		"~templates:{it|~it~};separator=\"\\n\"~>>\n")
-			.append("template(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~>>\n")
 		.toString();
 }

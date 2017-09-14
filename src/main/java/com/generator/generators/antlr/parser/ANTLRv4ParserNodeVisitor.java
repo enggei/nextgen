@@ -45,8 +45,26 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
    }
 
 	@Override
-	public Node visitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = new Node("OptionsSpec", arg.getText());
+	public Node visitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		final Node node = new Node("ChannelsSpec", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = new Node("GrammarSpec", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		final Node node = new Node("GrammarType", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -56,6 +74,15 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	@Override
 	public Node visitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
 		final Node node = new Node("PrequelConstruct", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = new Node("OptionsSpec", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,15 +135,6 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		final Node node = new Node("ChannelsSpec", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
 		final Node node = new Node("IdList", arg.getText());
 		onEnter(node);
@@ -128,24 +146,6 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	@Override
 	public Node visitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
 		final Node node = new Node("Action", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = new Node("GrammarSpec", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = new Node("GrammarType", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

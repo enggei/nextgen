@@ -38,9 +38,9 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		System.out.println("Message");
-		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
+	public Node visitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		System.out.println("ClassName");
+		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -51,6 +51,16 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
 		System.out.println("StartRule");
 		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		System.out.println("Message");
+		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -181,16 +191,6 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
 		System.out.println("PackagePath");
 		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		System.out.println("ClassName");
-		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

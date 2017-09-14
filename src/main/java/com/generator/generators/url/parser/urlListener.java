@@ -8,15 +8,15 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface urlListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link urlParser#fragmentaddress}.
+	 * Enter a parse tree produced by {@link urlParser#url}.
 	 * @param ctx the parse tree
 	 */
-	void enterFragmentaddress(urlParser.FragmentaddressContext ctx);
+	void enterUrl(urlParser.UrlContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link urlParser#fragmentaddress}.
+	 * Exit a parse tree produced by {@link urlParser#url}.
 	 * @param ctx the parse tree
 	 */
-	void exitFragmentaddress(urlParser.FragmentaddressContext ctx);
+	void exitUrl(urlParser.UrlContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link urlParser#uri}.
 	 * @param ctx the parse tree
@@ -28,25 +28,15 @@ public interface urlListener extends ParseTreeListener {
 	 */
 	void exitUri(urlParser.UriContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link urlParser#url}.
+	 * Enter a parse tree produced by {@link urlParser#scheme}.
 	 * @param ctx the parse tree
 	 */
-	void enterUrl(urlParser.UrlContext ctx);
+	void enterScheme(urlParser.SchemeContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link urlParser#url}.
+	 * Exit a parse tree produced by {@link urlParser#scheme}.
 	 * @param ctx the parse tree
 	 */
-	void exitUrl(urlParser.UrlContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link urlParser#authority}.
-	 * @param ctx the parse tree
-	 */
-	void enterAuthority(urlParser.AuthorityContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link urlParser#authority}.
-	 * @param ctx the parse tree
-	 */
-	void exitAuthority(urlParser.AuthorityContext ctx);
+	void exitScheme(urlParser.SchemeContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link urlParser#host}.
 	 * @param ctx the parse tree
@@ -98,26 +88,6 @@ public interface urlListener extends ParseTreeListener {
 	 */
 	void exitPath(urlParser.PathContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link urlParser#search}.
-	 * @param ctx the parse tree
-	 */
-	void enterSearch(urlParser.SearchContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link urlParser#search}.
-	 * @param ctx the parse tree
-	 */
-	void exitSearch(urlParser.SearchContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link urlParser#searchparameter}.
-	 * @param ctx the parse tree
-	 */
-	void enterSearchparameter(urlParser.SearchparameterContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link urlParser#searchparameter}.
-	 * @param ctx the parse tree
-	 */
-	void exitSearchparameter(urlParser.SearchparameterContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link urlParser#user}.
 	 * @param ctx the parse tree
 	 */
@@ -148,13 +118,53 @@ public interface urlListener extends ParseTreeListener {
 	 */
 	void exitPassword(urlParser.PasswordContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link urlParser#fragmentid}.
+	 * Enter a parse tree produced by {@link urlParser#frag}.
 	 * @param ctx the parse tree
 	 */
-	void enterFragmentid(urlParser.FragmentidContext ctx);
+	void enterFrag(urlParser.FragContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link urlParser#fragmentid}.
+	 * Exit a parse tree produced by {@link urlParser#frag}.
 	 * @param ctx the parse tree
 	 */
-	void exitFragmentid(urlParser.FragmentidContext ctx);
+	void exitFrag(urlParser.FragContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link urlParser#query}.
+	 * @param ctx the parse tree
+	 */
+	void enterQuery(urlParser.QueryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link urlParser#query}.
+	 * @param ctx the parse tree
+	 */
+	void exitQuery(urlParser.QueryContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link urlParser#search}.
+	 * @param ctx the parse tree
+	 */
+	void enterSearch(urlParser.SearchContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link urlParser#search}.
+	 * @param ctx the parse tree
+	 */
+	void exitSearch(urlParser.SearchContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link urlParser#searchparameter}.
+	 * @param ctx the parse tree
+	 */
+	void enterSearchparameter(urlParser.SearchparameterContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link urlParser#searchparameter}.
+	 * @param ctx the parse tree
+	 */
+	void exitSearchparameter(urlParser.SearchparameterContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link urlParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void enterString(urlParser.StringContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link urlParser#string}.
+	 * @param ctx the parse tree
+	 */
+	void exitString(urlParser.StringContext ctx);
 }

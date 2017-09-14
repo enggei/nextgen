@@ -445,7 +445,7 @@ public class StringTemplatePlugin extends DomainPlugin {
             }
          }.visit(templateNode);
 
-         stgBuilderST.addAppendsValue(templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"") + ">>"));
+         stgBuilderST.addAppendsValue(templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"")));
          groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), statementName);
       });
 

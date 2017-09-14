@@ -16,13 +16,13 @@ public class urlBaseListener implements urlListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFragmentaddress(urlParser.FragmentaddressContext ctx) { }
+	@Override public void enterUrl(urlParser.UrlContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFragmentaddress(urlParser.FragmentaddressContext ctx) { }
+	@Override public void exitUrl(urlParser.UrlContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -40,25 +40,13 @@ public class urlBaseListener implements urlListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterUrl(urlParser.UrlContext ctx) { }
+	@Override public void enterScheme(urlParser.SchemeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitUrl(urlParser.UrlContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAuthority(urlParser.AuthorityContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAuthority(urlParser.AuthorityContext ctx) { }
+	@Override public void exitScheme(urlParser.SchemeContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -124,30 +112,6 @@ public class urlBaseListener implements urlListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSearch(urlParser.SearchContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSearch(urlParser.SearchContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterSearchparameter(urlParser.SearchparameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitSearchparameter(urlParser.SearchparameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterUser(urlParser.UserContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -184,13 +148,61 @@ public class urlBaseListener implements urlListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFragmentid(urlParser.FragmentidContext ctx) { }
+	@Override public void enterFrag(urlParser.FragContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFragmentid(urlParser.FragmentidContext ctx) { }
+	@Override public void exitFrag(urlParser.FragContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterQuery(urlParser.QueryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitQuery(urlParser.QueryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSearch(urlParser.SearchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSearch(urlParser.SearchContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSearchparameter(urlParser.SearchparameterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSearchparameter(urlParser.SearchparameterContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterString(urlParser.StringContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitString(urlParser.StringContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

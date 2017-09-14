@@ -11,11 +11,11 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface urlVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link urlParser#fragmentaddress}.
+	 * Visit a parse tree produced by {@link urlParser#url}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFragmentaddress(urlParser.FragmentaddressContext ctx);
+	T visitUrl(urlParser.UrlContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link urlParser#uri}.
 	 * @param ctx the parse tree
@@ -23,17 +23,11 @@ public interface urlVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUri(urlParser.UriContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link urlParser#url}.
+	 * Visit a parse tree produced by {@link urlParser#scheme}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUrl(urlParser.UrlContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link urlParser#authority}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAuthority(urlParser.AuthorityContext ctx);
+	T visitScheme(urlParser.SchemeContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link urlParser#host}.
 	 * @param ctx the parse tree
@@ -65,18 +59,6 @@ public interface urlVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPath(urlParser.PathContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link urlParser#search}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSearch(urlParser.SearchContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link urlParser#searchparameter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSearchparameter(urlParser.SearchparameterContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link urlParser#user}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -95,9 +77,33 @@ public interface urlVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPassword(urlParser.PasswordContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link urlParser#fragmentid}.
+	 * Visit a parse tree produced by {@link urlParser#frag}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFragmentid(urlParser.FragmentidContext ctx);
+	T visitFrag(urlParser.FragContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link urlParser#query}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitQuery(urlParser.QueryContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link urlParser#search}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSearch(urlParser.SearchContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link urlParser#searchparameter}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSearchparameter(urlParser.SearchparameterContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link urlParser#string}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitString(urlParser.StringContext ctx);
 }

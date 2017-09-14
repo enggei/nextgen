@@ -39,42 +39,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inOptionsSpec.push(true);
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec.pop();
-	}
-
-	public boolean inOptionsSpec() {
-      return inOptionsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
-		onEnter(node);
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return inOption.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
 
 	@Override
@@ -561,6 +525,60 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return inLabeledAlt.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLexerRuleSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("LexerRuleSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inLexerRuleSpec.push(true);
+	}
+
+	public void exitLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
+		onExit();
+		this.inLexerRuleSpec.pop();
+	}
+
+	public boolean inLexerRuleSpec() {
+      return inLexerRuleSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerRuleBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
+		final Node node = model.findOrCreate(Label.label("LexerRuleBlock"), "text", arg.getText());
+		onEnter(node);
+		this.inLexerRuleBlock.push(true);
+	}
+
+	public void exitLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
+		onExit();
+		this.inLexerRuleBlock.pop();
+	}
+
+	public boolean inLexerRuleBlock() {
+      return inLexerRuleBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarSpec.push(true);
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec.pop();
+	}
+
+	public boolean inGrammarSpec() {
+      return inGrammarSpec.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
 
 	@Override
@@ -597,58 +615,40 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return inPrequelConstruct.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
 
 	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
 		onEnter(node);
-		this.inGrammarSpec.push(true);
+		this.inOptionsSpec.push(true);
 	}
 
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
 		onExit();
-		this.inGrammarSpec.pop();
+		this.inOptionsSpec.pop();
 	}
 
-	public boolean inGrammarSpec() {
-      return inGrammarSpec.isEmpty(); 
+	public boolean inOptionsSpec() {
+      return inOptionsSpec.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLexerRuleSpec = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
 
 	@Override
-	public void enterLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerRuleSpec"), "text", arg.getText());
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
 		onEnter(node);
-		this.inLexerRuleSpec.push(true);
+		this.inOption.push(true);
 	}
 
-	public void exitLexerRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleSpecContext arg) {
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
 		onExit();
-		this.inLexerRuleSpec.pop();
+		this.inOption.pop();
 	}
 
-	public boolean inLexerRuleSpec() {
-      return inLexerRuleSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerRuleBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerRuleBlock"), "text", arg.getText());
-		onEnter(node);
-		this.inLexerRuleBlock.push(true);
-	}
-
-	public void exitLexerRuleBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerRuleBlockContext arg) {
-		onExit();
-		this.inLexerRuleBlock.pop();
-	}
-
-	public boolean inLexerRuleBlock() {
-      return inLexerRuleBlock.isEmpty(); 
+	public boolean inOption() {
+      return inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
