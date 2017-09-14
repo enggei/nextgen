@@ -48,6 +48,16 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
+		System.out.println("Keyword");
+		final Node node = model.findOrCreate(Label.label("Keyword"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
 		System.out.println("Literal");
 		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
@@ -58,9 +68,19 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
-		System.out.println("Keyword");
-		final Node node = model.findOrCreate(Label.label("Keyword"), "text", arg.getText());
+	public Node visitPostDecreaseExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PostDecreaseExpressionContext arg) {
+		System.out.println("PostDecreaseExpression");
+		final Node node = model.findOrCreate(Label.label("PostDecreaseExpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
+		System.out.println("Getter");
+		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -91,6 +111,16 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
 		System.out.println("SourceElement");
 		final Node node = model.findOrCreate(Label.label("SourceElement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		System.out.println("Initialiser");
+		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -131,16 +161,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
 		System.out.println("VariableDeclaration");
 		final Node node = model.findOrCreate(Label.label("VariableDeclaration"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		System.out.println("Initialiser");
-		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -658,16 +678,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
-		System.out.println("Getter");
-		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitUnaryMinusExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.UnaryMinusExpressionContext arg) {
 		System.out.println("UnaryMinusExpression");
 		final Node node = model.findOrCreate(Label.label("UnaryMinusExpression"), "text", arg.getText());
@@ -681,16 +691,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitAssignmentExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentExpressionContext arg) {
 		System.out.println("AssignmentExpression");
 		final Node node = model.findOrCreate(Label.label("AssignmentExpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPostDecreaseExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PostDecreaseExpressionContext arg) {
-		System.out.println("PostDecreaseExpression");
-		final Node node = model.findOrCreate(Label.label("PostDecreaseExpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

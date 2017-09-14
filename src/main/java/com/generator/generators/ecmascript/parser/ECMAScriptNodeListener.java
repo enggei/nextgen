@@ -114,23 +114,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return inKeyword.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
-		this.inProgram.push(true);
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram.pop();
-	}
-
-	public boolean inProgram() {
-      return inProgram.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
 
 	@Override
@@ -843,6 +826,23 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inPropertySetter() {
       return inPropertySetter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onEnter(new Node("Program", arg.getText(), arg.getStart().getText()));
+		this.inProgram.push(true);
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram.pop();
+	}
+
+	public boolean inProgram() {
+      return inProgram.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();

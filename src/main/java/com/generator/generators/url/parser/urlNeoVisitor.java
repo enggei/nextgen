@@ -48,9 +48,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		System.out.println("Uri");
-		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
+	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		System.out.println("Scheme");
+		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +58,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		System.out.println("Scheme");
-		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		System.out.println("Uri");
+		final Node node = model.findOrCreate(Label.label("Uri"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

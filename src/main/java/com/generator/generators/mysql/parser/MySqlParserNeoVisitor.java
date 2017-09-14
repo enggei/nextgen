@@ -38,9 +38,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTblOptDefCollate(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCollateContext arg) {
-		System.out.println("TblOptDefCollate");
-		final Node node = model.findOrCreate(Label.label("TblOptDefCollate"), "text", arg.getText());
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		System.out.println("Sql_statements");
+		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -48,9 +48,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTblOptCompr(com.generator.generators.mysql.parser.MySqlParser.TblOptComprContext arg) {
-		System.out.println("TblOptCompr");
-		final Node node = model.findOrCreate(Label.label("TblOptCompr"), "text", arg.getText());
+	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		System.out.println("Create_view");
+		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -68,9 +68,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		System.out.println("Sql_statements");
-		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		System.out.println("Sql_statement");
+		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -78,9 +78,9 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		System.out.println("Sql_statement");
-		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
+	public Node visitTblOptCompr(com.generator.generators.mysql.parser.MySqlParser.TblOptComprContext arg) {
+		System.out.println("TblOptCompr");
+		final Node node = model.findOrCreate(Label.label("TblOptCompr"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -301,16 +301,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
 		System.out.println("Create_trigger");
 		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		System.out.println("Create_view");
-		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -771,6 +761,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitTblOptChkSum(com.generator.generators.mysql.parser.MySqlParser.TblOptChkSumContext arg) {
 		System.out.println("TblOptChkSum");
 		final Node node = model.findOrCreate(Label.label("TblOptChkSum"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTblOptDefCollate(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCollateContext arg) {
+		System.out.println("TblOptDefCollate");
+		final Node node = model.findOrCreate(Label.label("TblOptDefCollate"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

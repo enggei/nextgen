@@ -68,36 +68,6 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		System.out.println("PackageName");
-		final Node node = model.findOrCreate(Label.label("PackageName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
-		System.out.println("Imports");
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
-		System.out.println("Message");
-		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
 		System.out.println("EnumName");
 		final Node node = model.findOrCreate(Label.label("EnumName"), "text", arg.getText());
@@ -161,6 +131,36 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	public Node visitExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
 		System.out.println("ExtensionMax");
 		final Node node = model.findOrCreate(Label.label("ExtensionMax"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
+		System.out.println("PackageName");
+		final Node node = model.findOrCreate(Label.label("PackageName"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
+		System.out.println("Imports");
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
+		System.out.println("Message");
+		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

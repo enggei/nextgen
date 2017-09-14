@@ -17,7 +17,7 @@ import java.io.IOException;
 public class Tests {
 
    @Test
-   public void testCss() throws IOException {
+   public void testParser() throws IOException {
       final GolangNodeListener listener = new GolangNodeListener(true);
       new ParseTreeWalker().walk(listener, new GolangParser(new CommonTokenStream(new GolangLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/go/Test.go")))).sourceFile());
    }

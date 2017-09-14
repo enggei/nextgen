@@ -93,24 +93,6 @@ public class css3NeoListener extends css3BaseListener {
       return inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText());
-		onEnter(node);
-		this.inGoodImport.push(true);
-	}
-
-	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		onExit();
-		this.inGoodImport.pop();
-	}
-
-	public boolean inGoodImport() {
-      return inGoodImport.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
 
 	@Override
@@ -163,6 +145,24 @@ public class css3NeoListener extends css3BaseListener {
 
 	public boolean inBadCharset() {
       return inBadCharset.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText());
+		onEnter(node);
+		this.inGoodImport.push(true);
+	}
+
+	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		onExit();
+		this.inGoodImport.pop();
+	}
+
+	public boolean inGoodImport() {
+      return inGoodImport.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();

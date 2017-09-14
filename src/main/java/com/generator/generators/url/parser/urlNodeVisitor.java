@@ -63,8 +63,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		final Node node = new Node("Uri", arg.getText());
+	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		final Node node = new Node("Scheme", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		final Node node = new Node("Scheme", arg.getText());
+	public Node visitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		final Node node = new Node("Uri", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
