@@ -723,7 +723,7 @@ public final class TemplateGroupGroup {
 		out.close();
    }
 
-	public static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
 			.append("stgBuilder(appends,delimiter) ::= <<private static final String stg = new StringBuilder(\"delimiters \\\"~delimiter~\\\", \\\"~delimiter~\\\"\\\\n\")\n" + 
@@ -972,7 +972,7 @@ public final class TemplateGroupGroup {
 		"}>>\n")
 			.append("template(content,name,params) ::= <<~name~(~params:{it|~it~};separator=\",\"~) ::= <<~content~~eot()~>>\n")
 			.append("eot() ::= <<~gt()~~gt()~>>\n")
-			.append("stg(delimiter,templates) ::= <<delimiters \"~delimiter~\" \"~delimiter~\"\n" + 
+			.append("stg(delimiter,templates) ::= <<delimiters \"~delimiter~\", \"~delimiter~\"\n" + 
 		"\n" + 
 		"~templates:{it|~it~};separator=\"\\n\"~>>\n")
 		.toString();

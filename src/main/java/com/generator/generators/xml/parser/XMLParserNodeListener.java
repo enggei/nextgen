@@ -80,23 +80,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
       return inAttribute.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inReference = new java.util.Stack<>();
-
-	@Override
-	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText()));
-		this.inReference.push(true);
-	}
-
-	public void exitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		onExit();
-		this.inReference.pop();
-	}
-
-	public boolean inReference() {
-      return inReference.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
 
 	@Override
@@ -146,6 +129,23 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	public boolean inContent() {
       return inContent.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReference = new java.util.Stack<>();
+
+	@Override
+	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
+		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText()));
+		this.inReference.push(true);
+	}
+
+	public void exitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
+		onExit();
+		this.inReference.pop();
+	}
+
+	public boolean inReference() {
+      return inReference.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChardata = new java.util.Stack<>();

@@ -1,4 +1,4 @@
-package com.generator.generators.java;
+package com.generator.util;
 
 import javax.tools.*;
 import java.io.ByteArrayOutputStream;
@@ -15,11 +15,11 @@ import java.util.Locale;
 /**
  * Created 11.09.17.
  */
-public class SourceToInstanceGenerator {
+public class CompilerUtil {
 
    private final JavaCompiler compiler;
 
-   public SourceToInstanceGenerator() {
+   public CompilerUtil() {
       // todo add classpath
       this.compiler = ToolProvider.getSystemJavaCompiler();
    }
@@ -51,6 +51,14 @@ public class SourceToInstanceGenerator {
       }
 
       return null;
+   }
+
+   public static void printDiagnostics(DiagnosticCollector<JavaFileObject> diagnostics) {
+      for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
+         System.out.println("diagnostic.getCode() = " + diagnostic.getCode());
+         System.out.println("diagnostic.getKind().name() = " + diagnostic.getKind().name());
+         System.out.println("diagnostic.getLineNumber() = " + diagnostic.getLineNumber());
+      }
    }
 
    private static final class CharSequenceJavaFileObject extends SimpleJavaFileObject {

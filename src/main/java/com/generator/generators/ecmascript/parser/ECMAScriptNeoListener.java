@@ -57,24 +57,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -109,6 +91,42 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return inKeyword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
+		onEnter(node);
+		this.inProgram.push(true);
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram.pop();
+	}
+
+	public boolean inProgram() {
+      return inProgram.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
@@ -865,24 +883,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inPropertySetter() {
       return inPropertySetter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
-		onEnter(node);
-		this.inProgram.push(true);
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram.pop();
-	}
-
-	public boolean inProgram() {
-      return inProgram.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();

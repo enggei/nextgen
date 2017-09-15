@@ -93,24 +93,6 @@ public class ProtobufNeoListener extends ProtobufBaseListener {
       return inPropertyName.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
-		onEnter(node);
-		this.inPackageDecl.push(true);
-	}
-
-	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onExit();
-		this.inPackageDecl.pop();
-	}
-
-	public boolean inPackageDecl() {
-      return inPackageDecl.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
 
 	@Override
@@ -127,6 +109,24 @@ public class ProtobufNeoListener extends ProtobufBaseListener {
 
 	public boolean inDefaultValue() {
       return inDefaultValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
+		onEnter(node);
+		this.inPackageDecl.push(true);
+	}
+
+	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		onExit();
+		this.inPackageDecl.pop();
+	}
+
+	public boolean inPackageDecl() {
+      return inPackageDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageName = new java.util.Stack<>();

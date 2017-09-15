@@ -5,6 +5,7 @@ import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNodeListener;
 import com.generator.util.ClasspathUtil;
+import com.generator.util.CompilerUtil;
 import com.generator.util.FileUtil;
 import com.generator.util.Reflect;
 import org.antlr.v4.runtime.CharStreams;
@@ -81,7 +82,7 @@ public class Tests {
             addLexicalValue("name").
             addLexicalValue("yolo");
 
-      final Object instance = new SourceToInstanceGenerator().newInstance("com.test.Hello", pojoST, new DiagnosticCollector<>());
+      final Object instance = new CompilerUtil().newInstance("com.test.Hello", pojoST, new DiagnosticCollector<>());
       System.out.println("instance " + instance.toString());
 
       final Reflect pojoInstance = Reflect.on(instance);

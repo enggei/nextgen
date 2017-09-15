@@ -80,125 +80,6 @@ public class urlNodeListener extends urlBaseListener {
       return inUrl.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
-
-	@Override
-	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText()));
-		this.inUri.push(true);
-	}
-
-	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onExit();
-		this.inUri.pop();
-	}
-
-	public boolean inUri() {
-      return inUri.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
-
-	@Override
-	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText()));
-		this.inScheme.push(true);
-	}
-
-	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onExit();
-		this.inScheme.pop();
-	}
-
-	public boolean inScheme() {
-      return inScheme.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
-
-	@Override
-	public void enterHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		onEnter(new Node("Host", arg.getText(), arg.getStart().getText()));
-		this.inHost.push(true);
-	}
-
-	public void exitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		onExit();
-		this.inHost.pop();
-	}
-
-	public boolean inHost() {
-      return inHost.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inHostname = new java.util.Stack<>();
-
-	@Override
-	public void enterHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		onEnter(new Node("Hostname", arg.getText(), arg.getStart().getText()));
-		this.inHostname.push(true);
-	}
-
-	public void exitHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		onExit();
-		this.inHostname.pop();
-	}
-
-	public boolean inHostname() {
-      return inHostname.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inHostnumber = new java.util.Stack<>();
-
-	@Override
-	public void enterHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		onEnter(new Node("Hostnumber", arg.getText(), arg.getStart().getText()));
-		this.inHostnumber.push(true);
-	}
-
-	public void exitHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		onExit();
-		this.inHostnumber.pop();
-	}
-
-	public boolean inHostnumber() {
-      return inHostnumber.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPort = new java.util.Stack<>();
-
-	@Override
-	public void enterPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		onEnter(new Node("Port", arg.getText(), arg.getStart().getText()));
-		this.inPort.push(true);
-	}
-
-	public void exitPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		onExit();
-		this.inPort.pop();
-	}
-
-	public boolean inPort() {
-      return inPort.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPath = new java.util.Stack<>();
-
-	@Override
-	public void enterPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		onEnter(new Node("Path", arg.getText(), arg.getStart().getText()));
-		this.inPath.push(true);
-	}
-
-	public void exitPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		onExit();
-		this.inPath.pop();
-	}
-
-	public boolean inPath() {
-      return inPath.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inUser = new java.util.Stack<>();
 
 	@Override
@@ -316,6 +197,125 @@ public class urlNodeListener extends urlBaseListener {
 
 	public boolean inSearchparameter() {
       return inSearchparameter.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
+
+	@Override
+	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText()));
+		this.inUri.push(true);
+	}
+
+	public void exitUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
+		onExit();
+		this.inUri.pop();
+	}
+
+	public boolean inUri() {
+      return inUri.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
+
+	@Override
+	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText()));
+		this.inScheme.push(true);
+	}
+
+	public void exitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
+		onExit();
+		this.inScheme.pop();
+	}
+
+	public boolean inScheme() {
+      return inScheme.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
+
+	@Override
+	public void enterHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
+		onEnter(new Node("Host", arg.getText(), arg.getStart().getText()));
+		this.inHost.push(true);
+	}
+
+	public void exitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
+		onExit();
+		this.inHost.pop();
+	}
+
+	public boolean inHost() {
+      return inHost.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHostname = new java.util.Stack<>();
+
+	@Override
+	public void enterHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
+		onEnter(new Node("Hostname", arg.getText(), arg.getStart().getText()));
+		this.inHostname.push(true);
+	}
+
+	public void exitHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
+		onExit();
+		this.inHostname.pop();
+	}
+
+	public boolean inHostname() {
+      return inHostname.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHostnumber = new java.util.Stack<>();
+
+	@Override
+	public void enterHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
+		onEnter(new Node("Hostnumber", arg.getText(), arg.getStart().getText()));
+		this.inHostnumber.push(true);
+	}
+
+	public void exitHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
+		onExit();
+		this.inHostnumber.pop();
+	}
+
+	public boolean inHostnumber() {
+      return inHostnumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPort = new java.util.Stack<>();
+
+	@Override
+	public void enterPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
+		onEnter(new Node("Port", arg.getText(), arg.getStart().getText()));
+		this.inPort.push(true);
+	}
+
+	public void exitPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
+		onExit();
+		this.inPort.pop();
+	}
+
+	public boolean inPort() {
+      return inPort.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPath = new java.util.Stack<>();
+
+	@Override
+	public void enterPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
+		onEnter(new Node("Path", arg.getText(), arg.getStart().getText()));
+		this.inPath.push(true);
+	}
+
+	public void exitPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
+		onExit();
+		this.inPath.pop();
+	}
+
+	public boolean inPath() {
+      return inPath.isEmpty(); 
    }
 
 }

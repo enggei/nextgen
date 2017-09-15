@@ -1,11 +1,12 @@
 package com.generator.generators.stringtemplate;
 
+import com.generator.generators.stringtemplate.parserg4.*;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
-import org.stringtemplate.v4.STGroupString;
 
 import java.io.IOException;
-
-import static com.generator.generators.stringtemplate.StringTemplatePlugin.escape;
 
 /**
  * Created 07.09.17.
@@ -13,74 +14,60 @@ import static com.generator.generators.stringtemplate.StringTemplatePlugin.escap
 public class Tests {
 
    @Test
-   public void testTemplateGroupGroup() {
+   public void testTemplateGroupGroup() throws IOException {
 
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
-
-      // must close template with >> because of stringtemplate-issue
+      // create an STG-document, using TemplateGroupGroup
+      final TemplateGroupGroup.templateST templateST = templateGroupGroup.newtemplate().
+            setName("enum").
+            addParamsValue("comments").
+            addParamsValue("name").
+            addParamsValue("properties").
+            setContent("~if(comments)~\n" +
+                  "//~comments~\n" +
+                  "~endif~\n" +
+                  "enum ~name~ {\n" +
+                  "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
+                  "}");
       final TemplateGroupGroup.stgST x = templateGroupGroup.newstg().
             setDelimiter("~").
-            addTemplatesValue(templateGroupGroup.newtemplate().
-                  setName("enum").
-                  addParamsValue("comments").
-                  addParamsValue("name").
-                  addParamsValue("properties").setContent("~if(comments)~\n" +
-                  "//~comments~\n" +
-                  "~endif~\n" +
-                  "enum ~name~ {\n" +
-                  "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
-                  "}"));
+            addTemplatesValue(templateST);
       System.out.println(x);
-
-      final TemplateGroupGroup tmp = new TemplateGroupGroup(new STGroupString(TemplateGroupGroup.stg));
-      final TemplateGroupGroup.stgST y = tmp.newstg().
-            setDelimiter("~").
-            addTemplatesValue(templateGroupGroup.newtemplate().
-                  setName("enum").
-                  addParamsValue("comments").
-                  addParamsValue("name").
-                  addParamsValue("properties").setContent("~if(comments)~\n" +
-                  "//~comments~\n" +
-                  "~endif~\n" +
-                  "enum ~name~ {\n" +
-                  "\t~properties:{it|~it;format=\"humpToCap\"~ = ~i~;}; separator=\"\\n\"~\n" +
-                  "}"));
-
-      System.out.println(y);
-
-      if(!x.equals(y)) {
-         System.out.println("Error");
-      }
-
    }
 
    @Test
    public void teSTGParser() throws IOException {
 
       // todo STGParser from g4 grammars not working... why ?
+      final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
-      final String[] filenames = new String[]{
-            "/home/goe/projects/nextgen/src/main/java/com/generator/generators/cypher/cypher.stg",
-      };
+      final TemplateGroupGroup.stgST stgST = templateGroupGroup.newstg().
+            setDelimiter("~").
+            addTemplatesValue(templateGroupGroup.newtemplate().
+                  setName("hello").
+                  setContent("Hello ~name~!").
+                  addParamsValue("name"));
+      System.out.println(stgST);
 
-//      for (String fileName : filenames) {
-////         final STGParser parserg4 = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromFileName(fileName, Charset.forName("UTF-8")))));
-//         final STGParser parser = new STGParser(new CommonTokenStream(new STLexer(CharStreams.fromString("delimiters \"~\",\"~\"\n" +
-//               "\n" +
-//               "eom() ::= <<}>>"))));
-//
-//         final STGBaseListener listener = new STGBaseListener();
-//         new ParseTreeWalker().walk(listener, parser.group());
-//
-//         visitAll("", listener.getRoot());
-//      }
+      final STGParser parser = new STGParser(new CommonTokenStream(new STGLexer(CharStreams.fromString(stgST.toString()))));
+      final STGParserBaseListener listener = new STGParserBaseListener();
+      new ParseTreeWalker().walk(listener, parser.group());
    }
 
-//   private void visitAll(String delim, STGBaseListener.Node node) {
-//      System.out.println(delim + node.name + " (" + node.startToken + ")");
-//      for (STGBaseListener.Node child : node.children) {
-//         visitAll(delim + "\t", child);
-//      }
-//   }
+   @Test
+   public void testSTParser() throws IOException {
+
+      final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
+
+      final TemplateGroupGroup.templateST templateST = templateGroupGroup.newtemplate().
+            setName("hello").
+            setContent(" Hello ~name~! ").
+            addParamsValue("name");
+      System.out.println(templateST);
+
+      final STParser parser = new STParser(new CommonTokenStream(new STLexer(CharStreams.fromString(templateST.toString()))));
+      final STParserBaseListener listener = new STParserBaseListener();
+      new ParseTreeWalker().walk(listener, parser.template());
+   }
 }

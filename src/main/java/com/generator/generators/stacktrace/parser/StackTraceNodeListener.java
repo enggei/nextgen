@@ -80,23 +80,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inClassName.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
-
-	@Override
-	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		onEnter(new Node("Message", arg.getText(), arg.getStart().getText()));
-		this.inMessage.push(true);
-	}
-
-	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		onExit();
-		this.inMessage.pop();
-	}
-
-	public boolean inMessage() {
-      return inMessage.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
 
 	@Override
@@ -112,6 +95,23 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inStartRule() {
       return inStartRule.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
+
+	@Override
+	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		onEnter(new Node("Message", arg.getText(), arg.getStart().getText()));
+		this.inMessage.push(true);
+	}
+
+	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		onExit();
+		this.inMessage.pop();
+	}
+
+	public boolean inMessage() {
+      return inMessage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();
@@ -233,23 +233,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inQualifiedClass.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
-
-	@Override
-	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		onEnter(new Node("ClassFile", arg.getText(), arg.getStart().getText()));
-		this.inClassFile.push(true);
-	}
-
-	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		onExit();
-		this.inClassFile.pop();
-	}
-
-	public boolean inClassFile() {
-      return inClassFile.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
 
 	@Override
@@ -265,6 +248,23 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inInnerClassName() {
       return inInnerClassName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
+
+	@Override
+	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		onEnter(new Node("ClassFile", arg.getText(), arg.getStart().getText()));
+		this.inClassFile.push(true);
+	}
+
+	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		onExit();
+		this.inClassFile.pop();
+	}
+
+	public boolean inClassFile() {
+      return inClassFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedMethod = new java.util.Stack<>();

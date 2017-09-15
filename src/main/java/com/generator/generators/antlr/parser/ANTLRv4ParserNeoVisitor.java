@@ -28,39 +28,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		System.out.println("ArgActionBlock");
-		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		System.out.println("ModeSpec");
-		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		System.out.println("GrammarType");
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+	public Node visitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
+		System.out.println("RuleReturns");
+		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -188,6 +158,46 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		System.out.println("ModeSpec");
+		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		System.out.println("GrammarType");
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
+		System.out.println("ArgActionBlock");
+		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
 		System.out.println("Rules");
 		final Node node = model.findOrCreate(Label.label("Rules"), "text", arg.getText());
@@ -251,16 +261,6 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	public Node visitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
 		System.out.println("RulePrequel");
 		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		System.out.println("RuleReturns");
-		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

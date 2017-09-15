@@ -5,6 +5,7 @@ import com.generator.NeoModel;
 import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.util.CompilerUtil;
 import com.generator.util.Reflect;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -70,7 +71,7 @@ public class JavaPlugin extends DomainPlugin {
                   addLexicalValue("name");
 
             // compile source and create instance :
-            final Object instance = new SourceToInstanceGenerator().newInstance(packageName + "." + name, pojoST, new DiagnosticCollector<>());
+            final Object instance = new CompilerUtil().newInstance(packageName + "." + name, pojoST, new DiagnosticCollector<>());
 
             // create Object-node for this instance, and use uuid for key in instance-map
             final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
@@ -103,14 +104,9 @@ public class JavaPlugin extends DomainPlugin {
 
                   // compile source and create instance :
                   final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-                  final Object instance = new SourceToInstanceGenerator().newInstance(packageName + "." + name, content, diagnostics);
+                  final Object instance = new CompilerUtil().newInstance(packageName + "." + name, content, diagnostics);
                   if(instance==null) {
-
-                     for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-                        System.out.println("diagnostic.getCode() = " + diagnostic.getCode());
-                        System.out.println("diagnostic.getKind().name() = " + diagnostic.getKind().name());
-                        System.out.println("diagnostic.getLineNumber() = " + diagnostic.getLineNumber());
-                     }
+                     CompilerUtil.printDiagnostics(diagnostics);
                      return;
                   }
 

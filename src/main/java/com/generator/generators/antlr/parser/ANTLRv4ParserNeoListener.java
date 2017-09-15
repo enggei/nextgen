@@ -39,6 +39,78 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarType.push(true);
+	}
+
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		onExit();
+		this.inGrammarType.pop();
+	}
+
+	public boolean inGrammarType() {
+      return inGrammarType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
+
+	@Override
+	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
+		onEnter(node);
+		this.inPrequelConstruct.push(true);
+	}
+
+	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		onExit();
+		this.inPrequelConstruct.pop();
+	}
+
+	public boolean inPrequelConstruct() {
+      return inPrequelConstruct.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inOptionsSpec.push(true);
+	}
+
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		onExit();
+		this.inOptionsSpec.pop();
+	}
+
+	public boolean inOptionsSpec() {
+      return inOptionsSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
+		onEnter(node);
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return inOption.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
 
 	@Override
@@ -525,6 +597,24 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return inLabeledAlt.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+		onEnter(node);
+		this.inGrammarSpec.push(true);
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec.pop();
+	}
+
+	public boolean inGrammarSpec() {
+      return inGrammarSpec.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inLexerRuleSpec = new java.util.Stack<>();
 
 	@Override
@@ -559,96 +649,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inLexerRuleBlock() {
       return inLexerRuleBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarSpec.push(true);
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onExit();
-		this.inGrammarSpec.pop();
-	}
-
-	public boolean inGrammarSpec() {
-      return inGrammarSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
-		onEnter(node);
-		this.inGrammarType.push(true);
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onExit();
-		this.inGrammarType.pop();
-	}
-
-	public boolean inGrammarType() {
-      return inGrammarType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
-
-	@Override
-	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText());
-		onEnter(node);
-		this.inPrequelConstruct.push(true);
-	}
-
-	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onExit();
-		this.inPrequelConstruct.pop();
-	}
-
-	public boolean inPrequelConstruct() {
-      return inPrequelConstruct.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText());
-		onEnter(node);
-		this.inOptionsSpec.push(true);
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec.pop();
-	}
-
-	public boolean inOptionsSpec() {
-      return inOptionsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
-		onEnter(node);
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
