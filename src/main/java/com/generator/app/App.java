@@ -12,8 +12,8 @@ import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
@@ -28,10 +28,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.generator.BaseDomainVisitor.*;
 import static com.generator.app.AppEvents.*;
-import static com.generator.BaseDomainVisitor.getString;
-import static com.generator.BaseDomainVisitor.incoming;
-import static com.generator.BaseDomainVisitor.outgoing;
 
 /**
  * Created 06.07.17.
@@ -336,13 +334,13 @@ public class App extends JFrame {
          GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector("0");
 
          graph = new NeoModel(new GraphDatabaseFactory()
-            .newEmbeddedDatabaseBuilder(new File(dir))
-            .setConfig(bolt.type, "BOLT")
-            .setConfig(bolt.enabled, "true")
-            .setConfig(bolt.address, "localhost:7687")
-            .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
-            .newGraphDatabase(),
-            model -> System.out.println("graph closed"));
+               .newEmbeddedDatabaseBuilder(new File(dir))
+               .setConfig(bolt.type, "BOLT")
+               .setConfig(bolt.enabled, "true")
+               .setConfig(bolt.address, "localhost:7687")
+               .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
+               .newGraphDatabase(),
+               model -> System.out.println("graph closed"));
 
          graph.getGraphDb().registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
 
@@ -432,8 +430,7 @@ public class App extends JFrame {
 
       void deleteNodes(Set<Node> nodes) {
 
-         transactionHistory.push(new TransactionHistory().
-               addNodes(nodes));
+         transactionHistory.push(new TransactionHistory().addNodes(nodes));
 
          for (Node node : nodes) {
             incoming(node).forEach(Relationship::delete);

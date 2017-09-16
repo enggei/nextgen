@@ -43,10 +43,10 @@ public class Tests {
       final TemplateGroupGroup templateGroupGroup = new TemplateGroupGroup();
 
       final TemplateGroupGroup.stgST stgST = templateGroupGroup.newstg().
-            setDelimiter("~").
+            setDelimiter("%").
             addTemplatesValue(templateGroupGroup.newtemplate().
                   setName("hello").
-                  setContent("Hello ~name~!").
+                  setContent("Hello %name%!").
                   addParamsValue("name"));
       System.out.println(stgST);
 
@@ -67,7 +67,7 @@ public class Tests {
       System.out.println(templateST);
 
       final STParser parser = new STParser(new CommonTokenStream(new STLexer(CharStreams.fromString(templateST.toString()))));
-      final STParserBaseListener listener = new STParserBaseListener();
+      final STParserNodeListener listener = new STParserNodeListener();
       new ParseTreeWalker().walk(listener, parser.template());
    }
 }

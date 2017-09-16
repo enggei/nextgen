@@ -1,10 +1,10 @@
 package com.generator.app;
 
-import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.BaseDomainVisitor;
 import com.generator.NeoModel;
 import com.generator.generators.cypher.CypherGroup;
+import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.SwingUtil;
 import com.google.common.util.concurrent.AtomicDouble;
 import org.neo4j.graphdb.*;
@@ -34,9 +34,9 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.generator.app.AppEvents.*;
 import static com.generator.BaseDomainVisitor.*;
 import static com.generator.NeoModel.*;
+import static com.generator.app.AppEvents.*;
 
 /**
  * Created 18.07.17.
@@ -388,10 +388,28 @@ public final class Workspace extends JPanel {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               if (SwingUtil.showConfirmDialog(app, "Delete " + selectedNodes.size() + " node" + (selectedNodes.size() == 1 ? "" : "s") + " and their relations ?")) {
+
                                  final Set<Node> nodes = new LinkedHashSet<>();
                                  for (NodeCanvas.NeoNode selectedNode : selectedNodes)
                                     nodes.add(selectedNode.getNode());
-                                 app.model.deleteNodes(nodes);
+
+                                 final Set<Workspace.NodeCanvas.NeoNode> allNodes = nodeCanvas.getAllNodes();
+                                 final Set<Node> visibleNodes = new LinkedHashSet<>();
+                                 for (Workspace.NodeCanvas.NeoNode neoNode : allNodes)
+                                    visibleNodes.add(neoNode.getNode());
+
+                                 // check if there are dependent nodes in graph (which are not currently visible) which are dependent on the nodes to delete:
+                                 final Set<Node> dependentNodes = new LinkedHashSet<>();
+                                 for (Node node : nodes) {
+                                    incoming(node).forEach(relationship -> {
+                                       final Node other = BaseDomainVisitor.other(node, relationship);
+                                       if (visibleNodes.contains(other)) return;
+                                       dependentNodes.add(other);
+                                    });
+                                 }
+
+                                 if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
+                                    app.model.deleteNodes(nodes);
                               }
                            }
                         });
