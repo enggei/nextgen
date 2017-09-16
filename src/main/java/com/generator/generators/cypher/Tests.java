@@ -1,6 +1,7 @@
 package com.generator.generators.cypher;
 
 import com.generator.NeoModel;
+import com.generator.ProjectConstants;
 import com.generator.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -242,7 +243,7 @@ public class Tests {
             " (`Mary`)-[:HAS_ACCOUNT]->(`account12`)");
       cypherCommands.add(employeeAccountRelations.toString());
 
-      final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File("/home/goe/projects/nextgen/src/test/db"));
+      final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File(ProjectConstants.TEST_ROOT + "/db"));
       NeoModel model = new NeoModel(db);
 
       // run once in clean db:

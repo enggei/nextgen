@@ -1,5 +1,6 @@
 package com.generator.generators.csv;
 
+import com.generator.ProjectConstants;
 import com.generator.generators.csv.parser.CSVLexer;
 import com.generator.generators.csv.parser.CSVNodeListener;
 import com.generator.generators.csv.parser.CSVParser;
@@ -17,7 +18,7 @@ public class Tests {
 
    @Test
    public void testParser() throws IOException {
-      final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/csv/test.csv"))));
+      final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT+"csv/test.csv"))));
       final CSVNodeListener listener = new CSVNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.csvFile());
    }

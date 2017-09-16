@@ -1,19 +1,23 @@
 delimiters "~", "~"
 eom() ::= <<}>>
 gt() ::= ">"
-Bean(eqha,lexical,name,package,properties) ::= <<package ~package~;
+Bean(eqha,lexical,name,package,properties,methods,scope) ::= <<~if(package)~package ~package~;
+~endif~
+~if(scope)~~scope~~else~public~endif~ class ~name~ {
+~if(properties)~
 
-public class ~name~ {
+	~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
 
-   ~properties:{it|private ~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator="\n"~
-
+~endif~
 	public ~name~() {
 	}
+~if(properties)~
 
 	public ~name~(~properties:{it|~it.type~ ~it.name~};separator=","~) {
 		~properties:{it|this.~it.name~ = ~it.name~;};separator="\n"~
 	}
 
+~endif~
 ~properties:{it|
 	public ~it.type~ get~it.name;format="capitalize"~() {
 		return ~it.name~;
@@ -23,6 +27,10 @@ public class ~name~ {
    	this.~it.name~ = ~it.name~;
 	~eom()~
 };separator="\n"~
+~if(methods)~
+	~methods:{it|~it~};separator="\n\n"~
+
+~endif~
 ~if(eqha)~
 	@Override
 	public boolean equals(Object o) {

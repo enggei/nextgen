@@ -14,7 +14,7 @@ public class Tests {
 
    @Test
    public void testXMLParser() throws IOException {
-      final XMLParser parser = new XMLParser(new CommonTokenStream(new XMLLexer(CharStreams.fromFileName("/home/goe/projects/nextgen/pom.xml"))));
+      final XMLParser parser = new XMLParser(new CommonTokenStream(new XMLLexer(CharStreams.fromFileName("pom.xml"))));
 
       final XMLParserNodeListener listener = new XMLParserNodeListener();
       new ParseTreeWalker().walk(listener, parser.document());

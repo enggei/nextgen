@@ -1,5 +1,6 @@
 package com.generator.generators.java;
 
+import com.generator.ProjectConstants;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
@@ -149,12 +150,12 @@ public class Tests {
    @Test
    public void writeSTG() throws IOException {
 
-      JavaGroup.toSTGFile(new File("/home/goe/projects/nextgen/src/main/java/com/generator/generators/java"));
+      JavaGroup.toSTGFile(new File(ProjectConstants.GENERATORS_ROOT+"java"));
    }
 
    @Test
    public void testParseJava() throws IOException {
-      for (File file : FileUtil.findAllFilesWhichEndsWith("/home/goe/projects/nextgen/src/main/java", ".java")) {
+      for (File file : FileUtil.findAllFilesWhichEndsWith(ProjectConstants.MAIN_ROOT, ".java")) {
          System.out.println(file.getAbsolutePath());
          parseFile(file);
       }
