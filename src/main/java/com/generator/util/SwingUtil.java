@@ -148,7 +148,7 @@ public class SwingUtil {
       panel.add(content, BorderLayout.CENTER);
 
       if (modal)
-         showDialog(txtEditor, parentComponent, "Text", null, true);
+         showDialog(content, parentComponent, "Text", null, true);
       else
          JOptionPane.showMessageDialog(parentComponent, panel, "Text", JOptionPane.INFORMATION_MESSAGE);
    }

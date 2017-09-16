@@ -148,7 +148,7 @@ public class EasyFlowPlugin extends DomainPlugin {
       final String javaClass = new JavaGenerator(new EasyFlowGroup()).visitFlow(node, packageName);
 
       try {
-         GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, name).write(javaClass);
+         GeneratedFile.newJavaFile(targetDir.getPath(), packageName, name).write(javaClass);
       } catch (IOException ex) {
          ex.printStackTrace();
       }

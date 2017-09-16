@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.BaseDomainVisitor.*;
@@ -289,15 +290,22 @@ public class DomainPlugin extends Plugin {
          if (hasLabel(instanceNode, Entities.Entity)) {
 
             if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
-               incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render", app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
-                     renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
+               incoming(node, ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> {
+                  final Node directoryNode = other(neoNode.getNode(), rendererRelationship);
+                  if (directoryNode != null) {
+                     final File directory = ProjectPlugin.getFile(directoryNode);
+                     if (directory != null && directory.exists()) {
+                        pop.add(new App.TransactionAction("Render to " + DomainMotif.getPropertyValue(directoryNode, AppMotif.Properties.name.name()), app) {
+                           @Override
+                           protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                              final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));
+                              renderToFile(rendererRelationship, node, content, other(node, rendererRelationship), app);
+                           }
+                        });
+                     }
                   }
-               }));
+               });
             }
-
 
             final JMenu referenceMenu = new JMenu(getNameAndLabelsFrom(instanceNode));
 

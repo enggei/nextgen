@@ -36,7 +36,7 @@ import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
  */
 public class ProjectPlugin extends DomainPlugin {
 
-   enum Entities implements Label {
+   public enum Entities implements Label {
       Project, Directory
    }
 
@@ -275,8 +275,8 @@ public class ProjectPlugin extends DomainPlugin {
                               rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
 
                            } else if (radPlainFile.isSelected()) {
-                              if (txtPlainFileExtension.getText().trim().length() == 0)
-                                 throw new IllegalStateException("file must have an extension");
+//                              if (txtPlainFileExtension.getText().trim().length() == 0)
+//                                 throw new IllegalStateException("file must have an extension");
                               if (txtFilename.getText().trim().length() == 0)
                                  throw new IllegalStateException("file must be set");
 //                                 if (txtPlainFileDir.getText().trim().length() == 0)
@@ -385,7 +385,7 @@ public class ProjectPlugin extends DomainPlugin {
             case java: {
                final String packageName = getPropertyValue(statementNode, getString(rendererRelationship, "package"));
                final String className = getPropertyValue(statementNode, getString(rendererRelationship, Properties.className.name()));
-               GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, className).write(content);
+               GeneratedFile.newJavaFile(targetDir.getPath(), packageName, className).write(content);
                break;
             }
 
@@ -393,7 +393,7 @@ public class ProjectPlugin extends DomainPlugin {
                final String dir = getString(rendererRelationship, Properties.dir.name());
                final String filename = getString(rendererRelationship, Properties.file.name());
                final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension.startsWith("[.]") ? extension : ("." + extension));
+               final String fullFilename = filename + (extension==null||extension.length()==0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
                FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
                break;
             }
@@ -402,7 +402,7 @@ public class ProjectPlugin extends DomainPlugin {
                final String filename = getPropertyValue(statementNode, getString(rendererRelationship, Properties.filename.name()));
                final String dir = getString(rendererRelationship, Properties.dir.name());
                final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension.startsWith("[.]") ? extension : ("." + extension));
+               final String fullFilename = filename + (extension==null||extension.length()==0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
                FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
                break;
             }
@@ -437,11 +437,11 @@ public class ProjectPlugin extends DomainPlugin {
       }
 
       private void listDirectory(File getDir, StringBuilder out) {
-         out.append("\n").append(getDir.getAbsolutePath()).append("\n");
+         out.append("\n").append(getDir.getPath()).append("\n");
          final File[] files = getDir.listFiles();
          if (files == null) return;
          for (File file : files) {
-            if (file.isFile()) out.append(file.getAbsolutePath()).append("\n");
+            if (file.isFile()) out.append(file.getPath()).append("\n");
             else listDirectory(file, out);
          }
       }

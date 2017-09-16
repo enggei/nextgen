@@ -1,11 +1,40 @@
 package com.generator.generators.docker;
 
 import org.junit.Test;
+import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.stream.LogOutputStream;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created 15.09.17.
  */
 public class Tests {
+
+   @Test
+   public void testBuild() throws InterruptedException, TimeoutException, IOException {
+
+      final InputStream stream = new ByteArrayInputStream("bnt2st2\n" .getBytes(StandardCharsets.UTF_8.name()));
+
+      final File directory = new File("/home/goe/projects/nextgen/src/test/java");
+
+      new ProcessExecutor().
+            directory(directory).
+            command("sudo", "-S", "docker", "build", "-t", "reacttest", "-f", "Dockerfile", ".").
+            redirectOutput(new LogOutputStream() {
+               @Override
+               protected void processLine(String line) {
+                  System.out.println(line);
+               }
+            }).
+            redirectInput(stream).
+            execute();
+   }
 
    @Test
    public void testDockerGroup() {

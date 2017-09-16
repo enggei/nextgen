@@ -159,11 +159,13 @@
         </dependency>
 
         <!--process executions-->
+        <!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-exec -->
         <dependency>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>zt-exec</artifactId>
-            <version>1.9</version>
+            <version>1.10</version>
         </dependency>
+
 
         <!--ssh-->
         <dependency>

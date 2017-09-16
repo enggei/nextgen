@@ -28,6 +28,7 @@ import java.util.Set;
 
 import static com.generator.BaseDomainVisitor.*;
 import static com.generator.BaseDomainVisitor.other;
+import static com.generator.NeoModel.getNameAndLabelsFrom;
 import static com.generator.NeoModel.relate;
 
 /**
@@ -52,6 +53,15 @@ public class MavenPlugin extends DomainPlugin {
 
    @Override
    protected void addActionsTo(JMenu menu) {
+
+      final JMenu showMenu = new JMenu("Poms");
+      getGraph().findNodes(Entities.Pom).forEachRemaining(node -> showMenu.add(new App.TransactionAction("Show " + getNameAndLabelsFrom(node), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            fireNodesLoaded(true, node);
+         }
+      }));
+      menu.add(showMenu);
 
       menu.add(new AbstractAction("Import from Maven") {
          @Override
@@ -87,7 +97,7 @@ public class MavenPlugin extends DomainPlugin {
 
       if (hasLabel(neoNode.getNode(), Entities.Pom)) {
 
-         final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), ProjectPlugin.Relations.DIRECTORY));
+         final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER));
          if (directoryNode != null) {
 
             final File directory = ProjectPlugin.getFile(directoryNode);
@@ -101,7 +111,7 @@ public class MavenPlugin extends DomainPlugin {
 
                      new ProcessExecutor().
                            directory(directory).
-                           command("ls", "-ltr")
+                           command("mvn", lifecycle)
                            .redirectOutput(new LogOutputStream() {
                               @Override
                               protected void processLine(String line) {
@@ -113,12 +123,12 @@ public class MavenPlugin extends DomainPlugin {
             }
          }
 
-         pop.add(new App.TransactionAction("Add dependency", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            }
-         });
+//         pop.add(new App.TransactionAction("Add dependency", app) {
+//            @Override
+//            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//
+//            }
+//         });
       }
    }
 

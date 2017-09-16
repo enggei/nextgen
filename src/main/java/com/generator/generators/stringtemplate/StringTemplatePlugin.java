@@ -452,7 +452,7 @@ public class StringTemplatePlugin extends DomainPlugin {
       groupClassDeclaration.setStg(stgBuilderST);
 
       try {
-         GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(groupClassDeclaration);
+         GeneratedFile.newJavaFile(targetDir.getPath(), packageName, groupName).write(groupClassDeclaration);
       } catch (IOException e) {
          e.printStackTrace();
       }
