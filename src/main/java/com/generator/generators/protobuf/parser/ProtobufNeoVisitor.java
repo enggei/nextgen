@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public ProtobufNeoVisitor(com.generator.NeoModel model) {
+	public ProtobufNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -68,16 +68,6 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
-		System.out.println("EnumName");
-		final Node node = model.findOrCreate(Label.label("EnumName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
 		System.out.println("PackageDecl");
 		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
@@ -111,6 +101,16 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	public Node visitMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
 		System.out.println("Message");
 		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
+		System.out.println("EnumName");
+		final Node node = model.findOrCreate(Label.label("EnumName"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

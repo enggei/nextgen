@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public GolangNeoVisitor(com.generator.NeoModel model) {
+	public GolangNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -41,26 +41,6 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	public Node visitBlock(com.generator.generators.go.parser.GolangParser.BlockContext arg) {
 		System.out.println("Block");
 		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		System.out.println("Function");
-		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		System.out.println("Literal");
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -98,9 +78,29 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		System.out.println("Literal");
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSelector(com.generator.generators.go.parser.GolangParser.SelectorContext arg) {
 		System.out.println("Selector");
 		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		System.out.println("Function");
+		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

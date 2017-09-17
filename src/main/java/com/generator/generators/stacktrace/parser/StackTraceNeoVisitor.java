@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public StackTraceNeoVisitor(com.generator.NeoModel model) {
+	public StackTraceNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -51,6 +51,66 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
 		System.out.println("StartRule");
 		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		System.out.println("Message");
+		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
+		System.out.println("StackTrace");
+		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		System.out.println("StackTraceLine");
+		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		System.out.println("AtLine");
+		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
+		System.out.println("CausedByLine");
+		final Node node = model.findOrCreate(Label.label("CausedByLine"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
+		System.out.println("EllipsisLine");
+		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -131,66 +191,6 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
 		System.out.println("PackagePath");
 		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		System.out.println("Message");
-		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		System.out.println("StackTrace");
-		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		System.out.println("StackTraceLine");
-		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		System.out.println("AtLine");
-		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
-		System.out.println("CausedByLine");
-		final Node node = model.findOrCreate(Label.label("CausedByLine"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		System.out.println("EllipsisLine");
-		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

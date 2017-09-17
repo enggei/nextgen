@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 
 /**
  * Created 25.08.17.

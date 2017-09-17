@@ -9,9 +9,9 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.BaseDomainVisitor.incoming;
-import static com.generator.BaseDomainVisitor.other;
-import static com.generator.BaseDomainVisitor.outgoing;
+import static com.generator.neo.BaseDomainVisitor.incoming;
+import static com.generator.neo.BaseDomainVisitor.other;
+import static com.generator.neo.BaseDomainVisitor.outgoing;
 
 /**
  * Created 18.07.17.

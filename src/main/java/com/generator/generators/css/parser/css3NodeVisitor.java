@@ -54,8 +54,206 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		final Node node = new Node("ElementName", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		final Node node = new Node("Number", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
+		final Node node = new Node("TypeNamespacePrefix", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		final Node node = new Node("Stylesheet", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
 		final Node node = new Node("GoodCharset", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		final Node node = new Node("BadCharset", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		final Node node = new Node("GoodImport", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		final Node node = new Node("BadImport", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		final Node node = new Node("GoodNamespace", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
+		final Node node = new Node("BadNamespace", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
+		final Node node = new Node("NamespacePrefix", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
+		final Node node = new Node("Media", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
+		final Node node = new Node("MediaQueryList", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
+		final Node node = new Node("MediaQuery", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
+		final Node node = new Node("MediaType", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
+		final Node node = new Node("MediaExpression", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
+		final Node node = new Node("MediaFeature", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
+		final Node node = new Node("Page", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
+		final Node node = new Node("PseudoPage", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
+		final Node node = new Node("SelectorGroup", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
+		final Node node = new Node("Selector", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
+		final Node node = new Node("Combinator", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -74,24 +272,6 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
 		final Node node = new Node("TypeSelector", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		final Node node = new Node("TypeNamespacePrefix", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		final Node node = new Node("ElementName", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -459,6 +639,15 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
+		final Node node = new Node("SupportsDeclarationCondition", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGeneralEnclosed(com.generator.generators.css.parser.css3Parser.GeneralEnclosedContext arg) {
 		final Node node = new Node("GeneralEnclosed", arg.getText());
 		onEnter(node);
@@ -650,195 +839,6 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitWs(com.generator.generators.css.parser.css3Parser.WsContext arg) {
 		final Node node = new Node("Ws", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
-		final Node node = new Node("Combinator", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		final Node node = new Node("Stylesheet", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		final Node node = new Node("Number", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
-		final Node node = new Node("SupportsDeclarationCondition", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		final Node node = new Node("Media", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
-		final Node node = new Node("MediaQuery", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
-		final Node node = new Node("MediaType", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
-		final Node node = new Node("MediaExpression", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
-		final Node node = new Node("MediaFeature", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
-		final Node node = new Node("Page", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
-		final Node node = new Node("PseudoPage", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
-		final Node node = new Node("SelectorGroup", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		final Node node = new Node("Selector", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		final Node node = new Node("BadCharset", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		final Node node = new Node("GoodImport", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		final Node node = new Node("BadImport", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		final Node node = new Node("GoodNamespace", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
-		final Node node = new Node("BadNamespace", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
-		final Node node = new Node("NamespacePrefix", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
-		final Node node = new Node("MediaQueryList", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

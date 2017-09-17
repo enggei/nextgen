@@ -45,8 +45,8 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
    }
 
 	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		final Node node = new Node("Template", arg.getText());
+	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		final Node node = new Node("Imports", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -54,8 +54,8 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		final Node node = new Node("Imports", arg.getText());
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		final Node node = new Node("Template", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -4,7 +4,7 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.BaseDomainVisitor.other;
-import static com.generator.NeoModel.getNameAndLabelsFrom;
-import static com.generator.NeoModel.relate;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.other;
+import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
+import static com.generator.neo.BaseDomainVisitor.relate;
 
 /**
  * Created 03.08.17.

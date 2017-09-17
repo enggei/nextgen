@@ -2,8 +2,8 @@ package com.generator.generators.domain;
 
 import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
+import com.generator.neo.BaseDomainVisitor;
+import com.generator.neo.NeoModel;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.util.StringUtil;
@@ -16,12 +16,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.getNameAndLabelsFrom;
-import static com.generator.NeoModel.relate;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
+import static com.generator.neo.BaseDomainVisitor.relate;
 import static com.generator.generators.project.ProjectPlugin.renderToFile;
 
 /**

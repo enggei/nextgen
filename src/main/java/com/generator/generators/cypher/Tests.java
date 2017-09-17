@@ -1,7 +1,8 @@
 package com.generator.generators.cypher;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.ProjectConstants;
+import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;
@@ -244,7 +245,7 @@ public class Tests {
       cypherCommands.add(employeeAccountRelations.toString());
 
       final GraphDatabaseService db = new org.neo4j.graphdb.factory.GraphDatabaseFactory().newEmbeddedDatabase(new File(ProjectConstants.TEST_ROOT + "/db"));
-      NeoModel model = new NeoModel(db);
+      NeoModel model = new EmbeddedNeoModel(db);
 
       // run once in clean db:
       // must be batch !

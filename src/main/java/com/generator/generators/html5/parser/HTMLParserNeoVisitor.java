@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public HTMLParserNeoVisitor(com.generator.NeoModel model) {
+	public HTMLParserNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -28,9 +28,9 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		System.out.println("HtmlDocument");
-		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText());
+	public Node visitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
+		System.out.println("HtmlContent");
+		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,29 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		System.out.println("HtmlElements");
-		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
+	public Node visitHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
+		System.out.println("HtmlTagName");
+		final Node node = model.findOrCreate(Label.label("HtmlTagName"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
+		System.out.println("HtmlMisc");
+		final Node node = model.findOrCreate(Label.label("HtmlMisc"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
+		System.out.println("HtmlChardata");
+		final Node node = model.findOrCreate(Label.label("HtmlChardata"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +78,19 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		System.out.println("HtmlContent");
-		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText());
+	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
+		System.out.println("HtmlDocument");
+		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
+		System.out.println("HtmlElements");
+		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -91,36 +121,6 @@ public class HTMLParserNeoVisitor extends HTMLParserBaseVisitor<Node> {
 	public Node visitHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
 		System.out.println("HtmlAttributeValue");
 		final Node node = model.findOrCreate(Label.label("HtmlAttributeValue"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
-		System.out.println("HtmlTagName");
-		final Node node = model.findOrCreate(Label.label("HtmlTagName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
-		System.out.println("HtmlChardata");
-		final Node node = model.findOrCreate(Label.label("HtmlChardata"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
-		System.out.println("HtmlMisc");
-		final Node node = model.findOrCreate(Label.label("HtmlMisc"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

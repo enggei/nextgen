@@ -1,7 +1,7 @@
 package com.generator.generators.project;
 
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
+import com.generator.neo.BaseDomainVisitor;
+import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
@@ -24,8 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
 import static com.generator.generators.domain.DomainPlugin.Entities.Domain;

@@ -9,20 +9,20 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
-	private final com.generator.NeoModel model;
+	private final com.generator.neo.NeoModel model;
 
-	public JavaParserNeoListener(com.generator.NeoModel model) {
+	public JavaParserNeoListener(com.generator.neo.NeoModel model) {
 		this(model, false);
 	}
 
-	public JavaParserNeoListener(com.generator.NeoModel model, boolean debug) {
+	public JavaParserNeoListener(com.generator.neo.NeoModel model, boolean debug) {
 		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -55,24 +55,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inBlock() {
       return inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
@@ -109,6 +91,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inStatement() {
       return inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalParameterList = new java.util.Stack<>();

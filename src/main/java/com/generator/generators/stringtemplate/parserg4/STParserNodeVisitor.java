@@ -63,6 +63,15 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	}
 
 	@Override
+	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
+		final Node node = new Node("List", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
 		final Node node = new Node("Expr", arg.getText());
 		onEnter(node);
@@ -72,8 +81,44 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	}
 
 	@Override
-	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		final Node node = new Node("List", arg.getText());
+	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
+		final Node node = new Node("Primary", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
+		final Node node = new Node("SingleElement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
+		final Node node = new Node("CompoundElement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
+		final Node node = new Node("ExprTag", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
+		final Node node = new Node("Region", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -90,8 +135,26 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	}
 
 	@Override
-	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		final Node node = new Node("Primary", arg.getText());
+	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
+		final Node node = new Node("Elements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSubtemplate(com.generator.generators.stringtemplate.parserg4.STParser.SubtemplateContext arg) {
+		final Node node = new Node("Subtemplate", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIfstat(com.generator.generators.stringtemplate.parserg4.STParser.IfstatContext arg) {
+		final Node node = new Node("Ifstat", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -164,69 +227,6 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	@Override
 	public Node visitMapTemplateRef(com.generator.generators.stringtemplate.parserg4.STParser.MapTemplateRefContext arg) {
 		final Node node = new Node("MapTemplateRef", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		final Node node = new Node("Elements", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		final Node node = new Node("SingleElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
-		final Node node = new Node("CompoundElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		final Node node = new Node("ExprTag", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		final Node node = new Node("Region", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSubtemplate(com.generator.generators.stringtemplate.parserg4.STParser.SubtemplateContext arg) {
-		final Node node = new Node("Subtemplate", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIfstat(com.generator.generators.stringtemplate.parserg4.STParser.IfstatContext arg) {
-		final Node node = new Node("Ifstat", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.util.FormatUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;

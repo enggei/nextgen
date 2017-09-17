@@ -45,8 +45,35 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
    }
 
 	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		final Node node = new Node("Sql_statement", arg.getText());
+	public Node visitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		final Node node = new Node("NotExpression", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		final Node node = new Node("Sql_statements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReset_master(com.generator.generators.mysql.parser.MySqlParser.Reset_masterContext arg) {
+		final Node node = new Node("Reset_master", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReset_slave(com.generator.generators.mysql.parser.MySqlParser.Reset_slaveContext arg) {
+		final Node node = new Node("Reset_slave", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -63,8 +90,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		final Node node = new Node("NotExpression", arg.getText());
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		final Node node = new Node("Sql_statement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +99,8 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		final Node node = new Node("Sql_statements", arg.getText());
+	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
+		final Node node = new Node("Column_def_table_constraints", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -434,15 +461,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
 		final Node node = new Node("Server_option", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
-		final Node node = new Node("Column_def_table_constraints", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2171,24 +2189,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitPurge_binary_logs(com.generator.generators.mysql.parser.MySqlParser.Purge_binary_logsContext arg) {
 		final Node node = new Node("Purge_binary_logs", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReset_master(com.generator.generators.mysql.parser.MySqlParser.Reset_masterContext arg) {
-		final Node node = new Node("Reset_master", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReset_slave(com.generator.generators.mysql.parser.MySqlParser.Reset_slaveContext arg) {
-		final Node node = new Node("Reset_slave", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

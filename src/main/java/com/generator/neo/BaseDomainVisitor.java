@@ -1,4 +1,4 @@
-package com.generator;
+package com.generator.neo;
 
 import org.neo4j.graphdb.*;
 
@@ -10,29 +10,11 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**
  * goe on 4/23/15.
+ * todo: refactor to NeoUtil
  */
 public abstract class BaseDomainVisitor {
 
-   public static void tryToDeleteNode(Node node) throws IllegalStateException {
-
-      final UUID uuid = NeoModel.uuidOf(node);
-
-      if (node.hasRelationship(Direction.INCOMING))
-         throw new IllegalStateException(uuid + " has dependencies. Remove these first!");
-
-      System.out.println("deleting node " + uuid);
-      for (Relationship nodeRelationship : node.getRelationships(Direction.OUTGOING)) {
-         final Node other = other(node, nodeRelationship);
-         System.out.println("deleting relationship " + uuid + " -> (" + nodeRelationship.getType() + ") -> " + NeoModel.uuidOf(other));
-         nodeRelationship.delete();
-         try {
-            tryToDeleteNode(other);
-         } catch (IllegalStateException ignored) {
-            // the other node cannot be deleted, it has other dependencies
-         }
-      }
-      node.delete();
-   }
+   public static final String TAG_UUID = "_uuid";
 
    public static boolean isRelated(Node node, Node target, RelationshipType relationshipType) {
       for (Relationship relationship : outgoing(node, relationshipType))
@@ -155,5 +137,69 @@ public abstract class BaseDomainVisitor {
       for (Relationship relationship : relationships)
          relations.add(relationship);
       return relations;
+   }
+
+   static UUID uuidOf(Node node) {
+      return node == null ? null : hasUUID(node) ? UUID.fromString(node.getProperty(TAG_UUID).toString()) : null;
+   }
+
+   public static String getNameOrLabelFrom(Node node) {
+      if (node == null) return "NULL";
+      if (node.hasProperty("name") && !"".equals(node.getProperty("name").toString())) {
+         return node.getProperty("name").toString();
+      } else {
+         // if node has labels, show all
+         final StringBuilder lbl = new StringBuilder();
+         for (Label label : node.getLabels()) lbl.append(label).append(" ");
+         if (lbl.length() > 0) return lbl.toString().trim();
+         // if no labels, show uuid:
+         return hasUUID(node) ? uuidOf(node).toString() : "[" + node.getPropertyKeys() + "]";
+      }
+   }
+
+   public static String getNameAndLabelsFrom(Node node) {
+      final StringBuilder lbl = new StringBuilder();
+
+      if (node == null) {
+         lbl.append("NULL");
+      } else {
+         String name = getString(node, "name", "");
+         if (name.length() == 0) {
+            // check if there is an outgoing "name" relation and use this if it exists
+            final Node nameNode = other(node, singleOutgoing(node, RelationshipType.withName("name")));
+            name = nameNode == null ? "" : getString(nameNode, "name");
+         }
+         lbl.append(name);
+         lbl.append(name.length() == 0 ? "(" : " (");
+         for (Label label : node.getLabels()) lbl.append(label).append(" ");
+         lbl.append(")");
+      }
+      return lbl.toString();
+   }
+
+   public static String getNameOrTypeFrom(Relationship relationship) {
+      if (relationship == null) return "NULL";
+      if (relationship.hasProperty("name") && !"".equals(relationship.getProperty("name").toString())) {
+         return relationship.getProperty("name").toString();
+      } else {
+         return relationship.getType().name();
+      }
+   }
+
+   public static Object getProperty(String name, Node node, Object defaultValue) {
+      return node.hasProperty(name) ? node.getProperty(name) : defaultValue;
+   }
+
+   public static void relate(Node source, Node target, RelationshipType relationshipType) {
+      // if already related, do nothing
+      for (Relationship relationship : outgoing(source, relationshipType))
+         if (target.equals(other(source, relationship)))
+            return;
+
+      source.createRelationshipTo(target, relationshipType);
+   }
+
+   private static boolean hasUUID(Node node) {
+      return node.hasProperty(TAG_UUID);
    }
 }

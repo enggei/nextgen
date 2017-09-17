@@ -1,7 +1,8 @@
 package com.generator.app;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.generators.antlr.ANTLRPlugin;
+import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.java.JavaPlugin;
@@ -10,6 +11,7 @@ import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -28,7 +30,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 import static com.generator.app.AppEvents.*;
 
 /**
@@ -155,6 +157,7 @@ public class App extends JFrame {
                   plugins.add(new StringTemplatePlugin(App.this));
                   plugins.add(new ProjectPlugin(App.this));
                   plugins.add(new JavaPlugin(App.this));
+                  plugins.add(new DockerPlugin(App.this));
                   plugins.add(new MySQLPlugin(App.this));
                   plugins.add(new EasyFlowPlugin(App.this));
                   plugins.add(new MavenPlugin(App.this));
@@ -318,7 +321,7 @@ public class App extends JFrame {
       void closeDatabase() {
          if (graph != null) {
             if (transactionEventHandler != null)
-               graph.getGraphDb().unregisterTransactionEventHandler(transactionEventHandler);
+               graph.unregisterTransactionEventHandler(transactionEventHandler);
             graph.close();
          }
       }
@@ -333,16 +336,16 @@ public class App extends JFrame {
 
          GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector("0");
 
-         graph = new NeoModel(new GraphDatabaseFactory()
+         graph = new EmbeddedNeoModel(new GraphDatabaseFactory()
                .newEmbeddedDatabaseBuilder(new File(dir))
-               .setConfig(bolt.type, "BOLT")
-               .setConfig(bolt.enabled, "true")
-               .setConfig(bolt.address, "localhost:7687")
+//               .setConfig(remote.type, "BOLT")
+//               .setConfig(remote.enabled, "true")
+//               .setConfig(remote.address, "localhost:7687")
                .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
                .newGraphDatabase(),
                model -> System.out.println("graph closed"));
 
-         graph.getGraphDb().registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
+         graph.registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
 
             private final Set<Long> deletedNodes = new LinkedHashSet<>();
             private final Set<Long> deletedRelations = new LinkedHashSet<>();
@@ -513,15 +516,15 @@ public class App extends JFrame {
 
             RelationHistory(Relationship relationship) {
 
-               if (!relationship.getEndNode().hasProperty(NeoModel.TAG_UUID) || !relationship.getStartNode().hasProperty(NeoModel.TAG_UUID)) {
+               if (!relationship.getEndNode().hasProperty(TAG_UUID) || !relationship.getStartNode().hasProperty(TAG_UUID)) {
                   source = null;
                   dst = null;
                   relationshipType = null;
                   return;
                }
 
-               this.source = relationship.getStartNode().getProperty(NeoModel.TAG_UUID).toString();
-               this.dst = relationship.getEndNode().getProperty(NeoModel.TAG_UUID).toString();
+               this.source = relationship.getStartNode().getProperty(TAG_UUID).toString();
+               this.dst = relationship.getEndNode().getProperty(TAG_UUID).toString();
                for (String s : relationship.getPropertyKeys())
                   properties.put(s, relationship.getProperty(s));
                this.relationshipType = relationship.getType().name();

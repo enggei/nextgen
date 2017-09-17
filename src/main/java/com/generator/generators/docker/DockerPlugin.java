@@ -22,8 +22,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.relate;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.relate;
 
 /**
  * Created 16.09.17.

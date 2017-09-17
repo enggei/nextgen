@@ -17,10 +17,10 @@ import java.io.IOException;
 public class Tests {
 
    @Test
-   public void testAntlrGrammarGroup() {
+   public void testAntlrGrammar() {
 
-      final ANTLRGrammarGroup group = new ANTLRGrammarGroup();
-      final ANTLRGrammarGroup.grammarST grammarST = group.newgrammar().
+      final AntlrGroup group = new AntlrGroup();
+      final AntlrGroup.grammarST grammarST = group.newgrammar().
             setName("ANTLRv4Parser");
 
       grammarST.addOptionsValue("tokenVocab", "ANTLRv4Lexer");

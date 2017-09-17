@@ -80,23 +80,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return inClassName.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
-
-	@Override
-	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText()));
-		this.inStartRule.push(true);
-	}
-
-	public void exitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		onExit();
-		this.inStartRule.pop();
-	}
-
-	public boolean inStartRule() {
-      return inStartRule.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
 
 	@Override
@@ -112,6 +95,23 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inMessage() {
       return inMessage.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
+
+	@Override
+	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText()));
+		this.inStartRule.push(true);
+	}
+
+	public void exitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		onExit();
+		this.inStartRule.pop();
+	}
+
+	public boolean inStartRule() {
+      return inStartRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();

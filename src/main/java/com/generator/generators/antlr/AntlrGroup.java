@@ -46,6 +46,10 @@ public final class AntlrGroup {
       return new NeoListenerST(stGroup);
    }
 
+   public grammarST newgrammar() {
+      return new grammarST(stGroup);
+   }
+
    public NeoVisitorST newNeoVisitor() {
       return new NeoVisitorST(stGroup);
    }
@@ -56,6 +60,14 @@ public final class AntlrGroup {
 
    public BaseNodeListenerST newBaseNodeListener() {
       return new BaseNodeListenerST(stGroup);
+   }
+
+   public ruleST newrule() {
+      return new ruleST(stGroup);
+   }
+
+   public fragmentST newfragment() {
+      return new fragmentST(stGroup);
    }
 
    public final class NeoListenerST implements AntlrGroupTemplate {
@@ -131,6 +143,83 @@ public final class AntlrGroup {
 
       public String getParser() {
       	return (String) this._parser;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class grammarST implements AntlrGroupTemplate {
+
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _options = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _rules = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _fragments = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private grammarST(STGroup group) {
+   		template = group.getInstanceOf("grammar");
+   	}
+
+      public grammarST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public grammarST addOptionsValue(Object name_, Object value_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("value", (value_ == null || value_.toString().length() == 0) ? null : value_);
+      	this._options.add(map);
+
+         template.addAggr("options.{name, value}", map.get("name"), map.get("value"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getOptions() {
+      	return this._options;
+      }
+
+      public grammarST addRulesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._rules.add(value);
+      	template.add("rules", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getRulesValues() {
+      	return this._rules;
+      }
+
+      public grammarST addFragmentsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._fragments.add(value);
+      	template.add("fragments", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getFragmentsValues() {
+      	return this._fragments;
       }
 
       @Override
@@ -382,6 +471,130 @@ public final class AntlrGroup {
    	}
    }
 
+   public final class ruleST implements AntlrGroupTemplate {
+
+      private java.util.Set<Object> _alternatives = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private ruleST(STGroup group) {
+   		template = group.getInstanceOf("rule");
+   	}
+
+      public ruleST addAlternativesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._alternatives.add(value);
+      	template.add("alternatives", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getAlternativesValues() {
+      	return this._alternatives;
+      }
+
+      public ruleST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public ruleST addCommentsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._comments.add(value);
+      	template.add("comments", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getCommentsValues() {
+      	return this._comments;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class fragmentST implements AntlrGroupTemplate {
+
+      private java.util.Set<Object> _alternatives = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
+      private Object _name;
+
+      private final ST template;
+
+      private fragmentST(STGroup group) {
+   		template = group.getInstanceOf("fragment");
+   	}
+
+      public fragmentST addAlternativesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._alternatives.add(value);
+      	template.add("alternatives", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getAlternativesValues() {
+      	return this._alternatives;
+      }
+
+      public fragmentST addCommentsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._comments.add(value);
+      	template.add("comments", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getCommentsValues() {
+      	return this._comments;
+      }
+
+      public fragmentST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
 		alreadySet.set(true);
@@ -523,20 +736,20 @@ public final class AntlrGroup {
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
 		"	protected final StringBuilder delim = new StringBuilder(\"\");\n" + 
 		"	protected final boolean debug;\n" + 
-		"	private final com.generator.NeoModel model;\n" + 
+		"	private final com.generator.neo.NeoModel model;\n" + 
 		"\n" + 
-		"	public ~name~(com.generator.NeoModel model) {\n" + 
+		"	public ~name~(com.generator.neo.NeoModel model) {\n" + 
 		"		this(model, false);\n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public ~name~(com.generator.NeoModel model, boolean debug) {\n" + 
+		"	public ~name~(com.generator.neo.NeoModel model, boolean debug) {\n" + 
 		"		this.model = model;\n" + 
 		"		this.debug = debug;\n" + 
 		"	}\n" + 
 		"\n" + 
 		"   private void onEnter(Node node) {\n" + 
 		"		if (!nodeStack.isEmpty())\n" + 
-		"      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"      	com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
 		"		if (debug) System.out.println(delim.toString() + node.getProperty(\"text\"));\n" + 
 		"		delim.append(\"\\t\");\n" + 
@@ -573,6 +786,18 @@ public final class AntlrGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
+			.append("grammar(name,options,rules,fragments) ::= <<parser grammar ~name~;\n" + 
+		"\n" + 
+		"~if(options)~\n" + 
+		"options\n" + 
+		"	~options:{it|{ ~it.name~ = ~it.value~; ~eom()~};separator=\"\\n\"~\n" + 
+		"~endif~\n" + 
+		"\n" + 
+		"~rules:{it|\n" + 
+		"~it~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"~fragments:{it|\n" + 
+		"~it~};separator=\"\\n\\n\"~>>\n")
 			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import org.neo4j.graphdb.Node;\n" + 
@@ -582,15 +807,15 @@ public final class AntlrGroup {
 		"public class ~name~ extends ~parser~BaseVisitor<Node> {\n" + 
 		"\n" + 
 		"   protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();\n" + 
-		"	protected final com.generator.NeoModel model;\n" + 
+		"	protected final com.generator.neo.NeoModel model;\n" + 
 		"\n" + 
-		"	public ~name~(com.generator.NeoModel model) {\n" + 
+		"	public ~name~(com.generator.neo.NeoModel model) {\n" + 
 		"		this.model = model;\n" + 
 		"	}\n" + 
 		"\n" + 
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty())\n" + 
-		"         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -738,5 +963,14 @@ public final class AntlrGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
+			.append("rule(alternatives,name,comments) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
+		"~name~\n" + 
+		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
+		"	;>>\n")
+			.append("fragment(alternatives,comments,name) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
+		"fragment\n" + 
+		"~name~\n" + 
+		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
+		"	;>>\n")
 		.toString();
 }

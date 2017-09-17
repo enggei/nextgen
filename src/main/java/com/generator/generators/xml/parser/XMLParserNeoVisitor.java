@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public XMLParserNeoVisitor(com.generator.NeoModel model) {
+	public XMLParserNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 

@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public STGParserNeoVisitor(com.generator.NeoModel model) {
+	public STGParserNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -28,9 +28,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		System.out.println("Template");
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
+	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		System.out.println("Imports");
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		System.out.println("Imports");
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		System.out.println("Template");
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

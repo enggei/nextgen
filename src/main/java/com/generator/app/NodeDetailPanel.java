@@ -1,7 +1,7 @@
 package com.generator.app;
 
 import com.generator.app.App.TransactionAction;
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -16,7 +16,7 @@ import java.awt.event.*;
 import java.util.*;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 
 /**
  * Created 18.07.17.
@@ -182,10 +182,10 @@ class NodeDetailPanel extends JPanel {
          final Set<String> labels = new TreeSet<>();
          switch (propertiesToShow) {
             case all:
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> labels.add(label.name()));
+               app.model.graph().getAllLabelsInUse().forEach(label -> labels.add(label.name()));
                break;
             case hasValue:
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(s -> {
+               app.model.graph().getAllLabelsInUse().forEach(s -> {
                   for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes)
                      if (hasLabel(currentNode.getNode(), s)) {
                         labels.add(s.name());
@@ -352,7 +352,7 @@ class NodeDetailPanel extends JPanel {
 
          LabelElement(Workspace.NodeCanvas.NeoNode node, java.util.List<String> labels) {
             this.node = node;
-            values.put("node", NeoModel.getNameOrLabelFrom(node.getNode()));
+            values.put("node", getNameOrLabelFrom(node.getNode()));
             boolean first = true;
             for (String label : labels) {
                if (first) {
@@ -424,10 +424,10 @@ class NodeDetailPanel extends JPanel {
          final Set<String> properties = new TreeSet<>();
          switch (propertiesToShow) {
             case all:
-               app.model.graph().getGraphDb().getAllPropertyKeys().forEach(properties::add);
+               app.model.graph().getAllPropertyKeys().forEach(properties::add);
                break;
             case hasValue:
-               app.model.graph().getGraphDb().getAllPropertyKeys().forEach(s -> {
+               app.model.graph().getAllPropertyKeys().forEach(s -> {
                   for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes)
                      if (currentNode.getNode().hasProperty(s)) {
                         properties.add(s);
@@ -610,7 +610,7 @@ class NodeDetailPanel extends JPanel {
 
          NodeElement(Workspace.NodeCanvas.NeoNode node, java.util.List<String> properties) {
             this.node = node;
-            this.name = NeoModel.getNameOrLabelFrom(node.getNode());
+            this.name = getNameOrLabelFrom(node.getNode());
             for (String property : properties)
                values.put(property, node.getNode().hasProperty(property) ? get(node.getNode(), property) : null);
          }
@@ -674,10 +674,10 @@ class NodeDetailPanel extends JPanel {
          final Set<String> properties = new TreeSet<>();
          switch (propertiesToShow) {
             case all:
-               app.model.graph().getGraphDb().getAllPropertyKeys().forEach(properties::add);
+               app.model.graph().getAllPropertyKeys().forEach(properties::add);
                break;
             case hasValue:
-               app.model.graph().getGraphDb().getAllPropertyKeys().forEach(s -> {
+               app.model.graph().getAllPropertyKeys().forEach(s -> {
                   for (Relationship element : elements) {
                      if (element.hasProperty(s)) {
                         properties.add(s);
@@ -1001,10 +1001,10 @@ class NodeDetailPanel extends JPanel {
             this.relationship = relationship;
             this.id = relationship.getId();
             this.sourceId = source.getId();
-            this.sourceName = NeoModel.getNameOrLabelFrom(source);
+            this.sourceName = getNameOrLabelFrom(source);
             this.relationtype = relationship.getType().name();
             this.destinationId = other(source, relationship).getId();
-            this.destinationName = NeoModel.getNameOrLabelFrom(other(source, relationship));
+            this.destinationName = getNameOrLabelFrom(other(source, relationship));
             for (String property : properties)
                values.put(property, relationship.hasProperty(property) ? get(relationship, property) : null);
          }

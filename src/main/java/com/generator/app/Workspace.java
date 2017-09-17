@@ -1,7 +1,7 @@
 package com.generator.app;
 
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
+import com.generator.neo.BaseDomainVisitor;
+import com.generator.neo.NeoModel;
 import com.generator.generators.cypher.CypherGroup;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
@@ -34,8 +34,8 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.*;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.NeoModel.*;
 import static com.generator.app.AppEvents.*;
 
 /**
@@ -141,7 +141,7 @@ public final class Workspace extends JPanel {
                         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                            final Set<String> existing = new TreeSet<>();
-                           app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+                           app.model.graph().getAllLabelsInUse().forEach(label -> {
                               existing.add(label.name());
                            });
 
@@ -415,23 +415,22 @@ public final class Workspace extends JPanel {
                         });
                      }
 
-                     pop.add(new App.TransactionAction("Import from clipboard", app) {
-                        @Override
-                        public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                           final JTextArea textArea = new JTextArea("");
-
-                           SwingUtil.showTextInput("Cypher-import", textArea, nodeCanvas, () -> {
-                              final String query = textArea.getText().trim();
-                              if (query.length() == 0) return;
-                              final Result result = app.model.graph().query(query);
-
-                              SwingUtil.showMessage(result.resultAsString(), app);
-                           });
-                        }
-                     });
-
-
+                     //todo this should be refactored to use cypher-params (for escaping of content, performance etc)
+//                     pop.add(new App.TransactionAction("Import from clipboard", app) {
+//                        @Override
+//                        public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//
+//                           final JTextArea textArea = new JTextArea("");
+//
+//                           SwingUtil.showTextInput("Cypher-import", textArea, nodeCanvas, () -> {
+//                              final String query = textArea.getText().trim();
+//                              if (query.length() == 0) return;
+//                              final Result result = app.model.graph().query(query);
+//
+//                              SwingUtil.showMessage(result.resultAsString(), app);
+//                           });
+//                        }
+//                     });
                   }
 
                   @Override
@@ -552,7 +551,7 @@ public final class Workspace extends JPanel {
                         @Override
                         public void doAction(Transaction tx) throws Throwable {
                            final Set<String> labels = new LinkedHashSet<>();
-                           app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> labels.add(label.name()));
+                           app.model.graph().getAllLabelsInUse().forEach(label -> labels.add(label.name()));
                            final JComboBox<String> cboLabels = new JComboBox<>(labels.toArray(new String[labels.size()]));
                            final JTextField txtLabelSearch = new JTextField();
                            txtLabelSearch.addKeyListener(new KeyAdapter() {
@@ -570,7 +569,7 @@ public final class Workspace extends JPanel {
                            });
 
                            final Set<String> relationships = new LinkedHashSet<>();
-                           app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                           app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
                            final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
                            final JTextField txtRelationSearch = new JTextField();
                            txtRelationSearch.addKeyListener(new KeyAdapter() {
@@ -588,7 +587,7 @@ public final class Workspace extends JPanel {
                            });
 
                            final Set<String> properties = new LinkedHashSet<>();
-                           app.model.graph().getGraphDb().getAllPropertyKeys().forEach(properties::add);
+                           app.model.graph().getAllPropertyKeys().forEach(properties::add);
                            final JComboBox<String> cboProperties = new JComboBox<>(properties.toArray(new String[properties.size()]));
                            final JTextField txtPropertySearch = new JTextField();
                            txtPropertySearch.addKeyListener(new KeyAdapter() {
@@ -651,7 +650,7 @@ public final class Workspace extends JPanel {
                                     } else if (radRelationtypes.isSelected()) {
 
                                        final String relationSearch = (String) cboRelationships.getSelectedItem();
-                                       app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+                                       app.model.graph().getAllRelationships().forEach(relationship -> {
                                           if (!relationship.getType().name().equals(relationSearch)) return;
                                           if (chkProperty.isSelected() && !relationship.hasProperty(propertySearch) && !valueSearch.equals(relationship.getProperty(propertySearch)))
                                              return;
@@ -1116,7 +1115,7 @@ public final class Workspace extends JPanel {
 
             Color nodeColor = null;
             for (org.neo4j.graphdb.Label label : node.getLabels()) {
-               final Node colorNode = app.model.graph().getGraphDb().findNode(AppMotif.Entities._Color, "label", label.name());
+               final Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", label.name());
                if (colorNode == null) continue;
                if (nodeColor == null) {
                   final String color = getString(colorNode, AppMotif.Properties._color.name());
@@ -1468,7 +1467,7 @@ public final class Workspace extends JPanel {
                         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                            final Set<String> relationships = new LinkedHashSet<>();
-                           app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                           app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
                            final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
 
                            final JRadioButton radOneToMany = new JRadioButton();
@@ -1843,7 +1842,7 @@ public final class Workspace extends JPanel {
                               final String existingType = relationship.getType().name();
 
                               final Set<String> relationships = new LinkedHashSet<>();
-                              app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
+                              app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
                               final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
 
                               final JRadioButton radOneToMany = new JRadioButton();
@@ -2317,7 +2316,7 @@ public final class Workspace extends JPanel {
                if (AppMotif.Properties.y.name().equals(key)) continue;
                if (AppMotif.Properties._color.name().equals(key)) continue;
                if (AppMotif.Properties._lastLayout.name().equals(key)) continue;
-               if (NeoModel.TAG_UUID.equals(key)) continue;
+               if (TAG_UUID.equals(key)) continue;
                if (!first) out.append(", ");
                out.append(key).append(": '").append(node.getProperty(key)).append("'");
                first = false;

@@ -63,24 +63,6 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		final Node node = new Node("Function", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		final Node node = new Node("Literal", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
 		final Node node = new Node("Expression", arg.getText());
 		onEnter(node);
@@ -108,8 +90,26 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		final Node node = new Node("Literal", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSelector(com.generator.generators.go.parser.GolangParser.SelectorContext arg) {
 		final Node node = new Node("Selector", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		final Node node = new Node("Function", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

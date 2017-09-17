@@ -1,7 +1,6 @@
 package com.generator.generators.java;
 
-import com.generator.BaseDomainVisitor;
-import com.generator.NeoModel;
+import com.generator.neo.BaseDomainVisitor;
 import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
@@ -14,7 +13,6 @@ import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
-import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.awt.*;
@@ -25,9 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.getNameAndLabelsFrom;
-import static com.generator.NeoModel.relate;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
+import static com.generator.neo.BaseDomainVisitor.relate;
 
 /**
  * Created 12.09.17.
@@ -75,7 +73,7 @@ public class JavaPlugin extends DomainPlugin {
 
             // create Object-node for this instance, and use uuid for key in instance-map
             final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
-            instanceMap.put(getString(node, NeoModel.TAG_UUID), instance);
+            instanceMap.put(getString(node, TAG_UUID), instance);
             fireNodesLoaded(node);
          }
       });
@@ -112,7 +110,7 @@ public class JavaPlugin extends DomainPlugin {
 
                   // create Object-node for this instance, and use uuid for key in instance-map
                   final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
-                  instanceMap.put(getString(node, NeoModel.TAG_UUID), instance);
+                  instanceMap.put(getString(node, TAG_UUID), instance);
                   relate(neoNode.getNode(), node, Relations.OBJECT);
 
                   // todo add delete-listener, so instanceMap does not fill up
@@ -127,7 +125,7 @@ public class JavaPlugin extends DomainPlugin {
       if (hasLabel(neoNode.getNode(), Entities.Object)) {
 
          // todo: nodeInstances will be null if restarting - needs to be cleaned-up
-         final Object instance = instanceMap.get(getString(neoNode.getNode(), NeoModel.TAG_UUID));
+         final Object instance = instanceMap.get(getString(neoNode.getNode(), TAG_UUID));
          if (instance == null) return;
 
          new BaseClassVisitor() {
@@ -217,8 +215,8 @@ public class JavaPlugin extends DomainPlugin {
 
       private String renderObject(Node node) {
 
-         final Object instance = instanceMap.get(BaseDomainVisitor.getString(node, NeoModel.TAG_UUID));
-         if (instance == null) return "No instance for " + BaseDomainVisitor.getString(node, NeoModel.TAG_UUID);
+         final Object instance = instanceMap.get(BaseDomainVisitor.getString(node, TAG_UUID));
+         if (instance == null) return "No instance for " + BaseDomainVisitor.getString(node, TAG_UUID);
 
          final StringBuilder text = new StringBuilder();
 

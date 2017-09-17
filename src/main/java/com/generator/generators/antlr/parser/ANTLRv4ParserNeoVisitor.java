@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public ANTLRv4ParserNeoVisitor(com.generator.NeoModel model) {
+	public ANTLRv4ParserNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -28,9 +28,19 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		System.out.println("RuleReturns");
-		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText());
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		System.out.println("GrammarType");
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -158,39 +168,19 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		System.out.println("ModeSpec");
-		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		System.out.println("GrammarType");
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
 		System.out.println("ArgActionBlock");
 		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		System.out.println("ModeSpec");
+		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -261,6 +251,16 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	public Node visitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
 		System.out.println("RulePrequel");
 		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
+		System.out.println("RuleReturns");
+		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

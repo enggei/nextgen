@@ -1,6 +1,6 @@
 package com.generator.generators.stringtemplate;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.BaseDomainVisitor.*;
-import static com.generator.NeoModel.getNameAndLabelsFrom;
+import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 
 /**
@@ -183,6 +183,27 @@ public class StringTemplatePlugin extends DomainPlugin {
                fireNodesLoaded(newNode);
             }
          });
+
+         for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+            if (hasLabel(selectedNode.getNode(), Entities.STTemplate)) {
+               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.ENTITY)) continue;
+
+               final String templateName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+               final AtomicBoolean exists = new AtomicBoolean(false);
+               outgoing(neoNode.getNode(), DomainPlugin.Relations.ENTITY).forEach(relationship -> {
+                  if (templateName.equalsIgnoreCase(getOtherProperty(neoNode.getNode(), relationship, AppMotif.Properties.name.name()).toString()))
+                     exists.set(true);
+               });
+               if (exists.get()) continue;   // template with same name already exists for this STGroup
+
+               pop.add(new App.TransactionAction("Add template -> " + getNameAndLabelsFrom(selectedNode.getNode()), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     neoNode.getNode().createRelationshipTo(selectedNode.getNode(), DomainPlugin.Relations.ENTITY);
+                  }
+               });
+            }
+         }
 
          incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render " + getString(rendererRelationship, ProjectPlugin.Properties.fileType.name()), app) {
             @Override
@@ -632,7 +653,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                         }
                      });
 
-                     if (!"Errors".equals(errors.toString()))
+                     if (!"Errors" .equals(errors.toString()))
                         throw new IllegalStateException(errors.toString());
                      else if (parsed == null)
                         throw new IllegalStateException("Template is invalid. check syntax");

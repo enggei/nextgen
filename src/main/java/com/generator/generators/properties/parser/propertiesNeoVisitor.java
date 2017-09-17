@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public propertiesNeoVisitor(com.generator.NeoModel model) {
+	public propertiesNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -28,9 +28,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		System.out.println("PropertiesFile");
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		System.out.println("PropertiesFile");
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
+	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
+		System.out.println("Value");
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

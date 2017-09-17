@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 
 /**
  * Created 18.07.17.
@@ -140,27 +140,27 @@ final class InformationPanel extends JPanel {
             labels = new LabelsNode();
             root.add(labels);
             final Set<String> sorted = new TreeSet<>();
-            app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> sorted.add(label.name()));
+            app.model.graph().getAllLabelsInUse().forEach(label -> sorted.add(label.name()));
             for (String label : sorted) labels.add(new LabelNode(Label.label(label)));
 
             relationships = new RelationsNode();
             root.add(relationships);
             final Set<String> sortedRelations = new TreeSet<>();
-            app.model.graph().getGraphDb().getAllRelationshipTypesInUse().forEach(relationshipType -> sortedRelations.add(relationshipType.name()));
+            app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> sortedRelations.add(relationshipType.name()));
             for (String sortedRelation : sortedRelations) relationships.add(new RelationshipTypeNode(RelationshipType.withName(sortedRelation)));
 
             final PropertyNode propertyNodes = new PropertyNode("Properties");
             root.add(propertyNodes);
-            app.model.graph().getGraphDb().getAllPropertyKeys().forEach(propertyKey -> propertyNodes.add(new PropertyNode(propertyKey)));
+            app.model.graph().getAllPropertyKeys().forEach(propertyKey -> propertyNodes.add(new PropertyNode(propertyKey)));
 
             final InformationNode nodeIndices = new InformationNode("Node Indices");
             root.add(nodeIndices);
-            for (String indexName : app.model.graph().getGraphDb().index().nodeIndexNames())
+            for (String indexName : app.model.graph().index().nodeIndexNames())
                nodeIndices.add(new NodeIndexNode(indexName));
 
             final InformationNode relationIndices = new InformationNode("Relationships Indices");
             root.add(relationIndices);
-            for (String indexName : app.model.graph().getGraphDb().index().relationshipIndexNames())
+            for (String indexName : app.model.graph().index().relationshipIndexNames())
                relationIndices.add(new RelationshipIndexNode(indexName));
 
             layouts = new InformationNode("Layouts");
@@ -226,7 +226,7 @@ final class InformationPanel extends JPanel {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
+               app.model.graph().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
                   if (node.getRelationships().iterator().hasNext()) return;
                   nodes.add(new AppEvents.NodeLoadEvent(node));
                }));
@@ -241,7 +241,7 @@ final class InformationPanel extends JPanel {
                // todo: move this to neoModel
                final Map<Label, Motif> structureMap = new LinkedHashMap<>();
 
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
+               app.model.graph().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
                   final Motif structure = structureMap.computeIfAbsent(label, Motif::new);
                   outgoing(node).forEach(relationship -> {
                      final Node dstNode = other(node, relationship);
@@ -303,7 +303,7 @@ final class InformationPanel extends JPanel {
 
                final Set<String> existing = new TreeSet<>();
                final Set<String> replacements = new TreeSet<>();
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+               app.model.graph().getAllLabelsInUse().forEach(label -> {
                   existing.add(label.name());
                   replacements.add(label.name());
                });
@@ -382,7 +382,7 @@ final class InformationPanel extends JPanel {
             public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                final Set<String> replacements = new TreeSet<>();
-               app.model.graph().getGraphDb().getAllLabelsInUse().forEach(label -> {
+               app.model.graph().getAllLabelsInUse().forEach(label -> {
                   replacements.add(label.name());
                });
 
@@ -430,7 +430,7 @@ final class InformationPanel extends JPanel {
          pop.add(new App.TransactionAction("Set color", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               Node colorNode = app.model.graph().getGraphDb().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
+               Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
                if (colorNode == null)
                   colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
                final String color = SwingUtil.showInputDialog("Color", InformationPanel.this, getString(colorNode, AppMotif.Properties._color.name()));
@@ -465,7 +465,7 @@ final class InformationPanel extends JPanel {
             protected void actionPerformed(ActionEvent e, Transaction tx) {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
                final String existingType = ((RelationshipType) getUserObject()).name();
-               app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+               app.model.graph().getAllRelationships().forEach(relationship -> {
                   if (!relationship.getType().name().equals(existingType)) return;
                   nodes.add(new AppEvents.NodeLoadEvent(relationship.getStartNode()));
                   nodes.add(new AppEvents.NodeLoadEvent(relationship.getEndNode()));
@@ -480,11 +480,11 @@ final class InformationPanel extends JPanel {
                final String existingType = ((RelationshipType) getUserObject()).name();
 
                final Set<String> types = new TreeSet<>();
-               app.model.graph().getGraphDb().getAllRelationshipTypes().forEach(relationshipType -> types.add(relationshipType.name()));
+               app.model.graph().getAllRelationshipTypes().forEach(relationshipType -> types.add(relationshipType.name()));
                final String newType = SwingUtil.showSelectDialog(InformationPanel.this, types, existingType);
                if (newType == null || newType.equals(existingType)) return;
 
-               app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+               app.model.graph().getAllRelationships().forEach(relationship -> {
                   if (!relationship.getType().name().equals(existingType)) return;
 
                   final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
@@ -527,7 +527,7 @@ final class InformationPanel extends JPanel {
                for (Node node : app.model.graph().findNodesWithProperty(existingProperty))
                   node.setProperty(newProperty, node.removeProperty(existingProperty));
 
-               app.model.graph().getGraphDb().getAllRelationships().forEach(relationship -> {
+               app.model.graph().getAllRelationships().forEach(relationship -> {
                   if (!relationship.hasProperty(existingProperty)) return;
                   relationship.setProperty(newProperty, relationship.removeProperty(existingProperty));
                });

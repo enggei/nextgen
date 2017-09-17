@@ -1,7 +1,7 @@
 package com.generator.app;
 
 import com.generator.generators.domain.DomainPlugin;
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -10,7 +10,7 @@ import org.neo4j.graphdb.RelationshipType;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.generator.BaseDomainVisitor.*;
+import static com.generator.neo.BaseDomainVisitor.*;
 
 /**
  * Created 25.08.17.

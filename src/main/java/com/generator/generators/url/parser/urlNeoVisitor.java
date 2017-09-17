@@ -7,15 +7,15 @@ import org.neo4j.graphdb.RelationshipType;
 public class urlNeoVisitor extends urlBaseVisitor<Node> {
 
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
-	protected final com.generator.NeoModel model;
+	protected final com.generator.neo.NeoModel model;
 
-	public urlNeoVisitor(com.generator.NeoModel model) {
+	public urlNeoVisitor(com.generator.neo.NeoModel model) {
 		this.model = model;
 	}
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -38,9 +38,59 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		System.out.println("Url");
-		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
+	public Node visitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
+		System.out.println("Host");
+		final Node node = model.findOrCreate(Label.label("Host"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
+		System.out.println("Hostnumber");
+		final Node node = model.findOrCreate(Label.label("Hostnumber"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
+		System.out.println("Port");
+		final Node node = model.findOrCreate(Label.label("Port"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
+		System.out.println("Path");
+		final Node node = model.findOrCreate(Label.label("Path"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
+		System.out.println("User");
+		final Node node = model.findOrCreate(Label.label("User"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
+		System.out.println("Login");
+		final Node node = model.findOrCreate(Label.label("Login"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -88,6 +138,16 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
+		System.out.println("Searchparameter");
+		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
 		System.out.println("Scheme");
 		final Node node = model.findOrCreate(Label.label("Scheme"), "text", arg.getText());
@@ -98,69 +158,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		System.out.println("Host");
-		final Node node = model.findOrCreate(Label.label("Host"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		System.out.println("Hostname");
-		final Node node = model.findOrCreate(Label.label("Hostname"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		System.out.println("Hostnumber");
-		final Node node = model.findOrCreate(Label.label("Hostnumber"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		System.out.println("Path");
-		final Node node = model.findOrCreate(Label.label("Path"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
-		System.out.println("User");
-		final Node node = model.findOrCreate(Label.label("User"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		System.out.println("Login");
-		final Node node = model.findOrCreate(Label.label("Login"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		System.out.println("Searchparameter");
-		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
+	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
+		System.out.println("Url");
+		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -178,9 +178,9 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		System.out.println("Port");
-		final Node node = model.findOrCreate(Label.label("Port"), "text", arg.getText());
+	public Node visitHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
+		System.out.println("Hostname");
+		final Node node = model.findOrCreate(Label.label("Hostname"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

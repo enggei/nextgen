@@ -1,11 +1,11 @@
 package com.generator.app;
 
-import com.generator.NeoModel;
+import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.ResourceIterator;
 
 import javax.swing.*;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -41,7 +41,7 @@ public abstract class Plugin {
       fireNodesLoaded(false, nodes);
    }
 
-   protected void fireNodesLoaded(ResourceIterator<Node> nodes) {
+   protected void fireNodesLoaded(Iterator<Node> nodes) {
       final Set<Node> nodeSet = new LinkedHashSet<>();
       while (nodes.hasNext()) nodeSet.add(nodes.next());
       fireNodesLoaded(nodeSet);

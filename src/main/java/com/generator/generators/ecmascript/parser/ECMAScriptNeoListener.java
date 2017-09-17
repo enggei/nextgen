@@ -9,20 +9,20 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
    protected final java.util.Stack<Node> nodeStack = new java.util.Stack<>();
 	protected final StringBuilder delim = new StringBuilder("");
 	protected final boolean debug;
-	private final com.generator.NeoModel model;
+	private final com.generator.neo.NeoModel model;
 
-	public ECMAScriptNeoListener(com.generator.NeoModel model) {
+	public ECMAScriptNeoListener(com.generator.neo.NeoModel model) {
 		this(model, false);
 	}
 
-	public ECMAScriptNeoListener(com.generator.NeoModel model, boolean debug) {
+	public ECMAScriptNeoListener(com.generator.neo.NeoModel model, boolean debug) {
 		this.model = model;
 		this.debug = debug;
 	}
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	com.generator.NeoModel.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -55,6 +55,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inBlock() {
       return inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
@@ -91,24 +109,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return inKeyword.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
