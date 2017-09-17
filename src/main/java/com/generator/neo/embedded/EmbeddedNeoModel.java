@@ -244,23 +244,4 @@ public class EmbeddedNeoModel implements NeoModel {
    public IndexManager index() {
       return graphDb.index();
    }
-
-//   public interface Committer {
-//
-//      void doAction(Transaction tx) throws Throwable;
-//
-//      void exception(Throwable throwable);
-//   }
-//
-//   public void doInTransaction(Committer committer) {
-//      try (Transaction tx = beginTx()) {
-//         try {
-//            committer.doAction(tx);
-//            tx.success();
-//         } catch (Throwable throwable) {
-//            committer.exception(throwable);
-//            tx.failure();
-//         }
-//      }
-//   }
 }
