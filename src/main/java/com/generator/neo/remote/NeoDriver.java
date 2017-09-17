@@ -112,7 +112,7 @@ public class NeoDriver implements AutoCloseable {
       return transaction;	// Continue using open transaction
    }
 
-   private StatementResult executeCypher(final String cypher) {
+   protected StatementResult executeCypher(final String cypher) {
       System.out.println("executeCypher: " + cypher);
       try ( Session session = driver.session() ) {
          return session.run(cypher);
@@ -189,11 +189,11 @@ public class NeoDriver implements AutoCloseable {
       };
    }
 
-   public Collection<Node> readNodes(final String cypher) {
+   Collection<Node> readNodes(final String cypher) {
       return readTransaction(tx -> readNodes(tx, new Statement(cypher)));
    }
 
-   public Collection<Node> readNodes(final Statement statement) {
+   Collection<Node> readNodes(final Statement statement) {
       return readTransaction(tx -> readNodes(tx, statement));
    }
 
@@ -209,7 +209,7 @@ public class NeoDriver implements AutoCloseable {
       return nodes;
    }
 
-   public Collection<NodeWithRelationships> readNodesWithRelationships(final String cypher) {
+   Collection<NodeWithRelationships> readNodesWithRelationships(final String cypher) {
       return readTransaction(tx -> readNodesWithRelationships(tx, new Statement(cypher)));
    }
 
@@ -252,11 +252,11 @@ public class NeoDriver implements AutoCloseable {
       return nodesWithRelationships;
    }
 
-   public Relationship readSingleRelationship(final String cypher) {
+   Relationship readSingleRelationship(final String cypher) {
       return readTransaction(tx -> readSingleRelationship(tx, new Statement(cypher)));
    }
 
-   public Relationship readSingleRelationship(final Statement statement) {
+   Relationship readSingleRelationship(final Statement statement) {
       return readTransaction(tx -> readSingleRelationship(tx, statement));
    }
 
@@ -269,11 +269,11 @@ public class NeoDriver implements AutoCloseable {
       return result.single().get(0).asRelationship();
    }
 
-   public Collection<Relationship> readRelationships(final String cypher) {
+   Collection<Relationship> readRelationships(final String cypher) {
       return readTransaction(tx -> readRelationships(tx, new Statement(cypher)));
    }
 
-   public Collection<Relationship> readRelationships(final Statement statement) {
+   Collection<Relationship> readRelationships(final Statement statement) {
       return readTransaction(tx -> readRelationships(tx, statement));
    }
 
@@ -287,6 +287,26 @@ public class NeoDriver implements AutoCloseable {
       relationships.addAll(result.list(record -> record.get(0).asRelationship()));
 
       return relationships;
+   }
+
+   Collection<String> readSingleStringColumn(final String cypher) {
+      return readTransaction(tx -> readSingleStringColumn(tx, new Statement(cypher)));
+   }
+
+   Collection<String> readSingleStringColumn(final Statement statement) {
+      return readTransaction(tx -> readSingleStringColumn(tx, statement));
+   }
+
+   static Collection<String> readSingleStringColumn(Transaction tx, final Statement statement) {
+      Collection<String> data = new LinkedHashSet<>();
+
+      System.out.println("readSingleStringColumn: " + statement.toString());
+      StatementResult result = tx.run(statement);
+//		System.out.println("readSingleStringColumn summary: " + debugSummary(result.summary()));
+
+      data.addAll(result.list(record -> record.get(0).asString()));
+
+      return data;
    }
 
    protected <T> T readTransaction(TransactionWork<T> transactionWork) {
@@ -400,6 +420,15 @@ public class NeoDriver implements AutoCloseable {
 		return getNodes(Arrays.stream(labels).collect(Collectors.joining(":")));
 	}
 */
+
+	public Collection<Node> getNodes(@NotNull final String label, String property, Object value) {
+      return readNodes(new Statement("MATCH (n:" + label + " {" + property + ": $value}) RETURN n",
+            parameters("value", value)));
+   }
+
+   public Collection<Node> getNodesWithProperty(@NotNull final String property) {
+      return readNodes("MATCH (n) WHERE EXISTS (n." + property + ") RETURN n");
+   }
 
    public Collection<NodeWithRelationships> getNodesWithRelationships(@NotNull final String label) {
       return readNodesWithRelationships("MATCH (n:" + label + ") OPTIONAL MATCH (n)-[rel]-(o) RETURN n, rel");

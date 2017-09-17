@@ -7,12 +7,11 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.UUID;
 
 import static com.generator.util.NeoUtil.TAG_UUID;
@@ -39,73 +38,128 @@ public class Tests {
    private static final String PASSWORD = "gu11/K0de";
    private static URI NEO4J_URI;
 
+   private static final UUID TEST_NODE_UUID[] = {
+      UUID.fromString("5f955916-75cc-499c-93af-8dcab726f08b"),
+      UUID.fromString("6fed3bba-b35f-48e7-9c61-2d4e5e36afd4"),
+      UUID.fromString("1c62a80a-3f50-4b55-8267-0c2123e68589")
+   };
+
+   private static final UUID TEST_REL_UUID[] = {
+      UUID.fromString("f58e1fde-d585-44ca-b907-5d0e4b875124"),
+      UUID.fromString("b764ad71-e6b5-4f11-9b6f-bc9cf48acdeb")
+   };
+
    @BeforeClass
    static public void setup() throws URISyntaxException {
       NEO4J_URI = new URI("bolt://localhost:7687");
    }
 
    @Test
-   public void transactions() {
+   public void basicFunctionality() {
       RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
-            model -> System.out.println("closed"));
+         model -> System.out.println("closed"));
 
       remote.dropAll();
 
-      UUID uuid = UUID.fromString("5f955916-75cc-499c-93af-8dcab726f08b");
+      UUID uuid = TEST_NODE_UUID[0];
 
       remote.createNode(uuid,
-            "test", "somevalue",
-            "int", 128);
+         "test", "somevalue",
+         "int", 128);
 
       Node node = remote.setNodeProperties(uuid,
-            "bool", false,
-            "timestamp", System.currentTimeMillis());
+         "bool", false,
+         "timestamp", System.currentTimeMillis());
 
-      assertTrue("The node does not contain \"text\" and \"int\" properties!", node.containsKey("test") && node.containsKey("int"));
+      assertTrue("The node does not contain \"test\" and \"int\" properties!", node.containsKey("test") && node.containsKey("int"));
       assertEquals("Nodes are not equal!", node, remote.getSingleNode(uuid));
 
-      UUID uuid2 = UUID.fromString("6fed3bba-b35f-48e7-9c61-2d4e5e36afd4");
+      UUID uuid2 = TEST_NODE_UUID[1];
 
       Node node2 = remote.createNode(uuid2);
 
-      Assert.assertNotEquals("Nodes are equal!", node, node2);
+         Assert.assertNotEquals("Nodes are equal!", node, node2);
 
       node = remote.setProperties(node, "oneMore", "text");
 
       assertTrue("This is not the same node!", uuidOf(node).equals(uuid));
 
       node = remote.replaceNodeProperties(uuid,
-            TAG_UUID, uuid.toString());
+         TAG_UUID, uuid.toString());
 
       assertTrue("More than UUID property remains!", node.size() == 1 && uuidOf(node).equals(uuid));
 
       remote.addLabel(uuid, "Something");
 
-      UUID uuidLikes = UUID.fromString("f58e1fde-d585-44ca-b907-5d0e4b875124");
+      UUID uuidLikes = TEST_REL_UUID[0];
 
       Relationship likes = remote.createOutgoingRelationship(node, node2, "LIKES", uuidLikes);
 
       remote.setRelationshipProperties("LIKES", uuidLikes,
-            "tag", "hoorah!",
-            "factor", 47.2f);
+         "tag", "hoorah!",
+         "factor", 47.2f);
 
-      UUID uuid4 = UUID.fromString("1c62a80a-3f50-4b55-8267-0c2123e68589");
+      UUID uuid4 = TEST_NODE_UUID[2];
 
       remote.createNode("D", uuid4);
 
-      UUID uuidHates = UUID.fromString("b764ad71-e6b5-4f11-9b6f-bc9cf48acdeb");
+      UUID uuidHates = TEST_REL_UUID[1];
 
       Relationship hates = remote.createIncomingRelationship(uuid2, uuid4, "HATES", uuidHates,
-            "tool", "pitchfork");
+         "tool", "pitchfork");
 
       remote.setProperties(hates,
-            "question", "no idea",
-            "answer", 42);
+         "question", "no idea",
+         "answer", 42);
 
       hates = remote.setRelationshipProperties("HATES", uuidHates,
-            "oneMore", "yay");
+         "oneMore", "yay");
 
       assertTrue("Wrong number of properties in relationship!", hates.size() == 5);
+
+      for (UUID uuid1 : TEST_NODE_UUID) {
+         remote.setNodeProperties(uuid1, "timestamp", System.currentTimeMillis());
+      }
+
+      for (UUID uuid1 : TEST_NODE_UUID) {
+         assertTrue("Node " + uuid1 + " does not contain \"timestamp\" property!", remote.getNode(uuid1).hasProperty("timestamp"));
+      }
+
+      org.neo4j.graphdb.Node node4 = remote.findOrCreate(Label.label("Blah"), "nisse", "fant",
+         "bool", true, "int", 256);
+
+      assertTrue("node4 does not contain property \"int\"", node4.hasProperty("int"));
+
+      System.out.println(node4);
+
+      node4 = remote.findOrCreate(Label.label("Blah"), "nisse", "fant",
+         "dings", "boms");
+
+      assertTrue("node4 does not contain property \"dings\"", node4.hasProperty("dings"));
+
+      System.out.println(node4);
+   }
+
+   @Test
+   public void iterators() {
+      RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
+         model -> System.out.println("closed"));
+
+      ResourceIterable<org.neo4j.graphdb.Relationship> allRelationships = remote.getAllRelationships();
+
+      System.out.println("Iterator:");
+      ResourceIterator<org.neo4j.graphdb.Relationship> iterator = allRelationships.iterator();
+      while (iterator.hasNext()) {
+         System.out.println(iterator.next());
+      }
+
+      System.out.println("Stream:");
+      allRelationships.stream().forEach(System.out::println);
+   }
+
+   @Test
+   public void transactions() {
+
    }
 
    @Test
