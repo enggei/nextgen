@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.app.AppEvents.*;
-import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 18.07.17.

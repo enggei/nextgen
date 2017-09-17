@@ -749,7 +749,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"   private void onEnter(Node node) {\n" + 
 		"		if (!nodeStack.isEmpty())\n" + 
-		"      	com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
 		"		if (debug) System.out.println(delim.toString() + node.getProperty(\"text\"));\n" + 
 		"		delim.append(\"\\t\");\n" + 
@@ -815,7 +815,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty())\n" + 
-		"         com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
+		"         com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
 		"   }\n" + 
 		"\n" + 

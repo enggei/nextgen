@@ -1,6 +1,6 @@
 package com.generator.generators.mysql;
 
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.app.AppMotif;
 import com.generator.generators.mysql.parser.MySqlParser;
@@ -33,7 +33,7 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
          nodeStack.push(model.findOrCreate(MySQLPlugin.Entities.Table, AppMotif.Properties.name.name(), tableName));
       } else if (inColumnDefinition()) {
          final org.neo4j.graphdb.Node columnNode = model.findOrCreate(MySQLPlugin.Entities.Column, AppMotif.Properties.name.name(), StringUtil.trimEnds(1, arg.getText()));
-         BaseDomainVisitor.relate(nodeStack.peek(), columnNode, MySQLPlugin.Relations.COLUMN);
+         NeoUtil.relate(nodeStack.peek(), columnNode, MySQLPlugin.Relations.COLUMN);
          nodeStack.push(columnNode);
       }
    }

@@ -1,6 +1,5 @@
 package com.generator.neo.embedded;
 
-import com.generator.neo.BaseDomainVisitor;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.TransactionEventHandler;
@@ -16,7 +15,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.neo.BaseDomainVisitor.TAG_UUID;
+import static com.generator.util.NeoUtil.TAG_UUID;
 
 
 /**

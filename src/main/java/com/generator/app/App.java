@@ -30,7 +30,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.util.NeoUtil.*;
 import static com.generator.app.AppEvents.*;
 
 /**

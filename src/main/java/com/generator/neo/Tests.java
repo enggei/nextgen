@@ -15,7 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
-import static com.generator.neo.BaseDomainVisitor.TAG_UUID;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.getCachedRelationship;
 import static com.generator.neo.remote.NeoNode.fromDriverNode;

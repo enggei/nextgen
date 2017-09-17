@@ -1,6 +1,6 @@
 package com.generator.app;
 
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.generators.cypher.CypherGroup;
 import com.generator.generators.domain.DomainPlugin;
@@ -34,7 +34,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.util.NeoUtil.*;
 import static com.generator.neo.NeoModel.*;
 import static com.generator.app.AppEvents.*;
 
@@ -402,7 +402,7 @@ public final class Workspace extends JPanel {
                                  final Set<Node> dependentNodes = new LinkedHashSet<>();
                                  for (Node node : nodes) {
                                     incoming(node).forEach(relationship -> {
-                                       final Node other = BaseDomainVisitor.other(node, relationship);
+                                       final Node other = NeoUtil.other(node, relationship);
                                        if (visibleNodes.contains(other)) return;
                                        dependentNodes.add(other);
                                     });
@@ -1512,9 +1512,9 @@ public final class Workspace extends JPanel {
                                  @Override
                                  public void doAction(Transaction tx1) throws Throwable {
                                     for (NeoNode selectedNode : selectedNodes) {
-                                       if (radOneToMany.isSelected() && BaseDomainVisitor.isRelated(getNode(), selectedNode.getNode(), RelationshipType.withName(selected)))
+                                       if (radOneToMany.isSelected() && NeoUtil.isRelated(getNode(), selectedNode.getNode(), RelationshipType.withName(selected)))
                                           continue;
-                                       else if (radManyToOne.isSelected() && BaseDomainVisitor.isRelated(selectedNode.getNode(), getNode(), RelationshipType.withName(selected)))
+                                       else if (radManyToOne.isSelected() && NeoUtil.isRelated(selectedNode.getNode(), getNode(), RelationshipType.withName(selected)))
                                           continue;
 
                                        if (radOneToMany.isSelected())

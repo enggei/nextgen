@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.generator.neo.BaseDomainVisitor.TAG_UUID;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.removeCache;
 import static com.generator.neo.remote.NeoCache.updateCache;
 

@@ -26,10 +26,10 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
 
-import static com.generator.neo.BaseDomainVisitor.*;
-import static com.generator.neo.BaseDomainVisitor.other;
-import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
-import static com.generator.neo.BaseDomainVisitor.relate;
+import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.other;
+import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
+import static com.generator.util.NeoUtil.relate;
 
 /**
  * Created 03.08.17.

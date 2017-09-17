@@ -3,7 +3,7 @@ package com.generator.generators.easyFlow;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Workspace;
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -26,8 +26,8 @@ import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Entities.*;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Relations.*;
-import static com.generator.neo.BaseDomainVisitor.*;
-import static com.generator.neo.BaseDomainVisitor.relate;
+import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.relate;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
@@ -178,7 +178,7 @@ public class EasyFlowPlugin extends DomainPlugin {
          if (!hasOutgoing(node, FROM))
             throw new IllegalStateException("Flownode has no initial state");
 
-         final Node initStateNode = BaseDomainVisitor.otherOutgoing(node, FROM);
+         final Node initStateNode = NeoUtil.otherOutgoing(node, FROM);
          final String initStateName = StringUtil.toUpper(getPropertyValue(initStateNode, AppMotif.Properties.name.name()));
          expand(initStateNode, transitST.setState(initStateName), group, events, states, stateComments);
 
@@ -194,7 +194,7 @@ public class EasyFlowPlugin extends DomainPlugin {
          final EasyFlowGroup.statefulContextST contextST = group.newstatefulContext().
                setName(name);
 
-         for (Relationship propertyRelation : BaseDomainVisitor.outgoing(node, CONTEXT_PROPERTY)) {
+         for (Relationship propertyRelation : NeoUtil.outgoing(node, CONTEXT_PROPERTY)) {
             final Node contextPropertyNode = other(node, propertyRelation);
             final Object propertyValue = getPropertyValue(contextPropertyNode, Properties.value.name());
             final String comment = getPropertyValue(contextPropertyNode, Properties.comment.name());

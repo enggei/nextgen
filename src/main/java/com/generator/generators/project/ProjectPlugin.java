@@ -1,6 +1,6 @@
 package com.generator.generators.project;
 
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
@@ -24,7 +24,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.util.NeoUtil.*;
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
 import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
@@ -136,7 +136,7 @@ public class ProjectPlugin extends DomainPlugin {
 
          for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
 
-            if (BaseDomainVisitor.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
+            if (NeoUtil.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
 
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                   return;
@@ -158,7 +158,7 @@ public class ProjectPlugin extends DomainPlugin {
                });
             }
 
-            if (BaseDomainVisitor.hasLabel(selectedNode.getNode(), EasyFlowPlugin.Entities.Flow)) {
+            if (NeoUtil.hasLabel(selectedNode.getNode(), EasyFlowPlugin.Entities.Flow)) {
 
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                   return;

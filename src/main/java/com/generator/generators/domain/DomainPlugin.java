@@ -2,7 +2,7 @@ package com.generator.generators.domain;
 
 import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -18,9 +18,9 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
-import static com.generator.neo.BaseDomainVisitor.*;
-import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
-import static com.generator.neo.BaseDomainVisitor.relate;
+import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
+import static com.generator.util.NeoUtil.relate;
 import static com.generator.generators.project.ProjectPlugin.renderToFile;
 
 /**
@@ -695,10 +695,10 @@ public class DomainPlugin extends Plugin {
 
       public void visit(Node node) {
          if (node == null) return;
-         if (BaseDomainVisitor.hasLabel(node, Entities.Domain.name())) visitDomain(node);
-         if (BaseDomainVisitor.hasLabel(node, Entities.Entity.name())) visitEntity(node);
-         if (BaseDomainVisitor.hasLabel(node, Entities.Relation.name())) visitRelation(node);
-         if (BaseDomainVisitor.hasLabel(node, Entities.Property.name())) visitProperty(node);
+         if (NeoUtil.hasLabel(node, Entities.Domain.name())) visitDomain(node);
+         if (NeoUtil.hasLabel(node, Entities.Entity.name())) visitEntity(node);
+         if (NeoUtil.hasLabel(node, Entities.Relation.name())) visitRelation(node);
+         if (NeoUtil.hasLabel(node, Entities.Property.name())) visitProperty(node);
       }
 
       void visitDomain(Node node) {

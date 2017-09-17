@@ -1,5 +1,6 @@
 package com.generator.generators.xml.parser;
 
+import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -22,7 +23,7 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	com.generator.neo.BaseDomainVisitor.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");

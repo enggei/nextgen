@@ -46,499 +46,6 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inLexerAlt = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
-		onEnter(new Node("LexerAlt", arg.getText(), arg.getStart().getText()));
-		this.inLexerAlt.push(true);
-	}
-
-	public void exitLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
-		onExit();
-		this.inLexerAlt.pop();
-	}
-
-	public boolean inLexerAlt() {
-      return inLexerAlt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerElements = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
-		onEnter(new Node("LexerElements", arg.getText(), arg.getStart().getText()));
-		this.inLexerElements.push(true);
-	}
-
-	public void exitLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
-		onExit();
-		this.inLexerElements.pop();
-	}
-
-	public boolean inLexerElements() {
-      return inLexerElements.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerElement = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
-		onEnter(new Node("LexerElement", arg.getText(), arg.getStart().getText()));
-		this.inLexerElement.push(true);
-	}
-
-	public void exitLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
-		onExit();
-		this.inLexerElement.pop();
-	}
-
-	public boolean inLexerElement() {
-      return inLexerElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLabeledLexerElement = new java.util.Stack<>();
-
-	@Override
-	public void enterLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
-		onEnter(new Node("LabeledLexerElement", arg.getText(), arg.getStart().getText()));
-		this.inLabeledLexerElement.push(true);
-	}
-
-	public void exitLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
-		onExit();
-		this.inLabeledLexerElement.pop();
-	}
-
-	public boolean inLabeledLexerElement() {
-      return inLabeledLexerElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
-		onEnter(new Node("LexerBlock", arg.getText(), arg.getStart().getText()));
-		this.inLexerBlock.push(true);
-	}
-
-	public void exitLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
-		onExit();
-		this.inLexerBlock.pop();
-	}
-
-	public boolean inLexerBlock() {
-      return inLexerBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerCommands = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
-		onEnter(new Node("LexerCommands", arg.getText(), arg.getStart().getText()));
-		this.inLexerCommands.push(true);
-	}
-
-	public void exitLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
-		onExit();
-		this.inLexerCommands.pop();
-	}
-
-	public boolean inLexerCommands() {
-      return inLexerCommands.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerCommand = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
-		onEnter(new Node("LexerCommand", arg.getText(), arg.getStart().getText()));
-		this.inLexerCommand.push(true);
-	}
-
-	public void exitLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
-		onExit();
-		this.inLexerCommand.pop();
-	}
-
-	public boolean inLexerCommand() {
-      return inLexerCommand.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerCommandName = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
-		onEnter(new Node("LexerCommandName", arg.getText(), arg.getStart().getText()));
-		this.inLexerCommandName.push(true);
-	}
-
-	public void exitLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
-		onExit();
-		this.inLexerCommandName.pop();
-	}
-
-	public boolean inLexerCommandName() {
-      return inLexerCommandName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerCommandExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
-		onEnter(new Node("LexerCommandExpr", arg.getText(), arg.getStart().getText()));
-		this.inLexerCommandExpr.push(true);
-	}
-
-	public void exitLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
-		onExit();
-		this.inLexerCommandExpr.pop();
-	}
-
-	public boolean inLexerCommandExpr() {
-      return inLexerCommandExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAltList = new java.util.Stack<>();
-
-	@Override
-	public void enterAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
-		onEnter(new Node("AltList", arg.getText(), arg.getStart().getText()));
-		this.inAltList.push(true);
-	}
-
-	public void exitAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
-		onExit();
-		this.inAltList.pop();
-	}
-
-	public boolean inAltList() {
-      return inAltList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAlternative = new java.util.Stack<>();
-
-	@Override
-	public void enterAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
-		onEnter(new Node("Alternative", arg.getText(), arg.getStart().getText()));
-		this.inAlternative.push(true);
-	}
-
-	public void exitAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
-		onExit();
-		this.inAlternative.pop();
-	}
-
-	public boolean inAlternative() {
-      return inAlternative.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return inElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLabeledElement = new java.util.Stack<>();
-
-	@Override
-	public void enterLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
-		onEnter(new Node("LabeledElement", arg.getText(), arg.getStart().getText()));
-		this.inLabeledElement.push(true);
-	}
-
-	public void exitLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
-		onExit();
-		this.inLabeledElement.pop();
-	}
-
-	public boolean inLabeledElement() {
-      return inLabeledElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEbnf = new java.util.Stack<>();
-
-	@Override
-	public void enterEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
-		onEnter(new Node("Ebnf", arg.getText(), arg.getStart().getText()));
-		this.inEbnf.push(true);
-	}
-
-	public void exitEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
-		onExit();
-		this.inEbnf.pop();
-	}
-
-	public boolean inEbnf() {
-      return inEbnf.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlockSuffix = new java.util.Stack<>();
-
-	@Override
-	public void enterBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
-		onEnter(new Node("BlockSuffix", arg.getText(), arg.getStart().getText()));
-		this.inBlockSuffix.push(true);
-	}
-
-	public void exitBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
-		onExit();
-		this.inBlockSuffix.pop();
-	}
-
-	public boolean inBlockSuffix() {
-      return inBlockSuffix.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEbnfSuffix = new java.util.Stack<>();
-
-	@Override
-	public void enterEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
-		onEnter(new Node("EbnfSuffix", arg.getText(), arg.getStart().getText()));
-		this.inEbnfSuffix.push(true);
-	}
-
-	public void exitEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
-		onExit();
-		this.inEbnfSuffix.pop();
-	}
-
-	public boolean inEbnfSuffix() {
-      return inEbnfSuffix.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLexerAtom = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
-		onEnter(new Node("LexerAtom", arg.getText(), arg.getStart().getText()));
-		this.inLexerAtom.push(true);
-	}
-
-	public void exitLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
-		onExit();
-		this.inLexerAtom.pop();
-	}
-
-	public boolean inLexerAtom() {
-      return inLexerAtom.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAtom = new java.util.Stack<>();
-
-	@Override
-	public void enterAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
-		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText()));
-		this.inAtom.push(true);
-	}
-
-	public void exitAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
-		onExit();
-		this.inAtom.pop();
-	}
-
-	public boolean inAtom() {
-      return inAtom.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNotSet = new java.util.Stack<>();
-
-	@Override
-	public void enterNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
-		onEnter(new Node("NotSet", arg.getText(), arg.getStart().getText()));
-		this.inNotSet.push(true);
-	}
-
-	public void exitNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
-		onExit();
-		this.inNotSet.pop();
-	}
-
-	public boolean inNotSet() {
-      return inNotSet.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBlockSet = new java.util.Stack<>();
-
-	@Override
-	public void enterBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
-		onEnter(new Node("BlockSet", arg.getText(), arg.getStart().getText()));
-		this.inBlockSet.push(true);
-	}
-
-	public void exitBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
-		onExit();
-		this.inBlockSet.pop();
-	}
-
-	public boolean inBlockSet() {
-      return inBlockSet.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSetElement = new java.util.Stack<>();
-
-	@Override
-	public void enterSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
-		onEnter(new Node("SetElement", arg.getText(), arg.getStart().getText()));
-		this.inSetElement.push(true);
-	}
-
-	public void exitSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
-		onExit();
-		this.inSetElement.pop();
-	}
-
-	public boolean inSetElement() {
-      return inSetElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleref = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
-		onEnter(new Node("Ruleref", arg.getText(), arg.getStart().getText()));
-		this.inRuleref.push(true);
-	}
-
-	public void exitRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
-		onExit();
-		this.inRuleref.pop();
-	}
-
-	public boolean inRuleref() {
-      return inRuleref.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTerminal = new java.util.Stack<>();
-
-	@Override
-	public void enterTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
-		onEnter(new Node("Terminal", arg.getText(), arg.getStart().getText()));
-		this.inTerminal.push(true);
-	}
-
-	public void exitTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
-		onExit();
-		this.inTerminal.pop();
-	}
-
-	public boolean inTerminal() {
-      return inTerminal.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElementOptions = new java.util.Stack<>();
-
-	@Override
-	public void enterElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
-		onEnter(new Node("ElementOptions", arg.getText(), arg.getStart().getText()));
-		this.inElementOptions.push(true);
-	}
-
-	public void exitElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
-		onExit();
-		this.inElementOptions.pop();
-	}
-
-	public boolean inElementOptions() {
-      return inElementOptions.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElementOption = new java.util.Stack<>();
-
-	@Override
-	public void enterElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
-		onEnter(new Node("ElementOption", arg.getText(), arg.getStart().getText()));
-		this.inElementOption.push(true);
-	}
-
-	public void exitElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
-		onExit();
-		this.inElementOption.pop();
-	}
-
-	public boolean inElementOption() {
-      return inElementOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
-
-	@Override
-	public void enterIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
-		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText()));
-		this.inIdentifier.push(true);
-	}
-
-	public void exitIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
-		onExit();
-		this.inIdentifier.pop();
-	}
-
-	public boolean inIdentifier() {
-      return inIdentifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onEnter(new Node("GrammarSpec", arg.getText(), arg.getStart().getText()));
-		this.inGrammarSpec.push(true);
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onExit();
-		this.inGrammarSpec.pop();
-	}
-
-	public boolean inGrammarSpec() {
-      return inGrammarSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
-
-	@Override
-	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onEnter(new Node("PrequelConstruct", arg.getText(), arg.getStart().getText()));
-		this.inPrequelConstruct.push(true);
-	}
-
-	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onExit();
-		this.inPrequelConstruct.pop();
-	}
-
-	public boolean inPrequelConstruct() {
-      return inPrequelConstruct.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onEnter(new Node("OptionsSpec", arg.getText(), arg.getStart().getText()));
-		this.inOptionsSpec.push(true);
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec.pop();
-	}
-
-	public boolean inOptionsSpec() {
-      return inOptionsSpec.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
 
 	@Override
@@ -571,6 +78,23 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inOptionValue() {
       return inOptionValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
+
+	@Override
+	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText()));
+		this.inDelegateGrammars.push(true);
+	}
+
+	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		onExit();
+		this.inDelegateGrammars.pop();
+	}
+
+	public boolean inDelegateGrammars() {
+      return inDelegateGrammars.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelegateGrammar = new java.util.Stack<>();
@@ -1015,6 +539,23 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return inLexerRuleSpec.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onEnter(new Node("GrammarSpec", arg.getText(), arg.getStart().getText()));
+		this.inGrammarSpec.push(true);
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec.pop();
+	}
+
+	public boolean inGrammarSpec() {
+      return inGrammarSpec.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inLexerRuleBlock = new java.util.Stack<>();
 
 	@Override
@@ -1049,6 +590,363 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return inLexerAltList.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLexerAlt = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
+		onEnter(new Node("LexerAlt", arg.getText(), arg.getStart().getText()));
+		this.inLexerAlt.push(true);
+	}
+
+	public void exitLexerAlt(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltContext arg) {
+		onExit();
+		this.inLexerAlt.pop();
+	}
+
+	public boolean inLexerAlt() {
+      return inLexerAlt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerElements = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
+		onEnter(new Node("LexerElements", arg.getText(), arg.getStart().getText()));
+		this.inLexerElements.push(true);
+	}
+
+	public void exitLexerElements(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementsContext arg) {
+		onExit();
+		this.inLexerElements.pop();
+	}
+
+	public boolean inLexerElements() {
+      return inLexerElements.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerElement = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
+		onEnter(new Node("LexerElement", arg.getText(), arg.getStart().getText()));
+		this.inLexerElement.push(true);
+	}
+
+	public void exitLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerElementContext arg) {
+		onExit();
+		this.inLexerElement.pop();
+	}
+
+	public boolean inLexerElement() {
+      return inLexerElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLabeledLexerElement = new java.util.Stack<>();
+
+	@Override
+	public void enterLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
+		onEnter(new Node("LabeledLexerElement", arg.getText(), arg.getStart().getText()));
+		this.inLabeledLexerElement.push(true);
+	}
+
+	public void exitLabeledLexerElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledLexerElementContext arg) {
+		onExit();
+		this.inLabeledLexerElement.pop();
+	}
+
+	public boolean inLabeledLexerElement() {
+      return inLabeledLexerElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
+		onEnter(new Node("LexerBlock", arg.getText(), arg.getStart().getText()));
+		this.inLexerBlock.push(true);
+	}
+
+	public void exitLexerBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerBlockContext arg) {
+		onExit();
+		this.inLexerBlock.pop();
+	}
+
+	public boolean inLexerBlock() {
+      return inLexerBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerCommands = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
+		onEnter(new Node("LexerCommands", arg.getText(), arg.getStart().getText()));
+		this.inLexerCommands.push(true);
+	}
+
+	public void exitLexerCommands(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandsContext arg) {
+		onExit();
+		this.inLexerCommands.pop();
+	}
+
+	public boolean inLexerCommands() {
+      return inLexerCommands.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerCommand = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
+		onEnter(new Node("LexerCommand", arg.getText(), arg.getStart().getText()));
+		this.inLexerCommand.push(true);
+	}
+
+	public void exitLexerCommand(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandContext arg) {
+		onExit();
+		this.inLexerCommand.pop();
+	}
+
+	public boolean inLexerCommand() {
+      return inLexerCommand.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerCommandName = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
+		onEnter(new Node("LexerCommandName", arg.getText(), arg.getStart().getText()));
+		this.inLexerCommandName.push(true);
+	}
+
+	public void exitLexerCommandName(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandNameContext arg) {
+		onExit();
+		this.inLexerCommandName.pop();
+	}
+
+	public boolean inLexerCommandName() {
+      return inLexerCommandName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerCommandExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
+		onEnter(new Node("LexerCommandExpr", arg.getText(), arg.getStart().getText()));
+		this.inLexerCommandExpr.push(true);
+	}
+
+	public void exitLexerCommandExpr(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerCommandExprContext arg) {
+		onExit();
+		this.inLexerCommandExpr.pop();
+	}
+
+	public boolean inLexerCommandExpr() {
+      return inLexerCommandExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAltList = new java.util.Stack<>();
+
+	@Override
+	public void enterAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
+		onEnter(new Node("AltList", arg.getText(), arg.getStart().getText()));
+		this.inAltList.push(true);
+	}
+
+	public void exitAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.AltListContext arg) {
+		onExit();
+		this.inAltList.pop();
+	}
+
+	public boolean inAltList() {
+      return inAltList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAlternative = new java.util.Stack<>();
+
+	@Override
+	public void enterAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
+		onEnter(new Node("Alternative", arg.getText(), arg.getStart().getText()));
+		this.inAlternative.push(true);
+	}
+
+	public void exitAlternative(com.generator.generators.antlr.parser.ANTLRv4Parser.AlternativeContext arg) {
+		onExit();
+		this.inAlternative.pop();
+	}
+
+	public boolean inAlternative() {
+      return inAlternative.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
+
+	@Override
+	public void enterElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		this.inElement.push(true);
+	}
+
+	public void exitElement(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementContext arg) {
+		onExit();
+		this.inElement.pop();
+	}
+
+	public boolean inElement() {
+      return inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLabeledElement = new java.util.Stack<>();
+
+	@Override
+	public void enterLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
+		onEnter(new Node("LabeledElement", arg.getText(), arg.getStart().getText()));
+		this.inLabeledElement.push(true);
+	}
+
+	public void exitLabeledElement(com.generator.generators.antlr.parser.ANTLRv4Parser.LabeledElementContext arg) {
+		onExit();
+		this.inLabeledElement.pop();
+	}
+
+	public boolean inLabeledElement() {
+      return inLabeledElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEbnf = new java.util.Stack<>();
+
+	@Override
+	public void enterEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
+		onEnter(new Node("Ebnf", arg.getText(), arg.getStart().getText()));
+		this.inEbnf.push(true);
+	}
+
+	public void exitEbnf(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfContext arg) {
+		onExit();
+		this.inEbnf.pop();
+	}
+
+	public boolean inEbnf() {
+      return inEbnf.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockSuffix = new java.util.Stack<>();
+
+	@Override
+	public void enterBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
+		onEnter(new Node("BlockSuffix", arg.getText(), arg.getStart().getText()));
+		this.inBlockSuffix.push(true);
+	}
+
+	public void exitBlockSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSuffixContext arg) {
+		onExit();
+		this.inBlockSuffix.pop();
+	}
+
+	public boolean inBlockSuffix() {
+      return inBlockSuffix.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEbnfSuffix = new java.util.Stack<>();
+
+	@Override
+	public void enterEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
+		onEnter(new Node("EbnfSuffix", arg.getText(), arg.getStart().getText()));
+		this.inEbnfSuffix.push(true);
+	}
+
+	public void exitEbnfSuffix(com.generator.generators.antlr.parser.ANTLRv4Parser.EbnfSuffixContext arg) {
+		onExit();
+		this.inEbnfSuffix.pop();
+	}
+
+	public boolean inEbnfSuffix() {
+      return inEbnfSuffix.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerAtom = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
+		onEnter(new Node("LexerAtom", arg.getText(), arg.getStart().getText()));
+		this.inLexerAtom.push(true);
+	}
+
+	public void exitLexerAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAtomContext arg) {
+		onExit();
+		this.inLexerAtom.pop();
+	}
+
+	public boolean inLexerAtom() {
+      return inLexerAtom.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAtom = new java.util.Stack<>();
+
+	@Override
+	public void enterAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
+		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText()));
+		this.inAtom.push(true);
+	}
+
+	public void exitAtom(com.generator.generators.antlr.parser.ANTLRv4Parser.AtomContext arg) {
+		onExit();
+		this.inAtom.pop();
+	}
+
+	public boolean inAtom() {
+      return inAtom.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNotSet = new java.util.Stack<>();
+
+	@Override
+	public void enterNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
+		onEnter(new Node("NotSet", arg.getText(), arg.getStart().getText()));
+		this.inNotSet.push(true);
+	}
+
+	public void exitNotSet(com.generator.generators.antlr.parser.ANTLRv4Parser.NotSetContext arg) {
+		onExit();
+		this.inNotSet.pop();
+	}
+
+	public boolean inNotSet() {
+      return inNotSet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBlockSet = new java.util.Stack<>();
+
+	@Override
+	public void enterBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
+		onEnter(new Node("BlockSet", arg.getText(), arg.getStart().getText()));
+		this.inBlockSet.push(true);
+	}
+
+	public void exitBlockSet(com.generator.generators.antlr.parser.ANTLRv4Parser.BlockSetContext arg) {
+		onExit();
+		this.inBlockSet.pop();
+	}
+
+	public boolean inBlockSet() {
+      return inBlockSet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSetElement = new java.util.Stack<>();
+
+	@Override
+	public void enterSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
+		onEnter(new Node("SetElement", arg.getText(), arg.getStart().getText()));
+		this.inSetElement.push(true);
+	}
+
+	public void exitSetElement(com.generator.generators.antlr.parser.ANTLRv4Parser.SetElementContext arg) {
+		onExit();
+		this.inSetElement.pop();
+	}
+
+	public boolean inSetElement() {
+      return inSetElement.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
 
 	@Override
@@ -1064,6 +962,23 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inBlock() {
       return inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleref = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
+		onEnter(new Node("Ruleref", arg.getText(), arg.getStart().getText()));
+		this.inRuleref.push(true);
+	}
+
+	public void exitRuleref(com.generator.generators.antlr.parser.ANTLRv4Parser.RulerefContext arg) {
+		onExit();
+		this.inRuleref.pop();
+	}
+
+	public boolean inRuleref() {
+      return inRuleref.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharacterRange = new java.util.Stack<>();
@@ -1083,6 +998,91 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return inCharacterRange.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inTerminal = new java.util.Stack<>();
+
+	@Override
+	public void enterTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
+		onEnter(new Node("Terminal", arg.getText(), arg.getStart().getText()));
+		this.inTerminal.push(true);
+	}
+
+	public void exitTerminal(com.generator.generators.antlr.parser.ANTLRv4Parser.TerminalContext arg) {
+		onExit();
+		this.inTerminal.pop();
+	}
+
+	public boolean inTerminal() {
+      return inTerminal.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementOptions = new java.util.Stack<>();
+
+	@Override
+	public void enterElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
+		onEnter(new Node("ElementOptions", arg.getText(), arg.getStart().getText()));
+		this.inElementOptions.push(true);
+	}
+
+	public void exitElementOptions(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionsContext arg) {
+		onExit();
+		this.inElementOptions.pop();
+	}
+
+	public boolean inElementOptions() {
+      return inElementOptions.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementOption = new java.util.Stack<>();
+
+	@Override
+	public void enterElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
+		onEnter(new Node("ElementOption", arg.getText(), arg.getStart().getText()));
+		this.inElementOption.push(true);
+	}
+
+	public void exitElementOption(com.generator.generators.antlr.parser.ANTLRv4Parser.ElementOptionContext arg) {
+		onExit();
+		this.inElementOption.pop();
+	}
+
+	public boolean inElementOption() {
+      return inElementOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
+
+	@Override
+	public void enterIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
+		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText()));
+		this.inIdentifier.push(true);
+	}
+
+	public void exitIdentifier(com.generator.generators.antlr.parser.ANTLRv4Parser.IdentifierContext arg) {
+		onExit();
+		this.inIdentifier.pop();
+	}
+
+	public boolean inIdentifier() {
+      return inIdentifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
+
+	@Override
+	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		onEnter(new Node("PrequelConstruct", arg.getText(), arg.getStart().getText()));
+		this.inPrequelConstruct.push(true);
+	}
+
+	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		onExit();
+		this.inPrequelConstruct.pop();
+	}
+
+	public boolean inPrequelConstruct() {
+      return inPrequelConstruct.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
 
 	@Override
@@ -1100,21 +1100,21 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return inGrammarType.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
 
 	@Override
-	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText()));
-		this.inDelegateGrammars.push(true);
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		onEnter(new Node("OptionsSpec", arg.getText(), arg.getStart().getText()));
+		this.inOptionsSpec.push(true);
 	}
 
-	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
 		onExit();
-		this.inDelegateGrammars.pop();
+		this.inOptionsSpec.pop();
 	}
 
-	public boolean inDelegateGrammars() {
-      return inDelegateGrammars.isEmpty(); 
+	public boolean inOptionsSpec() {
+      return inOptionsSpec.isEmpty(); 
    }
 
 }

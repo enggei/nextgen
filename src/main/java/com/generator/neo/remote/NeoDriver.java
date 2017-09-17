@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.generator.neo.BaseDomainVisitor.TAG_UUID;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoNode.TAG_NODE;
 import static com.generator.neo.remote.NeoNode.uuidOf;
 import static org.neo4j.driver.v1.Values.parameters;

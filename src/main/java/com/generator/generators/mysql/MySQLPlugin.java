@@ -1,6 +1,6 @@
 package com.generator.generators.mysql;
 
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
@@ -20,7 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.generator.neo.BaseDomainVisitor.relate;
+import static com.generator.util.NeoUtil.relate;
 
 /**
  * Created 23.08.17.
@@ -46,15 +46,15 @@ public class MySQLPlugin extends DomainPlugin {
    @Override
    protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
 
-      if (BaseDomainVisitor.hasLabel(neoNode.getNode(), "ColCreateTable")) {
+      if (NeoUtil.hasLabel(neoNode.getNode(), "ColCreateTable")) {
          pop.add(new App.TransactionAction("As Pojo", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               BaseDomainVisitor.outgoing(neoNode.getNode(), RelationshipType.withName("child")).forEach(new Consumer<Relationship>() {
+               NeoUtil.outgoing(neoNode.getNode(), RelationshipType.withName("child")).forEach(new Consumer<Relationship>() {
                   @Override
                   public void accept(Relationship relationship) {
-                     final Node other = BaseDomainVisitor.other(neoNode.getNode(), relationship);
+                     final Node other = NeoUtil.other(neoNode.getNode(), relationship);
 
                   }
                });

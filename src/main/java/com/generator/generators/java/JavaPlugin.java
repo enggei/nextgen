@@ -1,6 +1,6 @@
 package com.generator.generators.java;
 
-import com.generator.neo.BaseDomainVisitor;
+import com.generator.util.NeoUtil;
 import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
@@ -23,9 +23,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.neo.BaseDomainVisitor.*;
-import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
-import static com.generator.neo.BaseDomainVisitor.relate;
+import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
+import static com.generator.util.NeoUtil.relate;
 
 /**
  * Created 12.09.17.
@@ -215,8 +215,8 @@ public class JavaPlugin extends DomainPlugin {
 
       private String renderObject(Node node) {
 
-         final Object instance = instanceMap.get(BaseDomainVisitor.getString(node, TAG_UUID));
-         if (instance == null) return "No instance for " + BaseDomainVisitor.getString(node, TAG_UUID);
+         final Object instance = instanceMap.get(NeoUtil.getString(node, TAG_UUID));
+         if (instance == null) return "No instance for " + NeoUtil.getString(node, TAG_UUID);
 
          final StringBuilder text = new StringBuilder();
 

@@ -10,7 +10,7 @@ import org.neo4j.graphdb.RelationshipType;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.generator.neo.BaseDomainVisitor.*;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 25.08.17.

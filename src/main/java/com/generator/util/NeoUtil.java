@@ -1,4 +1,4 @@
-package com.generator.neo;
+package com.generator.util;
 
 import org.neo4j.graphdb.*;
 
@@ -12,7 +12,7 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
  * goe on 4/23/15.
  * todo: refactor to NeoUtil
  */
-public abstract class BaseDomainVisitor {
+public abstract class NeoUtil {
 
    public static final String TAG_UUID = "_uuid";
 

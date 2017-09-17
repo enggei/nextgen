@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static com.generator.neo.BaseDomainVisitor.TAG_UUID;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.removeCache;
 import static com.generator.neo.remote.NeoCache.updateCache;
 import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;

@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.neo.BaseDomainVisitor.*;
-import static com.generator.neo.BaseDomainVisitor.getNameAndLabelsFrom;
+import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 
 /**
