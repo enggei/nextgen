@@ -2,17 +2,23 @@ package com.generator.neo.remote;
 
 
 import com.generator.neo.NeoModel;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.driver.v1.Statement;
+import org.neo4j.driver.v1.StatementResult;
+import org.neo4j.driver.v1.summary.ResultSummary;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.IndexManager;
+import org.neo4j.helpers.collection.Iterators;
 import org.neo4j.index.impl.lucene.legacy.EmptyIndexHits;
 
+import java.io.PrintWriter;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
 import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.isCachedNode;
@@ -56,8 +62,13 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public ResourceIterable<Relationship> getAllRelationships() {
-      // todo implement
-      return new EmptyIndexHits<>();
+
+      final Iterable<Relationship> relationships = readRelationships(new Statement("MATCH ()-[r]-() RETURN r"))
+         .stream()
+         .map(relationship -> fromDriverRelationship(RemoteNeoModel.this, relationship))
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(relationships.iterator());
    }
 
    @Override
@@ -74,8 +85,13 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public Iterable<Node> findNodesWithProperty(String property) {
-      // todo implement
-      return new EmptyIndexHits<>();
+
+      final Iterable<Node> nodes = getNodesWithProperty(property)
+         .stream()
+         .map(node -> fromDriverNode(RemoteNeoModel.this, node))
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(nodes.iterator());
    }
 
    @Override
@@ -93,35 +109,53 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    @Override
    public ResourceIterable<Label> getAllLabelsInUse() {
 
-      // todo implement
-      return new EmptyIndexHits<>();
+      // NOTE: Returns all unique labels, not just all unique label combos
+      final Iterable<Label> labels = readSingleStringColumn("MATCH (n) WITH DISTINCT LABELS(n) AS labels UNWIND labels as label RETURN DISTINCT label")
+         .stream()
+         .map(Label::label)
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(labels.iterator());
    }
 
    @Override
    public ResourceIterable<RelationshipType> getAllRelationshipTypesInUse() {
 
-      // todo implement
-      return new EmptyIndexHits<>();
+      final Iterable<RelationshipType> relationshipTypes = readSingleStringColumn("MATCH ()-[r]-() WITH DISTINCT TYPE(r) AS type RETURN type")
+         .stream()
+         .map(RelationshipType::withName)
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(relationshipTypes.iterator());
    }
 
    @Override
    public ResourceIterable<Label> getAllLabels() {
 
-      // todo implement
-      return new EmptyIndexHits<>();
+      final Iterable<Label> labels = readSingleStringColumn("CALL db.labels() YIELD label")
+         .stream()
+         .map(Label::label)
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(labels.iterator());
    }
 
    @Override
    public ResourceIterable<RelationshipType> getAllRelationshipTypes() {
 
-      // todo implement
-      return new EmptyIndexHits<>();
+      final Iterable<RelationshipType> relationshipTypes = readSingleStringColumn("CALL db.relationshipTypes()")
+         .stream()
+         .map(RelationshipType::withName)
+         .collect(Collectors.toCollection(LinkedHashSet::new));
+
+      return () -> Iterators.asResourceIterator(relationshipTypes.iterator());
    }
 
    @Override
    public ResourceIterable<String> getAllPropertyKeys() {
-      // todo implement
-      return new EmptyIndexHits<>();
+      final Iterable<String> properties = new LinkedHashSet<>(readSingleStringColumn("CALL db.propertyKeys()"));
+
+      return () -> Iterators.asResourceIterator(properties.iterator());
    }
 
    @Override
@@ -234,8 +268,22 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public Node findOrCreate(Label label, String key, Object value, Object... properties) {
-      // todo implement
-      return null;
+      if (properties.length % 2 != 0)
+         throw new IllegalArgumentException("Properties in findOrCreate must be key-value pairs");
+
+      org.neo4j.driver.v1.types.Node node;
+
+      Iterator<org.neo4j.driver.v1.types.Node> iterator = getNodes(label.name(), key, value).iterator();
+
+      // TODO: Review this - ensuring UUID is generated for Node
+      if (!iterator.hasNext())
+         node = createNode(label.name(), UUID.randomUUID(), key, value);
+      else
+         node = iterator.next();
+
+      node = setProperties(node, properties);
+
+      return fromDriverNode(this, node);
    }
 
    @Override
