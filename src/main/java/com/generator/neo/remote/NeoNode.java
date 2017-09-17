@@ -155,7 +155,7 @@ public class NeoNode implements Node, NeoEntity {
       merge(this, other.relationships);
    }
 
-   static NeoNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node) {
+   public static NeoNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node) {
       return fromDriverNode(driver, node, null);
    }
 
@@ -163,6 +163,7 @@ public class NeoNode implements Node, NeoEntity {
       return new NeoNode(driver, node, relationships);
    }
 
+   // todo move static methods into BaseDomainVisitor, (which will be refactored to NeoUtil)
    public static UUID uuidOf(final org.neo4j.driver.v1.types.Node node) {
       return node == null ? null : hasUUID(node) ? UUID.fromString(node.get(TAG_UUID).asString()) : null;
    }

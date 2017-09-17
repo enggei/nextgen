@@ -33,12 +33,12 @@ public class NeoCache {
       return relationshipCache.containsKey(uuid);
    }
 
-   static NeoNode getCachedNode(final UUID uuid) {
+   public static NeoNode getCachedNode(final UUID uuid) {
       System.out.println("getCachedNode: " + uuid);
       return nodeCache.get(uuid);
    }
 
-   static NeoRelationship getCachedRelationship(final UUID uuid) {
+   public static NeoRelationship getCachedRelationship(final UUID uuid) {
       System.out.println("getCachedRelationship: " + uuid);
       return relationshipCache.get(uuid);
    }
