@@ -64,7 +64,7 @@ final class InformationPanel extends JPanel {
       }};
       add(new JScrollPane(informationTree), BorderLayout.CENTER);
 
-      app.events.addPropertyChangeListener(GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(getClass(), InformationPanel.this, app) {
+      app.events.addPropertyChangeListener(GRAPH_NEW, new TransactionalPropertyChangeListener(getClass(), InformationPanel.this, app) {
 
          @Override
          protected void propertyChange(Object oldValue, Object newValue) {
@@ -230,7 +230,7 @@ final class InformationPanel extends JPanel {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
                app.model.graph().getAllLabelsInUse().forEach(label -> app.model.graph().findNodes(label).forEachRemaining(node -> {
                   if (node.getRelationships().iterator().hasNext()) return;
-                  nodes.add(new AppEvents.NodeLoadEvent(node));
+                  nodes.add(new NodeLoadEvent(node));
                }));
                app.events.firePropertyChange(NODE_LOAD, nodes);
             }
@@ -367,7 +367,7 @@ final class InformationPanel extends JPanel {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
-               app.model.graph().findNodes(((Label) getUserObject())).forEachRemaining(node -> nodes.add(new AppEvents.NodeLoadEvent(node)));
+               app.model.graph().findNodes(((Label) getUserObject())).forEachRemaining(node -> nodes.add(new NodeLoadEvent(node)));
                app.events.firePropertyChange(NODE_LOAD, nodes);
             }
          });
@@ -375,7 +375,7 @@ final class InformationPanel extends JPanel {
          pop.add(new App.TransactionAction("New", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               app.events.firePropertyChange(NODE_LOAD, new AppEvents.NodeLoadEvent(app.model.graph().newNode((Label) getUserObject())));
+               app.events.firePropertyChange(NODE_LOAD, new NodeLoadEvent(app.model.graph().newNode((Label) getUserObject())));
             }
          });
 
@@ -487,8 +487,8 @@ final class InformationPanel extends JPanel {
                final String existingType = ((RelationshipType) getUserObject()).name();
                app.model.graph().getAllRelationships().forEach(relationship -> {
                   if (!relationship.getType().name().equals(existingType)) return;
-                  nodes.add(new AppEvents.NodeLoadEvent(relationship.getStartNode()));
-                  nodes.add(new AppEvents.NodeLoadEvent(relationship.getEndNode()));
+                  nodes.add(new NodeLoadEvent(relationship.getStartNode()));
+                  nodes.add(new NodeLoadEvent(relationship.getEndNode()));
                });
                app.events.firePropertyChange(NODE_LOAD, nodes);
             }
@@ -514,6 +514,39 @@ final class InformationPanel extends JPanel {
                });
             }
          });
+
+         pop.add(new App.TransactionAction("Set color", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) {
+
+               final ColorBrewerSelector editor = new ColorBrewerSelector();
+
+               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.OnSave() {
+                  @Override
+                  public void verifyAndSave() throws Exception {
+                     final Color color = editor.getSelectedColor();
+                     if (color == null) return;
+
+                     app.model.graph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "relation", ((RelationshipType) getUserObject()).name());
+                           if (colorNode == null)
+                              colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "relation", ((RelationshipType) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
+                           final String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+                           colorNode.setProperty(AppMotif.Properties._color.name(), hex);
+                           app.events.firePropertyChange(RELATION_COLOR_CHANGED, ((RelationshipType) getUserObject()).name(), color);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
+            }
+         });
       }
    }
 
@@ -531,7 +564,7 @@ final class InformationPanel extends JPanel {
                final String property = ((String) getUserObject());
                final Set<AppEvents.NodeLoadEvent> nodes = new LinkedHashSet<>();
                for (Node node : app.model.graph().findNodesWithProperty(property))
-                  nodes.add(new AppEvents.NodeLoadEvent(node));
+                  nodes.add(new NodeLoadEvent(node));
                app.events.firePropertyChange(NODE_LOAD, nodes);
             }
          });

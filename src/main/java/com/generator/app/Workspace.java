@@ -1,12 +1,11 @@
 package com.generator.app;
 
-import com.generator.util.NeoUtil;
-import com.generator.neo.NeoModel;
 import com.generator.generators.cypher.CypherGroup;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.neo.NeoModel;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
-import com.google.common.util.concurrent.AtomicDouble;
 import org.abego.treelayout.Configuration;
 import org.abego.treelayout.NodeExtentProvider;
 import org.abego.treelayout.TreeForTreeLayout;
@@ -41,9 +40,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.generator.util.NeoUtil.*;
-import static com.generator.neo.NeoModel.*;
 import static com.generator.app.AppEvents.*;
+import static com.generator.neo.NeoModel.Committer;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 18.07.17.
@@ -76,7 +75,6 @@ public final class Workspace extends JPanel {
    public class NodeCanvas extends PCanvas {
 
       private final Color selectedNodeColor = Color.decode("#d95f0e");
-      private final Color defaultRelationColor = Color.decode("#252525");
       private final Color highlightedNodeColor = Color.decode("#43a2ca");
       private AppMotif.RelationPaintStrategy relationPaintStrategy = app.model.getRelationPaintStrategy();
       private AppMotif.RelationPathStrategy relationPathStrategy = app.model.getRelationPathStrategy();
@@ -1804,14 +1802,18 @@ public final class Workspace extends JPanel {
       class NeoRelationship implements PropertyChangeListener {
 
          final PPath path;
-         private Paint currentPaint = defaultRelationColor;
+         private Paint defaultColor = Color.decode("#252525");
+         private Paint currentPaint = defaultColor;
          private PText pText;
 
          NeoRelationship(Relationship relationship, NodeCanvas.NeoNode source, NodeCanvas.NeoNode target) {
-            //System.out.println("new relationship " + getNameAndLabelsFrom(source.getNode()) + " -> [ "+   relationship.getType() + " ] -> " + getNameAndLabelsFrom(target.getNode()));
             pText = new PText();
             path = PPath.createLine(source.getFullBoundsReference().getCenter2D().getX(), source.getFullBoundsReference().getCenter2D().getY(), target.getFullBoundsReference().getCenter2D().getX(), target.getFullBoundsReference().getCenter2D().getY());
-            path.setStrokePaint(currentPaint);
+
+            final Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "relation", relationship.getType().name());
+            if (colorNode != null)
+               defaultColor = Color.decode(getString(colorNode, AppMotif.Properties._color.name()));
+            path.setStrokePaint(defaultColor);
             path.addAttribute("id", relationship.getId());
             path.addAttribute("relationship", relationship);
             path.addAttribute("source", source);
@@ -1843,7 +1845,7 @@ public final class Workspace extends JPanel {
 
                @Override
                public void mouseExited(PInputEvent event) {
-                  currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultRelationColor;
+                  currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultColor;
                   repaintRelation();
                }
 
@@ -2009,13 +2011,13 @@ public final class Workspace extends JPanel {
 
          void unhighlight() {
             path.addAttribute("highlighted", Boolean.FALSE);
-            currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultRelationColor;
+            currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultColor;
             updatePath(((NodeCanvas.NeoNode) path.getAttribute("source")), (NodeCanvas.NeoNode) path.getAttribute("target"));
          }
 
          void toggleSelect() {
             path.addAttribute("selected", !path.getBooleanAttribute("selected", false));
-            currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultRelationColor;
+            currentPaint = path.getBooleanAttribute("selected", false) ? selectedNodeColor : defaultColor;
             updatePath(((NodeCanvas.NeoNode) path.getAttribute("source")), (NodeCanvas.NeoNode) path.getAttribute("target"));
          }
 
@@ -2027,7 +2029,7 @@ public final class Workspace extends JPanel {
 
          void unselect() {
             path.addAttribute("selected", Boolean.FALSE);
-            currentPaint = defaultRelationColor;
+            currentPaint = defaultColor;
             updatePath(((NodeCanvas.NeoNode) path.getAttribute("source")), (NodeCanvas.NeoNode) path.getAttribute("target"));
          }
 

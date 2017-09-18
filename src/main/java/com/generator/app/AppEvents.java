@@ -32,6 +32,7 @@ public final class AppEvents {
    static final String LABELS_ASSIGNED = "labels.assigned";
 
    static final String RELATION_HIGHLIGHTED = "relation.highlighted";
+   static final String RELATION_COLOR_CHANGED = "relations.color";
    static final String RELATIONS_CLOSED = "relation.closed";
    static final String RELATIONS_SELECTED = "relations.selected";
    static final String RELATIONS_DELETED = "relations.deleted";
