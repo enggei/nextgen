@@ -60,7 +60,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inElement() {
-      return inElement.isEmpty(); 
+      return !inElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inAttribute() {
-      return inAttribute.isEmpty(); 
+      return !inAttribute.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inDocument() {
-      return inDocument.isEmpty(); 
+      return !inDocument.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProlog = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inProlog() {
-      return inProlog.isEmpty(); 
+      return !inProlog.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inContent = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inContent() {
-      return inContent.isEmpty(); 
+      return !inContent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReference = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inReference() {
-      return inReference.isEmpty(); 
+      return !inReference.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChardata = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inChardata() {
-      return inChardata.isEmpty(); 
+      return !inChardata.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMisc = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 	}
 
 	public boolean inMisc() {
-      return inMisc.isEmpty(); 
+      return !inMisc.isEmpty(); 
    }
 
 }

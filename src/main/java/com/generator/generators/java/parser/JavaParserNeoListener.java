@@ -54,25 +54,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inBlock() {
-      return inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
+      return !inBlock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
@@ -90,7 +72,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inExpression() {
-      return inExpression.isEmpty(); 
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
@@ -108,7 +90,25 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inStatement() {
-      return inStatement.isEmpty(); 
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalParameterList = new java.util.Stack<>();
@@ -126,7 +126,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inFormalParameterList() {
-      return inFormalParameterList.isEmpty(); 
+      return !inFormalParameterList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArguments = new java.util.Stack<>();
@@ -144,7 +144,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inArguments() {
-      return inArguments.isEmpty(); 
+      return !inArguments.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionList = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inExpressionList() {
-      return inExpressionList.isEmpty(); 
+      return !inExpressionList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeList = new java.util.Stack<>();
@@ -180,7 +180,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeList() {
-      return inTypeList.isEmpty(); 
+      return !inTypeList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
@@ -198,7 +198,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inCompilationUnit() {
-      return inCompilationUnit.isEmpty(); 
+      return !inCompilationUnit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
@@ -216,7 +216,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inPackageDeclaration() {
-      return inPackageDeclaration.isEmpty(); 
+      return !inPackageDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
@@ -234,7 +234,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inImportDeclaration() {
-      return inImportDeclaration.isEmpty(); 
+      return !inImportDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
@@ -252,7 +252,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeDeclaration() {
-      return inTypeDeclaration.isEmpty(); 
+      return !inTypeDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
@@ -270,7 +270,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inModifier() {
-      return inModifier.isEmpty(); 
+      return !inModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
@@ -288,7 +288,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassOrInterfaceModifier() {
-      return inClassOrInterfaceModifier.isEmpty(); 
+      return !inClassOrInterfaceModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariableModifier = new java.util.Stack<>();
@@ -306,7 +306,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inVariableModifier() {
-      return inVariableModifier.isEmpty(); 
+      return !inVariableModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassDeclaration = new java.util.Stack<>();
@@ -324,7 +324,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassDeclaration() {
-      return inClassDeclaration.isEmpty(); 
+      return !inClassDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeParameters = new java.util.Stack<>();
@@ -342,7 +342,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeParameters() {
-      return inTypeParameters.isEmpty(); 
+      return !inTypeParameters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeParameter = new java.util.Stack<>();
@@ -360,7 +360,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeParameter() {
-      return inTypeParameter.isEmpty(); 
+      return !inTypeParameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeBound = new java.util.Stack<>();
@@ -378,7 +378,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeBound() {
-      return inTypeBound.isEmpty(); 
+      return !inTypeBound.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumDeclaration = new java.util.Stack<>();
@@ -396,7 +396,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inEnumDeclaration() {
-      return inEnumDeclaration.isEmpty(); 
+      return !inEnumDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumConstants = new java.util.Stack<>();
@@ -414,7 +414,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inEnumConstants() {
-      return inEnumConstants.isEmpty(); 
+      return !inEnumConstants.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumConstant = new java.util.Stack<>();
@@ -432,7 +432,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inEnumConstant() {
-      return inEnumConstant.isEmpty(); 
+      return !inEnumConstant.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumBodyDeclarations = new java.util.Stack<>();
@@ -450,7 +450,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inEnumBodyDeclarations() {
-      return inEnumBodyDeclarations.isEmpty(); 
+      return !inEnumBodyDeclarations.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceDeclaration() {
-      return inInterfaceDeclaration.isEmpty(); 
+      return !inInterfaceDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassBody = new java.util.Stack<>();
@@ -486,7 +486,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassBody() {
-      return inClassBody.isEmpty(); 
+      return !inClassBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceBody = new java.util.Stack<>();
@@ -504,7 +504,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceBody() {
-      return inInterfaceBody.isEmpty(); 
+      return !inInterfaceBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassBodyDeclaration = new java.util.Stack<>();
@@ -522,7 +522,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassBodyDeclaration() {
-      return inClassBodyDeclaration.isEmpty(); 
+      return !inClassBodyDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberDeclaration = new java.util.Stack<>();
@@ -540,7 +540,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inMemberDeclaration() {
-      return inMemberDeclaration.isEmpty(); 
+      return !inMemberDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodDeclaration = new java.util.Stack<>();
@@ -558,7 +558,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inMethodDeclaration() {
-      return inMethodDeclaration.isEmpty(); 
+      return !inMethodDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodBody = new java.util.Stack<>();
@@ -576,7 +576,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inMethodBody() {
-      return inMethodBody.isEmpty(); 
+      return !inMethodBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeTypeOrVoid = new java.util.Stack<>();
@@ -594,7 +594,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeTypeOrVoid() {
-      return inTypeTypeOrVoid.isEmpty(); 
+      return !inTypeTypeOrVoid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGenericMethodDeclaration = new java.util.Stack<>();
@@ -612,7 +612,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inGenericMethodDeclaration() {
-      return inGenericMethodDeclaration.isEmpty(); 
+      return !inGenericMethodDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGenericConstructorDeclaration = new java.util.Stack<>();
@@ -630,7 +630,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inGenericConstructorDeclaration() {
-      return inGenericConstructorDeclaration.isEmpty(); 
+      return !inGenericConstructorDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstructorDeclaration = new java.util.Stack<>();
@@ -648,7 +648,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inConstructorDeclaration() {
-      return inConstructorDeclaration.isEmpty(); 
+      return !inConstructorDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFieldDeclaration = new java.util.Stack<>();
@@ -666,7 +666,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inFieldDeclaration() {
-      return inFieldDeclaration.isEmpty(); 
+      return !inFieldDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceBodyDeclaration = new java.util.Stack<>();
@@ -684,7 +684,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceBodyDeclaration() {
-      return inInterfaceBodyDeclaration.isEmpty(); 
+      return !inInterfaceBodyDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceMemberDeclaration = new java.util.Stack<>();
@@ -702,7 +702,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceMemberDeclaration() {
-      return inInterfaceMemberDeclaration.isEmpty(); 
+      return !inInterfaceMemberDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstDeclaration = new java.util.Stack<>();
@@ -720,7 +720,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inConstDeclaration() {
-      return inConstDeclaration.isEmpty(); 
+      return !inConstDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstantDeclarator = new java.util.Stack<>();
@@ -738,7 +738,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inConstantDeclarator() {
-      return inConstantDeclarator.isEmpty(); 
+      return !inConstantDeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceMethodDeclaration = new java.util.Stack<>();
@@ -756,7 +756,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceMethodDeclaration() {
-      return inInterfaceMethodDeclaration.isEmpty(); 
+      return !inInterfaceMethodDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceMethodModifier = new java.util.Stack<>();
@@ -774,7 +774,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInterfaceMethodModifier() {
-      return inInterfaceMethodModifier.isEmpty(); 
+      return !inInterfaceMethodModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGenericInterfaceMethodDeclaration = new java.util.Stack<>();
@@ -792,7 +792,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inGenericInterfaceMethodDeclaration() {
-      return inGenericInterfaceMethodDeclaration.isEmpty(); 
+      return !inGenericInterfaceMethodDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariableDeclarators = new java.util.Stack<>();
@@ -810,7 +810,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inVariableDeclarators() {
-      return inVariableDeclarators.isEmpty(); 
+      return !inVariableDeclarators.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariableDeclarator = new java.util.Stack<>();
@@ -828,7 +828,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inVariableDeclarator() {
-      return inVariableDeclarator.isEmpty(); 
+      return !inVariableDeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariableDeclaratorId = new java.util.Stack<>();
@@ -846,7 +846,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inVariableDeclaratorId() {
-      return inVariableDeclaratorId.isEmpty(); 
+      return !inVariableDeclaratorId.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariableInitializer = new java.util.Stack<>();
@@ -864,7 +864,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inVariableInitializer() {
-      return inVariableInitializer.isEmpty(); 
+      return !inVariableInitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArrayInitializer = new java.util.Stack<>();
@@ -882,7 +882,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inArrayInitializer() {
-      return inArrayInitializer.isEmpty(); 
+      return !inArrayInitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassOrInterfaceType = new java.util.Stack<>();
@@ -900,7 +900,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassOrInterfaceType() {
-      return inClassOrInterfaceType.isEmpty(); 
+      return !inClassOrInterfaceType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();
@@ -918,7 +918,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeArgument() {
-      return inTypeArgument.isEmpty(); 
+      return !inTypeArgument.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedNameList = new java.util.Stack<>();
@@ -936,7 +936,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inQualifiedNameList() {
-      return inQualifiedNameList.isEmpty(); 
+      return !inQualifiedNameList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalParameters = new java.util.Stack<>();
@@ -954,7 +954,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inFormalParameters() {
-      return inFormalParameters.isEmpty(); 
+      return !inFormalParameters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalParameter = new java.util.Stack<>();
@@ -972,7 +972,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inFormalParameter() {
-      return inFormalParameter.isEmpty(); 
+      return !inFormalParameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLastFormalParameter = new java.util.Stack<>();
@@ -990,7 +990,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inLastFormalParameter() {
-      return inLastFormalParameter.isEmpty(); 
+      return !inLastFormalParameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedName = new java.util.Stack<>();
@@ -1008,7 +1008,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inQualifiedName() {
-      return inQualifiedName.isEmpty(); 
+      return !inQualifiedName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
@@ -1026,7 +1026,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inIntegerLiteral() {
-      return inIntegerLiteral.isEmpty(); 
+      return !inIntegerLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotation = new java.util.Stack<>();
@@ -1044,7 +1044,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotation() {
-      return inAnnotation.isEmpty(); 
+      return !inAnnotation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementValuePairs = new java.util.Stack<>();
@@ -1062,7 +1062,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inElementValuePairs() {
-      return inElementValuePairs.isEmpty(); 
+      return !inElementValuePairs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementValuePair = new java.util.Stack<>();
@@ -1080,7 +1080,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inElementValuePair() {
-      return inElementValuePair.isEmpty(); 
+      return !inElementValuePair.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementValue = new java.util.Stack<>();
@@ -1098,7 +1098,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inElementValue() {
-      return inElementValue.isEmpty(); 
+      return !inElementValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementValueArrayInitializer = new java.util.Stack<>();
@@ -1116,7 +1116,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inElementValueArrayInitializer() {
-      return inElementValueArrayInitializer.isEmpty(); 
+      return !inElementValueArrayInitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationTypeDeclaration = new java.util.Stack<>();
@@ -1134,7 +1134,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationTypeDeclaration() {
-      return inAnnotationTypeDeclaration.isEmpty(); 
+      return !inAnnotationTypeDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationTypeBody = new java.util.Stack<>();
@@ -1152,7 +1152,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationTypeBody() {
-      return inAnnotationTypeBody.isEmpty(); 
+      return !inAnnotationTypeBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationTypeElementDeclaration = new java.util.Stack<>();
@@ -1170,7 +1170,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationTypeElementDeclaration() {
-      return inAnnotationTypeElementDeclaration.isEmpty(); 
+      return !inAnnotationTypeElementDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationTypeElementRest = new java.util.Stack<>();
@@ -1188,7 +1188,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationTypeElementRest() {
-      return inAnnotationTypeElementRest.isEmpty(); 
+      return !inAnnotationTypeElementRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationMethodOrConstantRest = new java.util.Stack<>();
@@ -1206,7 +1206,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationMethodOrConstantRest() {
-      return inAnnotationMethodOrConstantRest.isEmpty(); 
+      return !inAnnotationMethodOrConstantRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationMethodRest = new java.util.Stack<>();
@@ -1224,7 +1224,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationMethodRest() {
-      return inAnnotationMethodRest.isEmpty(); 
+      return !inAnnotationMethodRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotationConstantRest = new java.util.Stack<>();
@@ -1242,7 +1242,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inAnnotationConstantRest() {
-      return inAnnotationConstantRest.isEmpty(); 
+      return !inAnnotationConstantRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
@@ -1260,7 +1260,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inDefaultValue() {
-      return inDefaultValue.isEmpty(); 
+      return !inDefaultValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlockStatement = new java.util.Stack<>();
@@ -1278,7 +1278,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inBlockStatement() {
-      return inBlockStatement.isEmpty(); 
+      return !inBlockStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLocalVariableDeclaration = new java.util.Stack<>();
@@ -1296,7 +1296,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inLocalVariableDeclaration() {
-      return inLocalVariableDeclaration.isEmpty(); 
+      return !inLocalVariableDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCatchClause = new java.util.Stack<>();
@@ -1314,7 +1314,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inCatchClause() {
-      return inCatchClause.isEmpty(); 
+      return !inCatchClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCatchType = new java.util.Stack<>();
@@ -1332,7 +1332,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inCatchType() {
-      return inCatchType.isEmpty(); 
+      return !inCatchType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFinallyBlock = new java.util.Stack<>();
@@ -1350,7 +1350,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inFinallyBlock() {
-      return inFinallyBlock.isEmpty(); 
+      return !inFinallyBlock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inResourceSpecification = new java.util.Stack<>();
@@ -1368,7 +1368,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inResourceSpecification() {
-      return inResourceSpecification.isEmpty(); 
+      return !inResourceSpecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inResources = new java.util.Stack<>();
@@ -1386,7 +1386,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inResources() {
-      return inResources.isEmpty(); 
+      return !inResources.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inResource = new java.util.Stack<>();
@@ -1404,7 +1404,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inResource() {
-      return inResource.isEmpty(); 
+      return !inResource.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSwitchBlockStatementGroup = new java.util.Stack<>();
@@ -1422,7 +1422,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inSwitchBlockStatementGroup() {
-      return inSwitchBlockStatementGroup.isEmpty(); 
+      return !inSwitchBlockStatementGroup.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSwitchLabel = new java.util.Stack<>();
@@ -1440,7 +1440,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inSwitchLabel() {
-      return inSwitchLabel.isEmpty(); 
+      return !inSwitchLabel.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForControl = new java.util.Stack<>();
@@ -1458,7 +1458,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inForControl() {
-      return inForControl.isEmpty(); 
+      return !inForControl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForInit = new java.util.Stack<>();
@@ -1476,7 +1476,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inForInit() {
-      return inForInit.isEmpty(); 
+      return !inForInit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnhancedForControl = new java.util.Stack<>();
@@ -1494,7 +1494,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inEnhancedForControl() {
-      return inEnhancedForControl.isEmpty(); 
+      return !inEnhancedForControl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParExpression = new java.util.Stack<>();
@@ -1512,7 +1512,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inParExpression() {
-      return inParExpression.isEmpty(); 
+      return !inParExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdaExpression = new java.util.Stack<>();
@@ -1530,7 +1530,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inLambdaExpression() {
-      return inLambdaExpression.isEmpty(); 
+      return !inLambdaExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdaParameters = new java.util.Stack<>();
@@ -1548,7 +1548,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inLambdaParameters() {
-      return inLambdaParameters.isEmpty(); 
+      return !inLambdaParameters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdaBody = new java.util.Stack<>();
@@ -1566,7 +1566,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inLambdaBody() {
-      return inLambdaBody.isEmpty(); 
+      return !inLambdaBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrimary = new java.util.Stack<>();
@@ -1584,7 +1584,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inPrimary() {
-      return inPrimary.isEmpty(); 
+      return !inPrimary.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodReference = new java.util.Stack<>();
@@ -1602,7 +1602,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inMethodReference() {
-      return inMethodReference.isEmpty(); 
+      return !inMethodReference.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassType = new java.util.Stack<>();
@@ -1620,7 +1620,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassType() {
-      return inClassType.isEmpty(); 
+      return !inClassType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreator = new java.util.Stack<>();
@@ -1638,7 +1638,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inCreator() {
-      return inCreator.isEmpty(); 
+      return !inCreator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreatedName = new java.util.Stack<>();
@@ -1656,7 +1656,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inCreatedName() {
-      return inCreatedName.isEmpty(); 
+      return !inCreatedName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInnerCreator = new java.util.Stack<>();
@@ -1674,7 +1674,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inInnerCreator() {
-      return inInnerCreator.isEmpty(); 
+      return !inInnerCreator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArrayCreatorRest = new java.util.Stack<>();
@@ -1692,7 +1692,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inArrayCreatorRest() {
-      return inArrayCreatorRest.isEmpty(); 
+      return !inArrayCreatorRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassCreatorRest = new java.util.Stack<>();
@@ -1710,7 +1710,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inClassCreatorRest() {
-      return inClassCreatorRest.isEmpty(); 
+      return !inClassCreatorRest.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExplicitGenericInvocation = new java.util.Stack<>();
@@ -1728,7 +1728,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inExplicitGenericInvocation() {
-      return inExplicitGenericInvocation.isEmpty(); 
+      return !inExplicitGenericInvocation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArgumentsOrDiamond = new java.util.Stack<>();
@@ -1746,7 +1746,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeArgumentsOrDiamond() {
-      return inTypeArgumentsOrDiamond.isEmpty(); 
+      return !inTypeArgumentsOrDiamond.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNonWildcardTypeArgumentsOrDiamond = new java.util.Stack<>();
@@ -1764,7 +1764,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inNonWildcardTypeArgumentsOrDiamond() {
-      return inNonWildcardTypeArgumentsOrDiamond.isEmpty(); 
+      return !inNonWildcardTypeArgumentsOrDiamond.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNonWildcardTypeArguments = new java.util.Stack<>();
@@ -1782,7 +1782,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inNonWildcardTypeArguments() {
-      return inNonWildcardTypeArguments.isEmpty(); 
+      return !inNonWildcardTypeArguments.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeType = new java.util.Stack<>();
@@ -1800,7 +1800,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeType() {
-      return inTypeType.isEmpty(); 
+      return !inTypeType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrimitiveType = new java.util.Stack<>();
@@ -1818,7 +1818,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inPrimitiveType() {
-      return inPrimitiveType.isEmpty(); 
+      return !inPrimitiveType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArguments = new java.util.Stack<>();
@@ -1836,7 +1836,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inTypeArguments() {
-      return inTypeArguments.isEmpty(); 
+      return !inTypeArguments.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSuperSuffix = new java.util.Stack<>();
@@ -1854,7 +1854,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inSuperSuffix() {
-      return inSuperSuffix.isEmpty(); 
+      return !inSuperSuffix.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExplicitGenericInvocationSuffix = new java.util.Stack<>();
@@ -1872,7 +1872,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 	}
 
 	public boolean inExplicitGenericInvocationSuffix() {
-      return inExplicitGenericInvocationSuffix.isEmpty(); 
+      return !inExplicitGenericInvocationSuffix.isEmpty(); 
    }
 
 }

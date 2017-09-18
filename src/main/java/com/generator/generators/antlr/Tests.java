@@ -4,12 +4,15 @@ import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
+import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created 25.08.17.
@@ -56,20 +59,38 @@ public class Tests {
 
       // todo
       final String[] grammarFiles = new String[]{
-            "antlr/parser/ANTLRv4Parser.g4"
+//            "antlr/parser/ANTLRv4Parser.g4",
+//            "java/parser/JavaParser.g4",
+//            "java/parser/JavaLexer.g4",
+            "csv/parser/CSV.g4"
       };
 
       for (String fileName : grammarFiles) {
+
+         final Set<String> terminals = new LinkedHashSet<>();
+
          final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + fileName))));
          final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
             @Override
             public void enterRuleSpec(ANTLRv4Parser.RuleSpecContext arg) {
                super.enterRuleSpec(arg);
 
-               System.out.println(delim + "Rule name" + nodeStack.peek().startToken);
+               System.out.println(delim + "Rule name " + nodeStack.peek().startToken);
+            }
+
+            @Override
+            public void enterTerminal(ANTLRv4Parser.TerminalContext arg) {
+               super.enterTerminal(arg);
+
+               terminals.add(arg.getText());
             }
          };
          new ParseTreeWalker().walk(listener, parser.grammarSpec());
+
+         System.out.println("terminals: ");
+         for (String terminal : terminals) {
+            System.out.print(" " + terminal);
+         }
       }
    }
 

@@ -81,6 +81,15 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
+	public Node visitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
+		final Node node = new Node("Property", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
 		final Node node = new Node("PackageDecl", arg.getText());
 		onEnter(node);
@@ -128,15 +137,6 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	@Override
 	public Node visitMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
 		final Node node = new Node("MessageContent", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
-		final Node node = new Node("Property", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

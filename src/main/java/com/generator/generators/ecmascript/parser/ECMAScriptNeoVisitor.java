@@ -68,6 +68,16 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
+		System.out.println("Getter");
+		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
 		System.out.println("Program");
 		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
@@ -961,16 +971,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitFutureReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.FutureReservedWordContext arg) {
 		System.out.println("FutureReservedWord");
 		final Node node = model.findOrCreate(Label.label("FutureReservedWord"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
-		System.out.println("Getter");
-		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

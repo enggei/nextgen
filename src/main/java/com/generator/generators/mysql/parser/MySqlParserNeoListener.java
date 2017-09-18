@@ -54,7 +54,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inNotExpression() {
-      return inNotExpression.isEmpty(); 
+      return !inNotExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRoot = new java.util.Stack<>();
@@ -72,7 +72,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRoot() {
-      return inRoot.isEmpty(); 
+      return !inRoot.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSql_statements = new java.util.Stack<>();
@@ -90,7 +90,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSql_statements() {
-      return inSql_statements.isEmpty(); 
+      return !inSql_statements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSql_statement = new java.util.Stack<>();
@@ -108,7 +108,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSql_statement() {
-      return inSql_statement.isEmpty(); 
+      return !inSql_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEmpty_statement = new java.util.Stack<>();
@@ -126,7 +126,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inEmpty_statement() {
-      return inEmpty_statement.isEmpty(); 
+      return !inEmpty_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDdl_statement = new java.util.Stack<>();
@@ -144,7 +144,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDdl_statement() {
-      return inDdl_statement.isEmpty(); 
+      return !inDdl_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDml_statement = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDml_statement() {
-      return inDml_statement.isEmpty(); 
+      return !inDml_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTransaction_statement = new java.util.Stack<>();
@@ -180,7 +180,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTransaction_statement() {
-      return inTransaction_statement.isEmpty(); 
+      return !inTransaction_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplication_statement = new java.util.Stack<>();
@@ -198,7 +198,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplication_statement() {
-      return inReplication_statement.isEmpty(); 
+      return !inReplication_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrepared_statement = new java.util.Stack<>();
@@ -216,7 +216,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrepared_statement() {
-      return inPrepared_statement.isEmpty(); 
+      return !inPrepared_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompound_statement = new java.util.Stack<>();
@@ -234,7 +234,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCompound_statement() {
-      return inCompound_statement.isEmpty(); 
+      return !inCompound_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAdministration_statement = new java.util.Stack<>();
@@ -252,7 +252,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAdministration_statement() {
-      return inAdministration_statement.isEmpty(); 
+      return !inAdministration_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUtility_statement = new java.util.Stack<>();
@@ -270,7 +270,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUtility_statement() {
-      return inUtility_statement.isEmpty(); 
+      return !inUtility_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_database = new java.util.Stack<>();
@@ -288,7 +288,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_database() {
-      return inCreate_database.isEmpty(); 
+      return !inCreate_database.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_event = new java.util.Stack<>();
@@ -306,7 +306,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_event() {
-      return inCreate_event.isEmpty(); 
+      return !inCreate_event.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_index = new java.util.Stack<>();
@@ -324,7 +324,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_index() {
-      return inCreate_index.isEmpty(); 
+      return !inCreate_index.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_logfile_group = new java.util.Stack<>();
@@ -342,7 +342,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_logfile_group() {
-      return inCreate_logfile_group.isEmpty(); 
+      return !inCreate_logfile_group.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_procedure = new java.util.Stack<>();
@@ -360,7 +360,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_procedure() {
-      return inCreate_procedure.isEmpty(); 
+      return !inCreate_procedure.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_function = new java.util.Stack<>();
@@ -378,7 +378,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_function() {
-      return inCreate_function.isEmpty(); 
+      return !inCreate_function.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_server = new java.util.Stack<>();
@@ -396,7 +396,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_server() {
-      return inCreate_server.isEmpty(); 
+      return !inCreate_server.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCopyCreateTable = new java.util.Stack<>();
@@ -414,7 +414,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCopyCreateTable() {
-      return inCopyCreateTable.isEmpty(); 
+      return !inCopyCreateTable.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQueryCreateTable = new java.util.Stack<>();
@@ -432,7 +432,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inQueryCreateTable() {
-      return inQueryCreateTable.isEmpty(); 
+      return !inQueryCreateTable.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColCreateTable = new java.util.Stack<>();
@@ -450,7 +450,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColCreateTable() {
-      return inColCreateTable.isEmpty(); 
+      return !inColCreateTable.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_tablespace_innodb = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_tablespace_innodb() {
-      return inCreate_tablespace_innodb.isEmpty(); 
+      return !inCreate_tablespace_innodb.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_tablespace_ndb = new java.util.Stack<>();
@@ -486,7 +486,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_tablespace_ndb() {
-      return inCreate_tablespace_ndb.isEmpty(); 
+      return !inCreate_tablespace_ndb.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_trigger = new java.util.Stack<>();
@@ -504,7 +504,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_trigger() {
-      return inCreate_trigger.isEmpty(); 
+      return !inCreate_trigger.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_view = new java.util.Stack<>();
@@ -522,7 +522,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_view() {
-      return inCreate_view.isEmpty(); 
+      return !inCreate_view.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_database_option = new java.util.Stack<>();
@@ -540,7 +540,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_database_option() {
-      return inCreate_database_option.isEmpty(); 
+      return !inCreate_database_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOwner_statement = new java.util.Stack<>();
@@ -558,7 +558,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOwner_statement() {
-      return inOwner_statement.isEmpty(); 
+      return !inOwner_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPreciseSchedule = new java.util.Stack<>();
@@ -576,7 +576,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPreciseSchedule() {
-      return inPreciseSchedule.isEmpty(); 
+      return !inPreciseSchedule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIntervalSchedule = new java.util.Stack<>();
@@ -594,7 +594,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIntervalSchedule() {
-      return inIntervalSchedule.isEmpty(); 
+      return !inIntervalSchedule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTimestamp_value = new java.util.Stack<>();
@@ -612,7 +612,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTimestamp_value() {
-      return inTimestamp_value.isEmpty(); 
+      return !inTimestamp_value.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterval_expr = new java.util.Stack<>();
@@ -630,7 +630,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInterval_expr() {
-      return inInterval_expr.isEmpty(); 
+      return !inInterval_expr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterval_type = new java.util.Stack<>();
@@ -648,7 +648,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInterval_type() {
-      return inInterval_type.isEmpty(); 
+      return !inInterval_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex_type = new java.util.Stack<>();
@@ -666,7 +666,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndex_type() {
-      return inIndex_type.isEmpty(); 
+      return !inIndex_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex_option = new java.util.Stack<>();
@@ -684,7 +684,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndex_option() {
-      return inIndex_option.isEmpty(); 
+      return !inIndex_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProc_param = new java.util.Stack<>();
@@ -702,7 +702,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inProc_param() {
-      return inProc_param.isEmpty(); 
+      return !inProc_param.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunc_param = new java.util.Stack<>();
@@ -720,7 +720,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFunc_param() {
-      return inFunc_param.isEmpty(); 
+      return !inFunc_param.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRcComment = new java.util.Stack<>();
@@ -738,7 +738,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRcComment() {
-      return inRcComment.isEmpty(); 
+      return !inRcComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRcSqllang = new java.util.Stack<>();
@@ -756,7 +756,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRcSqllang() {
-      return inRcSqllang.isEmpty(); 
+      return !inRcSqllang.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRcDeterm = new java.util.Stack<>();
@@ -774,7 +774,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRcDeterm() {
-      return inRcDeterm.isEmpty(); 
+      return !inRcDeterm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRcSqldata = new java.util.Stack<>();
@@ -792,7 +792,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRcSqldata() {
-      return inRcSqldata.isEmpty(); 
+      return !inRcSqldata.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRcSecurestmt = new java.util.Stack<>();
@@ -810,7 +810,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRcSecurestmt() {
-      return inRcSecurestmt.isEmpty(); 
+      return !inRcSecurestmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inServer_option = new java.util.Stack<>();
@@ -828,7 +828,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inServer_option() {
-      return inServer_option.isEmpty(); 
+      return !inServer_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColumn_def_table_constraints = new java.util.Stack<>();
@@ -846,7 +846,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColumn_def_table_constraints() {
-      return inColumn_def_table_constraints.isEmpty(); 
+      return !inColumn_def_table_constraints.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColumnDefinition = new java.util.Stack<>();
@@ -864,7 +864,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColumnDefinition() {
-      return inColumnDefinition.isEmpty(); 
+      return !inColumnDefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstraintDefinition = new java.util.Stack<>();
@@ -882,7 +882,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConstraintDefinition() {
-      return inConstraintDefinition.isEmpty(); 
+      return !inConstraintDefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndexDefinition = new java.util.Stack<>();
@@ -900,7 +900,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndexDefinition() {
-      return inIndexDefinition.isEmpty(); 
+      return !inIndexDefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColumn_definition = new java.util.Stack<>();
@@ -918,7 +918,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColumn_definition() {
-      return inColumn_definition.isEmpty(); 
+      return !inColumn_definition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrNull = new java.util.Stack<>();
@@ -936,7 +936,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrNull() {
-      return inColConstrNull.isEmpty(); 
+      return !inColConstrNull.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrDflt = new java.util.Stack<>();
@@ -954,7 +954,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrDflt() {
-      return inColConstrDflt.isEmpty(); 
+      return !inColConstrDflt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrAuInc = new java.util.Stack<>();
@@ -972,7 +972,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrAuInc() {
-      return inColConstrAuInc.isEmpty(); 
+      return !inColConstrAuInc.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrPK = new java.util.Stack<>();
@@ -990,7 +990,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrPK() {
-      return inColConstrPK.isEmpty(); 
+      return !inColConstrPK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrUK = new java.util.Stack<>();
@@ -1008,7 +1008,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrUK() {
-      return inColConstrUK.isEmpty(); 
+      return !inColConstrUK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrComment = new java.util.Stack<>();
@@ -1026,7 +1026,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrComment() {
-      return inColConstrComment.isEmpty(); 
+      return !inColConstrComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrForm = new java.util.Stack<>();
@@ -1044,7 +1044,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrForm() {
-      return inColConstrForm.isEmpty(); 
+      return !inColConstrForm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrStorage = new java.util.Stack<>();
@@ -1062,7 +1062,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrStorage() {
-      return inColConstrStorage.isEmpty(); 
+      return !inColConstrStorage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inColConstrRefdef = new java.util.Stack<>();
@@ -1080,7 +1080,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inColConstrRefdef() {
-      return inColConstrRefdef.isEmpty(); 
+      return !inColConstrRefdef.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblConstrPK = new java.util.Stack<>();
@@ -1098,7 +1098,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblConstrPK() {
-      return inTblConstrPK.isEmpty(); 
+      return !inTblConstrPK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblConstrUK = new java.util.Stack<>();
@@ -1116,7 +1116,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblConstrUK() {
-      return inTblConstrUK.isEmpty(); 
+      return !inTblConstrUK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblConstrFK = new java.util.Stack<>();
@@ -1134,7 +1134,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblConstrFK() {
-      return inTblConstrFK.isEmpty(); 
+      return !inTblConstrFK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblConstCheck = new java.util.Stack<>();
@@ -1152,7 +1152,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblConstCheck() {
-      return inTblConstCheck.isEmpty(); 
+      return !inTblConstCheck.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReference_definition = new java.util.Stack<>();
@@ -1170,7 +1170,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReference_definition() {
-      return inReference_definition.isEmpty(); 
+      return !inReference_definition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOn_delete_action = new java.util.Stack<>();
@@ -1188,7 +1188,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOn_delete_action() {
-      return inOn_delete_action.isEmpty(); 
+      return !inOn_delete_action.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOn_update_action = new java.util.Stack<>();
@@ -1206,7 +1206,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOn_update_action() {
-      return inOn_update_action.isEmpty(); 
+      return !inOn_update_action.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReference_action_control_type = new java.util.Stack<>();
@@ -1224,7 +1224,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReference_action_control_type() {
-      return inReference_action_control_type.isEmpty(); 
+      return !inReference_action_control_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleIndex = new java.util.Stack<>();
@@ -1242,7 +1242,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimpleIndex() {
-      return inSimpleIndex.isEmpty(); 
+      return !inSimpleIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSpecIndex = new java.util.Stack<>();
@@ -1260,7 +1260,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSpecIndex() {
-      return inSpecIndex.isEmpty(); 
+      return !inSpecIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptEngine = new java.util.Stack<>();
@@ -1278,7 +1278,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptEngine() {
-      return inTblOptEngine.isEmpty(); 
+      return !inTblOptEngine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptAuInc = new java.util.Stack<>();
@@ -1296,7 +1296,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptAuInc() {
-      return inTblOptAuInc.isEmpty(); 
+      return !inTblOptAuInc.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptAvgRLen = new java.util.Stack<>();
@@ -1314,7 +1314,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptAvgRLen() {
-      return inTblOptAvgRLen.isEmpty(); 
+      return !inTblOptAvgRLen.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptDefCharSet = new java.util.Stack<>();
@@ -1332,7 +1332,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptDefCharSet() {
-      return inTblOptDefCharSet.isEmpty(); 
+      return !inTblOptDefCharSet.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptChkSum = new java.util.Stack<>();
@@ -1350,7 +1350,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptChkSum() {
-      return inTblOptChkSum.isEmpty(); 
+      return !inTblOptChkSum.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptDefCollate = new java.util.Stack<>();
@@ -1368,7 +1368,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptDefCollate() {
-      return inTblOptDefCollate.isEmpty(); 
+      return !inTblOptDefCollate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptComment = new java.util.Stack<>();
@@ -1386,7 +1386,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptComment() {
-      return inTblOptComment.isEmpty(); 
+      return !inTblOptComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptCompr = new java.util.Stack<>();
@@ -1404,7 +1404,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptCompr() {
-      return inTblOptCompr.isEmpty(); 
+      return !inTblOptCompr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptConn = new java.util.Stack<>();
@@ -1422,7 +1422,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptConn() {
-      return inTblOptConn.isEmpty(); 
+      return !inTblOptConn.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptDataDir = new java.util.Stack<>();
@@ -1440,7 +1440,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptDataDir() {
-      return inTblOptDataDir.isEmpty(); 
+      return !inTblOptDataDir.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptDelKW = new java.util.Stack<>();
@@ -1458,7 +1458,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptDelKW() {
-      return inTblOptDelKW.isEmpty(); 
+      return !inTblOptDelKW.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptEncr = new java.util.Stack<>();
@@ -1476,7 +1476,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptEncr() {
-      return inTblOptEncr.isEmpty(); 
+      return !inTblOptEncr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptIndexDir = new java.util.Stack<>();
@@ -1494,7 +1494,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptIndexDir() {
-      return inTblOptIndexDir.isEmpty(); 
+      return !inTblOptIndexDir.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptInsMeth = new java.util.Stack<>();
@@ -1512,7 +1512,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptInsMeth() {
-      return inTblOptInsMeth.isEmpty(); 
+      return !inTblOptInsMeth.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptKeyBlockSz = new java.util.Stack<>();
@@ -1530,7 +1530,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptKeyBlockSz() {
-      return inTblOptKeyBlockSz.isEmpty(); 
+      return !inTblOptKeyBlockSz.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptMaxRows = new java.util.Stack<>();
@@ -1548,7 +1548,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptMaxRows() {
-      return inTblOptMaxRows.isEmpty(); 
+      return !inTblOptMaxRows.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptMinRows = new java.util.Stack<>();
@@ -1566,7 +1566,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptMinRows() {
-      return inTblOptMinRows.isEmpty(); 
+      return !inTblOptMinRows.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptPackK = new java.util.Stack<>();
@@ -1584,7 +1584,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptPackK() {
-      return inTblOptPackK.isEmpty(); 
+      return !inTblOptPackK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptPasswd = new java.util.Stack<>();
@@ -1602,7 +1602,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptPasswd() {
-      return inTblOptPasswd.isEmpty(); 
+      return !inTblOptPasswd.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptRowFormat = new java.util.Stack<>();
@@ -1620,7 +1620,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptRowFormat() {
-      return inTblOptRowFormat.isEmpty(); 
+      return !inTblOptRowFormat.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptStatAutoR = new java.util.Stack<>();
@@ -1638,7 +1638,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptStatAutoR() {
-      return inTblOptStatAutoR.isEmpty(); 
+      return !inTblOptStatAutoR.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptStatPersist = new java.util.Stack<>();
@@ -1656,7 +1656,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptStatPersist() {
-      return inTblOptStatPersist.isEmpty(); 
+      return !inTblOptStatPersist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptStatSamplPg = new java.util.Stack<>();
@@ -1674,7 +1674,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptStatSamplPg() {
-      return inTblOptStatSamplPg.isEmpty(); 
+      return !inTblOptStatSamplPg.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptTablespace = new java.util.Stack<>();
@@ -1692,7 +1692,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptTablespace() {
-      return inTblOptTablespace.isEmpty(); 
+      return !inTblOptTablespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTblOptUnion = new java.util.Stack<>();
@@ -1710,7 +1710,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTblOptUnion() {
-      return inTblOptUnion.isEmpty(); 
+      return !inTblOptUnion.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPartition_options = new java.util.Stack<>();
@@ -1728,7 +1728,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPartition_options() {
-      return inPartition_options.isEmpty(); 
+      return !inPartition_options.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPartition_function_definition = new java.util.Stack<>();
@@ -1746,7 +1746,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPartition_function_definition() {
-      return inPartition_function_definition.isEmpty(); 
+      return !inPartition_function_definition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLinear_partition_func_def = new java.util.Stack<>();
@@ -1764,7 +1764,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLinear_partition_func_def() {
-      return inLinear_partition_func_def.isEmpty(); 
+      return !inLinear_partition_func_def.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPartition_def = new java.util.Stack<>();
@@ -1782,7 +1782,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPartition_def() {
-      return inPartition_def.isEmpty(); 
+      return !inPartition_def.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubpartition_def = new java.util.Stack<>();
@@ -1800,7 +1800,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSubpartition_def() {
-      return inSubpartition_def.isEmpty(); 
+      return !inSubpartition_def.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlterDb = new java.util.Stack<>();
@@ -1818,7 +1818,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlterDb() {
-      return inAlterDb.isEmpty(); 
+      return !inAlterDb.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlterDbUpgradeName = new java.util.Stack<>();
@@ -1836,7 +1836,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlterDbUpgradeName() {
-      return inAlterDbUpgradeName.isEmpty(); 
+      return !inAlterDbUpgradeName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_event = new java.util.Stack<>();
@@ -1854,7 +1854,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_event() {
-      return inAlter_event.isEmpty(); 
+      return !inAlter_event.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_function = new java.util.Stack<>();
@@ -1872,7 +1872,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_function() {
-      return inAlter_function.isEmpty(); 
+      return !inAlter_function.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_instance = new java.util.Stack<>();
@@ -1890,7 +1890,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_instance() {
-      return inAlter_instance.isEmpty(); 
+      return !inAlter_instance.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_logfile_group = new java.util.Stack<>();
@@ -1908,7 +1908,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_logfile_group() {
-      return inAlter_logfile_group.isEmpty(); 
+      return !inAlter_logfile_group.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_procedure = new java.util.Stack<>();
@@ -1926,7 +1926,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_procedure() {
-      return inAlter_procedure.isEmpty(); 
+      return !inAlter_procedure.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_server = new java.util.Stack<>();
@@ -1944,7 +1944,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_server() {
-      return inAlter_server.isEmpty(); 
+      return !inAlter_server.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_table = new java.util.Stack<>();
@@ -1962,7 +1962,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_table() {
-      return inAlter_table.isEmpty(); 
+      return !inAlter_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_tablespace = new java.util.Stack<>();
@@ -1980,7 +1980,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_tablespace() {
-      return inAlter_tablespace.isEmpty(); 
+      return !inAlter_tablespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlter_view = new java.util.Stack<>();
@@ -1998,7 +1998,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlter_view() {
-      return inAlter_view.isEmpty(); 
+      return !inAlter_view.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblTableOpt = new java.util.Stack<>();
@@ -2016,7 +2016,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblTableOpt() {
-      return inAltblTableOpt.isEmpty(); 
+      return !inAltblTableOpt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddCol = new java.util.Stack<>();
@@ -2034,7 +2034,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddCol() {
-      return inAltblAddCol.isEmpty(); 
+      return !inAltblAddCol.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddCols = new java.util.Stack<>();
@@ -2052,7 +2052,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddCols() {
-      return inAltblAddCols.isEmpty(); 
+      return !inAltblAddCols.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddIndex = new java.util.Stack<>();
@@ -2070,7 +2070,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddIndex() {
-      return inAltblAddIndex.isEmpty(); 
+      return !inAltblAddIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddPK = new java.util.Stack<>();
@@ -2088,7 +2088,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddPK() {
-      return inAltblAddPK.isEmpty(); 
+      return !inAltblAddPK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddUK = new java.util.Stack<>();
@@ -2106,7 +2106,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddUK() {
-      return inAltblAddUK.isEmpty(); 
+      return !inAltblAddUK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddSpecIndex = new java.util.Stack<>();
@@ -2124,7 +2124,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddSpecIndex() {
-      return inAltblAddSpecIndex.isEmpty(); 
+      return !inAltblAddSpecIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddFK = new java.util.Stack<>();
@@ -2142,7 +2142,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddFK() {
-      return inAltblAddFK.isEmpty(); 
+      return !inAltblAddFK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAlg = new java.util.Stack<>();
@@ -2160,7 +2160,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAlg() {
-      return inAltblAlg.isEmpty(); 
+      return !inAltblAlg.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblColDef = new java.util.Stack<>();
@@ -2178,7 +2178,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblColDef() {
-      return inAltblColDef.isEmpty(); 
+      return !inAltblColDef.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblColChange = new java.util.Stack<>();
@@ -2196,7 +2196,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblColChange() {
-      return inAltblColChange.isEmpty(); 
+      return !inAltblColChange.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblLock = new java.util.Stack<>();
@@ -2214,7 +2214,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblLock() {
-      return inAltblLock.isEmpty(); 
+      return !inAltblLock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblColMod = new java.util.Stack<>();
@@ -2232,7 +2232,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblColMod() {
-      return inAltblColMod.isEmpty(); 
+      return !inAltblColMod.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblColDrop = new java.util.Stack<>();
@@ -2250,7 +2250,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblColDrop() {
-      return inAltblColDrop.isEmpty(); 
+      return !inAltblColDrop.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDropPK = new java.util.Stack<>();
@@ -2268,7 +2268,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDropPK() {
-      return inAltblDropPK.isEmpty(); 
+      return !inAltblDropPK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDropIndex = new java.util.Stack<>();
@@ -2286,7 +2286,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDropIndex() {
-      return inAltblDropIndex.isEmpty(); 
+      return !inAltblDropIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDropFK = new java.util.Stack<>();
@@ -2304,7 +2304,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDropFK() {
-      return inAltblDropFK.isEmpty(); 
+      return !inAltblDropFK.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDisKey = new java.util.Stack<>();
@@ -2322,7 +2322,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDisKey() {
-      return inAltblDisKey.isEmpty(); 
+      return !inAltblDisKey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblEnKey = new java.util.Stack<>();
@@ -2340,7 +2340,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblEnKey() {
-      return inAltblEnKey.isEmpty(); 
+      return !inAltblEnKey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblRenameTbl = new java.util.Stack<>();
@@ -2358,7 +2358,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblRenameTbl() {
-      return inAltblRenameTbl.isEmpty(); 
+      return !inAltblRenameTbl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblResort = new java.util.Stack<>();
@@ -2376,7 +2376,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblResort() {
-      return inAltblResort.isEmpty(); 
+      return !inAltblResort.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblConvert = new java.util.Stack<>();
@@ -2394,7 +2394,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblConvert() {
-      return inAltblConvert.isEmpty(); 
+      return !inAltblConvert.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDefCharset = new java.util.Stack<>();
@@ -2412,7 +2412,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDefCharset() {
-      return inAltblDefCharset.isEmpty(); 
+      return !inAltblDefCharset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDisTblspace = new java.util.Stack<>();
@@ -2430,7 +2430,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDisTblspace() {
-      return inAltblDisTblspace.isEmpty(); 
+      return !inAltblDisTblspace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblImpTblSpace = new java.util.Stack<>();
@@ -2448,7 +2448,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblImpTblSpace() {
-      return inAltblImpTblSpace.isEmpty(); 
+      return !inAltblImpTblSpace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblForce = new java.util.Stack<>();
@@ -2466,7 +2466,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblForce() {
-      return inAltblForce.isEmpty(); 
+      return !inAltblForce.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblValid = new java.util.Stack<>();
@@ -2484,7 +2484,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblValid() {
-      return inAltblValid.isEmpty(); 
+      return !inAltblValid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAddPart = new java.util.Stack<>();
@@ -2502,7 +2502,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAddPart() {
-      return inAltblAddPart.isEmpty(); 
+      return !inAltblAddPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDropPart = new java.util.Stack<>();
@@ -2520,7 +2520,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDropPart() {
-      return inAltblDropPart.isEmpty(); 
+      return !inAltblDropPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblDiscartPart = new java.util.Stack<>();
@@ -2538,7 +2538,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblDiscartPart() {
-      return inAltblDiscartPart.isEmpty(); 
+      return !inAltblDiscartPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblImportPart = new java.util.Stack<>();
@@ -2556,7 +2556,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblImportPart() {
-      return inAltblImportPart.isEmpty(); 
+      return !inAltblImportPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblTruncPart = new java.util.Stack<>();
@@ -2574,7 +2574,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblTruncPart() {
-      return inAltblTruncPart.isEmpty(); 
+      return !inAltblTruncPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblCoalPart = new java.util.Stack<>();
@@ -2592,7 +2592,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblCoalPart() {
-      return inAltblCoalPart.isEmpty(); 
+      return !inAltblCoalPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblReorgPart = new java.util.Stack<>();
@@ -2610,7 +2610,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblReorgPart() {
-      return inAltblReorgPart.isEmpty(); 
+      return !inAltblReorgPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblExchPart = new java.util.Stack<>();
@@ -2628,7 +2628,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblExchPart() {
-      return inAltblExchPart.isEmpty(); 
+      return !inAltblExchPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblAnalPart = new java.util.Stack<>();
@@ -2646,7 +2646,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblAnalPart() {
-      return inAltblAnalPart.isEmpty(); 
+      return !inAltblAnalPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblCheckPart = new java.util.Stack<>();
@@ -2664,7 +2664,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblCheckPart() {
-      return inAltblCheckPart.isEmpty(); 
+      return !inAltblCheckPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblOptimPart = new java.util.Stack<>();
@@ -2682,7 +2682,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblOptimPart() {
-      return inAltblOptimPart.isEmpty(); 
+      return !inAltblOptimPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblRebuildPart = new java.util.Stack<>();
@@ -2700,7 +2700,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblRebuildPart() {
-      return inAltblRebuildPart.isEmpty(); 
+      return !inAltblRebuildPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblRepairPart = new java.util.Stack<>();
@@ -2718,7 +2718,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblRepairPart() {
-      return inAltblRepairPart.isEmpty(); 
+      return !inAltblRepairPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblRemovePart = new java.util.Stack<>();
@@ -2736,7 +2736,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblRemovePart() {
-      return inAltblRemovePart.isEmpty(); 
+      return !inAltblRemovePart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAltblUpgrPart = new java.util.Stack<>();
@@ -2754,7 +2754,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAltblUpgrPart() {
-      return inAltblUpgrPart.isEmpty(); 
+      return !inAltblUpgrPart.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_database = new java.util.Stack<>();
@@ -2772,7 +2772,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_database() {
-      return inDrop_database.isEmpty(); 
+      return !inDrop_database.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_event = new java.util.Stack<>();
@@ -2790,7 +2790,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_event() {
-      return inDrop_event.isEmpty(); 
+      return !inDrop_event.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_index = new java.util.Stack<>();
@@ -2808,7 +2808,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_index() {
-      return inDrop_index.isEmpty(); 
+      return !inDrop_index.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_logfile_group = new java.util.Stack<>();
@@ -2826,7 +2826,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_logfile_group() {
-      return inDrop_logfile_group.isEmpty(); 
+      return !inDrop_logfile_group.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_procedure = new java.util.Stack<>();
@@ -2844,7 +2844,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_procedure() {
-      return inDrop_procedure.isEmpty(); 
+      return !inDrop_procedure.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_function = new java.util.Stack<>();
@@ -2862,7 +2862,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_function() {
-      return inDrop_function.isEmpty(); 
+      return !inDrop_function.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_server = new java.util.Stack<>();
@@ -2880,7 +2880,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_server() {
-      return inDrop_server.isEmpty(); 
+      return !inDrop_server.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_table = new java.util.Stack<>();
@@ -2898,7 +2898,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_table() {
-      return inDrop_table.isEmpty(); 
+      return !inDrop_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_tablespace = new java.util.Stack<>();
@@ -2916,7 +2916,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_tablespace() {
-      return inDrop_tablespace.isEmpty(); 
+      return !inDrop_tablespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_trigger = new java.util.Stack<>();
@@ -2934,7 +2934,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_trigger() {
-      return inDrop_trigger.isEmpty(); 
+      return !inDrop_trigger.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_view = new java.util.Stack<>();
@@ -2952,7 +2952,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_view() {
-      return inDrop_view.isEmpty(); 
+      return !inDrop_view.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRename_table = new java.util.Stack<>();
@@ -2970,7 +2970,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRename_table() {
-      return inRename_table.isEmpty(); 
+      return !inRename_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTruncate_table = new java.util.Stack<>();
@@ -2988,7 +2988,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTruncate_table() {
-      return inTruncate_table.isEmpty(); 
+      return !inTruncate_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCall_statement = new java.util.Stack<>();
@@ -3006,7 +3006,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCall_statement() {
-      return inCall_statement.isEmpty(); 
+      return !inCall_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelete_statement = new java.util.Stack<>();
@@ -3024,7 +3024,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDelete_statement() {
-      return inDelete_statement.isEmpty(); 
+      return !inDelete_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDo_statement = new java.util.Stack<>();
@@ -3042,7 +3042,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDo_statement() {
-      return inDo_statement.isEmpty(); 
+      return !inDo_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_statement = new java.util.Stack<>();
@@ -3060,7 +3060,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_statement() {
-      return inHandler_statement.isEmpty(); 
+      return !inHandler_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInsert_statement = new java.util.Stack<>();
@@ -3078,7 +3078,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInsert_statement() {
-      return inInsert_statement.isEmpty(); 
+      return !inInsert_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLoad_data_statement = new java.util.Stack<>();
@@ -3096,7 +3096,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLoad_data_statement() {
-      return inLoad_data_statement.isEmpty(); 
+      return !inLoad_data_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLoad_xml_statement = new java.util.Stack<>();
@@ -3114,7 +3114,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLoad_xml_statement() {
-      return inLoad_xml_statement.isEmpty(); 
+      return !inLoad_xml_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplace_statement = new java.util.Stack<>();
@@ -3132,7 +3132,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplace_statement() {
-      return inReplace_statement.isEmpty(); 
+      return !inReplace_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleSelect = new java.util.Stack<>();
@@ -3150,7 +3150,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimpleSelect() {
-      return inSimpleSelect.isEmpty(); 
+      return !inSimpleSelect.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParenSelect = new java.util.Stack<>();
@@ -3168,7 +3168,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inParenSelect() {
-      return inParenSelect.isEmpty(); 
+      return !inParenSelect.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnionSelect = new java.util.Stack<>();
@@ -3186,7 +3186,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnionSelect() {
-      return inUnionSelect.isEmpty(); 
+      return !inUnionSelect.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnionParenSelect = new java.util.Stack<>();
@@ -3204,7 +3204,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnionParenSelect() {
-      return inUnionParenSelect.isEmpty(); 
+      return !inUnionParenSelect.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUpdate_statement = new java.util.Stack<>();
@@ -3222,7 +3222,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUpdate_statement() {
-      return inUpdate_statement.isEmpty(); 
+      return !inUpdate_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInsert_statement_value = new java.util.Stack<>();
@@ -3240,7 +3240,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInsert_statement_value() {
-      return inInsert_statement_value.isEmpty(); 
+      return !inInsert_statement_value.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUpdate_elem = new java.util.Stack<>();
@@ -3258,7 +3258,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUpdate_elem() {
-      return inUpdate_elem.isEmpty(); 
+      return !inUpdate_elem.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCol_or_uservar = new java.util.Stack<>();
@@ -3276,7 +3276,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCol_or_uservar() {
-      return inCol_or_uservar.isEmpty(); 
+      return !inCol_or_uservar.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSingle_delete_statement = new java.util.Stack<>();
@@ -3294,7 +3294,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSingle_delete_statement() {
-      return inSingle_delete_statement.isEmpty(); 
+      return !inSingle_delete_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMultiple_delete_statement = new java.util.Stack<>();
@@ -3312,7 +3312,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMultiple_delete_statement() {
-      return inMultiple_delete_statement.isEmpty(); 
+      return !inMultiple_delete_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_open_statement = new java.util.Stack<>();
@@ -3330,7 +3330,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_open_statement() {
-      return inHandler_open_statement.isEmpty(); 
+      return !inHandler_open_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_read_index_statement = new java.util.Stack<>();
@@ -3348,7 +3348,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_read_index_statement() {
-      return inHandler_read_index_statement.isEmpty(); 
+      return !inHandler_read_index_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_read_statement = new java.util.Stack<>();
@@ -3366,7 +3366,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_read_statement() {
-      return inHandler_read_statement.isEmpty(); 
+      return !inHandler_read_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_close_statement = new java.util.Stack<>();
@@ -3384,7 +3384,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_close_statement() {
-      return inHandler_close_statement.isEmpty(); 
+      return !inHandler_close_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSingle_update_statement = new java.util.Stack<>();
@@ -3402,7 +3402,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSingle_update_statement() {
-      return inSingle_update_statement.isEmpty(); 
+      return !inSingle_update_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMultiple_update_statement = new java.util.Stack<>();
@@ -3420,7 +3420,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMultiple_update_statement() {
-      return inMultiple_update_statement.isEmpty(); 
+      return !inMultiple_update_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOrder_by_clause = new java.util.Stack<>();
@@ -3438,7 +3438,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOrder_by_clause() {
-      return inOrder_by_clause.isEmpty(); 
+      return !inOrder_by_clause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOrder_by_expression = new java.util.Stack<>();
@@ -3456,7 +3456,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOrder_by_expression() {
-      return inOrder_by_expression.isEmpty(); 
+      return !inOrder_by_expression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTable_sources = new java.util.Stack<>();
@@ -3474,7 +3474,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTable_sources() {
-      return inTable_sources.isEmpty(); 
+      return !inTable_sources.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTable_source = new java.util.Stack<>();
@@ -3492,7 +3492,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTable_source() {
-      return inTable_source.isEmpty(); 
+      return !inTable_source.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAtomTableItem = new java.util.Stack<>();
@@ -3510,7 +3510,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAtomTableItem() {
-      return inAtomTableItem.isEmpty(); 
+      return !inAtomTableItem.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubqueryTableItem = new java.util.Stack<>();
@@ -3528,7 +3528,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSubqueryTableItem() {
-      return inSubqueryTableItem.isEmpty(); 
+      return !inSubqueryTableItem.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTableSourcesItem = new java.util.Stack<>();
@@ -3546,7 +3546,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTableSourcesItem() {
-      return inTableSourcesItem.isEmpty(); 
+      return !inTableSourcesItem.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex_hint = new java.util.Stack<>();
@@ -3564,7 +3564,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndex_hint() {
-      return inIndex_hint.isEmpty(); 
+      return !inIndex_hint.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInnerJoin = new java.util.Stack<>();
@@ -3582,7 +3582,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInnerJoin() {
-      return inInnerJoin.isEmpty(); 
+      return !inInnerJoin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStraightJoin = new java.util.Stack<>();
@@ -3600,7 +3600,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStraightJoin() {
-      return inStraightJoin.isEmpty(); 
+      return !inStraightJoin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOuterJoin = new java.util.Stack<>();
@@ -3618,7 +3618,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOuterJoin() {
-      return inOuterJoin.isEmpty(); 
+      return !inOuterJoin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNaturalJoin = new java.util.Stack<>();
@@ -3636,7 +3636,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inNaturalJoin() {
-      return inNaturalJoin.isEmpty(); 
+      return !inNaturalJoin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubquery = new java.util.Stack<>();
@@ -3654,7 +3654,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSubquery() {
-      return inSubquery.isEmpty(); 
+      return !inSubquery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery_expression = new java.util.Stack<>();
@@ -3672,7 +3672,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inQuery_expression() {
-      return inQuery_expression.isEmpty(); 
+      return !inQuery_expression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery_expression_nointo = new java.util.Stack<>();
@@ -3690,7 +3690,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inQuery_expression_nointo() {
-      return inQuery_expression_nointo.isEmpty(); 
+      return !inQuery_expression_nointo.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery_specification = new java.util.Stack<>();
@@ -3708,7 +3708,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inQuery_specification() {
-      return inQuery_specification.isEmpty(); 
+      return !inQuery_specification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery_specification_nointo = new java.util.Stack<>();
@@ -3726,7 +3726,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inQuery_specification_nointo() {
-      return inQuery_specification_nointo.isEmpty(); 
+      return !inQuery_specification_nointo.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnion_parenth = new java.util.Stack<>();
@@ -3744,7 +3744,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnion_parenth() {
-      return inUnion_parenth.isEmpty(); 
+      return !inUnion_parenth.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnion_statement = new java.util.Stack<>();
@@ -3762,7 +3762,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnion_statement() {
-      return inUnion_statement.isEmpty(); 
+      return !inUnion_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelect_spec = new java.util.Stack<>();
@@ -3780,7 +3780,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSelect_spec() {
-      return inSelect_spec.isEmpty(); 
+      return !inSelect_spec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelect_list = new java.util.Stack<>();
@@ -3798,7 +3798,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSelect_list() {
-      return inSelect_list.isEmpty(); 
+      return !inSelect_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSellistelAllCol = new java.util.Stack<>();
@@ -3816,7 +3816,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSellistelAllCol() {
-      return inSellistelAllCol.isEmpty(); 
+      return !inSellistelAllCol.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSellistelCol = new java.util.Stack<>();
@@ -3834,7 +3834,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSellistelCol() {
-      return inSellistelCol.isEmpty(); 
+      return !inSellistelCol.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSellistelFunc = new java.util.Stack<>();
@@ -3852,7 +3852,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSellistelFunc() {
-      return inSellistelFunc.isEmpty(); 
+      return !inSellistelFunc.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSellistelExpr = new java.util.Stack<>();
@@ -3870,7 +3870,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSellistelExpr() {
-      return inSellistelExpr.isEmpty(); 
+      return !inSellistelExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectIntoVars = new java.util.Stack<>();
@@ -3888,7 +3888,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSelectIntoVars() {
-      return inSelectIntoVars.isEmpty(); 
+      return !inSelectIntoVars.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectIntoDump = new java.util.Stack<>();
@@ -3906,7 +3906,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSelectIntoDump() {
-      return inSelectIntoDump.isEmpty(); 
+      return !inSelectIntoDump.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectIntoOutfile = new java.util.Stack<>();
@@ -3924,7 +3924,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSelectIntoOutfile() {
-      return inSelectIntoOutfile.isEmpty(); 
+      return !inSelectIntoOutfile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFrom_clause = new java.util.Stack<>();
@@ -3942,7 +3942,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFrom_clause() {
-      return inFrom_clause.isEmpty(); 
+      return !inFrom_clause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGroup_by_item = new java.util.Stack<>();
@@ -3960,7 +3960,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inGroup_by_item() {
-      return inGroup_by_item.isEmpty(); 
+      return !inGroup_by_item.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLimit_clause = new java.util.Stack<>();
@@ -3978,7 +3978,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLimit_clause() {
-      return inLimit_clause.isEmpty(); 
+      return !inLimit_clause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStart_transaction = new java.util.Stack<>();
@@ -3996,7 +3996,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStart_transaction() {
-      return inStart_transaction.isEmpty(); 
+      return !inStart_transaction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBegin_work = new java.util.Stack<>();
@@ -4014,7 +4014,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBegin_work() {
-      return inBegin_work.isEmpty(); 
+      return !inBegin_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCommit_work = new java.util.Stack<>();
@@ -4032,7 +4032,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCommit_work() {
-      return inCommit_work.isEmpty(); 
+      return !inCommit_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRollback_work = new java.util.Stack<>();
@@ -4050,7 +4050,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRollback_work() {
-      return inRollback_work.isEmpty(); 
+      return !inRollback_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSavepoint_statement = new java.util.Stack<>();
@@ -4068,7 +4068,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSavepoint_statement() {
-      return inSavepoint_statement.isEmpty(); 
+      return !inSavepoint_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRollback_statement = new java.util.Stack<>();
@@ -4086,7 +4086,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRollback_statement() {
-      return inRollback_statement.isEmpty(); 
+      return !inRollback_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRelease_statement = new java.util.Stack<>();
@@ -4104,7 +4104,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRelease_statement() {
-      return inRelease_statement.isEmpty(); 
+      return !inRelease_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLock_tables = new java.util.Stack<>();
@@ -4122,7 +4122,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLock_tables() {
-      return inLock_tables.isEmpty(); 
+      return !inLock_tables.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnlock_tables = new java.util.Stack<>();
@@ -4140,7 +4140,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnlock_tables() {
-      return inUnlock_tables.isEmpty(); 
+      return !inUnlock_tables.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet_autocommit_statement = new java.util.Stack<>();
@@ -4158,7 +4158,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSet_autocommit_statement() {
-      return inSet_autocommit_statement.isEmpty(); 
+      return !inSet_autocommit_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet_transaction_statement = new java.util.Stack<>();
@@ -4176,7 +4176,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSet_transaction_statement() {
-      return inSet_transaction_statement.isEmpty(); 
+      return !inSet_transaction_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTransact_option = new java.util.Stack<>();
@@ -4194,7 +4194,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTransact_option() {
-      return inTransact_option.isEmpty(); 
+      return !inTransact_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLock_table_element = new java.util.Stack<>();
@@ -4212,7 +4212,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLock_table_element() {
-      return inLock_table_element.isEmpty(); 
+      return !inLock_table_element.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTrans_characteristic = new java.util.Stack<>();
@@ -4230,7 +4230,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTrans_characteristic() {
-      return inTrans_characteristic.isEmpty(); 
+      return !inTrans_characteristic.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTransaction_level = new java.util.Stack<>();
@@ -4248,7 +4248,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTransaction_level() {
-      return inTransaction_level.isEmpty(); 
+      return !inTransaction_level.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChange_master = new java.util.Stack<>();
@@ -4266,7 +4266,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inChange_master() {
-      return inChange_master.isEmpty(); 
+      return !inChange_master.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChange_repl_filter = new java.util.Stack<>();
@@ -4284,7 +4284,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inChange_repl_filter() {
-      return inChange_repl_filter.isEmpty(); 
+      return !inChange_repl_filter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPurge_binary_logs = new java.util.Stack<>();
@@ -4302,7 +4302,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPurge_binary_logs() {
-      return inPurge_binary_logs.isEmpty(); 
+      return !inPurge_binary_logs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReset_master = new java.util.Stack<>();
@@ -4320,7 +4320,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReset_master() {
-      return inReset_master.isEmpty(); 
+      return !inReset_master.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReset_slave = new java.util.Stack<>();
@@ -4338,7 +4338,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReset_slave() {
-      return inReset_slave.isEmpty(); 
+      return !inReset_slave.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStart_slave = new java.util.Stack<>();
@@ -4356,7 +4356,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStart_slave() {
-      return inStart_slave.isEmpty(); 
+      return !inStart_slave.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStop_slave = new java.util.Stack<>();
@@ -4374,7 +4374,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStop_slave() {
-      return inStop_slave.isEmpty(); 
+      return !inStop_slave.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStart_group_repl = new java.util.Stack<>();
@@ -4392,7 +4392,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStart_group_repl() {
-      return inStart_group_repl.isEmpty(); 
+      return !inStart_group_repl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStop_group_repl = new java.util.Stack<>();
@@ -4410,7 +4410,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStop_group_repl() {
-      return inStop_group_repl.isEmpty(); 
+      return !inStop_group_repl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMasterOptString = new java.util.Stack<>();
@@ -4428,7 +4428,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMasterOptString() {
-      return inMasterOptString.isEmpty(); 
+      return !inMasterOptString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMasterOptDecimal = new java.util.Stack<>();
@@ -4446,7 +4446,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMasterOptDecimal() {
-      return inMasterOptDecimal.isEmpty(); 
+      return !inMasterOptDecimal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMasterOptBool = new java.util.Stack<>();
@@ -4464,7 +4464,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMasterOptBool() {
-      return inMasterOptBool.isEmpty(); 
+      return !inMasterOptBool.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMasterOptReal = new java.util.Stack<>();
@@ -4482,7 +4482,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMasterOptReal() {
-      return inMasterOptReal.isEmpty(); 
+      return !inMasterOptReal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMasterOptIdList = new java.util.Stack<>();
@@ -4500,7 +4500,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMasterOptIdList() {
-      return inMasterOptIdList.isEmpty(); 
+      return !inMasterOptIdList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inString_master_option = new java.util.Stack<>();
@@ -4518,7 +4518,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inString_master_option() {
-      return inString_master_option.isEmpty(); 
+      return !inString_master_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDecimal_master_option = new java.util.Stack<>();
@@ -4536,7 +4536,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDecimal_master_option() {
-      return inDecimal_master_option.isEmpty(); 
+      return !inDecimal_master_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBool_master_option = new java.util.Stack<>();
@@ -4554,7 +4554,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBool_master_option() {
-      return inBool_master_option.isEmpty(); 
+      return !inBool_master_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChannel_option = new java.util.Stack<>();
@@ -4572,7 +4572,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inChannel_option() {
-      return inChannel_option.isEmpty(); 
+      return !inChannel_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplfilterDbList = new java.util.Stack<>();
@@ -4590,7 +4590,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplfilterDbList() {
-      return inReplfilterDbList.isEmpty(); 
+      return !inReplfilterDbList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplfilterTableList = new java.util.Stack<>();
@@ -4608,7 +4608,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplfilterTableList() {
-      return inReplfilterTableList.isEmpty(); 
+      return !inReplfilterTableList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplfilterStableList = new java.util.Stack<>();
@@ -4626,7 +4626,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplfilterStableList() {
-      return inReplfilterStableList.isEmpty(); 
+      return !inReplfilterStableList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReplfilterTablepairList = new java.util.Stack<>();
@@ -4644,7 +4644,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReplfilterTablepairList() {
-      return inReplfilterTablepairList.isEmpty(); 
+      return !inReplfilterTablepairList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inThread_type = new java.util.Stack<>();
@@ -4662,7 +4662,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inThread_type() {
-      return inThread_type.isEmpty(); 
+      return !inThread_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUntilGtidSset = new java.util.Stack<>();
@@ -4680,7 +4680,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUntilGtidSset() {
-      return inUntilGtidSset.isEmpty(); 
+      return !inUntilGtidSset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUntilMasterLog = new java.util.Stack<>();
@@ -4698,7 +4698,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUntilMasterLog() {
-      return inUntilMasterLog.isEmpty(); 
+      return !inUntilMasterLog.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUntilRelayLog = new java.util.Stack<>();
@@ -4716,7 +4716,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUntilRelayLog() {
-      return inUntilRelayLog.isEmpty(); 
+      return !inUntilRelayLog.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUntilSqlGaps = new java.util.Stack<>();
@@ -4734,7 +4734,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUntilSqlGaps() {
-      return inUntilSqlGaps.isEmpty(); 
+      return !inUntilSqlGaps.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStart_slave_connection_option = new java.util.Stack<>();
@@ -4752,7 +4752,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inStart_slave_connection_option() {
-      return inStart_slave_connection_option.isEmpty(); 
+      return !inStart_slave_connection_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGtid_set = new java.util.Stack<>();
@@ -4770,7 +4770,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inGtid_set() {
-      return inGtid_set.isEmpty(); 
+      return !inGtid_set.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_start_transaction = new java.util.Stack<>();
@@ -4788,7 +4788,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_start_transaction() {
-      return inXa_start_transaction.isEmpty(); 
+      return !inXa_start_transaction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_end_transaction = new java.util.Stack<>();
@@ -4806,7 +4806,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_end_transaction() {
-      return inXa_end_transaction.isEmpty(); 
+      return !inXa_end_transaction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_prepare = new java.util.Stack<>();
@@ -4824,7 +4824,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_prepare() {
-      return inXa_prepare.isEmpty(); 
+      return !inXa_prepare.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_commit_work = new java.util.Stack<>();
@@ -4842,7 +4842,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_commit_work() {
-      return inXa_commit_work.isEmpty(); 
+      return !inXa_commit_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_rollback_work = new java.util.Stack<>();
@@ -4860,7 +4860,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_rollback_work() {
-      return inXa_rollback_work.isEmpty(); 
+      return !inXa_rollback_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXa_recover_work = new java.util.Stack<>();
@@ -4878,7 +4878,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXa_recover_work() {
-      return inXa_recover_work.isEmpty(); 
+      return !inXa_recover_work.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrepare_statement = new java.util.Stack<>();
@@ -4896,7 +4896,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrepare_statement() {
-      return inPrepare_statement.isEmpty(); 
+      return !inPrepare_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExecute_statement = new java.util.Stack<>();
@@ -4914,7 +4914,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inExecute_statement() {
-      return inExecute_statement.isEmpty(); 
+      return !inExecute_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeallocate_prepare = new java.util.Stack<>();
@@ -4932,7 +4932,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDeallocate_prepare() {
-      return inDeallocate_prepare.isEmpty(); 
+      return !inDeallocate_prepare.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRoutine_body = new java.util.Stack<>();
@@ -4950,7 +4950,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRoutine_body() {
-      return inRoutine_body.isEmpty(); 
+      return !inRoutine_body.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlock_statement = new java.util.Stack<>();
@@ -4968,7 +4968,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBlock_statement() {
-      return inBlock_statement.isEmpty(); 
+      return !inBlock_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCase_statement = new java.util.Stack<>();
@@ -4986,7 +4986,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCase_statement() {
-      return inCase_statement.isEmpty(); 
+      return !inCase_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIf_statement = new java.util.Stack<>();
@@ -5004,7 +5004,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIf_statement() {
-      return inIf_statement.isEmpty(); 
+      return !inIf_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIterate_statement = new java.util.Stack<>();
@@ -5022,7 +5022,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIterate_statement() {
-      return inIterate_statement.isEmpty(); 
+      return !inIterate_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLeave_statement = new java.util.Stack<>();
@@ -5040,7 +5040,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLeave_statement() {
-      return inLeave_statement.isEmpty(); 
+      return !inLeave_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLoop_statement = new java.util.Stack<>();
@@ -5058,7 +5058,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLoop_statement() {
-      return inLoop_statement.isEmpty(); 
+      return !inLoop_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRepeat_statement = new java.util.Stack<>();
@@ -5076,7 +5076,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRepeat_statement() {
-      return inRepeat_statement.isEmpty(); 
+      return !inRepeat_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReturn_statement = new java.util.Stack<>();
@@ -5094,7 +5094,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReturn_statement() {
-      return inReturn_statement.isEmpty(); 
+      return !inReturn_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inWhile_statement = new java.util.Stack<>();
@@ -5112,7 +5112,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inWhile_statement() {
-      return inWhile_statement.isEmpty(); 
+      return !inWhile_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCursor_statement = new java.util.Stack<>();
@@ -5130,7 +5130,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCursor_statement() {
-      return inCursor_statement.isEmpty(); 
+      return !inCursor_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclare_variable = new java.util.Stack<>();
@@ -5148,7 +5148,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDeclare_variable() {
-      return inDeclare_variable.isEmpty(); 
+      return !inDeclare_variable.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclare_condition = new java.util.Stack<>();
@@ -5166,7 +5166,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDeclare_condition() {
-      return inDeclare_condition.isEmpty(); 
+      return !inDeclare_condition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclare_cursor = new java.util.Stack<>();
@@ -5184,7 +5184,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDeclare_cursor() {
-      return inDeclare_cursor.isEmpty(); 
+      return !inDeclare_cursor.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclare_handler = new java.util.Stack<>();
@@ -5202,7 +5202,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDeclare_handler() {
-      return inDeclare_handler.isEmpty(); 
+      return !inDeclare_handler.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler_condition_value = new java.util.Stack<>();
@@ -5220,7 +5220,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHandler_condition_value() {
-      return inHandler_condition_value.isEmpty(); 
+      return !inHandler_condition_value.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProcedure_sql_statement = new java.util.Stack<>();
@@ -5238,7 +5238,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inProcedure_sql_statement() {
-      return inProcedure_sql_statement.isEmpty(); 
+      return !inProcedure_sql_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlterUserMysql56 = new java.util.Stack<>();
@@ -5256,7 +5256,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlterUserMysql56() {
-      return inAlterUserMysql56.isEmpty(); 
+      return !inAlterUserMysql56.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlterUserMysql57 = new java.util.Stack<>();
@@ -5274,7 +5274,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAlterUserMysql57() {
-      return inAlterUserMysql57.isEmpty(); 
+      return !inAlterUserMysql57.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreateUserMysql56 = new java.util.Stack<>();
@@ -5292,7 +5292,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreateUserMysql56() {
-      return inCreateUserMysql56.isEmpty(); 
+      return !inCreateUserMysql56.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreateUserMysql57 = new java.util.Stack<>();
@@ -5310,7 +5310,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreateUserMysql57() {
-      return inCreateUserMysql57.isEmpty(); 
+      return !inCreateUserMysql57.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDrop_user = new java.util.Stack<>();
@@ -5328,7 +5328,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDrop_user() {
-      return inDrop_user.isEmpty(); 
+      return !inDrop_user.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGrant_statement = new java.util.Stack<>();
@@ -5346,7 +5346,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inGrant_statement() {
-      return inGrant_statement.isEmpty(); 
+      return !inGrant_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGrant_proxy = new java.util.Stack<>();
@@ -5364,7 +5364,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inGrant_proxy() {
-      return inGrant_proxy.isEmpty(); 
+      return !inGrant_proxy.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRename_user = new java.util.Stack<>();
@@ -5382,7 +5382,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRename_user() {
-      return inRename_user.isEmpty(); 
+      return !inRename_user.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDetailRevoke = new java.util.Stack<>();
@@ -5400,7 +5400,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDetailRevoke() {
-      return inDetailRevoke.isEmpty(); 
+      return !inDetailRevoke.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShortRevoke = new java.util.Stack<>();
@@ -5418,7 +5418,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShortRevoke() {
-      return inShortRevoke.isEmpty(); 
+      return !inShortRevoke.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRevoke_proxy = new java.util.Stack<>();
@@ -5436,7 +5436,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRevoke_proxy() {
-      return inRevoke_proxy.isEmpty(); 
+      return !inRevoke_proxy.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet_password_statement = new java.util.Stack<>();
@@ -5454,7 +5454,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSet_password_statement() {
-      return inSet_password_statement.isEmpty(); 
+      return !inSet_password_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser_password_option = new java.util.Stack<>();
@@ -5472,7 +5472,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUser_password_option() {
-      return inUser_password_option.isEmpty(); 
+      return !inUser_password_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAuthByPassword = new java.util.Stack<>();
@@ -5490,7 +5490,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAuthByPassword() {
-      return inAuthByPassword.isEmpty(); 
+      return !inAuthByPassword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAuthByString = new java.util.Stack<>();
@@ -5508,7 +5508,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAuthByString() {
-      return inAuthByString.isEmpty(); 
+      return !inAuthByString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAuthByHash = new java.util.Stack<>();
@@ -5526,7 +5526,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAuthByHash() {
-      return inAuthByHash.isEmpty(); 
+      return !inAuthByHash.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTls_option = new java.util.Stack<>();
@@ -5544,7 +5544,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTls_option() {
-      return inTls_option.isEmpty(); 
+      return !inTls_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser_resource_option = new java.util.Stack<>();
@@ -5562,7 +5562,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUser_resource_option() {
-      return inUser_resource_option.isEmpty(); 
+      return !inUser_resource_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser_lock_option = new java.util.Stack<>();
@@ -5580,7 +5580,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUser_lock_option() {
-      return inUser_lock_option.isEmpty(); 
+      return !inUser_lock_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrivelege_clause = new java.util.Stack<>();
@@ -5598,7 +5598,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrivelege_clause() {
-      return inPrivelege_clause.isEmpty(); 
+      return !inPrivelege_clause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrivilege = new java.util.Stack<>();
@@ -5616,7 +5616,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrivilege() {
-      return inPrivilege.isEmpty(); 
+      return !inPrivilege.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrivilege_level = new java.util.Stack<>();
@@ -5634,7 +5634,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrivilege_level() {
-      return inPrivilege_level.isEmpty(); 
+      return !inPrivilege_level.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet_password_option = new java.util.Stack<>();
@@ -5652,7 +5652,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSet_password_option() {
-      return inSet_password_option.isEmpty(); 
+      return !inSet_password_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnalyze_table = new java.util.Stack<>();
@@ -5670,7 +5670,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAnalyze_table() {
-      return inAnalyze_table.isEmpty(); 
+      return !inAnalyze_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCheck_table = new java.util.Stack<>();
@@ -5688,7 +5688,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCheck_table() {
-      return inCheck_table.isEmpty(); 
+      return !inCheck_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChecksum_table = new java.util.Stack<>();
@@ -5706,7 +5706,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inChecksum_table() {
-      return inChecksum_table.isEmpty(); 
+      return !inChecksum_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOptimize_table = new java.util.Stack<>();
@@ -5724,7 +5724,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inOptimize_table() {
-      return inOptimize_table.isEmpty(); 
+      return !inOptimize_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRepair_table = new java.util.Stack<>();
@@ -5742,7 +5742,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRepair_table() {
-      return inRepair_table.isEmpty(); 
+      return !inRepair_table.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCheck_table_option = new java.util.Stack<>();
@@ -5760,7 +5760,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCheck_table_option() {
-      return inCheck_table_option.isEmpty(); 
+      return !inCheck_table_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_udfunction = new java.util.Stack<>();
@@ -5778,7 +5778,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCreate_udfunction() {
-      return inCreate_udfunction.isEmpty(); 
+      return !inCreate_udfunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInstall_plugin = new java.util.Stack<>();
@@ -5796,7 +5796,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInstall_plugin() {
-      return inInstall_plugin.isEmpty(); 
+      return !inInstall_plugin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUninstall_plugin = new java.util.Stack<>();
@@ -5814,7 +5814,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUninstall_plugin() {
-      return inUninstall_plugin.isEmpty(); 
+      return !inUninstall_plugin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetVariableAssignment = new java.util.Stack<>();
@@ -5832,7 +5832,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetVariableAssignment() {
-      return inSetVariableAssignment.isEmpty(); 
+      return !inSetVariableAssignment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetCharset = new java.util.Stack<>();
@@ -5850,7 +5850,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetCharset() {
-      return inSetCharset.isEmpty(); 
+      return !inSetCharset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetNames = new java.util.Stack<>();
@@ -5868,7 +5868,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetNames() {
-      return inSetNames.isEmpty(); 
+      return !inSetNames.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetPasswordStatement = new java.util.Stack<>();
@@ -5886,7 +5886,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetPasswordStatement() {
-      return inSetPasswordStatement.isEmpty(); 
+      return !inSetPasswordStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetTransaction = new java.util.Stack<>();
@@ -5904,7 +5904,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetTransaction() {
-      return inSetTransaction.isEmpty(); 
+      return !inSetTransaction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSetAutocommit = new java.util.Stack<>();
@@ -5922,7 +5922,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSetAutocommit() {
-      return inSetAutocommit.isEmpty(); 
+      return !inSetAutocommit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowMasterlogs = new java.util.Stack<>();
@@ -5940,7 +5940,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowMasterlogs() {
-      return inShowMasterlogs.isEmpty(); 
+      return !inShowMasterlogs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowLogevents = new java.util.Stack<>();
@@ -5958,7 +5958,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowLogevents() {
-      return inShowLogevents.isEmpty(); 
+      return !inShowLogevents.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowObjWithFilter = new java.util.Stack<>();
@@ -5976,7 +5976,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowObjWithFilter() {
-      return inShowObjWithFilter.isEmpty(); 
+      return !inShowObjWithFilter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowColumns = new java.util.Stack<>();
@@ -5994,7 +5994,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowColumns() {
-      return inShowColumns.isEmpty(); 
+      return !inShowColumns.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowCreateDb = new java.util.Stack<>();
@@ -6012,7 +6012,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowCreateDb() {
-      return inShowCreateDb.isEmpty(); 
+      return !inShowCreateDb.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowCreateFullidobj = new java.util.Stack<>();
@@ -6030,7 +6030,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowCreateFullidobj() {
-      return inShowCreateFullidobj.isEmpty(); 
+      return !inShowCreateFullidobj.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowCreateUser = new java.util.Stack<>();
@@ -6048,7 +6048,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowCreateUser() {
-      return inShowCreateUser.isEmpty(); 
+      return !inShowCreateUser.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowEngine = new java.util.Stack<>();
@@ -6066,7 +6066,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowEngine() {
-      return inShowEngine.isEmpty(); 
+      return !inShowEngine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowGlobalinfo = new java.util.Stack<>();
@@ -6084,7 +6084,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowGlobalinfo() {
-      return inShowGlobalinfo.isEmpty(); 
+      return !inShowGlobalinfo.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowErrWarn = new java.util.Stack<>();
@@ -6102,7 +6102,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowErrWarn() {
-      return inShowErrWarn.isEmpty(); 
+      return !inShowErrWarn.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowCountErrWarn = new java.util.Stack<>();
@@ -6120,7 +6120,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowCountErrWarn() {
-      return inShowCountErrWarn.isEmpty(); 
+      return !inShowCountErrWarn.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowFromschemaFilter = new java.util.Stack<>();
@@ -6138,7 +6138,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowFromschemaFilter() {
-      return inShowFromschemaFilter.isEmpty(); 
+      return !inShowFromschemaFilter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowRoutinecode = new java.util.Stack<>();
@@ -6156,7 +6156,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowRoutinecode() {
-      return inShowRoutinecode.isEmpty(); 
+      return !inShowRoutinecode.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowGrants = new java.util.Stack<>();
@@ -6174,7 +6174,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowGrants() {
-      return inShowGrants.isEmpty(); 
+      return !inShowGrants.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowIndexes = new java.util.Stack<>();
@@ -6192,7 +6192,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowIndexes() {
-      return inShowIndexes.isEmpty(); 
+      return !inShowIndexes.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowOpentables = new java.util.Stack<>();
@@ -6210,7 +6210,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowOpentables() {
-      return inShowOpentables.isEmpty(); 
+      return !inShowOpentables.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowProfile = new java.util.Stack<>();
@@ -6228,7 +6228,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowProfile() {
-      return inShowProfile.isEmpty(); 
+      return !inShowProfile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShowSlavestatus = new java.util.Stack<>();
@@ -6246,7 +6246,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShowSlavestatus() {
-      return inShowSlavestatus.isEmpty(); 
+      return !inShowSlavestatus.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVariable_clause = new java.util.Stack<>();
@@ -6264,7 +6264,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inVariable_clause() {
-      return inVariable_clause.isEmpty(); 
+      return !inVariable_clause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShow_filter = new java.util.Stack<>();
@@ -6282,7 +6282,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShow_filter() {
-      return inShow_filter.isEmpty(); 
+      return !inShow_filter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShow_profile_type = new java.util.Stack<>();
@@ -6300,7 +6300,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShow_profile_type() {
-      return inShow_profile_type.isEmpty(); 
+      return !inShow_profile_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBinlog_statement = new java.util.Stack<>();
@@ -6318,7 +6318,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBinlog_statement() {
-      return inBinlog_statement.isEmpty(); 
+      return !inBinlog_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCache_index_statement = new java.util.Stack<>();
@@ -6336,7 +6336,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCache_index_statement() {
-      return inCache_index_statement.isEmpty(); 
+      return !inCache_index_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFlush_statement = new java.util.Stack<>();
@@ -6354,7 +6354,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFlush_statement() {
-      return inFlush_statement.isEmpty(); 
+      return !inFlush_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKill_statement = new java.util.Stack<>();
@@ -6372,7 +6372,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inKill_statement() {
-      return inKill_statement.isEmpty(); 
+      return !inKill_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLoad_index_into_cache = new java.util.Stack<>();
@@ -6390,7 +6390,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLoad_index_into_cache() {
-      return inLoad_index_into_cache.isEmpty(); 
+      return !inLoad_index_into_cache.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReset_statement = new java.util.Stack<>();
@@ -6408,7 +6408,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inReset_statement() {
-      return inReset_statement.isEmpty(); 
+      return !inReset_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShutdown_statement = new java.util.Stack<>();
@@ -6426,7 +6426,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inShutdown_statement() {
-      return inShutdown_statement.isEmpty(); 
+      return !inShutdown_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTbl_index_list = new java.util.Stack<>();
@@ -6444,7 +6444,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTbl_index_list() {
-      return inTbl_index_list.isEmpty(); 
+      return !inTbl_index_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFlush_option = new java.util.Stack<>();
@@ -6462,7 +6462,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFlush_option() {
-      return inFlush_option.isEmpty(); 
+      return !inFlush_option.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLoad_tbl_index_list = new java.util.Stack<>();
@@ -6480,7 +6480,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLoad_tbl_index_list() {
-      return inLoad_tbl_index_list.isEmpty(); 
+      return !inLoad_tbl_index_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimple_describe_statement = new java.util.Stack<>();
@@ -6498,7 +6498,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimple_describe_statement() {
-      return inSimple_describe_statement.isEmpty(); 
+      return !inSimple_describe_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFull_describe_statement = new java.util.Stack<>();
@@ -6516,7 +6516,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFull_describe_statement() {
-      return inFull_describe_statement.isEmpty(); 
+      return !inFull_describe_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHelp_statement = new java.util.Stack<>();
@@ -6534,7 +6534,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHelp_statement() {
-      return inHelp_statement.isEmpty(); 
+      return !inHelp_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUse_statement = new java.util.Stack<>();
@@ -6552,7 +6552,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUse_statement() {
-      return inUse_statement.isEmpty(); 
+      return !inUse_statement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDescstmtDescObj = new java.util.Stack<>();
@@ -6570,7 +6570,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDescstmtDescObj() {
-      return inDescstmtDescObj.isEmpty(); 
+      return !inDescstmtDescObj.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConnectionDescObj = new java.util.Stack<>();
@@ -6588,7 +6588,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConnectionDescObj() {
-      return inConnectionDescObj.isEmpty(); 
+      return !inConnectionDescObj.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTable_name = new java.util.Stack<>();
@@ -6606,7 +6606,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTable_name() {
-      return inTable_name.isEmpty(); 
+      return !inTable_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFull_id = new java.util.Stack<>();
@@ -6624,7 +6624,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFull_id() {
-      return inFull_id.isEmpty(); 
+      return !inFull_id.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFull_column_name = new java.util.Stack<>();
@@ -6642,7 +6642,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFull_column_name() {
-      return inFull_column_name.isEmpty(); 
+      return !inFull_column_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex_col_name = new java.util.Stack<>();
@@ -6660,7 +6660,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndex_col_name() {
-      return inIndex_col_name.isEmpty(); 
+      return !inIndex_col_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser_name = new java.util.Stack<>();
@@ -6678,7 +6678,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUser_name() {
-      return inUser_name.isEmpty(); 
+      return !inUser_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMysql_variable = new java.util.Stack<>();
@@ -6696,7 +6696,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMysql_variable() {
-      return inMysql_variable.isEmpty(); 
+      return !inMysql_variable.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharset_name = new java.util.Stack<>();
@@ -6714,7 +6714,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCharset_name() {
-      return inCharset_name.isEmpty(); 
+      return !inCharset_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCollation_name = new java.util.Stack<>();
@@ -6732,7 +6732,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCollation_name() {
-      return inCollation_name.isEmpty(); 
+      return !inCollation_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEngine_name = new java.util.Stack<>();
@@ -6750,7 +6750,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inEngine_name() {
-      return inEngine_name.isEmpty(); 
+      return !inEngine_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUuid_set = new java.util.Stack<>();
@@ -6768,7 +6768,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUuid_set() {
-      return inUuid_set.isEmpty(); 
+      return !inUuid_set.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXid = new java.util.Stack<>();
@@ -6786,7 +6786,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXid() {
-      return inXid.isEmpty(); 
+      return !inXid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXid_string_id = new java.util.Stack<>();
@@ -6804,7 +6804,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inXid_string_id() {
-      return inXid_string_id.isEmpty(); 
+      return !inXid_string_id.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAuth_plugin = new java.util.Stack<>();
@@ -6822,7 +6822,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAuth_plugin() {
-      return inAuth_plugin.isEmpty(); 
+      return !inAuth_plugin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inId_ = new java.util.Stack<>();
@@ -6840,7 +6840,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inId_() {
-      return inId_.isEmpty(); 
+      return !inId_.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimple_id = new java.util.Stack<>();
@@ -6858,7 +6858,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimple_id() {
-      return inSimple_id.isEmpty(); 
+      return !inSimple_id.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDot_ext_id = new java.util.Stack<>();
@@ -6876,7 +6876,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDot_ext_id() {
-      return inDot_ext_id.isEmpty(); 
+      return !inDot_ext_id.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDecimal_literal = new java.util.Stack<>();
@@ -6894,7 +6894,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDecimal_literal() {
-      return inDecimal_literal.isEmpty(); 
+      return !inDecimal_literal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFilesize_literal = new java.util.Stack<>();
@@ -6912,7 +6912,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFilesize_literal() {
-      return inFilesize_literal.isEmpty(); 
+      return !inFilesize_literal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inString_literal = new java.util.Stack<>();
@@ -6930,7 +6930,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inString_literal() {
-      return inString_literal.isEmpty(); 
+      return !inString_literal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBoolean_literal = new java.util.Stack<>();
@@ -6948,7 +6948,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBoolean_literal() {
-      return inBoolean_literal.isEmpty(); 
+      return !inBoolean_literal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHexadecimal_literal = new java.util.Stack<>();
@@ -6966,7 +6966,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inHexadecimal_literal() {
-      return inHexadecimal_literal.isEmpty(); 
+      return !inHexadecimal_literal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNull_notnull = new java.util.Stack<>();
@@ -6984,7 +6984,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inNull_notnull() {
-      return inNull_notnull.isEmpty(); 
+      return !inNull_notnull.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstant = new java.util.Stack<>();
@@ -7002,7 +7002,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConstant() {
-      return inConstant.isEmpty(); 
+      return !inConstant.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharDatatype = new java.util.Stack<>();
@@ -7020,7 +7020,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCharDatatype() {
-      return inCharDatatype.isEmpty(); 
+      return !inCharDatatype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDimensionDatatype = new java.util.Stack<>();
@@ -7038,7 +7038,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDimensionDatatype() {
-      return inDimensionDatatype.isEmpty(); 
+      return !inDimensionDatatype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleDatatype = new java.util.Stack<>();
@@ -7056,7 +7056,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimpleDatatype() {
-      return inSimpleDatatype.isEmpty(); 
+      return !inSimpleDatatype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCollectCharDatatype = new java.util.Stack<>();
@@ -7074,7 +7074,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCollectCharDatatype() {
-      return inCollectCharDatatype.isEmpty(); 
+      return !inCollectCharDatatype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSpatialDatatype = new java.util.Stack<>();
@@ -7092,7 +7092,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSpatialDatatype() {
-      return inSpatialDatatype.isEmpty(); 
+      return !inSpatialDatatype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inData_type_to_convert = new java.util.Stack<>();
@@ -7110,7 +7110,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inData_type_to_convert() {
-      return inData_type_to_convert.isEmpty(); 
+      return !inData_type_to_convert.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSpatial_data_type = new java.util.Stack<>();
@@ -7128,7 +7128,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSpatial_data_type() {
-      return inSpatial_data_type.isEmpty(); 
+      return !inSpatial_data_type.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLength_one_dimension = new java.util.Stack<>();
@@ -7146,7 +7146,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLength_one_dimension() {
-      return inLength_one_dimension.isEmpty(); 
+      return !inLength_one_dimension.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLength_two_dimension = new java.util.Stack<>();
@@ -7164,7 +7164,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLength_two_dimension() {
-      return inLength_two_dimension.isEmpty(); 
+      return !inLength_two_dimension.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLength_two_optional_dimension = new java.util.Stack<>();
@@ -7182,7 +7182,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLength_two_optional_dimension() {
-      return inLength_two_optional_dimension.isEmpty(); 
+      return !inLength_two_optional_dimension.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inId_list = new java.util.Stack<>();
@@ -7200,7 +7200,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inId_list() {
-      return inId_list.isEmpty(); 
+      return !inId_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTable_list = new java.util.Stack<>();
@@ -7218,7 +7218,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTable_list() {
-      return inTable_list.isEmpty(); 
+      return !inTable_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTable_pair_list = new java.util.Stack<>();
@@ -7236,7 +7236,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTable_pair_list() {
-      return inTable_pair_list.isEmpty(); 
+      return !inTable_pair_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex_colname_list = new java.util.Stack<>();
@@ -7254,7 +7254,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIndex_colname_list() {
-      return inIndex_colname_list.isEmpty(); 
+      return !inIndex_colname_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression_list = new java.util.Stack<>();
@@ -7272,7 +7272,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inExpression_list() {
-      return inExpression_list.isEmpty(); 
+      return !inExpression_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstant_list = new java.util.Stack<>();
@@ -7290,7 +7290,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConstant_list() {
-      return inConstant_list.isEmpty(); 
+      return !inConstant_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimple_string_list = new java.util.Stack<>();
@@ -7308,7 +7308,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimple_string_list() {
-      return inSimple_string_list.isEmpty(); 
+      return !inSimple_string_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser_var_list = new java.util.Stack<>();
@@ -7326,7 +7326,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUser_var_list() {
-      return inUser_var_list.isEmpty(); 
+      return !inUser_var_list.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDefault_value = new java.util.Stack<>();
@@ -7344,7 +7344,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDefault_value() {
-      return inDefault_value.isEmpty(); 
+      return !inDefault_value.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIf_exists = new java.util.Stack<>();
@@ -7362,7 +7362,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIf_exists() {
-      return inIf_exists.isEmpty(); 
+      return !inIf_exists.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIf_not_exists = new java.util.Stack<>();
@@ -7380,7 +7380,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIf_not_exists() {
-      return inIf_not_exists.isEmpty(); 
+      return !inIf_not_exists.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSpecificFunctionCall = new java.util.Stack<>();
@@ -7398,7 +7398,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSpecificFunctionCall() {
-      return inSpecificFunctionCall.isEmpty(); 
+      return !inSpecificFunctionCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAggregateFunctionCall = new java.util.Stack<>();
@@ -7416,7 +7416,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAggregateFunctionCall() {
-      return inAggregateFunctionCall.isEmpty(); 
+      return !inAggregateFunctionCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inScalarFunctionCall = new java.util.Stack<>();
@@ -7434,7 +7434,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inScalarFunctionCall() {
-      return inScalarFunctionCall.isEmpty(); 
+      return !inScalarFunctionCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUdfFunctionCall = new java.util.Stack<>();
@@ -7452,7 +7452,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUdfFunctionCall() {
-      return inUdfFunctionCall.isEmpty(); 
+      return !inUdfFunctionCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleSpecificFCall = new java.util.Stack<>();
@@ -7470,7 +7470,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSimpleSpecificFCall() {
-      return inSimpleSpecificFCall.isEmpty(); 
+      return !inSimpleSpecificFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConvertDataTypeFCall = new java.util.Stack<>();
@@ -7488,7 +7488,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConvertDataTypeFCall() {
-      return inConvertDataTypeFCall.isEmpty(); 
+      return !inConvertDataTypeFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValuesFCall = new java.util.Stack<>();
@@ -7506,7 +7506,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inValuesFCall() {
-      return inValuesFCall.isEmpty(); 
+      return !inValuesFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCaseFCall = new java.util.Stack<>();
@@ -7524,7 +7524,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCaseFCall() {
-      return inCaseFCall.isEmpty(); 
+      return !inCaseFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharFCall = new java.util.Stack<>();
@@ -7542,7 +7542,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCharFCall() {
-      return inCharFCall.isEmpty(); 
+      return !inCharFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPositionFCall = new java.util.Stack<>();
@@ -7560,7 +7560,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPositionFCall() {
-      return inPositionFCall.isEmpty(); 
+      return !inPositionFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubstrFCall = new java.util.Stack<>();
@@ -7578,7 +7578,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSubstrFCall() {
-      return inSubstrFCall.isEmpty(); 
+      return !inSubstrFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTrimFCall = new java.util.Stack<>();
@@ -7596,7 +7596,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTrimFCall() {
-      return inTrimFCall.isEmpty(); 
+      return !inTrimFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inWeightFCall = new java.util.Stack<>();
@@ -7614,7 +7614,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inWeightFCall() {
-      return inWeightFCall.isEmpty(); 
+      return !inWeightFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExtractFCall = new java.util.Stack<>();
@@ -7632,7 +7632,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inExtractFCall() {
-      return inExtractFCall.isEmpty(); 
+      return !inExtractFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGetFormatFCall = new java.util.Stack<>();
@@ -7650,7 +7650,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inGetFormatFCall() {
-      return inGetFormatFCall.isEmpty(); 
+      return !inGetFormatFCall.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLevelWeightFList = new java.util.Stack<>();
@@ -7668,7 +7668,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLevelWeightFList() {
-      return inLevelWeightFList.isEmpty(); 
+      return !inLevelWeightFList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLevelWeightFRange = new java.util.Stack<>();
@@ -7686,7 +7686,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLevelWeightFRange() {
-      return inLevelWeightFRange.isEmpty(); 
+      return !inLevelWeightFRange.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAggregate_windowed_function = new java.util.Stack<>();
@@ -7704,7 +7704,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inAggregate_windowed_function() {
-      return inAggregate_windowed_function.isEmpty(); 
+      return !inAggregate_windowed_function.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inScalar_function_name = new java.util.Stack<>();
@@ -7722,7 +7722,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inScalar_function_name() {
-      return inScalar_function_name.isEmpty(); 
+      return !inScalar_function_name.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunction_args = new java.util.Stack<>();
@@ -7740,7 +7740,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFunction_args() {
-      return inFunction_args.isEmpty(); 
+      return !inFunction_args.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunction_arg = new java.util.Stack<>();
@@ -7758,7 +7758,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFunction_arg() {
-      return inFunction_arg.isEmpty(); 
+      return !inFunction_arg.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIsExpression = new java.util.Stack<>();
@@ -7776,7 +7776,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIsExpression() {
-      return inIsExpression.isEmpty(); 
+      return !inIsExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLogicalExpression = new java.util.Stack<>();
@@ -7794,7 +7794,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLogicalExpression() {
-      return inLogicalExpression.isEmpty(); 
+      return !inLogicalExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPredicateExpression = new java.util.Stack<>();
@@ -7812,7 +7812,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPredicateExpression() {
-      return inPredicateExpression.isEmpty(); 
+      return !inPredicateExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSoundsLikePredicate = new java.util.Stack<>();
@@ -7830,7 +7830,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSoundsLikePredicate() {
-      return inSoundsLikePredicate.isEmpty(); 
+      return !inSoundsLikePredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionAtomPredicate = new java.util.Stack<>();
@@ -7848,7 +7848,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inExpressionAtomPredicate() {
-      return inExpressionAtomPredicate.isEmpty(); 
+      return !inExpressionAtomPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInPredicate = new java.util.Stack<>();
@@ -7866,7 +7866,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInPredicate() {
-      return inInPredicate.isEmpty(); 
+      return !inInPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubqueryComparasionPredicate = new java.util.Stack<>();
@@ -7884,7 +7884,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inSubqueryComparasionPredicate() {
-      return inSubqueryComparasionPredicate.isEmpty(); 
+      return !inSubqueryComparasionPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBetweenPredicate = new java.util.Stack<>();
@@ -7902,7 +7902,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBetweenPredicate() {
-      return inBetweenPredicate.isEmpty(); 
+      return !inBetweenPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBinaryComparasionPredicate = new java.util.Stack<>();
@@ -7920,7 +7920,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBinaryComparasionPredicate() {
-      return inBinaryComparasionPredicate.isEmpty(); 
+      return !inBinaryComparasionPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIsNullPredicate = new java.util.Stack<>();
@@ -7938,7 +7938,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIsNullPredicate() {
-      return inIsNullPredicate.isEmpty(); 
+      return !inIsNullPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLikePredicate = new java.util.Stack<>();
@@ -7956,7 +7956,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLikePredicate() {
-      return inLikePredicate.isEmpty(); 
+      return !inLikePredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRegexpPredicate = new java.util.Stack<>();
@@ -7974,7 +7974,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inRegexpPredicate() {
-      return inRegexpPredicate.isEmpty(); 
+      return !inRegexpPredicate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnaryExpressionAtom = new java.util.Stack<>();
@@ -7992,7 +7992,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnaryExpressionAtom() {
-      return inUnaryExpressionAtom.isEmpty(); 
+      return !inUnaryExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExistsExpessionAtom = new java.util.Stack<>();
@@ -8010,7 +8010,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inExistsExpessionAtom() {
-      return inExistsExpessionAtom.isEmpty(); 
+      return !inExistsExpessionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstantExpressionAtom = new java.util.Stack<>();
@@ -8028,7 +8028,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inConstantExpressionAtom() {
-      return inConstantExpressionAtom.isEmpty(); 
+      return !inConstantExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionCallExpressionAtom = new java.util.Stack<>();
@@ -8046,7 +8046,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFunctionCallExpressionAtom() {
-      return inFunctionCallExpressionAtom.isEmpty(); 
+      return !inFunctionCallExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMysqlVariableExpressionAtom = new java.util.Stack<>();
@@ -8064,7 +8064,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMysqlVariableExpressionAtom() {
-      return inMysqlVariableExpressionAtom.isEmpty(); 
+      return !inMysqlVariableExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBinaryExpressionAtom = new java.util.Stack<>();
@@ -8082,7 +8082,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBinaryExpressionAtom() {
-      return inBinaryExpressionAtom.isEmpty(); 
+      return !inBinaryExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFullColumnNameExpressionAtom = new java.util.Stack<>();
@@ -8100,7 +8100,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFullColumnNameExpressionAtom() {
-      return inFullColumnNameExpressionAtom.isEmpty(); 
+      return !inFullColumnNameExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDefaultExpressionAtom = new java.util.Stack<>();
@@ -8118,7 +8118,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inDefaultExpressionAtom() {
-      return inDefaultExpressionAtom.isEmpty(); 
+      return !inDefaultExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBitExpressionAtom = new java.util.Stack<>();
@@ -8136,7 +8136,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBitExpressionAtom() {
-      return inBitExpressionAtom.isEmpty(); 
+      return !inBitExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNestedExpressionAtom = new java.util.Stack<>();
@@ -8154,7 +8154,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inNestedExpressionAtom() {
-      return inNestedExpressionAtom.isEmpty(); 
+      return !inNestedExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMathExpressionAtom = new java.util.Stack<>();
@@ -8172,7 +8172,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMathExpressionAtom() {
-      return inMathExpressionAtom.isEmpty(); 
+      return !inMathExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIntervalExpressionAtom = new java.util.Stack<>();
@@ -8190,7 +8190,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inIntervalExpressionAtom() {
-      return inIntervalExpressionAtom.isEmpty(); 
+      return !inIntervalExpressionAtom.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnary_operator = new java.util.Stack<>();
@@ -8208,7 +8208,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inUnary_operator() {
-      return inUnary_operator.isEmpty(); 
+      return !inUnary_operator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inComparison_operator = new java.util.Stack<>();
@@ -8226,7 +8226,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inComparison_operator() {
-      return inComparison_operator.isEmpty(); 
+      return !inComparison_operator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLogical_operator = new java.util.Stack<>();
@@ -8244,7 +8244,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inLogical_operator() {
-      return inLogical_operator.isEmpty(); 
+      return !inLogical_operator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBit_operator = new java.util.Stack<>();
@@ -8262,7 +8262,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inBit_operator() {
-      return inBit_operator.isEmpty(); 
+      return !inBit_operator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMath_operator = new java.util.Stack<>();
@@ -8280,7 +8280,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inMath_operator() {
-      return inMath_operator.isEmpty(); 
+      return !inMath_operator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharset_name_base = new java.util.Stack<>();
@@ -8298,7 +8298,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inCharset_name_base() {
-      return inCharset_name_base.isEmpty(); 
+      return !inCharset_name_base.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTransaction_level_base = new java.util.Stack<>();
@@ -8316,7 +8316,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inTransaction_level_base() {
-      return inTransaction_level_base.isEmpty(); 
+      return !inTransaction_level_base.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrivileges_base = new java.util.Stack<>();
@@ -8334,7 +8334,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inPrivileges_base() {
-      return inPrivileges_base.isEmpty(); 
+      return !inPrivileges_base.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterval_type_base = new java.util.Stack<>();
@@ -8352,7 +8352,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inInterval_type_base() {
-      return inInterval_type_base.isEmpty(); 
+      return !inInterval_type_base.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inData_type_base = new java.util.Stack<>();
@@ -8370,7 +8370,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inData_type_base() {
-      return inData_type_base.isEmpty(); 
+      return !inData_type_base.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeywords_can_be_id = new java.util.Stack<>();
@@ -8388,7 +8388,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inKeywords_can_be_id() {
-      return inKeywords_can_be_id.isEmpty(); 
+      return !inKeywords_can_be_id.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunction_name_base = new java.util.Stack<>();
@@ -8406,7 +8406,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 	}
 
 	public boolean inFunction_name_base() {
-      return inFunction_name_base.isEmpty(); 
+      return !inFunction_name_base.isEmpty(); 
    }
 
 }

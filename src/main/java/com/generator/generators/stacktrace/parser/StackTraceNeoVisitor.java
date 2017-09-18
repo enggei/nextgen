@@ -68,29 +68,19 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		System.out.println("AtLine");
-		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		System.out.println("StartRule");
-		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
 		System.out.println("StackTraceLine");
 		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		System.out.println("AtLine");
+		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,9 +98,9 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		System.out.println("EllipsisLine");
-		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText());
+	public Node visitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
+		System.out.println("MessageLine");
+		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -118,9 +108,19 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		System.out.println("MessageLine");
-		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText());
+	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		System.out.println("StartRule");
+		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
+		System.out.println("EllipsisLine");
+		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

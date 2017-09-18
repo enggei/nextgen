@@ -60,7 +60,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlDocument() {
-      return inHtmlDocument.isEmpty(); 
+      return !inHtmlDocument.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlElements = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlElements() {
-      return inHtmlElements.isEmpty(); 
+      return !inHtmlElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlElement = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlElement() {
-      return inHtmlElement.isEmpty(); 
+      return !inHtmlElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlContent = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlContent() {
-      return inHtmlContent.isEmpty(); 
+      return !inHtmlContent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlAttribute = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlAttribute() {
-      return inHtmlAttribute.isEmpty(); 
+      return !inHtmlAttribute.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlAttributeName = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlAttributeName() {
-      return inHtmlAttributeName.isEmpty(); 
+      return !inHtmlAttributeName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlAttributeValue = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlAttributeValue() {
-      return inHtmlAttributeValue.isEmpty(); 
+      return !inHtmlAttributeValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlTagName = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlTagName() {
-      return inHtmlTagName.isEmpty(); 
+      return !inHtmlTagName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlChardata = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlChardata() {
-      return inHtmlChardata.isEmpty(); 
+      return !inHtmlChardata.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlMisc = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlMisc() {
-      return inHtmlMisc.isEmpty(); 
+      return !inHtmlMisc.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHtmlComment = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inHtmlComment() {
-      return inHtmlComment.isEmpty(); 
+      return !inHtmlComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXhtmlCDATA = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inXhtmlCDATA() {
-      return inXhtmlCDATA.isEmpty(); 
+      return !inXhtmlCDATA.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDtd = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inDtd() {
-      return inDtd.isEmpty(); 
+      return !inDtd.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inXml = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inXml() {
-      return inXml.isEmpty(); 
+      return !inXml.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inScriptlet = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inScriptlet() {
-      return inScriptlet.isEmpty(); 
+      return !inScriptlet.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inScript = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inScript() {
-      return inScript.isEmpty(); 
+      return !inScript.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStyle = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 	}
 
 	public boolean inStyle() {
-      return inStyle.isEmpty(); 
+      return !inStyle.isEmpty(); 
    }
 
 }

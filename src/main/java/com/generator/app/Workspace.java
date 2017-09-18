@@ -1208,13 +1208,13 @@ public final class Workspace extends JPanel {
 
                      case KeyEvent.VK_3:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Bottom));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Bottom));
                         });
                         break;
 
                      case KeyEvent.VK_4:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Top));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Top));
                         });
                         break;
 

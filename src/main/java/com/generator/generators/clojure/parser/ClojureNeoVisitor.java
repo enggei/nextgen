@@ -28,16 +28,6 @@ public class ClojureNeoVisitor extends ClojureBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		System.out.println("Quote");
-		final Node node = model.findOrCreate(Label.label("Quote"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
 		System.out.println("Backtick");
 		final Node node = model.findOrCreate(Label.label("Backtick"), "text", arg.getText());
@@ -111,76 +101,6 @@ public class ClojureNeoVisitor extends ClojureBaseVisitor<Node> {
 	public Node visitMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
 		System.out.println("Meta_data");
 		final Node node = model.findOrCreate(Label.label("Meta_data"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		System.out.println("File");
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		System.out.println("Form");
-		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		System.out.println("Forms");
-		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		System.out.println("List");
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		System.out.println("Vector");
-		final Node node = model.findOrCreate(Label.label("Vector"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		System.out.println("Map");
-		final Node node = model.findOrCreate(Label.label("Map"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		System.out.println("Set");
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -281,6 +201,96 @@ public class ClojureNeoVisitor extends ClojureBaseVisitor<Node> {
 	public Node visitBign(com.generator.generators.clojure.parser.ClojureParser.BignContext arg) {
 		System.out.println("Bign");
 		final Node node = model.findOrCreate(Label.label("Bign"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		System.out.println("File");
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		System.out.println("Form");
+		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		System.out.println("Forms");
+		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		System.out.println("List");
+		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		System.out.println("Vector");
+		final Node node = model.findOrCreate(Label.label("Vector"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		System.out.println("Map");
+		final Node node = model.findOrCreate(Label.label("Map"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
+		System.out.println("Set");
+		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		System.out.println("Reader_macro");
+		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
+		System.out.println("Quote");
+		final Node node = model.findOrCreate(Label.label("Quote"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -411,16 +421,6 @@ public class ClojureNeoVisitor extends ClojureBaseVisitor<Node> {
 	public Node visitParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
 		System.out.println("Param_name");
 		final Node node = model.findOrCreate(Label.label("Param_name"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		System.out.println("Reader_macro");
-		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

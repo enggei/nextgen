@@ -68,6 +68,16 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
+		System.out.println("Property");
+		final Node node = model.findOrCreate(Label.label("Property"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
 		System.out.println("PackageDecl");
 		final Node node = model.findOrCreate(Label.label("PackageDecl"), "text", arg.getText());
@@ -121,16 +131,6 @@ public class ProtobufNeoVisitor extends ProtobufBaseVisitor<Node> {
 	public Node visitMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
 		System.out.println("MessageContent");
 		final Node node = model.findOrCreate(Label.label("MessageContent"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
-		System.out.println("Property");
-		final Node node = model.findOrCreate(Label.label("Property"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

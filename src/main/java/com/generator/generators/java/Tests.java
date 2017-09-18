@@ -21,10 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.reflections.ReflectionUtils.*;
 
@@ -38,7 +35,7 @@ public class Tests {
       final JavaGroup.BeanST beanST = javaGroup.newBean().
             setPackage("com.test").
             setName("Hello").
-            addPropertiesValue(null, "String", "name").
+            addPropertiesValue(null, "name", "String").
             addLexicalValue("name");
       beanST.addMethodsValue(javaGroup.newmethod().
             setReturnValue("void").
@@ -52,24 +49,58 @@ public class Tests {
             setScope("private").
             addMethodsValue(javaGroup.newmethod().
                   setName("calculate").
-                  addParametersValue("test","Integer").
+                  addParametersValue("test", "Integer").
                   addStatementsValue("test++;")));
+
+      final JavaGroup.BeanST newBean = javaGroup.newBean();
 
       final JavaParser parser = new JavaParser(new CommonTokenStream(new JavaLexer(CharStreams.fromString(beanST.toString()))));
       final JavaParserNodeListener listener = new JavaParserNodeListener(true) {
 
+         private String init;
+         private String propertyName;
+         private String propertyType;
+
          @Override
          public void enterQualifiedName(JavaParser.QualifiedNameContext arg) {
             super.enterQualifiedName(arg);
+            if (inPackageDeclaration())
+               newBean.setPackage(arg.getText());
+         }
 
-            if (inPackageDeclaration()) {
-               System.out.println("package " + arg.getText());
-            }
+         @Override
+         public void enterClassDeclaration(JavaParser.ClassDeclarationContext arg) {
+            super.enterClassDeclaration(arg);
+            newBean.setName(arg.IDENTIFIER());
+         }
+
+         @Override
+         public void enterClassOrInterfaceType(JavaParser.ClassOrInterfaceTypeContext arg) {
+            super.enterClassOrInterfaceType(arg);
+            if (inMemberDeclaration() && inFieldDeclaration() && inTypeType()) propertyType = arg.getText();
+         }
+
+         @Override
+         public void enterVariableDeclaratorId(JavaParser.VariableDeclaratorIdContext arg) {
+            super.enterVariableDeclaratorId(arg);
+            if(inMemberDeclaration()) propertyName = arg.getText();
+         }
+
+         @Override
+         public void exitMemberDeclaration(JavaParser.MemberDeclarationContext arg) {
+            super.exitMemberDeclaration(arg);
+         }
+
+         @Override
+         public void exitFieldDeclaration(JavaParser.FieldDeclarationContext arg) {
+            super.exitFieldDeclaration(arg);
+            newBean.addPropertiesValue(init, propertyName, propertyType);
          }
       };
       new ParseTreeWalker().walk(listener, parser.compilationUnit());
 
       System.out.println(beanST.toString());
+      System.out.println(newBean.toString());
    }
 
    @Test
@@ -150,7 +181,7 @@ public class Tests {
    @Test
    public void writeSTG() throws IOException {
 
-      JavaGroup.toSTGFile(new File(ProjectConstants.GENERATORS_ROOT+"java"));
+      JavaGroup.toSTGFile(new File(ProjectConstants.GENERATORS_ROOT + "java"));
    }
 
    @Test

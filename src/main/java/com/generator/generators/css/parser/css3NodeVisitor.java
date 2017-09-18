@@ -54,15 +54,6 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		final Node node = new Node("ElementName", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
 		final Node node = new Node("Number", arg.getText());
 		onEnter(node);
@@ -83,6 +74,15 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
 		final Node node = new Node("TypeNamespacePrefix", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		final Node node = new Node("ElementName", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

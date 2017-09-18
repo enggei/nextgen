@@ -54,15 +54,6 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	}
 
 	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		final Node node = new Node("Sql_statements", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
 		final Node node = new Node("Root", arg.getText());
 		onEnter(node);
@@ -533,6 +524,15 @@ public class MySqlParserNodeVisitor extends MySqlParserBaseVisitor<MySqlParserNo
 	@Override
 	public Node visitColConstrComment(com.generator.generators.mysql.parser.MySqlParser.ColConstrCommentContext arg) {
 		final Node node = new Node("ColConstrComment", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		final Node node = new Node("Sql_statements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

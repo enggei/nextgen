@@ -54,7 +54,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inString() {
-      return inString.isEmpty(); 
+      return !inString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
@@ -72,7 +72,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inUrl() {
-      return inUrl.isEmpty(); 
+      return !inUrl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUri = new java.util.Stack<>();
@@ -90,7 +90,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inUri() {
-      return inUri.isEmpty(); 
+      return !inUri.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inScheme = new java.util.Stack<>();
@@ -108,7 +108,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inScheme() {
-      return inScheme.isEmpty(); 
+      return !inScheme.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHost = new java.util.Stack<>();
@@ -126,7 +126,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inHost() {
-      return inHost.isEmpty(); 
+      return !inHost.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHostname = new java.util.Stack<>();
@@ -144,7 +144,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inHostname() {
-      return inHostname.isEmpty(); 
+      return !inHostname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHostnumber = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inHostnumber() {
-      return inHostnumber.isEmpty(); 
+      return !inHostnumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPort = new java.util.Stack<>();
@@ -180,7 +180,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inPort() {
-      return inPort.isEmpty(); 
+      return !inPort.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPath = new java.util.Stack<>();
@@ -198,7 +198,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inPath() {
-      return inPath.isEmpty(); 
+      return !inPath.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUser = new java.util.Stack<>();
@@ -216,7 +216,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inUser() {
-      return inUser.isEmpty(); 
+      return !inUser.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLogin = new java.util.Stack<>();
@@ -234,7 +234,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inLogin() {
-      return inLogin.isEmpty(); 
+      return !inLogin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPassword = new java.util.Stack<>();
@@ -252,7 +252,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inPassword() {
-      return inPassword.isEmpty(); 
+      return !inPassword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFrag = new java.util.Stack<>();
@@ -270,7 +270,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inFrag() {
-      return inFrag.isEmpty(); 
+      return !inFrag.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
@@ -288,7 +288,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inQuery() {
-      return inQuery.isEmpty(); 
+      return !inQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSearch = new java.util.Stack<>();
@@ -306,7 +306,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inSearch() {
-      return inSearch.isEmpty(); 
+      return !inSearch.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSearchparameter = new java.util.Stack<>();
@@ -324,7 +324,7 @@ public class urlNeoListener extends urlBaseListener {
 	}
 
 	public boolean inSearchparameter() {
-      return inSearchparameter.isEmpty(); 
+      return !inSearchparameter.isEmpty(); 
    }
 
 }

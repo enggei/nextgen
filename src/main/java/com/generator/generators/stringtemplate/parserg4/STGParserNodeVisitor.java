@@ -90,15 +90,6 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		final Node node = new Node("KeyValuePair", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
 		final Node node = new Node("FormalArg", arg.getText());
 		onEnter(node);
@@ -119,6 +110,15 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	@Override
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
 		final Node node = new Node("DictPairs", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		final Node node = new Node("KeyValuePair", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

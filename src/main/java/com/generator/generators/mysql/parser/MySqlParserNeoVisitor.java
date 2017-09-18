@@ -38,16 +38,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		System.out.println("Sql_statements");
-		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
 		System.out.println("Root");
 		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
@@ -571,6 +561,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitColConstrComment(com.generator.generators.mysql.parser.MySqlParser.ColConstrCommentContext arg) {
 		System.out.println("ColConstrComment");
 		final Node node = model.findOrCreate(Label.label("ColConstrComment"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		System.out.println("Sql_statements");
+		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

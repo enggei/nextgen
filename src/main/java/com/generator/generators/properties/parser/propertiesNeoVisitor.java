@@ -48,9 +48,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		System.out.println("Key");
-		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText());
+	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		System.out.println("PropertiesFile");
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +58,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		System.out.println("Decl");
-		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
+	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
+		System.out.println("Key");
+		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -78,9 +78,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		System.out.println("PropertiesFile");
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
+	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		System.out.println("Decl");
+		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

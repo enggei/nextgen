@@ -54,7 +54,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inValue() {
-      return inValue.isEmpty(); 
+      return !inValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
@@ -72,7 +72,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inRow() {
-      return inRow.isEmpty(); 
+      return !inRow.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKey = new java.util.Stack<>();
@@ -90,7 +90,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inKey() {
-      return inKey.isEmpty(); 
+      return !inKey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
@@ -108,7 +108,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inPropertiesFile() {
-      return inPropertiesFile.isEmpty(); 
+      return !inPropertiesFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
@@ -126,7 +126,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inDecl() {
-      return inDecl.isEmpty(); 
+      return !inDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
@@ -144,7 +144,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 	}
 
 	public boolean inComment() {
-      return inComment.isEmpty(); 
+      return !inComment.isEmpty(); 
    }
 
 }

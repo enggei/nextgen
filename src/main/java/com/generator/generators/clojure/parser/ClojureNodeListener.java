@@ -60,7 +60,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inFile() {
-      return inFile.isEmpty(); 
+      return !inFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inForm() {
-      return inForm.isEmpty(); 
+      return !inForm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inForms() {
-      return inForms.isEmpty(); 
+      return !inForms.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inList() {
-      return inList.isEmpty(); 
+      return !inList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inVector() {
-      return inVector.isEmpty(); 
+      return !inVector.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMap = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inMap() {
-      return inMap.isEmpty(); 
+      return !inMap.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inSet() {
-      return inSet.isEmpty(); 
+      return !inSet.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReader_macro = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inReader_macro() {
-      return inReader_macro.isEmpty(); 
+      return !inReader_macro.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuote = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inQuote() {
-      return inQuote.isEmpty(); 
+      return !inQuote.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBacktick = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inBacktick() {
-      return inBacktick.isEmpty(); 
+      return !inBacktick.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnquote = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inUnquote() {
-      return inUnquote.isEmpty(); 
+      return !inUnquote.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnquote_splicing = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inUnquote_splicing() {
-      return inUnquote_splicing.isEmpty(); 
+      return !inUnquote_splicing.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTag = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inTag() {
-      return inTag.isEmpty(); 
+      return !inTag.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeref = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inDeref() {
-      return inDeref.isEmpty(); 
+      return !inDeref.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGensym = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inGensym() {
-      return inGensym.isEmpty(); 
+      return !inGensym.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambda = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inLambda() {
-      return inLambda.isEmpty(); 
+      return !inLambda.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMeta_data = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inMeta_data() {
-      return inMeta_data.isEmpty(); 
+      return !inMeta_data.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVar_quote = new java.util.Stack<>();
@@ -349,7 +349,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inVar_quote() {
-      return inVar_quote.isEmpty(); 
+      return !inVar_quote.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHost_expr = new java.util.Stack<>();
@@ -366,7 +366,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inHost_expr() {
-      return inHost_expr.isEmpty(); 
+      return !inHost_expr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDiscard = new java.util.Stack<>();
@@ -383,7 +383,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inDiscard() {
-      return inDiscard.isEmpty(); 
+      return !inDiscard.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
@@ -400,7 +400,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inDispatch() {
-      return inDispatch.isEmpty(); 
+      return !inDispatch.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRegex = new java.util.Stack<>();
@@ -417,7 +417,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inRegex() {
-      return inRegex.isEmpty(); 
+      return !inRegex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
@@ -434,7 +434,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
@@ -451,7 +451,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inString() {
-      return inString.isEmpty(); 
+      return !inString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHex = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inHex() {
-      return inHex.isEmpty(); 
+      return !inHex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBin = new java.util.Stack<>();
@@ -485,7 +485,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inBin() {
-      return inBin.isEmpty(); 
+      return !inBin.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBign = new java.util.Stack<>();
@@ -502,7 +502,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inBign() {
-      return inBign.isEmpty(); 
+      return !inBign.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
@@ -519,7 +519,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inNumber() {
-      return inNumber.isEmpty(); 
+      return !inNumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCharacter = new java.util.Stack<>();
@@ -536,7 +536,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inCharacter() {
-      return inCharacter.isEmpty(); 
+      return !inCharacter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamed_char = new java.util.Stack<>();
@@ -553,7 +553,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inNamed_char() {
-      return inNamed_char.isEmpty(); 
+      return !inNamed_char.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAny_char = new java.util.Stack<>();
@@ -570,7 +570,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inAny_char() {
-      return inAny_char.isEmpty(); 
+      return !inAny_char.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inU_hex_quad = new java.util.Stack<>();
@@ -587,7 +587,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inU_hex_quad() {
-      return inU_hex_quad.isEmpty(); 
+      return !inU_hex_quad.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNil = new java.util.Stack<>();
@@ -604,7 +604,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inNil() {
-      return inNil.isEmpty(); 
+      return !inNil.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyword = new java.util.Stack<>();
@@ -621,7 +621,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inKeyword() {
-      return inKeyword.isEmpty(); 
+      return !inKeyword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimple_keyword = new java.util.Stack<>();
@@ -638,7 +638,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inSimple_keyword() {
-      return inSimple_keyword.isEmpty(); 
+      return !inSimple_keyword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMacro_keyword = new java.util.Stack<>();
@@ -655,7 +655,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inMacro_keyword() {
-      return inMacro_keyword.isEmpty(); 
+      return !inMacro_keyword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSymbol = new java.util.Stack<>();
@@ -672,7 +672,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inSymbol() {
-      return inSymbol.isEmpty(); 
+      return !inSymbol.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimple_sym = new java.util.Stack<>();
@@ -689,7 +689,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inSimple_sym() {
-      return inSimple_sym.isEmpty(); 
+      return !inSimple_sym.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNs_symbol = new java.util.Stack<>();
@@ -706,7 +706,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inNs_symbol() {
-      return inNs_symbol.isEmpty(); 
+      return !inNs_symbol.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParam_name = new java.util.Stack<>();
@@ -723,7 +723,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 	}
 
 	public boolean inParam_name() {
-      return inParam_name.isEmpty(); 
+      return !inParam_name.isEmpty(); 
    }
 
 }

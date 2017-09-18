@@ -60,7 +60,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inIdentifier() {
-      return inIdentifier.isEmpty(); 
+      return !inIdentifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inClassName() {
-      return inClassName.isEmpty(); 
+      return !inClassName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inMessage() {
-      return inMessage.isEmpty(); 
+      return !inMessage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inStartRule() {
-      return inStartRule.isEmpty(); 
+      return !inStartRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inStackTrace() {
-      return inStackTrace.isEmpty(); 
+      return !inStackTrace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStackTraceLine = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inStackTraceLine() {
-      return inStackTraceLine.isEmpty(); 
+      return !inStackTraceLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAtLine = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inAtLine() {
-      return inAtLine.isEmpty(); 
+      return !inAtLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCausedByLine = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inCausedByLine() {
-      return inCausedByLine.isEmpty(); 
+      return !inCausedByLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEllipsisLine = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inEllipsisLine() {
-      return inEllipsisLine.isEmpty(); 
+      return !inEllipsisLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMessageLine = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inMessageLine() {
-      return inMessageLine.isEmpty(); 
+      return !inMessageLine.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedClass = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inQualifiedClass() {
-      return inQualifiedClass.isEmpty(); 
+      return !inQualifiedClass.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inClassFile() {
-      return inClassFile.isEmpty(); 
+      return !inClassFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inInnerClassName() {
-      return inInnerClassName.isEmpty(); 
+      return !inInnerClassName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedMethod = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inQualifiedMethod() {
-      return inQualifiedMethod.isEmpty(); 
+      return !inQualifiedMethod.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstructor = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inConstructor() {
-      return inConstructor.isEmpty(); 
+      return !inConstructor.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodName = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inMethodName() {
-      return inMethodName.isEmpty(); 
+      return !inMethodName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackagePath = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 	}
 
 	public boolean inPackagePath() {
-      return inPackagePath.isEmpty(); 
+      return !inPackagePath.isEmpty(); 
    }
 
 }

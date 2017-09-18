@@ -46,23 +46,6 @@ public class STParserNodeListener extends STParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return inOption.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
 
 	@Override
@@ -77,7 +60,24 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inElement() {
-      return inElement.isEmpty(); 
+      return !inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inList() {
-      return inList.isEmpty(); 
+      return !inList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inExpr() {
-      return inExpr.isEmpty(); 
+      return !inExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrimary = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inPrimary() {
-      return inPrimary.isEmpty(); 
+      return !inPrimary.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExprTag = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inExprTag() {
-      return inExprTag.isEmpty(); 
+      return !inExprTag.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRegion = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inRegion() {
-      return inRegion.isEmpty(); 
+      return !inRegion.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSubtemplate = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inSubtemplate() {
-      return inSubtemplate.isEmpty(); 
+      return !inSubtemplate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIfstat = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inIfstat() {
-      return inIfstat.isEmpty(); 
+      return !inIfstat.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConditional = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inConditional() {
-      return inConditional.isEmpty(); 
+      return !inConditional.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAndConditional = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inAndConditional() {
-      return inAndConditional.isEmpty(); 
+      return !inAndConditional.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNotConditional = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inNotConditional() {
-      return inNotConditional.isEmpty(); 
+      return !inNotConditional.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNotConditionalExpr = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inNotConditionalExpr() {
-      return inNotConditionalExpr.isEmpty(); 
+      return !inNotConditionalExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExprOptions = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inExprOptions() {
-      return inExprOptions.isEmpty(); 
+      return !inExprOptions.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMapExpr = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inMapExpr() {
-      return inMapExpr.isEmpty(); 
+      return !inMapExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberExpr = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inMemberExpr() {
-      return inMemberExpr.isEmpty(); 
+      return !inMemberExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMapTemplateRef = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inMapTemplateRef() {
-      return inMapTemplateRef.isEmpty(); 
+      return !inMapTemplateRef.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
@@ -349,7 +349,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inTemplate() {
-      return inTemplate.isEmpty(); 
+      return !inTemplate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElements = new java.util.Stack<>();
@@ -366,7 +366,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inElements() {
-      return inElements.isEmpty(); 
+      return !inElements.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSingleElement = new java.util.Stack<>();
@@ -383,7 +383,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inSingleElement() {
-      return inSingleElement.isEmpty(); 
+      return !inSingleElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompoundElement = new java.util.Stack<>();
@@ -400,7 +400,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inCompoundElement() {
-      return inCompoundElement.isEmpty(); 
+      return !inCompoundElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIncludeExpr = new java.util.Stack<>();
@@ -417,7 +417,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inIncludeExpr() {
-      return inIncludeExpr.isEmpty(); 
+      return !inIncludeExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArgs = new java.util.Stack<>();
@@ -434,7 +434,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inArgs() {
-      return inArgs.isEmpty(); 
+      return !inArgs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArgExprList = new java.util.Stack<>();
@@ -451,7 +451,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inArgExprList() {
-      return inArgExprList.isEmpty(); 
+      return !inArgExprList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamedArg = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class STParserNodeListener extends STParserBaseListener {
 	}
 
 	public boolean inNamedArg() {
-      return inNamedArg.isEmpty(); 
+      return !inNamedArg.isEmpty(); 
    }
 
 }

@@ -60,7 +60,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inElement() {
-      return inElement.isEmpty(); 
+      return !inElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlock = new java.util.Stack<>();
@@ -77,24 +77,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inBlock() {
-      return inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
+      return !inBlock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
@@ -111,7 +94,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExpression() {
-      return inExpression.isEmpty(); 
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
@@ -128,7 +111,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inStatement() {
-      return inStatement.isEmpty(); 
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
@@ -145,7 +128,24 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inDeclaration() {
-      return inDeclaration.isEmpty(); 
+      return !inDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSelector() {
-      return inSelector.isEmpty(); 
+      return !inSelector.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
@@ -179,24 +179,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFunction() {
-      return inFunction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return inStatementList.isEmpty(); 
+      return !inFunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
@@ -213,7 +196,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inElementList() {
-      return inElementList.isEmpty(); 
+      return !inElementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArguments = new java.util.Stack<>();
@@ -230,7 +213,24 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inArguments() {
-      return inArguments.isEmpty(); 
+      return !inArguments.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEos = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inEos() {
-      return inEos.isEmpty(); 
+      return !inEos.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceFile = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSourceFile() {
-      return inSourceFile.isEmpty(); 
+      return !inSourceFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inPackageClause() {
-      return inPackageClause.isEmpty(); 
+      return !inPackageClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportDecl = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inImportDecl() {
-      return inImportDecl.isEmpty(); 
+      return !inImportDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportSpec = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inImportSpec() {
-      return inImportSpec.isEmpty(); 
+      return !inImportSpec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportPath = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inImportPath() {
-      return inImportPath.isEmpty(); 
+      return !inImportPath.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTopLevelDecl = new java.util.Stack<>();
@@ -349,7 +349,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTopLevelDecl() {
-      return inTopLevelDecl.isEmpty(); 
+      return !inTopLevelDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstDecl = new java.util.Stack<>();
@@ -366,7 +366,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inConstDecl() {
-      return inConstDecl.isEmpty(); 
+      return !inConstDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstSpec = new java.util.Stack<>();
@@ -383,7 +383,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inConstSpec() {
-      return inConstSpec.isEmpty(); 
+      return !inConstSpec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIdentifierList = new java.util.Stack<>();
@@ -400,7 +400,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inIdentifierList() {
-      return inIdentifierList.isEmpty(); 
+      return !inIdentifierList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionList = new java.util.Stack<>();
@@ -417,7 +417,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExpressionList() {
-      return inExpressionList.isEmpty(); 
+      return !inExpressionList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeDecl = new java.util.Stack<>();
@@ -434,7 +434,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeDecl() {
-      return inTypeDecl.isEmpty(); 
+      return !inTypeDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeSpec = new java.util.Stack<>();
@@ -451,7 +451,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeSpec() {
-      return inTypeSpec.isEmpty(); 
+      return !inTypeSpec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionDecl = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFunctionDecl() {
-      return inFunctionDecl.isEmpty(); 
+      return !inFunctionDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodDecl = new java.util.Stack<>();
@@ -485,7 +485,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inMethodDecl() {
-      return inMethodDecl.isEmpty(); 
+      return !inMethodDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReceiver = new java.util.Stack<>();
@@ -502,7 +502,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inReceiver() {
-      return inReceiver.isEmpty(); 
+      return !inReceiver.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVarDecl = new java.util.Stack<>();
@@ -519,7 +519,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inVarDecl() {
-      return inVarDecl.isEmpty(); 
+      return !inVarDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVarSpec = new java.util.Stack<>();
@@ -536,7 +536,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inVarSpec() {
-      return inVarSpec.isEmpty(); 
+      return !inVarSpec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleStmt = new java.util.Stack<>();
@@ -553,7 +553,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSimpleStmt() {
-      return inSimpleStmt.isEmpty(); 
+      return !inSimpleStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionStmt = new java.util.Stack<>();
@@ -570,7 +570,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExpressionStmt() {
-      return inExpressionStmt.isEmpty(); 
+      return !inExpressionStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSendStmt = new java.util.Stack<>();
@@ -587,7 +587,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSendStmt() {
-      return inSendStmt.isEmpty(); 
+      return !inSendStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIncDecStmt = new java.util.Stack<>();
@@ -604,7 +604,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inIncDecStmt() {
-      return inIncDecStmt.isEmpty(); 
+      return !inIncDecStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAssignment = new java.util.Stack<>();
@@ -621,7 +621,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inAssignment() {
-      return inAssignment.isEmpty(); 
+      return !inAssignment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAssign_op = new java.util.Stack<>();
@@ -638,7 +638,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inAssign_op() {
-      return inAssign_op.isEmpty(); 
+      return !inAssign_op.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShortVarDecl = new java.util.Stack<>();
@@ -655,7 +655,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inShortVarDecl() {
-      return inShortVarDecl.isEmpty(); 
+      return !inShortVarDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEmptyStmt = new java.util.Stack<>();
@@ -672,7 +672,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inEmptyStmt() {
-      return inEmptyStmt.isEmpty(); 
+      return !inEmptyStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLabeledStmt = new java.util.Stack<>();
@@ -689,7 +689,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inLabeledStmt() {
-      return inLabeledStmt.isEmpty(); 
+      return !inLabeledStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReturnStmt = new java.util.Stack<>();
@@ -706,7 +706,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inReturnStmt() {
-      return inReturnStmt.isEmpty(); 
+      return !inReturnStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBreakStmt = new java.util.Stack<>();
@@ -723,7 +723,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inBreakStmt() {
-      return inBreakStmt.isEmpty(); 
+      return !inBreakStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inContinueStmt = new java.util.Stack<>();
@@ -740,7 +740,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inContinueStmt() {
-      return inContinueStmt.isEmpty(); 
+      return !inContinueStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGotoStmt = new java.util.Stack<>();
@@ -757,7 +757,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inGotoStmt() {
-      return inGotoStmt.isEmpty(); 
+      return !inGotoStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFallthroughStmt = new java.util.Stack<>();
@@ -774,7 +774,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFallthroughStmt() {
-      return inFallthroughStmt.isEmpty(); 
+      return !inFallthroughStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeferStmt = new java.util.Stack<>();
@@ -791,7 +791,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inDeferStmt() {
-      return inDeferStmt.isEmpty(); 
+      return !inDeferStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIfStmt = new java.util.Stack<>();
@@ -808,7 +808,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inIfStmt() {
-      return inIfStmt.isEmpty(); 
+      return !inIfStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSwitchStmt = new java.util.Stack<>();
@@ -825,7 +825,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSwitchStmt() {
-      return inSwitchStmt.isEmpty(); 
+      return !inSwitchStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExprSwitchStmt = new java.util.Stack<>();
@@ -842,7 +842,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExprSwitchStmt() {
-      return inExprSwitchStmt.isEmpty(); 
+      return !inExprSwitchStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExprCaseClause = new java.util.Stack<>();
@@ -859,7 +859,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExprCaseClause() {
-      return inExprCaseClause.isEmpty(); 
+      return !inExprCaseClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExprSwitchCase = new java.util.Stack<>();
@@ -876,7 +876,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inExprSwitchCase() {
-      return inExprSwitchCase.isEmpty(); 
+      return !inExprSwitchCase.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeSwitchStmt = new java.util.Stack<>();
@@ -893,7 +893,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeSwitchStmt() {
-      return inTypeSwitchStmt.isEmpty(); 
+      return !inTypeSwitchStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeSwitchGuard = new java.util.Stack<>();
@@ -910,7 +910,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeSwitchGuard() {
-      return inTypeSwitchGuard.isEmpty(); 
+      return !inTypeSwitchGuard.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeCaseClause = new java.util.Stack<>();
@@ -927,7 +927,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeCaseClause() {
-      return inTypeCaseClause.isEmpty(); 
+      return !inTypeCaseClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeSwitchCase = new java.util.Stack<>();
@@ -944,7 +944,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeSwitchCase() {
-      return inTypeSwitchCase.isEmpty(); 
+      return !inTypeSwitchCase.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeList = new java.util.Stack<>();
@@ -961,7 +961,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeList() {
-      return inTypeList.isEmpty(); 
+      return !inTypeList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectStmt = new java.util.Stack<>();
@@ -978,7 +978,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSelectStmt() {
-      return inSelectStmt.isEmpty(); 
+      return !inSelectStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCommClause = new java.util.Stack<>();
@@ -995,7 +995,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inCommClause() {
-      return inCommClause.isEmpty(); 
+      return !inCommClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCommCase = new java.util.Stack<>();
@@ -1012,7 +1012,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inCommCase() {
-      return inCommCase.isEmpty(); 
+      return !inCommCase.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRecvStmt = new java.util.Stack<>();
@@ -1029,7 +1029,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inRecvStmt() {
-      return inRecvStmt.isEmpty(); 
+      return !inRecvStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForStmt = new java.util.Stack<>();
@@ -1046,7 +1046,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inForStmt() {
-      return inForStmt.isEmpty(); 
+      return !inForStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForClause = new java.util.Stack<>();
@@ -1063,7 +1063,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inForClause() {
-      return inForClause.isEmpty(); 
+      return !inForClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRangeClause = new java.util.Stack<>();
@@ -1080,7 +1080,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inRangeClause() {
-      return inRangeClause.isEmpty(); 
+      return !inRangeClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoStmt = new java.util.Stack<>();
@@ -1097,7 +1097,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inGoStmt() {
-      return inGoStmt.isEmpty(); 
+      return !inGoStmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inType = new java.util.Stack<>();
@@ -1114,7 +1114,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inType() {
-      return inType.isEmpty(); 
+      return !inType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeName = new java.util.Stack<>();
@@ -1131,7 +1131,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeName() {
-      return inTypeName.isEmpty(); 
+      return !inTypeName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeLit = new java.util.Stack<>();
@@ -1148,7 +1148,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeLit() {
-      return inTypeLit.isEmpty(); 
+      return !inTypeLit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArrayType = new java.util.Stack<>();
@@ -1165,7 +1165,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inArrayType() {
-      return inArrayType.isEmpty(); 
+      return !inArrayType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inArrayLength = new java.util.Stack<>();
@@ -1182,7 +1182,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inArrayLength() {
-      return inArrayLength.isEmpty(); 
+      return !inArrayLength.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementType = new java.util.Stack<>();
@@ -1199,7 +1199,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inElementType() {
-      return inElementType.isEmpty(); 
+      return !inElementType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPointerType = new java.util.Stack<>();
@@ -1216,7 +1216,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inPointerType() {
-      return inPointerType.isEmpty(); 
+      return !inPointerType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceType = new java.util.Stack<>();
@@ -1233,7 +1233,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inInterfaceType() {
-      return inInterfaceType.isEmpty(); 
+      return !inInterfaceType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSliceType = new java.util.Stack<>();
@@ -1250,7 +1250,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSliceType() {
-      return inSliceType.isEmpty(); 
+      return !inSliceType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMapType = new java.util.Stack<>();
@@ -1267,7 +1267,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inMapType() {
-      return inMapType.isEmpty(); 
+      return !inMapType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChannelType = new java.util.Stack<>();
@@ -1284,7 +1284,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inChannelType() {
-      return inChannelType.isEmpty(); 
+      return !inChannelType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodSpec = new java.util.Stack<>();
@@ -1301,7 +1301,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inMethodSpec() {
-      return inMethodSpec.isEmpty(); 
+      return !inMethodSpec.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionType = new java.util.Stack<>();
@@ -1318,7 +1318,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFunctionType() {
-      return inFunctionType.isEmpty(); 
+      return !inFunctionType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSignature = new java.util.Stack<>();
@@ -1335,7 +1335,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSignature() {
-      return inSignature.isEmpty(); 
+      return !inSignature.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inResult = new java.util.Stack<>();
@@ -1352,7 +1352,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inResult() {
-      return inResult.isEmpty(); 
+      return !inResult.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameters = new java.util.Stack<>();
@@ -1369,7 +1369,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inParameters() {
-      return inParameters.isEmpty(); 
+      return !inParameters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameterList = new java.util.Stack<>();
@@ -1386,7 +1386,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inParameterList() {
-      return inParameterList.isEmpty(); 
+      return !inParameterList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameterDecl = new java.util.Stack<>();
@@ -1403,7 +1403,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inParameterDecl() {
-      return inParameterDecl.isEmpty(); 
+      return !inParameterDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOperand = new java.util.Stack<>();
@@ -1420,7 +1420,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inOperand() {
-      return inOperand.isEmpty(); 
+      return !inOperand.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBasicLit = new java.util.Stack<>();
@@ -1437,7 +1437,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inBasicLit() {
-      return inBasicLit.isEmpty(); 
+      return !inBasicLit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOperandName = new java.util.Stack<>();
@@ -1454,7 +1454,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inOperandName() {
-      return inOperandName.isEmpty(); 
+      return !inOperandName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedIdent = new java.util.Stack<>();
@@ -1471,7 +1471,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inQualifiedIdent() {
-      return inQualifiedIdent.isEmpty(); 
+      return !inQualifiedIdent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompositeLit = new java.util.Stack<>();
@@ -1488,7 +1488,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inCompositeLit() {
-      return inCompositeLit.isEmpty(); 
+      return !inCompositeLit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteralType = new java.util.Stack<>();
@@ -1505,7 +1505,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inLiteralType() {
-      return inLiteralType.isEmpty(); 
+      return !inLiteralType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteralValue = new java.util.Stack<>();
@@ -1522,7 +1522,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inLiteralValue() {
-      return inLiteralValue.isEmpty(); 
+      return !inLiteralValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyedElement = new java.util.Stack<>();
@@ -1539,7 +1539,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inKeyedElement() {
-      return inKeyedElement.isEmpty(); 
+      return !inKeyedElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKey = new java.util.Stack<>();
@@ -1556,7 +1556,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inKey() {
-      return inKey.isEmpty(); 
+      return !inKey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStructType = new java.util.Stack<>();
@@ -1573,7 +1573,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inStructType() {
-      return inStructType.isEmpty(); 
+      return !inStructType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFieldDecl = new java.util.Stack<>();
@@ -1590,7 +1590,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFieldDecl() {
-      return inFieldDecl.isEmpty(); 
+      return !inFieldDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnonymousField = new java.util.Stack<>();
@@ -1607,7 +1607,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inAnonymousField() {
-      return inAnonymousField.isEmpty(); 
+      return !inAnonymousField.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionLit = new java.util.Stack<>();
@@ -1624,7 +1624,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inFunctionLit() {
-      return inFunctionLit.isEmpty(); 
+      return !inFunctionLit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrimaryExpr = new java.util.Stack<>();
@@ -1641,7 +1641,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inPrimaryExpr() {
-      return inPrimaryExpr.isEmpty(); 
+      return !inPrimaryExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIndex = new java.util.Stack<>();
@@ -1658,7 +1658,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inIndex() {
-      return inIndex.isEmpty(); 
+      return !inIndex.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSlice = new java.util.Stack<>();
@@ -1675,7 +1675,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inSlice() {
-      return inSlice.isEmpty(); 
+      return !inSlice.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeAssertion = new java.util.Stack<>();
@@ -1692,7 +1692,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inTypeAssertion() {
-      return inTypeAssertion.isEmpty(); 
+      return !inTypeAssertion.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMethodExpr = new java.util.Stack<>();
@@ -1709,7 +1709,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inMethodExpr() {
-      return inMethodExpr.isEmpty(); 
+      return !inMethodExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReceiverType = new java.util.Stack<>();
@@ -1726,7 +1726,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inReceiverType() {
-      return inReceiverType.isEmpty(); 
+      return !inReceiverType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnaryExpr = new java.util.Stack<>();
@@ -1743,7 +1743,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inUnaryExpr() {
-      return inUnaryExpr.isEmpty(); 
+      return !inUnaryExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConversion = new java.util.Stack<>();
@@ -1760,7 +1760,7 @@ public class GolangNodeListener extends GolangBaseListener {
 	}
 
 	public boolean inConversion() {
-      return inConversion.isEmpty(); 
+      return !inConversion.isEmpty(); 
    }
 
 }

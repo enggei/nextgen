@@ -782,7 +782,7 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public boolean in~it.name~() {\n" + 
-		"      return in~it.name~.isEmpty(); \n" + 
+		"      return !in~it.name~.isEmpty(); \n" + 
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
@@ -959,7 +959,7 @@ public final class AntlrGroup {
 		"	~eom()~\n" + 
 		"\n" + 
 		"	public boolean in~it.name~() {\n" + 
-		"      return in~it.name~.isEmpty(); \n" + 
+		"      return !in~it.name~.isEmpty(); \n" + 
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")

@@ -60,7 +60,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inOption() {
-      return inOption.isEmpty(); 
+      return !inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inFile() {
-      return inFile.isEmpty(); 
+      return !inFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inPropertyName() {
-      return inPropertyName.isEmpty(); 
+      return !inPropertyName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inDefaultValue() {
-      return inDefaultValue.isEmpty(); 
+      return !inDefaultValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inPackageDecl() {
-      return inPackageDecl.isEmpty(); 
+      return !inPackageDecl.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageName = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inPackageName() {
-      return inPackageName.isEmpty(); 
+      return !inPackageName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inImports() {
-      return inImports.isEmpty(); 
+      return !inImports.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inMessage() {
-      return inMessage.isEmpty(); 
+      return !inMessage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumName = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inEnumName() {
-      return inEnumName.isEmpty(); 
+      return !inEnumName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMessageContent = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inMessageContent() {
-      return inMessageContent.isEmpty(); 
+      return !inMessageContent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProperty = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inProperty() {
-      return inProperty.isEmpty(); 
+      return !inProperty.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackedValue = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inPackedValue() {
-      return inPackedValue.isEmpty(); 
+      return !inPackedValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExtensions = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inExtensions() {
-      return inExtensions.isEmpty(); 
+      return !inExtensions.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertyType = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inPropertyType() {
-      return inPropertyType.isEmpty(); 
+      return !inPropertyType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExtensionMax = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 	}
 
 	public boolean inExtensionMax() {
-      return inExtensionMax.isEmpty(); 
+      return !inExtensionMax.isEmpty(); 
    }
 
 }

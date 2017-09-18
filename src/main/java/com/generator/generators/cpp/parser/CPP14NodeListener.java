@@ -46,23 +46,6 @@ public class CPP14NodeListener extends CPP14BaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
 
 	@Override
@@ -77,7 +60,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTranslationunit() {
-      return inTranslationunit.isEmpty(); 
+      return !inTranslationunit.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
@@ -94,7 +77,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPrimaryexpression() {
-      return inPrimaryexpression.isEmpty(); 
+      return !inPrimaryexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
@@ -111,7 +94,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inIdexpression() {
-      return inIdexpression.isEmpty(); 
+      return !inIdexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
@@ -128,7 +111,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUnqualifiedid() {
-      return inUnqualifiedid.isEmpty(); 
+      return !inUnqualifiedid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
@@ -145,7 +128,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inQualifiedid() {
-      return inQualifiedid.isEmpty(); 
+      return !inQualifiedid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
@@ -162,7 +145,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNestednamespecifier() {
-      return inNestednamespecifier.isEmpty(); 
+      return !inNestednamespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
@@ -179,7 +162,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLambdaexpression() {
-      return inLambdaexpression.isEmpty(); 
+      return !inLambdaexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdaintroducer = new java.util.Stack<>();
@@ -196,7 +179,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLambdaintroducer() {
-      return inLambdaintroducer.isEmpty(); 
+      return !inLambdaintroducer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdacapture = new java.util.Stack<>();
@@ -213,7 +196,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLambdacapture() {
-      return inLambdacapture.isEmpty(); 
+      return !inLambdacapture.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCapturedefault = new java.util.Stack<>();
@@ -230,7 +213,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCapturedefault() {
-      return inCapturedefault.isEmpty(); 
+      return !inCapturedefault.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCapturelist = new java.util.Stack<>();
@@ -247,7 +230,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCapturelist() {
-      return inCapturelist.isEmpty(); 
+      return !inCapturelist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCapture = new java.util.Stack<>();
@@ -264,7 +247,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCapture() {
-      return inCapture.isEmpty(); 
+      return !inCapture.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimplecapture = new java.util.Stack<>();
@@ -281,7 +264,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inSimplecapture() {
-      return inSimplecapture.isEmpty(); 
+      return !inSimplecapture.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitcapture = new java.util.Stack<>();
@@ -298,7 +281,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitcapture() {
-      return inInitcapture.isEmpty(); 
+      return !inInitcapture.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLambdadeclarator = new java.util.Stack<>();
@@ -315,7 +298,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLambdadeclarator() {
-      return inLambdadeclarator.isEmpty(); 
+      return !inLambdadeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPostfixexpression = new java.util.Stack<>();
@@ -332,7 +315,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPostfixexpression() {
-      return inPostfixexpression.isEmpty(); 
+      return !inPostfixexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
@@ -349,7 +332,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExpressionlist() {
-      return inExpressionlist.isEmpty(); 
+      return !inExpressionlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPseudodestructorname = new java.util.Stack<>();
@@ -366,7 +349,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPseudodestructorname() {
-      return inPseudodestructorname.isEmpty(); 
+      return !inPseudodestructorname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnaryexpression = new java.util.Stack<>();
@@ -383,7 +366,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUnaryexpression() {
-      return inUnaryexpression.isEmpty(); 
+      return !inUnaryexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnaryoperator = new java.util.Stack<>();
@@ -400,7 +383,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUnaryoperator() {
-      return inUnaryoperator.isEmpty(); 
+      return !inUnaryoperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNewexpression = new java.util.Stack<>();
@@ -417,7 +400,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNewexpression() {
-      return inNewexpression.isEmpty(); 
+      return !inNewexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNewplacement = new java.util.Stack<>();
@@ -434,7 +417,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNewplacement() {
-      return inNewplacement.isEmpty(); 
+      return !inNewplacement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNewtypeid = new java.util.Stack<>();
@@ -451,7 +434,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNewtypeid() {
-      return inNewtypeid.isEmpty(); 
+      return !inNewtypeid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNewdeclarator = new java.util.Stack<>();
@@ -468,7 +451,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNewdeclarator() {
-      return inNewdeclarator.isEmpty(); 
+      return !inNewdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoptrnewdeclarator = new java.util.Stack<>();
@@ -485,7 +468,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoptrnewdeclarator() {
-      return inNoptrnewdeclarator.isEmpty(); 
+      return !inNoptrnewdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNewinitializer = new java.util.Stack<>();
@@ -502,7 +485,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNewinitializer() {
-      return inNewinitializer.isEmpty(); 
+      return !inNewinitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeleteexpression = new java.util.Stack<>();
@@ -519,7 +502,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeleteexpression() {
-      return inDeleteexpression.isEmpty(); 
+      return !inDeleteexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoexceptexpression = new java.util.Stack<>();
@@ -536,7 +519,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoexceptexpression() {
-      return inNoexceptexpression.isEmpty(); 
+      return !inNoexceptexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCastexpression = new java.util.Stack<>();
@@ -553,7 +536,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCastexpression() {
-      return inCastexpression.isEmpty(); 
+      return !inCastexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPmexpression = new java.util.Stack<>();
@@ -570,7 +553,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPmexpression() {
-      return inPmexpression.isEmpty(); 
+      return !inPmexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMultiplicativeexpression = new java.util.Stack<>();
@@ -587,7 +570,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMultiplicativeexpression() {
-      return inMultiplicativeexpression.isEmpty(); 
+      return !inMultiplicativeexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAdditiveexpression = new java.util.Stack<>();
@@ -604,7 +587,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAdditiveexpression() {
-      return inAdditiveexpression.isEmpty(); 
+      return !inAdditiveexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inShiftexpression = new java.util.Stack<>();
@@ -621,7 +604,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inShiftexpression() {
-      return inShiftexpression.isEmpty(); 
+      return !inShiftexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRelationalexpression = new java.util.Stack<>();
@@ -638,7 +621,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inRelationalexpression() {
-      return inRelationalexpression.isEmpty(); 
+      return !inRelationalexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEqualityexpression = new java.util.Stack<>();
@@ -655,7 +638,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEqualityexpression() {
-      return inEqualityexpression.isEmpty(); 
+      return !inEqualityexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAndexpression = new java.util.Stack<>();
@@ -672,7 +655,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAndexpression() {
-      return inAndexpression.isEmpty(); 
+      return !inAndexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
@@ -689,7 +672,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExclusiveorexpression() {
-      return inExclusiveorexpression.isEmpty(); 
+      return !inExclusiveorexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInclusiveorexpression = new java.util.Stack<>();
@@ -706,7 +689,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInclusiveorexpression() {
-      return inInclusiveorexpression.isEmpty(); 
+      return !inInclusiveorexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLogicalandexpression = new java.util.Stack<>();
@@ -723,7 +706,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLogicalandexpression() {
-      return inLogicalandexpression.isEmpty(); 
+      return !inLogicalandexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLogicalorexpression = new java.util.Stack<>();
@@ -740,7 +723,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLogicalorexpression() {
-      return inLogicalorexpression.isEmpty(); 
+      return !inLogicalorexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConditionalexpression = new java.util.Stack<>();
@@ -757,7 +740,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inConditionalexpression() {
-      return inConditionalexpression.isEmpty(); 
+      return !inConditionalexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAssignmentexpression = new java.util.Stack<>();
@@ -774,7 +757,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAssignmentexpression() {
-      return inAssignmentexpression.isEmpty(); 
+      return !inAssignmentexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAssignmentoperator = new java.util.Stack<>();
@@ -791,7 +774,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAssignmentoperator() {
-      return inAssignmentoperator.isEmpty(); 
+      return !inAssignmentoperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
@@ -808,7 +791,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExpression() {
-      return inExpression.isEmpty(); 
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();
@@ -825,7 +808,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inConstantexpression() {
-      return inConstantexpression.isEmpty(); 
+      return !inConstantexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
@@ -842,7 +825,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inStatement() {
-      return inStatement.isEmpty(); 
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLabeledstatement = new java.util.Stack<>();
@@ -859,7 +842,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLabeledstatement() {
-      return inLabeledstatement.isEmpty(); 
+      return !inLabeledstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionstatement = new java.util.Stack<>();
@@ -876,7 +859,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExpressionstatement() {
-      return inExpressionstatement.isEmpty(); 
+      return !inExpressionstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCompoundstatement = new java.util.Stack<>();
@@ -893,7 +876,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCompoundstatement() {
-      return inCompoundstatement.isEmpty(); 
+      return !inCompoundstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatementseq = new java.util.Stack<>();
@@ -910,7 +893,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inStatementseq() {
-      return inStatementseq.isEmpty(); 
+      return !inStatementseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectionstatement = new java.util.Stack<>();
@@ -927,7 +910,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inSelectionstatement() {
-      return inSelectionstatement.isEmpty(); 
+      return !inSelectionstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCondition = new java.util.Stack<>();
@@ -944,7 +927,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCondition() {
-      return inCondition.isEmpty(); 
+      return !inCondition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIterationstatement = new java.util.Stack<>();
@@ -961,7 +944,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inIterationstatement() {
-      return inIterationstatement.isEmpty(); 
+      return !inIterationstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForinitstatement = new java.util.Stack<>();
@@ -978,7 +961,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inForinitstatement() {
-      return inForinitstatement.isEmpty(); 
+      return !inForinitstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForrangedeclaration = new java.util.Stack<>();
@@ -995,7 +978,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inForrangedeclaration() {
-      return inForrangedeclaration.isEmpty(); 
+      return !inForrangedeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForrangeinitializer = new java.util.Stack<>();
@@ -1012,7 +995,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inForrangeinitializer() {
-      return inForrangeinitializer.isEmpty(); 
+      return !inForrangeinitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inJumpstatement = new java.util.Stack<>();
@@ -1029,7 +1012,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inJumpstatement() {
-      return inJumpstatement.isEmpty(); 
+      return !inJumpstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclarationstatement = new java.util.Stack<>();
@@ -1046,7 +1029,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclarationstatement() {
-      return inDeclarationstatement.isEmpty(); 
+      return !inDeclarationstatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclarationseq = new java.util.Stack<>();
@@ -1063,7 +1046,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclarationseq() {
-      return inDeclarationseq.isEmpty(); 
+      return !inDeclarationseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
@@ -1080,7 +1063,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclaration() {
-      return inDeclaration.isEmpty(); 
+      return !inDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBlockdeclaration = new java.util.Stack<>();
@@ -1097,7 +1080,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBlockdeclaration() {
-      return inBlockdeclaration.isEmpty(); 
+      return !inBlockdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAliasdeclaration = new java.util.Stack<>();
@@ -1114,7 +1097,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAliasdeclaration() {
-      return inAliasdeclaration.isEmpty(); 
+      return !inAliasdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpledeclaration = new java.util.Stack<>();
@@ -1131,7 +1114,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inSimpledeclaration() {
-      return inSimpledeclaration.isEmpty(); 
+      return !inSimpledeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatic_assertdeclaration = new java.util.Stack<>();
@@ -1148,7 +1131,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inStatic_assertdeclaration() {
-      return inStatic_assertdeclaration.isEmpty(); 
+      return !inStatic_assertdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEmptydeclaration = new java.util.Stack<>();
@@ -1165,7 +1148,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEmptydeclaration() {
-      return inEmptydeclaration.isEmpty(); 
+      return !inEmptydeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributedeclaration = new java.util.Stack<>();
@@ -1182,7 +1165,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributedeclaration() {
-      return inAttributedeclaration.isEmpty(); 
+      return !inAttributedeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclspecifier = new java.util.Stack<>();
@@ -1199,7 +1182,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclspecifier() {
-      return inDeclspecifier.isEmpty(); 
+      return !inDeclspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclspecifierseq = new java.util.Stack<>();
@@ -1216,7 +1199,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclspecifierseq() {
-      return inDeclspecifierseq.isEmpty(); 
+      return !inDeclspecifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStorageclassspecifier = new java.util.Stack<>();
@@ -1233,7 +1216,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inStorageclassspecifier() {
-      return inStorageclassspecifier.isEmpty(); 
+      return !inStorageclassspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionspecifier = new java.util.Stack<>();
@@ -1250,7 +1233,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inFunctionspecifier() {
-      return inFunctionspecifier.isEmpty(); 
+      return !inFunctionspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypedefname = new java.util.Stack<>();
@@ -1267,7 +1250,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypedefname() {
-      return inTypedefname.isEmpty(); 
+      return !inTypedefname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypespecifier = new java.util.Stack<>();
@@ -1284,7 +1267,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypespecifier() {
-      return inTypespecifier.isEmpty(); 
+      return !inTypespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTrailingtypespecifier = new java.util.Stack<>();
@@ -1301,7 +1284,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTrailingtypespecifier() {
-      return inTrailingtypespecifier.isEmpty(); 
+      return !inTrailingtypespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypespecifierseq = new java.util.Stack<>();
@@ -1318,7 +1301,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypespecifierseq() {
-      return inTypespecifierseq.isEmpty(); 
+      return !inTypespecifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTrailingtypespecifierseq = new java.util.Stack<>();
@@ -1335,7 +1318,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTrailingtypespecifierseq() {
-      return inTrailingtypespecifierseq.isEmpty(); 
+      return !inTrailingtypespecifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpletypespecifier = new java.util.Stack<>();
@@ -1352,7 +1335,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inSimpletypespecifier() {
-      return inSimpletypespecifier.isEmpty(); 
+      return !inSimpletypespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypename = new java.util.Stack<>();
@@ -1369,7 +1352,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypename() {
-      return inTypename.isEmpty(); 
+      return !inTypename.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDecltypespecifier = new java.util.Stack<>();
@@ -1386,7 +1369,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDecltypespecifier() {
-      return inDecltypespecifier.isEmpty(); 
+      return !inDecltypespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElaboratedtypespecifier = new java.util.Stack<>();
@@ -1403,7 +1386,24 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inElaboratedtypespecifier() {
-      return inElaboratedtypespecifier.isEmpty(); 
+      return !inElaboratedtypespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumname = new java.util.Stack<>();
@@ -1420,7 +1420,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumname() {
-      return inEnumname.isEmpty(); 
+      return !inEnumname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumspecifier = new java.util.Stack<>();
@@ -1437,7 +1437,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumspecifier() {
-      return inEnumspecifier.isEmpty(); 
+      return !inEnumspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumhead = new java.util.Stack<>();
@@ -1454,7 +1454,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumhead() {
-      return inEnumhead.isEmpty(); 
+      return !inEnumhead.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOpaqueenumdeclaration = new java.util.Stack<>();
@@ -1471,7 +1471,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inOpaqueenumdeclaration() {
-      return inOpaqueenumdeclaration.isEmpty(); 
+      return !inOpaqueenumdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumkey = new java.util.Stack<>();
@@ -1488,7 +1488,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumkey() {
-      return inEnumkey.isEmpty(); 
+      return !inEnumkey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumbase = new java.util.Stack<>();
@@ -1505,7 +1505,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumbase() {
-      return inEnumbase.isEmpty(); 
+      return !inEnumbase.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumeratorlist = new java.util.Stack<>();
@@ -1522,7 +1522,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumeratorlist() {
-      return inEnumeratorlist.isEmpty(); 
+      return !inEnumeratorlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumeratordefinition = new java.util.Stack<>();
@@ -1539,7 +1539,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumeratordefinition() {
-      return inEnumeratordefinition.isEmpty(); 
+      return !inEnumeratordefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumerator = new java.util.Stack<>();
@@ -1556,7 +1556,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inEnumerator() {
-      return inEnumerator.isEmpty(); 
+      return !inEnumerator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacename = new java.util.Stack<>();
@@ -1573,7 +1573,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamespacename() {
-      return inNamespacename.isEmpty(); 
+      return !inNamespacename.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOriginalnamespacename = new java.util.Stack<>();
@@ -1590,7 +1590,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inOriginalnamespacename() {
-      return inOriginalnamespacename.isEmpty(); 
+      return !inOriginalnamespacename.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacedefinition = new java.util.Stack<>();
@@ -1607,7 +1607,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamespacedefinition() {
-      return inNamespacedefinition.isEmpty(); 
+      return !inNamespacedefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamednamespacedefinition = new java.util.Stack<>();
@@ -1624,7 +1624,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamednamespacedefinition() {
-      return inNamednamespacedefinition.isEmpty(); 
+      return !inNamednamespacedefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOriginalnamespacedefinition = new java.util.Stack<>();
@@ -1641,7 +1641,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inOriginalnamespacedefinition() {
-      return inOriginalnamespacedefinition.isEmpty(); 
+      return !inOriginalnamespacedefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExtensionnamespacedefinition = new java.util.Stack<>();
@@ -1658,7 +1658,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExtensionnamespacedefinition() {
-      return inExtensionnamespacedefinition.isEmpty(); 
+      return !inExtensionnamespacedefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnnamednamespacedefinition = new java.util.Stack<>();
@@ -1675,7 +1675,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUnnamednamespacedefinition() {
-      return inUnnamednamespacedefinition.isEmpty(); 
+      return !inUnnamednamespacedefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacebody = new java.util.Stack<>();
@@ -1692,7 +1692,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamespacebody() {
-      return inNamespacebody.isEmpty(); 
+      return !inNamespacebody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacealias = new java.util.Stack<>();
@@ -1709,7 +1709,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamespacealias() {
-      return inNamespacealias.isEmpty(); 
+      return !inNamespacealias.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacealiasdefinition = new java.util.Stack<>();
@@ -1726,7 +1726,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNamespacealiasdefinition() {
-      return inNamespacealiasdefinition.isEmpty(); 
+      return !inNamespacealiasdefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiednamespacespecifier = new java.util.Stack<>();
@@ -1743,7 +1743,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inQualifiednamespacespecifier() {
-      return inQualifiednamespacespecifier.isEmpty(); 
+      return !inQualifiednamespacespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUsingdeclaration = new java.util.Stack<>();
@@ -1760,7 +1760,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUsingdeclaration() {
-      return inUsingdeclaration.isEmpty(); 
+      return !inUsingdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUsingdirective = new java.util.Stack<>();
@@ -1777,7 +1777,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUsingdirective() {
-      return inUsingdirective.isEmpty(); 
+      return !inUsingdirective.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAsmdefinition = new java.util.Stack<>();
@@ -1794,7 +1794,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAsmdefinition() {
-      return inAsmdefinition.isEmpty(); 
+      return !inAsmdefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLinkagespecification = new java.util.Stack<>();
@@ -1811,7 +1811,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLinkagespecification() {
-      return inLinkagespecification.isEmpty(); 
+      return !inLinkagespecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributespecifierseq = new java.util.Stack<>();
@@ -1828,7 +1828,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributespecifierseq() {
-      return inAttributespecifierseq.isEmpty(); 
+      return !inAttributespecifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributespecifier = new java.util.Stack<>();
@@ -1845,7 +1845,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributespecifier() {
-      return inAttributespecifier.isEmpty(); 
+      return !inAttributespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAlignmentspecifier = new java.util.Stack<>();
@@ -1862,7 +1862,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAlignmentspecifier() {
-      return inAlignmentspecifier.isEmpty(); 
+      return !inAlignmentspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributelist = new java.util.Stack<>();
@@ -1879,7 +1879,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributelist() {
-      return inAttributelist.isEmpty(); 
+      return !inAttributelist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
@@ -1896,7 +1896,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttribute() {
-      return inAttribute.isEmpty(); 
+      return !inAttribute.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributetoken = new java.util.Stack<>();
@@ -1913,7 +1913,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributetoken() {
-      return inAttributetoken.isEmpty(); 
+      return !inAttributetoken.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributescopedtoken = new java.util.Stack<>();
@@ -1930,7 +1930,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributescopedtoken() {
-      return inAttributescopedtoken.isEmpty(); 
+      return !inAttributescopedtoken.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributenamespace = new java.util.Stack<>();
@@ -1947,7 +1947,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributenamespace() {
-      return inAttributenamespace.isEmpty(); 
+      return !inAttributenamespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttributeargumentclause = new java.util.Stack<>();
@@ -1964,7 +1964,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAttributeargumentclause() {
-      return inAttributeargumentclause.isEmpty(); 
+      return !inAttributeargumentclause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBalancedtokenseq = new java.util.Stack<>();
@@ -1981,7 +1981,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBalancedtokenseq() {
-      return inBalancedtokenseq.isEmpty(); 
+      return !inBalancedtokenseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBalancedtoken = new java.util.Stack<>();
@@ -1998,7 +1998,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBalancedtoken() {
-      return inBalancedtoken.isEmpty(); 
+      return !inBalancedtoken.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitdeclaratorlist = new java.util.Stack<>();
@@ -2015,7 +2015,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitdeclaratorlist() {
-      return inInitdeclaratorlist.isEmpty(); 
+      return !inInitdeclaratorlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitdeclarator = new java.util.Stack<>();
@@ -2032,7 +2032,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitdeclarator() {
-      return inInitdeclarator.isEmpty(); 
+      return !inInitdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclarator = new java.util.Stack<>();
@@ -2049,7 +2049,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclarator() {
-      return inDeclarator.isEmpty(); 
+      return !inDeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPtrdeclarator = new java.util.Stack<>();
@@ -2066,7 +2066,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPtrdeclarator() {
-      return inPtrdeclarator.isEmpty(); 
+      return !inPtrdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoptrdeclarator = new java.util.Stack<>();
@@ -2083,7 +2083,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoptrdeclarator() {
-      return inNoptrdeclarator.isEmpty(); 
+      return !inNoptrdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParametersandqualifiers = new java.util.Stack<>();
@@ -2100,7 +2100,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inParametersandqualifiers() {
-      return inParametersandqualifiers.isEmpty(); 
+      return !inParametersandqualifiers.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTrailingreturntype = new java.util.Stack<>();
@@ -2117,7 +2117,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTrailingreturntype() {
-      return inTrailingreturntype.isEmpty(); 
+      return !inTrailingreturntype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPtroperator = new java.util.Stack<>();
@@ -2134,7 +2134,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPtroperator() {
-      return inPtroperator.isEmpty(); 
+      return !inPtroperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCvqualifierseq = new java.util.Stack<>();
@@ -2151,7 +2151,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCvqualifierseq() {
-      return inCvqualifierseq.isEmpty(); 
+      return !inCvqualifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCvqualifier = new java.util.Stack<>();
@@ -2168,7 +2168,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCvqualifier() {
-      return inCvqualifier.isEmpty(); 
+      return !inCvqualifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRefqualifier = new java.util.Stack<>();
@@ -2185,7 +2185,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inRefqualifier() {
-      return inRefqualifier.isEmpty(); 
+      return !inRefqualifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclaratorid = new java.util.Stack<>();
@@ -2202,7 +2202,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDeclaratorid() {
-      return inDeclaratorid.isEmpty(); 
+      return !inDeclaratorid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeid = new java.util.Stack<>();
@@ -2219,7 +2219,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypeid() {
-      return inTypeid.isEmpty(); 
+      return !inTypeid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAbstractdeclarator = new java.util.Stack<>();
@@ -2236,7 +2236,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAbstractdeclarator() {
-      return inAbstractdeclarator.isEmpty(); 
+      return !inAbstractdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPtrabstractdeclarator = new java.util.Stack<>();
@@ -2253,7 +2253,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPtrabstractdeclarator() {
-      return inPtrabstractdeclarator.isEmpty(); 
+      return !inPtrabstractdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoptrabstractdeclarator = new java.util.Stack<>();
@@ -2270,7 +2270,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoptrabstractdeclarator() {
-      return inNoptrabstractdeclarator.isEmpty(); 
+      return !inNoptrabstractdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAbstractpackdeclarator = new java.util.Stack<>();
@@ -2287,7 +2287,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAbstractpackdeclarator() {
-      return inAbstractpackdeclarator.isEmpty(); 
+      return !inAbstractpackdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoptrabstractpackdeclarator = new java.util.Stack<>();
@@ -2304,7 +2304,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoptrabstractpackdeclarator() {
-      return inNoptrabstractpackdeclarator.isEmpty(); 
+      return !inNoptrabstractpackdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameterdeclarationclause = new java.util.Stack<>();
@@ -2321,7 +2321,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inParameterdeclarationclause() {
-      return inParameterdeclarationclause.isEmpty(); 
+      return !inParameterdeclarationclause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameterdeclarationlist = new java.util.Stack<>();
@@ -2338,7 +2338,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inParameterdeclarationlist() {
-      return inParameterdeclarationlist.isEmpty(); 
+      return !inParameterdeclarationlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inParameterdeclaration = new java.util.Stack<>();
@@ -2355,7 +2355,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inParameterdeclaration() {
-      return inParameterdeclaration.isEmpty(); 
+      return !inParameterdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctiondefinition = new java.util.Stack<>();
@@ -2372,7 +2372,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inFunctiondefinition() {
-      return inFunctiondefinition.isEmpty(); 
+      return !inFunctiondefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionbody = new java.util.Stack<>();
@@ -2389,7 +2389,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inFunctionbody() {
-      return inFunctionbody.isEmpty(); 
+      return !inFunctionbody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitializer = new java.util.Stack<>();
@@ -2406,7 +2406,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitializer() {
-      return inInitializer.isEmpty(); 
+      return !inInitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBraceorequalinitializer = new java.util.Stack<>();
@@ -2423,7 +2423,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBraceorequalinitializer() {
-      return inBraceorequalinitializer.isEmpty(); 
+      return !inBraceorequalinitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitializerclause = new java.util.Stack<>();
@@ -2440,7 +2440,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitializerclause() {
-      return inInitializerclause.isEmpty(); 
+      return !inInitializerclause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInitializerlist = new java.util.Stack<>();
@@ -2457,7 +2457,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inInitializerlist() {
-      return inInitializerlist.isEmpty(); 
+      return !inInitializerlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBracedinitlist = new java.util.Stack<>();
@@ -2474,7 +2474,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBracedinitlist() {
-      return inBracedinitlist.isEmpty(); 
+      return !inBracedinitlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassname = new java.util.Stack<>();
@@ -2491,7 +2491,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClassname() {
-      return inClassname.isEmpty(); 
+      return !inClassname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassspecifier = new java.util.Stack<>();
@@ -2508,7 +2508,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClassspecifier() {
-      return inClassspecifier.isEmpty(); 
+      return !inClassspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClasshead = new java.util.Stack<>();
@@ -2525,7 +2525,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClasshead() {
-      return inClasshead.isEmpty(); 
+      return !inClasshead.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassheadname = new java.util.Stack<>();
@@ -2542,7 +2542,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClassheadname() {
-      return inClassheadname.isEmpty(); 
+      return !inClassheadname.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassvirtspecifier = new java.util.Stack<>();
@@ -2559,7 +2559,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClassvirtspecifier() {
-      return inClassvirtspecifier.isEmpty(); 
+      return !inClassvirtspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClasskey = new java.util.Stack<>();
@@ -2576,7 +2576,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClasskey() {
-      return inClasskey.isEmpty(); 
+      return !inClasskey.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberspecification = new java.util.Stack<>();
@@ -2593,7 +2593,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMemberspecification() {
-      return inMemberspecification.isEmpty(); 
+      return !inMemberspecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberdeclaration = new java.util.Stack<>();
@@ -2610,7 +2610,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMemberdeclaration() {
-      return inMemberdeclaration.isEmpty(); 
+      return !inMemberdeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberdeclaratorlist = new java.util.Stack<>();
@@ -2627,7 +2627,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMemberdeclaratorlist() {
-      return inMemberdeclaratorlist.isEmpty(); 
+      return !inMemberdeclaratorlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMemberdeclarator = new java.util.Stack<>();
@@ -2644,7 +2644,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMemberdeclarator() {
-      return inMemberdeclarator.isEmpty(); 
+      return !inMemberdeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVirtspecifierseq = new java.util.Stack<>();
@@ -2661,7 +2661,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inVirtspecifierseq() {
-      return inVirtspecifierseq.isEmpty(); 
+      return !inVirtspecifierseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVirtspecifier = new java.util.Stack<>();
@@ -2678,7 +2678,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inVirtspecifier() {
-      return inVirtspecifier.isEmpty(); 
+      return !inVirtspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPurespecifier = new java.util.Stack<>();
@@ -2695,7 +2695,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPurespecifier() {
-      return inPurespecifier.isEmpty(); 
+      return !inPurespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBaseclause = new java.util.Stack<>();
@@ -2712,7 +2712,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBaseclause() {
-      return inBaseclause.isEmpty(); 
+      return !inBaseclause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBasespecifierlist = new java.util.Stack<>();
@@ -2729,7 +2729,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBasespecifierlist() {
-      return inBasespecifierlist.isEmpty(); 
+      return !inBasespecifierlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBasespecifier = new java.util.Stack<>();
@@ -2746,7 +2746,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBasespecifier() {
-      return inBasespecifier.isEmpty(); 
+      return !inBasespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassordecltype = new java.util.Stack<>();
@@ -2763,7 +2763,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inClassordecltype() {
-      return inClassordecltype.isEmpty(); 
+      return !inClassordecltype.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBasetypespecifier = new java.util.Stack<>();
@@ -2780,7 +2780,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBasetypespecifier() {
-      return inBasetypespecifier.isEmpty(); 
+      return !inBasetypespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAccessspecifier = new java.util.Stack<>();
@@ -2797,7 +2797,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inAccessspecifier() {
-      return inAccessspecifier.isEmpty(); 
+      return !inAccessspecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConversionfunctionid = new java.util.Stack<>();
@@ -2814,7 +2814,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inConversionfunctionid() {
-      return inConversionfunctionid.isEmpty(); 
+      return !inConversionfunctionid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConversiontypeid = new java.util.Stack<>();
@@ -2831,7 +2831,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inConversiontypeid() {
-      return inConversiontypeid.isEmpty(); 
+      return !inConversiontypeid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConversiondeclarator = new java.util.Stack<>();
@@ -2848,7 +2848,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inConversiondeclarator() {
-      return inConversiondeclarator.isEmpty(); 
+      return !inConversiondeclarator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCtorinitializer = new java.util.Stack<>();
@@ -2865,7 +2865,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inCtorinitializer() {
-      return inCtorinitializer.isEmpty(); 
+      return !inCtorinitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMeminitializerlist = new java.util.Stack<>();
@@ -2882,7 +2882,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMeminitializerlist() {
-      return inMeminitializerlist.isEmpty(); 
+      return !inMeminitializerlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMeminitializer = new java.util.Stack<>();
@@ -2899,7 +2899,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMeminitializer() {
-      return inMeminitializer.isEmpty(); 
+      return !inMeminitializer.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMeminitializerid = new java.util.Stack<>();
@@ -2916,7 +2916,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inMeminitializerid() {
-      return inMeminitializerid.isEmpty(); 
+      return !inMeminitializerid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOperatorfunctionid = new java.util.Stack<>();
@@ -2933,7 +2933,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inOperatorfunctionid() {
-      return inOperatorfunctionid.isEmpty(); 
+      return !inOperatorfunctionid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteraloperatorid = new java.util.Stack<>();
@@ -2950,7 +2950,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inLiteraloperatorid() {
-      return inLiteraloperatorid.isEmpty(); 
+      return !inLiteraloperatorid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplatedeclaration = new java.util.Stack<>();
@@ -2967,7 +2967,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplatedeclaration() {
-      return inTemplatedeclaration.isEmpty(); 
+      return !inTemplatedeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplateparameterlist = new java.util.Stack<>();
@@ -2984,7 +2984,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplateparameterlist() {
-      return inTemplateparameterlist.isEmpty(); 
+      return !inTemplateparameterlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplateparameter = new java.util.Stack<>();
@@ -3001,7 +3001,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplateparameter() {
-      return inTemplateparameter.isEmpty(); 
+      return !inTemplateparameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeparameter = new java.util.Stack<>();
@@ -3018,7 +3018,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypeparameter() {
-      return inTypeparameter.isEmpty(); 
+      return !inTypeparameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpletemplateid = new java.util.Stack<>();
@@ -3035,7 +3035,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inSimpletemplateid() {
-      return inSimpletemplateid.isEmpty(); 
+      return !inSimpletemplateid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplateid = new java.util.Stack<>();
@@ -3052,7 +3052,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplateid() {
-      return inTemplateid.isEmpty(); 
+      return !inTemplateid.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplatename = new java.util.Stack<>();
@@ -3069,7 +3069,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplatename() {
-      return inTemplatename.isEmpty(); 
+      return !inTemplatename.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplateargumentlist = new java.util.Stack<>();
@@ -3086,7 +3086,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplateargumentlist() {
-      return inTemplateargumentlist.isEmpty(); 
+      return !inTemplateargumentlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplateargument = new java.util.Stack<>();
@@ -3103,7 +3103,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTemplateargument() {
-      return inTemplateargument.isEmpty(); 
+      return !inTemplateargument.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypenamespecifier = new java.util.Stack<>();
@@ -3120,7 +3120,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypenamespecifier() {
-      return inTypenamespecifier.isEmpty(); 
+      return !inTypenamespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExplicitinstantiation = new java.util.Stack<>();
@@ -3137,7 +3137,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExplicitinstantiation() {
-      return inExplicitinstantiation.isEmpty(); 
+      return !inExplicitinstantiation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExplicitspecialization = new java.util.Stack<>();
@@ -3154,7 +3154,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExplicitspecialization() {
-      return inExplicitspecialization.isEmpty(); 
+      return !inExplicitspecialization.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTryblock = new java.util.Stack<>();
@@ -3171,7 +3171,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTryblock() {
-      return inTryblock.isEmpty(); 
+      return !inTryblock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctiontryblock = new java.util.Stack<>();
@@ -3188,7 +3188,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inFunctiontryblock() {
-      return inFunctiontryblock.isEmpty(); 
+      return !inFunctiontryblock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandlerseq = new java.util.Stack<>();
@@ -3205,7 +3205,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inHandlerseq() {
-      return inHandlerseq.isEmpty(); 
+      return !inHandlerseq.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHandler = new java.util.Stack<>();
@@ -3222,7 +3222,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inHandler() {
-      return inHandler.isEmpty(); 
+      return !inHandler.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExceptiondeclaration = new java.util.Stack<>();
@@ -3239,7 +3239,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExceptiondeclaration() {
-      return inExceptiondeclaration.isEmpty(); 
+      return !inExceptiondeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inThrowexpression = new java.util.Stack<>();
@@ -3256,7 +3256,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inThrowexpression() {
-      return inThrowexpression.isEmpty(); 
+      return !inThrowexpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExceptionspecification = new java.util.Stack<>();
@@ -3273,7 +3273,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inExceptionspecification() {
-      return inExceptionspecification.isEmpty(); 
+      return !inExceptionspecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDynamicexceptionspecification = new java.util.Stack<>();
@@ -3290,7 +3290,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inDynamicexceptionspecification() {
-      return inDynamicexceptionspecification.isEmpty(); 
+      return !inDynamicexceptionspecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeidlist = new java.util.Stack<>();
@@ -3307,7 +3307,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inTypeidlist() {
-      return inTypeidlist.isEmpty(); 
+      return !inTypeidlist.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNoexceptspecification = new java.util.Stack<>();
@@ -3324,7 +3324,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inNoexceptspecification() {
-      return inNoexceptspecification.isEmpty(); 
+      return !inNoexceptspecification.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRightShift = new java.util.Stack<>();
@@ -3341,7 +3341,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inRightShift() {
-      return inRightShift.isEmpty(); 
+      return !inRightShift.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRightShiftAssign = new java.util.Stack<>();
@@ -3358,7 +3358,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inRightShiftAssign() {
-      return inRightShiftAssign.isEmpty(); 
+      return !inRightShiftAssign.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOperator = new java.util.Stack<>();
@@ -3375,7 +3375,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inOperator() {
-      return inOperator.isEmpty(); 
+      return !inOperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBooleanliteral = new java.util.Stack<>();
@@ -3392,7 +3392,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inBooleanliteral() {
-      return inBooleanliteral.isEmpty(); 
+      return !inBooleanliteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPointerliteral = new java.util.Stack<>();
@@ -3409,7 +3409,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inPointerliteral() {
-      return inPointerliteral.isEmpty(); 
+      return !inPointerliteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUserdefinedliteral = new java.util.Stack<>();
@@ -3426,7 +3426,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 	}
 
 	public boolean inUserdefinedliteral() {
-      return inUserdefinedliteral.isEmpty(); 
+      return !inUserdefinedliteral.isEmpty(); 
    }
 
 }

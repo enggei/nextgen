@@ -63,8 +63,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		final Node node = new Node("Key", arg.getText());
+	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		final Node node = new Node("PropertiesFile", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = new Node("Decl", arg.getText());
+	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
+		final Node node = new Node("Key", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -90,8 +90,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = new Node("PropertiesFile", arg.getText());
+	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		final Node node = new Node("Decl", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

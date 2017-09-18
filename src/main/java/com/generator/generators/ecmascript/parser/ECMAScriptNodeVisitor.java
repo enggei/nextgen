@@ -81,6 +81,15 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	}
 
 	@Override
+	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
+		final Node node = new Node("Getter", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
 		final Node node = new Node("Program", arg.getText());
 		onEnter(node);
@@ -884,15 +893,6 @@ public class ECMAScriptNodeVisitor extends ECMAScriptBaseVisitor<ECMAScriptNodeV
 	@Override
 	public Node visitFutureReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.FutureReservedWordContext arg) {
 		final Node node = new Node("FutureReservedWord", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
-		final Node node = new Node("Getter", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

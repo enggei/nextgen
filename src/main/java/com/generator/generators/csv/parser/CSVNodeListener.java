@@ -60,7 +60,7 @@ public class CSVNodeListener extends CSVBaseListener {
 	}
 
 	public boolean inCsvFile() {
-      return inCsvFile.isEmpty(); 
+      return !inCsvFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class CSVNodeListener extends CSVBaseListener {
 	}
 
 	public boolean inHdr() {
-      return inHdr.isEmpty(); 
+      return !inHdr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class CSVNodeListener extends CSVBaseListener {
 	}
 
 	public boolean inRow() {
-      return inRow.isEmpty(); 
+      return !inRow.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class CSVNodeListener extends CSVBaseListener {
 	}
 
 	public boolean inField() {
-      return inField.isEmpty(); 
+      return !inField.isEmpty(); 
    }
 
 }

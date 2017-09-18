@@ -60,7 +60,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inImports() {
-      return inImports.isEmpty(); 
+      return !inImports.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
@@ -77,7 +77,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inTemplate() {
-      return inTemplate.isEmpty(); 
+      return !inTemplate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGroup = new java.util.Stack<>();
@@ -94,7 +94,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inGroup() {
-      return inGroup.isEmpty(); 
+      return !inGroup.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelimiters = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inDelimiters() {
-      return inDelimiters.isEmpty(); 
+      return !inDelimiters.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalArgs = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inFormalArgs() {
-      return inFormalArgs.isEmpty(); 
+      return !inFormalArgs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalArg = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inFormalArg() {
-      return inFormalArg.isEmpty(); 
+      return !inFormalArg.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDict = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inDict() {
-      return inDict.isEmpty(); 
+      return !inDict.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDictPairs = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inDictPairs() {
-      return inDictPairs.isEmpty(); 
+      return !inDictPairs.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyValuePair = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inKeyValuePair() {
-      return inKeyValuePair.isEmpty(); 
+      return !inKeyValuePair.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDefaultValuePair = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inDefaultValuePair() {
-      return inDefaultValuePair.isEmpty(); 
+      return !inDefaultValuePair.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyValue = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 	}
 
 	public boolean inKeyValue() {
-      return inKeyValue.isEmpty(); 
+      return !inKeyValue.isEmpty(); 
    }
 
 }

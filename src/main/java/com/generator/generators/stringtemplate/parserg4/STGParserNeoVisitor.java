@@ -78,16 +78,6 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		System.out.println("KeyValuePair");
-		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
 		System.out.println("FormalArg");
 		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText());
@@ -111,6 +101,16 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
 		System.out.println("DictPairs");
 		final Node node = model.findOrCreate(Label.label("DictPairs"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		System.out.println("KeyValuePair");
+		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

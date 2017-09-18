@@ -60,24 +60,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBlock() {
-      return inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText()));
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return inNumber.isEmpty(); 
+      return !inBlock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
@@ -94,7 +77,24 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inExpression() {
-      return inExpression.isEmpty(); 
+      return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText()));
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
@@ -111,7 +111,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inStylesheet() {
-      return inStylesheet.isEmpty(); 
+      return !inStylesheet.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodCharset = new java.util.Stack<>();
@@ -128,7 +128,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGoodCharset() {
-      return inGoodCharset.isEmpty(); 
+      return !inGoodCharset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadCharset = new java.util.Stack<>();
@@ -145,7 +145,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadCharset() {
-      return inBadCharset.isEmpty(); 
+      return !inBadCharset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
@@ -162,7 +162,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGoodImport() {
-      return inGoodImport.isEmpty(); 
+      return !inGoodImport.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();
@@ -179,7 +179,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadImport() {
-      return inBadImport.isEmpty(); 
+      return !inBadImport.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
@@ -196,7 +196,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGoodNamespace() {
-      return inGoodNamespace.isEmpty(); 
+      return !inGoodNamespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadNamespace = new java.util.Stack<>();
@@ -213,7 +213,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadNamespace() {
-      return inBadNamespace.isEmpty(); 
+      return !inBadNamespace.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNamespacePrefix = new java.util.Stack<>();
@@ -230,7 +230,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inNamespacePrefix() {
-      return inNamespacePrefix.isEmpty(); 
+      return !inNamespacePrefix.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMedia = new java.util.Stack<>();
@@ -247,7 +247,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMedia() {
-      return inMedia.isEmpty(); 
+      return !inMedia.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMediaQueryList = new java.util.Stack<>();
@@ -264,7 +264,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMediaQueryList() {
-      return inMediaQueryList.isEmpty(); 
+      return !inMediaQueryList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMediaQuery = new java.util.Stack<>();
@@ -281,7 +281,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMediaQuery() {
-      return inMediaQuery.isEmpty(); 
+      return !inMediaQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMediaType = new java.util.Stack<>();
@@ -298,7 +298,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMediaType() {
-      return inMediaType.isEmpty(); 
+      return !inMediaType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMediaExpression = new java.util.Stack<>();
@@ -315,7 +315,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMediaExpression() {
-      return inMediaExpression.isEmpty(); 
+      return !inMediaExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inMediaFeature = new java.util.Stack<>();
@@ -332,7 +332,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inMediaFeature() {
-      return inMediaFeature.isEmpty(); 
+      return !inMediaFeature.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPage = new java.util.Stack<>();
@@ -349,7 +349,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inPage() {
-      return inPage.isEmpty(); 
+      return !inPage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPseudoPage = new java.util.Stack<>();
@@ -366,7 +366,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inPseudoPage() {
-      return inPseudoPage.isEmpty(); 
+      return !inPseudoPage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectorGroup = new java.util.Stack<>();
@@ -383,7 +383,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSelectorGroup() {
-      return inSelectorGroup.isEmpty(); 
+      return !inSelectorGroup.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
@@ -400,7 +400,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSelector() {
-      return inSelector.isEmpty(); 
+      return !inSelector.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCombinator = new java.util.Stack<>();
@@ -417,7 +417,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCombinator() {
-      return inCombinator.isEmpty(); 
+      return !inCombinator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSimpleSelectorSequence = new java.util.Stack<>();
@@ -434,7 +434,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSimpleSelectorSequence() {
-      return inSimpleSelectorSequence.isEmpty(); 
+      return !inSimpleSelectorSequence.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeSelector = new java.util.Stack<>();
@@ -451,7 +451,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inTypeSelector() {
-      return inTypeSelector.isEmpty(); 
+      return !inTypeSelector.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeNamespacePrefix = new java.util.Stack<>();
@@ -468,7 +468,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inTypeNamespacePrefix() {
-      return inTypeNamespacePrefix.isEmpty(); 
+      return !inTypeNamespacePrefix.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementName = new java.util.Stack<>();
@@ -485,7 +485,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inElementName() {
-      return inElementName.isEmpty(); 
+      return !inElementName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUniversal = new java.util.Stack<>();
@@ -502,7 +502,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUniversal() {
-      return inUniversal.isEmpty(); 
+      return !inUniversal.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
@@ -519,7 +519,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inClassName() {
-      return inClassName.isEmpty(); 
+      return !inClassName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAttrib = new java.util.Stack<>();
@@ -536,7 +536,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inAttrib() {
-      return inAttrib.isEmpty(); 
+      return !inAttrib.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPseudo = new java.util.Stack<>();
@@ -553,7 +553,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inPseudo() {
-      return inPseudo.isEmpty(); 
+      return !inPseudo.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunctionalPseudo = new java.util.Stack<>();
@@ -570,7 +570,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFunctionalPseudo() {
-      return inFunctionalPseudo.isEmpty(); 
+      return !inFunctionalPseudo.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNegation = new java.util.Stack<>();
@@ -587,7 +587,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inNegation() {
-      return inNegation.isEmpty(); 
+      return !inNegation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNegationArg = new java.util.Stack<>();
@@ -604,7 +604,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inNegationArg() {
-      return inNegationArg.isEmpty(); 
+      return !inNegationArg.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodOperator = new java.util.Stack<>();
@@ -621,7 +621,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGoodOperator() {
-      return inGoodOperator.isEmpty(); 
+      return !inGoodOperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadOperator = new java.util.Stack<>();
@@ -638,7 +638,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadOperator() {
-      return inBadOperator.isEmpty(); 
+      return !inBadOperator.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodProperty = new java.util.Stack<>();
@@ -655,7 +655,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGoodProperty() {
-      return inGoodProperty.isEmpty(); 
+      return !inGoodProperty.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadProperty = new java.util.Stack<>();
@@ -672,7 +672,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadProperty() {
-      return inBadProperty.isEmpty(); 
+      return !inBadProperty.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKnownRuleset = new java.util.Stack<>();
@@ -689,7 +689,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKnownRuleset() {
-      return inKnownRuleset.isEmpty(); 
+      return !inKnownRuleset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownRuleset = new java.util.Stack<>();
@@ -706,7 +706,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownRuleset() {
-      return inUnknownRuleset.isEmpty(); 
+      return !inUnknownRuleset.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDeclarationList = new java.util.Stack<>();
@@ -723,7 +723,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inDeclarationList() {
-      return inDeclarationList.isEmpty(); 
+      return !inDeclarationList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKnownDeclaration = new java.util.Stack<>();
@@ -740,7 +740,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKnownDeclaration() {
-      return inKnownDeclaration.isEmpty(); 
+      return !inKnownDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownDeclaration = new java.util.Stack<>();
@@ -757,7 +757,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownDeclaration() {
-      return inUnknownDeclaration.isEmpty(); 
+      return !inUnknownDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrio = new java.util.Stack<>();
@@ -774,7 +774,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inPrio() {
-      return inPrio.isEmpty(); 
+      return !inPrio.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
@@ -791,7 +791,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inValue() {
-      return inValue.isEmpty(); 
+      return !inValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
@@ -808,7 +808,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inExpr() {
-      return inExpr.isEmpty(); 
+      return !inExpr.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKnownTerm = new java.util.Stack<>();
@@ -825,7 +825,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKnownTerm() {
-      return inKnownTerm.isEmpty(); 
+      return !inKnownTerm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownTerm = new java.util.Stack<>();
@@ -842,7 +842,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownTerm() {
-      return inUnknownTerm.isEmpty(); 
+      return !inUnknownTerm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBadTerm = new java.util.Stack<>();
@@ -859,7 +859,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inBadTerm() {
-      return inBadTerm.isEmpty(); 
+      return !inBadTerm.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
@@ -876,7 +876,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFunction() {
-      return inFunction.isEmpty(); 
+      return !inFunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDxImageTransform = new java.util.Stack<>();
@@ -893,7 +893,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inDxImageTransform() {
-      return inDxImageTransform.isEmpty(); 
+      return !inDxImageTransform.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inHexcolor = new java.util.Stack<>();
@@ -910,7 +910,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inHexcolor() {
-      return inHexcolor.isEmpty(); 
+      return !inHexcolor.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPercentage = new java.util.Stack<>();
@@ -927,7 +927,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inPercentage() {
-      return inPercentage.isEmpty(); 
+      return !inPercentage.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDimension = new java.util.Stack<>();
@@ -944,7 +944,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inDimension() {
-      return inDimension.isEmpty(); 
+      return !inDimension.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownDimension = new java.util.Stack<>();
@@ -961,7 +961,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownDimension() {
-      return inUnknownDimension.isEmpty(); 
+      return !inUnknownDimension.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAny = new java.util.Stack<>();
@@ -978,7 +978,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inAny() {
-      return inAny.isEmpty(); 
+      return !inAny.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownAtRule = new java.util.Stack<>();
@@ -995,7 +995,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownAtRule() {
-      return inUnknownAtRule.isEmpty(); 
+      return !inUnknownAtRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAtKeyword = new java.util.Stack<>();
@@ -1012,7 +1012,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inAtKeyword() {
-      return inAtKeyword.isEmpty(); 
+      return !inAtKeyword.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnused = new java.util.Stack<>();
@@ -1029,7 +1029,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnused() {
-      return inUnused.isEmpty(); 
+      return !inUnused.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNestedStatement = new java.util.Stack<>();
@@ -1046,7 +1046,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inNestedStatement() {
-      return inNestedStatement.isEmpty(); 
+      return !inNestedStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGroupRuleBody = new java.util.Stack<>();
@@ -1063,7 +1063,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGroupRuleBody() {
-      return inGroupRuleBody.isEmpty(); 
+      return !inGroupRuleBody.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsRule = new java.util.Stack<>();
@@ -1080,7 +1080,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsRule() {
-      return inSupportsRule.isEmpty(); 
+      return !inSupportsRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsCondition = new java.util.Stack<>();
@@ -1097,7 +1097,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsCondition() {
-      return inSupportsCondition.isEmpty(); 
+      return !inSupportsCondition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsConditionInParens = new java.util.Stack<>();
@@ -1114,7 +1114,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsConditionInParens() {
-      return inSupportsConditionInParens.isEmpty(); 
+      return !inSupportsConditionInParens.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsNegation = new java.util.Stack<>();
@@ -1131,7 +1131,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsNegation() {
-      return inSupportsNegation.isEmpty(); 
+      return !inSupportsNegation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsConjunction = new java.util.Stack<>();
@@ -1148,7 +1148,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsConjunction() {
-      return inSupportsConjunction.isEmpty(); 
+      return !inSupportsConjunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsDisjunction = new java.util.Stack<>();
@@ -1165,7 +1165,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsDisjunction() {
-      return inSupportsDisjunction.isEmpty(); 
+      return !inSupportsDisjunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSupportsDeclarationCondition = new java.util.Stack<>();
@@ -1182,7 +1182,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inSupportsDeclarationCondition() {
-      return inSupportsDeclarationCondition.isEmpty(); 
+      return !inSupportsDeclarationCondition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGeneralEnclosed = new java.util.Stack<>();
@@ -1199,7 +1199,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inGeneralEnclosed() {
-      return inGeneralEnclosed.isEmpty(); 
+      return !inGeneralEnclosed.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
@@ -1216,7 +1216,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inVar() {
-      return inVar.isEmpty(); 
+      return !inVar.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCalc = new java.util.Stack<>();
@@ -1233,7 +1233,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCalc() {
-      return inCalc.isEmpty(); 
+      return !inCalc.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCalcSum = new java.util.Stack<>();
@@ -1250,7 +1250,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCalcSum() {
-      return inCalcSum.isEmpty(); 
+      return !inCalcSum.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCalcProduct = new java.util.Stack<>();
@@ -1267,7 +1267,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCalcProduct() {
-      return inCalcProduct.isEmpty(); 
+      return !inCalcProduct.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCalcValue = new java.util.Stack<>();
@@ -1284,7 +1284,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCalcValue() {
-      return inCalcValue.isEmpty(); 
+      return !inCalcValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFontFaceRule = new java.util.Stack<>();
@@ -1301,7 +1301,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFontFaceRule() {
-      return inFontFaceRule.isEmpty(); 
+      return !inFontFaceRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKnownFontFaceDeclaration = new java.util.Stack<>();
@@ -1318,7 +1318,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKnownFontFaceDeclaration() {
-      return inKnownFontFaceDeclaration.isEmpty(); 
+      return !inKnownFontFaceDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnknownFontFaceDeclaration = new java.util.Stack<>();
@@ -1335,7 +1335,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inUnknownFontFaceDeclaration() {
-      return inUnknownFontFaceDeclaration.isEmpty(); 
+      return !inUnknownFontFaceDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyframesRule = new java.util.Stack<>();
@@ -1352,7 +1352,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKeyframesRule() {
-      return inKeyframesRule.isEmpty(); 
+      return !inKeyframesRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyframesBlocks = new java.util.Stack<>();
@@ -1369,7 +1369,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKeyframesBlocks() {
-      return inKeyframesBlocks.isEmpty(); 
+      return !inKeyframesBlocks.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyframeSelector = new java.util.Stack<>();
@@ -1386,7 +1386,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inKeyframeSelector() {
-      return inKeyframeSelector.isEmpty(); 
+      return !inKeyframeSelector.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inViewport = new java.util.Stack<>();
@@ -1403,7 +1403,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inViewport() {
-      return inViewport.isEmpty(); 
+      return !inViewport.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCounterStyle = new java.util.Stack<>();
@@ -1420,7 +1420,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inCounterStyle() {
-      return inCounterStyle.isEmpty(); 
+      return !inCounterStyle.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFontFeatureValuesRule = new java.util.Stack<>();
@@ -1437,7 +1437,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFontFeatureValuesRule() {
-      return inFontFeatureValuesRule.isEmpty(); 
+      return !inFontFeatureValuesRule.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFontFamilyNameList = new java.util.Stack<>();
@@ -1454,7 +1454,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFontFamilyNameList() {
-      return inFontFamilyNameList.isEmpty(); 
+      return !inFontFamilyNameList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFontFamilyName = new java.util.Stack<>();
@@ -1471,7 +1471,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFontFamilyName() {
-      return inFontFamilyName.isEmpty(); 
+      return !inFontFamilyName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFeatureValueBlock = new java.util.Stack<>();
@@ -1488,7 +1488,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFeatureValueBlock() {
-      return inFeatureValueBlock.isEmpty(); 
+      return !inFeatureValueBlock.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFeatureType = new java.util.Stack<>();
@@ -1505,7 +1505,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFeatureType() {
-      return inFeatureType.isEmpty(); 
+      return !inFeatureType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFeatureValueDefinition = new java.util.Stack<>();
@@ -1522,7 +1522,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inFeatureValueDefinition() {
-      return inFeatureValueDefinition.isEmpty(); 
+      return !inFeatureValueDefinition.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIdent = new java.util.Stack<>();
@@ -1539,7 +1539,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inIdent() {
-      return inIdent.isEmpty(); 
+      return !inIdent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inWs = new java.util.Stack<>();
@@ -1556,7 +1556,7 @@ public class css3NodeListener extends css3BaseListener {
 	}
 
 	public boolean inWs() {
-      return inWs.isEmpty(); 
+      return !inWs.isEmpty(); 
    }
 
 }
