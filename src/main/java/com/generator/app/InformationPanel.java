@@ -1,8 +1,8 @@
 package com.generator.app;
 
 import com.generator.neo.NeoModel;
+import com.generator.util.ColorBrewerSelector;
 import com.generator.util.SwingUtil;
-import org.jcolorbrewer.ui.ColorPaletteChooserDialog;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
@@ -432,18 +432,33 @@ final class InformationPanel extends JPanel {
          pop.add(new App.TransactionAction("Set color", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
-               if (colorNode == null)
-                  colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
 
-               final ColorPaletteChooserDialog dialog = new ColorPaletteChooserDialog(app);
-               dialog.setModal(true);
-               if (dialog.showDialog()) {
-                  final Color color = dialog.getColor();
-                  final String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-                  colorNode.setProperty(AppMotif.Properties._color.name(), hex);
-                  app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), color);
-               }
+               final ColorBrewerSelector editor = new ColorBrewerSelector();
+
+               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.OnSave() {
+                  @Override
+                  public void verifyAndSave() throws Exception {
+                     final Color color = editor.getSelectedColor();
+                     if (color == null) return;
+
+                     app.model.graph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
+                           if (colorNode == null)
+                              colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
+                           final String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+                           colorNode.setProperty(AppMotif.Properties._color.name(), hex);
+                           app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), color);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
             }
          });
       }

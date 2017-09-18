@@ -222,13 +222,6 @@
             <version>1.0.3</version>
         </dependency>
 
-        <!-- jcolorbrewer -->
-        <dependency>
-            <groupId>org.biojava</groupId>
-            <artifactId>jcolorbrewer</artifactId>
-            <version>5.2</version>
-        </dependency>
-
         <!-- aspectJ -->
 
         <!--<dependency>-->
