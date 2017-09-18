@@ -1120,18 +1120,14 @@ public final class Workspace extends JPanel {
             addAttribute("id", node.getId());
             addAttribute("node", node);
 
-            Color nodeColor = null;
             for (org.neo4j.graphdb.Label label : node.getLabels()) {
                final Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", label.name());
                if (colorNode == null) continue;
-               if (nodeColor == null) {
-                  final String color = getString(colorNode, AppMotif.Properties._color.name());
-                  nodeColor = color == null ? Color.BLACK : Color.decode(color);
-                  continue;
-               }
-               nodeColor = blend(nodeColor, Color.decode(getString(node, AppMotif.Properties._color.name())));
+               final String color = getString(colorNode, AppMotif.Properties._color.name());
+               defaultNodeColor = Color.decode(color);
+               break;
             }
-            defaultNodeColor = nodeColor == null ? Color.BLACK : nodeColor;
+            if (defaultNodeColor == null) defaultNodeColor = Color.BLACK;
 
             setOffset(offset == null ? (node.hasProperty(AppMotif.Properties.x.name()) ? new Point2D.Double(getDouble(node, AppMotif.Properties.x.name()), getDouble(node, AppMotif.Properties.y.name())) : new Point2D.Double(random.nextInt(100), random.nextInt(100))) : offset);
 
@@ -1368,6 +1364,8 @@ public final class Workspace extends JPanel {
                      @Override
                      public void doAction(Transaction tx) throws Throwable {
 
+                        final Set<NeoNode> visitedChildren = new LinkedHashSet<>();
+
                         for (Map.Entry<Long, NeoNode> nodeEntry : nodesAndIds.entrySet()) {
 
                            if (!childrensMap.containsKey(nodeEntry.getKey()))
@@ -1378,10 +1376,15 @@ public final class Workspace extends JPanel {
                               if (nodesAndIds.keySet().contains(id)) {
                                  if (!parentsMap.containsKey(id))
                                     parentsMap.put(id, nodeEntry.getValue());
-                                 childrensMap.get(nodeEntry.getKey()).add(nodesAndIds.get(id));
+
+                                 if (!visitedChildren.contains(nodesAndIds.get(id))) {
+                                    visitedChildren.add(nodesAndIds.get(id));
+                                    childrensMap.get(nodeEntry.getKey()).add(nodesAndIds.get(id));
+                                 }
                               }
                            });
                         }
+
 
                         final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(NeoNode.this) {
                            @Override
@@ -1738,30 +1741,6 @@ public final class Workspace extends JPanel {
                   SwingUtil.showException(NodeCanvas.this, throwable);
                }
             }));
-         }
-
-         private Color blend(Color c1, Color c2) {
-            float iRatio = .5f;
-
-            int i1 = c1.getRGB();
-            int i2 = c2.getRGB();
-
-            int a1 = (i1 >> 24 & 0xff);
-            int r1 = ((i1 & 0xff0000) >> 16);
-            int g1 = ((i1 & 0xff00) >> 8);
-            int b1 = (i1 & 0xff);
-
-            int a2 = (i2 >> 24 & 0xff);
-            int r2 = ((i2 & 0xff0000) >> 16);
-            int g2 = ((i2 & 0xff00) >> 8);
-            int b2 = (i2 & 0xff);
-
-            int a = (int) ((a1 * iRatio) + (a2 * .5f));
-            int r = (int) ((r1 * iRatio) + (r2 * .5f));
-            int g = (int) ((g1 * iRatio) + (g2 * .5f));
-            int b = (int) ((b1 * iRatio) + (b2 * .5f));
-
-            return new Color(a << 24 | r << 16 | g << 8 | b);
          }
 
          Long id() {

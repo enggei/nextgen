@@ -2,6 +2,7 @@ package com.generator.app;
 
 import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
+import org.jcolorbrewer.ui.ColorPaletteChooserDialog;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
@@ -147,7 +148,8 @@ final class InformationPanel extends JPanel {
             root.add(relationships);
             final Set<String> sortedRelations = new TreeSet<>();
             app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> sortedRelations.add(relationshipType.name()));
-            for (String sortedRelation : sortedRelations) relationships.add(new RelationshipTypeNode(RelationshipType.withName(sortedRelation)));
+            for (String sortedRelation : sortedRelations)
+               relationships.add(new RelationshipTypeNode(RelationshipType.withName(sortedRelation)));
 
             final PropertyNode propertyNodes = new PropertyNode("Properties");
             root.add(propertyNodes);
@@ -433,12 +435,15 @@ final class InformationPanel extends JPanel {
                Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
                if (colorNode == null)
                   colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
-               final String color = SwingUtil.showInputDialog("Color", InformationPanel.this, getString(colorNode, AppMotif.Properties._color.name()));
-               if (color == null) return;
-               colorNode.setProperty(AppMotif.Properties._color.name(), color);
-               // old, just run to clean up
-               app.model.graph().findNodes(((Label) getUserObject())).forEachRemaining(node -> node.removeProperty(AppMotif.Properties._color.name()));
-               app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), Color.decode(color));
+
+               final ColorPaletteChooserDialog dialog = new ColorPaletteChooserDialog(app);
+               dialog.setModal(true);
+               if (dialog.showDialog()) {
+                  final Color color = dialog.getColor();
+                  final String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+                  colorNode.setProperty(AppMotif.Properties._color.name(), hex);
+                  app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), color);
+               }
             }
          });
       }
