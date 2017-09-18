@@ -7,6 +7,12 @@ import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.SwingUtil;
 import com.google.common.util.concurrent.AtomicDouble;
+import org.abego.treelayout.Configuration;
+import org.abego.treelayout.NodeExtentProvider;
+import org.abego.treelayout.TreeForTreeLayout;
+import org.abego.treelayout.TreeLayout;
+import org.abego.treelayout.util.AbstractTreeForTreeLayout;
+import org.abego.treelayout.util.DefaultConfiguration;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
 import org.piccolo2d.PCamera;
@@ -32,6 +38,7 @@ import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static com.generator.util.NeoUtil.*;
@@ -1189,24 +1196,25 @@ public final class Workspace extends JPanel {
 
                      case KeyEvent.VK_1:
                         SwingUtilities.invokeLater(() -> {
-                           final Map<Long, Workspace.NodeCanvas.NeoNode> nodesAndIds = new LinkedHashMap<>();
-                           for (Workspace.NodeCanvas.NeoNode selectedNode : nodeCanvas.getAllNodes()) {
-                              if (id().equals(selectedNode.id())) continue;
-                              nodesAndIds.put(selectedNode.id(), selectedNode);
-                           }
+                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Left));
+                        });
+                        break;
 
-                           app.model.graph().doInTransaction(new NeoModel.Committer() {
-                              @Override
-                              public void doAction(Transaction tx) throws Throwable {
-                                 final AppMotif.LayoutDirection direction = event.isControlDown() ? AppMotif.LayoutDirection.left : AppMotif.LayoutDirection.right;
-                                 new LayoutNode(direction, NeoNode.this, nodesAndIds).layout(direction, getOffset());
-                              }
+                     case KeyEvent.VK_2:
+                        SwingUtilities.invokeLater(() -> {
+                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Right));
+                        });
+                        break;
 
-                              @Override
-                              public void exception(Throwable throwable) {
-                                 SwingUtil.showExceptionNoStack(app, throwable);
-                              }
-                           });
+                     case KeyEvent.VK_3:
+                        SwingUtilities.invokeLater(() -> {
+                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Bottom));
+                        });
+                        break;
+
+                     case KeyEvent.VK_4:
+                        SwingUtilities.invokeLater(() -> {
+                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Top));
                         });
                         break;
 
@@ -1346,48 +1354,89 @@ public final class Workspace extends JPanel {
                         break;
                   }
                }
+
+               private void layoutTree(Configuration<NeoNode> configuration) {
+
+                  final Map<Long, NeoNode> nodesAndIds = new LinkedHashMap<>();
+                  for (NeoNode selectedNode : nodeCanvas.getAllNodes())
+                     nodesAndIds.put(selectedNode.id(), selectedNode);
+
+                  final Map<Long, NeoNode> parentsMap = new LinkedHashMap<>();
+                  final Map<Long, List<NeoNode>> childrensMap = new LinkedHashMap<>();
+
+                  app.model.graph().doInTransaction(new Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+
+                        for (Map.Entry<Long, NeoNode> nodeEntry : nodesAndIds.entrySet()) {
+
+                           if (!childrensMap.containsKey(nodeEntry.getKey()))
+                              childrensMap.put(nodeEntry.getKey(), new ArrayList<>());
+
+                           outgoing(nodeEntry.getValue().getNode()).forEach(relationship -> {
+                              final long id = other(nodeEntry.getValue().getNode(), relationship).getId();
+                              if (nodesAndIds.keySet().contains(id)) {
+                                 if (!parentsMap.containsKey(id))
+                                    parentsMap.put(id, nodeEntry.getValue());
+                                 childrensMap.get(nodeEntry.getKey()).add(nodesAndIds.get(id));
+                              }
+                           });
+                        }
+
+                        final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(NeoNode.this) {
+                           @Override
+                           public NeoNode getParent(NeoNode neoNode) {
+                              return parentsMap.get(neoNode.id());
+                           }
+
+                           @Override
+                           public List<NeoNode> getChildrenList(NeoNode neoNode) {
+                              return childrensMap.get(neoNode.id());
+                           }
+                        };
+
+                        final NodeExtentProvider<NeoNode> nodeExtendProvider = new NodeExtentProvider<NeoNode>() {
+                           @Override
+                           public double getWidth(NeoNode neoNode) {
+                              return neoNode.getFullBounds().getWidth();
+                           }
+
+                           @Override
+                           public double getHeight(NeoNode neoNode) {
+                              return neoNode.getFullBounds().getHeight();
+                           }
+                        };
+
+
+                        final TreeLayout<NeoNode> layout = new TreeLayout<>(tree, nodeExtendProvider, configuration);
+
+                        // apply coordination-translation
+                        final Point2D rootLocation = getOffset();
+                        final Map<NeoNode, Rectangle2D.Double> nodeBounds = layout.getNodeBounds();
+                        final Rectangle2D.Double rootBounds = nodeBounds.get(NeoNode.this);
+                        final double dX = rootLocation.getX() - rootBounds.getCenterX();
+                        final double dY = rootLocation.getY() - rootBounds.getCenterY();
+                        for (Map.Entry<NeoNode, Rectangle2D.Double> nodeBound : nodeBounds.entrySet()) {
+                           final double centerX = nodeBound.getValue().getCenterX() + dX;
+                           final double centerY = nodeBound.getValue().getCenterY() + dY;
+                           nodeBound.getKey().setOffset(centerX, centerY);
+                        }
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+               }
             };
 
             nodeEventListener.getEventFilter().setMarksAcceptedEventsAsHandled(true);
             addInputEventListener(nodeEventListener);
          }
 
-         public void setPaintStrategy(AppMotif.NodePaintStrategy nodePaintStrategy) {
+         void setPaintStrategy(AppMotif.NodePaintStrategy nodePaintStrategy) {
             delegate.setText(getNodeText(nodePaintStrategy, getNode()));
-         }
-
-         final class LayoutNode {
-
-            private final Workspace.NodeCanvas.NeoNode neoNode;
-            private final Set<LayoutNode> children = new LinkedHashSet<>();
-            private Double totalHeight;
-
-            LayoutNode(AppMotif.LayoutDirection direction, Workspace.NodeCanvas.NeoNode neoNode, Map<Long, Workspace.NodeCanvas.NeoNode> nodesAndIds) {
-               this.neoNode = neoNode;
-
-               final AtomicDouble childrenHeight = new AtomicDouble(0);
-               outgoing(neoNode.getNode()).forEach(relationship -> {
-                  final long id = other(neoNode.getNode(), relationship).getId();
-                  if (nodesAndIds.keySet().contains(id)) {
-                     final LayoutNode childNode = new LayoutNode(direction, nodesAndIds.remove(id), nodesAndIds);
-                     children.add(childNode);
-                     childrenHeight.addAndGet(childNode.totalHeight);
-                  }
-               });
-
-               if (childrenHeight.get() == 0) totalHeight = neoNode.getFullBounds().getHeight() + 15;
-               else totalHeight = childrenHeight.get();
-            }
-
-            public void layout(AppMotif.LayoutDirection direction, Point2D startPosition) {
-               neoNode.setOffset(startPosition);
-               double x = AppMotif.LayoutDirection.right.equals(direction) ? (startPosition.getX() + neoNode.getFullBounds().getWidth() + 75) : (startPosition.getX() - neoNode.getFullBounds().getWidth() - 75);
-               double y = children.size() == 1 ? startPosition.getY() : (startPosition.getY() - ((totalHeight / 2d)));
-               for (LayoutNode child : children) {
-                  child.layout(direction, new Point2D.Double(x, y));
-                  y += child.totalHeight + 15;
-               }
-            }
          }
 
          private void onRightClick(PInputEvent event) {

@@ -1,6 +1,5 @@
 package com.generator.generators.cpp.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -23,7 +22,7 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -38,6 +37,24 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
@@ -1460,24 +1477,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inElaboratedtypespecifier() {
       return inElaboratedtypespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEnumname = new java.util.Stack<>();

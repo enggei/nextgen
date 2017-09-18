@@ -1,6 +1,5 @@
 package com.generator.generators.properties.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -16,7 +15,7 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -27,16 +26,6 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		System.out.println("PropertiesFile");
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
 
 	@Override
 	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
@@ -69,6 +58,16 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		System.out.println("Decl");
+		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
 		System.out.println("Comment");
 		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
@@ -79,9 +78,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		System.out.println("Decl");
-		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
+	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		System.out.println("PropertiesFile");
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

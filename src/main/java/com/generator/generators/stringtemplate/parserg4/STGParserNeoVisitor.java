@@ -1,6 +1,5 @@
 package com.generator.generators.stringtemplate.parserg4;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -16,7 +15,7 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -79,6 +78,16 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		System.out.println("KeyValuePair");
+		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
 		System.out.println("FormalArg");
 		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText());
@@ -102,16 +111,6 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
 		System.out.println("DictPairs");
 		final Node node = model.findOrCreate(Label.label("DictPairs"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		System.out.println("KeyValuePair");
-		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

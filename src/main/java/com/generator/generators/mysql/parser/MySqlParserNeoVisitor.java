@@ -1,6 +1,5 @@
 package com.generator.generators.mysql.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -16,7 +15,7 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -49,26 +48,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitReset_master(com.generator.generators.mysql.parser.MySqlParser.Reset_masterContext arg) {
-		System.out.println("Reset_master");
-		final Node node = model.findOrCreate(Label.label("Reset_master"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReset_slave(com.generator.generators.mysql.parser.MySqlParser.Reset_slaveContext arg) {
-		System.out.println("Reset_slave");
-		final Node node = model.findOrCreate(Label.label("Reset_slave"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
 		System.out.println("Root");
 		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
@@ -82,16 +61,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
 		System.out.println("Sql_statement");
 		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
-		System.out.println("Column_def_table_constraints");
-		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -492,6 +461,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
 		System.out.println("Server_option");
 		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
+		System.out.println("Column_def_table_constraints");
+		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -2412,6 +2391,26 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitPurge_binary_logs(com.generator.generators.mysql.parser.MySqlParser.Purge_binary_logsContext arg) {
 		System.out.println("Purge_binary_logs");
 		final Node node = model.findOrCreate(Label.label("Purge_binary_logs"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReset_master(com.generator.generators.mysql.parser.MySqlParser.Reset_masterContext arg) {
+		System.out.println("Reset_master");
+		final Node node = model.findOrCreate(Label.label("Reset_master"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReset_slave(com.generator.generators.mysql.parser.MySqlParser.Reset_slaveContext arg) {
+		System.out.println("Reset_slave");
+		final Node node = model.findOrCreate(Label.label("Reset_slave"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

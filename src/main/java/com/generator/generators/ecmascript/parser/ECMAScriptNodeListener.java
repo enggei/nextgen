@@ -63,23 +63,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -112,6 +95,57 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return inKeyword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inThrowStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
+		onEnter(new Node("ThrowStatement", arg.getText(), arg.getStart().getText()));
+		this.inThrowStatement.push(true);
+	}
+
+	public void exitThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
+		onExit();
+		this.inThrowStatement.pop();
+	}
+
+	public boolean inThrowStatement() {
+      return inThrowStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTryStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
+		onEnter(new Node("TryStatement", arg.getText(), arg.getStart().getText()));
+		this.inTryStatement.push(true);
+	}
+
+	public void exitTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
+		onExit();
+		this.inTryStatement.pop();
+	}
+
+	public boolean inTryStatement() {
+      return inTryStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
@@ -571,40 +605,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inLabelledStatement() {
       return inLabelledStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inThrowStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
-		onEnter(new Node("ThrowStatement", arg.getText(), arg.getStart().getText()));
-		this.inThrowStatement.push(true);
-	}
-
-	public void exitThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
-		onExit();
-		this.inThrowStatement.pop();
-	}
-
-	public boolean inThrowStatement() {
-      return inThrowStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTryStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
-		onEnter(new Node("TryStatement", arg.getText(), arg.getStart().getText()));
-		this.inTryStatement.push(true);
-	}
-
-	public void exitTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
-		onExit();
-		this.inTryStatement.pop();
-	}
-
-	public boolean inTryStatement() {
-      return inTryStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCatchProduction = new java.util.Stack<>();

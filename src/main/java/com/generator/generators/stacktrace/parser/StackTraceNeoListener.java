@@ -1,6 +1,5 @@
 package com.generator.generators.stacktrace.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -23,7 +22,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -238,24 +237,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return inQualifiedClass.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
-
-	@Override
-	public void enterInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("InnerClassName"), "text", arg.getText());
-		onEnter(node);
-		this.inInnerClassName.push(true);
-	}
-
-	public void exitInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
-		onExit();
-		this.inInnerClassName.pop();
-	}
-
-	public boolean inInnerClassName() {
-      return inInnerClassName.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
 
 	@Override
@@ -272,6 +253,24 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	public boolean inClassFile() {
       return inClassFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
+
+	@Override
+	public void enterInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
+		final Node node = model.findOrCreate(Label.label("InnerClassName"), "text", arg.getText());
+		onEnter(node);
+		this.inInnerClassName.push(true);
+	}
+
+	public void exitInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
+		onExit();
+		this.inInnerClassName.pop();
+	}
+
+	public boolean inInnerClassName() {
+      return inInnerClassName.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualifiedMethod = new java.util.Stack<>();

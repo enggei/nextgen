@@ -63,15 +63,6 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	}
 
 	@Override
-	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		final Node node = new Node("StartRule", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
 		final Node node = new Node("Message", arg.getText());
 		onEnter(node);
@@ -90,8 +81,8 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	}
 
 	@Override
-	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		final Node node = new Node("StackTraceLine", arg.getText());
+	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		final Node node = new Node("AtLine", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -99,8 +90,17 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 	}
 
 	@Override
-	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		final Node node = new Node("AtLine", arg.getText());
+	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		final Node node = new Node("StartRule", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		final Node node = new Node("StackTraceLine", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

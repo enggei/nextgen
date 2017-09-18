@@ -1,6 +1,5 @@
 package com.generator.generators.ecmascript.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -23,7 +22,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -56,24 +55,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inBlock() {
       return inBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
@@ -110,6 +91,60 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return inKeyword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inThrowStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("ThrowStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inThrowStatement.push(true);
+	}
+
+	public void exitThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
+		onExit();
+		this.inThrowStatement.pop();
+	}
+
+	public boolean inThrowStatement() {
+      return inThrowStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTryStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("TryStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inTryStatement.push(true);
+	}
+
+	public void exitTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
+		onExit();
+		this.inTryStatement.pop();
+	}
+
+	public boolean inTryStatement() {
+      return inTryStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
@@ -596,42 +631,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inLabelledStatement() {
       return inLabelledStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inThrowStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ThrowStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inThrowStatement.push(true);
-	}
-
-	public void exitThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
-		onExit();
-		this.inThrowStatement.pop();
-	}
-
-	public boolean inThrowStatement() {
-      return inThrowStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTryStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("TryStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inTryStatement.push(true);
-	}
-
-	public void exitTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
-		onExit();
-		this.inTryStatement.pop();
-	}
-
-	public boolean inTryStatement() {
-      return inTryStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCatchProduction = new java.util.Stack<>();

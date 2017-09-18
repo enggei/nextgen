@@ -1,6 +1,5 @@
 package com.generator.generators.stacktrace.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -16,7 +15,7 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty())
-         NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+         com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
    }
 
@@ -49,16 +48,6 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		System.out.println("StartRule");
-		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
 		System.out.println("Message");
 		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
@@ -79,9 +68,9 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		System.out.println("StackTraceLine");
-		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
+	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		System.out.println("AtLine");
+		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -89,9 +78,19 @@ public class StackTraceNeoVisitor extends StackTraceBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		System.out.println("AtLine");
-		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
+	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
+		System.out.println("StartRule");
+		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		System.out.println("StackTraceLine");
+		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -1,6 +1,5 @@
 package com.generator.generators.css.parser;
 
-import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.RelationshipType;
@@ -23,7 +22,7 @@ public class css3NeoListener extends css3BaseListener {
 
    private void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
-      	NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
+      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.getProperty("text"));
 		delim.append("\t");
@@ -58,24 +57,6 @@ public class css3NeoListener extends css3BaseListener {
       return inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
 
 	@Override
@@ -92,6 +73,24 @@ public class css3NeoListener extends css3BaseListener {
 
 	public boolean inNumber() {
       return inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
