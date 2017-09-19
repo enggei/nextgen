@@ -12,7 +12,7 @@ public class Tests {
    public void testBaseVerticle() {
 
       final VertxGroup vertxGroup = new VertxGroup();
-      System.out.println(vertxGroup.newBaseVerticle().
+      System.out.println(vertxGroup.newBaseRouterVerticle().
             setPackageName(ProjectConstants.TEST_PACKAGE + ".vertx").
             setName("TestBaseVerticle").
             addEndpointsValue("get","getUser","user"));
