@@ -2,27 +2,24 @@ package com.generator.neo.remote;
 
 
 import com.generator.neo.NeoModel;
-import org.jetbrains.annotations.NotNull;
 import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.summary.ResultSummary;
 import org.neo4j.graphdb.*;
-import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
-import org.neo4j.index.impl.lucene.legacy.EmptyIndexHits;
 
-import java.io.PrintWriter;
 import java.net.URI;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
-import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.isCachedNode;
 import static com.generator.neo.remote.NeoNode.*;
+import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.neo4j.driver.v1.Values.parameters;
 
 /**

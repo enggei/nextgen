@@ -1,9 +1,10 @@
 package com.generator.neo.remote;
 
-import com.generator.generators.domain.DomainPlugin;
 import com.sun.istack.internal.NotNull;
 import org.neo4j.driver.v1.Transaction;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
