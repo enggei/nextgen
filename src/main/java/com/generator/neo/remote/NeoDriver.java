@@ -583,7 +583,7 @@ public class NeoDriver implements AutoCloseable {
 
          return result.single().get(0).asNode();
 
-      }, (context, node) -> context.txData().labelAssigned(label, fromDriverNode(NeoDriver.this, node)));
+      }, (context, node) -> context.txData().labelAssigned(additional, fromDriverNode(NeoDriver.this, node)));
    }
 
    public Node removeLabel(@NotNull final UUID uuid, @NotNull final String labelToRemove) {
@@ -603,7 +603,7 @@ public class NeoDriver implements AutoCloseable {
 
          return result.single().get(0).asNode();
 
-      }, (context, node) -> context.txData().labelRemoved(label, fromDriverNode(NeoDriver.this, node)));
+      }, (context, node) -> context.txData().labelRemoved(labelToRemove, fromDriverNode(NeoDriver.this, node)));
    }
 
    @Deprecated
