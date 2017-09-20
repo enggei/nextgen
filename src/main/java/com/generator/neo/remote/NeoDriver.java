@@ -9,14 +9,16 @@ import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.event.TransactionData;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.net.URI;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
+import static com.generator.neo.remote.NeoNode.*;
 import static com.generator.util.NeoUtil.TAG_UUID;
-import static com.generator.neo.remote.NeoNode.TAG_NODE;
-import static com.generator.neo.remote.NeoNode.uuidOf;
 import static org.neo4j.driver.v1.Values.parameters;
 
 /**
@@ -29,10 +31,18 @@ public class NeoDriver implements AutoCloseable {
       Collection<Relationship> relationships();
    }
 
-   protected final URI uri;
-   protected final Driver driver;
+   @FunctionalInterface
+   interface ContextUpdater<Context, T> {
+      void update(Context context, T data);
+   }
 
-   private Transaction transaction;	// Current transaction
+   protected final URI uri;
+   private final Driver driver;
+
+   // TODO: Multiple session transactions
+   private NeoTransaction transaction;	// Current transaction
+
+   private Collection<TransactionEventHandler<Object>> transactionEventHandlers = new CopyOnWriteArrayList<>();
 
    public NeoDriver(URI uri, String username, String password) {
       this.uri = uri;
@@ -81,7 +91,7 @@ public class NeoDriver implements AutoCloseable {
       executeCypher("DROP CONSTRAINT ON ()-[r:" + type + "]-() ASSERT exists(r." + property + ")");
    }
 
-   protected Transaction beginTransaction() {
+   NeoTransaction beginTransaction() {
       if (inTransaction()) {
          System.out.println("beginTransaction: closing current open tx");
          transaction.close();   // Close if open
@@ -101,9 +111,9 @@ public class NeoDriver implements AutoCloseable {
       transaction.close();
    }
 
-   private Transaction getTransaction() {
+   private NeoTransaction getTransaction() {
       if (!inTransaction()) {
-         transaction = driver.session().beginTransaction();
+         transaction = new NeoTransaction(this, driver.session().beginTransaction());
          System.out.println("getTransaction: new tx");
          return transaction;
       }
@@ -311,7 +321,7 @@ public class NeoDriver implements AutoCloseable {
 
    protected <T> T readTransaction(TransactionWork<T> transactionWork) {
       if (inTransaction())
-         return transactionWork.execute(getTransaction());
+         return transactionWork.execute(getTransaction().getTx());
       else
          try ( Session session = driver.session() ) {
             return readTransaction(session, transactionWork);
@@ -326,17 +336,21 @@ public class NeoDriver implements AutoCloseable {
       return session.readTransaction(transactionWork::execute);
    }
 
-   protected <T> T writeTransaction(TransactionWork<T> transactionWork) {
-      if (inTransaction())
-         return transactionWork.execute(getTransaction());
-      else
-         try ( Session session = driver.session() ) {
-            return writeTransaction(session, transactionWork);
-         }
-         catch (ServiceUnavailableException e) {
-            System.err.println(e.getMessage());
-            throw e;
-         }
+   @SuppressWarnings("unchecked")
+   protected <T> T writeTransaction(TransactionWork<T> transactionWork, ContextUpdater<NeoTransactionContext, T> updater) {
+      if (inTransaction()) {
+         T t = transactionWork.execute(getTransaction().getTx());
+         updater.update(getTransaction().getContext(), t);
+         return t;
+      }
+
+      try ( Session session = driver.session() ) {
+         return writeTransaction(session, transactionWork);
+      }
+      catch (ServiceUnavailableException e) {
+         System.err.println(e.getMessage());
+         throw e;
+      }
    }
 
    static <T> T writeTransaction(Session session, TransactionWork<T> transactionWork) {
@@ -344,7 +358,9 @@ public class NeoDriver implements AutoCloseable {
    }
 
    public void dropAll() {
-      writeTransaction(tx -> tx.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r"));
+      writeTransaction(tx -> tx.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r"), (context, data) -> {
+
+      });
    }
 
    @Deprecated
@@ -507,11 +523,12 @@ public class NeoDriver implements AutoCloseable {
          if (!result.hasNext()) return null;
 
          return result.single().get(0).asNode();
-      });
+
+      }, (context, node) -> context.txData().nodeCreated(fromDriverNode(NeoDriver.this, node)));
    }
 
    @Deprecated
-   public int deleteNode(final long id) {
+   public Node deleteNode(final long id) {
       return writeTransaction(tx -> {
          Statement statement = new Statement("MATCH (n) WHERE ID(n) = $id DELETE n",
                parameters("id", id));
@@ -520,25 +537,33 @@ public class NeoDriver implements AutoCloseable {
          final StatementResult result = tx.run(statement);
 //			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
 
-         return result.summary().counters().nodesDeleted();
-      });
+         if (result.summary().counters().nodesDeleted() > 0)
+            return NeoNode.deletedNode(id);
+
+         return null;
+
+      }, (context, node) -> context.txData().nodeDeleted(NeoNode.newInternalNeoNode(node)));
    }
 
-   public int deleteNode(@NotNull final UUID uuid) {
+   public Node deleteNode(@NotNull final UUID uuid) {
       return deleteNode(TAG_NODE, uuid);
    }
 
-   public int deleteNode(@NotNull final String label, @NotNull final UUID uuid) {
+   public Node deleteNode(@NotNull final String label, @NotNull final UUID uuid) {
       return writeTransaction(tx -> {
-         Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) DELETE n",
+         Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) DELETE n RETURN ID(n)",
                parameters("uuid", uuid));
 
          System.out.println("deleteNode: " + statement.toString());
          final StatementResult result = tx.run(statement);
 //			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
 
-         return result.summary().counters().nodesDeleted();
-      });
+         if (result.summary().counters().nodesDeleted() > 0)
+            return NeoNode.deletedNode(result.single().get(0).asInt());
+
+         return null;
+
+      }, (context, node) -> context.txData().nodeDeleted(NeoNode.newInternalNeoNode(node)));
    }
 
    public Node addLabel(@NotNull final UUID uuid, @NotNull final String additional) {
@@ -557,7 +582,8 @@ public class NeoDriver implements AutoCloseable {
          if (!result.hasNext()) return null;
 
          return result.single().get(0).asNode();
-      });
+
+      }, (context, node) -> context.txData().labelAssigned(label, fromDriverNode(NeoDriver.this, node)));
    }
 
    public Node removeLabel(@NotNull final UUID uuid, @NotNull final String labelToRemove) {
@@ -576,7 +602,8 @@ public class NeoDriver implements AutoCloseable {
          if (!result.hasNext()) return null;
 
          return result.single().get(0).asNode();
-      });
+
+      }, (context, node) -> context.txData().labelRemoved(label, fromDriverNode(NeoDriver.this, node)));
    }
 
    @Deprecated
@@ -689,7 +716,8 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asRelationship();
-      });
+
+      }, (context, rel) -> context.txData().relationshipCreated(NeoRelationship.fromDriverRelationship(NeoDriver.this, rel)));
    }
 
    public Relationship createOutgoingRelationship(@NotNull Node lhs, @NotNull Node rhs, @NotNull String type, @NotNull UUID uuid, Object... kv) {
@@ -731,11 +759,12 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asRelationship();
-      });
+
+      }, (context, rel) -> context.txData().relationshipCreated(NeoRelationship.fromDriverRelationship(NeoDriver.this, rel)));
    }
 
    @Deprecated
-   public int deleteRelationship(long id) {
+   public Relationship deleteRelationship(long id) {
       return writeTransaction(tx -> {
          Statement statement = new Statement("MATCH ()-[rel]-() WHERE ID(rel) = $id DELETE rel",
                parameters("id", id));
@@ -743,25 +772,31 @@ public class NeoDriver implements AutoCloseable {
          System.out.println("deleteRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
 //			System.out.println("createRelationship summary:" + debugSummary(result.summary()));
+         if (result.summary().counters().relationshipsDeleted() > 0)
+            return NeoRelationship.deletedRelationship(id, "");
 
-         return result.summary().counters().relationshipsDeleted();
-      });
+         return null;
+
+      }, (context, rel) -> context.txData().relationshipDeleted(NeoRelationship.newInternalRelationship(rel)));
    }
 
-   public int deleteRelationship(@NotNull final String type, @NotNull final UUID uuid) {
+   public Relationship deleteRelationship(@NotNull final String type, @NotNull final UUID uuid) {
       return writeTransaction(tx -> {
-         Statement statement = new Statement("MATCH ()-[rel:" + type + " {" + TAG_UUID + ": $uuid}]-() DELETE rel",
+         Statement statement = new Statement("MATCH ()-[rel:" + type + " {" + TAG_UUID + ": $uuid}]-() DELETE rel RETURN ID(rel)",
                parameters("uuid", uuid.toString()));
 
          System.out.println("deleteRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
 //			System.out.println("deleteRelationship summary:" + debugSummary(result.summary()));
+         if (result.summary().counters().relationshipsDeleted() > 0)
+            return NeoRelationship.deletedRelationship(result.single().get(0).asLong(), type);
 
-         return result.summary().counters().relationshipsDeleted();
-      });
+         return null;
+
+      }, (context, rel) -> context.txData().relationshipDeleted(NeoRelationship.newInternalRelationship(rel)));
    }
 
-   public int deleteRelationship(@NotNull final NeoRelationship relationship) {
+   public Relationship deleteRelationship(@NotNull final NeoRelationship relationship) {
       return deleteRelationship(relationship.getType().name(), relationship.getUUID());
    }
 
@@ -795,21 +830,23 @@ public class NeoDriver implements AutoCloseable {
       if (kv.length == 0 && !replace) return getSingleNode(id);
 
       return writeTransaction(tx -> {
-               Statement statement = new Statement("MATCH (n) WHERE ID(n) = $id SET n " + (replace ? "" : "+") + "= $props RETURN n",
-                     parameters("id", id, "props", propertyMap(kv)));
+         Statement statement = new Statement("MATCH (n) WHERE ID(n) = $id SET n " + (replace ? "" : "+") + "= $props RETURN n",
+            parameters("id", id, "props", propertyMap(kv)));
 
-               System.out.println("setNodeProperties: " + statement.toString());
-               StatementResult result = tx.run(statement);
-//				System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
+         System.out.println("setNodeProperties: " + statement.toString());
+         StatementResult result = tx.run(statement);
+//			System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
 
-               if (!result.hasNext()) {
-                  System.out.println("Node " + id + " does not exist");
-                  return null;
-               }
+         if (!result.hasNext()) {
+            System.out.println("Node " + id + " does not exist");
+            return null;
+         }
 
-               return result.single().get(0).asNode();
-            }
-      );
+         return result.single().get(0).asNode();
+
+      }, (context, node) -> {
+         // TODO: Update transaction data
+      });
    }
 
    public Node setNodeProperties(@NotNull final UUID uuid, Object... kv) {
@@ -835,21 +872,23 @@ public class NeoDriver implements AutoCloseable {
       if (kv.length == 0 && !replace) return getSingleNode(label, uuid);
 
       return writeTransaction(tx -> {
-               Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) SET n " + (replace ? "" : "+") + "= $props RETURN n",
-                     parameters("uuid", uuid.toString(), "props", propertyMap(kv)));
+         Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) SET n " + (replace ? "" : "+") + "= $props RETURN n",
+            parameters("uuid", uuid.toString(), "props", propertyMap(kv)));
 
-               System.out.println("setNodeProperties: " + statement.toString());
-               StatementResult result = tx.run(statement);
-//				System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
+         System.out.println("setNodeProperties: " + statement.toString());
+         StatementResult result = tx.run(statement);
+//			System.out.println("setNodeProperties summary: " + debugSummary(result.summary()));
 
-               if (!result.hasNext()) {
-                  System.out.println("Node " + label + "{" + uuid + "} does not exist");
-                  return null;
-               }
+         if (!result.hasNext()) {
+            System.out.println("Node " + label + "{" + uuid + "} does not exist");
+            return null;
+         }
 
-               return result.single().get(0).asNode();
-            }
-      );
+         return result.single().get(0).asNode();
+
+      }, (context, node) -> {
+         // TODO: Update transaction data
+      });
    }
 
    public Node removeNodeProperties(@NotNull final UUID uuid, String... properties) {
@@ -880,6 +919,9 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asNode();
+
+      }, (context, node) -> {
+         // TODO: Update transaction data
       });
    }
 
@@ -926,6 +968,9 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asRelationship();
+
+      }, (context, rel) -> {
+         // TODO: Update transaction data
       });
    }
 
@@ -957,6 +1002,9 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asRelationship();
+
+      }, (context, rel) -> {
+         // TODO: Update transaction data
       });
    }
 
@@ -984,6 +1032,9 @@ public class NeoDriver implements AutoCloseable {
          }
 
          return result.single().get(0).asRelationship();
+
+      }, (context, rel) -> {
+         // TODO: Update transaction data
       });
    }
 
@@ -1025,6 +1076,43 @@ public class NeoDriver implements AutoCloseable {
       sb.append("]");
 
       return sb.toString();
+   }
+
+   // Inspiration from org.neo4j.kernel.internal.TransactionEventHandlers
+   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> handler) {
+      this.transactionEventHandlers.add(handler);
+      return handler;
+   }
+
+   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> handler) {
+      if (!transactionEventHandlers.remove(handler)) {
+         throw new IllegalStateException(handler + " istn't registered");
+      }
+      return handler;
+   }
+
+   protected void fireBeforeCommit(TransactionData data) throws Exception {
+      fireBeforeTransactionCommit(transactionEventHandlers, data);
+   }
+
+   protected void fireAfterCommit(TransactionData data, Object state) throws Exception {
+      fireAfterTransactionCommit(transactionEventHandlers, data, state);
+   }
+
+   protected void fireAfterRollback(TransactionData data, Object state) {
+      fireAfterTransactionRollback(transactionEventHandlers, data, state);
+   }
+
+   private static void fireBeforeTransactionCommit(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data) throws Exception {
+      for (TransactionEventHandler<Object> handler : handlers) handler.beforeCommit(data);
+   }
+
+   private static void fireAfterTransactionCommit(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data, Object state) {
+      for (TransactionEventHandler<Object> handler : handlers) handler.afterCommit(data, state);
+   }
+
+   private static void fireAfterTransactionRollback(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data, Object state) {
+      for (TransactionEventHandler<Object> handler : handlers) handler.afterRollback(data, state);
    }
 
 }

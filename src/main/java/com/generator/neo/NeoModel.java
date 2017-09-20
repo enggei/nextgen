@@ -7,6 +7,7 @@ import org.neo4j.graphdb.index.IndexManager;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface NeoModel {
 
@@ -22,9 +23,9 @@ public interface NeoModel {
 
    ResourceIterable<String> getAllPropertyKeys();
 
-   void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
+   TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
 
-   void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
+   TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
 
    Node createNode(final Label label);
 
