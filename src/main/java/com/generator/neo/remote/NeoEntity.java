@@ -2,6 +2,9 @@ package com.generator.neo.remote;
 
 import org.neo4j.graphdb.Entity;
 
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -9,7 +12,19 @@ import java.util.UUID;
  */
 public interface NeoEntity extends Entity {
 
+/*
+   interface NeoEntityDiff {
+      Iterable<String> EMPTY_LABELS = new LinkedHashSet<>();
+
+      default Iterable<String> labels() {
+         return EMPTY_LABELS;
+      }
+
+      Map<String, Object> properties();
+   }
+*/
+
    UUID getUUID();
 
-   void merge(NeoEntity neoEntity);
+   void merge(NeoEntity other);
 }

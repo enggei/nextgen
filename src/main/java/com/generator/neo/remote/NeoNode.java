@@ -1,6 +1,7 @@
 package com.generator.neo.remote;
 
 import org.jetbrains.annotations.NotNull;
+import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.graphdb.*;
 
 import java.util.*;
@@ -35,6 +36,16 @@ public class NeoNode implements Node, NeoEntity {
    // Every node gets a default label so we can combine it with the TAG_UUID property and create a global index for node UUIDs.
    static String TAG_NODE = "_node";
 
+   static class InternalNeoNode extends NeoNode {
+      InternalNeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
+         super(driverNode);
+      }
+   }
+
+   static NeoNode newInternalNeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
+      return new InternalNeoNode(driverNode);
+   }
+
    NeoNode(@NotNull final NeoDriver driver, long id) {
       this(driver, driver.getSingleNodeWithRelationships(id));
    }
@@ -53,6 +64,15 @@ public class NeoNode implements Node, NeoEntity {
 
    public NeoNode(@NotNull final NeoDriver driver, @NotNull NeoDriver.NodeWithRelationships nwr) {
       this(driver, nwr.node(), nwr.relationships());
+   }
+
+   // NOTE: For internal use only!
+   private NeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
+      this.driver = null;
+      this.driverNode = driverNode;
+
+      UUID uuid = uuidOf(driverNode);
+      if (uuid != null) this.uuid = uuid;
    }
 
    private NeoNode(@NotNull final NeoDriver driver, @NotNull final org.neo4j.driver.v1.types.Node driverNode, final Collection<org.neo4j.driver.v1.types.Relationship> driverRelationships) {
@@ -137,14 +157,14 @@ public class NeoNode implements Node, NeoEntity {
    }
 
    @Override
-   public void merge(NeoEntity neoEntity) {
-      if (!(neoEntity instanceof NeoNode))
+   public void merge(NeoEntity otherEntity) {
+      if (!(otherEntity instanceof NeoNode))
          throw new IllegalArgumentException("Entity is not a NeoNode");
 
-      if (!uuid.equals(neoEntity.getUUID()))
-         throw new IllegalArgumentException("Not allowed to to merge different nodes: " + uuid + " and " + neoEntity.getUUID());
+      if (!uuid.equals(otherEntity.getUUID()))
+         throw new IllegalArgumentException("Not allowed to to merge different nodes: " + uuid + " and " + otherEntity.getUUID());
 
-      NeoNode other = (NeoNode)neoEntity;
+      NeoNode other = (NeoNode)otherEntity;
 
       System.out.println("Merging " + this + " with " + other);
 
@@ -192,7 +212,7 @@ public class NeoNode implements Node, NeoEntity {
 
    @Override
    public void delete() {
-      if (driver.deleteNode(uuid) > 0) removeCache(this);
+      if (driver.deleteNode(uuid) != null) removeCache(this);
    }
 
    @Override
@@ -494,5 +514,9 @@ public class NeoNode implements Node, NeoEntity {
    @Override
    public String toString() {
       return toString(this);
+   }
+
+   static org.neo4j.driver.v1.types.Node deletedNode(long id) {
+      return new InternalNode(id);
    }
 }

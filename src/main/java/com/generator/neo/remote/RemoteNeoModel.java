@@ -2,27 +2,24 @@ package com.generator.neo.remote;
 
 
 import com.generator.neo.NeoModel;
-import org.jetbrains.annotations.NotNull;
 import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.summary.ResultSummary;
 import org.neo4j.graphdb.*;
-import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
-import org.neo4j.index.impl.lucene.legacy.EmptyIndexHits;
 
-import java.io.PrintWriter;
 import java.net.URI;
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
-import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.isCachedNode;
 import static com.generator.neo.remote.NeoNode.*;
+import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.neo4j.driver.v1.Values.parameters;
 
 /**
@@ -92,18 +89,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
          .collect(Collectors.toCollection(LinkedHashSet::new));
 
       return () -> Iterators.asResourceIterator(nodes.iterator());
-   }
-
-   @Override
-   public void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      // todo implement
-      System.out.println("ignoring registerTransactionEventHandler");
-   }
-
-   @Override
-   public void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      // todo implement
-      System.out.println("ignoring unregisterTransactionEventHandler");
    }
 
    @Override
@@ -288,46 +273,33 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public Transaction beginTx() {
-      return new Transaction() {
+      return beginTransaction();
+   }
 
-         //			private final org.neo4j.driver.v1.Session session = RemoteNeoModel.this.driver.session();
-         private final org.neo4j.driver.v1.Transaction tx = RemoteNeoModel.this.beginTransaction();
+   @Override
+   public void doInTransaction(Committer committer) {
 
-         private AtomicBoolean terminateCalled = new AtomicBoolean(false);
+      AtomicBoolean failure = new AtomicBoolean(false);
 
-         @Override
-         public void terminate() {
-            System.out.println("tx terminate");
-            terminateCalled.set(true);
-         }
-
-         @Override
-         public void failure() {
-            System.out.println("tx failure");
+      try (NeoTransaction tx = beginTransaction()) {
+         try {
+            committer.doAction(tx);
+            tx.getContext().driver().fireBeforeCommit(tx.getContext().txData());
+            tx.success();
+            // TODO: put something meaningful in state
+            tx.getContext().driver().fireAfterCommit(tx.getContext().txData(), null);
+         } catch (Throwable throwable) {
+            committer.exception(throwable);
+            failure.set(true);
             tx.failure();
          }
-
-         @Override
-         public void success() {
-            System.out.println("tx success");
-            if (!terminateCalled.get()) tx.success();
+         finally {
+            if (failure.get()) {
+               // TODO: put something meaningful in state
+               tx.getContext().driver().fireAfterRollback(tx.getContext().txData(), null);
+            }
          }
-
-         @Override
-         public void close() {
-            System.out.println("tx close");
-            tx.close();
-         }
-
-         @Override
-         public Lock acquireWriteLock(PropertyContainer entity) {
-            throw new UnsupportedOperationException();
-         }
-
-         @Override
-         public Lock acquireReadLock(PropertyContainer entity) {
-            throw new UnsupportedOperationException();
-         }
-      };
+      }
    }
+
 }

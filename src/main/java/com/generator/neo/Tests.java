@@ -1,24 +1,31 @@
 package com.generator.neo;
 
 
-import com.generator.neo.remote.*;
+import com.generator.neo.remote.NeoDriver;
+import com.generator.neo.remote.NeoNode;
+import com.generator.neo.remote.NeoRelationship;
+import com.generator.neo.remote.RemoteNeoModel;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.event.LabelEntry;
+import org.neo4j.graphdb.event.TransactionData;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.UUID;
 
-import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.getCachedRelationship;
 import static com.generator.neo.remote.NeoNode.fromDriverNode;
 import static com.generator.neo.remote.NeoNode.uuidOf;
+import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -158,11 +165,6 @@ public class Tests {
    }
 
    @Test
-   public void transactions() {
-
-   }
-
-   @Test
    public void modelInterface() {
       NeoModel neoModel = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
             model -> System.out.println("closed"));
@@ -251,11 +253,63 @@ public class Tests {
    }
 
    @Test
-   public void doInTransaction() {
+   public void transactions() {
       NeoModel neoModel = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD);
 
+      neoModel.registerTransactionEventHandler(new TransactionEventHandler<Object>() {
+
+         private final Set<Long> deletedNodes = new LinkedHashSet<>();
+         private final Set<Long> deletedRelations = new LinkedHashSet<>();
+         private final Set<org.neo4j.graphdb.Node> addedNodes = new LinkedHashSet<>();
+         private final Set<org.neo4j.graphdb.Relationship> addedRelations = new LinkedHashSet<>();
+         private final Set<LabelEntry> assignedLabels = new LinkedHashSet<>();
+
+         @Override
+         public Object beforeCommit(TransactionData transactionData) throws Exception {
+            transactionData.deletedNodes().forEach(node -> deletedNodes.add(node.getId()));
+            transactionData.deletedRelationships().forEach(relationship -> deletedRelations.add(relationship.getId()));
+            transactionData.createdNodes().forEach(addedNodes::add);
+            transactionData.createdRelationships().forEach(addedRelations::add);
+            transactionData.assignedLabels().forEach(assignedLabels::add);
+            return null;
+         }
+
+         @Override
+         public void afterCommit(TransactionData data, Object state) {
+            if (!deletedNodes.isEmpty()) {
+               System.out.println("deletedNodes: " + deletedNodes.size());
+               deletedNodes.clear();
+            }
+
+            if (!deletedRelations.isEmpty()) {
+               System.out.println("deletedRelations: " + deletedRelations.size());
+               deletedRelations.clear();
+            }
+
+            if (!addedNodes.isEmpty()) {
+               System.out.println("addedNodes: " + addedNodes.size());
+               addedNodes.clear();
+            }
+
+            if (!addedRelations.isEmpty()) {
+               System.out.println("addedRelations: " + addedRelations.size());
+               addedRelations.clear();
+            }
+
+            if (!assignedLabels.isEmpty()) {
+               System.out.println("assignedLabels: " + assignedLabels.size());
+               assignedLabels.clear();
+            }
+         }
+
+         @Override
+         public void afterRollback(TransactionData data, Object state) {
+            System.out.println("rollback");
+         }
+      });
+
       // todo perhaps use a cypher-query for this
-//      neoModel.dropAll();
+      ((NeoDriver)neoModel).dropAll();
 
       // Success
       neoModel.doInTransaction(new NeoModel.Committer() {

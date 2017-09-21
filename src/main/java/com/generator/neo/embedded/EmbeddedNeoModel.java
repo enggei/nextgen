@@ -84,13 +84,13 @@ public class EmbeddedNeoModel implements NeoModel {
    }
 
    @Override
-   public void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      graphDb.registerTransactionEventHandler(transactionEventHandler);
+   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      return graphDb.registerTransactionEventHandler(transactionEventHandler);
    }
 
    @Override
-   public void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      graphDb.unregisterTransactionEventHandler(transactionEventHandler);
+   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      return graphDb.unregisterTransactionEventHandler(transactionEventHandler);
    }
 
    @Override

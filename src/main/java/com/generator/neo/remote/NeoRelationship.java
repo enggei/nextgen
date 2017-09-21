@@ -2,6 +2,7 @@ package com.generator.neo.remote;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.neo4j.driver.internal.InternalRelationship;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -11,9 +12,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.removeCache;
 import static com.generator.neo.remote.NeoCache.updateCache;
+import static com.generator.util.NeoUtil.TAG_UUID;
 
 
 /**
@@ -28,6 +29,29 @@ public class NeoRelationship implements Relationship, NeoEntity {
 
    private final RelationshipType type;
    private final NeoNode[] nodes;
+
+   static class InternalNeoRelationship extends NeoRelationship {
+      InternalNeoRelationship(@NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
+         super(driverRelationship);
+      }
+   }
+
+   static NeoRelationship newInternalRelationship(@NotNull org.neo4j.driver.v1.types.Relationship relationship) {
+      return new InternalNeoRelationship(relationship);
+   }
+
+   // NOTE: For internal use only!
+   private NeoRelationship(@NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
+      this.driver = null;
+      this.driverRelationship = driverRelationship;
+
+      UUID uuid = uuidOf(driverRelationship);
+      if (uuid != null) this.uuid = uuid;
+
+      this.type = RelationshipType.withName(driverRelationship.type());
+
+      this.nodes = new NeoNode[] { null, null };
+   }
 
    NeoRelationship(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
       this.driver = driver;
@@ -72,14 +96,14 @@ public class NeoRelationship implements Relationship, NeoEntity {
    }
 
    @Override
-   public void merge(NeoEntity neoEntity) {
-      if (!(neoEntity instanceof NeoRelationship))
+   public void merge(NeoEntity otherEntity) {
+      if (!(otherEntity instanceof NeoRelationship))
          throw new IllegalArgumentException("Entity is not a NeoRelationship");
 
-      if (!uuid.equals(neoEntity.getUUID()))
-         throw new IllegalArgumentException("Trying to merge " + uuid + " with different relationship " + neoEntity.getUUID());
+      if (!uuid.equals(otherEntity.getUUID()))
+         throw new IllegalArgumentException("Trying to merge " + uuid + " with different relationship " + otherEntity.getUUID());
 
-      NeoRelationship other = (NeoRelationship)neoEntity;
+      NeoRelationship other = (NeoRelationship)otherEntity;
 
       System.out.println("Merging " + this + " with " + other);
 
@@ -94,7 +118,7 @@ public class NeoRelationship implements Relationship, NeoEntity {
 
    @Override
    public void delete() {
-      if (driver.deleteRelationship(this) > 0) {
+      if (driver.deleteRelationship(this) != null) {
 
          for (NeoNode node : nodes) {
             node.removeRelationship(this);
@@ -218,4 +242,9 @@ public class NeoRelationship implements Relationship, NeoEntity {
    public String toString() {
       return toString(this);
    }
+
+   static org.neo4j.driver.v1.types.Relationship deletedRelationship(long id, String type) {
+      return new InternalRelationship(id, -1L, -1L, type);
+   }
+
 }
