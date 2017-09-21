@@ -1,16 +1,18 @@
 package com.generator.generators.project;
 
-import com.generator.util.NeoUtil;
-import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Workspace;
 import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.mobx.MobXModelVisitor;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
@@ -24,11 +26,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 
-import static com.generator.util.NeoUtil.*;
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
 import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
 import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 06.08.17.
@@ -202,6 +204,35 @@ public class ProjectPlugin extends DomainPlugin {
                });
             }
 
+            if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Entity)) {
+
+//               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+//                  return;
+
+               // todo: using Entity.Renderer, try to make a pattern which puts Renderers in apropriate domains (instead of Project-hasLabel(..))
+               pop.add(new App.TransactionAction("Add MobX renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final String packageName = SwingUtil.showInputDialog("Package", app);
+                     if (packageName == null) return;
+//
+                     final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+
+                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model" , DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
+                     relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
+
+                     final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
+                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                     rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
+                     rendererRelationship.setProperty(Properties.file.name(), className);
+                     rendererRelationship.setProperty(Properties.extension.name(), "js");
+
+                     fireNodesLoaded(visitorNode);
+                  }
+               });
+            }
+
             final Relationship selectedNodeInstanceRelation = singleIncoming(selectedNode.getNode(), DomainPlugin.Relations.INSTANCE);
             if (selectedNodeInstanceRelation == null) continue;
 
@@ -358,10 +389,24 @@ public class ProjectPlugin extends DomainPlugin {
          } else if (hasLabel(nodeToRender, EasyFlowPlugin.Entities.Flow)) {
             EasyFlowPlugin.renderEasyFlow(rendererRelationship, nodeToRender);
          } else {
+
             final Node templateNode = other(nodeToRender, singleIncoming(nodeToRender, DomainPlugin.Relations.INSTANCE));
-            if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate)) {
+            if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate))
                renderToFile(rendererRelationship, nodeToRender, StringTemplatePlugin.renderStatement(nodeToRender, templateNode), node, app);
-            }
+
+            // visitors:
+            incoming(nodeToRender, DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
+               final Node visitorNode = other(nodeToRender, visitorRelation);
+
+               try {
+                  final DomainVisitor visitor = (DomainVisitor) Class.forName(getString(visitorNode, DomainPlugin.Properties.visitorClass.name())).
+                        getConstructor(Node.class, App.class).
+                        newInstance(visitorNode, app);
+                  visitor.visit(nodeToRender);
+               } catch (Exception e) {
+                  e.printStackTrace();
+               }
+            });
          }
       });
 
@@ -392,7 +437,7 @@ public class ProjectPlugin extends DomainPlugin {
                final String dir = getString(rendererRelationship, Properties.dir.name());
                final String filename = getString(rendererRelationship, Properties.file.name());
                final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension==null||extension.length()==0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
+               final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
                FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
                break;
             }
@@ -401,7 +446,7 @@ public class ProjectPlugin extends DomainPlugin {
                final String filename = getPropertyValue(statementNode, getString(rendererRelationship, Properties.filename.name()));
                final String dir = getString(rendererRelationship, Properties.dir.name());
                final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension==null||extension.length()==0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
+               final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
                FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
                break;
             }

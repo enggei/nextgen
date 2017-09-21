@@ -12,6 +12,7 @@ import org.abego.treelayout.TreeForTreeLayout;
 import org.abego.treelayout.TreeLayout;
 import org.abego.treelayout.util.AbstractTreeForTreeLayout;
 import org.abego.treelayout.util.DefaultConfiguration;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.Label;
 import org.piccolo2d.PCamera;
@@ -1066,6 +1067,11 @@ public final class Workspace extends JPanel {
          });
       }
 
+      @NotNull
+      private Point2D newRandomPosition() {
+         return nodeCanvas.getCamera().getViewBounds().getCenter2D();
+      }
+
       Set<NodeCanvas.NeoNode> getSelectedNodes() {
          final Set<NodeCanvas.NeoNode> nodes = new LinkedHashSet<>();
          for (Object o : nodeLayer.getAllNodes()) {
@@ -1127,7 +1133,7 @@ public final class Workspace extends JPanel {
             }
             if (defaultNodeColor == null) defaultNodeColor = Color.BLACK;
 
-            setOffset(offset == null ? (node.hasProperty(AppMotif.Properties.x.name()) ? new Point2D.Double(getDouble(node, AppMotif.Properties.x.name()), getDouble(node, AppMotif.Properties.y.name())) : new Point2D.Double(random.nextInt(100), random.nextInt(100))) : offset);
+            setOffset(offset == null ? (node.hasProperty(AppMotif.Properties.x.name()) ? new Point2D.Double(getDouble(node, AppMotif.Properties.x.name()), getDouble(node, AppMotif.Properties.y.name())) : newRandomPosition()) : offset);
 
             final PBasicInputEventHandler nodeEventListener = new PDragSequenceEventHandler() {
                @Override
@@ -1190,13 +1196,13 @@ public final class Workspace extends JPanel {
 
                      case KeyEvent.VK_1:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Left));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Left));
                         });
                         break;
 
                      case KeyEvent.VK_2:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(30, 15, Configuration.Location.Right));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Right));
                         });
                         break;
 
@@ -1362,27 +1368,8 @@ public final class Workspace extends JPanel {
                      @Override
                      public void doAction(Transaction tx) throws Throwable {
 
-                        final Set<NeoNode> visitedChildren = new LinkedHashSet<>();
-
-                        for (Map.Entry<Long, NeoNode> nodeEntry : nodesAndIds.entrySet()) {
-
-                           if (!childrensMap.containsKey(nodeEntry.getKey()))
-                              childrensMap.put(nodeEntry.getKey(), new ArrayList<>());
-
-                           outgoing(nodeEntry.getValue().getNode()).forEach(relationship -> {
-                              final long id = other(nodeEntry.getValue().getNode(), relationship).getId();
-                              if (nodesAndIds.keySet().contains(id)) {
-                                 if (!parentsMap.containsKey(id))
-                                    parentsMap.put(id, nodeEntry.getValue());
-
-                                 if (!visitedChildren.contains(nodesAndIds.get(id))) {
-                                    visitedChildren.add(nodesAndIds.get(id));
-                                    childrensMap.get(nodeEntry.getKey()).add(nodesAndIds.get(id));
-                                 }
-                              }
-                           });
-                        }
-
+                        // recursively traverse from root, finding all visible-children and populate parentsMap and childrensMap:
+                        visit(new LinkedHashSet<>(), NeoNode.this);
 
                         final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(NeoNode.this) {
                            @Override
@@ -1422,6 +1409,27 @@ public final class Workspace extends JPanel {
                            final double centerY = nodeBound.getValue().getCenterY() + dY;
                            nodeBound.getKey().setOffset(centerX, centerY);
                         }
+                     }
+
+                     private void visit(Set<NeoNode> visitedChildren, NeoNode root) {
+                        childrensMap.put(root.id(), new ArrayList<>());
+
+                        final Set<Long> childrenToVisit = new LinkedHashSet<>();
+                        outgoing(root.getNode()).forEach(relationship -> {
+                           final Node childNode = other(root.getNode(), relationship);
+                           final long childId = childNode.getId();
+                           // if child is visible, and not already visited, add to root
+                           if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
+                              visitedChildren.add(nodesAndIds.get(childId));
+                              parentsMap.put(childId, root);
+                              childrensMap.get(root.id()).add(nodesAndIds.get(childId));
+                              childrenToVisit.add(childId);
+                           }
+                        });
+
+                        // recursively visit added children:
+                        for (Long childNode : childrenToVisit)
+                           visit(visitedChildren, nodesAndIds.get(childNode));
                      }
 
                      @Override
@@ -1874,6 +1882,7 @@ public final class Workspace extends JPanel {
                               final Set<String> relationships = new LinkedHashSet<>();
                               app.model.graph().getAllRelationshipTypesInUse().forEach(relationshipType -> relationships.add(relationshipType.name()));
                               final JComboBox<String> cboRelationships = new JComboBox<>(relationships.toArray(new String[relationships.size()]));
+                              cboRelationships.setSelectedItem(existingType);
 
                               final JRadioButton radOneToMany = new JRadioButton();
                               final JRadioButton radManyToOne = new JRadioButton("", true);
@@ -1896,18 +1905,20 @@ public final class Workspace extends JPanel {
                                  }
                               });
 
-                              final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                              final JTextField txtNew = new JTextField();
+
+                              final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref,4dlu,pref");
                               editor.addLabel("Relationship", 1, 1);
                               editor.add(cboRelationships, 3, 1);
                               editor.addLabel("Search", 1, 3);
                               editor.add(txtSearch, 3, 3);
-                              editor.add(txtSearch, 3, 3);
+                              editor.addLabel("New", 1, 5);
+                              editor.add(txtNew, 3, 5);
                               editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
                               SwingUtil.showDialog(editor, app, "Change type", () -> {
 
-                                 final String newType = (String) cboRelationships.getSelectedItem();
-                                 if (newType == null || newType.equals(existingType)) return;
+                                 final String newType = txtNew.getText().trim().length() == 0 ? (String) cboRelationships.getSelectedItem() : txtNew.getText().trim().toUpperCase();
 
                                  app.model.graph().doInTransaction(new Committer() {
                                     @Override
@@ -1915,7 +1926,6 @@ public final class Workspace extends JPanel {
                                        final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
                                        for (String key : relationship.getPropertyKeys())
                                           newRelationship.setProperty(key, relationship.getProperty(key));
-
                                        relationship.delete();
                                     }
 

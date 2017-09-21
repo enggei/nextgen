@@ -2,10 +2,9 @@ package com.generator.generators.domain;
 
 import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.util.NeoUtil;
-import com.generator.neo.NeoModel;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -16,12 +15,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
-import static com.generator.util.NeoUtil.*;
-import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
-import static com.generator.util.NeoUtil.relate;
 import static com.generator.generators.project.ProjectPlugin.renderToFile;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 06.08.17.
@@ -29,15 +27,15 @@ import static com.generator.generators.project.ProjectPlugin.renderToFile;
 public class DomainPlugin extends Plugin {
 
    public enum Entities implements Label {
-      Domain, Entity, Property, Relation, Value
+      Domain, Entity, Property, Relation, Value, Visitor
    }
 
    public enum Properties {
-      relationCardinality
+      relationCardinality, visitorClass
    }
 
    public enum Relations implements RelationshipType {
-      ENTITY, INSTANCE, SRC, DST
+      ENTITY, INSTANCE, SRC, DST, VISITOR
    }
 
    public enum RelationCardinality {
@@ -124,6 +122,24 @@ public class DomainPlugin extends Plugin {
             }
          });
 
+         incoming(node, DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
+            final Node visitorNode = other(node, visitorRelation);
+
+            pop.add(new App.TransactionAction("Visit with " + getString(visitorNode, AppMotif.Properties.name.name()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  try {
+                     final DomainVisitor visitor = (DomainVisitor) Class.forName(getString(visitorNode, DomainPlugin.Properties.visitorClass.name())).
+                           getConstructor(Node.class, App.class).
+                           newInstance(visitorNode, app);
+                     visitor.visit(node);
+                  } catch (Exception ex) {
+                     SwingUtil.showException(ex, app);
+                  }
+               }
+            });
+         });
+
          pop.add(new App.TransactionAction("Add Property", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -183,7 +199,7 @@ public class DomainPlugin extends Plugin {
                      if (txtEntityName.getText().trim().length() == 0)
                         throw new IllegalStateException("Entity must have a name");
 
-                     final Node newEntityNode = getGraph().newNode(Entities.Entity, AppMotif.Properties.name.name(), txtEntityName.getText().trim());
+                     final Node newEntityNode = getGraph().findOrCreate(Entities.Entity, AppMotif.Properties.name.name(), txtEntityName.getText().trim());
                      fireNodesLoaded(newEntityNode, newEntityRelation(node, name, relationCardinality, newEntityNode));
                   }
 
@@ -235,7 +251,7 @@ public class DomainPlugin extends Plugin {
                   });
 
                } else if (hasLabel(selectedNode.getNode(), Entities.Relation)) {
-                  pop.add(new App.TransactionAction("Add " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> DST ->" + getNameAndLabelsFrom(node), app) {
+                  pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> DST ->" + getNameAndLabelsFrom(node), app) {
                      @Override
                      protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -251,6 +267,57 @@ public class DomainPlugin extends Plugin {
          }
 
       } else if (hasLabel(node, Entities.Relation)) {
+
+         pop.add(new App.TransactionAction("Add Property", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final String name = SwingUtil.showInputDialog("Property name", app);
+               if (name == null || name.length() == 0) return;
+
+               final AtomicBoolean exists = new AtomicBoolean(false);
+               new EntityRelationVisitor() {
+                  @Override
+                  public void onSingle(Node relationNode, Node dstNode) {
+                     if (name.equals(getString(relationNode, AppMotif.Properties.name.name()))) exists.set(true);
+                  }
+
+                  @Override
+                  public void onList(Node relationNode, Node dstNode) {
+                     if (name.equals(getString(relationNode, AppMotif.Properties.name.name()))) exists.set(true);
+                  }
+               }.visit(node);
+
+               if (exists.get()) {
+                  SwingUtil.showMessage(name + " already has a property named " + name, app);
+                  return;
+               }
+
+               final Node newPropertyNode = getGraph().newNode(Entities.Property, AppMotif.Properties.name.name(), name);
+               fireNodesLoaded(newPropertyNode, newEntityRelation(node, name, RelationCardinality.SINGLE, newPropertyNode));
+            }
+         });
+
+
+         if (selectedNodes.size() <= 20) {
+
+            for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+               if (hasLabel(selectedNode.getNode(), Entities.Entity)) {
+                  pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> src ->" + getNameAndLabelsFrom(node), app) {
+                     @Override
+                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                        // remove old SRC
+                        System.out.println("removing existing SRC");
+                        incoming(node, Relations.SRC).forEach(Relationship::delete);
+
+                        relate(selectedNode.getNode(), node, Relations.SRC);
+                     }
+                  });
+               }
+            }
+         }
+
          pop.add(new App.TransactionAction("Change cardinality", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -266,7 +333,6 @@ public class DomainPlugin extends Plugin {
          });
 
       } else if (hasLabel(node, DomainPlugin.Entities.Value)) {
-
          pop.add(new App.TransactionAction("Set value", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
@@ -279,6 +345,27 @@ public class DomainPlugin extends Plugin {
                node.setProperty(AppMotif.Properties.name.name(), newValue);
                fireNodeChanged(neoNode, AppMotif.Properties.name.name(), newValue);
             }
+         });
+
+      } else if (hasLabel(node, Entities.Visitor)) {
+
+         outgoing(node, DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
+
+            final Node nodeToVisit = other(node, visitorRelation);
+
+            pop.add(new App.TransactionAction("Visit " + getNameOrLabelFrom(nodeToVisit), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  try {
+                     final DomainVisitor visitor = (DomainVisitor) Class.forName(getString(node, Properties.visitorClass.name())).
+                           getConstructor(Node.class, App.class).
+                           newInstance(node, app);
+                     visitor.visit(nodeToVisit);
+                  } catch (Exception ex) {
+                     SwingUtil.showException(ex, app);
+                  }
+               }
+            });
          });
       }
 
@@ -610,6 +697,34 @@ public class DomainPlugin extends Plugin {
       }
    }
 
+   public static void renderMobX(Relationship rendererRelationship, Node node) {
+      final String packageName = getString(rendererRelationship, "package");
+      final File targetDir = getFile(other(node, rendererRelationship));
+
+      final String groupName = getString(node, AppMotif.Properties.name.name()) + "Visitor";
+
+      final Set<Node> visitedNodes = new LinkedHashSet<>();
+      final Map<String, NeoVisitorGroup.entityVisitST> visitorMethods = new LinkedHashMap<>();
+
+      final NeoVisitorGroup visitorGroup = new NeoVisitorGroup();
+
+      for (Relationship relationship : outgoing(node, Relations.ENTITY))
+         visitEntityNode(visitorMethods, visitedNodes, visitorGroup, other(node, relationship));
+
+      final NeoVisitorGroup.DomainVisitorST domainVisitorST = visitorGroup.newDomainVisitor().
+            setName(groupName).
+            setPackageName(packageName);
+
+      for (Map.Entry<String, NeoVisitorGroup.entityVisitST> visitSTEntry : visitorMethods.entrySet())
+         domainVisitorST.addEntitiesValue(visitSTEntry.getKey(), visitSTEntry.getValue());
+
+      try {
+         GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(domainVisitorST);
+      } catch (IOException ex) {
+         ex.printStackTrace();
+      }
+   }
+
    private static void visitEntityNode(Map<String, NeoVisitorGroup.entityVisitST> visitorMethods, Set<Node> visitedNodes, NeoVisitorGroup visitorGroup, Node entityNode) {
 
       if (visitedNodes.contains(entityNode)) return;
@@ -686,42 +801,6 @@ public class DomainPlugin extends Plugin {
                }
             });
          });
-      }
-   }
-
-   public static abstract class DomainVisitor {
-
-      final Set<Node> visited = new LinkedHashSet<>();
-
-      public void visit(Node node) {
-         if (node == null) return;
-         if (NeoUtil.hasLabel(node, Entities.Domain.name())) visitDomain(node);
-         if (NeoUtil.hasLabel(node, Entities.Entity.name())) visitEntity(node);
-         if (NeoUtil.hasLabel(node, Entities.Relation.name())) visitRelation(node);
-         if (NeoUtil.hasLabel(node, Entities.Property.name())) visitProperty(node);
-      }
-
-      void visitDomain(Node node) {
-         if (visited.contains(node)) return;
-         visited.add(node);
-         outgoing(node, Relations.ENTITY).forEach(relationship -> visit(other(node, relationship)));
-      }
-
-      void visitEntity(Node node) {
-         if (visited.contains(node)) return;
-         visited.add(node);
-         outgoing(node, Relations.SRC).forEach(relationship -> visit(other(node, relationship)));
-      }
-
-      void visitRelation(Node node) {
-         if (visited.contains(node)) return;
-         visited.add(node);
-         outgoing(node, Relations.DST).forEach(relationship -> visit(other(node, relationship)));
-      }
-
-      void visitProperty(Node node) {
-         if (visited.contains(node)) return;
-         visited.add(node);
       }
    }
 }
