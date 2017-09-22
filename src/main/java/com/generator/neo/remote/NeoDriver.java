@@ -9,12 +9,9 @@ import org.neo4j.driver.v1.types.Entity;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.event.TransactionData;
-import org.neo4j.graphdb.event.TransactionEventHandler;
 
 import java.net.URI;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import static com.generator.neo.remote.NeoNode.*;
@@ -25,6 +22,11 @@ import static org.neo4j.driver.v1.Values.parameters;
  * Created by Ernst Sognnes on 08.07.17.
  */
 public class NeoDriver implements AutoCloseable {
+
+   public static final String CYPHER_DROP_ALL = "MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r";
+
+   private static void ignoreUpdate(NeoTransactionContext context, StatementResult data) {
+   }
 
    interface NodeWithRelationships {
       Node node();
@@ -42,7 +44,7 @@ public class NeoDriver implements AutoCloseable {
    // TODO: Multiple session transactions
    private NeoTransaction transaction;	// Current transaction
 
-   private Collection<TransactionEventHandler<Object>> transactionEventHandlers = new CopyOnWriteArrayList<>();
+   protected NeoTransactionEventHandler txEventHandler = new NeoTransactionEventHandler();
 
    public NeoDriver(URI uri, String username, String password) {
       this.uri = uri;
@@ -122,26 +124,22 @@ public class NeoDriver implements AutoCloseable {
       return transaction;	// Continue using open transaction
    }
 
-   protected StatementResult executeCypher(final String cypher) {
-      System.out.println("executeCypher: " + cypher);
-      try ( Session session = driver.session() ) {
-         return session.run(cypher);
-      }
-      catch (ServiceUnavailableException e) {
-         System.err.println(e.getMessage());
-         throw e;
-      }
+   public StatementResult executeCypher(final String cypher) {
+      return executeCypher(new Statement(cypher));
    }
 
-   private StatementResult executeCypher(final Statement statement) {
-      System.out.println("executeCypher: " + statement.toString());
-      try ( Session session = driver.session() ) {
-         return session.run(statement);
-      }
-      catch (ServiceUnavailableException e) {
-         System.err.println(e.getMessage());
-         throw e;
-      }
+   protected StatementResult executeCypher(final Statement statement) {
+      return writeTransaction(tx -> {
+         System.out.println("executeCypher: " + statement.toString());
+         try ( Session session = driver.session() ) {
+            return session.run(statement);
+         }
+         catch (ServiceUnavailableException e) {
+            System.err.println(e.getMessage());
+            throw e;
+         }
+
+      }, NeoDriver::ignoreUpdate);
    }
 
    public Node readSingleNode(final String cypher) {
@@ -336,8 +334,7 @@ public class NeoDriver implements AutoCloseable {
       return session.readTransaction(transactionWork::execute);
    }
 
-   @SuppressWarnings("unchecked")
-   protected <T> T writeTransaction(TransactionWork<T> transactionWork, ContextUpdater<NeoTransactionContext, T> updater) {
+   private <T> T writeTransaction(TransactionWork<T> transactionWork, ContextUpdater<NeoTransactionContext, T> updater) {
       if (inTransaction()) {
          T t = transactionWork.execute(getTransaction().getTx());
          updater.update(getTransaction().getContext(), t);
@@ -355,12 +352,6 @@ public class NeoDriver implements AutoCloseable {
 
    static <T> T writeTransaction(Session session, TransactionWork<T> transactionWork) {
       return session.writeTransaction(transactionWork::execute);
-   }
-
-   public void dropAll() {
-      writeTransaction(tx -> tx.run("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n, r"), (context, data) -> {
-
-      });
    }
 
    @Deprecated
@@ -1078,41 +1069,8 @@ public class NeoDriver implements AutoCloseable {
       return sb.toString();
    }
 
-   // Inspiration from org.neo4j.kernel.internal.TransactionEventHandlers
-   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> handler) {
-      this.transactionEventHandlers.add(handler);
-      return handler;
-   }
-
-   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> handler) {
-      if (!transactionEventHandlers.remove(handler)) {
-         throw new IllegalStateException(handler + " istn't registered");
-      }
-      return handler;
-   }
-
-   protected void fireBeforeCommit(TransactionData data) throws Exception {
-      fireBeforeTransactionCommit(transactionEventHandlers, data);
-   }
-
-   protected void fireAfterCommit(TransactionData data, Object state) throws Exception {
-      fireAfterTransactionCommit(transactionEventHandlers, data, state);
-   }
-
-   protected void fireAfterRollback(TransactionData data, Object state) {
-      fireAfterTransactionRollback(transactionEventHandlers, data, state);
-   }
-
-   private static void fireBeforeTransactionCommit(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data) throws Exception {
-      for (TransactionEventHandler<Object> handler : handlers) handler.beforeCommit(data);
-   }
-
-   private static void fireAfterTransactionCommit(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data, Object state) {
-      for (TransactionEventHandler<Object> handler : handlers) handler.afterCommit(data, state);
-   }
-
-   private static void fireAfterTransactionRollback(final Collection<TransactionEventHandler<Object>> handlers, TransactionData data, Object state) {
-      for (TransactionEventHandler<Object> handler : handlers) handler.afterRollback(data, state);
+   NeoTransactionEventHandler txEventHandler() {
+	   return txEventHandler;
    }
 
 }

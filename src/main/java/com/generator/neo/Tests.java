@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.getCachedRelationship;
+import static com.generator.neo.remote.NeoDriver.CYPHER_DROP_ALL;
 import static com.generator.neo.remote.NeoNode.fromDriverNode;
 import static com.generator.neo.remote.NeoNode.uuidOf;
 import static com.generator.util.NeoUtil.TAG_UUID;
@@ -66,7 +67,7 @@ public class Tests {
       RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
          model -> System.out.println("closed"));
 
-      remote.dropAll();
+      remote.query(CYPHER_DROP_ALL);
 
       UUID uuid = TEST_NODE_UUID[0];
 
@@ -213,7 +214,7 @@ public class Tests {
    public void cache() {
       NeoDriver neoDriver = new NeoDriver(NEO4J_URI, USERNAME, PASSWORD);
 
-      neoDriver.dropAll();
+      neoDriver.executeCypher(CYPHER_DROP_ALL);
 
       UUID uuid1 = UUID.fromString("5f955916-75cc-499c-93af-8dcab726f08b");
       UUID uuid2 = UUID.fromString("6fed3bba-b35f-48e7-9c61-2d4e5e36afd4");
@@ -266,6 +267,7 @@ public class Tests {
 
          @Override
          public Object beforeCommit(TransactionData transactionData) throws Exception {
+            System.out.println("before commit");
             transactionData.deletedNodes().forEach(node -> deletedNodes.add(node.getId()));
             transactionData.deletedRelationships().forEach(relationship -> deletedRelations.add(relationship.getId()));
             transactionData.createdNodes().forEach(addedNodes::add);
@@ -276,6 +278,7 @@ public class Tests {
 
          @Override
          public void afterCommit(TransactionData data, Object state) {
+            System.out.println("after commit");
             if (!deletedNodes.isEmpty()) {
                System.out.println("deletedNodes: " + deletedNodes.size());
                deletedNodes.clear();
@@ -308,48 +311,77 @@ public class Tests {
          }
       });
 
-      // todo perhaps use a cypher-query for this
-      ((NeoDriver)neoModel).dropAll();
+      // Test custom state object
+      neoModel.registerTransactionEventHandler(new TransactionEventHandler<Object>() {
+
+         @Override
+         public Object beforeCommit(TransactionData data) throws Exception {
+            System.out.println("before commit");
+            return "Supperådet";
+         }
+
+         @Override
+         public void afterCommit(TransactionData data, Object state) {
+            assertEquals("State object does not match!", "Supperådet", state);
+            System.out.println("after commit: " + state);
+         }
+
+         @Override
+         public void afterRollback(TransactionData data, Object state) {
+            assertEquals("State object does not match!", "Supperådet", state);
+            System.out.println("after rollback: " + state);
+         }
+      });
+
+      neoModel.query(CYPHER_DROP_ALL);
 
       // Success
-      neoModel.doInTransaction(new NeoModel.Committer() {
-         @Override
-         public void doAction(Transaction tx) throws Throwable {
-            final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Country"));
-            country.setProperty("name", "Kongo");
+      neoModel.doInTransaction(tx -> {
+         final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Country"));
+         country.setProperty("name", "Kongo");
 
-            final org.neo4j.graphdb.Node person = neoModel.createNode(newLabel("Person"));
-            person.setProperty("name", "Bongo");
+         final org.neo4j.graphdb.Node person = neoModel.createNode(newLabel("Person"));
+         person.setProperty("name", "Bongo");
 
-            person.createRelationshipTo(country, newRelationshipType("FROM"));
-         }
+         person.createRelationshipTo(country, newRelationshipType("FROM"));
 
-         @Override
-         public void exception(Throwable throwable) {
-            System.err.println(throwable.getMessage());
-         }
-      });
+      }, throwable -> System.err.println(throwable.getMessage()));
 
       // Failure
-      neoModel.doInTransaction(new NeoModel.Committer() {
-         @Override
-         public void doAction(Transaction tx) throws Throwable {
-            final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Country"));
-            country.setProperty("name", "USA");
+      neoModel.doInTransaction(tx -> {
 
-            final org.neo4j.graphdb.Node person = neoModel.createNode(newLabel("Person"));
-            person.setProperty("name", "Drumph");
+         final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Country"));
+         country.setProperty("name", "USA");
 
-            person.createRelationshipTo(country, newRelationshipType("FROM"));
+         final org.neo4j.graphdb.Node person = neoModel.createNode(newLabel("Person"));
+         person.setProperty("name", "Drumph");
 
-            throw new Exception("TEST EXCEPTION DURING TRANSACTION");
-         }
+         person.createRelationshipTo(country, newRelationshipType("FROM"));
 
-         @Override
-         public void exception(Throwable throwable) {
-            System.out.println(throwable.getMessage());
-         }
-      });
+         throw new Exception("TEST EXCEPTION DURING TRANSACTION");
+
+      }, throwable -> System.out.println(throwable.getMessage()));
+
+      // Terminate
+      neoModel.doInTransaction(tx -> {
+         final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Animal"));
+         country.setProperty("name", "Pig");
+
+         tx.terminate();
+
+      }, throwable -> System.err.println(throwable.getMessage()));
+
+      // Success
+      neoModel.doInTransaction(tx -> {
+         final org.neo4j.graphdb.Node country = neoModel.createNode(newLabel("Country"));
+         country.setProperty("name", "North Korea");
+
+         final org.neo4j.graphdb.Node person = neoModel.createNode(newLabel("Person"));
+         person.setProperty("name", "Rocket Man");
+
+         person.createRelationshipTo(country, newRelationshipType("FROM"));
+
+      }, throwable -> System.err.println(throwable.getMessage()));
    }
 
    static Label newLabel(final String name) {
