@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.generators.project.ProjectPlugin.renderToFile;
@@ -57,6 +56,10 @@ public class DomainPlugin extends Plugin {
 
    @Override
    protected void addActionsTo(JMenu menu) {
+
+      addShowMenu(menu, Entities.Domain);
+      addShowMenu(menu, Entities.Visitor);
+
       menu.add(new App.TransactionAction("New Domain", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -448,17 +451,48 @@ public class DomainPlugin extends Plugin {
                      protected void actionPerformed(ActionEvent e, Transaction tx12) throws Exception {
 
                         if (hasLabel(dstNode, Entities.Property)) {
-                           final String value = SwingUtil.showInputDialog("Value", app);
-                           if (value == null || value.trim().length() == 0) return;
 
-                           final Set<Node> newNodes = new LinkedHashSet<>();
-                           final Node newDstNode = newValueNode(value.trim());
-                           relate(node, newDstNode, RelationshipType.withName(parameterName));
-                           newNodes.add(newDstNode);
-                           fireNodesLoaded(newNodes);
+                           final JTextField[] txtValues = new JTextField[5];
+
+                           final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("100dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
+                           editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                           int row = 1;
+                           for (int i = 0; i < txtValues.length; i++) {
+                              editor.addLabel("Value " + (i + 1), 1, row);
+                              editor.add(txtValues[i] = new JTextField(), 3, row);
+                              row += 2;
+                           }
+
+                           SwingUtil.showDialog(editor, app, "Values", new SwingUtil.OnSave() {
+                              @Override
+                              public void verifyAndSave() throws Exception {
+
+                                 getGraph().doInTransaction(new NeoModel.Committer() {
+                                    @Override
+                                    public void doAction(Transaction tx) throws Throwable {
+                                       final Set<Node> newNodes = new LinkedHashSet<>();
+                                       for (JTextField txtValue : txtValues) {
+                                          final String value = txtValue.getText().trim();
+                                          if (value.length() == 0) continue;
+                                          final Node newDstNode = newValueNode(value.trim());
+                                          relate(node, newDstNode, RelationshipType.withName(parameterName));
+                                          newNodes.add(newDstNode);
+                                       }
+                                       if (newNodes.isEmpty()) return;
+
+                                       fireNodesLoaded(newNodes);
+                                    }
+
+                                    @Override
+                                    public void exception(Throwable throwable) {
+                                       SwingUtil.showExceptionNoStack(app, throwable);
+                                    }
+                                 });
+                              }
+                           });
 
                         } else {
-
                            showNewEntityDialog(parameterName, dstNode, node);
                         }
                      }
@@ -770,7 +804,7 @@ public class DomainPlugin extends Plugin {
    }
 
    protected Node newValueNode(String value) {
-      return getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
+      return getGraph().findOrCreate(Entities.Value, AppMotif.Properties.name.name(), value);
    }
 
    private Node newInstanceNode(String label, Node referenceNode) {

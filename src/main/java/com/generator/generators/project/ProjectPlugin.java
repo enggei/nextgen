@@ -7,6 +7,7 @@ import com.generator.app.Workspace;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.mobx.MobXAppVisitor;
 import com.generator.generators.mobx.MobXModelVisitor;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -82,14 +83,8 @@ public class ProjectPlugin extends DomainPlugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
-      final JMenu showMenu = new JMenu("Projects");
-      getGraph().findNodes(Entities.Project).forEachRemaining(node -> showMenu.add(new App.TransactionAction("Show " + getNameAndLabelsFrom(node), app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(true, node);
-         }
-      }));
-      menu.add(showMenu);
+     addShowMenu(menu, Entities.Project);
+     addShowMenu(menu, Entities.Directory);
 
       menu.add(new App.TransactionAction("New Project", app) {
          @Override
@@ -206,11 +201,9 @@ public class ProjectPlugin extends DomainPlugin {
 
             if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Entity)) {
 
-//               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
-//                  return;
-
                // todo: using Entity.Renderer, try to make a pattern which puts Renderers in apropriate domains (instead of Project-hasLabel(..))
-               pop.add(new App.TransactionAction("Add MobX renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+
+               pop.add(new App.TransactionAction("Add MobX-Model renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -220,6 +213,28 @@ public class ProjectPlugin extends DomainPlugin {
                      final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
 
                      final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model" , DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
+                     relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
+
+                     final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
+                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                     rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
+                     rendererRelationship.setProperty(Properties.file.name(), className);
+                     rendererRelationship.setProperty(Properties.extension.name(), "js");
+
+                     fireNodesLoaded(visitorNode);
+                  }
+               });
+
+               pop.add(new App.TransactionAction("Add MobX-App renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final String packageName = SwingUtil.showInputDialog("Package", app);
+                     if (packageName == null) return;
+//
+                     final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+
+                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX App" , DomainPlugin.Properties.visitorClass.name(), MobXAppVisitor.class.getCanonicalName());
                      relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
 
                      final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);

@@ -3,14 +3,16 @@ package com.generator.app;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
-import java.util.Iterator;
+import java.awt.event.ActionEvent;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.generator.app.AppEvents.NODE_CHANGED;
 import static com.generator.app.AppEvents.NODE_LOAD;
+import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
 
 /**
  * Created 03.08.17.
@@ -31,6 +33,17 @@ public abstract class Plugin {
 
    protected abstract void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes);
 
+   protected void addShowMenu(JMenu menu, Label label) {
+      final JMenu showMenu = new JMenu(label.name());
+      getGraph().findNodes(label).forEachRemaining(node -> showMenu.add(new App.TransactionAction("Show " + getNameAndLabelsFrom(node), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            fireNodesLoaded(true, node);
+         }
+      }));
+      menu.add(showMenu);
+   }
+
    public abstract void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane);
 
    public NeoModel getGraph() {
@@ -41,13 +54,7 @@ public abstract class Plugin {
       fireNodesLoaded(false, nodes);
    }
 
-   protected void fireNodesLoaded(Iterator<Node> nodes) {
-      final Set<Node> nodeSet = new LinkedHashSet<>();
-      while (nodes.hasNext()) nodeSet.add(nodes.next());
-      fireNodesLoaded(nodeSet);
-   }
-
-   protected void fireNodesLoaded(boolean scrollTo, Node... nodes) {
+   private void fireNodesLoaded(boolean scrollTo, Node... nodes) {
       final Set<AppEvents.NodeLoadEvent> nodeEvents = new LinkedHashSet<>();
       boolean scrollable = true;
       for (Node node : nodes) {

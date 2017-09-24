@@ -1,5 +1,6 @@
 package com.generator.generators.domain;
 
+import com.generator.app.App;
 import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -15,18 +16,19 @@ import static com.generator.util.NeoUtil.*;
  */
 public abstract class DomainVisitor {
 
-//   protected final Set<Node> visitedNodes = new LinkedHashSet<>();
+   private final Set<Relationship> visitedRelations = new LinkedHashSet<>();
+
    protected final Stack<Node> nodeStack = new Stack<>();
-   protected final Set<Relationship> visitedRelations = new LinkedHashSet<>();
    protected final StringBuilder delim = new StringBuilder("");
    protected final boolean debug;
 
-   public DomainVisitor() {
-      this(false);
-   }
+   protected final Node visitorNode;
+   protected final App app;
 
-   public DomainVisitor(boolean debug) {
+   public DomainVisitor(boolean debug, Node visitorNode, App app) {
       this.debug = debug;
+      this.visitorNode = visitorNode;
+      this.app = app;
    }
 
    public void visit(Node node) {

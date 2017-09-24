@@ -93,6 +93,8 @@ public class EasyFlowPlugin extends DomainPlugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
+      addShowMenu(menu, Entities.Flow);
+
       menu.add(new App.TransactionAction("New Flow", app) {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -106,13 +108,6 @@ public class EasyFlowPlugin extends DomainPlugin {
             // set name-property = name
             relate(newNode, newValueNode(name), RelationshipType.withName(AppMotif.Properties.name.name()));
             fireNodesLoaded(newNode);
-         }
-      });
-
-      menu.add(new App.TransactionAction("Show all Flows", app) {
-         @Override
-         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(getGraph().findNodes(Flow));
          }
       });
 

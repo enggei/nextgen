@@ -62,14 +62,7 @@ public class StringTemplatePlugin extends DomainPlugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
-      final JMenu showMenu = new JMenu("STGroups");
-      getGraph().findNodes(Entities.STGroup).forEachRemaining(node -> showMenu.add(new App.TransactionAction("Show " + getNameAndLabelsFrom(node), app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(true, node);
-         }
-      }));
-      menu.add(showMenu);
+      addShowMenu(menu, Entities.STGroup);
 
       menu.add(new AbstractAction("Parse STG file") {
          @Override
@@ -153,6 +146,8 @@ public class StringTemplatePlugin extends DomainPlugin {
          }
       });
    }
+
+
 
    @Override
    protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {

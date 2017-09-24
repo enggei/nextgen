@@ -47,7 +47,7 @@ public class DockerPlugin extends DomainPlugin {
 
    @Override
    protected void addActionsTo(JMenu menu) {
-      super.addActionsTo(menu);
+      addShowMenu(menu, Entities.Dockerfile);
    }
 
    @Override

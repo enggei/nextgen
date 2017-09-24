@@ -66,6 +66,8 @@ public class MySQLPlugin extends DomainPlugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
+      addShowMenu(menu, Entities.Database);
+
       menu.add(new App.TransactionAction("Parse sql", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {

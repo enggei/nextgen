@@ -16,13 +16,9 @@ public class MobXModelVisitor extends DomainVisitor {
 
    private final MobXGroup mobXGroup = new MobXGroup();
    private final Stack<MobXGroup.ModelST> modelStack = new Stack<>();
-   private final Node visitorNode;
-   private final App app;
 
    public MobXModelVisitor(Node visitorNode, App app) {
-      super(true);
-      this.visitorNode = visitorNode;
-      this.app = app;
+      super(true, visitorNode, app);
    }
 
    @Override

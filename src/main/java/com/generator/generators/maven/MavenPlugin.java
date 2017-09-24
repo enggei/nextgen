@@ -54,14 +54,7 @@ public class MavenPlugin extends DomainPlugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
-      final JMenu showMenu = new JMenu("Poms");
-      getGraph().findNodes(Entities.Pom).forEachRemaining(node -> showMenu.add(new App.TransactionAction("Show " + getNameAndLabelsFrom(node), app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(true, node);
-         }
-      }));
-      menu.add(showMenu);
+      addShowMenu(menu, Entities.Pom);
 
       menu.add(new AbstractAction("Import from Maven") {
          @Override

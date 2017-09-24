@@ -375,7 +375,7 @@ final class InformationPanel extends JPanel {
          pop.add(new App.TransactionAction("New", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
-               app.events.firePropertyChange(NODE_LOAD, new NodeLoadEvent(app.model.graph().newNode((Label) getUserObject())));
+               app.events.firePropertyChange(NODE_LOAD, Collections.singleton(new NodeLoadEvent(app.model.graph().newNode((Label) getUserObject()))));
             }
          });
 

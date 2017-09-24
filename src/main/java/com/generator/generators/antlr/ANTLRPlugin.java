@@ -37,6 +37,9 @@ public class ANTLRPlugin extends DomainPlugin {
 
    @Override
    protected void addActionsTo(JMenu menu) {
+
+      addShowMenu(menu, Entities.GrammarSpec);
+
       menu.add(new App.TransactionAction("Import grammar", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {

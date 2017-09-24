@@ -103,8 +103,6 @@ public final class Workspace extends JPanel {
 
          final PBasicInputEventHandler canvasInputListener = new PBasicInputEventHandler() {
 
-            private Point2D mousePosition;
-
             @Override
             public void mouseEntered(PInputEvent event) {
                if (!this.equals(event.getInputManager().getKeyboardFocus())) {
@@ -190,7 +188,7 @@ public final class Workspace extends JPanel {
                                  app.model.graph().doInTransaction(new NeoModel.Committer() {
                                     @Override
                                     public void doAction(Transaction tx) throws Throwable {
-                                       app.events.firePropertyChange(NODE_LOAD, new AppEvents.NodeLoadEvent(app.model.graph().newNode(Label.label(selectedLabel))));
+                                       app.events.firePropertyChange(NODE_LOAD, Collections.singleton(new AppEvents.NodeLoadEvent(app.model.graph().newNode(Label.label(selectedLabel)))));
                                     }
 
                                     @Override
@@ -864,7 +862,6 @@ public final class Workspace extends JPanel {
 
             @Override
             public void mouseMoved(PInputEvent event) {
-               mousePosition = event.getCanvasPosition();
                invalidate();
                repaint();
             }
@@ -1069,6 +1066,35 @@ public final class Workspace extends JPanel {
 
       @NotNull
       private Point2D newRandomPosition() {
+
+         final Point mousePosition = NodeCanvas.this.getMousePosition();
+         System.out.println("mousePosition = " + mousePosition);
+
+         System.out.println("getBounds() = " + getBounds());
+         System.out.println("getCamera().getViewBounds() = " + getCamera().getViewBounds());
+         System.out.println("getCamera().getFullBounds() = " + getCamera().getFullBounds());
+         System.out.println("getCamera().getUnionOfLayerFullBounds() = " + getCamera().getUnionOfLayerFullBounds());
+         System.out.println("getCamera().getFullBoundsReference() = " + getCamera().getFullBoundsReference());
+         System.out.println("getCamera().getBoundsReference() = " + getCamera().getBoundsReference());
+         System.out.println("getCamera().getGlobalBounds() = " + getCamera().getGlobalBounds());
+         System.out.println("getCamera().getGlobalFullBounds() = " + getCamera().getGlobalFullBounds());
+
+
+         /*
+         *
+            mousePosition = java.awt.Point[x=445,y=693]
+            getBounds() = java.awt.Rectangle[x=0,y=0,width=1173,height=993]
+            getCamera().getViewBounds() = PBounds[x=-3877.1215068783063,y=-3526.739733684169,width=1609.0534979423867,height=1362.139917695473]
+            getCamera().getFullBounds() = PBounds[x=0.0,y=0.0,width=1173.0,height=993.0]
+            getCamera().getUnionOfLayerFullBounds() = PBounds[x=-3751.4834371371794,y=-3470.2029259909928,width=1740.1707611166407,height=1111.4448238225987]
+            getCamera().getFullBoundsReference() = PBounds[x=0.0,y=0.0,width=1173.0,height=993.0]
+            getCamera().getBoundsReference() = PBounds[x=0.0,y=0.0,width=1173.0,height=993.0]
+            getCamera().getGlobalBounds() = PBounds[x=0.0,y=0.0,width=1173.0,height=993.0]
+            getCamera().getGlobalFullBounds() = PBounds[x=0.0,y=0.0,width=1173.0,height=993.0]
+         * */
+
+
+         // Point2D.Double[-3072.594757907113, -2845.6697748364327]
          return nodeCanvas.getCamera().getViewBounds().getCenter2D();
       }
 

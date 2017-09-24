@@ -1,6 +1,5 @@
 package com.generator.app;
 
-import com.generator.neo.NeoModel;
 import com.generator.generators.antlr.ANTLRPlugin;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
@@ -11,6 +10,7 @@ import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
@@ -30,8 +30,8 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.util.NeoUtil.*;
 import static com.generator.app.AppEvents.*;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 06.07.17.
@@ -154,8 +154,10 @@ public class App extends JFrame {
             @Override
             protected void propertyChange(Object oldValue, Object newValue) {
                if (plugins.isEmpty()) {
+
+                  // todo test of Label-mapping
+
                   plugins.add(new StringTemplatePlugin(App.this));
-                  plugins.add(new ProjectPlugin(App.this));
                   plugins.add(new JavaPlugin(App.this));
                   plugins.add(new DockerPlugin(App.this));
                   plugins.add(new MySQLPlugin(App.this));
@@ -164,6 +166,7 @@ public class App extends JFrame {
                   plugins.add(new ANTLRPlugin(App.this));
                   plugins.add(new SSHPlugin(App.this));
                   plugins.add(new DomainPlugin(App.this));
+                  plugins.add(new ProjectPlugin(App.this));
                }
             }
          });
