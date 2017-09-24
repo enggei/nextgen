@@ -31,7 +31,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -61,6 +61,57 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	public boolean inOption() {
       return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
+		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
+		this.inPropertyName.push(true);
+	}
+
+	public void exitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
+		onExit();
+		this.inPropertyName.pop();
+	}
+
+	public boolean inPropertyName() {
+      return !inPropertyName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
+
+	@Override
+	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
+		this.inDefaultValue.push(true);
+	}
+
+	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
+		onExit();
+		this.inDefaultValue.pop();
+	}
+
+	public boolean inDefaultValue() {
+      return !inDefaultValue.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
@@ -248,57 +299,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	public boolean inExtensionMax() {
       return !inExtensionMax.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
-		this.inPropertyName.push(true);
-	}
-
-	public void exitPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		onExit();
-		this.inPropertyName.pop();
-	}
-
-	public boolean inPropertyName() {
-      return !inPropertyName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDefaultValue = new java.util.Stack<>();
-
-	@Override
-	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
-		this.inDefaultValue.push(true);
-	}
-
-	public void exitDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		onExit();
-		this.inDefaultValue.pop();
-	}
-
-	public boolean inDefaultValue() {
-      return !inDefaultValue.isEmpty(); 
    }
 
 }

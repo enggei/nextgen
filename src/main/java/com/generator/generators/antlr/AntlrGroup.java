@@ -870,7 +870,7 @@ public final class AntlrGroup {
 		"   private void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.name);\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -929,7 +929,7 @@ public final class AntlrGroup {
 		"   private void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.name);\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 

@@ -31,7 +31,7 @@ public class css3NodeListener extends css3BaseListener {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -95,6 +95,499 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inNumber() {
       return !inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
+
+	@Override
+	public void enterStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		onEnter(new Node("Stylesheet", arg.getText(), arg.getStart().getText()));
+		this.inStylesheet.push(true);
+	}
+
+	public void exitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		onExit();
+		this.inStylesheet.pop();
+	}
+
+	public boolean inStylesheet() {
+      return !inStylesheet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodCharset = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		onEnter(new Node("GoodCharset", arg.getText(), arg.getStart().getText()));
+		this.inGoodCharset.push(true);
+	}
+
+	public void exitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		onExit();
+		this.inGoodCharset.pop();
+	}
+
+	public boolean inGoodCharset() {
+      return !inGoodCharset.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBadCharset = new java.util.Stack<>();
+
+	@Override
+	public void enterBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		onEnter(new Node("BadCharset", arg.getText(), arg.getStart().getText()));
+		this.inBadCharset.push(true);
+	}
+
+	public void exitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		onExit();
+		this.inBadCharset.pop();
+	}
+
+	public boolean inBadCharset() {
+      return !inBadCharset.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		onEnter(new Node("GoodImport", arg.getText(), arg.getStart().getText()));
+		this.inGoodImport.push(true);
+	}
+
+	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		onExit();
+		this.inGoodImport.pop();
+	}
+
+	public boolean inGoodImport() {
+      return !inGoodImport.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();
+
+	@Override
+	public void enterBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		onEnter(new Node("BadImport", arg.getText(), arg.getStart().getText()));
+		this.inBadImport.push(true);
+	}
+
+	public void exitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		onExit();
+		this.inBadImport.pop();
+	}
+
+	public boolean inBadImport() {
+      return !inBadImport.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		onEnter(new Node("GoodNamespace", arg.getText(), arg.getStart().getText()));
+		this.inGoodNamespace.push(true);
+	}
+
+	public void exitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		onExit();
+		this.inGoodNamespace.pop();
+	}
+
+	public boolean inGoodNamespace() {
+      return !inGoodNamespace.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBadNamespace = new java.util.Stack<>();
+
+	@Override
+	public void enterBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
+		onEnter(new Node("BadNamespace", arg.getText(), arg.getStart().getText()));
+		this.inBadNamespace.push(true);
+	}
+
+	public void exitBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
+		onExit();
+		this.inBadNamespace.pop();
+	}
+
+	public boolean inBadNamespace() {
+      return !inBadNamespace.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNamespacePrefix = new java.util.Stack<>();
+
+	@Override
+	public void enterNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
+		onEnter(new Node("NamespacePrefix", arg.getText(), arg.getStart().getText()));
+		this.inNamespacePrefix.push(true);
+	}
+
+	public void exitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
+		onExit();
+		this.inNamespacePrefix.pop();
+	}
+
+	public boolean inNamespacePrefix() {
+      return !inNamespacePrefix.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMedia = new java.util.Stack<>();
+
+	@Override
+	public void enterMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
+		onEnter(new Node("Media", arg.getText(), arg.getStart().getText()));
+		this.inMedia.push(true);
+	}
+
+	public void exitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
+		onExit();
+		this.inMedia.pop();
+	}
+
+	public boolean inMedia() {
+      return !inMedia.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMediaQueryList = new java.util.Stack<>();
+
+	@Override
+	public void enterMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
+		onEnter(new Node("MediaQueryList", arg.getText(), arg.getStart().getText()));
+		this.inMediaQueryList.push(true);
+	}
+
+	public void exitMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
+		onExit();
+		this.inMediaQueryList.pop();
+	}
+
+	public boolean inMediaQueryList() {
+      return !inMediaQueryList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMediaQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
+		onEnter(new Node("MediaQuery", arg.getText(), arg.getStart().getText()));
+		this.inMediaQuery.push(true);
+	}
+
+	public void exitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
+		onExit();
+		this.inMediaQuery.pop();
+	}
+
+	public boolean inMediaQuery() {
+      return !inMediaQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMediaType = new java.util.Stack<>();
+
+	@Override
+	public void enterMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
+		onEnter(new Node("MediaType", arg.getText(), arg.getStart().getText()));
+		this.inMediaType.push(true);
+	}
+
+	public void exitMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
+		onExit();
+		this.inMediaType.pop();
+	}
+
+	public boolean inMediaType() {
+      return !inMediaType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMediaExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
+		onEnter(new Node("MediaExpression", arg.getText(), arg.getStart().getText()));
+		this.inMediaExpression.push(true);
+	}
+
+	public void exitMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
+		onExit();
+		this.inMediaExpression.pop();
+	}
+
+	public boolean inMediaExpression() {
+      return !inMediaExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMediaFeature = new java.util.Stack<>();
+
+	@Override
+	public void enterMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
+		onEnter(new Node("MediaFeature", arg.getText(), arg.getStart().getText()));
+		this.inMediaFeature.push(true);
+	}
+
+	public void exitMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
+		onExit();
+		this.inMediaFeature.pop();
+	}
+
+	public boolean inMediaFeature() {
+      return !inMediaFeature.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPage = new java.util.Stack<>();
+
+	@Override
+	public void enterPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
+		onEnter(new Node("Page", arg.getText(), arg.getStart().getText()));
+		this.inPage.push(true);
+	}
+
+	public void exitPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
+		onExit();
+		this.inPage.pop();
+	}
+
+	public boolean inPage() {
+      return !inPage.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPseudoPage = new java.util.Stack<>();
+
+	@Override
+	public void enterPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
+		onEnter(new Node("PseudoPage", arg.getText(), arg.getStart().getText()));
+		this.inPseudoPage.push(true);
+	}
+
+	public void exitPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
+		onExit();
+		this.inPseudoPage.pop();
+	}
+
+	public boolean inPseudoPage() {
+      return !inPseudoPage.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSelectorGroup = new java.util.Stack<>();
+
+	@Override
+	public void enterSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
+		onEnter(new Node("SelectorGroup", arg.getText(), arg.getStart().getText()));
+		this.inSelectorGroup.push(true);
+	}
+
+	public void exitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
+		onExit();
+		this.inSelectorGroup.pop();
+	}
+
+	public boolean inSelectorGroup() {
+      return !inSelectorGroup.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
+
+	@Override
+	public void enterSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
+		onEnter(new Node("Selector", arg.getText(), arg.getStart().getText()));
+		this.inSelector.push(true);
+	}
+
+	public void exitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
+		onExit();
+		this.inSelector.pop();
+	}
+
+	public boolean inSelector() {
+      return !inSelector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCombinator = new java.util.Stack<>();
+
+	@Override
+	public void enterCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
+		onEnter(new Node("Combinator", arg.getText(), arg.getStart().getText()));
+		this.inCombinator.push(true);
+	}
+
+	public void exitCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
+		onExit();
+		this.inCombinator.pop();
+	}
+
+	public boolean inCombinator() {
+      return !inCombinator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimpleSelectorSequence = new java.util.Stack<>();
+
+	@Override
+	public void enterSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
+		onEnter(new Node("SimpleSelectorSequence", arg.getText(), arg.getStart().getText()));
+		this.inSimpleSelectorSequence.push(true);
+	}
+
+	public void exitSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
+		onExit();
+		this.inSimpleSelectorSequence.pop();
+	}
+
+	public boolean inSimpleSelectorSequence() {
+      return !inSimpleSelectorSequence.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeSelector = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
+		onEnter(new Node("TypeSelector", arg.getText(), arg.getStart().getText()));
+		this.inTypeSelector.push(true);
+	}
+
+	public void exitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
+		onExit();
+		this.inTypeSelector.pop();
+	}
+
+	public boolean inTypeSelector() {
+      return !inTypeSelector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeNamespacePrefix = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
+		onEnter(new Node("TypeNamespacePrefix", arg.getText(), arg.getStart().getText()));
+		this.inTypeNamespacePrefix.push(true);
+	}
+
+	public void exitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
+		onExit();
+		this.inTypeNamespacePrefix.pop();
+	}
+
+	public boolean inTypeNamespacePrefix() {
+      return !inTypeNamespacePrefix.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElementName = new java.util.Stack<>();
+
+	@Override
+	public void enterElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		onEnter(new Node("ElementName", arg.getText(), arg.getStart().getText()));
+		this.inElementName.push(true);
+	}
+
+	public void exitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		onExit();
+		this.inElementName.pop();
+	}
+
+	public boolean inElementName() {
+      return !inElementName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUniversal = new java.util.Stack<>();
+
+	@Override
+	public void enterUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
+		onEnter(new Node("Universal", arg.getText(), arg.getStart().getText()));
+		this.inUniversal.push(true);
+	}
+
+	public void exitUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
+		onExit();
+		this.inUniversal.pop();
+	}
+
+	public boolean inUniversal() {
+      return !inUniversal.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
+
+	@Override
+	public void enterClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
+		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText()));
+		this.inClassName.push(true);
+	}
+
+	public void exitClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
+		onExit();
+		this.inClassName.pop();
+	}
+
+	public boolean inClassName() {
+      return !inClassName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAttrib = new java.util.Stack<>();
+
+	@Override
+	public void enterAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
+		onEnter(new Node("Attrib", arg.getText(), arg.getStart().getText()));
+		this.inAttrib.push(true);
+	}
+
+	public void exitAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
+		onExit();
+		this.inAttrib.pop();
+	}
+
+	public boolean inAttrib() {
+      return !inAttrib.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPseudo = new java.util.Stack<>();
+
+	@Override
+	public void enterPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
+		onEnter(new Node("Pseudo", arg.getText(), arg.getStart().getText()));
+		this.inPseudo.push(true);
+	}
+
+	public void exitPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
+		onExit();
+		this.inPseudo.pop();
+	}
+
+	public boolean inPseudo() {
+      return !inPseudo.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunctionalPseudo = new java.util.Stack<>();
+
+	@Override
+	public void enterFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
+		onEnter(new Node("FunctionalPseudo", arg.getText(), arg.getStart().getText()));
+		this.inFunctionalPseudo.push(true);
+	}
+
+	public void exitFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
+		onExit();
+		this.inFunctionalPseudo.pop();
+	}
+
+	public boolean inFunctionalPseudo() {
+      return !inFunctionalPseudo.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNegation = new java.util.Stack<>();
+
+	@Override
+	public void enterNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
+		onEnter(new Node("Negation", arg.getText(), arg.getStart().getText()));
+		this.inNegation.push(true);
+	}
+
+	public void exitNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
+		onExit();
+		this.inNegation.pop();
+	}
+
+	public boolean inNegation() {
+      return !inNegation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNegationArg = new java.util.Stack<>();
@@ -741,499 +1234,6 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inCalc() {
       return !inCalc.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
-
-	@Override
-	public void enterStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		onEnter(new Node("Stylesheet", arg.getText(), arg.getStart().getText()));
-		this.inStylesheet.push(true);
-	}
-
-	public void exitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		onExit();
-		this.inStylesheet.pop();
-	}
-
-	public boolean inStylesheet() {
-      return !inStylesheet.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGoodCharset = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		onEnter(new Node("GoodCharset", arg.getText(), arg.getStart().getText()));
-		this.inGoodCharset.push(true);
-	}
-
-	public void exitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		onExit();
-		this.inGoodCharset.pop();
-	}
-
-	public boolean inGoodCharset() {
-      return !inGoodCharset.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBadCharset = new java.util.Stack<>();
-
-	@Override
-	public void enterBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		onEnter(new Node("BadCharset", arg.getText(), arg.getStart().getText()));
-		this.inBadCharset.push(true);
-	}
-
-	public void exitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		onExit();
-		this.inBadCharset.pop();
-	}
-
-	public boolean inBadCharset() {
-      return !inBadCharset.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		onEnter(new Node("GoodImport", arg.getText(), arg.getStart().getText()));
-		this.inGoodImport.push(true);
-	}
-
-	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		onExit();
-		this.inGoodImport.pop();
-	}
-
-	public boolean inGoodImport() {
-      return !inGoodImport.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();
-
-	@Override
-	public void enterBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		onEnter(new Node("BadImport", arg.getText(), arg.getStart().getText()));
-		this.inBadImport.push(true);
-	}
-
-	public void exitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		onExit();
-		this.inBadImport.pop();
-	}
-
-	public boolean inBadImport() {
-      return !inBadImport.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		onEnter(new Node("GoodNamespace", arg.getText(), arg.getStart().getText()));
-		this.inGoodNamespace.push(true);
-	}
-
-	public void exitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		onExit();
-		this.inGoodNamespace.pop();
-	}
-
-	public boolean inGoodNamespace() {
-      return !inGoodNamespace.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBadNamespace = new java.util.Stack<>();
-
-	@Override
-	public void enterBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
-		onEnter(new Node("BadNamespace", arg.getText(), arg.getStart().getText()));
-		this.inBadNamespace.push(true);
-	}
-
-	public void exitBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
-		onExit();
-		this.inBadNamespace.pop();
-	}
-
-	public boolean inBadNamespace() {
-      return !inBadNamespace.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNamespacePrefix = new java.util.Stack<>();
-
-	@Override
-	public void enterNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
-		onEnter(new Node("NamespacePrefix", arg.getText(), arg.getStart().getText()));
-		this.inNamespacePrefix.push(true);
-	}
-
-	public void exitNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
-		onExit();
-		this.inNamespacePrefix.pop();
-	}
-
-	public boolean inNamespacePrefix() {
-      return !inNamespacePrefix.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMedia = new java.util.Stack<>();
-
-	@Override
-	public void enterMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		onEnter(new Node("Media", arg.getText(), arg.getStart().getText()));
-		this.inMedia.push(true);
-	}
-
-	public void exitMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		onExit();
-		this.inMedia.pop();
-	}
-
-	public boolean inMedia() {
-      return !inMedia.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMediaQueryList = new java.util.Stack<>();
-
-	@Override
-	public void enterMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
-		onEnter(new Node("MediaQueryList", arg.getText(), arg.getStart().getText()));
-		this.inMediaQueryList.push(true);
-	}
-
-	public void exitMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
-		onExit();
-		this.inMediaQueryList.pop();
-	}
-
-	public boolean inMediaQueryList() {
-      return !inMediaQueryList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMediaQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
-		onEnter(new Node("MediaQuery", arg.getText(), arg.getStart().getText()));
-		this.inMediaQuery.push(true);
-	}
-
-	public void exitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
-		onExit();
-		this.inMediaQuery.pop();
-	}
-
-	public boolean inMediaQuery() {
-      return !inMediaQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMediaType = new java.util.Stack<>();
-
-	@Override
-	public void enterMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
-		onEnter(new Node("MediaType", arg.getText(), arg.getStart().getText()));
-		this.inMediaType.push(true);
-	}
-
-	public void exitMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
-		onExit();
-		this.inMediaType.pop();
-	}
-
-	public boolean inMediaType() {
-      return !inMediaType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMediaExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
-		onEnter(new Node("MediaExpression", arg.getText(), arg.getStart().getText()));
-		this.inMediaExpression.push(true);
-	}
-
-	public void exitMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
-		onExit();
-		this.inMediaExpression.pop();
-	}
-
-	public boolean inMediaExpression() {
-      return !inMediaExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMediaFeature = new java.util.Stack<>();
-
-	@Override
-	public void enterMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
-		onEnter(new Node("MediaFeature", arg.getText(), arg.getStart().getText()));
-		this.inMediaFeature.push(true);
-	}
-
-	public void exitMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
-		onExit();
-		this.inMediaFeature.pop();
-	}
-
-	public boolean inMediaFeature() {
-      return !inMediaFeature.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPage = new java.util.Stack<>();
-
-	@Override
-	public void enterPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
-		onEnter(new Node("Page", arg.getText(), arg.getStart().getText()));
-		this.inPage.push(true);
-	}
-
-	public void exitPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
-		onExit();
-		this.inPage.pop();
-	}
-
-	public boolean inPage() {
-      return !inPage.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPseudoPage = new java.util.Stack<>();
-
-	@Override
-	public void enterPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
-		onEnter(new Node("PseudoPage", arg.getText(), arg.getStart().getText()));
-		this.inPseudoPage.push(true);
-	}
-
-	public void exitPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
-		onExit();
-		this.inPseudoPage.pop();
-	}
-
-	public boolean inPseudoPage() {
-      return !inPseudoPage.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSelectorGroup = new java.util.Stack<>();
-
-	@Override
-	public void enterSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
-		onEnter(new Node("SelectorGroup", arg.getText(), arg.getStart().getText()));
-		this.inSelectorGroup.push(true);
-	}
-
-	public void exitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
-		onExit();
-		this.inSelectorGroup.pop();
-	}
-
-	public boolean inSelectorGroup() {
-      return !inSelectorGroup.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
-
-	@Override
-	public void enterSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		onEnter(new Node("Selector", arg.getText(), arg.getStart().getText()));
-		this.inSelector.push(true);
-	}
-
-	public void exitSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		onExit();
-		this.inSelector.pop();
-	}
-
-	public boolean inSelector() {
-      return !inSelector.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCombinator = new java.util.Stack<>();
-
-	@Override
-	public void enterCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
-		onEnter(new Node("Combinator", arg.getText(), arg.getStart().getText()));
-		this.inCombinator.push(true);
-	}
-
-	public void exitCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
-		onExit();
-		this.inCombinator.pop();
-	}
-
-	public boolean inCombinator() {
-      return !inCombinator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimpleSelectorSequence = new java.util.Stack<>();
-
-	@Override
-	public void enterSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
-		onEnter(new Node("SimpleSelectorSequence", arg.getText(), arg.getStart().getText()));
-		this.inSimpleSelectorSequence.push(true);
-	}
-
-	public void exitSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
-		onExit();
-		this.inSimpleSelectorSequence.pop();
-	}
-
-	public boolean inSimpleSelectorSequence() {
-      return !inSimpleSelectorSequence.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeSelector = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		onEnter(new Node("TypeSelector", arg.getText(), arg.getStart().getText()));
-		this.inTypeSelector.push(true);
-	}
-
-	public void exitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		onExit();
-		this.inTypeSelector.pop();
-	}
-
-	public boolean inTypeSelector() {
-      return !inTypeSelector.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeNamespacePrefix = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		onEnter(new Node("TypeNamespacePrefix", arg.getText(), arg.getStart().getText()));
-		this.inTypeNamespacePrefix.push(true);
-	}
-
-	public void exitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		onExit();
-		this.inTypeNamespacePrefix.pop();
-	}
-
-	public boolean inTypeNamespacePrefix() {
-      return !inTypeNamespacePrefix.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElementName = new java.util.Stack<>();
-
-	@Override
-	public void enterElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		onEnter(new Node("ElementName", arg.getText(), arg.getStart().getText()));
-		this.inElementName.push(true);
-	}
-
-	public void exitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		onExit();
-		this.inElementName.pop();
-	}
-
-	public boolean inElementName() {
-      return !inElementName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUniversal = new java.util.Stack<>();
-
-	@Override
-	public void enterUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
-		onEnter(new Node("Universal", arg.getText(), arg.getStart().getText()));
-		this.inUniversal.push(true);
-	}
-
-	public void exitUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
-		onExit();
-		this.inUniversal.pop();
-	}
-
-	public boolean inUniversal() {
-      return !inUniversal.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
-
-	@Override
-	public void enterClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
-		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText()));
-		this.inClassName.push(true);
-	}
-
-	public void exitClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
-		onExit();
-		this.inClassName.pop();
-	}
-
-	public boolean inClassName() {
-      return !inClassName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAttrib = new java.util.Stack<>();
-
-	@Override
-	public void enterAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
-		onEnter(new Node("Attrib", arg.getText(), arg.getStart().getText()));
-		this.inAttrib.push(true);
-	}
-
-	public void exitAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
-		onExit();
-		this.inAttrib.pop();
-	}
-
-	public boolean inAttrib() {
-      return !inAttrib.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPseudo = new java.util.Stack<>();
-
-	@Override
-	public void enterPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
-		onEnter(new Node("Pseudo", arg.getText(), arg.getStart().getText()));
-		this.inPseudo.push(true);
-	}
-
-	public void exitPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
-		onExit();
-		this.inPseudo.pop();
-	}
-
-	public boolean inPseudo() {
-      return !inPseudo.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunctionalPseudo = new java.util.Stack<>();
-
-	@Override
-	public void enterFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
-		onEnter(new Node("FunctionalPseudo", arg.getText(), arg.getStart().getText()));
-		this.inFunctionalPseudo.push(true);
-	}
-
-	public void exitFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
-		onExit();
-		this.inFunctionalPseudo.pop();
-	}
-
-	public boolean inFunctionalPseudo() {
-      return !inFunctionalPseudo.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNegation = new java.util.Stack<>();
-
-	@Override
-	public void enterNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
-		onEnter(new Node("Negation", arg.getText(), arg.getStart().getText()));
-		this.inNegation.push(true);
-	}
-
-	public void exitNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
-		onExit();
-		this.inNegation.pop();
-	}
-
-	public boolean inNegation() {
-      return !inNegation.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCalcSum = new java.util.Stack<>();

@@ -31,7 +31,7 @@ public class LuaNodeListener extends LuaBaseListener {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -63,23 +63,6 @@ public class LuaNodeListener extends LuaBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText()));
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return !inString.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
 
 	@Override
@@ -95,6 +78,23 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	public boolean inNumber() {
       return !inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText()));
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return !inString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();

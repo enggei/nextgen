@@ -28,6 +28,26 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		System.out.println("Imports");
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		System.out.println("Template");
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
 		System.out.println("Group");
 		final Node node = model.findOrCreate(Label.label("Group"), "text", arg.getText());
@@ -111,26 +131,6 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
 		System.out.println("KeyValue");
 		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		System.out.println("Template");
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		System.out.println("Imports");
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

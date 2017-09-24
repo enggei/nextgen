@@ -31,7 +31,7 @@ public class GolangNodeListener extends GolangBaseListener {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -114,23 +114,6 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inStatement.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
-		this.inDeclaration.push(true);
-	}
-
-	public void exitDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		onExit();
-		this.inDeclaration.pop();
-	}
-
-	public boolean inDeclaration() {
-      return !inDeclaration.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -148,21 +131,21 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inLiteral.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
 
 	@Override
-	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		onEnter(new Node("Function", arg.getText(), arg.getStart().getText()));
-		this.inFunction.push(true);
+	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
+		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
+		this.inDeclaration.push(true);
 	}
 
-	public void exitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+	public void exitDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
 		onExit();
-		this.inFunction.pop();
+		this.inDeclaration.pop();
 	}
 
-	public boolean inFunction() {
-      return !inFunction.isEmpty(); 
+	public boolean inDeclaration() {
+      return !inDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
@@ -180,6 +163,23 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	public boolean inSelector() {
       return !inSelector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
+
+	@Override
+	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		onEnter(new Node("Function", arg.getText(), arg.getStart().getText()));
+		this.inFunction.push(true);
+	}
+
+	public void exitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		onExit();
+		this.inFunction.pop();
+	}
+
+	public boolean inFunction() {
+      return !inFunction.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();

@@ -38,16 +38,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
 		System.out.println("Number");
 		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
@@ -58,9 +48,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		System.out.println("Stylesheet");
-		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -221,6 +211,16 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
 		System.out.println("SelectorGroup");
 		final Node node = model.findOrCreate(Label.label("SelectorGroup"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		System.out.println("Stylesheet");
+		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

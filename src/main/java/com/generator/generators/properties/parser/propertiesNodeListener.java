@@ -31,7 +31,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -44,57 +44,6 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText()));
-		this.inPropertiesFile.push(true);
-	}
-
-	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onExit();
-		this.inPropertiesFile.pop();
-	}
-
-	public boolean inPropertiesFile() {
-      return !inPropertiesFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
-
-	@Override
-	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		onEnter(new Node("Decl", arg.getText(), arg.getStart().getText()));
-		this.inDecl.push(true);
-	}
-
-	public void exitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		onExit();
-		this.inDecl.pop();
-	}
-
-	public boolean inDecl() {
-      return !inDecl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
-
-	@Override
-	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		onEnter(new Node("Comment", arg.getText(), arg.getStart().getText()));
-		this.inComment.push(true);
-	}
-
-	public void exitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		onExit();
-		this.inComment.pop();
-	}
-
-	public boolean inComment() {
-      return !inComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
@@ -146,6 +95,57 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	public boolean inKey() {
       return !inKey.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText()));
+		this.inPropertiesFile.push(true);
+	}
+
+	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onExit();
+		this.inPropertiesFile.pop();
+	}
+
+	public boolean inPropertiesFile() {
+      return !inPropertiesFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
+
+	@Override
+	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		onEnter(new Node("Decl", arg.getText(), arg.getStart().getText()));
+		this.inDecl.push(true);
+	}
+
+	public void exitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		onExit();
+		this.inDecl.pop();
+	}
+
+	public boolean inDecl() {
+      return !inDecl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
+
+	@Override
+	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		onEnter(new Node("Comment", arg.getText(), arg.getStart().getText()));
+		this.inComment.push(true);
+	}
+
+	public void exitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		onExit();
+		this.inComment.pop();
+	}
+
+	public boolean inComment() {
+      return !inComment.isEmpty(); 
    }
 
 }

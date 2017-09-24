@@ -29,7 +29,7 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
    private void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name);
+		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
@@ -92,6 +92,132 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
 		final Node node = new Node("Chunk", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		final Node node = new Node("Functioncall", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
+		final Node node = new Node("Stat", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
+		final Node node = new Node("Retstat", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
+		final Node node = new Node("Label", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFuncname(com.generator.generators.lua.parser.LuaParser.FuncnameContext arg) {
+		final Node node = new Node("Funcname", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVarlist(com.generator.generators.lua.parser.LuaParser.VarlistContext arg) {
+		final Node node = new Node("Varlist", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNamelist(com.generator.generators.lua.parser.LuaParser.NamelistContext arg) {
+		final Node node = new Node("Namelist", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExplist(com.generator.generators.lua.parser.LuaParser.ExplistContext arg) {
+		final Node node = new Node("Explist", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
+		final Node node = new Node("Exp", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
+		final Node node = new Node("Prefixexp", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVarOrExp(com.generator.generators.lua.parser.LuaParser.VarOrExpContext arg) {
+		final Node node = new Node("VarOrExp", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVarSuffix(com.generator.generators.lua.parser.LuaParser.VarSuffixContext arg) {
+		final Node node = new Node("VarSuffix", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNameAndArgs(com.generator.generators.lua.parser.LuaParser.NameAndArgsContext arg) {
+		final Node node = new Node("NameAndArgs", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArgs(com.generator.generators.lua.parser.LuaParser.ArgsContext arg) {
+		final Node node = new Node("Args", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -227,132 +353,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitOperatorPower(com.generator.generators.lua.parser.LuaParser.OperatorPowerContext arg) {
 		final Node node = new Node("OperatorPower", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = new Node("Functioncall", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		final Node node = new Node("Stat", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		final Node node = new Node("Retstat", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
-		final Node node = new Node("Label", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFuncname(com.generator.generators.lua.parser.LuaParser.FuncnameContext arg) {
-		final Node node = new Node("Funcname", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVarlist(com.generator.generators.lua.parser.LuaParser.VarlistContext arg) {
-		final Node node = new Node("Varlist", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNamelist(com.generator.generators.lua.parser.LuaParser.NamelistContext arg) {
-		final Node node = new Node("Namelist", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExplist(com.generator.generators.lua.parser.LuaParser.ExplistContext arg) {
-		final Node node = new Node("Explist", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
-		final Node node = new Node("Exp", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
-		final Node node = new Node("Prefixexp", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVarOrExp(com.generator.generators.lua.parser.LuaParser.VarOrExpContext arg) {
-		final Node node = new Node("VarOrExp", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVarSuffix(com.generator.generators.lua.parser.LuaParser.VarSuffixContext arg) {
-		final Node node = new Node("VarSuffix", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNameAndArgs(com.generator.generators.lua.parser.LuaParser.NameAndArgsContext arg) {
-		final Node node = new Node("NameAndArgs", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArgs(com.generator.generators.lua.parser.LuaParser.ArgsContext arg) {
-		final Node node = new Node("Args", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
