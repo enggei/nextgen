@@ -38,16 +38,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		System.out.println("Number");
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
 		System.out.println("Expression");
 		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
@@ -58,19 +48,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		System.out.println("TypeNamespacePrefix");
-		final Node node = model.findOrCreate(Label.label("TypeNamespacePrefix"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		System.out.println("ElementName");
-		final Node node = model.findOrCreate(Label.label("ElementName"), "text", arg.getText());
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		System.out.println("Number");
+		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -281,6 +261,26 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
 		System.out.println("TypeSelector");
 		final Node node = model.findOrCreate(Label.label("TypeSelector"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
+		System.out.println("TypeNamespacePrefix");
+		final Node node = model.findOrCreate(Label.label("TypeNamespacePrefix"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		System.out.println("ElementName");
+		final Node node = model.findOrCreate(Label.label("ElementName"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

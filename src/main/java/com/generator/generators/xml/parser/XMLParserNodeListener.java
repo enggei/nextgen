@@ -46,40 +46,6 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return !inElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
-
-	@Override
-	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
-		this.inAttribute.push(true);
-	}
-
-	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onExit();
-		this.inAttribute.pop();
-	}
-
-	public boolean inAttribute() {
-      return !inAttribute.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
 
 	@Override
@@ -180,6 +146,40 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	public boolean inMisc() {
       return !inMisc.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
+
+	@Override
+	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		this.inElement.push(true);
+	}
+
+	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		onExit();
+		this.inElement.pop();
+	}
+
+	public boolean inElement() {
+      return !inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
+
+	@Override
+	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+		this.inAttribute.push(true);
+	}
+
+	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		onExit();
+		this.inAttribute.pop();
+	}
+
+	public boolean inAttribute() {
+      return !inAttribute.isEmpty(); 
    }
 
 }

@@ -147,6 +147,24 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inLiteral.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
+
+	@Override
+	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText());
+		onEnter(node);
+		this.inFunction.push(true);
+	}
+
+	public void exitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+		onExit();
+		this.inFunction.pop();
+	}
+
+	public boolean inFunction() {
+      return !inFunction.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
 
 	@Override
@@ -165,22 +183,22 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inSelector.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inFunction = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
 
 	@Override
-	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText());
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText());
 		onEnter(node);
-		this.inFunction.push(true);
+		this.inStatementList.push(true);
 	}
 
-	public void exitFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
 		onExit();
-		this.inFunction.pop();
+		this.inStatementList.pop();
 	}
 
-	public boolean inFunction() {
-      return !inFunction.isEmpty(); 
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
@@ -217,24 +235,6 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inArguments() {
       return !inArguments.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText());
-		onEnter(node);
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inEos = new java.util.Stack<>();

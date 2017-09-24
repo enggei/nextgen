@@ -21,6 +21,8 @@ import com.generator.generators.java.parser.JavaParserVisitor;
 import com.generator.generators.java.BaseClassVisitor;
 import com.generator.generators.json.parser.JSONListener;
 import com.generator.generators.json.parser.JSONVisitor;
+import com.generator.generators.lua.parser.LuaListener;
+import com.generator.generators.lua.parser.LuaVisitor;
 import com.generator.generators.mysql.parser.MySqlParserListener;
 import com.generator.generators.mysql.parser.MySqlParserVisitor;
 import com.generator.generators.properties.parser.propertiesListener;
@@ -62,6 +64,7 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".lua.parser", "Lua", LuaVisitor.class, LuaListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);

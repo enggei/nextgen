@@ -45,15 +45,6 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
 		final Node node = new Node("Url", arg.getText());
 		onEnter(node);
@@ -182,6 +173,15 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	@Override
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
 		final Node node = new Node("Searchparameter", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

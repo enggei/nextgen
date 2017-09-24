@@ -39,78 +39,6 @@ public class ClojureNeoListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
-		onEnter(node);
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
-
-	@Override
-	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
-		onEnter(node);
-		this.inForm.push(true);
-	}
-
-	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		onExit();
-		this.inForm.pop();
-	}
-
-	public boolean inForm() {
-      return !inForm.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
-
-	@Override
-	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
-		onEnter(node);
-		this.inForms.push(true);
-	}
-
-	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onExit();
-		this.inForms.pop();
-	}
-
-	public boolean inForms() {
-      return !inForms.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
-
-	@Override
-	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
-		onEnter(node);
-		this.inList.push(true);
-	}
-
-	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		onExit();
-		this.inList.pop();
-	}
-
-	public boolean inList() {
-      return !inList.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
 
 	@Override
@@ -757,6 +685,78 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	public boolean inParam_name() {
       return !inParam_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
+		onEnter(node);
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
+
+	@Override
+	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
+		onEnter(node);
+		this.inForm.push(true);
+	}
+
+	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		onExit();
+		this.inForm.pop();
+	}
+
+	public boolean inForm() {
+      return !inForm.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
+
+	@Override
+	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
+		onEnter(node);
+		this.inForms.push(true);
+	}
+
+	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		onExit();
+		this.inForms.pop();
+	}
+
+	public boolean inForms() {
+      return !inForms.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
+
+	@Override
+	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
+		onEnter(node);
+		this.inList.push(true);
+	}
+
+	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		onExit();
+		this.inList.pop();
+	}
+
+	public boolean inList() {
+      return !inList.isEmpty(); 
    }
 
 }

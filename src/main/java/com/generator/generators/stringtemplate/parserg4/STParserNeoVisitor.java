@@ -28,6 +28,106 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitAndConditional(com.generator.generators.stringtemplate.parserg4.STParser.AndConditionalContext arg) {
+		System.out.println("AndConditional");
+		final Node node = model.findOrCreate(Label.label("AndConditional"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNotConditional(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalContext arg) {
+		System.out.println("NotConditional");
+		final Node node = model.findOrCreate(Label.label("NotConditional"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNotConditionalExpr(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalExprContext arg) {
+		System.out.println("NotConditionalExpr");
+		final Node node = model.findOrCreate(Label.label("NotConditionalExpr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExprOptions(com.generator.generators.stringtemplate.parserg4.STParser.ExprOptionsContext arg) {
+		System.out.println("ExprOptions");
+		final Node node = model.findOrCreate(Label.label("ExprOptions"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMapExpr(com.generator.generators.stringtemplate.parserg4.STParser.MapExprContext arg) {
+		System.out.println("MapExpr");
+		final Node node = model.findOrCreate(Label.label("MapExpr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMemberExpr(com.generator.generators.stringtemplate.parserg4.STParser.MemberExprContext arg) {
+		System.out.println("MemberExpr");
+		final Node node = model.findOrCreate(Label.label("MemberExpr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMapTemplateRef(com.generator.generators.stringtemplate.parserg4.STParser.MapTemplateRefContext arg) {
+		System.out.println("MapTemplateRef");
+		final Node node = model.findOrCreate(Label.label("MapTemplateRef"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
+		System.out.println("IncludeExpr");
+		final Node node = model.findOrCreate(Label.label("IncludeExpr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
+		System.out.println("ArgExprList");
+		final Node node = model.findOrCreate(Label.label("ArgExprList"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
+		System.out.println("NamedArg");
+		final Node node = model.findOrCreate(Label.label("NamedArg"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
 		System.out.println("Option");
 		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText());
@@ -41,36 +141,6 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	public Node visitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
 		System.out.println("Element");
 		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		System.out.println("List");
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		System.out.println("Expr");
-		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		System.out.println("Primary");
-		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -168,9 +238,9 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitAndConditional(com.generator.generators.stringtemplate.parserg4.STParser.AndConditionalContext arg) {
-		System.out.println("AndConditional");
-		final Node node = model.findOrCreate(Label.label("AndConditional"), "text", arg.getText());
+	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
+		System.out.println("List");
+		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -178,9 +248,9 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNotConditional(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalContext arg) {
-		System.out.println("NotConditional");
-		final Node node = model.findOrCreate(Label.label("NotConditional"), "text", arg.getText());
+	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
+		System.out.println("Expr");
+		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -188,59 +258,9 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNotConditionalExpr(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalExprContext arg) {
-		System.out.println("NotConditionalExpr");
-		final Node node = model.findOrCreate(Label.label("NotConditionalExpr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExprOptions(com.generator.generators.stringtemplate.parserg4.STParser.ExprOptionsContext arg) {
-		System.out.println("ExprOptions");
-		final Node node = model.findOrCreate(Label.label("ExprOptions"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMapExpr(com.generator.generators.stringtemplate.parserg4.STParser.MapExprContext arg) {
-		System.out.println("MapExpr");
-		final Node node = model.findOrCreate(Label.label("MapExpr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMemberExpr(com.generator.generators.stringtemplate.parserg4.STParser.MemberExprContext arg) {
-		System.out.println("MemberExpr");
-		final Node node = model.findOrCreate(Label.label("MemberExpr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMapTemplateRef(com.generator.generators.stringtemplate.parserg4.STParser.MapTemplateRefContext arg) {
-		System.out.println("MapTemplateRef");
-		final Node node = model.findOrCreate(Label.label("MapTemplateRef"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
-		System.out.println("IncludeExpr");
-		final Node node = model.findOrCreate(Label.label("IncludeExpr"), "text", arg.getText());
+	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
+		System.out.println("Primary");
+		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -251,26 +271,6 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
 		System.out.println("Args");
 		final Node node = model.findOrCreate(Label.label("Args"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
-		System.out.println("ArgExprList");
-		final Node node = model.findOrCreate(Label.label("ArgExprList"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
-		System.out.println("NamedArg");
-		final Node node = model.findOrCreate(Label.label("NamedArg"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

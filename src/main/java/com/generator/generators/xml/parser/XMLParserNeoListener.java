@@ -39,42 +39,6 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
-		onEnter(node);
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return !inElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
-
-	@Override
-	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
-		onEnter(node);
-		this.inAttribute.push(true);
-	}
-
-	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onExit();
-		this.inAttribute.pop();
-	}
-
-	public boolean inAttribute() {
-      return !inAttribute.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
 
 	@Override
@@ -181,6 +145,42 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	public boolean inMisc() {
       return !inMisc.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
+
+	@Override
+	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
+		onEnter(node);
+		this.inElement.push(true);
+	}
+
+	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		onExit();
+		this.inElement.pop();
+	}
+
+	public boolean inElement() {
+      return !inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
+
+	@Override
+	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
+		onEnter(node);
+		this.inAttribute.push(true);
+	}
+
+	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		onExit();
+		this.inAttribute.pop();
+	}
+
+	public boolean inAttribute() {
+      return !inAttribute.isEmpty(); 
    }
 
 }

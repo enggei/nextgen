@@ -45,6 +45,33 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
    }
 
 	@Override
+	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		final Node node = new Node("PropertiesFile", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		final Node node = new Node("Decl", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		final Node node = new Node("Comment", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
 		final Node node = new Node("Value", arg.getText());
 		onEnter(node);
@@ -63,35 +90,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = new Node("PropertiesFile", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
 		final Node node = new Node("Key", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = new Node("Comment", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = new Node("Decl", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
