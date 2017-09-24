@@ -3,7 +3,9 @@ package com.generator.neo.remote;
 
 import com.generator.neo.NeoModel;
 import org.neo4j.driver.v1.Statement;
+import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
 
@@ -12,7 +14,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.generator.neo.remote.NeoCache.getCachedNode;
@@ -49,12 +50,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
          }
          if (listener != null) listener.closed(RemoteNeoModel.this);
       }));
-   }
-
-   @Override
-   public void dropAll() {
-      super.dropAll();
-      NeoCache.clear();
    }
 
    @Override
@@ -248,6 +243,9 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    @Override
    public Result query(String query) {
       // todo implement
+
+      StatementResult statementResult = executeCypher(query);
+
       return null;
    }
 
@@ -277,29 +275,13 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    }
 
    @Override
-   public void doInTransaction(Committer committer) {
+   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      return txEventHandler.registerTransactionEventHandler(transactionEventHandler);
+   }
 
-      AtomicBoolean failure = new AtomicBoolean(false);
-
-      try (NeoTransaction tx = beginTransaction()) {
-         try {
-            committer.doAction(tx);
-            tx.getContext().driver().fireBeforeCommit(tx.getContext().txData());
-            tx.success();
-            // TODO: put something meaningful in state
-            tx.getContext().driver().fireAfterCommit(tx.getContext().txData(), null);
-         } catch (Throwable throwable) {
-            committer.exception(throwable);
-            failure.set(true);
-            tx.failure();
-         }
-         finally {
-            if (failure.get()) {
-               // TODO: put something meaningful in state
-               tx.getContext().driver().fireAfterRollback(tx.getContext().txData(), null);
-            }
-         }
-      }
+   @Override
+   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      return txEventHandler.unregisterTransactionEventHandler(transactionEventHandler);
    }
 
 }

@@ -69,6 +69,18 @@ public interface NeoModel {
       void exception(Throwable throwable);
    }
 
+   class Committer2 {
+      @FunctionalInterface
+      interface Committer {
+         void doAction(org.neo4j.graphdb.Transaction tx) throws Throwable;
+      }
+
+      @FunctionalInterface
+      interface ExceptionHandler {
+         void exception(Throwable throwable);
+      }
+   }
+
    default void doInTransaction(Committer committer) {
       try (org.neo4j.graphdb.Transaction tx = beginTx()) {
          try {
@@ -76,6 +88,18 @@ public interface NeoModel {
             tx.success();
          } catch (Throwable throwable) {
             committer.exception(throwable);
+            tx.failure();
+         }
+      }
+   }
+
+   default void doInTransaction(Committer2.Committer committer, Committer2.ExceptionHandler exceptionHandler) {
+      try (org.neo4j.graphdb.Transaction tx = beginTx()) {
+         try {
+            committer.doAction(tx);
+            tx.success();
+         } catch (Throwable throwable) {
+            exceptionHandler.exception(throwable);
             tx.failure();
          }
       }

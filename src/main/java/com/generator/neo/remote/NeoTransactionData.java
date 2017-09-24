@@ -2,17 +2,12 @@ package com.generator.neo.remote;
 
 import com.sun.istack.internal.NotNull;
 import org.neo4j.driver.v1.Transaction;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.PropertyEntry;
 import org.neo4j.graphdb.event.TransactionData;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
+import java.util.*;
 
 public class NeoTransactionData implements TransactionData {
 
@@ -26,8 +21,8 @@ public class NeoTransactionData implements TransactionData {
 	private final Collection<LabelEntry> removedLabels = new LinkedHashSet<>();
 	private final Collection<Relationship> createdRelationships = new LinkedHashSet<>();
 	private final Collection<Relationship> deletedRelationships = new LinkedHashSet<>();
-	private final Collection<PropertyEntry<Relationship>> assignedRelationships = new LinkedHashSet<>();
-	private final Collection<PropertyEntry<Relationship>> removedRelationships = new LinkedHashSet<>();
+	private final Collection<PropertyEntry<Relationship>> assignedRelationshipProperties = new LinkedHashSet<>();
+	private final Collection<PropertyEntry<Relationship>> removedRelationshipProperties = new LinkedHashSet<>();
 
 	NeoTransactionData(@NotNull org.neo4j.driver.v1.Transaction tx) {
 		if (!tx.isOpen()) {
@@ -88,12 +83,12 @@ public class NeoTransactionData implements TransactionData {
 
 	@Override
 	public Iterable<PropertyEntry<Relationship>> assignedRelationshipProperties() {
-		return assignedRelationships;
+		return assignedRelationshipProperties;
 	}
 
 	@Override
 	public Iterable<PropertyEntry<Relationship>> removedRelationshipProperties() {
-		return removedRelationships;
+		return removedRelationshipProperties;
 	}
 
 	@Override
@@ -140,7 +135,64 @@ public class NeoTransactionData implements TransactionData {
 		deletedRelationships.add(relationship);
 	}
 
-	static LabelEntry newLabelEntry(final String label, final Node node) {
+	void nodePropertyAssigned(final String name, final Object value, final Node node) {
+		nodePropertyAssigned(name, value, null, node);
+	}
+
+	void nodePropertyAssigned(final String name, final Object value, final Object old, final Node node) {
+		propertyAssigned(name, value, old, node, assignedNodeProperties);
+	}
+
+	void nodePropertyRemoved(final String name, final Object old, final Node node) {
+		propertyRemoved(name, old, node, removedNodeProperties);
+	}
+
+	void relationshipPropertyAssigned(final String name, final Object value, final Relationship relationship) {
+		relationshipPropertyAssigned(name, value, null, relationship);
+	}
+
+	void relationshipPropertyAssigned(final String name, final Object value, final Object old, final Relationship relationship) {
+		propertyAssigned(name, value, old, relationship, assignedRelationshipProperties);
+	}
+
+	void relationshipPropertyRemoved(final String name, final Object old, final Relationship relationship) {
+		propertyRemoved(name, old, relationship, removedRelationshipProperties);
+	}
+
+	private static <T extends Entity> void propertyAssigned(final String name, final Object value, final Object old, final T entity, final Collection<PropertyEntry<T>> collection) {
+		if (entity == null || name == null) return;
+
+		Object previous = clearOldPropertyEntry(name, old, entity, collection);
+
+		collection.add(newAssignedPropertyEntry(name, value, previous, entity));
+	}
+
+	private static <T extends Entity> void propertyRemoved(final String name, final Object old, final T entity, final Collection<PropertyEntry<T>> collection) {
+		if (entity == null || name == null) return;
+
+		Object previous = clearOldPropertyEntry(name, old, entity, collection);
+
+		collection.add(newRemovedPropertyEntry(name, previous, entity));
+	}
+
+	private static <T extends Entity> Object clearOldPropertyEntry(final String name, final Object old, final T entity, final Collection<PropertyEntry<T>> collection) {
+		// TODO: Refine this - we do not want O(N). Override hash method in newRemovedPropertyEntry f.ex.
+		Optional<PropertyEntry<T>> propertyEntry = collection
+			.stream()
+			.filter(entry -> entry.entity().getId() == entity.getId() && entry.key().equals(name))
+			.findFirst();
+
+		Object previous = old;
+
+		if (propertyEntry.isPresent()) {
+			previous = propertyEntry.get().previouslyCommitedValue();
+			collection.remove(propertyEntry.get());
+		}
+
+		return previous;
+	}
+
+	private static LabelEntry newLabelEntry(final String label, final Node node) {
 		return new LabelEntry() {
 			@Override
 			public Label label() {
@@ -154,39 +206,43 @@ public class NeoTransactionData implements TransactionData {
 		};
 	}
 
-	static boolean assertNode(final Object o) {
-		if (o == null) return true;
-
-		if (!(o instanceof Node))
-			throw new IllegalArgumentException("Expected object of type Node, but got " + o.getClass().getName());
-
-		return false;
+	private static <T extends PropertyContainer> PropertyEntry<T> newAssignedPropertyEntry(final String name, final Object value, final Object old, final T propertyContainer) {
+		return newPropertyEntry(name, value, old, propertyContainer, false);
 	}
 
-	static boolean assertId(final Object o) {
-		if (o == null) return true;
-
-		if (!(o instanceof Long))
-			throw new IllegalArgumentException("Expected object of type Long, but got " + o.getClass().getName());
-
-		return false;
+	private static <T extends PropertyContainer> PropertyEntry<T> newRemovedPropertyEntry(final String name, final Object old, final T propertyContainer) {
+		return newPropertyEntry(name, null, old, propertyContainer, true);
 	}
 
-	static boolean assertRelationship(final Object o) {
-		if (o == null) return true;
+	private static <T extends PropertyContainer> PropertyEntry<T> newPropertyEntry(final String name, final Object value, final Object old, final T propertyContainer, final boolean shouldThrow) {
 
-		if (!(o instanceof Relationship))
-			throw new IllegalArgumentException("Expected object of type Relationship, but got " + o.getClass().getName());
+		if (propertyContainer == null || name == null || !(propertyContainer instanceof Node || propertyContainer instanceof Relationship))
+			throw new IllegalArgumentException("propertyContainer is " + (propertyContainer != null ? propertyContainer.getClass().getName() : "NULL") + ", expecting Node or Relationship");
 
-		return false;
-	}
+		return new PropertyEntry<T>() {
+			@Override
+			public T entity() {
+				return propertyContainer;
+			}
 
-	static boolean assertLabelEntry(final Object o) {
-		if (o == null) return true;
+			@Override
+			public String key() {
+				return name;
+			}
 
-		if (!(o instanceof LabelEntry))
-			throw new IllegalArgumentException("Expected object of type LabelEntry, but got " + o.getClass().getName());
+			@Override
+			public Object previouslyCommitedValue() {
+				return old;
+			}
 
-		return false;
+			@Override
+			public Object value() {
+				// Ref. method contract org.neo4j.graphdb.event.PropertyEntry
+				if (shouldThrow)
+					throw new IllegalStateException(name + " was removed");
+
+				return value;
+			}
+		};
 	}
 }
