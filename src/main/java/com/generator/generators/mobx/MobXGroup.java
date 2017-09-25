@@ -50,14 +50,23 @@ public final class MobXGroup {
       return new DomainStoreST(stGroup);
    }
 
+   public MobXContainerST newMobXContainer() {
+      return new MobXContainerST(stGroup);
+   }
+
    public ModelST newModel() {
       return new ModelST(stGroup);
+   }
+
+   public requestST newrequest() {
+      return new requestST(stGroup);
    }
 
    public final class actionST implements MobXGroupTemplate {
 
       private Object _name;
       private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _parameter = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -95,6 +104,19 @@ public final class MobXGroup {
       	return this._statements;
       }
 
+      public actionST addParameterValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._parameter.add(map);
+
+         template.addAggr("parameter.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getParameter() {
+      	return this._parameter;
+      }
+
       @Override
    	public String toString() {
    		return template.render();
@@ -103,11 +125,9 @@ public final class MobXGroup {
 
    public final class DomainStoreST implements MobXGroupTemplate {
 
-      private java.util.Set<Object> _actions = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _observables = new java.util.LinkedHashSet<>();
       private Object _name;
-      private Object _comments;
-      private java.util.Set<java.util.Map<String, Object>> _stores = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _actions = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -115,27 +135,14 @@ public final class MobXGroup {
    		template = group.getInstanceOf("DomainStore");
    	}
 
-      public DomainStoreST addActionsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._actions.add(value);
-      	template.add("actions", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getActionsValues() {
-      	return this._actions;
-      }
-
-      public DomainStoreST addObservablesValue(Object init_, Object name_) {
+      public DomainStoreST addObservablesValue(Object name_, Object init_, Object path_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
+      	map.put("path", (path_ == null || path_.toString().length() == 0) ? null : path_);
       	this._observables.add(map);
 
-         template.addAggr("observables.{init, name}", map.get("init"), map.get("name"));
+         template.addAggr("observables.{name, init, path}", map.get("name"), map.get("init"), map.get("path"));
          return this;
       }
 
@@ -159,33 +166,129 @@ public final class MobXGroup {
       	return (String) this._name;
       }
 
-      public DomainStoreST setComments(Object value) {
+      public DomainStoreST addActionsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
-      	if (this._comments == null) {
-            this._comments = value;
-         	template.add("comments", value);
+      	this._actions.add(value);
+      	template.add("actions", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getActionsValues() {
+      	return this._actions;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class MobXContainerST implements MobXGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _components = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _store;
+      private java.util.Set<Object> _constructorStatements = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _methodDeclarations = new java.util.LinkedHashSet<>();
+      private Object _element;
+
+      private final ST template;
+
+      private MobXContainerST(STGroup group) {
+   		template = group.getInstanceOf("MobXContainer");
+   	}
+
+      public MobXContainerST addComponentsValue(Object importPath_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("importPath", (importPath_ == null || importPath_.toString().length() == 0) ? null : importPath_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._components.add(map);
+
+         template.addAggr("components.{importPath, name}", map.get("importPath"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getComponents() {
+      	return this._components;
+      }
+
+      public MobXContainerST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
          }
 
       	return this;
       }
 
-      public String getComments() {
-      	return (String) this._comments;
+      public String getName() {
+      	return (String) this._name;
       }
 
-      public DomainStoreST addStoresValue(Object name_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	this._stores.add(map);
+      public MobXContainerST setStore(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
 
-         template.addAggr("stores.{name}", map.get("name"));
+      	if (this._store == null) {
+            this._store = value;
+         	template.add("store", value);
+         }
+
+      	return this;
+      }
+
+      public String getStore() {
+      	return (String) this._store;
+      }
+
+      public MobXContainerST addConstructorStatementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._constructorStatements.add(value);
+      	template.add("constructorStatements", value);
+
          return this;
       }
 
-      public java.util.Set<java.util.Map<String, Object>> getStores() {
-      	return this._stores;
+      public java.util.Set<Object> getConstructorStatementsValues() {
+      	return this._constructorStatements;
+      }
+
+      public MobXContainerST addMethodDeclarationsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._methodDeclarations.add(value);
+      	template.add("methodDeclarations", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getMethodDeclarationsValues() {
+      	return this._methodDeclarations;
+      }
+
+      public MobXContainerST setElement(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._element == null) {
+            this._element = value;
+         	template.add("element", value);
+         }
+
+      	return this;
+      }
+
+      public String getElement() {
+      	return (String) this._element;
       }
 
       @Override
@@ -233,6 +336,89 @@ public final class MobXGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getObservables() {
       	return this._observables;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class requestST implements MobXGroupTemplate {
+
+      private Object _handleResponse;
+      private Object _uri;
+      private Object _action;
+      private Object _param;
+
+      private final ST template;
+
+      private requestST(STGroup group) {
+   		template = group.getInstanceOf("request");
+   	}
+
+      public requestST setHandleResponse(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._handleResponse == null) {
+            this._handleResponse = value;
+         	template.add("handleResponse", value);
+         }
+
+      	return this;
+      }
+
+      public String getHandleResponse() {
+      	return (String) this._handleResponse;
+      }
+
+      public requestST setUri(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._uri == null) {
+            this._uri = value;
+         	template.add("uri", value);
+         }
+
+      	return this;
+      }
+
+      public String getUri() {
+      	return (String) this._uri;
+      }
+
+      public requestST setAction(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._action == null) {
+            this._action = value;
+         	template.add("action", value);
+         }
+
+      	return this;
+      }
+
+      public String getAction() {
+      	return (String) this._action;
+      }
+
+      public requestST setParam(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._param == null) {
+            this._param = value;
+         	template.add("param", value);
+         }
+
+      	return this;
+      }
+
+      public String getParam() {
+      	return (String) this._param;
       }
 
       @Override
@@ -371,78 +557,52 @@ public final class MobXGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("action(name,statements) ::= <<@action ~name~() {\n" + 
+			.append("action(name,statements,parameter) ::= <<@action ~name~(~parameter:{it|~it.name~};separator=\",\"~) {\n" + 
 		"	~statements:{it|~it~;};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("DomainStore(actions,observables,name,comments,stores) ::= <<import {observable, autorun, action} from 'mobx';\n" + 
+			.append("DomainStore(observables,name,actions) ::= <<import {observable, autorun, action} from 'mobx';\n" + 
 		"import request from '../utils/request';\n" + 
-		"import ~name~ from './~name~';\n" + 
+		"~observables:{it|import ~it.name~ from '~it.path~';};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"~if(comments)~// ~comments~\n" + 
-		"~endif~\n" + 
-		"export class ~name~Store {\n" + 
+		"class ~name~ {\n" + 
 		"\n" + 
-		"	~stores:{it|~it.name~;};separator=\"\\n\"~\n" + 
-		"	@observable elements = [];\n" + 
-		"   @observable isLoading = true;\n" + 
-		"\n" + 
-		"	constructor(~stores:{it|~it.name~};separator=\",\"~) {\n" + 
-		"		~stores:{it|this.~it.name~ = ~it.name~;};separator=\"\\n\"~\n" + 
-		"//		this.transportLayer.onReceive~name~Update(updated~name~ => this.update~name~FromServer(updated~name~));\n" + 
-		"      this.load~name~();\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	load~name~() {\n" + 
-		"   	this.isLoading = true;\n" + 
-		"\n" + 
-		"		request.get('/bk/scan/status').then(response => {\n" + 
-		"			response.forEach(json => this.update~name~FromServer(json));\n" + 
-		"      }).catch(error => { console.log(error); });\n" + 
-		"\n" + 
-		"      //this.transportLayer.fetch~name~().then(fetched~name~ => {\n" + 
-		"      //	fetched~name~.forEach(json => this.update~name~FromServer(json));\n" + 
-		"      // this.isLoading = false;\n" + 
-		"		//});\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	/**\n" + 
-		"     * Update a ~name~ with information from the server. Guarantees a ~name~\n" + 
-		"     * only exists once. Might either construct a new ~name~, update an existing one,\n" + 
-		"     * or remove an ~name~ if it has been deleted on the server.\n" + 
-		"     */\n" + 
-		"   update~name~FromServer(json) {\n" + 
-		"\n" + 
-		"   	var val = this.elements.find(val => val.id === json.id);\n" + 
-		"\n" + 
-		"      if (!val) {\n" + 
-		"      	val = new ~name~(this, json.id);\n" + 
-		"         this.elements.push(val);\n" + 
-		"      }\n" + 
-		"      \n" + 
-		"		if (json.isDeleted) {\n" + 
-		"      	this.remove~name~(val);\n" + 
-		"      } else {\n" + 
-		"      	val.updateFromJson(json);\n" + 
-		"      }\n" + 
-		"    }\n" + 
-		"\n" + 
-		"	/**\n" + 
-		"     * Creates a fresh todo on the client and server\n" + 
-		"     */\n" + 
-		"   create~name~() {\n" + 
-		"   	var val = new ~name~(this);\n" + 
-		"      this.elements.push(val);\n" + 
-		"      return val;\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	remove~name~(val) {\n" + 
-		"   	this.elements.splice(this.elements.indexOf(val), 1);\n" + 
-		"      val.dispose();\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	~observables:{it|//@observable ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"	~observables:{it|@observable ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~actions:{it|~it~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"}\n" + 
+		"\n" + 
+		"export default new ~name~();>>\n")
+			.append("MobXContainer(components,name,store,constructorStatements,methodDeclarations,element) ::= <<import React from 'react';\n" + 
+		"~components:{it|import ~it.name~ from '~it.importPath~';};separator=\"\\n\"~\n" + 
+		"import { inject, observer } from 'mobx-react';\n" + 
+		"\n" + 
+		"@inject('~store~')\n" + 
+		"@observer\n" + 
+		"export default class ~name~ extends React.Component {\n" + 
+		"\n" + 
+		"  constructor(props) {\n" + 
+		"    super(props);\n" + 
+		"\n" + 
+		"	 ~constructorStatements:{it|~it~};separator=\"\\n\"~\n" + 
+		"  }\n" + 
+		"\n" + 
+		"  componentWillMount() {\n" + 
+		"  }\n" + 
+		"\n" + 
+		"  componentDidMount() {\n" + 
+		"  }\n" + 
+		"\n" + 
+		"  componentWillUnmount() {\n" + 
+		"  }\n" + 
+		"\n" + 
+		"  ~methodDeclarations:{it|~it~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"  render() {\n" + 
+		"    return (\n" + 
+		"		  ~element~\n" + 
+		"    );\n" + 
+		"  }\n" + 
 		"}>>\n")
 			.append("Model(name,observables) ::= <<import {observable, autorun, action, toJS} from 'mobx';\n" + 
 		"\n" + 
@@ -460,5 +620,9 @@ public final class MobXGroup {
 		"}\n" + 
 		"\n" + 
 		"export default ~name~;>>\n")
+			.append("request(handleResponse,uri,action,param) ::= <<request.~action~('~uri~'~if(param)~, ~param~~endif~).then(response => {\n" + 
+		"   console.info(\"~uri~ : \" + response);\n" + 
+		"	~handleResponse~\n" + 
+		"}).catch(error => { console.log(error); });>>\n")
 		.toString();
 }

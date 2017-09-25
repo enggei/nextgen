@@ -144,7 +144,6 @@ public class StringTemplatePlugin extends Plugin {
    }
 
 
-
    @Override
    protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
 
@@ -389,8 +388,10 @@ public class StringTemplatePlugin extends Plugin {
 
       outgoing(node, DomainPlugin.Relations.ENTITY).forEach(groupStatementRelation -> {
 
-         final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
          final Node templateNode = other(node, groupStatementRelation);
+         if (!hasLabel(templateNode, Entities.STTemplate)) return;
+
+         final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
          final String statementName = getString(templateNode, AppMotif.Properties.name.name());
 
          final TemplateGroupGroup.templateST templateST = group.newtemplate().
@@ -457,7 +458,9 @@ public class StringTemplatePlugin extends Plugin {
             }
          }.visit(templateNode);
 
-         stgBuilderST.addAppendsValue(templateST.setContent(escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"")));
+         // todo issue with template ending with >: it appends >> for template, so result is >>>, which STGroup cannot parse
+         final String content = escape(getString(templateNode, Properties.text.name())).replaceAll("\n", "\\\\n\" + \n\"");
+         stgBuilderST.addAppendsValue(templateST.setContent(content.endsWith(">") ? (content.trim() + " ") : content.trim()));
          groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), statementName);
       });
 
@@ -644,7 +647,7 @@ public class StringTemplatePlugin extends Plugin {
                         }
                      });
 
-                     if (!"Errors" .equals(errors.toString()))
+                     if (!"Errors".equals(errors.toString()))
                         throw new IllegalStateException(errors.toString());
                      else if (parsed == null)
                         throw new IllegalStateException("Template is invalid. check syntax");
@@ -923,17 +926,17 @@ public class StringTemplatePlugin extends Plugin {
          case STATEMENTPROPERTY: // todo split this and use referenceType = ReferenceType.ENTITY;
          case STRINGPROPERTY:
          case BOOLEANPROPERTY:
-            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
+            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
             break;
          case LISTPROPERTY:
-            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
+            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
             break;
          case KEYVALUELISTPROPERTY:
             final Node newParameterNode = getGraph().newNode(DomainPlugin.Entities.Entity, AppMotif.Properties.name.name(), templateParameter.getPropertyName());
             templateParameter.getKvNames().forEach(key -> {
-               DomainMotif.newEntityRelation(getGraph(),newParameterNode, key, DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), key));
+               DomainMotif.newEntityRelation(getGraph(), newParameterNode, key, DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), key));
             });
-            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, newParameterNode);
+            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, newParameterNode);
             break;
       }
    }

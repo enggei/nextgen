@@ -1222,25 +1222,25 @@ public final class Workspace extends JPanel {
 
                      case KeyEvent.VK_1:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Left));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Left), !event.isControlDown());
                         });
                         break;
 
                      case KeyEvent.VK_2:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Right));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Right), !event.isControlDown());
                         });
                         break;
 
                      case KeyEvent.VK_3:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Bottom));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Bottom), !event.isControlDown());
                         });
                         break;
 
                      case KeyEvent.VK_4:
                         SwingUtilities.invokeLater(() -> {
-                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Top));
+                           layoutTree(new DefaultConfiguration<>(50, 15, Configuration.Location.Top), !event.isControlDown());
                         });
                         break;
 
@@ -1381,7 +1381,7 @@ public final class Workspace extends JPanel {
                   }
                }
 
-               private void layoutTree(Configuration<NeoNode> configuration) {
+               private void layoutTree(Configuration<NeoNode> configuration, boolean outgoing) {
 
                   final Map<Long, NeoNode> nodesAndIds = new LinkedHashMap<>();
                   for (NeoNode selectedNode : nodeCanvas.getAllNodes())
@@ -1395,7 +1395,7 @@ public final class Workspace extends JPanel {
                      public void doAction(Transaction tx) throws Throwable {
 
                         // recursively traverse from root, finding all visible-children and populate parentsMap and childrensMap:
-                        visit(new LinkedHashSet<>(), NeoNode.this);
+                        visit(new LinkedHashSet<>(), NeoNode.this, outgoing);
 
                         final TreeForTreeLayout<NeoNode> tree = new AbstractTreeForTreeLayout<NeoNode>(NeoNode.this) {
                            @Override
@@ -1437,25 +1437,39 @@ public final class Workspace extends JPanel {
                         }
                      }
 
-                     private void visit(Set<NeoNode> visitedChildren, NeoNode root) {
+                     private void visit(Set<NeoNode> visitedChildren, NeoNode root, boolean outgoing) {
                         childrensMap.put(root.id(), new ArrayList<>());
 
                         final Set<Long> childrenToVisit = new LinkedHashSet<>();
-                        outgoing(root.getNode()).forEach(relationship -> {
-                           final Node childNode = other(root.getNode(), relationship);
-                           final long childId = childNode.getId();
-                           // if child is visible, and not already visited, add to root
-                           if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
-                              visitedChildren.add(nodesAndIds.get(childId));
-                              parentsMap.put(childId, root);
-                              childrensMap.get(root.id()).add(nodesAndIds.get(childId));
-                              childrenToVisit.add(childId);
-                           }
-                        });
+                        if (outgoing) {
+                           outgoing(root.getNode()).forEach(relationship -> {
+                              final Node childNode = other(root.getNode(), relationship);
+                              final long childId = childNode.getId();
+                              // if child is visible, and not already visited, add to root
+                              if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
+                                 visitedChildren.add(nodesAndIds.get(childId));
+                                 parentsMap.put(childId, root);
+                                 childrensMap.get(root.id()).add(nodesAndIds.get(childId));
+                                 childrenToVisit.add(childId);
+                              }
+                           });
+                        } else {
+                           incoming(root.getNode()).forEach(relationship -> {
+                              final Node childNode = other(root.getNode(), relationship);
+                              final long childId = childNode.getId();
+                              // if child is visible, and not already visited, add to root
+                              if (nodesAndIds.containsKey(childId) && !visitedChildren.contains(nodesAndIds.get(childId))) {
+                                 visitedChildren.add(nodesAndIds.get(childId));
+                                 parentsMap.put(childId, root);
+                                 childrensMap.get(root.id()).add(nodesAndIds.get(childId));
+                                 childrenToVisit.add(childId);
+                              }
+                           });
+                        }
 
                         // recursively visit added children:
                         for (Long childNode : childrenToVisit)
-                           visit(visitedChildren, nodesAndIds.get(childNode));
+                           visit(visitedChildren, nodesAndIds.get(childNode), outgoing);
                      }
 
                      @Override
