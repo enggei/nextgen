@@ -1,5 +1,6 @@
 package com.generator.generators.mysql;
 
+import com.generator.app.Plugin;
 import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.app.App;
@@ -25,7 +26,7 @@ import static com.generator.util.NeoUtil.relate;
 /**
  * Created 23.08.17.
  */
-public class MySQLPlugin extends DomainPlugin {
+public class MySQLPlugin extends Plugin {
 
    public enum Entities implements Label {
       Database, Table, Column
@@ -41,6 +42,11 @@ public class MySQLPlugin extends DomainPlugin {
 
    public MySQLPlugin(App app) {
       super(app, "MySQL");
+   }
+
+   @Override
+   protected Label[] getLabels() {
+      return Entities.values();
    }
 
    @Override
@@ -147,5 +153,10 @@ public class MySQLPlugin extends DomainPlugin {
             }));
          }
       });
+   }
+
+   @Override
+   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+
    }
 }

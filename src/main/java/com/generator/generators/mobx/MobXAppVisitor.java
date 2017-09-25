@@ -12,13 +12,18 @@ import java.util.Stack;
 /**
  * Created 22.09.17.
  */
-public class MobXAppVisitor extends DomainVisitor {
+public class MobXAppVisitor extends DomainVisitor<MobXGroup.ModelST> {
 
    private final MobXGroup mobXGroup = new MobXGroup();
    private final Stack<MobXGroup.ModelST> modelStack = new Stack<>();
 
    public MobXAppVisitor(Node visitorNode, App app) {
       super(true,visitorNode, app);
+   }
+
+   @Override
+   public MobXGroup.ModelST getResult() {
+      return modelStack.peek();
    }
 
    @Override
@@ -33,7 +38,6 @@ public class MobXAppVisitor extends DomainVisitor {
       super.visitEntity(node);
 
       NeoUtil.outgoing(visitorNode, ProjectPlugin.Relations.RENDERER).forEach(relationship -> ProjectPlugin.renderToFile(relationship, null, modelST.toString(), NeoUtil.other(visitorNode, relationship), app));
-      System.out.println(modelST);
    }
 
    @Override

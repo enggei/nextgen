@@ -1,9 +1,6 @@
 package com.generator.generators.project;
 
-import com.generator.app.App;
-import com.generator.app.AppMotif;
-import com.generator.app.DomainMotif;
-import com.generator.app.Workspace;
+import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -36,7 +33,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 06.08.17.
  */
-public class ProjectPlugin extends DomainPlugin {
+public class ProjectPlugin extends Plugin {
 
    public enum Entities implements Label {
       Project, Directory
@@ -54,25 +51,25 @@ public class ProjectPlugin extends DomainPlugin {
       java, plain, namedFile, groupFile
    }
 
-   private final Node domainNode;
-   private final Node projectNode;
-   private final Node directoryNode;
+//   private final Node domainNode;
+//   private final Node projectNode;
+//   private final Node directoryNode;
 
    public ProjectPlugin(App app) {
       super(app, "Project");
 
-      domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Project");
-      // use domain-node outgoing to merge here, not findOrCreate
-      projectNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Project.name());
-      directoryNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Directory.name());
-
-      relate(domainNode, projectNode, DomainPlugin.Relations.ENTITY);
-      newEntityProperty(projectNode, AppMotif.Properties.name.name());
-      newEntityRelation(projectNode, Relations.DIRECTORY.name(), RelationCardinality.LIST, directoryNode);
-
-      newEntityProperty(directoryNode, AppMotif.Properties.name.name());
-      newEntityProperty(directoryNode, Properties.path.name());
-      newEntityRelation(directoryNode, Relations.CHILD.name(), RelationCardinality.LIST, directoryNode);
+//      domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Project");
+//      // use domain-node outgoing to merge here, not findOrCreate
+//      projectNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Project.name());
+//      directoryNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Directory.name());
+//
+//      relate(domainNode, projectNode, DomainPlugin.Relations.ENTITY);
+//      newEntityProperty(projectNode, AppMotif.Properties.name.name());
+//      newEntityRelation(projectNode, Relations.DIRECTORY.name(), RelationCardinality.LIST, directoryNode);
+//
+//      newEntityProperty(directoryNode, AppMotif.Properties.name.name());
+//      newEntityProperty(directoryNode, Properties.path.name());
+//      newEntityRelation(directoryNode, Relations.CHILD.name(), RelationCardinality.LIST, directoryNode);
    }
 
    @Override
@@ -92,11 +89,11 @@ public class ProjectPlugin extends DomainPlugin {
             final String name = SwingUtil.showInputDialog("Project name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = getGraph().newNode(Label.label(getString(projectNode, AppMotif.Properties.name.name())));
-            projectNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
+            final Node newNode = getGraph().newNode(Entities.Project);
+//            projectNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
-            relate(newNode, newValueNode(name), RelationshipType.withName(AppMotif.Properties.name.name()));
+            relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
 
             fireNodesLoaded(newNode);
          }

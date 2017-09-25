@@ -30,7 +30,7 @@ import static com.generator.util.NeoUtil.relate;
 /**
  * Created 12.09.17.
  */
-public class JavaPlugin extends DomainPlugin {
+public class JavaPlugin extends Plugin {
 
    public enum Entities implements Label {
       Object
@@ -48,6 +48,11 @@ public class JavaPlugin extends DomainPlugin {
 
    public JavaPlugin(App app) {
       super(app, "Java");
+   }
+
+   @Override
+   protected Label[] getLabels() {
+      return Entities.values();
    }
 
    @Override

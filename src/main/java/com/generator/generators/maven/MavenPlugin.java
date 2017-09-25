@@ -2,12 +2,16 @@ package com.generator.generators.maven;
 
 import com.generator.app.App;
 import com.generator.app.AppMotif;
+import com.generator.app.Plugin;
 import com.generator.app.Workspace;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
-import com.generator.generators.domain.DomainPlugin;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -27,14 +31,11 @@ import java.io.StringReader;
 import java.util.Set;
 
 import static com.generator.util.NeoUtil.*;
-import static com.generator.util.NeoUtil.other;
-import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
-import static com.generator.util.NeoUtil.relate;
 
 /**
  * Created 03.08.17.
  */
-public class MavenPlugin extends DomainPlugin {
+public class MavenPlugin extends Plugin {
 
    public enum Entities implements Label {
       Pom, Dependency
@@ -49,6 +50,11 @@ public class MavenPlugin extends DomainPlugin {
 
    public MavenPlugin(App app) {
       super(app, "Maven");
+   }
+
+   @Override
+   protected Label[] getLabels() {
+      return Entities.values();
    }
 
    @Override
@@ -78,11 +84,6 @@ public class MavenPlugin extends DomainPlugin {
             }));
          }
       });
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
    }
 
    @Override

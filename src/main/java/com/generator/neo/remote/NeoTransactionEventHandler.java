@@ -22,7 +22,7 @@ class NeoTransactionEventHandler {
 
 	TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> handler) {
 		if (!transactionEventHandlers.remove(handler))
-			throw new IllegalStateException(handler + " istn't registered");
+			throw new IllegalStateException(handler + " isn't registered");
 
 		if (transactionEventHandlerStates.containsKey(handler))
 			transactionEventHandlerStates.remove(handler);

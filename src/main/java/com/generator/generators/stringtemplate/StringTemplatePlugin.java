@@ -1,14 +1,11 @@
 package com.generator.generators.stringtemplate;
 
-import com.generator.neo.NeoModel;
-import com.generator.app.App;
-import com.generator.app.AppEvents;
-import com.generator.app.AppMotif;
-import com.generator.app.Workspace;
+import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.domain.*;
 import com.generator.generators.stringtemplate.parser.TemplateFileParser;
+import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.runtime.Token;
@@ -32,14 +29,13 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.util.NeoUtil.*;
-import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
 import static com.generator.generators.project.ProjectPlugin.getFile;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 06.08.17.
  */
-public class StringTemplatePlugin extends DomainPlugin {
+public class StringTemplatePlugin extends Plugin {
 
    public StringTemplatePlugin(App app) {
       super(app, "StringTemplate");
@@ -117,7 +113,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                            AppMotif.Properties.name.name(), templateStatement.getName(),
                            Properties.text.name(), templateStatement.getText());
                      stNode.addLabel(DomainPlugin.Entities.Entity);
-                     stGroupNode.createRelationshipTo(stNode, Relations.ENTITY);
+                     stGroupNode.createRelationshipTo(stNode, DomainPlugin.Relations.ENTITY);
 
                      for (TemplateParameter templateParameter : templateStatement.getParameters())
                         newTemplateParameter(templateParameter, stNode);
@@ -181,7 +177,7 @@ public class StringTemplatePlugin extends DomainPlugin {
 
          for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
             if (hasLabel(selectedNode.getNode(), Entities.STTemplate)) {
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.ENTITY)) continue;
+               if (isRelated(neoNode.getNode(), selectedNode.getNode(), DomainPlugin.Relations.ENTITY)) continue;
 
                final String templateName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
                final AtomicBoolean exists = new AtomicBoolean(false);
@@ -223,22 +219,22 @@ public class StringTemplatePlugin extends DomainPlugin {
       if (neoNode.getNode().hasLabel(Entities.STTemplate))
          tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new TemplateEditor(neoNode));
 
-      incoming(neoNode.getNode(), Relations.INSTANCE).forEach(instanceRelation -> {
+      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
          final Node other = other(neoNode.getNode(), instanceRelation);
          if (hasLabel(other, Entities.STTemplate))
             tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new TemplateRenderPanel(neoNode, other));
       });
    }
 
-   private static RelationCardinality getCardinalityFor(TemplateEntities domainEntityType) {
+   private static DomainPlugin.RelationCardinality getCardinalityFor(TemplateEntities domainEntityType) {
       switch (domainEntityType) {
          case STRINGPROPERTY:
          case BOOLEANPROPERTY:
          case STATEMENTPROPERTY:
-            return RelationCardinality.SINGLE;
+            return DomainPlugin.RelationCardinality.SINGLE;
          case LISTPROPERTY:
          case KEYVALUELISTPROPERTY:
-            return RelationCardinality.LIST;
+            return DomainPlugin.RelationCardinality.LIST;
       }
       throw new IllegalStateException("Unknown domainEntity type " + domainEntityType);
    }
@@ -273,7 +269,7 @@ public class StringTemplatePlugin extends DomainPlugin {
 
       final ST template = new ST(group, getString(templateNode, Properties.text.name()));
 
-      new EntityRelationVisitor() {
+      new DomainPlugin.EntityRelationVisitor() {
          @Override
          public void onSingle(Node relationNode, Node dstNode) {
             final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
@@ -314,9 +310,9 @@ public class StringTemplatePlugin extends DomainPlugin {
          template.add(parameterName, getString(node, AppMotif.Properties.name.name()));
 
       } else {
-         final Node entityReferenceNode = other(node, singleIncoming(node, Relations.INSTANCE));
+         final Node entityReferenceNode = other(node, singleIncoming(node, DomainPlugin.Relations.INSTANCE));
 
-         switch (RelationCardinality.valueOf(getString(relationNode, DomainPlugin.Properties.relationCardinality.name()))) {
+         switch (DomainPlugin.RelationCardinality.valueOf(getString(relationNode, DomainPlugin.Properties.relationCardinality.name()))) {
 
             case SINGLE:
                if (hasLabel(entityReferenceNode, Entities.STTemplate))
@@ -350,7 +346,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                      if (hasLabel(referenceValueNode, DomainPlugin.Entities.Value)) {
                         aggrValues.put(key, getString(referenceValueNode, AppMotif.Properties.name.name()));
                      } else {
-                        final Node keyValueReferenceNode = other(referenceValueNode, singleIncoming(referenceValueNode, Relations.INSTANCE));
+                        final Node keyValueReferenceNode = other(referenceValueNode, singleIncoming(referenceValueNode, DomainPlugin.Relations.INSTANCE));
                         if (hasLabel(keyValueReferenceNode, Entities.STTemplate))
                            aggrValues.put(key, renderStatement(referenceValueNode, keyValueReferenceNode));
                      }
@@ -391,7 +387,7 @@ public class StringTemplatePlugin extends DomainPlugin {
             setDomain(getString(node, AppMotif.Properties.name.name())).
             setPackageName(packageName);
 
-      outgoing(node, Relations.ENTITY).forEach(groupStatementRelation -> {
+      outgoing(node, DomainPlugin.Relations.ENTITY).forEach(groupStatementRelation -> {
 
          final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
          final Node templateNode = other(node, groupStatementRelation);
@@ -400,7 +396,7 @@ public class StringTemplatePlugin extends DomainPlugin {
          final TemplateGroupGroup.templateST templateST = group.newtemplate().
                setName(statementName);
 
-         new EntityRelationVisitor() {
+         new DomainPlugin.EntityRelationVisitor() {
             @Override
             public void onSingle(Node relationNode, Node dstNode) {
                final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
@@ -442,7 +438,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                            setStatementName(statementName);
 
                      // visit Entity's properties (only uses single)
-                     new EntityRelationVisitor() {
+                     new DomainPlugin.EntityRelationVisitor() {
                         @Override
                         public void onSingle(Node relationNode, Node dstNode) {
                            kvSetter.addKvNamesValue(getString(relationNode, AppMotif.Properties.name.name()));
@@ -477,7 +473,7 @@ public class StringTemplatePlugin extends DomainPlugin {
    @NotNull
    private static Set<String> getKeys(Node entityReferenceNode) {
       final Set<String> existingKeys = new LinkedHashSet<>();
-      outgoing(entityReferenceNode, Relations.SRC).forEach(kvRelation -> {
+      outgoing(entityReferenceNode, DomainPlugin.Relations.SRC).forEach(kvRelation -> {
          final Node kvRelationNode = other(entityReferenceNode, kvRelation);
          final String key = getString(kvRelationNode, AppMotif.Properties.name.name());
 //         final Node keyNode = other(kvRelationNode, singleOutgoing(kvRelationNode, Relations.DST));
@@ -663,7 +659,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                      public void doAction(Transaction tx) throws Throwable {
 
                         final java.util.List<Node> existingParameters = new ArrayList<>();
-                        outgoing(templateNode.getNode(), Relations.SRC).forEach(relationship -> existingParameters.add(other(templateNode.getNode(), relationship)));
+                        outgoing(templateNode.getNode(), DomainPlugin.Relations.SRC).forEach(relationship -> existingParameters.add(other(templateNode.getNode(), relationship)));
 
                         final java.util.List<TemplateParameter> parameters = parsed.getParameters();
                         for (TemplateParameter templateParameter : parameters) {
@@ -680,7 +676,7 @@ public class StringTemplatePlugin extends DomainPlugin {
 
                                     if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY)) {
 
-                                       final Node entityNode = other(existingParameter, singleOutgoing(existingParameter, Relations.DST));
+                                       final Node entityNode = other(existingParameter, singleOutgoing(existingParameter, DomainPlugin.Relations.DST));
                                        final Set<String> newKeys = new LinkedHashSet<>(templateParameter.getKvNames());
                                        final Set<String> existingKeys = getKeys(entityNode);
 
@@ -696,7 +692,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                                        for (String oldKey : oldKeys) {
                                           outgoing(entityNode, DomainPlugin.Relations.SRC).forEach(kvRelation -> {
                                              final Node kvRelationNode = other(entityNode, kvRelation);
-                                             final Relationship kvRelationship = singleOutgoing(kvRelationNode, Relations.DST);
+                                             final Relationship kvRelationship = singleOutgoing(kvRelationNode, DomainPlugin.Relations.DST);
                                              final Node keyNode = other(kvRelationNode, kvRelationship);
 
                                              final String existingName = getString(keyNode, AppMotif.Properties.name.name(), "");
@@ -721,7 +717,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                                        }
 
                                        for (String newKey : newKeys) {
-                                          newEntityRelation(entityNode, newKey, RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), newKey));
+                                          DomainMotif.newEntityRelation(getGraph(), entityNode, newKey, DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), newKey));
                                        }
                                     }
 
@@ -756,7 +752,7 @@ public class StringTemplatePlugin extends DomainPlugin {
                         txtEditor.setBackground(uneditedColor);
 
                         // re-render all statements of this template
-                        outgoing(templateNode.getNode(), Relations.INSTANCE).forEach(relationship -> {
+                        outgoing(templateNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(relationship -> {
                            final Node instanceNode = other(templateNode.getNode(), relationship);
                            incoming(instanceNode, ProjectPlugin.Relations.RENDERER).forEach(rendererRelation -> {
                               final Node dirNode = other(instanceNode, rendererRelation);
@@ -927,17 +923,17 @@ public class StringTemplatePlugin extends DomainPlugin {
          case STATEMENTPROPERTY: // todo split this and use referenceType = ReferenceType.ENTITY;
          case STRINGPROPERTY:
          case BOOLEANPROPERTY:
-            newEntityRelation(templateNode, templateParameter.getPropertyName(), RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
+            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
             break;
          case LISTPROPERTY:
-            newEntityRelation(templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
+            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
             break;
          case KEYVALUELISTPROPERTY:
             final Node newParameterNode = getGraph().newNode(DomainPlugin.Entities.Entity, AppMotif.Properties.name.name(), templateParameter.getPropertyName());
             templateParameter.getKvNames().forEach(key -> {
-               newEntityRelation(newParameterNode, key, RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), key));
+               DomainMotif.newEntityRelation(getGraph(),newParameterNode, key, DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), key));
             });
-            newEntityRelation(templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, newParameterNode);
+            DomainMotif.newEntityRelation(getGraph(),templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.LIST, newParameterNode);
             break;
       }
    }

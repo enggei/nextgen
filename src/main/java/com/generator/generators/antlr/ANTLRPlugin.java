@@ -2,6 +2,7 @@ package com.generator.generators.antlr;
 
 import com.generator.app.App;
 import com.generator.app.AppMotif;
+import com.generator.app.Plugin;
 import com.generator.app.Workspace;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
@@ -25,7 +26,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 25.08.17.
  */
-public class ANTLRPlugin extends DomainPlugin {
+public class ANTLRPlugin extends Plugin {
 
    enum Entities implements Label {
       GrammarSpec
@@ -33,6 +34,11 @@ public class ANTLRPlugin extends DomainPlugin {
 
    public ANTLRPlugin(App app) {
       super(app, "ANTLR");
+   }
+
+   @Override
+   protected Label[] getLabels() {
+      return Entities.values();
    }
 
    @Override

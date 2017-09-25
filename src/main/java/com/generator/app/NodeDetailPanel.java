@@ -122,7 +122,9 @@ class NodeDetailPanel extends JPanel {
 
       if (currentNodes.size() < 20) {
          for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes) {
-            for (Plugin plugin : app.plugins) plugin.showEditorFor(currentNode, content);
+            for (Plugin plugin : app.plugins) {
+               plugin.showEditorFor(currentNode, content);
+            }
          }
       }
 

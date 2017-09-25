@@ -17,6 +17,20 @@ import static com.generator.util.NeoUtil.*;
  */
 public class DomainMotif {
 
+   public static void newEntityProperty(NeoModel graph, Node srcEntity, String name) {
+      newEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.findOrCreate(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
+   }
+
+   public static Node newValueNode(NeoModel graph, String value) {
+      return graph.findOrCreate(DomainPlugin.Entities.Value, AppMotif.Properties.name.name(), value);
+   }
+
+   public static Node newInstanceNode(NeoModel graph, String label, Node referenceNode) {
+      final Node newNode = graph.newNode(Label.label(label));
+      referenceNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
+      return newNode;
+   }
+
    public static Node newEntityRelation(NeoModel graph, Node srcEntity, String name, DomainPlugin.RelationCardinality relationCardinality, Node... dstEntities) {
 
       if (dstEntities.length == 0) throw new IllegalArgumentException("must have at least 1 dstEntity");
@@ -76,21 +90,21 @@ public class DomainMotif {
       return getString(other(node, valueRelation), AppMotif.Properties.name.name(), defaultValue);
    }
 
-   protected Set<Node> findNodes(NeoModel graph, Label label) {
-      final Set<Node> nodes = new LinkedHashSet<>();
-      graph.findNodes(label).forEachRemaining(nodes::add);
-      return nodes;
-   }
-
-   protected Set<Node> findNodes(NeoModel graph, Label label, String property, String value) {
-      final Set<Node> nodes = new LinkedHashSet<>();
-      graph.findNodes(label, property, value).forEachRemaining(nodes::add);
-      return nodes;
-   }
-
-   protected Node findNode(NeoModel graph, Label label, String property, String value) {
-      return graph.findNode(label, property, value);
-   }
+//   protected Set<Node> findNodes(NeoModel graph, Label label) {
+//      final Set<Node> nodes = new LinkedHashSet<>();
+//      graph.findNodes(label).forEachRemaining(nodes::add);
+//      return nodes;
+//   }
+//
+//   protected Set<Node> findNodes(NeoModel graph, Label label, String property, String value) {
+//      final Set<Node> nodes = new LinkedHashSet<>();
+//      graph.findNodes(label, property, value).forEachRemaining(nodes::add);
+//      return nodes;
+//   }
+//
+//   protected Node findNode(NeoModel graph, Label label, String property, String value) {
+//      return graph.findNode(label, property, value);
+//   }
 
    protected Node findOrCreate(NeoModel graph, Label label, String name, Object... properties) {
       return graph.findOrCreate(label, name, properties);

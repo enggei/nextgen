@@ -1,31 +1,16 @@
+
+// todo:
+NeoModel - functional comitter
+Meny - remote-connection
+
+
+
 Codegen project
 
 Tasks:
 
 * Assign to template in both directions
 * index in AppMotif.Properties.name, _Value
-* VK_F search for name-property
-
-* implement undo:
-class Commit {
-               private final Set<Node> deletedNodes;
-               private final Set<Relationship> deletedRelations;
-
-               public Commit(Set<Node> deletedNodes, Set<Relationship> deletedRelations) {
-                  this.deletedNodes = new LinkedHashSet<>(deletedNodes);
-                  this.deletedRelations = new LinkedHashSet<>(deletedRelations);
-               }
-
-               void undo() {
-                  for (Node deletedNode : deletedNodes) {
-                     final Node node = model.graph().getGraphDb().createNode();
-                  }
-               }
-            }
-
-            private final Stack<Commit> history = new Stack<>();
-
-
 
 * Create browser-editor (example):
 https://github.com/behavior3/behavior3editor

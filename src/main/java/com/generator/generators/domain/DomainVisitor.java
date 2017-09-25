@@ -14,7 +14,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 20.09.17.
  */
-public abstract class DomainVisitor {
+public abstract class DomainVisitor<T> {
 
    private final Set<Relationship> visitedRelations = new LinkedHashSet<>();
 
@@ -29,6 +29,10 @@ public abstract class DomainVisitor {
       this.debug = debug;
       this.visitorNode = visitorNode;
       this.app = app;
+   }
+
+   public T getResult() {
+      return null;
    }
 
    public void visit(Node node) {

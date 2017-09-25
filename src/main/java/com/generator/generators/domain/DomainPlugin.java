@@ -7,9 +7,11 @@ import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -169,7 +171,7 @@ public class DomainPlugin extends Plugin {
                }
 
                final Node newPropertyNode = getGraph().newNode(Entities.Property, AppMotif.Properties.name.name(), name);
-               fireNodesLoaded(newPropertyNode, newEntityRelation(node, name, RelationCardinality.SINGLE, newPropertyNode));
+               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(), node, name, RelationCardinality.SINGLE, newPropertyNode));
             }
          });
 
@@ -203,7 +205,7 @@ public class DomainPlugin extends Plugin {
                         throw new IllegalStateException("Entity must have a name");
 
                      final Node newEntityNode = getGraph().findOrCreate(Entities.Entity, AppMotif.Properties.name.name(), txtEntityName.getText().trim());
-                     fireNodesLoaded(newEntityNode, newEntityRelation(node, name, relationCardinality, newEntityNode));
+                     fireNodesLoaded(newEntityNode, DomainMotif.newEntityRelation(getGraph(),node, name, relationCardinality, newEntityNode));
                   }
 
                   @Override
@@ -242,7 +244,7 @@ public class DomainPlugin extends Plugin {
                               if (name.length() == 0)
                                  throw new IllegalStateException("Relation Name is required");
 
-                              fireNodesLoaded(newEntityRelation(selectedNode.getNode(), name, relationCardinality, node));
+                              fireNodesLoaded(DomainMotif.newEntityRelation(getGraph(),selectedNode.getNode(), name, relationCardinality, node));
                            }
 
                            @Override
@@ -297,7 +299,7 @@ public class DomainPlugin extends Plugin {
                }
 
                final Node newPropertyNode = getGraph().newNode(Entities.Property, AppMotif.Properties.name.name(), name);
-               fireNodesLoaded(newPropertyNode, newEntityRelation(node, name, RelationCardinality.SINGLE, newPropertyNode));
+               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(),node, name, RelationCardinality.SINGLE, newPropertyNode));
             }
          });
 
@@ -475,7 +477,7 @@ public class DomainPlugin extends Plugin {
                                        for (JTextField txtValue : txtValues) {
                                           final String value = txtValue.getText().trim();
                                           if (value.length() == 0) continue;
-                                          final Node newDstNode = newValueNode(value.trim());
+                                          final Node newDstNode = DomainMotif.newValueNode(getGraph(), value.trim());
                                           relate(node, newDstNode, RelationshipType.withName(parameterName));
                                           newNodes.add(newDstNode);
                                        }
@@ -576,7 +578,7 @@ public class DomainPlugin extends Plugin {
 
                                     // try to find existing node with same value, and if exists, use this and add link to it
                                     final Node existingNode = getGraph().findNode(Entities.Value, AppMotif.Properties.name.name(), value);
-                                    final Node newDstNode = existingNode == null ? newValueNode(value) : existingNode;
+                                    final Node newDstNode = existingNode == null ? DomainMotif.newValueNode(getGraph(), value) : existingNode;
                                     relate(node, newDstNode, RelationshipType.withName(fieldEntry.getKey()));
                                     fireNodesLoaded(newDstNode);
                                  }
@@ -677,13 +679,13 @@ public class DomainPlugin extends Plugin {
                      if (value.trim().length() == 0) continue;
 
                      if (newEntityNode == null) {
-                        newEntityNode = newInstanceNode(getString(instanceNode, AppMotif.Properties.name.name()), instanceNode);
+                        newEntityNode = DomainMotif.newInstanceNode(getGraph(), getString(instanceNode, AppMotif.Properties.name.name()), instanceNode);
                         relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
                      }
 
                      // try to find existing node with same value, and if exists, use this and add link to it
                      final Node existingValueNode = getGraph().findNode(Entities.Value, AppMotif.Properties.name.name(), value);
-                     final Node newPropertyNode = existingValueNode == null ? newValueNode(value) : existingValueNode;
+                     final Node newPropertyNode = existingValueNode == null ? DomainMotif.newValueNode(getGraph(), value) : existingValueNode;
                      relate(newEntityNode, newPropertyNode, RelationshipType.withName(fieldEntry.getKey()));
                   }
                   if (newEntityNode != null) fireNodesLoaded(newEntityNode);
@@ -700,9 +702,13 @@ public class DomainPlugin extends Plugin {
 
    @Override
    public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
-
+      if (hasLabel(neoNode.getNode(), Entities.Visitor)) {
+         outgoing(neoNode.getNode(), DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
+            System.out.println("Visitor " + visitorRelation.getId());
+            tabbedPane.add(getNameOrLabelFrom(neoNode.getNode()), new VisitorRenderPanel(neoNode, visitorRelation));
+         });
+      }
    }
-
 
    public static void renderDomainVisitor(Relationship rendererRelationship, Node node) {
       final String packageName = getString(rendererRelationship, "package");
@@ -731,31 +737,30 @@ public class DomainPlugin extends Plugin {
       }
    }
 
-   public static void renderMobX(Relationship rendererRelationship, Node node) {
-      final String packageName = getString(rendererRelationship, "package");
-      final File targetDir = getFile(other(node, rendererRelationship));
+   private final class VisitorRenderPanel extends JPanel {
+      VisitorRenderPanel(Workspace.NodeCanvas.NeoNode visitorNode, Relationship visitorRelation) {
+         super(new BorderLayout());
 
-      final String groupName = getString(node, AppMotif.Properties.name.name()) + "Visitor";
+         final JTextArea txtEditor = new JTextArea(25, 85);
+         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
 
-      final Set<Node> visitedNodes = new LinkedHashSet<>();
-      final Map<String, NeoVisitorGroup.entityVisitST> visitorMethods = new LinkedHashMap<>();
+         final Node nodeToVisit = other(visitorNode.getNode(), visitorRelation);
 
-      final NeoVisitorGroup visitorGroup = new NeoVisitorGroup();
+         try {
+            final DomainVisitor visitor = (DomainVisitor) Class.forName(getString(visitorNode.getNode(), Properties.visitorClass.name())).
+                  getConstructor(Node.class, App.class).
+                  newInstance(visitorNode.getNode(), app);
+            visitor.visit(nodeToVisit);
+            txtEditor.setText(visitor.getResult().toString());
+            txtEditor.setCaretPosition(0);
+         } catch (Exception ex) {
+            txtEditor.setText(SwingUtil.printStackTrace(ex));
+            txtEditor.setCaretPosition(0);
+         }
 
-      for (Relationship relationship : outgoing(node, Relations.ENTITY))
-         visitEntityNode(visitorMethods, visitedNodes, visitorGroup, other(node, relationship));
-
-      final NeoVisitorGroup.DomainVisitorST domainVisitorST = visitorGroup.newDomainVisitor().
-            setName(groupName).
-            setPackageName(packageName);
-
-      for (Map.Entry<String, NeoVisitorGroup.entityVisitST> visitSTEntry : visitorMethods.entrySet())
-         domainVisitorST.addEntitiesValue(visitSTEntry.getKey(), visitSTEntry.getValue());
-
-      try {
-         GeneratedFile.newJavaFile(targetDir.getAbsolutePath(), packageName, groupName).write(domainVisitorST);
-      } catch (IOException ex) {
-         ex.printStackTrace();
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
    }
 
@@ -790,27 +795,6 @@ public class DomainPlugin extends Plugin {
          if (existingVisitorST.getOutgoingValues().contains(newOutgoing)) continue;
          existingVisitorST.addOutgoingValue(newOutgoing);
       }
-   }
-
-   // todo make these static in DomainMotif
-
-
-   protected void newEntityProperty(Node srcEntity, String name) {
-      newEntityRelation(srcEntity, name, RelationCardinality.SINGLE, getGraph().findOrCreate(Entities.Property, AppMotif.Properties.name.name(), name));
-   }
-
-   protected Node newEntityRelation(Node srcEntity, String name, RelationCardinality relationCardinality, Node... dstEntities) {
-      return DomainMotif.newEntityRelation(getGraph(), srcEntity, name, relationCardinality, dstEntities);
-   }
-
-   protected Node newValueNode(String value) {
-      return getGraph().findOrCreate(Entities.Value, AppMotif.Properties.name.name(), value);
-   }
-
-   private Node newInstanceNode(String label, Node referenceNode) {
-      final Node newNode = getGraph().newNode(Label.label(label));
-      referenceNode.createRelationshipTo(newNode, Relations.INSTANCE);
-      return newNode;
    }
 
    public abstract static class EntityRelationVisitor {

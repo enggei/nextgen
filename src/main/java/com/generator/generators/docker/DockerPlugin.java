@@ -1,10 +1,6 @@
 package com.generator.generators.docker;
 
-import com.generator.app.App;
-import com.generator.app.AppMotif;
-import com.generator.app.DomainMotif;
-import com.generator.app.Workspace;
-import com.generator.generators.domain.DomainPlugin;
+import com.generator.app.*;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -28,7 +24,7 @@ import static com.generator.util.NeoUtil.relate;
 /**
  * Created 16.09.17.
  */
-public class DockerPlugin extends DomainPlugin {
+public class DockerPlugin extends Plugin {
 
    public enum Entities implements Label {
       Dockerfile
@@ -43,6 +39,11 @@ public class DockerPlugin extends DomainPlugin {
 
    public DockerPlugin(App app) {
       super(app, "Docker");
+   }
+
+   @Override
+   protected Label[] getLabels() {
+      return Entities.values();
    }
 
    @Override
@@ -134,6 +135,11 @@ public class DockerPlugin extends DomainPlugin {
             }
          });
       }
+   }
+
+   @Override
+   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+
    }
 
    private static String findPath(Node targetNode, Node renderDirectory) {
