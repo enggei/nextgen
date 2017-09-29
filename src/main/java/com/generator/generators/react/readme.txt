@@ -28,31 +28,37 @@ npm install socket.io socket.io-react -S
 # look and feel (material ui)
 npm install material-ui react-tap-event-plugin -S
 
+# css
+npm install css-loader style-loader --save-dev
 
 
 # webpack.config.js
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 
-var BUILD_DIR = path.resolve(__dirname, 'src/main/web/');
-var APP_DIR = path.resolve(__dirname, 'src/main/web/');
+const BUILD_DIR = path.resolve(__dirname, 'src/main/web/');
+const APP_DIR = path.resolve(__dirname, 'src/main/web/');
 
-var config = {
+const config = {
   entry: APP_DIR + '/index.js',
   output: {
     path: BUILD_DIR,
-    filename: 'app.js'
+    filename: 'bundle.js'
   },
   module : {
       loaders : [
         {
-          test : /\.jsx?/,
-          include : APP_DIR,
-          loader : 'babel-loader',
+          test: /\.jsx?/,
+          include: APP_DIR,
+          loader: 'babel-loader',
           query: {
             presets: ['es2015', 'react'],
             plugins: ['transform-object-rest-spread', 'transform-decorators-legacy', 'transform-class-properties']
           }
+        },
+        {
+          test: /\.css$/,
+          loader: "style-loader!css-loader"
         }
       ]
     }
@@ -63,7 +69,7 @@ new webpack.DefinePlugin({
     NODE_ENV: JSON.stringify('production')
   }
 }),
-new webpack.optimize.UglifyJsPlugin()
+new webpack.optimize.UglifyJsPlugin();
 
 module.exports = config;
 
