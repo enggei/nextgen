@@ -57,6 +57,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inBlock.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -93,22 +111,22 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inStatement.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
 
 	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+	public void enterIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("IntegerLiteral"), "text", arg.getText());
 		onEnter(node);
-		this.inLiteral.push(true);
+		this.inIntegerLiteral.push(true);
 	}
 
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+	public void exitIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
 		onExit();
-		this.inLiteral.pop();
+		this.inIntegerLiteral.pop();
 	}
 
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
+	public boolean inIntegerLiteral() {
+      return !inIntegerLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFormalParameterList = new java.util.Stack<>();
@@ -1009,24 +1027,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inQualifiedName() {
       return !inQualifiedName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("IntegerLiteral"), "text", arg.getText());
-		onEnter(node);
-		this.inIntegerLiteral.push(true);
-	}
-
-	public void exitIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
-		onExit();
-		this.inIntegerLiteral.pop();
-	}
-
-	public boolean inIntegerLiteral() {
-      return !inIntegerLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAnnotation = new java.util.Stack<>();

@@ -57,22 +57,22 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
 		onEnter(node);
-		this.inStatement.push(true);
+		this.inLiteral.push(true);
 	}
 
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
 		onExit();
-		this.inStatement.pop();
+		this.inLiteral.pop();
 	}
 
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyword = new java.util.Stack<>();
@@ -93,22 +93,76 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inKeyword.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
 
 	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
 		onEnter(node);
-		this.inLiteral.push(true);
+		this.inStatement.push(true);
 	}
 
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
 		onExit();
-		this.inLiteral.pop();
+		this.inStatement.pop();
 	}
 
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inNotExpression.push(true);
+	}
+
+	public void exitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
+		onExit();
+		this.inNotExpression.pop();
+	}
+
+	public boolean inNotExpression() {
+      return !inNotExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inParenthesizedExpression.push(true);
+	}
+
+	public void exitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
+		onExit();
+		this.inParenthesizedExpression.pop();
+	}
+
+	public boolean inParenthesizedExpression() {
+      return !inParenthesizedExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReservedWord = new java.util.Stack<>();
+
+	@Override
+	public void enterReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
+		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText());
+		onEnter(node);
+		this.inReservedWord.push(true);
+	}
+
+	public void exitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
+		onExit();
+		this.inReservedWord.pop();
+	}
+
+	public boolean inReservedWord() {
+      return !inReservedWord.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
@@ -867,6 +921,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inPropertyGetter.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentOperatorExpression.push(true);
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression.pop();
+	}
+
+	public boolean inAssignmentOperatorExpression() {
+      return !inAssignmentOperatorExpression.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPropertySetter = new java.util.Stack<>();
 
 	@Override
@@ -1081,24 +1153,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inLogicalOrExpression() {
       return !inLogicalOrExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText());
-		onEnter(node);
-		this.inNotExpression.push(true);
-	}
-
-	public void exitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		onExit();
-		this.inNotExpression.pop();
-	}
-
-	public boolean inNotExpression() {
-      return !inNotExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPreDecreaseExpression = new java.util.Stack<>();
@@ -1371,24 +1425,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBitShiftExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText());
-		onEnter(node);
-		this.inParenthesizedExpression.push(true);
-	}
-
-	public void exitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		onExit();
-		this.inParenthesizedExpression.pop();
-	}
-
-	public boolean inParenthesizedExpression() {
-      return !inParenthesizedExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inAdditiveExpression = new java.util.Stack<>();
 
 	@Override
@@ -1605,24 +1641,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBitOrExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAssignmentOperatorExpression.push(true);
-	}
-
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onExit();
-		this.inAssignmentOperatorExpression.pop();
-	}
-
-	public boolean inAssignmentOperatorExpression() {
-      return !inAssignmentOperatorExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inVoidExpression = new java.util.Stack<>();
 
 	@Override
@@ -1693,24 +1711,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inIdentifierName() {
       return !inIdentifierName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReservedWord = new java.util.Stack<>();
-
-	@Override
-	public void enterReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText());
-		onEnter(node);
-		this.inReservedWord.push(true);
-	}
-
-	public void exitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		onExit();
-		this.inReservedWord.pop();
-	}
-
-	public boolean inReservedWord() {
-      return !inReservedWord.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFutureReservedWord = new java.util.Stack<>();

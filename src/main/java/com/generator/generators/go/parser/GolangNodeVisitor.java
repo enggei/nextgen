@@ -63,8 +63,8 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		final Node node = new Node("Literal", arg.getText());
+	public Node visitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +72,8 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText());
+	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		final Node node = new Node("Literal", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -117,6 +117,15 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
+		final Node node = new Node("SourceFile", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
 		final Node node = new Node("StatementList", arg.getText());
 		onEnter(node);
@@ -146,15 +155,6 @@ public class GolangNodeVisitor extends GolangBaseVisitor<GolangNodeVisitor.Node>
 	@Override
 	public Node visitEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
 		final Node node = new Node("Eos", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
-		final Node node = new Node("SourceFile", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

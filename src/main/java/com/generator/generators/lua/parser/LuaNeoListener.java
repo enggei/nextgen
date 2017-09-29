@@ -57,24 +57,6 @@ public class LuaNeoListener extends LuaBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
-		onEnter(node);
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
 
 	@Override
@@ -91,6 +73,24 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	public boolean inString() {
       return !inString.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
+		onEnter(node);
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();

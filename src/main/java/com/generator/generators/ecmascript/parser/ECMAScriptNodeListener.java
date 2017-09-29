@@ -63,21 +63,21 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
+	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
 	}
 
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
 		onExit();
-		this.inStatement.pop();
+		this.inLiteral.pop();
 	}
 
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKeyword = new java.util.Stack<>();
@@ -97,21 +97,72 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return !inKeyword.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
 
 	@Override
-	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
 	}
 
-	public void exitLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
 		onExit();
-		this.inLiteral.pop();
+		this.inStatement.pop();
 	}
 
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
+		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText()));
+		this.inNotExpression.push(true);
+	}
+
+	public void exitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
+		onExit();
+		this.inNotExpression.pop();
+	}
+
+	public boolean inNotExpression() {
+      return !inNotExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
+		onEnter(new Node("ParenthesizedExpression", arg.getText(), arg.getStart().getText()));
+		this.inParenthesizedExpression.push(true);
+	}
+
+	public void exitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
+		onExit();
+		this.inParenthesizedExpression.pop();
+	}
+
+	public boolean inParenthesizedExpression() {
+      return !inParenthesizedExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReservedWord = new java.util.Stack<>();
+
+	@Override
+	public void enterReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
+		onEnter(new Node("ReservedWord", arg.getText(), arg.getStart().getText()));
+		this.inReservedWord.push(true);
+	}
+
+	public void exitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
+		onExit();
+		this.inReservedWord.pop();
+	}
+
+	public boolean inReservedWord() {
+      return !inReservedWord.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
@@ -828,6 +879,23 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return !inPropertyGetter.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onEnter(new Node("AssignmentOperatorExpression", arg.getText(), arg.getStart().getText()));
+		this.inAssignmentOperatorExpression.push(true);
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression.pop();
+	}
+
+	public boolean inAssignmentOperatorExpression() {
+      return !inAssignmentOperatorExpression.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPropertySetter = new java.util.Stack<>();
 
 	@Override
@@ -1030,23 +1098,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inLogicalOrExpression() {
       return !inLogicalOrExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText()));
-		this.inNotExpression.push(true);
-	}
-
-	public void exitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		onExit();
-		this.inNotExpression.pop();
-	}
-
-	public boolean inNotExpression() {
-      return !inNotExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPreDecreaseExpression = new java.util.Stack<>();
@@ -1304,23 +1355,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return !inBitShiftExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inParenthesizedExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		onEnter(new Node("ParenthesizedExpression", arg.getText(), arg.getStart().getText()));
-		this.inParenthesizedExpression.push(true);
-	}
-
-	public void exitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		onExit();
-		this.inParenthesizedExpression.pop();
-	}
-
-	public boolean inParenthesizedExpression() {
-      return !inParenthesizedExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inAdditiveExpression = new java.util.Stack<>();
 
 	@Override
@@ -1525,23 +1559,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
       return !inBitOrExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onEnter(new Node("AssignmentOperatorExpression", arg.getText(), arg.getStart().getText()));
-		this.inAssignmentOperatorExpression.push(true);
-	}
-
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onExit();
-		this.inAssignmentOperatorExpression.pop();
-	}
-
-	public boolean inAssignmentOperatorExpression() {
-      return !inAssignmentOperatorExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inVoidExpression = new java.util.Stack<>();
 
 	@Override
@@ -1608,23 +1625,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inIdentifierName() {
       return !inIdentifierName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReservedWord = new java.util.Stack<>();
-
-	@Override
-	public void enterReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		onEnter(new Node("ReservedWord", arg.getText(), arg.getStart().getText()));
-		this.inReservedWord.push(true);
-	}
-
-	public void exitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		onExit();
-		this.inReservedWord.pop();
-	}
-
-	public boolean inReservedWord() {
-      return !inReservedWord.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFutureReservedWord = new java.util.Stack<>();

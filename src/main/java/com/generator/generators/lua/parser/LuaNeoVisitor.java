@@ -88,16 +88,6 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		System.out.println("Functioncall");
-		final Node node = model.findOrCreate(Label.label("Functioncall"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
 		System.out.println("Stat");
 		final Node node = model.findOrCreate(Label.label("Stat"), "text", arg.getText());
@@ -181,6 +171,16 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
 		System.out.println("Prefixexp");
 		final Node node = model.findOrCreate(Label.label("Prefixexp"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		System.out.println("Functioncall");
+		final Node node = model.findOrCreate(Label.label("Functioncall"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

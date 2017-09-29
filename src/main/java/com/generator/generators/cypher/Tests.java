@@ -1,9 +1,15 @@
 package com.generator.generators.cypher;
 
-import com.generator.neo.NeoModel;
 import com.generator.ProjectConstants;
+import com.generator.generators.cypher.parser.CypherLexer;
+import com.generator.generators.cypher.parser.CypherNodeListener;
+import com.generator.generators.cypher.parser.CypherParser;
+import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.util.StringUtil;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -16,6 +22,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tests {
+
+
+   @Test
+   public void testParser() {
+      final CypherParser parser = new CypherParser(new CommonTokenStream(new CypherLexer(CharStreams.fromString("MATCH (node1:Label1)-->(node2:Label2)\n" +
+            "WHERE node1.propertyA = {value}\n" +
+            "RETURN node2.propertyA, node2.propertyB"))));
+      final CypherNodeListener listener = new CypherNodeListener(true);
+      new ParseTreeWalker().walk(listener, parser.cypher());
+
+   }
 
    @Test
    public void testCypher() {

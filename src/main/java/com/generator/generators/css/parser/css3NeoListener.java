@@ -57,24 +57,6 @@ public class css3NeoListener extends css3BaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
 
 	@Override
@@ -91,6 +73,24 @@ public class css3NeoListener extends css3BaseListener {
 
 	public boolean inNumber() {
       return !inNumber.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();

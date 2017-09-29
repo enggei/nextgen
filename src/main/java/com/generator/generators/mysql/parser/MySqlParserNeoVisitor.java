@@ -38,416 +38,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitCreate_database(com.generator.generators.mysql.parser.MySqlParser.Create_databaseContext arg) {
-		System.out.println("Create_database");
-		final Node node = model.findOrCreate(Label.label("Create_database"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_event(com.generator.generators.mysql.parser.MySqlParser.Create_eventContext arg) {
-		System.out.println("Create_event");
-		final Node node = model.findOrCreate(Label.label("Create_event"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_index(com.generator.generators.mysql.parser.MySqlParser.Create_indexContext arg) {
-		System.out.println("Create_index");
-		final Node node = model.findOrCreate(Label.label("Create_index"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_logfile_group(com.generator.generators.mysql.parser.MySqlParser.Create_logfile_groupContext arg) {
-		System.out.println("Create_logfile_group");
-		final Node node = model.findOrCreate(Label.label("Create_logfile_group"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_procedure(com.generator.generators.mysql.parser.MySqlParser.Create_procedureContext arg) {
-		System.out.println("Create_procedure");
-		final Node node = model.findOrCreate(Label.label("Create_procedure"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_function(com.generator.generators.mysql.parser.MySqlParser.Create_functionContext arg) {
-		System.out.println("Create_function");
-		final Node node = model.findOrCreate(Label.label("Create_function"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_server(com.generator.generators.mysql.parser.MySqlParser.Create_serverContext arg) {
-		System.out.println("Create_server");
-		final Node node = model.findOrCreate(Label.label("Create_server"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCopyCreateTable(com.generator.generators.mysql.parser.MySqlParser.CopyCreateTableContext arg) {
-		System.out.println("CopyCreateTable");
-		final Node node = model.findOrCreate(Label.label("CopyCreateTable"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQueryCreateTable(com.generator.generators.mysql.parser.MySqlParser.QueryCreateTableContext arg) {
-		System.out.println("QueryCreateTable");
-		final Node node = model.findOrCreate(Label.label("QueryCreateTable"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColCreateTable(com.generator.generators.mysql.parser.MySqlParser.ColCreateTableContext arg) {
-		System.out.println("ColCreateTable");
-		final Node node = model.findOrCreate(Label.label("ColCreateTable"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_tablespace_innodb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_innodbContext arg) {
-		System.out.println("Create_tablespace_innodb");
-		final Node node = model.findOrCreate(Label.label("Create_tablespace_innodb"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_tablespace_ndb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_ndbContext arg) {
-		System.out.println("Create_tablespace_ndb");
-		final Node node = model.findOrCreate(Label.label("Create_tablespace_ndb"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
-		System.out.println("Create_trigger");
-		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		System.out.println("Create_view");
-		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitOwner_statement(com.generator.generators.mysql.parser.MySqlParser.Owner_statementContext arg) {
-		System.out.println("Owner_statement");
-		final Node node = model.findOrCreate(Label.label("Owner_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPreciseSchedule(com.generator.generators.mysql.parser.MySqlParser.PreciseScheduleContext arg) {
-		System.out.println("PreciseSchedule");
-		final Node node = model.findOrCreate(Label.label("PreciseSchedule"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIntervalSchedule(com.generator.generators.mysql.parser.MySqlParser.IntervalScheduleContext arg) {
-		System.out.println("IntervalSchedule");
-		final Node node = model.findOrCreate(Label.label("IntervalSchedule"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTimestamp_value(com.generator.generators.mysql.parser.MySqlParser.Timestamp_valueContext arg) {
-		System.out.println("Timestamp_value");
-		final Node node = model.findOrCreate(Label.label("Timestamp_value"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInterval_expr(com.generator.generators.mysql.parser.MySqlParser.Interval_exprContext arg) {
-		System.out.println("Interval_expr");
-		final Node node = model.findOrCreate(Label.label("Interval_expr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInterval_type(com.generator.generators.mysql.parser.MySqlParser.Interval_typeContext arg) {
-		System.out.println("Interval_type");
-		final Node node = model.findOrCreate(Label.label("Interval_type"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndex_option(com.generator.generators.mysql.parser.MySqlParser.Index_optionContext arg) {
-		System.out.println("Index_option");
-		final Node node = model.findOrCreate(Label.label("Index_option"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitProc_param(com.generator.generators.mysql.parser.MySqlParser.Proc_paramContext arg) {
-		System.out.println("Proc_param");
-		final Node node = model.findOrCreate(Label.label("Proc_param"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunc_param(com.generator.generators.mysql.parser.MySqlParser.Func_paramContext arg) {
-		System.out.println("Func_param");
-		final Node node = model.findOrCreate(Label.label("Func_param"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRcComment(com.generator.generators.mysql.parser.MySqlParser.RcCommentContext arg) {
-		System.out.println("RcComment");
-		final Node node = model.findOrCreate(Label.label("RcComment"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRcSqllang(com.generator.generators.mysql.parser.MySqlParser.RcSqllangContext arg) {
-		System.out.println("RcSqllang");
-		final Node node = model.findOrCreate(Label.label("RcSqllang"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRcDeterm(com.generator.generators.mysql.parser.MySqlParser.RcDetermContext arg) {
-		System.out.println("RcDeterm");
-		final Node node = model.findOrCreate(Label.label("RcDeterm"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRcSqldata(com.generator.generators.mysql.parser.MySqlParser.RcSqldataContext arg) {
-		System.out.println("RcSqldata");
-		final Node node = model.findOrCreate(Label.label("RcSqldata"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRcSecurestmt(com.generator.generators.mysql.parser.MySqlParser.RcSecurestmtContext arg) {
-		System.out.println("RcSecurestmt");
-		final Node node = model.findOrCreate(Label.label("RcSecurestmt"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
-		System.out.println("Server_option");
-		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
-		System.out.println("Column_def_table_constraints");
-		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumnDefinition(com.generator.generators.mysql.parser.MySqlParser.ColumnDefinitionContext arg) {
-		System.out.println("ColumnDefinition");
-		final Node node = model.findOrCreate(Label.label("ColumnDefinition"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstraintDefinition(com.generator.generators.mysql.parser.MySqlParser.ConstraintDefinitionContext arg) {
-		System.out.println("ConstraintDefinition");
-		final Node node = model.findOrCreate(Label.label("ConstraintDefinition"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndexDefinition(com.generator.generators.mysql.parser.MySqlParser.IndexDefinitionContext arg) {
-		System.out.println("IndexDefinition");
-		final Node node = model.findOrCreate(Label.label("IndexDefinition"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColumn_definition(com.generator.generators.mysql.parser.MySqlParser.Column_definitionContext arg) {
-		System.out.println("Column_definition");
-		final Node node = model.findOrCreate(Label.label("Column_definition"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrNull(com.generator.generators.mysql.parser.MySqlParser.ColConstrNullContext arg) {
-		System.out.println("ColConstrNull");
-		final Node node = model.findOrCreate(Label.label("ColConstrNull"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrDflt(com.generator.generators.mysql.parser.MySqlParser.ColConstrDfltContext arg) {
-		System.out.println("ColConstrDflt");
-		final Node node = model.findOrCreate(Label.label("ColConstrDflt"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrAuInc(com.generator.generators.mysql.parser.MySqlParser.ColConstrAuIncContext arg) {
-		System.out.println("ColConstrAuInc");
-		final Node node = model.findOrCreate(Label.label("ColConstrAuInc"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
-		System.out.println("ColConstrPK");
-		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrUK(com.generator.generators.mysql.parser.MySqlParser.ColConstrUKContext arg) {
-		System.out.println("ColConstrUK");
-		final Node node = model.findOrCreate(Label.label("ColConstrUK"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrComment(com.generator.generators.mysql.parser.MySqlParser.ColConstrCommentContext arg) {
-		System.out.println("ColConstrComment");
-		final Node node = model.findOrCreate(Label.label("ColConstrComment"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitColConstrForm(com.generator.generators.mysql.parser.MySqlParser.ColConstrFormContext arg) {
-		System.out.println("ColConstrForm");
-		final Node node = model.findOrCreate(Label.label("ColConstrForm"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitColConstrStorage(com.generator.generators.mysql.parser.MySqlParser.ColConstrStorageContext arg) {
 		System.out.println("ColConstrStorage");
 		final Node node = model.findOrCreate(Label.label("ColConstrStorage"), "text", arg.getText());
@@ -1058,146 +648,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitCreate_database_option(com.generator.generators.mysql.parser.MySqlParser.Create_database_optionContext arg) {
-		System.out.println("Create_database_option");
-		final Node node = model.findOrCreate(Label.label("Create_database_option"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
-		System.out.println("Index_type");
-		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		System.out.println("Sql_statements");
-		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		System.out.println("Root");
-		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		System.out.println("Sql_statement");
-		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		System.out.println("Empty_statement");
-		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
-		System.out.println("Ddl_statement");
-		final Node node = model.findOrCreate(Label.label("Ddl_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDml_statement(com.generator.generators.mysql.parser.MySqlParser.Dml_statementContext arg) {
-		System.out.println("Dml_statement");
-		final Node node = model.findOrCreate(Label.label("Dml_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTransaction_statement(com.generator.generators.mysql.parser.MySqlParser.Transaction_statementContext arg) {
-		System.out.println("Transaction_statement");
-		final Node node = model.findOrCreate(Label.label("Transaction_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReplication_statement(com.generator.generators.mysql.parser.MySqlParser.Replication_statementContext arg) {
-		System.out.println("Replication_statement");
-		final Node node = model.findOrCreate(Label.label("Replication_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrepared_statement(com.generator.generators.mysql.parser.MySqlParser.Prepared_statementContext arg) {
-		System.out.println("Prepared_statement");
-		final Node node = model.findOrCreate(Label.label("Prepared_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCompound_statement(com.generator.generators.mysql.parser.MySqlParser.Compound_statementContext arg) {
-		System.out.println("Compound_statement");
-		final Node node = model.findOrCreate(Label.label("Compound_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAdministration_statement(com.generator.generators.mysql.parser.MySqlParser.Administration_statementContext arg) {
-		System.out.println("Administration_statement");
-		final Node node = model.findOrCreate(Label.label("Administration_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUtility_statement(com.generator.generators.mysql.parser.MySqlParser.Utility_statementContext arg) {
-		System.out.println("Utility_statement");
-		final Node node = model.findOrCreate(Label.label("Utility_statement"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitAltblAlg(com.generator.generators.mysql.parser.MySqlParser.AltblAlgContext arg) {
 		System.out.println("AltblAlg");
 		final Node node = model.findOrCreate(Label.label("AltblAlg"), "text", arg.getText());
@@ -1488,6 +938,566 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitDrop_event(com.generator.generators.mysql.parser.MySqlParser.Drop_eventContext arg) {
+		System.out.println("Drop_event");
+		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		System.out.println("Root");
+		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		System.out.println("Sql_statements");
+		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		System.out.println("Sql_statement");
+		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
+		System.out.println("Empty_statement");
+		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
+		System.out.println("Ddl_statement");
+		final Node node = model.findOrCreate(Label.label("Ddl_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDml_statement(com.generator.generators.mysql.parser.MySqlParser.Dml_statementContext arg) {
+		System.out.println("Dml_statement");
+		final Node node = model.findOrCreate(Label.label("Dml_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTransaction_statement(com.generator.generators.mysql.parser.MySqlParser.Transaction_statementContext arg) {
+		System.out.println("Transaction_statement");
+		final Node node = model.findOrCreate(Label.label("Transaction_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReplication_statement(com.generator.generators.mysql.parser.MySqlParser.Replication_statementContext arg) {
+		System.out.println("Replication_statement");
+		final Node node = model.findOrCreate(Label.label("Replication_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrepared_statement(com.generator.generators.mysql.parser.MySqlParser.Prepared_statementContext arg) {
+		System.out.println("Prepared_statement");
+		final Node node = model.findOrCreate(Label.label("Prepared_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCompound_statement(com.generator.generators.mysql.parser.MySqlParser.Compound_statementContext arg) {
+		System.out.println("Compound_statement");
+		final Node node = model.findOrCreate(Label.label("Compound_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAdministration_statement(com.generator.generators.mysql.parser.MySqlParser.Administration_statementContext arg) {
+		System.out.println("Administration_statement");
+		final Node node = model.findOrCreate(Label.label("Administration_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUtility_statement(com.generator.generators.mysql.parser.MySqlParser.Utility_statementContext arg) {
+		System.out.println("Utility_statement");
+		final Node node = model.findOrCreate(Label.label("Utility_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_database(com.generator.generators.mysql.parser.MySqlParser.Create_databaseContext arg) {
+		System.out.println("Create_database");
+		final Node node = model.findOrCreate(Label.label("Create_database"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_event(com.generator.generators.mysql.parser.MySqlParser.Create_eventContext arg) {
+		System.out.println("Create_event");
+		final Node node = model.findOrCreate(Label.label("Create_event"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_index(com.generator.generators.mysql.parser.MySqlParser.Create_indexContext arg) {
+		System.out.println("Create_index");
+		final Node node = model.findOrCreate(Label.label("Create_index"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_logfile_group(com.generator.generators.mysql.parser.MySqlParser.Create_logfile_groupContext arg) {
+		System.out.println("Create_logfile_group");
+		final Node node = model.findOrCreate(Label.label("Create_logfile_group"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_procedure(com.generator.generators.mysql.parser.MySqlParser.Create_procedureContext arg) {
+		System.out.println("Create_procedure");
+		final Node node = model.findOrCreate(Label.label("Create_procedure"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_function(com.generator.generators.mysql.parser.MySqlParser.Create_functionContext arg) {
+		System.out.println("Create_function");
+		final Node node = model.findOrCreate(Label.label("Create_function"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_server(com.generator.generators.mysql.parser.MySqlParser.Create_serverContext arg) {
+		System.out.println("Create_server");
+		final Node node = model.findOrCreate(Label.label("Create_server"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCopyCreateTable(com.generator.generators.mysql.parser.MySqlParser.CopyCreateTableContext arg) {
+		System.out.println("CopyCreateTable");
+		final Node node = model.findOrCreate(Label.label("CopyCreateTable"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQueryCreateTable(com.generator.generators.mysql.parser.MySqlParser.QueryCreateTableContext arg) {
+		System.out.println("QueryCreateTable");
+		final Node node = model.findOrCreate(Label.label("QueryCreateTable"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColCreateTable(com.generator.generators.mysql.parser.MySqlParser.ColCreateTableContext arg) {
+		System.out.println("ColCreateTable");
+		final Node node = model.findOrCreate(Label.label("ColCreateTable"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_tablespace_innodb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_innodbContext arg) {
+		System.out.println("Create_tablespace_innodb");
+		final Node node = model.findOrCreate(Label.label("Create_tablespace_innodb"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_tablespace_ndb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_ndbContext arg) {
+		System.out.println("Create_tablespace_ndb");
+		final Node node = model.findOrCreate(Label.label("Create_tablespace_ndb"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
+		System.out.println("Create_trigger");
+		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		System.out.println("Create_view");
+		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCreate_database_option(com.generator.generators.mysql.parser.MySqlParser.Create_database_optionContext arg) {
+		System.out.println("Create_database_option");
+		final Node node = model.findOrCreate(Label.label("Create_database_option"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitOwner_statement(com.generator.generators.mysql.parser.MySqlParser.Owner_statementContext arg) {
+		System.out.println("Owner_statement");
+		final Node node = model.findOrCreate(Label.label("Owner_statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPreciseSchedule(com.generator.generators.mysql.parser.MySqlParser.PreciseScheduleContext arg) {
+		System.out.println("PreciseSchedule");
+		final Node node = model.findOrCreate(Label.label("PreciseSchedule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIntervalSchedule(com.generator.generators.mysql.parser.MySqlParser.IntervalScheduleContext arg) {
+		System.out.println("IntervalSchedule");
+		final Node node = model.findOrCreate(Label.label("IntervalSchedule"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTimestamp_value(com.generator.generators.mysql.parser.MySqlParser.Timestamp_valueContext arg) {
+		System.out.println("Timestamp_value");
+		final Node node = model.findOrCreate(Label.label("Timestamp_value"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInterval_expr(com.generator.generators.mysql.parser.MySqlParser.Interval_exprContext arg) {
+		System.out.println("Interval_expr");
+		final Node node = model.findOrCreate(Label.label("Interval_expr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInterval_type(com.generator.generators.mysql.parser.MySqlParser.Interval_typeContext arg) {
+		System.out.println("Interval_type");
+		final Node node = model.findOrCreate(Label.label("Interval_type"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
+		System.out.println("Index_type");
+		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIndex_option(com.generator.generators.mysql.parser.MySqlParser.Index_optionContext arg) {
+		System.out.println("Index_option");
+		final Node node = model.findOrCreate(Label.label("Index_option"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitProc_param(com.generator.generators.mysql.parser.MySqlParser.Proc_paramContext arg) {
+		System.out.println("Proc_param");
+		final Node node = model.findOrCreate(Label.label("Proc_param"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunc_param(com.generator.generators.mysql.parser.MySqlParser.Func_paramContext arg) {
+		System.out.println("Func_param");
+		final Node node = model.findOrCreate(Label.label("Func_param"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRcComment(com.generator.generators.mysql.parser.MySqlParser.RcCommentContext arg) {
+		System.out.println("RcComment");
+		final Node node = model.findOrCreate(Label.label("RcComment"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRcSqllang(com.generator.generators.mysql.parser.MySqlParser.RcSqllangContext arg) {
+		System.out.println("RcSqllang");
+		final Node node = model.findOrCreate(Label.label("RcSqllang"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRcDeterm(com.generator.generators.mysql.parser.MySqlParser.RcDetermContext arg) {
+		System.out.println("RcDeterm");
+		final Node node = model.findOrCreate(Label.label("RcDeterm"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRcSqldata(com.generator.generators.mysql.parser.MySqlParser.RcSqldataContext arg) {
+		System.out.println("RcSqldata");
+		final Node node = model.findOrCreate(Label.label("RcSqldata"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRcSecurestmt(com.generator.generators.mysql.parser.MySqlParser.RcSecurestmtContext arg) {
+		System.out.println("RcSecurestmt");
+		final Node node = model.findOrCreate(Label.label("RcSecurestmt"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
+		System.out.println("Server_option");
+		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
+		System.out.println("Column_def_table_constraints");
+		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColumnDefinition(com.generator.generators.mysql.parser.MySqlParser.ColumnDefinitionContext arg) {
+		System.out.println("ColumnDefinition");
+		final Node node = model.findOrCreate(Label.label("ColumnDefinition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitConstraintDefinition(com.generator.generators.mysql.parser.MySqlParser.ConstraintDefinitionContext arg) {
+		System.out.println("ConstraintDefinition");
+		final Node node = model.findOrCreate(Label.label("ConstraintDefinition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIndexDefinition(com.generator.generators.mysql.parser.MySqlParser.IndexDefinitionContext arg) {
+		System.out.println("IndexDefinition");
+		final Node node = model.findOrCreate(Label.label("IndexDefinition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColumn_definition(com.generator.generators.mysql.parser.MySqlParser.Column_definitionContext arg) {
+		System.out.println("Column_definition");
+		final Node node = model.findOrCreate(Label.label("Column_definition"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrNull(com.generator.generators.mysql.parser.MySqlParser.ColConstrNullContext arg) {
+		System.out.println("ColConstrNull");
+		final Node node = model.findOrCreate(Label.label("ColConstrNull"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrDflt(com.generator.generators.mysql.parser.MySqlParser.ColConstrDfltContext arg) {
+		System.out.println("ColConstrDflt");
+		final Node node = model.findOrCreate(Label.label("ColConstrDflt"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrAuInc(com.generator.generators.mysql.parser.MySqlParser.ColConstrAuIncContext arg) {
+		System.out.println("ColConstrAuInc");
+		final Node node = model.findOrCreate(Label.label("ColConstrAuInc"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
+		System.out.println("ColConstrPK");
+		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrUK(com.generator.generators.mysql.parser.MySqlParser.ColConstrUKContext arg) {
+		System.out.println("ColConstrUK");
+		final Node node = model.findOrCreate(Label.label("ColConstrUK"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrComment(com.generator.generators.mysql.parser.MySqlParser.ColConstrCommentContext arg) {
+		System.out.println("ColConstrComment");
+		final Node node = model.findOrCreate(Label.label("ColConstrComment"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitColConstrForm(com.generator.generators.mysql.parser.MySqlParser.ColConstrFormContext arg) {
+		System.out.println("ColConstrForm");
+		final Node node = model.findOrCreate(Label.label("ColConstrForm"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitAltblOptimPart(com.generator.generators.mysql.parser.MySqlParser.AltblOptimPartContext arg) {
 		System.out.println("AltblOptimPart");
 		final Node node = model.findOrCreate(Label.label("AltblOptimPart"), "text", arg.getText());
@@ -1541,16 +1551,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitDrop_database(com.generator.generators.mysql.parser.MySqlParser.Drop_databaseContext arg) {
 		System.out.println("Drop_database");
 		final Node node = model.findOrCreate(Label.label("Drop_database"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDrop_event(com.generator.generators.mysql.parser.MySqlParser.Drop_eventContext arg) {
-		System.out.println("Drop_event");
-		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

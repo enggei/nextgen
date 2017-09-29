@@ -68,6 +68,36 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
+		System.out.println("NotExpression");
+		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
+		System.out.println("ParenthesizedExpression");
+		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
+		System.out.println("ReservedWord");
+		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
 		System.out.println("Program");
 		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
@@ -608,16 +638,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		System.out.println("NotExpression");
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitPreDecreaseExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PreDecreaseExpressionContext arg) {
 		System.out.println("PreDecreaseExpression");
 		final Node node = model.findOrCreate(Label.label("PreDecreaseExpression"), "text", arg.getText());
@@ -761,16 +781,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitBitShiftExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitShiftExpressionContext arg) {
 		System.out.println("BitShiftExpression");
 		final Node node = model.findOrCreate(Label.label("BitShiftExpression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		System.out.println("ParenthesizedExpression");
-		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -941,16 +951,6 @@ public class ECMAScriptNeoVisitor extends ECMAScriptBaseVisitor<Node> {
 	public Node visitIdentifierName(com.generator.generators.ecmascript.parser.ECMAScriptParser.IdentifierNameContext arg) {
 		System.out.println("IdentifierName");
 		final Node node = model.findOrCreate(Label.label("IdentifierName"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		System.out.println("ReservedWord");
-		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -54,8 +54,17 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		final Node node = new Node("Number", arg.getText());
+	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		final Node node = new Node("GoodCharset", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		final Node node = new Node("Stylesheet", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,8 +81,17 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		final Node node = new Node("GoodCharset", arg.getText());
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		final Node node = new Node("Number", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		final Node node = new Node("GoodNamespace", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -101,15 +119,6 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
 		final Node node = new Node("BadImport", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		final Node node = new Node("GoodNamespace", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -209,15 +218,6 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
 		final Node node = new Node("SelectorGroup", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		final Node node = new Node("Stylesheet", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

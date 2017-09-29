@@ -28,9 +28,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		System.out.println("Imports");
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		System.out.println("KeyValuePair");
+		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,19 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		System.out.println("Template");
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
+	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
+		System.out.println("DefaultValuePair");
+		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
+		System.out.println("KeyValue");
+		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,9 +118,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		System.out.println("KeyValuePair");
-		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
+	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		System.out.println("Imports");
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -118,19 +128,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		System.out.println("DefaultValuePair");
-		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
-		System.out.println("KeyValue");
-		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		System.out.println("Template");
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

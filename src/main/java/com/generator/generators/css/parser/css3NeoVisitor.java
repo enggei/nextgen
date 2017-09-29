@@ -38,9 +38,19 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		System.out.println("Number");
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
+	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		System.out.println("GoodCharset");
+		final Node node = model.findOrCreate(Label.label("GoodCharset"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
+		System.out.println("Stylesheet");
+		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +68,19 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		System.out.println("GoodCharset");
-		final Node node = model.findOrCreate(Label.label("GoodCharset"), "text", arg.getText());
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		System.out.println("Number");
+		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
+		System.out.println("GoodNamespace");
+		final Node node = model.findOrCreate(Label.label("GoodNamespace"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -91,16 +111,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
 		System.out.println("BadImport");
 		final Node node = model.findOrCreate(Label.label("BadImport"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		System.out.println("GoodNamespace");
-		final Node node = model.findOrCreate(Label.label("GoodNamespace"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -211,16 +221,6 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
 		System.out.println("SelectorGroup");
 		final Node node = model.findOrCreate(Label.label("SelectorGroup"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		System.out.println("Stylesheet");
-		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

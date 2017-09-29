@@ -28,16 +28,6 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		System.out.println("String");
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
 		System.out.println("Url");
 		final Node node = model.findOrCreate(Label.label("Url"), "text", arg.getText());
@@ -158,16 +148,6 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		System.out.println("Query");
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
 		System.out.println("Search");
 		final Node node = model.findOrCreate(Label.label("Search"), "text", arg.getText());
@@ -181,6 +161,26 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
 		System.out.println("Searchparameter");
 		final Node node = model.findOrCreate(Label.label("Searchparameter"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		System.out.println("String");
+		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		System.out.println("Query");
+		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

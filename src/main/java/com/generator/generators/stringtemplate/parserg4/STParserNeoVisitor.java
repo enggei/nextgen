@@ -48,66 +48,6 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		System.out.println("List");
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		System.out.println("Expr");
-		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		System.out.println("Primary");
-		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		System.out.println("Args");
-		final Node node = model.findOrCreate(Label.label("Args"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		System.out.println("Elements");
-		final Node node = model.findOrCreate(Label.label("Elements"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		System.out.println("Template");
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
 		System.out.println("SingleElement");
 		final Node node = model.findOrCreate(Label.label("SingleElement"), "text", arg.getText());
@@ -271,6 +211,66 @@ public class STParserNeoVisitor extends STParserBaseVisitor<Node> {
 	public Node visitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
 		System.out.println("NamedArg");
 		final Node node = model.findOrCreate(Label.label("NamedArg"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
+		System.out.println("List");
+		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
+		System.out.println("Template");
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
+		System.out.println("Elements");
+		final Node node = model.findOrCreate(Label.label("Elements"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
+		System.out.println("Expr");
+		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
+		System.out.println("Primary");
+		final Node node = model.findOrCreate(Label.label("Primary"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
+		System.out.println("Args");
+		final Node node = model.findOrCreate(Label.label("Args"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -48,9 +48,9 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		System.out.println("Literal");
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+	public Node visitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +58,9 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+	public Node visitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		System.out.println("Literal");
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,6 +108,16 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
+		System.out.println("SourceFile");
+		final Node node = model.findOrCreate(Label.label("SourceFile"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
 		System.out.println("StatementList");
 		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText());
@@ -141,16 +151,6 @@ public class GolangNeoVisitor extends GolangBaseVisitor<Node> {
 	public Node visitEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
 		System.out.println("Eos");
 		final Node node = model.findOrCreate(Label.label("Eos"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
-		System.out.println("SourceFile");
-		final Node node = model.findOrCreate(Label.label("SourceFile"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
