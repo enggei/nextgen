@@ -54,15 +54,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
 		final Node node = new Node("Number", arg.getText());
 		onEnter(node);
@@ -72,8 +63,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		final Node node = new Node("Var", arg.getText());
+	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -83,6 +74,15 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
 		final Node node = new Node("Field", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		final Node node = new Node("Var", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -110,6 +110,15 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
 		final Node node = new Node("Retstat", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		final Node node = new Node("Functioncall", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -173,15 +182,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
 		final Node node = new Node("Prefixexp", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = new Node("Functioncall", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

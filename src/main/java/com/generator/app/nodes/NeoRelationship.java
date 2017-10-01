@@ -98,7 +98,7 @@ public class NeoRelationship implements PropertyChangeListener {
             if (event.isRightMouseButton()) {
                SwingUtilities.invokeLater(() -> onRightClick(event));
             } else if (event.isLeftMouseButton()) {
-               SwingUtilities.invokeLater(() -> onLeftClick());
+               SwingUtilities.invokeLater(this::onLeftClick);
             }
          }
 
@@ -376,7 +376,7 @@ public class NeoRelationship implements PropertyChangeListener {
             drawBezierPath(start, end, ctrl1, ctrl2);
             break;
          case quadLines:
-            drawQuad(start, end, ctrl1, ctrl2);
+            drawQuad(start, end, ctrl1);
             break;
       }
    }
@@ -443,7 +443,7 @@ public class NeoRelationship implements PropertyChangeListener {
       repaintRelation();
    }
 
-   private void drawQuad(Point2D start, Point2D end, Point2D ctrl1, Point2D ctrl2) {
+   private void drawQuad(Point2D start, Point2D end, Point2D ctrl1) {
 
       path.reset();
       if (!AppMotif.RelationPaintStrategy.showNothing.equals(nodeCanvas.relationPaintStrategy)) {

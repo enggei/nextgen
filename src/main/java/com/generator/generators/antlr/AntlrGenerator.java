@@ -12,6 +12,7 @@ import com.generator.generators.csv.parser.CSVListener;
 import com.generator.generators.csv.parser.CSVVisitor;
 import com.generator.generators.cypher.parser.CypherListener;
 import com.generator.generators.cypher.parser.CypherVisitor;
+import com.generator.generators.domain.NeoVisitorGroup;
 import com.generator.generators.ecmascript.parser.ECMAScriptListener;
 import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
 import com.generator.generators.go.parser.GolangListener;
@@ -81,6 +82,48 @@ public class AntlrGenerator {
    private static void generateVisitorAndListener(String root, String packageName, String g4Name, Class visitorInterface, Class listenerInterface) {
       new ParserNodeVisitorGenerator(root, packageName, g4Name).visit(visitorInterface);
       new ParserNodeListenerGenerator(root, packageName, g4Name).visit(listenerInterface);
+      new NeoVisitorGenerator(root, packageName, g4Name).visit(listenerInterface);
+   }
+
+   private static final class NeoVisitorGenerator extends BaseClassVisitor {
+
+      private final String root;
+      private final String packageName;
+      private final String visitorName;
+
+      private final NeoVisitorGroup neoVisitorGroup = new NeoVisitorGroup();
+      private final NeoVisitorGroup.DomainVisitorST domainVisitorST;
+
+      NeoVisitorGenerator(String root, String packageName, String parserName) {
+         this.root = root;
+         this.packageName = packageName;
+         this.visitorName = parserName + "DomainVisitor";
+
+         domainVisitorST = neoVisitorGroup.newDomainVisitor().
+               setPackageName(packageName).
+               setName(visitorName);
+      }
+
+      @Override
+      public void onPublicMethod(Method method) {
+
+         // only has one parameter
+         final Parameter parameter = method.getParameters()[0];
+         final String param = parameter.getType().getCanonicalName();
+
+         if (method.getName().startsWith("enter")) {
+            domainVisitorST.addEntitiesValue(method.getName().substring(5), neoVisitorGroup.newentityVisit().setName(method.getName().substring(5)));
+         }
+      }
+
+      @Override
+      public void done() {
+         try {
+            GeneratedFile.newJavaFile(root, packageName, visitorName).write(domainVisitorST);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
    }
 
    private static final class ParserNodeListenerGenerator extends BaseClassVisitor {

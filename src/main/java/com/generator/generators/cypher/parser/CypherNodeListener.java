@@ -63,21 +63,21 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inAtom.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
-	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
+	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
 	}
 
-	public void exitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
 		onExit();
-		this.inStatement.pop();
+		this.inLiteral.pop();
 	}
 
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
@@ -97,23 +97,6 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inSet.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -129,6 +112,23 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inExpression() {
       return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
@@ -163,6 +163,23 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inQuery() {
       return !inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText()));
+		this.inRegularQuery.push(true);
+	}
+
+	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onExit();
+		this.inRegularQuery.pop();
+	}
+
+	public boolean inRegularQuery() {
+      return !inRegularQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
@@ -894,23 +911,6 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inRelationshipDetail() {
       return !inRelationshipDetail.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText()));
-		this.inRegularQuery.push(true);
-	}
-
-	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onExit();
-		this.inRegularQuery.pop();
-	}
-
-	public boolean inRegularQuery() {
-      return !inRegularQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inProperties = new java.util.Stack<>();

@@ -48,6 +48,16 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		System.out.println("Set");
+		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
 		System.out.println("Literal");
 		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
@@ -78,16 +88,6 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		System.out.println("Set");
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
 		System.out.println("Cypher");
 		final Node node = model.findOrCreate(Label.label("Cypher"), "text", arg.getText());
@@ -98,9 +98,9 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		System.out.println("Query");
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText());
+	public Node visitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		System.out.println("RegularQuery");
+		final Node node = model.findOrCreate(Label.label("RegularQuery"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -108,9 +108,9 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		System.out.println("RegularQuery");
-		final Node node = model.findOrCreate(Label.label("RegularQuery"), "text", arg.getText());
+	public Node visitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		System.out.println("Query");
+		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

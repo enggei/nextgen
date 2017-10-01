@@ -57,24 +57,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -109,6 +91,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return !inKeyword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
@@ -163,222 +163,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inReservedWord() {
       return !inReservedWord.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
-
-	@Override
-	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
-		onEnter(node);
-		this.inProgram.push(true);
-	}
-
-	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		onExit();
-		this.inProgram.pop();
-	}
-
-	public boolean inProgram() {
-      return !inProgram.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
-
-	@Override
-	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText());
-		onEnter(node);
-		this.inSourceElements.push(true);
-	}
-
-	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		onExit();
-		this.inSourceElements.pop();
-	}
-
-	public boolean inSourceElements() {
-      return !inSourceElements.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSourceElement = new java.util.Stack<>();
-
-	@Override
-	public void enterSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceElement"), "text", arg.getText());
-		onEnter(node);
-		this.inSourceElement.push(true);
-	}
-
-	public void exitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		onExit();
-		this.inSourceElement.pop();
-	}
-
-	public boolean inSourceElement() {
-      return !inSourceElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText());
-		onEnter(node);
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVariableStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inVariableStatement.push(true);
-	}
-
-	public void exitVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
-		onExit();
-		this.inVariableStatement.pop();
-	}
-
-	public boolean inVariableStatement() {
-      return !inVariableStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVariableDeclarationList = new java.util.Stack<>();
-
-	@Override
-	public void enterVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclarationList"), "text", arg.getText());
-		onEnter(node);
-		this.inVariableDeclarationList.push(true);
-	}
-
-	public void exitVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
-		onExit();
-		this.inVariableDeclarationList.pop();
-	}
-
-	public boolean inVariableDeclarationList() {
-      return !inVariableDeclarationList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVariableDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclaration"), "text", arg.getText());
-		onEnter(node);
-		this.inVariableDeclaration.push(true);
-	}
-
-	public void exitVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
-		onExit();
-		this.inVariableDeclaration.pop();
-	}
-
-	public boolean inVariableDeclaration() {
-      return !inVariableDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inInitialiser = new java.util.Stack<>();
-
-	@Override
-	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
-		onEnter(node);
-		this.inInitialiser.push(true);
-	}
-
-	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		onExit();
-		this.inInitialiser.pop();
-	}
-
-	public boolean inInitialiser() {
-      return !inInitialiser.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEmptyStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("EmptyStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inEmptyStatement.push(true);
-	}
-
-	public void exitEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
-		onExit();
-		this.inEmptyStatement.pop();
-	}
-
-	public boolean inEmptyStatement() {
-      return !inEmptyStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpressionStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inExpressionStatement.push(true);
-	}
-
-	public void exitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
-		onExit();
-		this.inExpressionStatement.pop();
-	}
-
-	public boolean inExpressionStatement() {
-      return !inExpressionStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIfStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inIfStatement.push(true);
-	}
-
-	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		onExit();
-		this.inIfStatement.pop();
-	}
-
-	public boolean inIfStatement() {
-      return !inIfStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDoStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText());
-		onEnter(node);
-		this.inDoStatement.push(true);
-	}
-
-	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		onExit();
-		this.inDoStatement.pop();
-	}
-
-	public boolean inDoStatement() {
-      return !inDoStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inWhileStatement = new java.util.Stack<>();
@@ -919,24 +703,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inPropertyGetter() {
       return !inPropertyGetter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
-		onEnter(node);
-		this.inAssignmentOperatorExpression.push(true);
-	}
-
-	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		onExit();
-		this.inAssignmentOperatorExpression.pop();
-	}
-
-	public boolean inAssignmentOperatorExpression() {
-      return !inAssignmentOperatorExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertySetter = new java.util.Stack<>();
@@ -1641,6 +1407,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBitOrExpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inAssignmentOperatorExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText());
+		onEnter(node);
+		this.inAssignmentOperatorExpression.push(true);
+	}
+
+	public void exitAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
+		onExit();
+		this.inAssignmentOperatorExpression.pop();
+	}
+
+	public boolean inAssignmentOperatorExpression() {
+      return !inAssignmentOperatorExpression.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inVoidExpression = new java.util.Stack<>();
 
 	@Override
@@ -1801,6 +1585,222 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inEof() {
       return !inEof.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProgram = new java.util.Stack<>();
+
+	@Override
+	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText());
+		onEnter(node);
+		this.inProgram.push(true);
+	}
+
+	public void exitProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
+		onExit();
+		this.inProgram.pop();
+	}
+
+	public boolean inProgram() {
+      return !inProgram.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSourceElements = new java.util.Stack<>();
+
+	@Override
+	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText());
+		onEnter(node);
+		this.inSourceElements.push(true);
+	}
+
+	public void exitSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
+		onExit();
+		this.inSourceElements.pop();
+	}
+
+	public boolean inSourceElements() {
+      return !inSourceElements.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSourceElement = new java.util.Stack<>();
+
+	@Override
+	public void enterSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		final Node node = model.findOrCreate(Label.label("SourceElement"), "text", arg.getText());
+		onEnter(node);
+		this.inSourceElement.push(true);
+	}
+
+	public void exitSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
+		onExit();
+		this.inSourceElement.pop();
+	}
+
+	public boolean inSourceElement() {
+      return !inSourceElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText());
+		onEnter(node);
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("VariableStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inVariableStatement.push(true);
+	}
+
+	public void exitVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
+		onExit();
+		this.inVariableStatement.pop();
+	}
+
+	public boolean inVariableStatement() {
+      return !inVariableStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableDeclarationList = new java.util.Stack<>();
+
+	@Override
+	public void enterVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
+		final Node node = model.findOrCreate(Label.label("VariableDeclarationList"), "text", arg.getText());
+		onEnter(node);
+		this.inVariableDeclarationList.push(true);
+	}
+
+	public void exitVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
+		onExit();
+		this.inVariableDeclarationList.pop();
+	}
+
+	public boolean inVariableDeclarationList() {
+      return !inVariableDeclarationList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVariableDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("VariableDeclaration"), "text", arg.getText());
+		onEnter(node);
+		this.inVariableDeclaration.push(true);
+	}
+
+	public void exitVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
+		onExit();
+		this.inVariableDeclaration.pop();
+	}
+
+	public boolean inVariableDeclaration() {
+      return !inVariableDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInitialiser = new java.util.Stack<>();
+
+	@Override
+	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText());
+		onEnter(node);
+		this.inInitialiser.push(true);
+	}
+
+	public void exitInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
+		onExit();
+		this.inInitialiser.pop();
+	}
+
+	public boolean inInitialiser() {
+      return !inInitialiser.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEmptyStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("EmptyStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inEmptyStatement.push(true);
+	}
+
+	public void exitEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
+		onExit();
+		this.inEmptyStatement.pop();
+	}
+
+	public boolean inEmptyStatement() {
+      return !inEmptyStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("ExpressionStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inExpressionStatement.push(true);
+	}
+
+	public void exitExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
+		onExit();
+		this.inExpressionStatement.pop();
+	}
+
+	public boolean inExpressionStatement() {
+      return !inExpressionStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIfStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inIfStatement.push(true);
+	}
+
+	public void exitIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
+		onExit();
+		this.inIfStatement.pop();
+	}
+
+	public boolean inIfStatement() {
+      return !inIfStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDoStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText());
+		onEnter(node);
+		this.inDoStatement.push(true);
+	}
+
+	public void exitDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
+		onExit();
+		this.inDoStatement.pop();
+	}
+
+	public boolean inDoStatement() {
+      return !inDoStatement.isEmpty(); 
    }
 
 }

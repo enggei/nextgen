@@ -21,8 +21,6 @@ import org.piccolo2d.nodes.PText;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Label;
-import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -716,7 +714,7 @@ public class NeoNode extends PNode {
       setTextPaint(getBooleanAttribute("selected", false) ? nodeCanvas.selectedNodeColor : defaultNodeColor);
    }
 
-   void toggleSelect() {
+   private void toggleSelect() {
       addAttribute("selected", !getBooleanAttribute("selected", false));
       setTextPaint(getBooleanAttribute("selected", false) ? nodeCanvas.selectedNodeColor : defaultNodeColor);
    }

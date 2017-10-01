@@ -39,366 +39,6 @@ public class ClojureNeoListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
-		onEnter(node);
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
-
-	@Override
-	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
-		onEnter(node);
-		this.inForm.push(true);
-	}
-
-	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		onExit();
-		this.inForm.pop();
-	}
-
-	public boolean inForm() {
-      return !inForm.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
-
-	@Override
-	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
-		onEnter(node);
-		this.inForms.push(true);
-	}
-
-	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onExit();
-		this.inForms.pop();
-	}
-
-	public boolean inForms() {
-      return !inForms.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
-
-	@Override
-	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
-		onEnter(node);
-		this.inList.push(true);
-	}
-
-	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		onExit();
-		this.inList.pop();
-	}
-
-	public boolean inList() {
-      return !inList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
-
-	@Override
-	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Vector"), "text", arg.getText());
-		onEnter(node);
-		this.inVector.push(true);
-	}
-
-	public void exitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		onExit();
-		this.inVector.pop();
-	}
-
-	public boolean inVector() {
-      return !inVector.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMap = new java.util.Stack<>();
-
-	@Override
-	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		final Node node = model.findOrCreate(Label.label("Map"), "text", arg.getText());
-		onEnter(node);
-		this.inMap.push(true);
-	}
-
-	public void exitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		onExit();
-		this.inMap.pop();
-	}
-
-	public boolean inMap() {
-      return !inMap.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
-
-	@Override
-	public void enterSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
-		onEnter(node);
-		this.inSet.push(true);
-	}
-
-	public void exitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		onExit();
-		this.inSet.pop();
-	}
-
-	public boolean inSet() {
-      return !inSet.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReader_macro = new java.util.Stack<>();
-
-	@Override
-	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
-		onEnter(node);
-		this.inReader_macro.push(true);
-	}
-
-	public void exitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		onExit();
-		this.inReader_macro.pop();
-	}
-
-	public boolean inReader_macro() {
-      return !inReader_macro.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuote = new java.util.Stack<>();
-
-	@Override
-	public void enterQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Quote"), "text", arg.getText());
-		onEnter(node);
-		this.inQuote.push(true);
-	}
-
-	public void exitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		onExit();
-		this.inQuote.pop();
-	}
-
-	public boolean inQuote() {
-      return !inQuote.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBacktick = new java.util.Stack<>();
-
-	@Override
-	public void enterBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
-		final Node node = model.findOrCreate(Label.label("Backtick"), "text", arg.getText());
-		onEnter(node);
-		this.inBacktick.push(true);
-	}
-
-	public void exitBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
-		onExit();
-		this.inBacktick.pop();
-	}
-
-	public boolean inBacktick() {
-      return !inBacktick.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnquote = new java.util.Stack<>();
-
-	@Override
-	public void enterUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unquote"), "text", arg.getText());
-		onEnter(node);
-		this.inUnquote.push(true);
-	}
-
-	public void exitUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
-		onExit();
-		this.inUnquote.pop();
-	}
-
-	public boolean inUnquote() {
-      return !inUnquote.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnquote_splicing = new java.util.Stack<>();
-
-	@Override
-	public void enterUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unquote_splicing"), "text", arg.getText());
-		onEnter(node);
-		this.inUnquote_splicing.push(true);
-	}
-
-	public void exitUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
-		onExit();
-		this.inUnquote_splicing.pop();
-	}
-
-	public boolean inUnquote_splicing() {
-      return !inUnquote_splicing.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTag = new java.util.Stack<>();
-
-	@Override
-	public void enterTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tag"), "text", arg.getText());
-		onEnter(node);
-		this.inTag.push(true);
-	}
-
-	public void exitTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
-		onExit();
-		this.inTag.pop();
-	}
-
-	public boolean inTag() {
-      return !inTag.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeref = new java.util.Stack<>();
-
-	@Override
-	public void enterDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
-		final Node node = model.findOrCreate(Label.label("Deref"), "text", arg.getText());
-		onEnter(node);
-		this.inDeref.push(true);
-	}
-
-	public void exitDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
-		onExit();
-		this.inDeref.pop();
-	}
-
-	public boolean inDeref() {
-      return !inDeref.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGensym = new java.util.Stack<>();
-
-	@Override
-	public void enterGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
-		final Node node = model.findOrCreate(Label.label("Gensym"), "text", arg.getText());
-		onEnter(node);
-		this.inGensym.push(true);
-	}
-
-	public void exitGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
-		onExit();
-		this.inGensym.pop();
-	}
-
-	public boolean inGensym() {
-      return !inGensym.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambda = new java.util.Stack<>();
-
-	@Override
-	public void enterLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lambda"), "text", arg.getText());
-		onEnter(node);
-		this.inLambda.push(true);
-	}
-
-	public void exitLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
-		onExit();
-		this.inLambda.pop();
-	}
-
-	public boolean inLambda() {
-      return !inLambda.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMeta_data = new java.util.Stack<>();
-
-	@Override
-	public void enterMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
-		final Node node = model.findOrCreate(Label.label("Meta_data"), "text", arg.getText());
-		onEnter(node);
-		this.inMeta_data.push(true);
-	}
-
-	public void exitMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
-		onExit();
-		this.inMeta_data.pop();
-	}
-
-	public boolean inMeta_data() {
-      return !inMeta_data.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVar_quote = new java.util.Stack<>();
-
-	@Override
-	public void enterVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
-		final Node node = model.findOrCreate(Label.label("Var_quote"), "text", arg.getText());
-		onEnter(node);
-		this.inVar_quote.push(true);
-	}
-
-	public void exitVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
-		onExit();
-		this.inVar_quote.pop();
-	}
-
-	public boolean inVar_quote() {
-      return !inVar_quote.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inHost_expr = new java.util.Stack<>();
-
-	@Override
-	public void enterHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
-		final Node node = model.findOrCreate(Label.label("Host_expr"), "text", arg.getText());
-		onEnter(node);
-		this.inHost_expr.push(true);
-	}
-
-	public void exitHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
-		onExit();
-		this.inHost_expr.pop();
-	}
-
-	public boolean inHost_expr() {
-      return !inHost_expr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDiscard = new java.util.Stack<>();
-
-	@Override
-	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		final Node node = model.findOrCreate(Label.label("Discard"), "text", arg.getText());
-		onEnter(node);
-		this.inDiscard.push(true);
-	}
-
-	public void exitDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		onExit();
-		this.inDiscard.pop();
-	}
-
-	public boolean inDiscard() {
-      return !inDiscard.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
 
 	@Override
@@ -757,6 +397,366 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	public boolean inParam_name() {
       return !inParam_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText());
+		onEnter(node);
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
+
+	@Override
+	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText());
+		onEnter(node);
+		this.inForm.push(true);
+	}
+
+	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		onExit();
+		this.inForm.pop();
+	}
+
+	public boolean inForm() {
+      return !inForm.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
+
+	@Override
+	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText());
+		onEnter(node);
+		this.inForms.push(true);
+	}
+
+	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		onExit();
+		this.inForms.pop();
+	}
+
+	public boolean inForms() {
+      return !inForms.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
+
+	@Override
+	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		final Node node = model.findOrCreate(Label.label("List"), "text", arg.getText());
+		onEnter(node);
+		this.inList.push(true);
+	}
+
+	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		onExit();
+		this.inList.pop();
+	}
+
+	public boolean inList() {
+      return !inList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
+
+	@Override
+	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		final Node node = model.findOrCreate(Label.label("Vector"), "text", arg.getText());
+		onEnter(node);
+		this.inVector.push(true);
+	}
+
+	public void exitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		onExit();
+		this.inVector.pop();
+	}
+
+	public boolean inVector() {
+      return !inVector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMap = new java.util.Stack<>();
+
+	@Override
+	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		final Node node = model.findOrCreate(Label.label("Map"), "text", arg.getText());
+		onEnter(node);
+		this.inMap.push(true);
+	}
+
+	public void exitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		onExit();
+		this.inMap.pop();
+	}
+
+	public boolean inMap() {
+      return !inMap.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
+
+	@Override
+	public void enterSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
+		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
+		onEnter(node);
+		this.inSet.push(true);
+	}
+
+	public void exitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
+		onExit();
+		this.inSet.pop();
+	}
+
+	public boolean inSet() {
+      return !inSet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReader_macro = new java.util.Stack<>();
+
+	@Override
+	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
+		onEnter(node);
+		this.inReader_macro.push(true);
+	}
+
+	public void exitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		onExit();
+		this.inReader_macro.pop();
+	}
+
+	public boolean inReader_macro() {
+      return !inReader_macro.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuote = new java.util.Stack<>();
+
+	@Override
+	public void enterQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
+		final Node node = model.findOrCreate(Label.label("Quote"), "text", arg.getText());
+		onEnter(node);
+		this.inQuote.push(true);
+	}
+
+	public void exitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
+		onExit();
+		this.inQuote.pop();
+	}
+
+	public boolean inQuote() {
+      return !inQuote.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBacktick = new java.util.Stack<>();
+
+	@Override
+	public void enterBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
+		final Node node = model.findOrCreate(Label.label("Backtick"), "text", arg.getText());
+		onEnter(node);
+		this.inBacktick.push(true);
+	}
+
+	public void exitBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
+		onExit();
+		this.inBacktick.pop();
+	}
+
+	public boolean inBacktick() {
+      return !inBacktick.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnquote = new java.util.Stack<>();
+
+	@Override
+	public void enterUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
+		final Node node = model.findOrCreate(Label.label("Unquote"), "text", arg.getText());
+		onEnter(node);
+		this.inUnquote.push(true);
+	}
+
+	public void exitUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
+		onExit();
+		this.inUnquote.pop();
+	}
+
+	public boolean inUnquote() {
+      return !inUnquote.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnquote_splicing = new java.util.Stack<>();
+
+	@Override
+	public void enterUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
+		final Node node = model.findOrCreate(Label.label("Unquote_splicing"), "text", arg.getText());
+		onEnter(node);
+		this.inUnquote_splicing.push(true);
+	}
+
+	public void exitUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
+		onExit();
+		this.inUnquote_splicing.pop();
+	}
+
+	public boolean inUnquote_splicing() {
+      return !inUnquote_splicing.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTag = new java.util.Stack<>();
+
+	@Override
+	public void enterTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
+		final Node node = model.findOrCreate(Label.label("Tag"), "text", arg.getText());
+		onEnter(node);
+		this.inTag.push(true);
+	}
+
+	public void exitTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
+		onExit();
+		this.inTag.pop();
+	}
+
+	public boolean inTag() {
+      return !inTag.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeref = new java.util.Stack<>();
+
+	@Override
+	public void enterDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
+		final Node node = model.findOrCreate(Label.label("Deref"), "text", arg.getText());
+		onEnter(node);
+		this.inDeref.push(true);
+	}
+
+	public void exitDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
+		onExit();
+		this.inDeref.pop();
+	}
+
+	public boolean inDeref() {
+      return !inDeref.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGensym = new java.util.Stack<>();
+
+	@Override
+	public void enterGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
+		final Node node = model.findOrCreate(Label.label("Gensym"), "text", arg.getText());
+		onEnter(node);
+		this.inGensym.push(true);
+	}
+
+	public void exitGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
+		onExit();
+		this.inGensym.pop();
+	}
+
+	public boolean inGensym() {
+      return !inGensym.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambda = new java.util.Stack<>();
+
+	@Override
+	public void enterLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
+		final Node node = model.findOrCreate(Label.label("Lambda"), "text", arg.getText());
+		onEnter(node);
+		this.inLambda.push(true);
+	}
+
+	public void exitLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
+		onExit();
+		this.inLambda.pop();
+	}
+
+	public boolean inLambda() {
+      return !inLambda.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMeta_data = new java.util.Stack<>();
+
+	@Override
+	public void enterMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
+		final Node node = model.findOrCreate(Label.label("Meta_data"), "text", arg.getText());
+		onEnter(node);
+		this.inMeta_data.push(true);
+	}
+
+	public void exitMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
+		onExit();
+		this.inMeta_data.pop();
+	}
+
+	public boolean inMeta_data() {
+      return !inMeta_data.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVar_quote = new java.util.Stack<>();
+
+	@Override
+	public void enterVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
+		final Node node = model.findOrCreate(Label.label("Var_quote"), "text", arg.getText());
+		onEnter(node);
+		this.inVar_quote.push(true);
+	}
+
+	public void exitVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
+		onExit();
+		this.inVar_quote.pop();
+	}
+
+	public boolean inVar_quote() {
+      return !inVar_quote.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHost_expr = new java.util.Stack<>();
+
+	@Override
+	public void enterHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
+		final Node node = model.findOrCreate(Label.label("Host_expr"), "text", arg.getText());
+		onEnter(node);
+		this.inHost_expr.push(true);
+	}
+
+	public void exitHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
+		onExit();
+		this.inHost_expr.pop();
+	}
+
+	public boolean inHost_expr() {
+      return !inHost_expr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDiscard = new java.util.Stack<>();
+
+	@Override
+	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
+		final Node node = model.findOrCreate(Label.label("Discard"), "text", arg.getText());
+		onEnter(node);
+		this.inDiscard.push(true);
+	}
+
+	public void exitDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
+		onExit();
+		this.inDiscard.pop();
+	}
+
+	public boolean inDiscard() {
+      return !inDiscard.isEmpty(); 
    }
 
 }

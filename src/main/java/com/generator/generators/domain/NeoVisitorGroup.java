@@ -96,8 +96,8 @@ public final class NeoVisitorGroup {
 
       public DomainVisitorST addEntitiesValue(Object name_, Object visit_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("visit", (visit_==null || visit_.toString().length()==0) ? null : visit_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("visit", (visit_ == null || visit_.toString().length() == 0) ? null : visit_);
       	this._entities.add(map);
 
          template.addAggr("entities.{name, visit}", map.get("name"), map.get("visit"));
@@ -300,7 +300,7 @@ public final class NeoVisitorGroup {
 		"	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();\n" + 
 		"\n" + 
 		"   public void visit(Node node) {\n" + 
-		"		~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\\n\"~\n" + 
+		"		~entities:{it|if(hasLabel(node, \"~it.name~\")) visit~it.name;format=\"capitalize\"~(node);};separator=\"\\nelse \"~\n" + 
 		"   }\n" + 
 		"\n" + 
 		"	~entities:{it|~it.visit~};separator=\"\\n\\n\"~\n" + 
@@ -311,18 +311,26 @@ public final class NeoVisitorGroup {
 		"      return false;\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private Iterable<Relationship> outgoing(Node node, RelationshipType type) {\n" + 
+		"	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {\n" + 
 		"     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	private Node other(Node node, Relationship relationship) {\n" + 
+		"	protected Iterable<Relationship> outgoing(Node node) {\n" + 
+		"     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);\n" + 
+		"   }\n" + 
+		"\n" + 
+		"	protected Node other(Node node, Relationship relationship) {\n" + 
 		"     	return relationship == null ? null : relationship.getOtherNode(node);\n" + 
 		"   }\n" + 
 		"}>>\n")
-			.append("entityVisit(name,outgoing) ::= <<void visit~name;format=\"capitalize\"~(Node node) {\n" + 
+			.append("entityVisit(name,outgoing) ::= <<public void visit~name;format=\"capitalize\"~(Node node) {\n" + 
 		"	if (visited.contains(node)) return;\n" + 
 		"   visited.add(node);\n" + 
+		"~if(outgoing)~\n" + 
 		"	~outgoing:{it|outgoing(node, RelationshipType.withName(\"~it~\")).forEach(relationship -> visit(other(node, relationship)));};separator=\"\\n\"~\n" + 
+		"~else~\n" + 
+		"	outgoing(node).forEach(relationship -> visit(other(node, relationship)));\n" + 
+		"~endif~\n" + 
 		"}>>\n")
 		.toString();
 }

@@ -6,8 +6,10 @@ import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
+import com.generator.generators.antlr.parser.ANTLRv4ParserDomainVisitor;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNeoVisitor;
 import com.generator.generators.domain.DomainPlugin;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -30,6 +32,10 @@ public class ANTLRPlugin extends Plugin {
 
    enum Entities implements Label {
       GrammarSpec
+   }
+
+   enum Properties {
+      text
    }
 
    public ANTLRPlugin(App app) {
@@ -68,12 +74,9 @@ public class ANTLRPlugin extends Plugin {
 
    @Override
    public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
-         final Node instanceNode = other(neoNode.getNode(), instanceRelation);
-         if (hasLabel(instanceNode, Entities.GrammarSpec)) {
-            tabbedPane.add(getString(neoNode.getNode(), AppMotif.Properties.name.name()), new GrammarEditor(neoNode));
-         }
-      });
+      if(hasLabel(neoNode.getNode(), Entities.GrammarSpec)) {
+         tabbedPane.add(getNameOrLabelFrom(neoNode.getNode()), new GrammarEditor(neoNode));
+      }
    }
 
    private final class GrammarEditor extends JPanel {
@@ -87,7 +90,15 @@ public class ANTLRPlugin extends Plugin {
 
          final StringBuilder out = new StringBuilder();
 
-         // render grammar
+         // todo: auto-generate a NeoVisitor for ParserNeoVisitor
+         new ANTLRv4ParserDomainVisitor() {
+
+            @Override
+            public void visitGrammarSpec(Node node) {
+               out.append(getString(node, Properties.text.name()));
+               super.visitGrammarSpec(node);
+            }
+         }.visit(node.getNode());
 
          txtEditor.setText(out.toString().trim());
 

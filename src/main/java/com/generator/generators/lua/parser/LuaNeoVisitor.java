@@ -38,16 +38,6 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		System.out.println("String");
-		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
 		System.out.println("Number");
 		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
@@ -58,9 +48,9 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		System.out.println("Var");
-		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText());
+	public Node visitString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
+		System.out.println("String");
+		final Node node = model.findOrCreate(Label.label("String"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -71,6 +61,16 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
 		System.out.println("Field");
 		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		System.out.println("Var");
+		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -101,6 +101,16 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
 		System.out.println("Retstat");
 		final Node node = model.findOrCreate(Label.label("Retstat"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		System.out.println("Functioncall");
+		final Node node = model.findOrCreate(Label.label("Functioncall"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -171,16 +181,6 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
 		System.out.println("Prefixexp");
 		final Node node = model.findOrCreate(Label.label("Prefixexp"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		System.out.println("Functioncall");
-		final Node node = model.findOrCreate(Label.label("Functioncall"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

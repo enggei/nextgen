@@ -28,16 +28,6 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		System.out.println("Document");
-		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
 		System.out.println("Prolog");
 		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
@@ -101,6 +91,16 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		System.out.println("Attribute");
 		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		System.out.println("Document");
+		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

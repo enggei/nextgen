@@ -28,49 +28,9 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
-		System.out.println("KeyValue");
-		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		System.out.println("Group");
-		final Node node = model.findOrCreate(Label.label("Group"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDelimiters(com.generator.generators.stringtemplate.parserg4.STGParser.DelimitersContext arg) {
-		System.out.println("Delimiters");
-		final Node node = model.findOrCreate(Label.label("Delimiters"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
-		System.out.println("FormalArgs");
-		final Node node = model.findOrCreate(Label.label("FormalArgs"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
-		System.out.println("FormalArg");
-		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText());
+	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		System.out.println("Imports");
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -118,9 +78,49 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		System.out.println("Imports");
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
+		System.out.println("KeyValue");
+		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
+		System.out.println("Group");
+		final Node node = model.findOrCreate(Label.label("Group"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDelimiters(com.generator.generators.stringtemplate.parserg4.STGParser.DelimitersContext arg) {
+		System.out.println("Delimiters");
+		final Node node = model.findOrCreate(Label.label("Delimiters"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
+		System.out.println("FormalArgs");
+		final Node node = model.findOrCreate(Label.label("FormalArgs"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
+		System.out.println("FormalArg");
+		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

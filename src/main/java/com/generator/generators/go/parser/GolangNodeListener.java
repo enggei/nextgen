@@ -80,40 +80,6 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
-		this.inDeclaration.push(true);
-	}
-
-	public void exitDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		onExit();
-		this.inDeclaration.pop();
-	}
-
-	public boolean inDeclaration() {
-      return !inDeclaration.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -148,6 +114,40 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inExpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
+		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
+		this.inDeclaration.push(true);
+	}
+
+	public void exitDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
+		onExit();
+		this.inDeclaration.pop();
+	}
+
+	public boolean inDeclaration() {
+      return !inDeclaration.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
 
 	@Override
@@ -180,23 +180,6 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	public boolean inFunction() {
       return !inFunction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
@@ -248,6 +231,23 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	public boolean inEos() {
       return !inEos.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText()));
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSourceFile = new java.util.Stack<>();

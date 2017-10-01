@@ -93,24 +93,6 @@ public class LuaNeoListener extends LuaBaseListener {
       return !inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
-
-	@Override
-	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText());
-		onEnter(node);
-		this.inVar.push(true);
-	}
-
-	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onExit();
-		this.inVar.pop();
-	}
-
-	public boolean inVar() {
-      return !inVar.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
 
 	@Override
@@ -127,6 +109,24 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	public boolean inField() {
       return !inField.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
+
+	@Override
+	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText());
+		onEnter(node);
+		this.inVar.push(true);
+	}
+
+	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onExit();
+		this.inVar.pop();
+	}
+
+	public boolean inVar() {
+      return !inVar.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();

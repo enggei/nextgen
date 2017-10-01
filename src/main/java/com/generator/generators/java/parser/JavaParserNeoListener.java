@@ -57,24 +57,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -109,6 +91,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inExpression() {
       return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
@@ -271,24 +271,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inTypeDeclaration() {
       return !inTypeDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText());
-		onEnter(node);
-		this.inModifier.push(true);
-	}
-
-	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onExit();
-		this.inModifier.pop();
-	}
-
-	public boolean inModifier() {
-      return !inModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
@@ -919,6 +901,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inClassOrInterfaceType() {
       return !inClassOrInterfaceType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText());
+		onEnter(node);
+		this.inModifier.push(true);
+	}
+
+	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onExit();
+		this.inModifier.pop();
+	}
+
+	public boolean inModifier() {
+      return !inModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();

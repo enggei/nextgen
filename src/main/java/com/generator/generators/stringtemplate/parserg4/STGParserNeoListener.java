@@ -39,6 +39,42 @@ public class STGParserNeoListener extends STGParserBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
+		onEnter(node);
+		this.inTemplate.push(true);
+	}
+
+	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		onExit();
+		this.inTemplate.pop();
+	}
+
+	public boolean inTemplate() {
+      return !inTemplate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
+
+	@Override
+	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+		onEnter(node);
+		this.inImports.push(true);
+	}
+
+	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		onExit();
+		this.inImports.pop();
+	}
+
+	public boolean inImports() {
+      return !inImports.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inGroup = new java.util.Stack<>();
 
 	@Override
@@ -199,42 +235,6 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	public boolean inKeyValue() {
       return !inKeyValue.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText());
-		onEnter(node);
-		this.inTemplate.push(true);
-	}
-
-	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onExit();
-		this.inTemplate.pop();
-	}
-
-	public boolean inTemplate() {
-      return !inTemplate.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
-
-	@Override
-	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
-		onEnter(node);
-		this.inImports.push(true);
-	}
-
-	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		onExit();
-		this.inImports.pop();
-	}
-
-	public boolean inImports() {
-      return !inImports.isEmpty(); 
    }
 
 }
