@@ -26,14 +26,14 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -45,8 +45,26 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
    }
 
 	@Override
-	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = new Node("Comment", arg.getText());
+	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
+		final Node node = new Node("Value", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
+		final Node node = new Node("Row", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
+		final Node node = new Node("Key", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -72,26 +90,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		final Node node = new Node("Value", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		final Node node = new Node("Row", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		final Node node = new Node("Key", arg.getText());
+	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		final Node node = new Node("Comment", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

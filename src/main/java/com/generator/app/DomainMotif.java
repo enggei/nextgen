@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.Label;
@@ -114,11 +115,11 @@ public class DomainMotif {
       graph.doInTransaction(committer);
    }
 
-   protected Node getProperty(Workspace.NodeCanvas.NeoNode neoNode, String propertyName) {
+   protected Node getProperty(NeoNode neoNode, String propertyName) {
       return other(neoNode.getNode(), singleOutgoing(neoNode.getNode(), RelationshipType.withName(propertyName)));
    }
 
-   public static boolean hasProperty(Workspace.NodeCanvas.NeoNode neoNode, String propertyName) {
+   public static boolean hasProperty(NeoNode neoNode, String propertyName) {
       return hasProperty(neoNode.getNode(), propertyName);
    }
 

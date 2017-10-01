@@ -20,7 +20,7 @@ public class css3NeoListener extends css3BaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class css3NeoListener extends css3BaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);

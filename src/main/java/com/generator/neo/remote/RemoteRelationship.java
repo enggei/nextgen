@@ -20,7 +20,7 @@ import static com.generator.util.NeoUtil.TAG_UUID;
 /**
  * Created by Ernst Sognnes on 11.07.17.
  */
-public class NeoRelationship implements Relationship, NeoEntity {
+public class RemoteRelationship implements Relationship, NeoEntity {
 
    private final NeoDriver driver;
    private org.neo4j.driver.v1.types.Relationship driverRelationship;
@@ -28,20 +28,20 @@ public class NeoRelationship implements Relationship, NeoEntity {
    private UUID uuid = new UUID(0l, 0l);
 
    private final RelationshipType type;
-   private final NeoNode[] nodes;
+   private final RemoteNode[] nodes;
 
-   static class InternalNeoRelationship extends NeoRelationship {
+   static class InternalNeoRelationship extends RemoteRelationship {
       InternalNeoRelationship(@NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
          super(driverRelationship);
       }
    }
 
-   static NeoRelationship newInternalRelationship(@NotNull org.neo4j.driver.v1.types.Relationship relationship) {
+   static RemoteRelationship newInternalRelationship(@NotNull org.neo4j.driver.v1.types.Relationship relationship) {
       return new InternalNeoRelationship(relationship);
    }
 
    // NOTE: For internal use only!
-   private NeoRelationship(@NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
+   private RemoteRelationship(@NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
       this.driver = null;
       this.driverRelationship = driverRelationship;
 
@@ -50,10 +50,10 @@ public class NeoRelationship implements Relationship, NeoEntity {
 
       this.type = RelationshipType.withName(driverRelationship.type());
 
-      this.nodes = new NeoNode[] { null, null };
+      this.nodes = new RemoteNode[] { null, null };
    }
 
-   NeoRelationship(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
+   RemoteRelationship(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Relationship driverRelationship) {
       this.driver = driver;
       this.driverRelationship = driverRelationship;
 
@@ -65,13 +65,13 @@ public class NeoRelationship implements Relationship, NeoEntity {
       this.type = RelationshipType.withName(driverRelationship.type());
 
       // Start and end nodes
-      this.nodes = new NeoNode[] { new NeoNode(driver, driverRelationship.startNodeId()), new NeoNode(driver, driverRelationship.endNodeId()) };
+      this.nodes = new RemoteNode[] { new RemoteNode(driver, driverRelationship.startNodeId()), new RemoteNode(driver, driverRelationship.endNodeId()) };
 
       updateCache(this);
    }
 
-   static NeoRelationship fromDriverRelationship(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Relationship relationship) {
-      return new NeoRelationship(driver, relationship);
+   static RemoteRelationship fromDriverRelationship(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Relationship relationship) {
+      return new RemoteRelationship(driver, relationship);
    }
 
    public static UUID uuidOf(final org.neo4j.driver.v1.types.Relationship relationship) {
@@ -97,13 +97,13 @@ public class NeoRelationship implements Relationship, NeoEntity {
 
    @Override
    public void merge(NeoEntity otherEntity) {
-      if (!(otherEntity instanceof NeoRelationship))
+      if (!(otherEntity instanceof RemoteRelationship))
          throw new IllegalArgumentException("Entity is not a NeoRelationship");
 
       if (!uuid.equals(otherEntity.getUUID()))
          throw new IllegalArgumentException("Trying to merge " + uuid + " with different relationship " + otherEntity.getUUID());
 
-      NeoRelationship other = (NeoRelationship)otherEntity;
+      RemoteRelationship other = (RemoteRelationship)otherEntity;
 
       System.out.println("Merging " + this + " with " + other);
 
@@ -113,14 +113,14 @@ public class NeoRelationship implements Relationship, NeoEntity {
 
       this.driverRelationship = other.driverRelationship;
 
-      for (NeoNode node : nodes) node.addOrUpdateRelationship(this);
+      for (RemoteNode node : nodes) node.addOrUpdateRelationship(this);
    }
 
    @Override
    public void delete() {
       if (driver.deleteRelationship(this) != null) {
 
-         for (NeoNode node : nodes) {
+         for (RemoteNode node : nodes) {
             node.removeRelationship(this);
          }
 
@@ -226,7 +226,7 @@ public class NeoRelationship implements Relationship, NeoEntity {
       return driverRelationship.asMap();
    }
 
-   static String toString(NeoRelationship neoRelationship) {
+   static String toString(RemoteRelationship neoRelationship) {
       UUID uuid = uuidOf(neoRelationship);
       StringBuilder properties = new StringBuilder();
 

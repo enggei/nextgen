@@ -1,6 +1,7 @@
 package com.generator.generators.stringtemplate;
 
 import com.generator.app.*;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.domain.*;
@@ -145,7 +146,7 @@ public class StringTemplatePlugin extends Plugin {
 
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       if (hasLabel(neoNode.getNode(), Entities.STGroup)) {
          pop.add(new App.TransactionAction("Add template", app) {
@@ -174,7 +175,7 @@ public class StringTemplatePlugin extends Plugin {
             }
          });
 
-         for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+         for (NeoNode selectedNode : selectedNodes) {
             if (hasLabel(selectedNode.getNode(), Entities.STTemplate)) {
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), DomainPlugin.Relations.ENTITY)) continue;
 
@@ -214,7 +215,7 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
       if (neoNode.getNode().hasLabel(Entities.STTemplate))
          tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new TemplateEditor(neoNode));
 
@@ -583,7 +584,7 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    private final class TemplateEditor extends JPanel {
-      TemplateEditor(Workspace.NodeCanvas.NeoNode templateNode) {
+      TemplateEditor(NeoNode templateNode) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();
@@ -942,7 +943,7 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    private final class TemplateRenderPanel extends JPanel {
-      TemplateRenderPanel(Workspace.NodeCanvas.NeoNode statementNode, Node templateNode) {
+      TemplateRenderPanel(NeoNode statementNode, Node templateNode) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea(25, 85);
@@ -974,7 +975,7 @@ public class StringTemplatePlugin extends Plugin {
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
 
-      private void onLeftClick(JTextArea txtEditor, Workspace.NodeCanvas.NeoNode statementNode, Node templateNode) {
+      private void onLeftClick(JTextArea txtEditor, NeoNode statementNode, Node templateNode) {
          SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
             @Override
             public void doAction(Transaction tx) throws Throwable {

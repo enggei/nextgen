@@ -28,26 +28,6 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		System.out.println("KeyValuePair");
-		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		System.out.println("DefaultValuePair");
-		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
 		System.out.println("KeyValue");
 		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText());
@@ -111,6 +91,26 @@ public class STGParserNeoVisitor extends STGParserBaseVisitor<Node> {
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
 		System.out.println("DictPairs");
 		final Node node = model.findOrCreate(Label.label("DictPairs"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		System.out.println("KeyValuePair");
+		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
+		System.out.println("DefaultValuePair");
+		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

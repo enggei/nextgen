@@ -14,7 +14,7 @@ import java.net.URI;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.generator.neo.remote.NeoNode.*;
+import static com.generator.neo.remote.RemoteNode.*;
 import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.neo4j.driver.v1.Values.parameters;
 
@@ -529,11 +529,11 @@ public class NeoDriver implements AutoCloseable {
 //			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
 
          if (result.summary().counters().nodesDeleted() > 0)
-            return NeoNode.deletedNode(id);
+            return RemoteNode.deletedNode(id);
 
          return null;
 
-      }, (context, node) -> context.txData().nodeDeleted(NeoNode.newInternalNeoNode(node)));
+      }, (context, node) -> context.txData().nodeDeleted(RemoteNode.newInternalNeoNode(node)));
    }
 
    public Node deleteNode(@NotNull final UUID uuid) {
@@ -550,11 +550,11 @@ public class NeoDriver implements AutoCloseable {
 //			System.out.println("deleteNode summary: " + debugSummary(result.summary()));
 
          if (result.summary().counters().nodesDeleted() > 0)
-            return NeoNode.deletedNode(result.single().get(0).asInt());
+            return RemoteNode.deletedNode(result.single().get(0).asInt());
 
          return null;
 
-      }, (context, node) -> context.txData().nodeDeleted(NeoNode.newInternalNeoNode(node)));
+      }, (context, node) -> context.txData().nodeDeleted(RemoteNode.newInternalNeoNode(node)));
    }
 
    public Node addLabel(@NotNull final UUID uuid, @NotNull final String additional) {
@@ -708,7 +708,7 @@ public class NeoDriver implements AutoCloseable {
 
          return result.single().get(0).asRelationship();
 
-      }, (context, rel) -> context.txData().relationshipCreated(NeoRelationship.fromDriverRelationship(NeoDriver.this, rel)));
+      }, (context, rel) -> context.txData().relationshipCreated(RemoteRelationship.fromDriverRelationship(NeoDriver.this, rel)));
    }
 
    public Relationship createOutgoingRelationship(@NotNull Node lhs, @NotNull Node rhs, @NotNull String type, @NotNull UUID uuid, Object... kv) {
@@ -751,7 +751,7 @@ public class NeoDriver implements AutoCloseable {
 
          return result.single().get(0).asRelationship();
 
-      }, (context, rel) -> context.txData().relationshipCreated(NeoRelationship.fromDriverRelationship(NeoDriver.this, rel)));
+      }, (context, rel) -> context.txData().relationshipCreated(RemoteRelationship.fromDriverRelationship(NeoDriver.this, rel)));
    }
 
    @Deprecated
@@ -764,11 +764,11 @@ public class NeoDriver implements AutoCloseable {
          StatementResult result = tx.run(statement);
 //			System.out.println("createRelationship summary:" + debugSummary(result.summary()));
          if (result.summary().counters().relationshipsDeleted() > 0)
-            return NeoRelationship.deletedRelationship(id, "");
+            return RemoteRelationship.deletedRelationship(id, "");
 
          return null;
 
-      }, (context, rel) -> context.txData().relationshipDeleted(NeoRelationship.newInternalRelationship(rel)));
+      }, (context, rel) -> context.txData().relationshipDeleted(RemoteRelationship.newInternalRelationship(rel)));
    }
 
    public Relationship deleteRelationship(@NotNull final String type, @NotNull final UUID uuid) {
@@ -780,14 +780,14 @@ public class NeoDriver implements AutoCloseable {
          StatementResult result = tx.run(statement);
 //			System.out.println("deleteRelationship summary:" + debugSummary(result.summary()));
          if (result.summary().counters().relationshipsDeleted() > 0)
-            return NeoRelationship.deletedRelationship(result.single().get(0).asLong(), type);
+            return RemoteRelationship.deletedRelationship(result.single().get(0).asLong(), type);
 
          return null;
 
-      }, (context, rel) -> context.txData().relationshipDeleted(NeoRelationship.newInternalRelationship(rel)));
+      }, (context, rel) -> context.txData().relationshipDeleted(RemoteRelationship.newInternalRelationship(rel)));
    }
 
-   public Relationship deleteRelationship(@NotNull final NeoRelationship relationship) {
+   public Relationship deleteRelationship(@NotNull final RemoteRelationship relationship) {
       return deleteRelationship(relationship.getType().name(), relationship.getUUID());
    }
 

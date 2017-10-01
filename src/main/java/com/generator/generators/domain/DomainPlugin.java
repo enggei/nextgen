@@ -1,6 +1,7 @@
 package com.generator.generators.domain;
 
 import com.generator.app.*;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -80,7 +81,7 @@ public class DomainPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       final Node node = neoNode.getNode();
 
@@ -218,7 +219,7 @@ public class DomainPlugin extends Plugin {
 
          if (selectedNodes.size() <= 20) {
 
-            for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+            for (NeoNode selectedNode : selectedNodes) {
                if (hasLabel(selectedNode.getNode(), Entities.Entity)) {
 
                   pop.add(new App.TransactionAction("Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(node), app) {
@@ -306,7 +307,7 @@ public class DomainPlugin extends Plugin {
 
          if (selectedNodes.size() <= 20) {
 
-            for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+            for (NeoNode selectedNode : selectedNodes) {
                if (hasLabel(selectedNode.getNode(), Entities.Entity)) {
                   pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> src ->" + getNameAndLabelsFrom(node), app) {
                      @Override
@@ -418,7 +419,7 @@ public class DomainPlugin extends Plugin {
                   }
 
                   if (selectedNodes.size() == 1) {
-                     final Workspace.NodeCanvas.NeoNode selectedNode = selectedNodes.iterator().next();
+                     final NeoNode selectedNode = selectedNodes.iterator().next();
 
                      final String dstType = getString(dstNode, AppMotif.Properties.name.name());
                      if (!isRelated(node, selectedNode.getNode(), RelationshipType.withName(parameterName)) && ((hasLabel(dstNode, Entities.Property) && hasLabel(selectedNode.getNode(), Entities.Value)) || hasLabel(selectedNode.getNode(), dstType))) {
@@ -500,7 +501,7 @@ public class DomainPlugin extends Plugin {
                      }
                   });
 
-                  for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+                  for (NeoNode selectedNode : selectedNodes) {
 
 //                     final boolean isProperty = hasLabel(dstNode, Entities.Property) && hasLabel(selectedNode.getNode(), Entities.Value);
 
@@ -701,7 +702,7 @@ public class DomainPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
       if (hasLabel(neoNode.getNode(), Entities.Visitor)) {
          outgoing(neoNode.getNode(), DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
             System.out.println("Visitor " + visitorRelation.getId());
@@ -738,7 +739,7 @@ public class DomainPlugin extends Plugin {
    }
 
    private final class VisitorRenderPanel extends JPanel {
-      VisitorRenderPanel(Workspace.NodeCanvas.NeoNode visitorNode, Relationship visitorRelation) {
+      VisitorRenderPanel(NeoNode visitorNode, Relationship visitorRelation) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea(25, 85);

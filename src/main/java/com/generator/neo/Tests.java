@@ -2,8 +2,8 @@ package com.generator.neo;
 
 
 import com.generator.neo.remote.NeoDriver;
-import com.generator.neo.remote.NeoNode;
-import com.generator.neo.remote.NeoRelationship;
+import com.generator.neo.remote.RemoteNode;
+import com.generator.neo.remote.RemoteRelationship;
 import com.generator.neo.remote.RemoteNeoModel;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -24,8 +24,8 @@ import java.util.UUID;
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.getCachedRelationship;
 import static com.generator.neo.remote.NeoDriver.CYPHER_DROP_ALL;
-import static com.generator.neo.remote.NeoNode.fromDriverNode;
-import static com.generator.neo.remote.NeoNode.uuidOf;
+import static com.generator.neo.remote.RemoteNode.fromDriverNode;
+import static com.generator.neo.remote.RemoteNode.uuidOf;
 import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -221,13 +221,13 @@ public class Tests {
       UUID uuid3 = UUID.fromString("1c62a80a-3f50-4b55-8267-0c2123e68589");
 
       assertEquals(null, getCachedNode(uuid1));
-      NeoNode node1 = fromDriverNode(neoDriver, neoDriver.createNode(uuid1));
+      RemoteNode node1 = fromDriverNode(neoDriver, neoDriver.createNode(uuid1));
 
       assertEquals(null, getCachedNode(uuid2));
-      NeoNode node2 = fromDriverNode(neoDriver, neoDriver.createNode(uuid2));
+      RemoteNode node2 = fromDriverNode(neoDriver, neoDriver.createNode(uuid2));
 
-      NeoNode node1cached = getCachedNode(uuid1);
-      NeoNode node2cached = getCachedNode(uuid2);
+      RemoteNode node1cached = getCachedNode(uuid1);
+      RemoteNode node2cached = getCachedNode(uuid2);
 
       assertEquals(node1, node1cached);
       assertEquals(node2, node2cached);
@@ -241,8 +241,8 @@ public class Tests {
 
       System.out.println(node1);
 
-      NeoRelationship rel1 = (NeoRelationship)node2.createRelationshipTo(node1cached, newRelationshipType("TJA"));
-      NeoRelationship rel1cached = getCachedRelationship(rel1.getUUID());
+      RemoteRelationship rel1 = (RemoteRelationship)node2.createRelationshipTo(node1cached, newRelationshipType("TJA"));
+      RemoteRelationship rel1cached = getCachedRelationship(rel1.getUUID());
 
       assertEquals(rel1, rel1cached);
 

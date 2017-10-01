@@ -58,16 +58,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTblConstrPK(com.generator.generators.mysql.parser.MySqlParser.TblConstrPKContext arg) {
-		System.out.println("TblConstrPK");
-		final Node node = model.findOrCreate(Label.label("TblConstrPK"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTblConstrUK(com.generator.generators.mysql.parser.MySqlParser.TblConstrUKContext arg) {
 		System.out.println("TblConstrUK");
 		final Node node = model.findOrCreate(Label.label("TblConstrUK"), "text", arg.getText());
@@ -938,16 +928,6 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitDrop_event(com.generator.generators.mysql.parser.MySqlParser.Drop_eventContext arg) {
-		System.out.println("Drop_event");
-		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
 		System.out.println("Root");
 		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText());
@@ -1498,6 +1478,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitTblConstrPK(com.generator.generators.mysql.parser.MySqlParser.TblConstrPKContext arg) {
+		System.out.println("TblConstrPK");
+		final Node node = model.findOrCreate(Label.label("TblConstrPK"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitAltblOptimPart(com.generator.generators.mysql.parser.MySqlParser.AltblOptimPartContext arg) {
 		System.out.println("AltblOptimPart");
 		final Node node = model.findOrCreate(Label.label("AltblOptimPart"), "text", arg.getText());
@@ -1551,6 +1541,16 @@ public class MySqlParserNeoVisitor extends MySqlParserBaseVisitor<Node> {
 	public Node visitDrop_database(com.generator.generators.mysql.parser.MySqlParser.Drop_databaseContext arg) {
 		System.out.println("Drop_database");
 		final Node node = model.findOrCreate(Label.label("Drop_database"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDrop_event(com.generator.generators.mysql.parser.MySqlParser.Drop_eventContext arg) {
+		System.out.println("Drop_event");
+		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

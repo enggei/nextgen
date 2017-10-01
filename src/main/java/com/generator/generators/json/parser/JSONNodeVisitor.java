@@ -26,14 +26,14 @@ public class JSONNodeVisitor extends JSONBaseVisitor<JSONNodeVisitor.Node> {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);

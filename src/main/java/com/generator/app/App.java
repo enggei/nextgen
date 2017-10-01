@@ -1,6 +1,7 @@
 package com.generator.app;
 
 import com.generator.generators.antlr.ANTLRPlugin;
+import com.generator.generators.antlr.GrammarEditor;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -38,10 +39,10 @@ import static com.generator.util.NeoUtil.*;
  */
 public class App extends JFrame {
 
-   final AppEvents events = new AppEvents(new PropertyChangeSupport(this));
-   final AppModel model = new AppModel();
-   final Workspace workspace = new Workspace(this);
-   final Set<Plugin> plugins = new LinkedHashSet<>();
+   public final AppEvents events = new AppEvents(new PropertyChangeSupport(this));
+   public final AppModel model = new AppModel();
+   public final Workspace workspace = new Workspace(this);
+   public final Set<Plugin> plugins = new LinkedHashSet<>();
 
    private final Stack<AppModel.TransactionHistory> transactionHistory = new Stack<>();
 
@@ -148,6 +149,19 @@ public class App extends JFrame {
                SwingUtilities.invokeLater(() -> showTextProcessor(""));
             }
          });
+         utilsMenu.add(new TransactionAction("Antlr4 Grammar Editor", App.this) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final GrammarEditor editor = new GrammarEditor(App.this);
+               SwingUtil.showCloseDialog(editor, App.this, "Bnf test", new SwingUtil.OnClosed() {
+                  @Override
+                  public void onClosed() {
+
+                  }
+               });
+            }
+         });
          add(utilsMenu);
 
          events.addPropertyChangeListener(AppEvents.GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(App.this) {
@@ -210,7 +224,7 @@ public class App extends JFrame {
       });
    }
 
-   final class AppModel {
+   public final class AppModel {
 
       private final Properties properties = new Properties();
       private final File propertiesFile = new File(System.getProperty("user.home"), "/.nextgen/app.properties");
@@ -428,13 +442,13 @@ public class App extends JFrame {
          }
       }
 
-      void deleteRelations(Set<Relationship> relations) {
+      public void deleteRelations(Set<Relationship> relations) {
          transactionHistory.push(new TransactionHistory().addRelations(relations));
          for (Relationship relation : relations)
             relation.delete();
       }
 
-      void deleteNodes(Set<Node> nodes) {
+      public void deleteNodes(Set<Node> nodes) {
 
          transactionHistory.push(new TransactionHistory().addNodes(nodes));
 

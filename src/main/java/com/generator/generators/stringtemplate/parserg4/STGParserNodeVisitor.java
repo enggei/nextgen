@@ -26,14 +26,14 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -43,24 +43,6 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		final Node node = new Node("KeyValuePair", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		final Node node = new Node("DefaultValuePair", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
 
 	@Override
 	public Node visitKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
@@ -119,6 +101,24 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	@Override
 	public Node visitDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
 		final Node node = new Node("DictPairs", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		final Node node = new Node("KeyValuePair", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
+		final Node node = new Node("DefaultValuePair", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

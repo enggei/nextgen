@@ -20,7 +20,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -201,24 +201,6 @@ public class STGParserNeoListener extends STGParserBaseListener {
       return !inKeyValue.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
-
-	@Override
-	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
-		onEnter(node);
-		this.inImports.push(true);
-	}
-
-	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		onExit();
-		this.inImports.pop();
-	}
-
-	public boolean inImports() {
-      return !inImports.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
 
 	@Override
@@ -235,6 +217,24 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	public boolean inTemplate() {
       return !inTemplate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
+
+	@Override
+	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText());
+		onEnter(node);
+		this.inImports.push(true);
+	}
+
+	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		onExit();
+		this.inImports.pop();
+	}
+
+	public boolean inImports() {
+      return !inImports.isEmpty(); 
    }
 
 }

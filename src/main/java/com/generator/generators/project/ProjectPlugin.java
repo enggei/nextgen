@@ -1,6 +1,7 @@
 package com.generator.generators.project;
 
 import com.generator.app.*;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -26,8 +27,6 @@ import java.util.Set;
 
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasPropertyValue;
-import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
-import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -101,7 +100,7 @@ public class ProjectPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       if (hasLabel(neoNode.getNode(), Entities.Project)) {
 
@@ -128,7 +127,7 @@ public class ProjectPlugin extends Plugin {
             });
          }
 
-         for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+         for (NeoNode selectedNode : selectedNodes) {
 
             if (NeoUtil.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
 
@@ -426,7 +425,7 @@ public class ProjectPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
       if (hasLabel(neoNode.getNode(), Entities.Directory)) {
          tabbedPane.add("" + getFile(neoNode.getNode()), new DirectoryEditor(neoNode));
@@ -476,7 +475,7 @@ public class ProjectPlugin extends Plugin {
    }
 
    private final class DirectoryEditor extends JPanel {
-      DirectoryEditor(Workspace.NodeCanvas.NeoNode node) {
+      DirectoryEditor(NeoNode node) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();

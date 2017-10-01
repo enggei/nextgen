@@ -747,7 +747,7 @@ public final class AntlrGroup {
 		"		this.debug = debug;\n" + 
 		"	}\n" + 
 		"\n" + 
-		"   private void onEnter(Node node) {\n" + 
+		"   protected void onEnter(Node node) {\n" + 
 		"		if (!nodeStack.isEmpty())\n" + 
 		"      	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName(\"child\"));\n" + 
 		"      nodeStack.push(node);\n" + 
@@ -755,7 +755,7 @@ public final class AntlrGroup {
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   private void onExit() {\n" + 
+		"   protected void onExit() {\n" + 
 		"      if (nodeStack.size() > 1) {\n" + 
 		"			nodeStack.pop();\n" + 
 		"         delim.deleteCharAt(delim.length() - 1);\n" + 
@@ -867,14 +867,14 @@ public final class AntlrGroup {
 		"		this.debug = debug;\n" + 
 		"	}\n" + 
 		"\n" + 
-		"   private void onEnter(Node node) {\n" + 
+		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
 		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   private void onExit() {\n" + 
+		"   protected void onExit() {\n" + 
 		"      if (nodeStack.size() > 1) {\n" + 
 		"         nodeStack.pop();\n" + 
 		"         delim.deleteCharAt(delim.length() - 1);\n" + 
@@ -926,14 +926,14 @@ public final class AntlrGroup {
 		"		this.debug = debug;\n" + 
 		"	}\n" + 
 		"\n" + 
-		"   private void onEnter(Node node) {\n" + 
+		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
 		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
-		"   private void onExit() {\n" + 
+		"   protected void onExit() {\n" + 
 		"      if (nodeStack.size() > 1) {\n" + 
 		"			nodeStack.pop();\n" + 
 		"         delim.deleteCharAt(delim.length() - 1);\n" + 

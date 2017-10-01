@@ -2,10 +2,8 @@ package com.generator.generators.ssh;
 
 import com.generator.app.App;
 import com.generator.app.Plugin;
-import com.generator.app.Workspace;
-import com.generator.util.SwingUtil;
+import com.generator.app.nodes.NeoNode;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
@@ -50,12 +48,12 @@ public class SSHPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
 

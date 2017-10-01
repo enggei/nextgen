@@ -48,16 +48,6 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
 		System.out.println("Literal");
 		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
@@ -68,9 +58,9 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		System.out.println("Set");
-		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
+	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -81,6 +71,16 @@ public class CypherNeoVisitor extends CypherBaseVisitor<Node> {
 	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
 		System.out.println("Statement");
 		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		System.out.println("Set");
+		final Node node = model.findOrCreate(Label.label("Set"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -26,14 +26,14 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -43,15 +43,6 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		final Node node = new Node("HtmlElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
 
 	@Override
 	public Node visitHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
@@ -65,6 +56,15 @@ public class HTMLParserNodeVisitor extends HTMLParserBaseVisitor<HTMLParserNodeV
 	@Override
 	public Node visitHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
 		final Node node = new Node("HtmlElements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
+		final Node node = new Node("HtmlElement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

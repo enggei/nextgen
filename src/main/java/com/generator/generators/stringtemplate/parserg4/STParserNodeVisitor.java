@@ -26,14 +26,14 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -43,33 +43,6 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
    public Node getRoot() {
       return nodeStack.peek();
    }
-
-	@Override
-	public Node visitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		final Node node = new Node("Option", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		final Node node = new Node("Element", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		final Node node = new Node("SingleElement", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
 
 	@Override
 	public Node visitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
@@ -216,26 +189,26 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	}
 
 	@Override
+	public Node visitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		final Node node = new Node("Option", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
+		final Node node = new Node("Element", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
 		final Node node = new Node("List", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		final Node node = new Node("Template", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		final Node node = new Node("Elements", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -263,6 +236,33 @@ public class STParserNodeVisitor extends STParserBaseVisitor<STParserNodeVisitor
 	@Override
 	public Node visitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
 		final Node node = new Node("Args", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
+		final Node node = new Node("Template", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
+		final Node node = new Node("Elements", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
+		final Node node = new Node("SingleElement", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

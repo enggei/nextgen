@@ -1,6 +1,8 @@
 package com.generator.app;
 
 import com.generator.app.App.TransactionAction;
+import com.generator.app.nodes.NeoNode;
+import com.generator.app.nodes.NeoRelationship;
 import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Direction;
@@ -61,11 +63,11 @@ class NodeDetailPanel extends JPanel {
       });
 
       app.events.addPropertyChangeListener(NODE_HIGHLIGHTED, evt -> {
-         labelsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
-         propertiesPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
-         nodeRelationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+         labelsPanel.onNodeHighlighted((NeoNode) evt.getNewValue());
+         propertiesPanel.onNodeHighlighted((NeoNode) evt.getNewValue());
+         nodeRelationsPanel.onNodeHighlighted((NeoNode) evt.getNewValue());
          if (relationsPanel != null)
-            relationsPanel.onNodeHighlighted((Workspace.NodeCanvas.NeoNode) evt.getNewValue());
+            relationsPanel.onNodeHighlighted((NeoNode) evt.getNewValue());
       });
 
       app.events.addPropertyChangeListener(NODES_DELETED, evt -> {
@@ -87,9 +89,9 @@ class NodeDetailPanel extends JPanel {
       });
 
       app.events.addPropertyChangeListener(RELATION_HIGHLIGHTED, evt -> {
-         nodeRelationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
+         nodeRelationsPanel.onRelationsHighlighted((NeoRelationship) evt.getNewValue());
          if (relationsPanel != null)
-            relationsPanel.onRelationsHighlighted((Workspace.NodeCanvas.NeoRelationship) evt.getNewValue());
+            relationsPanel.onRelationsHighlighted((NeoRelationship) evt.getNewValue());
       });
    }
 
@@ -97,8 +99,8 @@ class NodeDetailPanel extends JPanel {
 
       content.removeAll();
 
-      final Set<Workspace.NodeCanvas.NeoNode> currentNodes = app.workspace.nodeCanvas.getSelectedNodes();
-      final Set<Workspace.NodeCanvas.NeoRelationship> currentRelations = workspace.nodeCanvas.getSelectedRelations();
+      final Set<NeoNode> currentNodes = app.workspace.nodeCanvas.getSelectedNodes();
+      final Set<NeoRelationship> currentRelations = workspace.nodeCanvas.getSelectedRelations();
 
       int max = 0;
       if (!currentNodes.isEmpty()) {
@@ -106,7 +108,7 @@ class NodeDetailPanel extends JPanel {
          content.add("Properties", propertiesPanel = new PropertiesPanel(currentNodes));
 
          final Set<Relationship> elements = new LinkedHashSet<>();
-         for (Workspace.NodeCanvas.NeoNode node : currentNodes)
+         for (NeoNode node : currentNodes)
             node.getNode().getRelationships(Direction.OUTGOING).forEach(elements::add);
          content.add("Node-Relations", nodeRelationsPanel = new RelationsPanel(elements));
          max += 3;
@@ -114,14 +116,14 @@ class NodeDetailPanel extends JPanel {
 
       if (!currentRelations.isEmpty()) {
          final Set<Relationship> elements = new LinkedHashSet<>();
-         for (Workspace.NodeCanvas.NeoRelationship currentRelation : currentRelations)
+         for (NeoRelationship currentRelation : currentRelations)
             elements.add(currentRelation.getRelationship());
          content.add("Relations", relationsPanel = new RelationsPanel(elements));
          max += 1;
       }
 
       if (currentNodes.size() < 20) {
-         for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes) {
+         for (NeoNode currentNode : currentNodes) {
             for (Plugin plugin : app.plugins) {
                plugin.showEditorFor(currentNode, content);
             }
@@ -143,7 +145,7 @@ class NodeDetailPanel extends JPanel {
       private JScrollPane centerPanel;
       private LabelsTable table;
 
-      LabelsPanel(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      LabelsPanel(Set<NeoNode> currentNodes) {
          super(new BorderLayout());
          final JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -180,7 +182,7 @@ class NodeDetailPanel extends JPanel {
          add(centerPanel, BorderLayout.CENTER);
       }
 
-      private Set<String> getLabelsToShow(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      private Set<String> getLabelsToShow(Set<NeoNode> currentNodes) {
          final Set<String> labels = new TreeSet<>();
          switch (propertiesToShow) {
             case all:
@@ -188,7 +190,7 @@ class NodeDetailPanel extends JPanel {
                break;
             case hasValue:
                app.model.graph().getAllLabelsInUse().forEach(s -> {
-                  for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes)
+                  for (NeoNode currentNode : currentNodes)
                      if (hasLabel(currentNode.getNode(), s)) {
                         labels.add(s.name());
                         break;
@@ -199,7 +201,7 @@ class NodeDetailPanel extends JPanel {
          return labels;
       }
 
-      private void updateTable(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      private void updateTable(Set<NeoNode> currentNodes) {
          app.model.graph().doInTransaction(new NeoModel.Committer() {
             @Override
             public void doAction(Transaction tx) throws Throwable {
@@ -219,7 +221,7 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      void onNodeHighlighted(NeoNode node) {
          table.onNodeHighlighted(node);
       }
 
@@ -240,8 +242,8 @@ class NodeDetailPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                SwingUtilities.invokeLater(() -> {
-                  final Set<Workspace.NodeCanvas.NeoNode> selected = model.getValuesAt(new int[]{convertRowIndexToModel(getSelectedRow())});
-                  for (Workspace.NodeCanvas.NeoNode pNode : workspace.nodeCanvas.getAllNodes()) {
+                  final Set<NeoNode> selected = model.getValuesAt(new int[]{convertRowIndexToModel(getSelectedRow())});
+                  for (NeoNode pNode : workspace.nodeCanvas.getAllNodes()) {
                      if (selected.contains(pNode)) {
                         pNode.highlight();
                         workspace.nodeCanvas.getCamera().animateViewToCenterBounds(pNode.getGlobalFullBounds(), false, 500);
@@ -252,7 +254,7 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      void onNodeHighlighted(NeoNode node) {
          final int index = ((LabelTableModel) getModel()).getIndexOf(node);
          if (index == -1) return;
          setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
@@ -269,12 +271,12 @@ class NodeDetailPanel extends JPanel {
       private final java.util.List<LabelTableModel.LabelElement> content = new ArrayList<>();
       private final java.util.List<String> columns = new ArrayList<>();
 
-      LabelTableModel(Set<Workspace.NodeCanvas.NeoNode> nodes, Set<String> labels) {
+      LabelTableModel(Set<NeoNode> nodes, Set<String> labels) {
 
          columns.add("node");
          labels.forEach(label -> columns.add(label));
 
-         for (Workspace.NodeCanvas.NeoNode node : nodes)
+         for (NeoNode node : nodes)
             content.add(new LabelTableModel.LabelElement(node, columns));
       }
 
@@ -335,24 +337,24 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      private int getIndexOf(Workspace.NodeCanvas.NeoNode node) {
+      private int getIndexOf(NeoNode node) {
          for (int i = 0; i < content.size(); i++)
             if (node.equals(content.get(i).node)) return i;
          return -1;
       }
 
-      private Set<Workspace.NodeCanvas.NeoNode> getValuesAt(int[] selectedRows) {
-         final Set<Workspace.NodeCanvas.NeoNode> values = new LinkedHashSet<>();
+      private Set<NeoNode> getValuesAt(int[] selectedRows) {
+         final Set<NeoNode> values = new LinkedHashSet<>();
          for (int selectedRow : selectedRows)
             values.add(content.get(selectedRow).node);
          return values;
       }
 
       private final class LabelElement {
-         private final Workspace.NodeCanvas.NeoNode node;
+         private final NeoNode node;
          private final Map<String, Object> values = new LinkedHashMap<>();
 
-         LabelElement(Workspace.NodeCanvas.NeoNode node, java.util.List<String> labels) {
+         LabelElement(NeoNode node, java.util.List<String> labels) {
             this.node = node;
             values.put("node", getNameOrLabelFrom(node.getNode()));
             boolean first = true;
@@ -387,7 +389,7 @@ class NodeDetailPanel extends JPanel {
       private JScrollPane centerPanel;
       private PropertiesTable table;
 
-      PropertiesPanel(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      PropertiesPanel(Set<NeoNode> currentNodes) {
          super(new BorderLayout());
          final JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -422,7 +424,7 @@ class NodeDetailPanel extends JPanel {
          add(centerPanel, BorderLayout.CENTER);
       }
 
-      private Set<String> getPropertiesToShow(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      private Set<String> getPropertiesToShow(Set<NeoNode> currentNodes) {
          final Set<String> properties = new TreeSet<>();
          switch (propertiesToShow) {
             case all:
@@ -430,7 +432,7 @@ class NodeDetailPanel extends JPanel {
                break;
             case hasValue:
                app.model.graph().getAllPropertyKeys().forEach(s -> {
-                  for (Workspace.NodeCanvas.NeoNode currentNode : currentNodes)
+                  for (NeoNode currentNode : currentNodes)
                      if (currentNode.getNode().hasProperty(s)) {
                         properties.add(s);
                         break;
@@ -441,7 +443,7 @@ class NodeDetailPanel extends JPanel {
          return properties;
       }
 
-      private void updateTable(Set<Workspace.NodeCanvas.NeoNode> currentNodes) {
+      private void updateTable(Set<NeoNode> currentNodes) {
          app.model.graph().doInTransaction(new NeoModel.Committer() {
             @Override
             public void doAction(Transaction tx) throws Throwable {
@@ -461,7 +463,7 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      void onNodeHighlighted(NeoNode node) {
          table.onNodeHighlighted(node);
       }
 
@@ -483,8 +485,8 @@ class NodeDetailPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                SwingUtilities.invokeLater(() -> {
-                  final Set<Workspace.NodeCanvas.NeoNode> selected = model.getValuesAt(new int[]{convertRowIndexToModel(getSelectedRow())});
-                  for (Workspace.NodeCanvas.NeoNode pNode : workspace.nodeCanvas.getAllNodes()) {
+                  final Set<NeoNode> selected = model.getValuesAt(new int[]{convertRowIndexToModel(getSelectedRow())});
+                  for (NeoNode pNode : workspace.nodeCanvas.getAllNodes()) {
                      if (selected.contains(pNode)) {
                         pNode.highlight();
                         workspace.nodeCanvas.getCamera().animateViewToCenterBounds(pNode.getGlobalFullBounds(), false, 500);
@@ -495,7 +497,7 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      void onNodeHighlighted(NeoNode node) {
          final int index = ((PropertyTableModel) getModel()).getIndexOf(node);
          if (index == -1) return;
          setRowSelectionInterval(convertRowIndexToView(index), convertRowIndexToView(index));
@@ -513,11 +515,11 @@ class NodeDetailPanel extends JPanel {
       private final java.util.List<String> columns = new ArrayList<>();
       private final int columnOffset = 1;
 
-      PropertyTableModel(Set<Workspace.NodeCanvas.NeoNode> nodes, Set<String> propertiesToShow) {
+      PropertyTableModel(Set<NeoNode> nodes, Set<String> propertiesToShow) {
 
          columns.addAll(propertiesToShow);
 
-         for (Workspace.NodeCanvas.NeoNode node : nodes)
+         for (NeoNode node : nodes)
             content.add(new PropertyTableModel.NodeElement(node, columns));
       }
 
@@ -592,25 +594,25 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      private int getIndexOf(Workspace.NodeCanvas.NeoNode node) {
+      private int getIndexOf(NeoNode node) {
          for (int i = 0; i < content.size(); i++)
             if (node.equals(content.get(i).node)) return i;
          return -1;
       }
 
-      private Set<Workspace.NodeCanvas.NeoNode> getValuesAt(int[] selectedRows) {
-         final Set<Workspace.NodeCanvas.NeoNode> values = new LinkedHashSet<>();
+      private Set<NeoNode> getValuesAt(int[] selectedRows) {
+         final Set<NeoNode> values = new LinkedHashSet<>();
          for (int selectedRow : selectedRows)
             values.add(content.get(selectedRow).node);
          return values;
       }
 
       private final class NodeElement {
-         private final Workspace.NodeCanvas.NeoNode node;
+         private final NeoNode node;
          private final Map<String, Object> values = new LinkedHashMap<>();
          private final String name;
 
-         NodeElement(Workspace.NodeCanvas.NeoNode node, java.util.List<String> properties) {
+         NodeElement(NeoNode node, java.util.List<String> properties) {
             this.node = node;
             this.name = getNameOrLabelFrom(node.getNode());
             for (String property : properties)
@@ -712,11 +714,11 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      void onNodeHighlighted(NeoNode node) {
          table.onNodeHighlighted(node);
       }
 
-      void onRelationsHighlighted(Workspace.NodeCanvas.NeoRelationship relationship) {
+      void onRelationsHighlighted(NeoRelationship relationship) {
          table.onRelationsHighlighted(relationship);
       }
 
@@ -784,7 +786,7 @@ class NodeDetailPanel extends JPanel {
 
             private void onLeftClick(MouseEvent event) {
                final Set<Long> selected = asSet(getSelectedRows());
-               for (Workspace.NodeCanvas.NeoRelationship neoRelationship : workspace.nodeCanvas.getAllRelations()) {
+               for (NeoRelationship neoRelationship : workspace.nodeCanvas.getAllRelations()) {
                   if (selected.contains(neoRelationship.id())) {
                      neoRelationship.highlight();
                      workspace.nodeCanvas.getCamera().animateViewToCenterBounds(neoRelationship.path.getGlobalFullBounds(), false, 500);
@@ -835,7 +837,7 @@ class NodeDetailPanel extends JPanel {
          });
       }
 
-      private void onRelationsHighlighted(Workspace.NodeCanvas.NeoRelationship node) {
+      private void onRelationsHighlighted(NeoRelationship node) {
          final Set<Integer> indices = ((RelationTableModel) getModel()).getIndicesFor(node);
          final ListSelectionModel selectionModel = getSelectionModel();
          selectionModel.clearSelection();
@@ -845,7 +847,7 @@ class NodeDetailPanel extends JPanel {
          scrollRectToVisible(getCellRect(indices.iterator().next(), 0, true));
       }
 
-      private void onNodeHighlighted(Workspace.NodeCanvas.NeoNode node) {
+      private void onNodeHighlighted(NeoNode node) {
          final Set<Integer> indices = ((RelationTableModel) getModel()).getIndicesFor(node);
          final ListSelectionModel selectionModel = getSelectionModel();
          selectionModel.clearSelection();
@@ -968,7 +970,7 @@ class NodeDetailPanel extends JPanel {
          return values;
       }
 
-      private Set<Integer> getIndicesFor(Workspace.NodeCanvas.NeoNode neoNode) {
+      private Set<Integer> getIndicesFor(NeoNode neoNode) {
          final Set<Long> nodes = Collections.singleton(neoNode.id());
          final Set<Integer> indices = new LinkedHashSet<>();
          for (int i = 0; i < content.size(); i++) {
@@ -977,7 +979,7 @@ class NodeDetailPanel extends JPanel {
          return indices;
       }
 
-      private Set<Integer> getIndicesFor(Workspace.NodeCanvas.NeoRelationship neoRelationship) {
+      private Set<Integer> getIndicesFor(NeoRelationship neoRelationship) {
          final Set<Integer> indices = new LinkedHashSet<>();
          for (int i = 0; i < content.size(); i++) {
             if (content.get(i).id == neoRelationship.id()) indices.add(i);

@@ -9,19 +9,19 @@ import java.util.UUID;
  */
 public class NeoCache {
 
-   private static final Map<UUID, NeoNode> nodeCache = new HashMap<>();
-   private static final Map<UUID, NeoRelationship> relationshipCache = new HashMap<>();
+   private static final Map<UUID, RemoteNode> nodeCache = new HashMap<>();
+   private static final Map<UUID, RemoteRelationship> relationshipCache = new HashMap<>();
 
    static void clear() {
       nodeCache.clear();
       relationshipCache.clear();
    }
 
-   static boolean isCached(final NeoNode neoNode) {
+   static boolean isCached(final RemoteNode neoNode) {
       return neoNode != null && nodeCache.containsKey(neoNode.getUUID());
    }
 
-   static boolean isCached(final NeoRelationship neoRelationship) {
+   static boolean isCached(final RemoteRelationship neoRelationship) {
       return neoRelationship != null && relationshipCache.containsKey(neoRelationship.getUUID());
    }
 
@@ -33,17 +33,17 @@ public class NeoCache {
       return relationshipCache.containsKey(uuid);
    }
 
-   public static NeoNode getCachedNode(final UUID uuid) {
+   public static RemoteNode getCachedNode(final UUID uuid) {
       System.out.println("getCachedNode: " + uuid);
       return nodeCache.get(uuid);
    }
 
-   public static NeoRelationship getCachedRelationship(final UUID uuid) {
+   public static RemoteRelationship getCachedRelationship(final UUID uuid) {
       System.out.println("getCachedRelationship: " + uuid);
       return relationshipCache.get(uuid);
    }
 
-   static NeoNode updateCache(final NeoNode neoNode) {
+   static RemoteNode updateCache(final RemoteNode neoNode) {
       System.out.println("updateCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
       if (neoNode == null) return null;
 
@@ -54,13 +54,13 @@ public class NeoCache {
          return neoNode;
       }
 
-      NeoNode cached = nodeCache.get(uuid);
+      RemoteNode cached = nodeCache.get(uuid);
       if (cached != neoNode) cached.merge(neoNode);
 
       return cached;
    }
 
-   static NeoRelationship updateCache(final NeoRelationship neoRelationship) {
+   static RemoteRelationship updateCache(final RemoteRelationship neoRelationship) {
       System.out.println("updateCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
       if (neoRelationship == null) return null;
 
@@ -71,20 +71,20 @@ public class NeoCache {
          return neoRelationship;
       }
 
-      NeoRelationship cached = relationshipCache.get(uuid);
+      RemoteRelationship cached = relationshipCache.get(uuid);
       if (cached != neoRelationship) cached.merge(neoRelationship);
 
       return cached;
    }
 
-   static NeoNode removeCache(final NeoNode neoNode) {
+   static RemoteNode removeCache(final RemoteNode neoNode) {
       System.out.println("removeCache: " + (neoNode != null ? neoNode.toString() : "NULL"));
       if (neoNode == null) return null;
 
       return nodeCache.remove(neoNode.getUUID());
    }
 
-   static NeoRelationship removeCache(final NeoRelationship neoRelationship) {
+   static RemoteRelationship removeCache(final RemoteRelationship neoRelationship) {
       System.out.println("removeCache: " + (neoRelationship != null ? neoRelationship.toString() : "NULL"));
       if (neoRelationship == null) return null;
 

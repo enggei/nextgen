@@ -20,7 +20,7 @@ public class GolangNeoListener extends GolangBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class GolangNeoListener extends GolangBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -75,42 +75,6 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
 
 	@Override
@@ -145,6 +109,42 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inDeclaration() {
       return !inDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText());
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();
@@ -271,6 +271,24 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inSourceFile() {
       return !inSourceFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		final Node node = model.findOrCreate(Label.label("PackageClause"), "text", arg.getText());
+		onEnter(node);
+		this.inPackageClause.push(true);
+	}
+
+	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		onExit();
+		this.inPackageClause.pop();
+	}
+
+	public boolean inPackageClause() {
+      return !inPackageClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportDecl = new java.util.Stack<>();
@@ -991,24 +1009,6 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inTypeList() {
       return !inTypeList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageClause"), "text", arg.getText());
-		onEnter(node);
-		this.inPackageClause.push(true);
-	}
-
-	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		onExit();
-		this.inPackageClause.pop();
-	}
-
-	public boolean inPackageClause() {
-      return !inPackageClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelectStmt = new java.util.Stack<>();

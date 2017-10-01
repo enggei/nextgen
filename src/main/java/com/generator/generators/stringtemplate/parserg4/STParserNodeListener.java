@@ -28,14 +28,14 @@ public class STParserNodeListener extends STParserBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -44,40 +44,6 @@ public class STParserNodeListener extends STParserBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return !inElement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
@@ -401,6 +367,40 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	public boolean inNamedArg() {
       return !inNamedArg.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
+
+	@Override
+	public void enterElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		this.inElement.push(true);
+	}
+
+	public void exitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
+		onExit();
+		this.inElement.pop();
+	}
+
+	public boolean inElement() {
+      return !inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();

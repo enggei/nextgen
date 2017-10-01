@@ -1,5 +1,6 @@
 package com.generator.generators.java;
 
+import com.generator.app.nodes.NeoNode;
 import com.generator.util.NeoUtil;
 import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
@@ -85,7 +86,7 @@ public class JavaPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       // get incoming INSTANCE, and if of STTemplate, allow to create instance of, similar to renderer
 
@@ -190,14 +191,14 @@ public class JavaPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
       if (neoNode.getNode().hasLabel(Entities.Object))
          tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new ObjectPanel(neoNode));
    }
 
    private final class ObjectPanel extends JPanel {
 
-      ObjectPanel(Workspace.NodeCanvas.NeoNode objectNode) {
+      ObjectPanel(NeoNode objectNode) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea(25, 85);

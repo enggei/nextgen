@@ -28,14 +28,14 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -61,6 +61,23 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inBlock() {
       return !inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
@@ -95,23 +112,6 @@ public class ECMAScriptNodeListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return !inKeyword.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();

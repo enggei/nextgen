@@ -28,14 +28,14 @@ public class CPP14NodeListener extends CPP14BaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -44,652 +44,6 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
-
-	@Override
-	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
-		this.inTranslationunit.push(true);
-	}
-
-	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onExit();
-		this.inTranslationunit.pop();
-	}
-
-	public boolean inTranslationunit() {
-      return !inTranslationunit.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
-		this.inPrimaryexpression.push(true);
-	}
-
-	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onExit();
-		this.inPrimaryexpression.pop();
-	}
-
-	public boolean inPrimaryexpression() {
-      return !inPrimaryexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
-		this.inIdexpression.push(true);
-	}
-
-	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onExit();
-		this.inIdexpression.pop();
-	}
-
-	public boolean inIdexpression() {
-      return !inIdexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
-		this.inUnqualifiedid.push(true);
-	}
-
-	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onExit();
-		this.inUnqualifiedid.pop();
-	}
-
-	public boolean inUnqualifiedid() {
-      return !inUnqualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
-		this.inQualifiedid.push(true);
-	}
-
-	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onExit();
-		this.inQualifiedid.pop();
-	}
-
-	public boolean inQualifiedid() {
-      return !inQualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
-		this.inNestednamespecifier.push(true);
-	}
-
-	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onExit();
-		this.inNestednamespecifier.pop();
-	}
-
-	public boolean inNestednamespecifier() {
-      return !inNestednamespecifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
-		this.inLambdaexpression.push(true);
-	}
-
-	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onExit();
-		this.inLambdaexpression.pop();
-	}
-
-	public boolean inLambdaexpression() {
-      return !inLambdaexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdaintroducer = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
-		this.inLambdaintroducer.push(true);
-	}
-
-	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onExit();
-		this.inLambdaintroducer.pop();
-	}
-
-	public boolean inLambdaintroducer() {
-      return !inLambdaintroducer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdacapture = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
-		this.inLambdacapture.push(true);
-	}
-
-	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onExit();
-		this.inLambdacapture.pop();
-	}
-
-	public boolean inLambdacapture() {
-      return !inLambdacapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapturedefault = new java.util.Stack<>();
-
-	@Override
-	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
-		this.inCapturedefault.push(true);
-	}
-
-	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onExit();
-		this.inCapturedefault.pop();
-	}
-
-	public boolean inCapturedefault() {
-      return !inCapturedefault.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapturelist = new java.util.Stack<>();
-
-	@Override
-	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
-		this.inCapturelist.push(true);
-	}
-
-	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onExit();
-		this.inCapturelist.pop();
-	}
-
-	public boolean inCapturelist() {
-      return !inCapturelist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCapture = new java.util.Stack<>();
-
-	@Override
-	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
-		this.inCapture.push(true);
-	}
-
-	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onExit();
-		this.inCapture.pop();
-	}
-
-	public boolean inCapture() {
-      return !inCapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSimplecapture = new java.util.Stack<>();
-
-	@Override
-	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
-		this.inSimplecapture.push(true);
-	}
-
-	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onExit();
-		this.inSimplecapture.pop();
-	}
-
-	public boolean inSimplecapture() {
-      return !inSimplecapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inInitcapture = new java.util.Stack<>();
-
-	@Override
-	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
-		this.inInitcapture.push(true);
-	}
-
-	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onExit();
-		this.inInitcapture.pop();
-	}
-
-	public boolean inInitcapture() {
-      return !inInitcapture.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLambdadeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
-		this.inLambdadeclarator.push(true);
-	}
-
-	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onExit();
-		this.inLambdadeclarator.pop();
-	}
-
-	public boolean inLambdadeclarator() {
-      return !inLambdadeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPostfixexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
-		this.inPostfixexpression.push(true);
-	}
-
-	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onExit();
-		this.inPostfixexpression.pop();
-	}
-
-	public boolean inPostfixexpression() {
-      return !inPostfixexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
-
-	@Override
-	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
-		this.inExpressionlist.push(true);
-	}
-
-	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onExit();
-		this.inExpressionlist.pop();
-	}
-
-	public boolean inExpressionlist() {
-      return !inExpressionlist.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPseudodestructorname = new java.util.Stack<>();
-
-	@Override
-	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
-		this.inPseudodestructorname.push(true);
-	}
-
-	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onExit();
-		this.inPseudodestructorname.pop();
-	}
-
-	public boolean inPseudodestructorname() {
-      return !inPseudodestructorname.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnaryexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
-		this.inUnaryexpression.push(true);
-	}
-
-	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onExit();
-		this.inUnaryexpression.pop();
-	}
-
-	public boolean inUnaryexpression() {
-      return !inUnaryexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnaryoperator = new java.util.Stack<>();
-
-	@Override
-	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
-		this.inUnaryoperator.push(true);
-	}
-
-	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onExit();
-		this.inUnaryoperator.pop();
-	}
-
-	public boolean inUnaryoperator() {
-      return !inUnaryoperator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
-		this.inNewexpression.push(true);
-	}
-
-	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onExit();
-		this.inNewexpression.pop();
-	}
-
-	public boolean inNewexpression() {
-      return !inNewexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewplacement = new java.util.Stack<>();
-
-	@Override
-	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
-		this.inNewplacement.push(true);
-	}
-
-	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onExit();
-		this.inNewplacement.pop();
-	}
-
-	public boolean inNewplacement() {
-      return !inNewplacement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewtypeid = new java.util.Stack<>();
-
-	@Override
-	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
-		this.inNewtypeid.push(true);
-	}
-
-	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onExit();
-		this.inNewtypeid.pop();
-	}
-
-	public boolean inNewtypeid() {
-      return !inNewtypeid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewdeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
-		this.inNewdeclarator.push(true);
-	}
-
-	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onExit();
-		this.inNewdeclarator.pop();
-	}
-
-	public boolean inNewdeclarator() {
-      return !inNewdeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNoptrnewdeclarator = new java.util.Stack<>();
-
-	@Override
-	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText()));
-		this.inNoptrnewdeclarator.push(true);
-	}
-
-	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onExit();
-		this.inNoptrnewdeclarator.pop();
-	}
-
-	public boolean inNoptrnewdeclarator() {
-      return !inNoptrnewdeclarator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNewinitializer = new java.util.Stack<>();
-
-	@Override
-	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText()));
-		this.inNewinitializer.push(true);
-	}
-
-	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onExit();
-		this.inNewinitializer.pop();
-	}
-
-	public boolean inNewinitializer() {
-      return !inNewinitializer.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDeleteexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText()));
-		this.inDeleteexpression.push(true);
-	}
-
-	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onExit();
-		this.inDeleteexpression.pop();
-	}
-
-	public boolean inDeleteexpression() {
-      return !inDeleteexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNoexceptexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText()));
-		this.inNoexceptexpression.push(true);
-	}
-
-	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onExit();
-		this.inNoexceptexpression.pop();
-	}
-
-	public boolean inNoexceptexpression() {
-      return !inNoexceptexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCastexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText()));
-		this.inCastexpression.push(true);
-	}
-
-	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onExit();
-		this.inCastexpression.pop();
-	}
-
-	public boolean inCastexpression() {
-      return !inCastexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPmexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText()));
-		this.inPmexpression.push(true);
-	}
-
-	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onExit();
-		this.inPmexpression.pop();
-	}
-
-	public boolean inPmexpression() {
-      return !inPmexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMultiplicativeexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText()));
-		this.inMultiplicativeexpression.push(true);
-	}
-
-	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onExit();
-		this.inMultiplicativeexpression.pop();
-	}
-
-	public boolean inMultiplicativeexpression() {
-      return !inMultiplicativeexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAdditiveexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText()));
-		this.inAdditiveexpression.push(true);
-	}
-
-	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onExit();
-		this.inAdditiveexpression.pop();
-	}
-
-	public boolean inAdditiveexpression() {
-      return !inAdditiveexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inShiftexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText()));
-		this.inShiftexpression.push(true);
-	}
-
-	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onExit();
-		this.inShiftexpression.pop();
-	}
-
-	public boolean inShiftexpression() {
-      return !inShiftexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRelationalexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText()));
-		this.inRelationalexpression.push(true);
-	}
-
-	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onExit();
-		this.inRelationalexpression.pop();
-	}
-
-	public boolean inRelationalexpression() {
-      return !inRelationalexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEqualityexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText()));
-		this.inEqualityexpression.push(true);
-	}
-
-	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onExit();
-		this.inEqualityexpression.pop();
-	}
-
-	public boolean inEqualityexpression() {
-      return !inEqualityexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAndexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText()));
-		this.inAndexpression.push(true);
-	}
-
-	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onExit();
-		this.inAndexpression.pop();
-	}
-
-	public boolean inAndexpression() {
-      return !inAndexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
@@ -3427,6 +2781,652 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	public boolean inUserdefinedliteral() {
       return !inUserdefinedliteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
+
+	@Override
+	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
+		this.inTranslationunit.push(true);
+	}
+
+	public void exitTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
+		onExit();
+		this.inTranslationunit.pop();
+	}
+
+	public boolean inTranslationunit() {
+      return !inTranslationunit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
+		this.inPrimaryexpression.push(true);
+	}
+
+	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onExit();
+		this.inPrimaryexpression.pop();
+	}
+
+	public boolean inPrimaryexpression() {
+      return !inPrimaryexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
+		this.inIdexpression.push(true);
+	}
+
+	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onExit();
+		this.inIdexpression.pop();
+	}
+
+	public boolean inIdexpression() {
+      return !inIdexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
+		this.inUnqualifiedid.push(true);
+	}
+
+	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onExit();
+		this.inUnqualifiedid.pop();
+	}
+
+	public boolean inUnqualifiedid() {
+      return !inUnqualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
+		this.inQualifiedid.push(true);
+	}
+
+	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onExit();
+		this.inQualifiedid.pop();
+	}
+
+	public boolean inQualifiedid() {
+      return !inQualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
+		this.inNestednamespecifier.push(true);
+	}
+
+	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onExit();
+		this.inNestednamespecifier.pop();
+	}
+
+	public boolean inNestednamespecifier() {
+      return !inNestednamespecifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
+		this.inLambdaexpression.push(true);
+	}
+
+	public void exitLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
+		onExit();
+		this.inLambdaexpression.pop();
+	}
+
+	public boolean inLambdaexpression() {
+      return !inLambdaexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdaintroducer = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
+		this.inLambdaintroducer.push(true);
+	}
+
+	public void exitLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
+		onExit();
+		this.inLambdaintroducer.pop();
+	}
+
+	public boolean inLambdaintroducer() {
+      return !inLambdaintroducer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdacapture = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
+		this.inLambdacapture.push(true);
+	}
+
+	public void exitLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
+		onExit();
+		this.inLambdacapture.pop();
+	}
+
+	public boolean inLambdacapture() {
+      return !inLambdacapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapturedefault = new java.util.Stack<>();
+
+	@Override
+	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
+		this.inCapturedefault.push(true);
+	}
+
+	public void exitCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
+		onExit();
+		this.inCapturedefault.pop();
+	}
+
+	public boolean inCapturedefault() {
+      return !inCapturedefault.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapturelist = new java.util.Stack<>();
+
+	@Override
+	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
+		this.inCapturelist.push(true);
+	}
+
+	public void exitCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
+		onExit();
+		this.inCapturelist.pop();
+	}
+
+	public boolean inCapturelist() {
+      return !inCapturelist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCapture = new java.util.Stack<>();
+
+	@Override
+	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
+		this.inCapture.push(true);
+	}
+
+	public void exitCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
+		onExit();
+		this.inCapture.pop();
+	}
+
+	public boolean inCapture() {
+      return !inCapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSimplecapture = new java.util.Stack<>();
+
+	@Override
+	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
+		this.inSimplecapture.push(true);
+	}
+
+	public void exitSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
+		onExit();
+		this.inSimplecapture.pop();
+	}
+
+	public boolean inSimplecapture() {
+      return !inSimplecapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInitcapture = new java.util.Stack<>();
+
+	@Override
+	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
+		this.inInitcapture.push(true);
+	}
+
+	public void exitInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
+		onExit();
+		this.inInitcapture.pop();
+	}
+
+	public boolean inInitcapture() {
+      return !inInitcapture.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLambdadeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
+		this.inLambdadeclarator.push(true);
+	}
+
+	public void exitLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
+		onExit();
+		this.inLambdadeclarator.pop();
+	}
+
+	public boolean inLambdadeclarator() {
+      return !inLambdadeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPostfixexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
+		this.inPostfixexpression.push(true);
+	}
+
+	public void exitPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
+		onExit();
+		this.inPostfixexpression.pop();
+	}
+
+	public boolean inPostfixexpression() {
+      return !inPostfixexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
+
+	@Override
+	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
+		this.inExpressionlist.push(true);
+	}
+
+	public void exitExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
+		onExit();
+		this.inExpressionlist.pop();
+	}
+
+	public boolean inExpressionlist() {
+      return !inExpressionlist.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPseudodestructorname = new java.util.Stack<>();
+
+	@Override
+	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
+		this.inPseudodestructorname.push(true);
+	}
+
+	public void exitPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
+		onExit();
+		this.inPseudodestructorname.pop();
+	}
+
+	public boolean inPseudodestructorname() {
+      return !inPseudodestructorname.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnaryexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
+		this.inUnaryexpression.push(true);
+	}
+
+	public void exitUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
+		onExit();
+		this.inUnaryexpression.pop();
+	}
+
+	public boolean inUnaryexpression() {
+      return !inUnaryexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnaryoperator = new java.util.Stack<>();
+
+	@Override
+	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
+		this.inUnaryoperator.push(true);
+	}
+
+	public void exitUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
+		onExit();
+		this.inUnaryoperator.pop();
+	}
+
+	public boolean inUnaryoperator() {
+      return !inUnaryoperator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
+		this.inNewexpression.push(true);
+	}
+
+	public void exitNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
+		onExit();
+		this.inNewexpression.pop();
+	}
+
+	public boolean inNewexpression() {
+      return !inNewexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewplacement = new java.util.Stack<>();
+
+	@Override
+	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
+		this.inNewplacement.push(true);
+	}
+
+	public void exitNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
+		onExit();
+		this.inNewplacement.pop();
+	}
+
+	public boolean inNewplacement() {
+      return !inNewplacement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewtypeid = new java.util.Stack<>();
+
+	@Override
+	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
+		this.inNewtypeid.push(true);
+	}
+
+	public void exitNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
+		onExit();
+		this.inNewtypeid.pop();
+	}
+
+	public boolean inNewtypeid() {
+      return !inNewtypeid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewdeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
+		this.inNewdeclarator.push(true);
+	}
+
+	public void exitNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
+		onExit();
+		this.inNewdeclarator.pop();
+	}
+
+	public boolean inNewdeclarator() {
+      return !inNewdeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNoptrnewdeclarator = new java.util.Stack<>();
+
+	@Override
+	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText()));
+		this.inNoptrnewdeclarator.push(true);
+	}
+
+	public void exitNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
+		onExit();
+		this.inNoptrnewdeclarator.pop();
+	}
+
+	public boolean inNoptrnewdeclarator() {
+      return !inNoptrnewdeclarator.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNewinitializer = new java.util.Stack<>();
+
+	@Override
+	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText()));
+		this.inNewinitializer.push(true);
+	}
+
+	public void exitNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
+		onExit();
+		this.inNewinitializer.pop();
+	}
+
+	public boolean inNewinitializer() {
+      return !inNewinitializer.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDeleteexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText()));
+		this.inDeleteexpression.push(true);
+	}
+
+	public void exitDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
+		onExit();
+		this.inDeleteexpression.pop();
+	}
+
+	public boolean inDeleteexpression() {
+      return !inDeleteexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNoexceptexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText()));
+		this.inNoexceptexpression.push(true);
+	}
+
+	public void exitNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
+		onExit();
+		this.inNoexceptexpression.pop();
+	}
+
+	public boolean inNoexceptexpression() {
+      return !inNoexceptexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCastexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText()));
+		this.inCastexpression.push(true);
+	}
+
+	public void exitCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
+		onExit();
+		this.inCastexpression.pop();
+	}
+
+	public boolean inCastexpression() {
+      return !inCastexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPmexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText()));
+		this.inPmexpression.push(true);
+	}
+
+	public void exitPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
+		onExit();
+		this.inPmexpression.pop();
+	}
+
+	public boolean inPmexpression() {
+      return !inPmexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMultiplicativeexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText()));
+		this.inMultiplicativeexpression.push(true);
+	}
+
+	public void exitMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
+		onExit();
+		this.inMultiplicativeexpression.pop();
+	}
+
+	public boolean inMultiplicativeexpression() {
+      return !inMultiplicativeexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAdditiveexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText()));
+		this.inAdditiveexpression.push(true);
+	}
+
+	public void exitAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
+		onExit();
+		this.inAdditiveexpression.pop();
+	}
+
+	public boolean inAdditiveexpression() {
+      return !inAdditiveexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inShiftexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText()));
+		this.inShiftexpression.push(true);
+	}
+
+	public void exitShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
+		onExit();
+		this.inShiftexpression.pop();
+	}
+
+	public boolean inShiftexpression() {
+      return !inShiftexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRelationalexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText()));
+		this.inRelationalexpression.push(true);
+	}
+
+	public void exitRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
+		onExit();
+		this.inRelationalexpression.pop();
+	}
+
+	public boolean inRelationalexpression() {
+      return !inRelationalexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEqualityexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText()));
+		this.inEqualityexpression.push(true);
+	}
+
+	public void exitEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
+		onExit();
+		this.inEqualityexpression.pop();
+	}
+
+	public boolean inEqualityexpression() {
+      return !inEqualityexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAndexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText()));
+		this.inAndexpression.push(true);
+	}
+
+	public void exitAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
+		onExit();
+		this.inAndexpression.pop();
+	}
+
+	public boolean inAndexpression() {
+      return !inAndexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
    }
 
 }

@@ -1,12 +1,11 @@
 package com.generator.generators.mysql;
 
 import com.generator.app.Plugin;
+import com.generator.app.nodes.NeoNode;
 import com.generator.util.NeoUtil;
 import com.generator.neo.NeoModel;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
-import com.generator.app.Workspace;
-import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
@@ -50,7 +49,7 @@ public class MySQLPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       if (NeoUtil.hasLabel(neoNode.getNode(), "ColCreateTable")) {
          pop.add(new App.TransactionAction("As Pojo", app) {
@@ -156,7 +155,7 @@ public class MySQLPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
 }

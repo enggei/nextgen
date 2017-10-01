@@ -3,7 +3,7 @@ package com.generator.generators.antlr;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
-import com.generator.app.Workspace;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNeoVisitor;
@@ -62,12 +62,12 @@ public class ANTLRPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
       incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
          final Node instanceNode = other(neoNode.getNode(), instanceRelation);
          if (hasLabel(instanceNode, Entities.GrammarSpec)) {
@@ -77,7 +77,7 @@ public class ANTLRPlugin extends Plugin {
    }
 
    private final class GrammarEditor extends JPanel {
-      GrammarEditor(Workspace.NodeCanvas.NeoNode node) {
+      GrammarEditor(NeoNode node) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();

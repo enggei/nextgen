@@ -2,8 +2,7 @@ package com.generator.generators.mobx;
 
 import com.generator.app.App;
 import com.generator.app.Plugin;
-import com.generator.app.Workspace;
-import com.generator.generators.domain.DomainPlugin;
+import com.generator.app.nodes.NeoNode;
 import org.neo4j.graphdb.Label;
 
 import javax.swing.*;
@@ -29,12 +28,12 @@ public class MobXPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
 }

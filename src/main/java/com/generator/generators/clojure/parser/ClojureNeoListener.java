@@ -20,7 +20,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class ClojureNeoListener extends ClojureBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -37,24 +37,6 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inReader_macro = new java.util.Stack<>();
-
-	@Override
-	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
-		onEnter(node);
-		this.inReader_macro.push(true);
-	}
-
-	public void exitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		onExit();
-		this.inReader_macro.pop();
-	}
-
-	public boolean inReader_macro() {
-      return !inReader_macro.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
@@ -181,6 +163,24 @@ public class ClojureNeoListener extends ClojureBaseListener {
 
 	public boolean inSet() {
       return !inSet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReader_macro = new java.util.Stack<>();
+
+	@Override
+	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		final Node node = model.findOrCreate(Label.label("Reader_macro"), "text", arg.getText());
+		onEnter(node);
+		this.inReader_macro.push(true);
+	}
+
+	public void exitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		onExit();
+		this.inReader_macro.pop();
+	}
+
+	public boolean inReader_macro() {
+      return !inReader_macro.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuote = new java.util.Stack<>();

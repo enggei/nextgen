@@ -18,31 +18,31 @@ import java.beans.PropertyChangeSupport;
  */
 public final class AppEvents {
 
-   static final String GRAPH_NEW = "graph.new";
+   public static final String GRAPH_NEW = "graph.new";
 
-   static final String NODE_LOAD = "nodes.load";
-   static final String NODE_HIGHLIGHTED = "node.highlighted";
-   static final String NODES_CLOSED = "nodes.closed";
-   static final String NODES_SELECTED = "nodes.selected";
-   static final String NODES_DELETED = "nodes.deleted";
-   static final String NODES_ADDED = "nodes.added";
-   static final String NODE_COLOR_CHANGED = "nodes.color";
-   static final String NODE_CHANGED = "node.";
+   public static final String NODE_LOAD = "nodes.load";
+   public static final String NODE_HIGHLIGHTED = "node.highlighted";
+   public static final String NODES_CLOSED = "nodes.closed";
+   public static final String NODES_SELECTED = "nodes.selected";
+   public static final String NODES_DELETED = "nodes.deleted";
+   public static final String NODES_ADDED = "nodes.added";
+   public static final String NODE_COLOR_CHANGED = "nodes.color";
+   public static final String NODE_CHANGED = "node.";
 
-   static final String LABELS_ASSIGNED = "labels.assigned";
+   public static final String LABELS_ASSIGNED = "labels.assigned";
 
-   static final String RELATION_HIGHLIGHTED = "relation.highlighted";
-   static final String RELATION_COLOR_CHANGED = "relations.color";
-   static final String RELATIONS_CLOSED = "relation.closed";
-   static final String RELATIONS_SELECTED = "relations.selected";
-   static final String RELATIONS_DELETED = "relations.deleted";
-   static final String RELATIONS_ADDED = "relations.added";
+   public static final String RELATION_HIGHLIGHTED = "relation.highlighted";
+   public static final String RELATION_COLOR_CHANGED = "relations.color";
+   public static final String RELATIONS_CLOSED = "relation.closed";
+   public static final String RELATIONS_SELECTED = "relations.selected";
+   public static final String RELATIONS_DELETED = "relations.deleted";
+   public static final String RELATIONS_ADDED = "relations.added";
 
-   static final String RELATION_PAINTSTRATEGY_CHANGED = "graph.relationPaintStrategy";
-   static final String RELATION_PATHSTRATEGY_CHANGED = "graph.relationPathStrategy";
-   static final String NODE_PAINTSTRATEGY_CHANGED = "graph.nodePaintStrategy";
+   public static final String RELATION_PAINTSTRATEGY_CHANGED = "graph.relationPaintStrategy";
+   public static final String RELATION_PATHSTRATEGY_CHANGED = "graph.relationPathStrategy";
+   public static final String NODE_PAINTSTRATEGY_CHANGED = "graph.nodePaintStrategy";
 
-   static final String UNDO_LAST_DELETE = "undo.delete";
+   public static final String UNDO_LAST_DELETE = "undo.delete";
 
    private final PropertyChangeSupport appChangeSupport;
 
@@ -113,7 +113,7 @@ public final class AppEvents {
       protected abstract void propertyChange(O oldValue, N newValue);
    }
 
-   static final class NodeLoadEvent {
+   public static final class NodeLoadEvent {
       final Node node;
       final Point2D position;
       boolean centerOnScreen;
@@ -124,7 +124,7 @@ public final class AppEvents {
          this.centerOnScreen = centerOnScreen;
       }
 
-      NodeLoadEvent(Node node, Point2D position) {
+      public NodeLoadEvent(Node node, Point2D position) {
          this(node, position, false);
       }
 
@@ -132,7 +132,7 @@ public final class AppEvents {
          this(node, null, centerOnScreen);
       }
 
-      NodeLoadEvent(Node node) {
+      public NodeLoadEvent(Node node) {
          this(node, null, false);
       }
    }

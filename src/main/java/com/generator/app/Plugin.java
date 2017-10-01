@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
@@ -31,7 +32,7 @@ public abstract class Plugin {
 
    protected abstract void addActionsTo(JMenu menu);
 
-   protected abstract void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes);
+   public abstract void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes);
 
    protected void addShowMenu(JMenu menu, Label label) {
       final JMenu showMenu = new JMenu(label.name());
@@ -44,7 +45,7 @@ public abstract class Plugin {
       menu.add(showMenu);
    }
 
-   public abstract void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane);
+   public abstract void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane);
 
    public NeoModel getGraph() {
       return app.model.graph();
@@ -70,7 +71,7 @@ public abstract class Plugin {
       app.events.firePropertyChange(NODE_LOAD, nodeEvents);
    }
 
-   protected void fireNodeChanged(Workspace.NodeCanvas.NeoNode neoNode, String name, Object newValue) {
+   protected void fireNodeChanged(NeoNode neoNode, String name, Object newValue) {
       app.events.firePropertyChange(NODE_CHANGED + neoNode.getNode().getId(), name, newValue);
    }
 
@@ -78,7 +79,7 @@ public abstract class Plugin {
       app.events.firePropertyChange(NODE_CHANGED + node.getId());
    }
 
-   protected void addNodeChangedListener(Workspace.NodeCanvas.NeoNode neoNode, AppEvents.TransactionalPropertyChangeListener transactionHandler) {
+   protected void addNodeChangedListener(NeoNode neoNode, AppEvents.TransactionalPropertyChangeListener transactionHandler) {
       System.out.println("added nodeChange listener " + transactionHandler.parent.getClass());
       app.events.addPropertyChangeListener(NODE_CHANGED + neoNode.id(), transactionHandler);
    }

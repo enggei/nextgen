@@ -13,13 +13,13 @@ import java.util.stream.StreamSupport;
 import static com.generator.util.NeoUtil.TAG_UUID;
 import static com.generator.neo.remote.NeoCache.removeCache;
 import static com.generator.neo.remote.NeoCache.updateCache;
-import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
+import static com.generator.neo.remote.RemoteRelationship.fromDriverRelationship;
 
 
 /**
  * Created by Ernst Sognnes on 11.07.17.
  */
-public class NeoNode implements Node, NeoEntity {
+public class RemoteNode implements Node, NeoEntity {
 
    private final NeoDriver driver;
    private org.neo4j.driver.v1.types.Node driverNode;
@@ -36,38 +36,38 @@ public class NeoNode implements Node, NeoEntity {
    // Every node gets a default label so we can combine it with the TAG_UUID property and create a global index for node UUIDs.
    static String TAG_NODE = "_node";
 
-   static class InternalNeoNode extends NeoNode {
+   static class InternalNeoNode extends RemoteNode {
       InternalNeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
          super(driverNode);
       }
    }
 
-   static NeoNode newInternalNeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
+   static RemoteNode newInternalNeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
       return new InternalNeoNode(driverNode);
    }
 
-   NeoNode(@NotNull final NeoDriver driver, long id) {
+   RemoteNode(@NotNull final NeoDriver driver, long id) {
       this(driver, driver.getSingleNodeWithRelationships(id));
    }
 
-   public NeoNode(@NotNull final NeoDriver driver, @NotNull final UUID uuid) {
+   public RemoteNode(@NotNull final NeoDriver driver, @NotNull final UUID uuid) {
       this(driver, TAG_NODE, uuid);
    }
 
-   public NeoNode(@NotNull final NeoDriver driver, @NotNull final Label label, @NotNull final UUID uuid) {
+   public RemoteNode(@NotNull final NeoDriver driver, @NotNull final Label label, @NotNull final UUID uuid) {
       this(driver, label.name(), uuid);
    }
 
-   public NeoNode(@NotNull final NeoDriver driver, @NotNull final String label, @NotNull final UUID uuid) {
+   public RemoteNode(@NotNull final NeoDriver driver, @NotNull final String label, @NotNull final UUID uuid) {
       this(driver, driver.getSingleNodeWithRelationships(label, uuid));
    }
 
-   public NeoNode(@NotNull final NeoDriver driver, @NotNull NeoDriver.NodeWithRelationships nwr) {
+   public RemoteNode(@NotNull final NeoDriver driver, @NotNull NeoDriver.NodeWithRelationships nwr) {
       this(driver, nwr.node(), nwr.relationships());
    }
 
    // NOTE: For internal use only!
-   private NeoNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
+   private RemoteNode(@NotNull final org.neo4j.driver.v1.types.Node driverNode) {
       this.driver = null;
       this.driverNode = driverNode;
 
@@ -75,7 +75,7 @@ public class NeoNode implements Node, NeoEntity {
       if (uuid != null) this.uuid = uuid;
    }
 
-   private NeoNode(@NotNull final NeoDriver driver, @NotNull final org.neo4j.driver.v1.types.Node driverNode, final Collection<org.neo4j.driver.v1.types.Relationship> driverRelationships) {
+   private RemoteNode(@NotNull final NeoDriver driver, @NotNull final org.neo4j.driver.v1.types.Node driverNode, final Collection<org.neo4j.driver.v1.types.Relationship> driverRelationships) {
       this.driver = driver;
       this.driverNode = driverNode;
 
@@ -91,7 +91,7 @@ public class NeoNode implements Node, NeoEntity {
       updateCache(this);
    }
 
-   protected void addOrUpdateRelationship(@NotNull final NeoRelationship relationship) {
+   protected void addOrUpdateRelationship(@NotNull final RemoteRelationship relationship) {
       final RelationshipType type = relationship.getType();
       final UUID uuid = relationship.getUUID();
 
@@ -107,7 +107,7 @@ public class NeoNode implements Node, NeoEntity {
 
       if (!degrees.containsKey(type)) degrees.put(type, new LinkedHashMap<>());
 
-      final NeoRelationship r = new NeoRelationship(driver, relationship);
+      final RemoteRelationship r = new RemoteRelationship(driver, relationship);
       final UUID uuid = r.getUUID();
 
       degrees.get(type).put(uuid, r);
@@ -115,7 +115,7 @@ public class NeoNode implements Node, NeoEntity {
       if (!relationships.containsKey(uuid)) relationships.put(uuid, r);
    }
 
-   protected void removeRelationship(@NotNull final NeoRelationship relationship) {
+   protected void removeRelationship(@NotNull final RemoteRelationship relationship) {
       final RelationshipType type = relationship.getType();
       final UUID uuid = relationship.getUUID();
 
@@ -132,11 +132,11 @@ public class NeoNode implements Node, NeoEntity {
       return uuid;
    }
 
-   private static void merge(NeoNode self, final Map<UUID, Relationship> other) {
+   private static void merge(RemoteNode self, final Map<UUID, Relationship> other) {
       // Clear all that are not present in "other"
       self.relationships.forEach((uuid, r) -> {
-         final NeoRelationship relationship = (NeoRelationship)r;
-         final NeoNode otherNode = (NeoNode)relationship.getOtherNode(self);
+         final RemoteRelationship relationship = (RemoteRelationship)r;
+         final RemoteNode otherNode = (RemoteNode)relationship.getOtherNode(self);
 
          // Clear if not present in "other"
          if (!other.containsKey(uuid)) {
@@ -148,8 +148,8 @@ public class NeoNode implements Node, NeoEntity {
 
       // Add or update remaining only present in "other"
       other.forEach((uuid, r) -> {
-         final NeoRelationship relationship = (NeoRelationship)r;
-         final NeoNode otherNode = (NeoNode)relationship.getOtherNode(self);
+         final RemoteRelationship relationship = (RemoteRelationship)r;
+         final RemoteNode otherNode = (RemoteNode)relationship.getOtherNode(self);
 
          otherNode.addOrUpdateRelationship(relationship);
          self.addOrUpdateRelationship(relationship);
@@ -158,13 +158,13 @@ public class NeoNode implements Node, NeoEntity {
 
    @Override
    public void merge(NeoEntity otherEntity) {
-      if (!(otherEntity instanceof NeoNode))
+      if (!(otherEntity instanceof RemoteNode))
          throw new IllegalArgumentException("Entity is not a NeoNode");
 
       if (!uuid.equals(otherEntity.getUUID()))
          throw new IllegalArgumentException("Not allowed to to merge different nodes: " + uuid + " and " + otherEntity.getUUID());
 
-      NeoNode other = (NeoNode)otherEntity;
+      RemoteNode other = (RemoteNode)otherEntity;
 
       System.out.println("Merging " + this + " with " + other);
 
@@ -175,12 +175,12 @@ public class NeoNode implements Node, NeoEntity {
       merge(this, other.relationships);
    }
 
-   public static NeoNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node) {
+   public static RemoteNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node) {
       return fromDriverNode(driver, node, null);
    }
 
-   static NeoNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node, Collection<org.neo4j.driver.v1.types.Relationship> relationships) {
-      return new NeoNode(driver, node, relationships);
+   static RemoteNode fromDriverNode(@NotNull NeoDriver driver, @NotNull org.neo4j.driver.v1.types.Node node, Collection<org.neo4j.driver.v1.types.Relationship> relationships) {
+      return new RemoteNode(driver, node, relationships);
    }
 
    // todo move static methods into BaseDomainVisitor, (which will be refactored to NeoUtil)
@@ -369,14 +369,14 @@ public class NeoNode implements Node, NeoEntity {
 
    @Override
    public Relationship createRelationshipTo(Node otherNode, RelationshipType type) {
-      if (!(otherNode instanceof NeoNode)) throw new IllegalArgumentException("otherNode is not an instance of NeoNode");
+      if (!(otherNode instanceof RemoteNode)) throw new IllegalArgumentException("otherNode is not an instance of NeoNode");
 
-      NeoNode other = (NeoNode)otherNode;
+      RemoteNode other = (RemoteNode)otherNode;
       final Relationship relationship = fromDriverRelationship(driver,
             driver.createOutgoingRelationship(this.getUUID(), other.getUUID(), type.name(), UUID.randomUUID()));
 
-      this.addOrUpdateRelationship((NeoRelationship) relationship);
-      other.addOrUpdateRelationship((NeoRelationship) relationship);
+      this.addOrUpdateRelationship((RemoteRelationship) relationship);
+      other.addOrUpdateRelationship((RemoteRelationship) relationship);
 
       return relationship;
    }
@@ -499,7 +499,7 @@ public class NeoNode implements Node, NeoEntity {
       return driverNode.asMap();
    }
 
-   static String toString(NeoNode neoNode) {
+   static String toString(RemoteNode neoNode) {
       UUID uuid = uuidOf(neoNode);
       StringBuilder properties = new StringBuilder();
 

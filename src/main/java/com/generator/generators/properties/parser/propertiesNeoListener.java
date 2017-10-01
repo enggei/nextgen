@@ -20,7 +20,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -37,60 +37,6 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
    public Node getRoot() {
       return nodeStack.peek();
-   }
-
-	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
-		onEnter(node);
-		this.inPropertiesFile.push(true);
-	}
-
-	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onExit();
-		this.inPropertiesFile.pop();
-	}
-
-	public boolean inPropertiesFile() {
-      return !inPropertiesFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
-
-	@Override
-	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
-		onEnter(node);
-		this.inDecl.push(true);
-	}
-
-	public void exitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		onExit();
-		this.inDecl.pop();
-	}
-
-	public boolean inDecl() {
-      return !inDecl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
-
-	@Override
-	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
-		onEnter(node);
-		this.inComment.push(true);
-	}
-
-	public void exitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		onExit();
-		this.inComment.pop();
-	}
-
-	public boolean inComment() {
-      return !inComment.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
@@ -145,6 +91,60 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	public boolean inKey() {
       return !inKey.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
+		onEnter(node);
+		this.inPropertiesFile.push(true);
+	}
+
+	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onExit();
+		this.inPropertiesFile.pop();
+	}
+
+	public boolean inPropertiesFile() {
+      return !inPropertiesFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
+
+	@Override
+	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
+		onEnter(node);
+		this.inDecl.push(true);
+	}
+
+	public void exitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		onExit();
+		this.inDecl.pop();
+	}
+
+	public boolean inDecl() {
+      return !inDecl.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
+
+	@Override
+	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
+		onEnter(node);
+		this.inComment.push(true);
+	}
+
+	public void exitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		onExit();
+		this.inComment.pop();
+	}
+
+	public boolean inComment() {
+      return !inComment.isEmpty(); 
    }
 
 }

@@ -26,14 +26,14 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -43,6 +43,15 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
    public Node getRoot() {
       return nodeStack.peek();
    }
+
+	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		final Node node = new Node("Document", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
 
 	@Override
 	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
@@ -83,15 +92,6 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
 	@Override
 	public Node visitMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		final Node node = new Node("Misc", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		final Node node = new Node("Document", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

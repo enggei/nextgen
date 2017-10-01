@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import org.neo4j.graphdb.*;
 
@@ -18,11 +19,11 @@ import static com.generator.util.NeoUtil.outgoing;
  */
 public final class AppMotif {
 
-   enum Entities implements Label {
+   public enum Entities implements Label {
       _Layout, _Color, _RegexpPattern, _Motif
    }
 
-   enum Relations implements RelationshipType {
+   public enum Relations implements RelationshipType {
       _LAYOUT_MEMBER
    }
 
@@ -30,15 +31,15 @@ public final class AppMotif {
       name, _color, _lastLayout, x, y
    }
 
-   enum RelationPaintStrategy {
+   public enum RelationPaintStrategy {
       showLines, showLinesAndLabels, showNothing, showLinesAndProperties
    }
 
-   enum NodePaintStrategy {
+   public enum NodePaintStrategy {
       showNameAndLabels, showName, showLabels, showProperties, showValues
    }
 
-   enum RelationPathStrategy {
+   public enum RelationPathStrategy {
       straightLines, rectangularLines, bezierLines, quadLines
    }
 
@@ -50,11 +51,11 @@ public final class AppMotif {
       left, right
    }
 
-   static void saveLayout(Node layoutNode, Set<Workspace.NodeCanvas.NeoNode> nodes) {
+   static void saveLayout(Node layoutNode, Set<NeoNode> nodes) {
 
       outgoing(layoutNode).forEach(Relationship::delete);
 
-      for (Workspace.NodeCanvas.NeoNode neoNode : nodes) {
+      for (NeoNode neoNode : nodes) {
          final Relationship layoutMembership = layoutNode.createRelationshipTo(neoNode.getNode(), AppMotif.Relations._LAYOUT_MEMBER);
          final Rectangle2D rectangle2D = neoNode.getFullBoundsReference().getBounds2D();
          layoutMembership.setProperty(AppMotif.Properties.x.name(), rectangle2D.getX());
@@ -62,7 +63,7 @@ public final class AppMotif {
       }
    }
 
-   static void saveLayout(App app, String layoutName, Set<Workspace.NodeCanvas.NeoNode> nodes) {
+   static void saveLayout(App app, String layoutName, Set<NeoNode> nodes) {
       final Node existingLayoutNode = app.model.graph().findNode(Entities._Layout, Properties.name.name(), layoutName);
       saveLayout(existingLayoutNode == null ? app.model.graph().newNode(Entities._Layout, Properties.name.name(), layoutName) : existingLayoutNode, nodes);
    }

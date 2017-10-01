@@ -26,14 +26,14 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
 		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
          nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -63,15 +63,6 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
 		final Node node = new Node("Literal", arg.getText());
 		onEnter(node);
@@ -81,8 +72,8 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		final Node node = new Node("Set", arg.getText());
+	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -92,6 +83,15 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	@Override
 	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
 		final Node node = new Node("Statement", arg.getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		final Node node = new Node("Set", arg.getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

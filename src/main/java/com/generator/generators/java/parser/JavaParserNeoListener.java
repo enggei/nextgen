@@ -20,7 +20,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -55,6 +55,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inBlock() {
       return !inBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
@@ -91,24 +109,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inExpression() {
       return !inExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText());
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();

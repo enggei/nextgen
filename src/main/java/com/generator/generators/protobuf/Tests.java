@@ -15,20 +15,11 @@ import java.io.IOException;
 
 public class Tests {
 
-
    @Test
    public void testProtobufParser() throws IOException {
       final ProtobufParser parser = new ProtobufParser(new CommonTokenStream(new ProtobufLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/protobuf/test.proto"))));
-      final ProtobufNodeListener listener = new ProtobufNodeListener();
+      final ProtobufNodeListener listener = new ProtobufNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.file());
-      visit("", listener.getRoot());
-   }
-
-   private void visit(String delim, ProtobufNodeListener.Node node) {
-      System.out.println(delim + node.name + " (" + node.value + ")");
-      for (ProtobufNodeListener.Node child : node.children) {
-         visit(delim + "\t", child);
-      }
    }
 
    @Test

@@ -28,9 +28,29 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		System.out.println("Comment");
-		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
+	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
+		System.out.println("Value");
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
+		System.out.println("Row");
+		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
+		System.out.println("Key");
+		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,29 +78,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		System.out.println("Row");
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		System.out.println("Key");
-		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText());
+	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		System.out.println("Comment");
+		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

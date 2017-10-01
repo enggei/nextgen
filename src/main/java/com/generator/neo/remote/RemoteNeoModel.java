@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 
 import static com.generator.neo.remote.NeoCache.getCachedNode;
 import static com.generator.neo.remote.NeoCache.isCachedNode;
-import static com.generator.neo.remote.NeoNode.*;
-import static com.generator.neo.remote.NeoRelationship.fromDriverRelationship;
+import static com.generator.neo.remote.RemoteNode.*;
+import static com.generator.neo.remote.RemoteRelationship.fromDriverRelationship;
 import static com.generator.util.NeoUtil.TAG_UUID;
 import static org.neo4j.driver.v1.Values.parameters;
 

@@ -1,6 +1,7 @@
 package com.generator.generators.easyFlow;
 
 import com.generator.app.*;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -110,7 +111,7 @@ public class EasyFlowPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       final Node node = neoNode.getNode();
 
@@ -125,7 +126,7 @@ public class EasyFlowPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
 

@@ -20,7 +20,7 @@ public class JSONNeoListener extends JSONBaseListener {
 		this.debug = debug;
 	}
 
-   private void onEnter(Node node) {
+   protected void onEnter(Node node) {
 		if (!nodeStack.isEmpty())
       	com.generator.util.NeoUtil.relate(nodeStack.peek(), node, RelationshipType.withName("child"));
       nodeStack.push(node);
@@ -28,7 +28,7 @@ public class JSONNeoListener extends JSONBaseListener {
 		delim.append("\t");
    }
 
-   private void onExit() {
+   protected void onExit() {
       if (nodeStack.size() > 1) {
 			nodeStack.pop();
          delim.deleteCharAt(delim.length() - 1);
@@ -55,24 +55,6 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	public boolean inValue() {
       return !inValue.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
-
-	@Override
-	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText());
-		onEnter(node);
-		this.inJson.push(true);
-	}
-
-	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onExit();
-		this.inJson.pop();
-	}
-
-	public boolean inJson() {
-      return !inJson.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inObj = new java.util.Stack<>();
@@ -127,6 +109,24 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	public boolean inArray() {
       return !inArray.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
+
+	@Override
+	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText());
+		onEnter(node);
+		this.inJson.push(true);
+	}
+
+	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		onExit();
+		this.inJson.pop();
+	}
+
+	public boolean inJson() {
+      return !inJson.isEmpty(); 
    }
 
 }

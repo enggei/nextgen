@@ -1,6 +1,7 @@
 package com.generator.generators.docker;
 
 import com.generator.app.*;
+import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.*;
@@ -52,11 +53,11 @@ public class DockerPlugin extends Plugin {
    }
 
    @Override
-   protected void handleNodeRightClick(JPopupMenu pop, Workspace.NodeCanvas.NeoNode neoNode, Set<Workspace.NodeCanvas.NeoNode> selectedNodes) {
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
       if (hasLabel(neoNode.getNode(), Entities.Dockerfile)) {
 
-         for (Workspace.NodeCanvas.NeoNode selectedNode : selectedNodes) {
+         for (NeoNode selectedNode : selectedNodes) {
             if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.BUILD)) continue;
                pop.add(new App.TransactionAction("Add Build-directory " + DomainMotif.getPropertyValue(selectedNode.getNode(), AppMotif.Properties.name.name()), app) {
@@ -138,7 +139,7 @@ public class DockerPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(Workspace.NodeCanvas.NeoNode neoNode, JTabbedPane tabbedPane) {
+   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
 
    }
 
