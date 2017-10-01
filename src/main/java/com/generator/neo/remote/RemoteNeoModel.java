@@ -10,6 +10,7 @@ import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -33,11 +34,11 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
       void closed(NeoModel model);
    }
 
-   public RemoteNeoModel(URI uri, String username, String password) {
+   public RemoteNeoModel(String uri, String username, String password) {
       this(uri, username, password, null);
    }
 
-   public RemoteNeoModel(URI uri, String username, String password, NeoModelListener listener) {
+   public RemoteNeoModel(String uri, String username, String password, NeoModelListener listener) {
       super(uri, username, password);
 
       addConstraintUnique(TAG_NODE, TAG_UUID);
@@ -216,7 +217,7 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public Set<Node> getAll(String label, String property, Object value) {
-      return readNodes(new Statement("MATCH (n:" + label + " {" + property + ": $value} RETURN n", parameters("value", value)))
+      return readNodes(new Statement("MATCH (n:" + label + " {" + property + ": $value}) RETURN n", parameters("value", value)))
             .stream()
             .map(node -> fromDriverNode(this, node))
             .collect(Collectors.toCollection(LinkedHashSet::new));
@@ -224,7 +225,7 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public Set<Node> getAll(String property, Object value) {
-      return readNodes(new Statement("MATCH (n {" + property + ": $value} RETURN n", parameters("value", value)))
+      return readNodes(new Statement("MATCH (n {" + property + ": $value}) RETURN n", parameters("value", value)))
             .stream()
             .map(node -> fromDriverNode(this, node))
             .collect(Collectors.toCollection(LinkedHashSet::new));

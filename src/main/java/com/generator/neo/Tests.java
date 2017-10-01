@@ -2,20 +2,22 @@ package com.generator.neo;
 
 
 import com.generator.neo.remote.NeoDriver;
+import com.generator.neo.remote.RemoteNeoModel;
 import com.generator.neo.remote.RemoteNode;
 import com.generator.neo.remote.RemoteRelationship;
-import com.generator.neo.remote.RemoteNeoModel;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.driver.v1.types.Node;
 import org.neo4j.driver.v1.types.Relationship;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.ResourceIterable;
+import org.neo4j.graphdb.ResourceIterator;
 import org.neo4j.graphdb.event.LabelEntry;
 import org.neo4j.graphdb.event.TransactionData;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -44,7 +46,7 @@ public class Tests {
 
    private static final String USERNAME = "neo4j";
    private static final String PASSWORD = "gu11/K0de";
-   private static URI NEO4J_URI;
+   private static String NEO4J_URI;
 
    private static final UUID TEST_NODE_UUID[] = {
       UUID.fromString("5f955916-75cc-499c-93af-8dcab726f08b"),
@@ -59,7 +61,7 @@ public class Tests {
 
    @BeforeClass
    static public void setup() throws URISyntaxException {
-      NEO4J_URI = new URI("bolt://localhost:7687");
+      NEO4J_URI = "bolt://localhost:7687";
    }
 
    @Test

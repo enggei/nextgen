@@ -11,6 +11,7 @@ import org.neo4j.driver.v1.types.Relationship;
 import org.neo4j.graphdb.Direction;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,8 +47,12 @@ public class NeoDriver implements AutoCloseable {
 
    protected NeoTransactionEventHandler txEventHandler = new NeoTransactionEventHandler();
 
-   public NeoDriver(URI uri, String username, String password) {
-      this.uri = uri;
+   public NeoDriver(String uri, String username, String password) {
+      try {
+         this.uri = new URI(uri);
+      } catch (URISyntaxException e) {
+         throw new RuntimeException("Illegal uri " + uri);
+      }
       this.driver = GraphDatabase.driver(uri, AuthTokens.basic(username, password));
    }
 

@@ -13,6 +13,7 @@ import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
+import com.generator.neo.remote.RemoteNeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Label;
@@ -106,8 +107,24 @@ public class App extends JFrame {
       addWindowListener(new WindowAdapter() {
          @Override
          public void windowOpened(WindowEvent e) {
-            if (!model.getCurrentDatabaseDir().equals(System.getProperty("user.home"))) {
-               SwingUtilities.invokeLater(() -> model.setDatabase(model.getCurrentDatabaseDir()));
+
+            final String currentDatabaseDir = model.getCurrentDatabaseDir();
+
+            if (!currentDatabaseDir.equals(System.getProperty("user.home"))) {
+               if (!currentDatabaseDir.toLowerCase().startsWith("bolt://")) {
+                  final NeoModel neoModel = new EmbeddedNeoModel(new GraphDatabaseFactory()
+                        .newEmbeddedDatabaseBuilder(new File(currentDatabaseDir))
+                        .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
+                        .newGraphDatabase(),
+                        model -> System.out.println("graph closed"));
+                  SwingUtilities.invokeLater(() -> model.setDatabase(neoModel));
+
+               } else {
+                  final String credentials = model.properties.getProperty("current.database.credentials");
+                  final RemoteNeoModel remote = new RemoteNeoModel(currentDatabaseDir, credentials.split(" ")[0], credentials.split(" ")[1],
+                        model -> System.out.println("closed"));
+                  SwingUtilities.invokeLater(() -> model.setDatabase(remote));
+               }
             }
          }
       });
@@ -123,23 +140,61 @@ public class App extends JFrame {
       MenuBar() {
 
          final JMenu projectMenu = new JMenu("Project");
-         projectMenu.add(new AbstractAction("Set database") {
+         projectMenu.add(new AbstractAction("Set local database") {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                final File dir = SwingUtil.showOpenDir(App.this, model.getCurrentDatabaseDir());
                if (dir == null) return;
-               SwingUtilities.invokeLater(() -> model.setDatabase(dir.getAbsolutePath()));
+
+               final NeoModel neoModel = new EmbeddedNeoModel(new GraphDatabaseFactory()
+                     .newEmbeddedDatabaseBuilder(dir)
+                     .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
+                     .newGraphDatabase(),
+                     model -> System.out.println("graph closed"));
+
+               SwingUtilities.invokeLater(() -> {
+                  model.setDatabase(neoModel);
+                  model.setProperties("current.database", dir.getAbsolutePath());
+               });
             }
          });
 
-         projectMenu.add(new AbstractAction("Set Generator root") {
+         projectMenu.add(new AbstractAction("Set Remote database") {
             @Override
             public void actionPerformed(ActionEvent e) {
-               final File dir = SwingUtil.showOpenDir(App.this, model.getAppStringProperty("generator.path"));
-               if (dir == null) return;
-               model.setAppProperty("generator.path", dir.getAbsolutePath());
+
+               // make editor for parameters
+               final JTextField txtUri = new JTextField("bolt://localhost:7687");
+               final JTextField txtUsername = new JTextField("neo4j");
+               final JPasswordField txtPassword = new JPasswordField("gu11/K0de");
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref");
+               editor.addLabel("Uri", 1, 1);
+               editor.add(txtUri, 3, 1);
+               editor.addLabel("Username", 1, 3);
+               editor.add(txtUsername, 3, 3);
+               editor.addLabel("Password", 1, 5);
+               editor.add(txtPassword, 3, 5);
+
+               SwingUtil.showDialog(editor, App.this, "Login", () -> {
+
+                  final String uri = txtUri.getText();
+                  if (uri == null || uri.length() == 0 || !uri.toLowerCase().startsWith("bolt://")) return;
+                  if (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0) return;
+
+                  final RemoteNeoModel remote = new RemoteNeoModel(uri, txtUsername.getText(), new String(txtPassword.getPassword()),
+                        model -> System.out.println("closed"));
+
+                  SwingUtilities.invokeLater(() -> {
+                     model.setDatabase(remote);
+                     model.setProperties("current.database", uri);
+                     model.setProperties("current.database.credentials", txtUsername.getText() + " " + new String(txtPassword.getPassword()));
+                  });
+               });
             }
          });
+
          add(projectMenu);
 
          final JMenu utilsMenu = new JMenu("Utilities");
@@ -343,7 +398,7 @@ public class App extends JFrame {
          }
       }
 
-      void setDatabase(String dir) {
+      void setDatabase(NeoModel neoModel) {
 
          getRootPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -351,16 +406,7 @@ public class App extends JFrame {
 
          transactionHistory.clear();
 
-         GraphDatabaseSettings.BoltConnector bolt = GraphDatabaseSettings.boltConnector("0");
-
-         graph = new EmbeddedNeoModel(new GraphDatabaseFactory()
-               .newEmbeddedDatabaseBuilder(new File(dir))
-//               .setConfig(remote.type, "BOLT")
-//               .setConfig(remote.enabled, "true")
-//               .setConfig(remote.address, "localhost:7687")
-               .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
-               .newGraphDatabase(),
-               model -> System.out.println("graph closed"));
+         graph = neoModel;
 
          graph.registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
 
@@ -414,10 +460,8 @@ public class App extends JFrame {
                System.out.println("rollback");
             }
          });
-         properties.setProperty("current.database", dir);
-         saveProperties();
 
-         events.firePropertyChange(AppEvents.GRAPH_NEW, dir);
+         events.firePropertyChange(AppEvents.GRAPH_NEW);
          getRootPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       }
 
@@ -425,12 +469,12 @@ public class App extends JFrame {
          return graph;
       }
 
-      String getAppStringProperty(String property) {
-         return properties.getProperty(property, defaultPropertyValues.get(property));
-      }
+      public void setProperties(String... kv) {
 
-      void setAppProperty(String property, String value) {
-         properties.put(property, value);
+         if (kv.length % 2 != 0) throw new IllegalArgumentException("properties must be key-value pairs");
+
+         for (int i = 0; i < kv.length; i += 2)
+            this.properties.put(kv[i], kv[i + 1]);
          saveProperties();
       }
 
@@ -458,6 +502,8 @@ public class App extends JFrame {
             node.delete();
          }
       }
+
+
 
       public class TransactionHistory {
 

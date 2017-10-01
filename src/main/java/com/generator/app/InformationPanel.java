@@ -155,15 +155,17 @@ final class InformationPanel extends JPanel {
             root.add(propertyNodes);
             app.model.graph().getAllPropertyKeys().forEach(propertyKey -> propertyNodes.add(new PropertyNode(propertyKey)));
 
-            final InformationNode nodeIndices = new InformationNode("Node Indices");
-            root.add(nodeIndices);
-            for (String indexName : app.model.graph().index().nodeIndexNames())
-               nodeIndices.add(new NodeIndexNode(indexName));
+            System.out.println("TODO Indices not working on RemoteNeo");
 
-            final InformationNode relationIndices = new InformationNode("Relationships Indices");
-            root.add(relationIndices);
-            for (String indexName : app.model.graph().index().relationshipIndexNames())
-               relationIndices.add(new RelationshipIndexNode(indexName));
+//            final InformationNode nodeIndices = new InformationNode("Node Indices");
+//            root.add(nodeIndices);
+//            for (String indexName : app.model.graph().index().nodeIndexNames())
+//               nodeIndices.add(new NodeIndexNode(indexName));
+
+//            final InformationNode relationIndices = new InformationNode("Relationships Indices");
+//            root.add(relationIndices);
+//            for (String indexName : app.model.graph().index().relationshipIndexNames())
+//               relationIndices.add(new RelationshipIndexNode(indexName));
 
             layouts = new InformationNode("Layouts");
             root.add(layouts);

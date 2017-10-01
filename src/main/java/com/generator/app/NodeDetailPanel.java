@@ -155,7 +155,7 @@ class NodeDetailPanel extends JPanel {
                propertiesToShow = AppMotif.PropertiesToShow.all;
                app.model.setPropertiesFilter(propertiesToShow);
                app.model.setPropertiesFilter(propertiesToShow);
-               app.model.setAppProperty("properties.filter", propertiesToShow.name());
+               app.model.setProperties("properties.filter", propertiesToShow.name());
                updateTable(currentNodes);
             }
          });
