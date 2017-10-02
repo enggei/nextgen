@@ -8,8 +8,8 @@ public abstract class css3DomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
-		else if(hasLabel(node, "Number")) visitNumber(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
+		else if(hasLabel(node, "Number")) visitNumber(node);
 		else if(hasLabel(node, "Stylesheet")) visitStylesheet(node);
 		else if(hasLabel(node, "GoodCharset")) visitGoodCharset(node);
 		else if(hasLabel(node, "BadCharset")) visitBadCharset(node);
@@ -104,13 +104,13 @@ public abstract class css3DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitNumber(Node node) {
+	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpression(Node node) {
+	public void visitNumber(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -639,12 +639,19 @@ public abstract class css3DomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

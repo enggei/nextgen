@@ -6,11 +6,15 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
 
       public final String name;
       public final String value;
+      public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
+			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -29,7 +33,7 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -45,17 +49,8 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		final Node node = new Node("Field", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		final Node node = new Node("Hdr", arg.getText());
+		final Node node = new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -64,7 +59,7 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
 
 	@Override
 	public Node visitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
-		final Node node = new Node("Row", arg.getText());
+		final Node node = new Node("Row", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -73,7 +68,16 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
 
 	@Override
 	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		final Node node = new Node("CsvFile", arg.getText());
+		final Node node = new Node("CsvFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		final Node node = new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

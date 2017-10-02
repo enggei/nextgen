@@ -7,12 +7,14 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.java.parser.JavaParser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBlock.push(true);
 	}
 
@@ -63,28 +65,11 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterExpression(com.generator.generators.java.parser.JavaParser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExpression.push(true);
 	}
 
@@ -101,7 +86,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.java.parser.JavaParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStatement.push(true);
 	}
 
@@ -114,11 +99,28 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inStatement.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.java.parser.JavaParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inIntegerLiteral = new java.util.Stack<>();
 
 	@Override
 	public void enterIntegerLiteral(com.generator.generators.java.parser.JavaParser.IntegerLiteralContext arg) {
-		onEnter(new Node("IntegerLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("IntegerLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIntegerLiteral.push(true);
 	}
 
@@ -135,7 +137,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameterList(com.generator.generators.java.parser.JavaParser.FormalParameterListContext arg) {
-		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FormalParameterList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFormalParameterList.push(true);
 	}
 
@@ -152,7 +154,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArguments(com.generator.generators.java.parser.JavaParser.ArgumentsContext arg) {
-		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inArguments.push(true);
 	}
 
@@ -169,7 +171,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExpressionList(com.generator.generators.java.parser.JavaParser.ExpressionListContext arg) {
-		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExpressionList.push(true);
 	}
 
@@ -186,7 +188,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeList(com.generator.generators.java.parser.JavaParser.TypeListContext arg) {
-		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeList.push(true);
 	}
 
@@ -203,7 +205,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCompilationUnit.push(true);
 	}
 
@@ -220,7 +222,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPackageDeclaration.push(true);
 	}
 
@@ -237,7 +239,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inImportDeclaration.push(true);
 	}
 
@@ -254,7 +256,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeDeclaration.push(true);
 	}
 
@@ -267,11 +269,28 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inTypeDeclaration.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inModifier.push(true);
+	}
+
+	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onExit();
+		this.inModifier.pop();
+	}
+
+	public boolean inModifier() {
+      return !inModifier.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
 
 	@Override
 	public void enterClassOrInterfaceModifier(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceModifierContext arg) {
-		onEnter(new Node("ClassOrInterfaceModifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassOrInterfaceModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassOrInterfaceModifier.push(true);
 	}
 
@@ -288,7 +307,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableModifier(com.generator.generators.java.parser.JavaParser.VariableModifierContext arg) {
-		onEnter(new Node("VariableModifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("VariableModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariableModifier.push(true);
 	}
 
@@ -305,7 +324,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassDeclaration(com.generator.generators.java.parser.JavaParser.ClassDeclarationContext arg) {
-		onEnter(new Node("ClassDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassDeclaration.push(true);
 	}
 
@@ -322,7 +341,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeParameters(com.generator.generators.java.parser.JavaParser.TypeParametersContext arg) {
-		onEnter(new Node("TypeParameters", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeParameters", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeParameters.push(true);
 	}
 
@@ -339,7 +358,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeParameter(com.generator.generators.java.parser.JavaParser.TypeParameterContext arg) {
-		onEnter(new Node("TypeParameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeParameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeParameter.push(true);
 	}
 
@@ -356,7 +375,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeBound(com.generator.generators.java.parser.JavaParser.TypeBoundContext arg) {
-		onEnter(new Node("TypeBound", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeBound", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeBound.push(true);
 	}
 
@@ -373,7 +392,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumDeclaration(com.generator.generators.java.parser.JavaParser.EnumDeclarationContext arg) {
-		onEnter(new Node("EnumDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnumDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumDeclaration.push(true);
 	}
 
@@ -390,7 +409,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumConstants(com.generator.generators.java.parser.JavaParser.EnumConstantsContext arg) {
-		onEnter(new Node("EnumConstants", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnumConstants", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumConstants.push(true);
 	}
 
@@ -407,7 +426,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumConstant(com.generator.generators.java.parser.JavaParser.EnumConstantContext arg) {
-		onEnter(new Node("EnumConstant", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnumConstant", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumConstant.push(true);
 	}
 
@@ -424,7 +443,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnumBodyDeclarations(com.generator.generators.java.parser.JavaParser.EnumBodyDeclarationsContext arg) {
-		onEnter(new Node("EnumBodyDeclarations", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnumBodyDeclarations", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumBodyDeclarations.push(true);
 	}
 
@@ -441,7 +460,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		onEnter(new Node("InterfaceDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceDeclaration.push(true);
 	}
 
@@ -458,7 +477,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassBody(com.generator.generators.java.parser.JavaParser.ClassBodyContext arg) {
-		onEnter(new Node("ClassBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassBody.push(true);
 	}
 
@@ -475,7 +494,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceBody(com.generator.generators.java.parser.JavaParser.InterfaceBodyContext arg) {
-		onEnter(new Node("InterfaceBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceBody.push(true);
 	}
 
@@ -492,7 +511,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassBodyDeclaration(com.generator.generators.java.parser.JavaParser.ClassBodyDeclarationContext arg) {
-		onEnter(new Node("ClassBodyDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassBodyDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassBodyDeclaration.push(true);
 	}
 
@@ -509,7 +528,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMemberDeclaration(com.generator.generators.java.parser.JavaParser.MemberDeclarationContext arg) {
-		onEnter(new Node("MemberDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MemberDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMemberDeclaration.push(true);
 	}
 
@@ -526,7 +545,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodDeclaration(com.generator.generators.java.parser.JavaParser.MethodDeclarationContext arg) {
-		onEnter(new Node("MethodDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MethodDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMethodDeclaration.push(true);
 	}
 
@@ -543,7 +562,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodBody(com.generator.generators.java.parser.JavaParser.MethodBodyContext arg) {
-		onEnter(new Node("MethodBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MethodBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMethodBody.push(true);
 	}
 
@@ -560,7 +579,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeTypeOrVoid(com.generator.generators.java.parser.JavaParser.TypeTypeOrVoidContext arg) {
-		onEnter(new Node("TypeTypeOrVoid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeTypeOrVoid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeTypeOrVoid.push(true);
 	}
 
@@ -577,7 +596,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericMethodDeclarationContext arg) {
-		onEnter(new Node("GenericMethodDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("GenericMethodDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inGenericMethodDeclaration.push(true);
 	}
 
@@ -594,7 +613,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericConstructorDeclaration(com.generator.generators.java.parser.JavaParser.GenericConstructorDeclarationContext arg) {
-		onEnter(new Node("GenericConstructorDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("GenericConstructorDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inGenericConstructorDeclaration.push(true);
 	}
 
@@ -611,7 +630,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstructorDeclaration(com.generator.generators.java.parser.JavaParser.ConstructorDeclarationContext arg) {
-		onEnter(new Node("ConstructorDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ConstructorDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConstructorDeclaration.push(true);
 	}
 
@@ -628,7 +647,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFieldDeclaration(com.generator.generators.java.parser.JavaParser.FieldDeclarationContext arg) {
-		onEnter(new Node("FieldDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FieldDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFieldDeclaration.push(true);
 	}
 
@@ -645,7 +664,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceBodyDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceBodyDeclarationContext arg) {
-		onEnter(new Node("InterfaceBodyDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceBodyDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceBodyDeclaration.push(true);
 	}
 
@@ -662,7 +681,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMemberDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMemberDeclarationContext arg) {
-		onEnter(new Node("InterfaceMemberDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceMemberDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceMemberDeclaration.push(true);
 	}
 
@@ -679,7 +698,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstDeclaration(com.generator.generators.java.parser.JavaParser.ConstDeclarationContext arg) {
-		onEnter(new Node("ConstDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ConstDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConstDeclaration.push(true);
 	}
 
@@ -696,7 +715,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterConstantDeclarator(com.generator.generators.java.parser.JavaParser.ConstantDeclaratorContext arg) {
-		onEnter(new Node("ConstantDeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ConstantDeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConstantDeclarator.push(true);
 	}
 
@@ -713,7 +732,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceMethodDeclarationContext arg) {
-		onEnter(new Node("InterfaceMethodDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceMethodDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceMethodDeclaration.push(true);
 	}
 
@@ -730,7 +749,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInterfaceMethodModifier(com.generator.generators.java.parser.JavaParser.InterfaceMethodModifierContext arg) {
-		onEnter(new Node("InterfaceMethodModifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InterfaceMethodModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInterfaceMethodModifier.push(true);
 	}
 
@@ -747,7 +766,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterGenericInterfaceMethodDeclaration(com.generator.generators.java.parser.JavaParser.GenericInterfaceMethodDeclarationContext arg) {
-		onEnter(new Node("GenericInterfaceMethodDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("GenericInterfaceMethodDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inGenericInterfaceMethodDeclaration.push(true);
 	}
 
@@ -764,7 +783,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclarators(com.generator.generators.java.parser.JavaParser.VariableDeclaratorsContext arg) {
-		onEnter(new Node("VariableDeclarators", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("VariableDeclarators", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariableDeclarators.push(true);
 	}
 
@@ -781,7 +800,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclarator(com.generator.generators.java.parser.JavaParser.VariableDeclaratorContext arg) {
-		onEnter(new Node("VariableDeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("VariableDeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariableDeclarator.push(true);
 	}
 
@@ -798,7 +817,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableDeclaratorId(com.generator.generators.java.parser.JavaParser.VariableDeclaratorIdContext arg) {
-		onEnter(new Node("VariableDeclaratorId", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("VariableDeclaratorId", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariableDeclaratorId.push(true);
 	}
 
@@ -815,7 +834,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterVariableInitializer(com.generator.generators.java.parser.JavaParser.VariableInitializerContext arg) {
-		onEnter(new Node("VariableInitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("VariableInitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariableInitializer.push(true);
 	}
 
@@ -832,7 +851,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArrayInitializer(com.generator.generators.java.parser.JavaParser.ArrayInitializerContext arg) {
-		onEnter(new Node("ArrayInitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ArrayInitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inArrayInitializer.push(true);
 	}
 
@@ -849,7 +868,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassOrInterfaceType(com.generator.generators.java.parser.JavaParser.ClassOrInterfaceTypeContext arg) {
-		onEnter(new Node("ClassOrInterfaceType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassOrInterfaceType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassOrInterfaceType.push(true);
 	}
 
@@ -862,28 +881,11 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inClassOrInterfaceType.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText()));
-		this.inModifier.push(true);
-	}
-
-	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onExit();
-		this.inModifier.pop();
-	}
-
-	public boolean inModifier() {
-      return !inModifier.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();
 
 	@Override
 	public void enterTypeArgument(com.generator.generators.java.parser.JavaParser.TypeArgumentContext arg) {
-		onEnter(new Node("TypeArgument", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeArgument", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeArgument.push(true);
 	}
 
@@ -900,7 +902,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterQualifiedNameList(com.generator.generators.java.parser.JavaParser.QualifiedNameListContext arg) {
-		onEnter(new Node("QualifiedNameList", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("QualifiedNameList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiedNameList.push(true);
 	}
 
@@ -917,7 +919,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameters(com.generator.generators.java.parser.JavaParser.FormalParametersContext arg) {
-		onEnter(new Node("FormalParameters", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FormalParameters", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFormalParameters.push(true);
 	}
 
@@ -934,7 +936,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFormalParameter(com.generator.generators.java.parser.JavaParser.FormalParameterContext arg) {
-		onEnter(new Node("FormalParameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FormalParameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFormalParameter.push(true);
 	}
 
@@ -951,7 +953,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLastFormalParameter(com.generator.generators.java.parser.JavaParser.LastFormalParameterContext arg) {
-		onEnter(new Node("LastFormalParameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LastFormalParameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLastFormalParameter.push(true);
 	}
 
@@ -968,7 +970,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterQualifiedName(com.generator.generators.java.parser.JavaParser.QualifiedNameContext arg) {
-		onEnter(new Node("QualifiedName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("QualifiedName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiedName.push(true);
 	}
 
@@ -985,7 +987,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotation(com.generator.generators.java.parser.JavaParser.AnnotationContext arg) {
-		onEnter(new Node("Annotation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotation.push(true);
 	}
 
@@ -1002,7 +1004,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValuePairs(com.generator.generators.java.parser.JavaParser.ElementValuePairsContext arg) {
-		onEnter(new Node("ElementValuePairs", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ElementValuePairs", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElementValuePairs.push(true);
 	}
 
@@ -1019,7 +1021,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValuePair(com.generator.generators.java.parser.JavaParser.ElementValuePairContext arg) {
-		onEnter(new Node("ElementValuePair", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ElementValuePair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElementValuePair.push(true);
 	}
 
@@ -1036,7 +1038,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValue(com.generator.generators.java.parser.JavaParser.ElementValueContext arg) {
-		onEnter(new Node("ElementValue", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ElementValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElementValue.push(true);
 	}
 
@@ -1053,7 +1055,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterElementValueArrayInitializer(com.generator.generators.java.parser.JavaParser.ElementValueArrayInitializerContext arg) {
-		onEnter(new Node("ElementValueArrayInitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ElementValueArrayInitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElementValueArrayInitializer.push(true);
 	}
 
@@ -1070,7 +1072,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeDeclarationContext arg) {
-		onEnter(new Node("AnnotationTypeDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationTypeDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationTypeDeclaration.push(true);
 	}
 
@@ -1087,7 +1089,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeBody(com.generator.generators.java.parser.JavaParser.AnnotationTypeBodyContext arg) {
-		onEnter(new Node("AnnotationTypeBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationTypeBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationTypeBody.push(true);
 	}
 
@@ -1104,7 +1106,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeElementDeclaration(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementDeclarationContext arg) {
-		onEnter(new Node("AnnotationTypeElementDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationTypeElementDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationTypeElementDeclaration.push(true);
 	}
 
@@ -1121,7 +1123,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationTypeElementRest(com.generator.generators.java.parser.JavaParser.AnnotationTypeElementRestContext arg) {
-		onEnter(new Node("AnnotationTypeElementRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationTypeElementRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationTypeElementRest.push(true);
 	}
 
@@ -1138,7 +1140,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationMethodOrConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodOrConstantRestContext arg) {
-		onEnter(new Node("AnnotationMethodOrConstantRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationMethodOrConstantRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationMethodOrConstantRest.push(true);
 	}
 
@@ -1155,7 +1157,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationMethodRest(com.generator.generators.java.parser.JavaParser.AnnotationMethodRestContext arg) {
-		onEnter(new Node("AnnotationMethodRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationMethodRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationMethodRest.push(true);
 	}
 
@@ -1172,7 +1174,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterAnnotationConstantRest(com.generator.generators.java.parser.JavaParser.AnnotationConstantRestContext arg) {
-		onEnter(new Node("AnnotationConstantRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnnotationConstantRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnnotationConstantRest.push(true);
 	}
 
@@ -1189,7 +1191,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterDefaultValue(com.generator.generators.java.parser.JavaParser.DefaultValueContext arg) {
-		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDefaultValue.push(true);
 	}
 
@@ -1206,7 +1208,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterBlockStatement(com.generator.generators.java.parser.JavaParser.BlockStatementContext arg) {
-		onEnter(new Node("BlockStatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("BlockStatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBlockStatement.push(true);
 	}
 
@@ -1223,7 +1225,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLocalVariableDeclaration(com.generator.generators.java.parser.JavaParser.LocalVariableDeclarationContext arg) {
-		onEnter(new Node("LocalVariableDeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LocalVariableDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLocalVariableDeclaration.push(true);
 	}
 
@@ -1240,7 +1242,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCatchClause(com.generator.generators.java.parser.JavaParser.CatchClauseContext arg) {
-		onEnter(new Node("CatchClause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CatchClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCatchClause.push(true);
 	}
 
@@ -1257,7 +1259,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCatchType(com.generator.generators.java.parser.JavaParser.CatchTypeContext arg) {
-		onEnter(new Node("CatchType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CatchType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCatchType.push(true);
 	}
 
@@ -1274,7 +1276,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterFinallyBlock(com.generator.generators.java.parser.JavaParser.FinallyBlockContext arg) {
-		onEnter(new Node("FinallyBlock", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FinallyBlock", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFinallyBlock.push(true);
 	}
 
@@ -1291,7 +1293,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResourceSpecification(com.generator.generators.java.parser.JavaParser.ResourceSpecificationContext arg) {
-		onEnter(new Node("ResourceSpecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ResourceSpecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inResourceSpecification.push(true);
 	}
 
@@ -1308,7 +1310,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResources(com.generator.generators.java.parser.JavaParser.ResourcesContext arg) {
-		onEnter(new Node("Resources", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Resources", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inResources.push(true);
 	}
 
@@ -1325,7 +1327,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterResource(com.generator.generators.java.parser.JavaParser.ResourceContext arg) {
-		onEnter(new Node("Resource", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Resource", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inResource.push(true);
 	}
 
@@ -1342,7 +1344,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSwitchBlockStatementGroup(com.generator.generators.java.parser.JavaParser.SwitchBlockStatementGroupContext arg) {
-		onEnter(new Node("SwitchBlockStatementGroup", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SwitchBlockStatementGroup", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSwitchBlockStatementGroup.push(true);
 	}
 
@@ -1359,7 +1361,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSwitchLabel(com.generator.generators.java.parser.JavaParser.SwitchLabelContext arg) {
-		onEnter(new Node("SwitchLabel", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SwitchLabel", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSwitchLabel.push(true);
 	}
 
@@ -1376,7 +1378,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterForControl(com.generator.generators.java.parser.JavaParser.ForControlContext arg) {
-		onEnter(new Node("ForControl", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ForControl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inForControl.push(true);
 	}
 
@@ -1393,7 +1395,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterForInit(com.generator.generators.java.parser.JavaParser.ForInitContext arg) {
-		onEnter(new Node("ForInit", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ForInit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inForInit.push(true);
 	}
 
@@ -1410,7 +1412,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterEnhancedForControl(com.generator.generators.java.parser.JavaParser.EnhancedForControlContext arg) {
-		onEnter(new Node("EnhancedForControl", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnhancedForControl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnhancedForControl.push(true);
 	}
 
@@ -1427,7 +1429,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterParExpression(com.generator.generators.java.parser.JavaParser.ParExpressionContext arg) {
-		onEnter(new Node("ParExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ParExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParExpression.push(true);
 	}
 
@@ -1444,7 +1446,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaExpression(com.generator.generators.java.parser.JavaParser.LambdaExpressionContext arg) {
-		onEnter(new Node("LambdaExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LambdaExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdaExpression.push(true);
 	}
 
@@ -1461,7 +1463,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaParameters(com.generator.generators.java.parser.JavaParser.LambdaParametersContext arg) {
-		onEnter(new Node("LambdaParameters", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LambdaParameters", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdaParameters.push(true);
 	}
 
@@ -1478,7 +1480,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterLambdaBody(com.generator.generators.java.parser.JavaParser.LambdaBodyContext arg) {
-		onEnter(new Node("LambdaBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LambdaBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdaBody.push(true);
 	}
 
@@ -1495,7 +1497,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPrimary(com.generator.generators.java.parser.JavaParser.PrimaryContext arg) {
-		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPrimary.push(true);
 	}
 
@@ -1512,7 +1514,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterMethodReference(com.generator.generators.java.parser.JavaParser.MethodReferenceContext arg) {
-		onEnter(new Node("MethodReference", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MethodReference", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMethodReference.push(true);
 	}
 
@@ -1529,7 +1531,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassType(com.generator.generators.java.parser.JavaParser.ClassTypeContext arg) {
-		onEnter(new Node("ClassType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassType.push(true);
 	}
 
@@ -1546,7 +1548,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCreator(com.generator.generators.java.parser.JavaParser.CreatorContext arg) {
-		onEnter(new Node("Creator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Creator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCreator.push(true);
 	}
 
@@ -1563,7 +1565,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterCreatedName(com.generator.generators.java.parser.JavaParser.CreatedNameContext arg) {
-		onEnter(new Node("CreatedName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CreatedName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCreatedName.push(true);
 	}
 
@@ -1580,7 +1582,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterInnerCreator(com.generator.generators.java.parser.JavaParser.InnerCreatorContext arg) {
-		onEnter(new Node("InnerCreator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InnerCreator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInnerCreator.push(true);
 	}
 
@@ -1597,7 +1599,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterArrayCreatorRest(com.generator.generators.java.parser.JavaParser.ArrayCreatorRestContext arg) {
-		onEnter(new Node("ArrayCreatorRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ArrayCreatorRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inArrayCreatorRest.push(true);
 	}
 
@@ -1614,7 +1616,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterClassCreatorRest(com.generator.generators.java.parser.JavaParser.ClassCreatorRestContext arg) {
-		onEnter(new Node("ClassCreatorRest", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassCreatorRest", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassCreatorRest.push(true);
 	}
 
@@ -1631,7 +1633,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExplicitGenericInvocation(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationContext arg) {
-		onEnter(new Node("ExplicitGenericInvocation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ExplicitGenericInvocation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExplicitGenericInvocation.push(true);
 	}
 
@@ -1648,7 +1650,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.TypeArgumentsOrDiamondContext arg) {
-		onEnter(new Node("TypeArgumentsOrDiamond", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeArgumentsOrDiamond", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeArgumentsOrDiamond.push(true);
 	}
 
@@ -1665,7 +1667,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterNonWildcardTypeArgumentsOrDiamond(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsOrDiamondContext arg) {
-		onEnter(new Node("NonWildcardTypeArgumentsOrDiamond", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NonWildcardTypeArgumentsOrDiamond", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNonWildcardTypeArgumentsOrDiamond.push(true);
 	}
 
@@ -1682,7 +1684,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterNonWildcardTypeArguments(com.generator.generators.java.parser.JavaParser.NonWildcardTypeArgumentsContext arg) {
-		onEnter(new Node("NonWildcardTypeArguments", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NonWildcardTypeArguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNonWildcardTypeArguments.push(true);
 	}
 
@@ -1699,7 +1701,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeType(com.generator.generators.java.parser.JavaParser.TypeTypeContext arg) {
-		onEnter(new Node("TypeType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeType.push(true);
 	}
 
@@ -1716,7 +1718,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterPrimitiveType(com.generator.generators.java.parser.JavaParser.PrimitiveTypeContext arg) {
-		onEnter(new Node("PrimitiveType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PrimitiveType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPrimitiveType.push(true);
 	}
 
@@ -1733,7 +1735,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterTypeArguments(com.generator.generators.java.parser.JavaParser.TypeArgumentsContext arg) {
-		onEnter(new Node("TypeArguments", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("TypeArguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeArguments.push(true);
 	}
 
@@ -1750,7 +1752,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterSuperSuffix(com.generator.generators.java.parser.JavaParser.SuperSuffixContext arg) {
-		onEnter(new Node("SuperSuffix", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SuperSuffix", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSuperSuffix.push(true);
 	}
 
@@ -1767,7 +1769,7 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	@Override
 	public void enterExplicitGenericInvocationSuffix(com.generator.generators.java.parser.JavaParser.ExplicitGenericInvocationSuffixContext arg) {
-		onEnter(new Node("ExplicitGenericInvocationSuffix", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ExplicitGenericInvocationSuffix", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExplicitGenericInvocationSuffix.push(true);
 	}
 

@@ -10,8 +10,8 @@ public abstract class LuaDomainVisitor {
 		if(hasLabel(node, "Block")) visitBlock(node);
 		else if(hasLabel(node, "String")) visitString(node);
 		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Field")) visitField(node);
 		else if(hasLabel(node, "Var")) visitVar(node);
+		else if(hasLabel(node, "Field")) visitField(node);
 		else if(hasLabel(node, "Chunk")) visitChunk(node);
 		else if(hasLabel(node, "Stat")) visitStat(node);
 		else if(hasLabel(node, "Retstat")) visitRetstat(node);
@@ -62,13 +62,13 @@ public abstract class LuaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitField(Node node) {
+	public void visitVar(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitVar(Node node) {
+	public void visitField(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -261,12 +261,19 @@ public abstract class LuaDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

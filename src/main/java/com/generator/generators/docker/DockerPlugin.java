@@ -95,39 +95,41 @@ public class DockerPlugin extends Plugin {
                         editor.add(txtPassword, 3, 1);
                         editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-                        SwingUtil.showDialog(editor, app, "Build", () -> {
+                        SwingUtil.showDialog(editor, app, "Build", new SwingUtil.ConfirmAction() {
+                           @Override
+                           public void verifyAndCommit() throws Exception {
+                              final StringBuilder result = new StringBuilder();
+                              final LogOutputStream logOutputStream = new LogOutputStream() {
+                                 @Override
+                                 protected void processLine(String line) {
+                                    result.append(line).append("\n");
+                                    System.out.println(line);
+                                 }
+                              };
 
-                           final StringBuilder result = new StringBuilder();
-                           final LogOutputStream logOutputStream = new LogOutputStream() {
-                              @Override
-                              protected void processLine(String line) {
-                                 result.append(line).append("\n");
-                                 System.out.println(line);
+                              if (chkSudo.isSelected()) {
+                                 final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
+                                 new ProcessExecutor().
+                                       directory(directory).
+                                       command("sudo", "-S", "docker", "build", "-f", path + File.separatorChar + "Dockerfile", ".").
+                                       redirectError(logOutputStream).
+                                       redirectOutput(logOutputStream).
+                                       redirectInput(stream).
+                                       execute();
+
+                                 SwingUtil.showTextResult("Result", result.toString().trim(), editor);
+
+                              } else {
+                                 new ProcessExecutor().
+                                       directory(directory).
+                                       command("docker", "build", "-f", "Dockerfile", ".").
+                                       redirectError(logOutputStream).
+                                       redirectOutput(logOutputStream).
+                                       execute();
+
+
+                                 SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
                               }
-                           };
-
-                           if (chkSudo.isSelected()) {
-                              final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
-                              new ProcessExecutor().
-                                    directory(directory).
-                                    command("sudo", "-S", "docker", "build", "-f", path + File.separatorChar + "Dockerfile", ".").
-                                    redirectError(logOutputStream).
-                                    redirectOutput(logOutputStream).
-                                    redirectInput(stream).
-                                    execute();
-
-                              SwingUtil.showTextResult("Result", result.toString().trim(), editor);
-
-                           } else {
-                              new ProcessExecutor().
-                                    directory(directory).
-                                    command("docker", "build", "-f", "Dockerfile", ".").
-                                    redirectError(logOutputStream).
-                                    redirectOutput(logOutputStream).
-                                    execute();
-
-
-                              SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
                            }
                         });
                      }

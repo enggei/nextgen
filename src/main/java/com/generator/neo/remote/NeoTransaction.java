@@ -1,6 +1,6 @@
 package com.generator.neo.remote;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Lock;
 import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Transaction;

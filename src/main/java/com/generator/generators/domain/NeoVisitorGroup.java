@@ -312,12 +312,19 @@ public final class NeoVisitorGroup {
 		"   }\n" + 
 		"\n" + 
 		"	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {\n" + 
-		"     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);\n" + 
+		"     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));\n" + 
 		"   }\n" + 
 		"\n" + 
 		"	protected Iterable<Relationship> outgoing(Node node) {\n" + 
-		"     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);\n" + 
+		"     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));\n" + 
 		"   }\n" + 
+		"\n" + 
+		"	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {\n" + 
+		"		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));\n" + 
+		"		for (Relationship relationship : relationships)\n" + 
+		"			relations.add(relationship);\n" + 
+		"		return relations;\n" + 
+		"	}\n" + 
 		"\n" + 
 		"	protected Node other(Node node, Relationship relationship) {\n" + 
 		"     	return relationship == null ? null : relationship.getOtherNode(node);\n" + 

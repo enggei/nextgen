@@ -8,9 +8,9 @@ public abstract class JavaParserDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "IntegerLiteral")) visitIntegerLiteral(node);
 		else if(hasLabel(node, "FormalParameterList")) visitFormalParameterList(node);
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
@@ -20,6 +20,7 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "PackageDeclaration")) visitPackageDeclaration(node);
 		else if(hasLabel(node, "ImportDeclaration")) visitImportDeclaration(node);
 		else if(hasLabel(node, "TypeDeclaration")) visitTypeDeclaration(node);
+		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "ClassOrInterfaceModifier")) visitClassOrInterfaceModifier(node);
 		else if(hasLabel(node, "VariableModifier")) visitVariableModifier(node);
 		else if(hasLabel(node, "ClassDeclaration")) visitClassDeclaration(node);
@@ -55,7 +56,6 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "VariableInitializer")) visitVariableInitializer(node);
 		else if(hasLabel(node, "ArrayInitializer")) visitArrayInitializer(node);
 		else if(hasLabel(node, "ClassOrInterfaceType")) visitClassOrInterfaceType(node);
-		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "TypeArgument")) visitTypeArgument(node);
 		else if(hasLabel(node, "QualifiedNameList")) visitQualifiedNameList(node);
 		else if(hasLabel(node, "FormalParameters")) visitFormalParameters(node);
@@ -117,12 +117,6 @@ public abstract class JavaParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -130,6 +124,12 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitStatement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -184,6 +184,12 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitTypeDeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -394,12 +400,6 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitClassOrInterfaceType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -730,12 +730,19 @@ public abstract class JavaParserDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

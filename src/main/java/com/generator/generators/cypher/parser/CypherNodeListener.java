@@ -7,12 +7,14 @@ public class CypherNodeListener extends CypherBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class CypherNodeListener extends CypherBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterAtom(com.generator.generators.cypher.parser.CypherParser.AtomContext arg) {
-		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Atom", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAtom.push(true);
 	}
 
@@ -63,45 +65,11 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inAtom.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
-
-	@Override
-	public void enterSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		onEnter(new Node("Set", arg.getText(), arg.getStart().getText()));
-		this.inSet.push(true);
-	}
-
-	public void exitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		onExit();
-		this.inSet.pop();
-	}
-
-	public boolean inSet() {
-      return !inSet.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExpression.push(true);
 	}
 
@@ -118,7 +86,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStatement.push(true);
 	}
 
@@ -131,11 +99,45 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inStatement.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
+
+	@Override
+	public void enterSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		onEnter(new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inSet.push(true);
+	}
+
+	public void exitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		onExit();
+		this.inSet.pop();
+	}
+
+	public boolean inSet() {
+      return !inSet.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
 
 	@Override
 	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCypher.push(true);
 	}
 
@@ -152,7 +154,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onEnter(new Node("Query", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQuery.push(true);
 	}
 
@@ -169,7 +171,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRegularQuery.push(true);
 	}
 
@@ -186,7 +188,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onEnter(new Node("Union", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnion.push(true);
 	}
 
@@ -203,7 +205,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSingleQuery.push(true);
 	}
 
@@ -220,7 +222,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSinglePartQuery(com.generator.generators.cypher.parser.CypherParser.SinglePartQueryContext arg) {
-		onEnter(new Node("SinglePartQuery", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SinglePartQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSinglePartQuery.push(true);
 	}
 
@@ -237,7 +239,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReadOnlyEnd(com.generator.generators.cypher.parser.CypherParser.ReadOnlyEndContext arg) {
-		onEnter(new Node("ReadOnlyEnd", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReadOnlyEnd", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReadOnlyEnd.push(true);
 	}
 
@@ -254,7 +256,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReadUpdateEnd(com.generator.generators.cypher.parser.CypherParser.ReadUpdateEndContext arg) {
-		onEnter(new Node("ReadUpdateEnd", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReadUpdateEnd", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReadUpdateEnd.push(true);
 	}
 
@@ -271,7 +273,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUpdatingEnd(com.generator.generators.cypher.parser.CypherParser.UpdatingEndContext arg) {
-		onEnter(new Node("UpdatingEnd", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("UpdatingEnd", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUpdatingEnd.push(true);
 	}
 
@@ -288,7 +290,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		onEnter(new Node("MultiPartQuery", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MultiPartQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMultiPartQuery.push(true);
 	}
 
@@ -305,7 +307,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		onEnter(new Node("ReadPart", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReadPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReadPart.push(true);
 	}
 
@@ -322,7 +324,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		onEnter(new Node("UpdatingPart", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("UpdatingPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUpdatingPart.push(true);
 	}
 
@@ -339,7 +341,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		onEnter(new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUpdatingStartClause.push(true);
 	}
 
@@ -356,7 +358,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		onEnter(new Node("UpdatingClause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("UpdatingClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUpdatingClause.push(true);
 	}
 
@@ -373,7 +375,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReadingClause(com.generator.generators.cypher.parser.CypherParser.ReadingClauseContext arg) {
-		onEnter(new Node("ReadingClause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReadingClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReadingClause.push(true);
 	}
 
@@ -390,7 +392,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterCyper_match(com.generator.generators.cypher.parser.CypherParser.Cyper_matchContext arg) {
-		onEnter(new Node("Cyper_match", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Cyper_match", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCyper_match.push(true);
 	}
 
@@ -407,7 +409,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUnwind(com.generator.generators.cypher.parser.CypherParser.UnwindContext arg) {
-		onEnter(new Node("Unwind", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Unwind", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnwind.push(true);
 	}
 
@@ -424,7 +426,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterMerge(com.generator.generators.cypher.parser.CypherParser.MergeContext arg) {
-		onEnter(new Node("Merge", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Merge", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMerge.push(true);
 	}
 
@@ -441,7 +443,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterMergeAction(com.generator.generators.cypher.parser.CypherParser.MergeActionContext arg) {
-		onEnter(new Node("MergeAction", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MergeAction", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMergeAction.push(true);
 	}
 
@@ -458,7 +460,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterCreate(com.generator.generators.cypher.parser.CypherParser.CreateContext arg) {
-		onEnter(new Node("Create", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Create", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCreate.push(true);
 	}
 
@@ -475,7 +477,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
-		onEnter(new Node("SetItem", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SetItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSetItem.push(true);
 	}
 
@@ -492,7 +494,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterDelete(com.generator.generators.cypher.parser.CypherParser.DeleteContext arg) {
-		onEnter(new Node("Delete", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Delete", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDelete.push(true);
 	}
 
@@ -509,7 +511,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRemove(com.generator.generators.cypher.parser.CypherParser.RemoveContext arg) {
-		onEnter(new Node("Remove", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Remove", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRemove.push(true);
 	}
 
@@ -526,7 +528,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRemoveItem(com.generator.generators.cypher.parser.CypherParser.RemoveItemContext arg) {
-		onEnter(new Node("RemoveItem", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RemoveItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRemoveItem.push(true);
 	}
 
@@ -543,7 +545,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterInQueryCall(com.generator.generators.cypher.parser.CypherParser.InQueryCallContext arg) {
-		onEnter(new Node("InQueryCall", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InQueryCall", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInQueryCall.push(true);
 	}
 
@@ -560,7 +562,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterStandaloneCall(com.generator.generators.cypher.parser.CypherParser.StandaloneCallContext arg) {
-		onEnter(new Node("StandaloneCall", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("StandaloneCall", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStandaloneCall.push(true);
 	}
 
@@ -577,7 +579,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterYieldItems(com.generator.generators.cypher.parser.CypherParser.YieldItemsContext arg) {
-		onEnter(new Node("YieldItems", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("YieldItems", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inYieldItems.push(true);
 	}
 
@@ -594,7 +596,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterYieldItem(com.generator.generators.cypher.parser.CypherParser.YieldItemContext arg) {
-		onEnter(new Node("YieldItem", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("YieldItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inYieldItem.push(true);
 	}
 
@@ -611,7 +613,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterWith(com.generator.generators.cypher.parser.CypherParser.WithContext arg) {
-		onEnter(new Node("With", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("With", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inWith.push(true);
 	}
 
@@ -628,7 +630,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterCypher_return(com.generator.generators.cypher.parser.CypherParser.Cypher_returnContext arg) {
-		onEnter(new Node("Cypher_return", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Cypher_return", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCypher_return.push(true);
 	}
 
@@ -645,7 +647,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnBody(com.generator.generators.cypher.parser.CypherParser.ReturnBodyContext arg) {
-		onEnter(new Node("ReturnBody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReturnBody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReturnBody.push(true);
 	}
 
@@ -662,7 +664,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnItems(com.generator.generators.cypher.parser.CypherParser.ReturnItemsContext arg) {
-		onEnter(new Node("ReturnItems", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReturnItems", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReturnItems.push(true);
 	}
 
@@ -679,7 +681,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReturnItem(com.generator.generators.cypher.parser.CypherParser.ReturnItemContext arg) {
-		onEnter(new Node("ReturnItem", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReturnItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReturnItem.push(true);
 	}
 
@@ -696,7 +698,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterOrder(com.generator.generators.cypher.parser.CypherParser.OrderContext arg) {
-		onEnter(new Node("Order", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Order", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOrder.push(true);
 	}
 
@@ -713,7 +715,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSkip(com.generator.generators.cypher.parser.CypherParser.SkipContext arg) {
-		onEnter(new Node("Skip", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Skip", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSkip.push(true);
 	}
 
@@ -730,7 +732,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterLimit(com.generator.generators.cypher.parser.CypherParser.LimitContext arg) {
-		onEnter(new Node("Limit", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Limit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLimit.push(true);
 	}
 
@@ -747,7 +749,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSortItem(com.generator.generators.cypher.parser.CypherParser.SortItemContext arg) {
-		onEnter(new Node("SortItem", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SortItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSortItem.push(true);
 	}
 
@@ -764,7 +766,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterWhere(com.generator.generators.cypher.parser.CypherParser.WhereContext arg) {
-		onEnter(new Node("Where", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Where", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inWhere.push(true);
 	}
 
@@ -781,7 +783,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPattern(com.generator.generators.cypher.parser.CypherParser.PatternContext arg) {
-		onEnter(new Node("Pattern", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Pattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPattern.push(true);
 	}
 
@@ -798,7 +800,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternPart(com.generator.generators.cypher.parser.CypherParser.PatternPartContext arg) {
-		onEnter(new Node("PatternPart", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PatternPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPatternPart.push(true);
 	}
 
@@ -815,7 +817,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterAnonymousPatternPart(com.generator.generators.cypher.parser.CypherParser.AnonymousPatternPartContext arg) {
-		onEnter(new Node("AnonymousPatternPart", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AnonymousPatternPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAnonymousPatternPart.push(true);
 	}
 
@@ -832,7 +834,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternElement(com.generator.generators.cypher.parser.CypherParser.PatternElementContext arg) {
-		onEnter(new Node("PatternElement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PatternElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPatternElement.push(true);
 	}
 
@@ -849,7 +851,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodePattern(com.generator.generators.cypher.parser.CypherParser.NodePatternContext arg) {
-		onEnter(new Node("NodePattern", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NodePattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNodePattern.push(true);
 	}
 
@@ -866,7 +868,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternElementChain(com.generator.generators.cypher.parser.CypherParser.PatternElementChainContext arg) {
-		onEnter(new Node("PatternElementChain", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PatternElementChain", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPatternElementChain.push(true);
 	}
 
@@ -883,7 +885,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipPatternContext arg) {
-		onEnter(new Node("RelationshipPattern", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RelationshipPattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelationshipPattern.push(true);
 	}
 
@@ -900,7 +902,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipDetail(com.generator.generators.cypher.parser.CypherParser.RelationshipDetailContext arg) {
-		onEnter(new Node("RelationshipDetail", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RelationshipDetail", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelationshipDetail.push(true);
 	}
 
@@ -917,7 +919,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterProperties(com.generator.generators.cypher.parser.CypherParser.PropertiesContext arg) {
-		onEnter(new Node("Properties", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Properties", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inProperties.push(true);
 	}
 
@@ -934,7 +936,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipTypes(com.generator.generators.cypher.parser.CypherParser.RelationshipTypesContext arg) {
-		onEnter(new Node("RelationshipTypes", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RelationshipTypes", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelationshipTypes.push(true);
 	}
 
@@ -951,7 +953,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodeLabels(com.generator.generators.cypher.parser.CypherParser.NodeLabelsContext arg) {
-		onEnter(new Node("NodeLabels", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NodeLabels", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNodeLabels.push(true);
 	}
 
@@ -968,7 +970,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNodeLabel(com.generator.generators.cypher.parser.CypherParser.NodeLabelContext arg) {
-		onEnter(new Node("NodeLabel", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NodeLabel", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNodeLabel.push(true);
 	}
 
@@ -985,7 +987,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRangeLiteral(com.generator.generators.cypher.parser.CypherParser.RangeLiteralContext arg) {
-		onEnter(new Node("RangeLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RangeLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRangeLiteral.push(true);
 	}
 
@@ -1002,7 +1004,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterLabelName(com.generator.generators.cypher.parser.CypherParser.LabelNameContext arg) {
-		onEnter(new Node("LabelName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LabelName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLabelName.push(true);
 	}
 
@@ -1019,7 +1021,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelTypeName(com.generator.generators.cypher.parser.CypherParser.RelTypeNameContext arg) {
-		onEnter(new Node("RelTypeName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RelTypeName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelTypeName.push(true);
 	}
 
@@ -1036,7 +1038,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterOrExpression(com.generator.generators.cypher.parser.CypherParser.OrExpressionContext arg) {
-		onEnter(new Node("OrExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("OrExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOrExpression.push(true);
 	}
 
@@ -1053,7 +1055,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterXorExpression(com.generator.generators.cypher.parser.CypherParser.XorExpressionContext arg) {
-		onEnter(new Node("XorExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("XorExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inXorExpression.push(true);
 	}
 
@@ -1070,7 +1072,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterAndExpression(com.generator.generators.cypher.parser.CypherParser.AndExpressionContext arg) {
-		onEnter(new Node("AndExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AndExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAndExpression.push(true);
 	}
 
@@ -1087,7 +1089,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNotExpression(com.generator.generators.cypher.parser.CypherParser.NotExpressionContext arg) {
-		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNotExpression.push(true);
 	}
 
@@ -1104,7 +1106,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterComparisonExpression(com.generator.generators.cypher.parser.CypherParser.ComparisonExpressionContext arg) {
-		onEnter(new Node("ComparisonExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ComparisonExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inComparisonExpression.push(true);
 	}
 
@@ -1121,7 +1123,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.AddOrSubtractExpressionContext arg) {
-		onEnter(new Node("AddOrSubtractExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AddOrSubtractExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAddOrSubtractExpression.push(true);
 	}
 
@@ -1138,7 +1140,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterMultiplyDivideModuloExpression(com.generator.generators.cypher.parser.CypherParser.MultiplyDivideModuloExpressionContext arg) {
-		onEnter(new Node("MultiplyDivideModuloExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MultiplyDivideModuloExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMultiplyDivideModuloExpression.push(true);
 	}
 
@@ -1155,7 +1157,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPowerOfExpression(com.generator.generators.cypher.parser.CypherParser.PowerOfExpressionContext arg) {
-		onEnter(new Node("PowerOfExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PowerOfExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPowerOfExpression.push(true);
 	}
 
@@ -1172,7 +1174,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterUnaryAddOrSubtractExpression(com.generator.generators.cypher.parser.CypherParser.UnaryAddOrSubtractExpressionContext arg) {
-		onEnter(new Node("UnaryAddOrSubtractExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("UnaryAddOrSubtractExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnaryAddOrSubtractExpression.push(true);
 	}
 
@@ -1189,7 +1191,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterStringListNullOperatorExpression(com.generator.generators.cypher.parser.CypherParser.StringListNullOperatorExpressionContext arg) {
-		onEnter(new Node("StringListNullOperatorExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("StringListNullOperatorExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStringListNullOperatorExpression.push(true);
 	}
 
@@ -1206,7 +1208,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyOrLabelsExpression(com.generator.generators.cypher.parser.CypherParser.PropertyOrLabelsExpressionContext arg) {
-		onEnter(new Node("PropertyOrLabelsExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyOrLabelsExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyOrLabelsExpression.push(true);
 	}
 
@@ -1223,7 +1225,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterBooleanLiteral(com.generator.generators.cypher.parser.CypherParser.BooleanLiteralContext arg) {
-		onEnter(new Node("BooleanLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("BooleanLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBooleanLiteral.push(true);
 	}
 
@@ -1240,7 +1242,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterListLiteral(com.generator.generators.cypher.parser.CypherParser.ListLiteralContext arg) {
-		onEnter(new Node("ListLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ListLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inListLiteral.push(true);
 	}
 
@@ -1257,7 +1259,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPartialComparisonExpression(com.generator.generators.cypher.parser.CypherParser.PartialComparisonExpressionContext arg) {
-		onEnter(new Node("PartialComparisonExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PartialComparisonExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPartialComparisonExpression.push(true);
 	}
 
@@ -1274,7 +1276,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterParenthesizedExpression(com.generator.generators.cypher.parser.CypherParser.ParenthesizedExpressionContext arg) {
-		onEnter(new Node("ParenthesizedExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ParenthesizedExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParenthesizedExpression.push(true);
 	}
 
@@ -1291,7 +1293,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRelationshipsPattern(com.generator.generators.cypher.parser.CypherParser.RelationshipsPatternContext arg) {
-		onEnter(new Node("RelationshipsPattern", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RelationshipsPattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelationshipsPattern.push(true);
 	}
 
@@ -1308,7 +1310,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterFilterExpression(com.generator.generators.cypher.parser.CypherParser.FilterExpressionContext arg) {
-		onEnter(new Node("FilterExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FilterExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFilterExpression.push(true);
 	}
 
@@ -1325,7 +1327,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterIdInColl(com.generator.generators.cypher.parser.CypherParser.IdInCollContext arg) {
-		onEnter(new Node("IdInColl", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("IdInColl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIdInColl.push(true);
 	}
 
@@ -1342,7 +1344,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterFunctionInvocation(com.generator.generators.cypher.parser.CypherParser.FunctionInvocationContext arg) {
-		onEnter(new Node("FunctionInvocation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FunctionInvocation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctionInvocation.push(true);
 	}
 
@@ -1359,7 +1361,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterFunctionName(com.generator.generators.cypher.parser.CypherParser.FunctionNameContext arg) {
-		onEnter(new Node("FunctionName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FunctionName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctionName.push(true);
 	}
 
@@ -1376,7 +1378,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterExplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ExplicitProcedureInvocationContext arg) {
-		onEnter(new Node("ExplicitProcedureInvocation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ExplicitProcedureInvocation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExplicitProcedureInvocation.push(true);
 	}
 
@@ -1393,7 +1395,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterImplicitProcedureInvocation(com.generator.generators.cypher.parser.CypherParser.ImplicitProcedureInvocationContext arg) {
-		onEnter(new Node("ImplicitProcedureInvocation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ImplicitProcedureInvocation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inImplicitProcedureInvocation.push(true);
 	}
 
@@ -1410,7 +1412,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterProcedureResultField(com.generator.generators.cypher.parser.CypherParser.ProcedureResultFieldContext arg) {
-		onEnter(new Node("ProcedureResultField", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ProcedureResultField", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inProcedureResultField.push(true);
 	}
 
@@ -1427,7 +1429,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterProcedureName(com.generator.generators.cypher.parser.CypherParser.ProcedureNameContext arg) {
-		onEnter(new Node("ProcedureName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ProcedureName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inProcedureName.push(true);
 	}
 
@@ -1444,7 +1446,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNamespace(com.generator.generators.cypher.parser.CypherParser.NamespaceContext arg) {
-		onEnter(new Node("Namespace", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespace", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespace.push(true);
 	}
 
@@ -1461,7 +1463,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterListComprehension(com.generator.generators.cypher.parser.CypherParser.ListComprehensionContext arg) {
-		onEnter(new Node("ListComprehension", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ListComprehension", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inListComprehension.push(true);
 	}
 
@@ -1478,7 +1480,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPatternComprehension(com.generator.generators.cypher.parser.CypherParser.PatternComprehensionContext arg) {
-		onEnter(new Node("PatternComprehension", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PatternComprehension", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPatternComprehension.push(true);
 	}
 
@@ -1495,7 +1497,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyLookup(com.generator.generators.cypher.parser.CypherParser.PropertyLookupContext arg) {
-		onEnter(new Node("PropertyLookup", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyLookup", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyLookup.push(true);
 	}
 
@@ -1512,7 +1514,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterCaseExpression(com.generator.generators.cypher.parser.CypherParser.CaseExpressionContext arg) {
-		onEnter(new Node("CaseExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CaseExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCaseExpression.push(true);
 	}
 
@@ -1529,7 +1531,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterCaseAlternatives(com.generator.generators.cypher.parser.CypherParser.CaseAlternativesContext arg) {
-		onEnter(new Node("CaseAlternatives", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CaseAlternatives", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCaseAlternatives.push(true);
 	}
 
@@ -1546,7 +1548,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterVariable(com.generator.generators.cypher.parser.CypherParser.VariableContext arg) {
-		onEnter(new Node("Variable", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Variable", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVariable.push(true);
 	}
 
@@ -1563,7 +1565,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterNumberLiteral(com.generator.generators.cypher.parser.CypherParser.NumberLiteralContext arg) {
-		onEnter(new Node("NumberLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("NumberLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNumberLiteral.push(true);
 	}
 
@@ -1580,7 +1582,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterMapLiteral(com.generator.generators.cypher.parser.CypherParser.MapLiteralContext arg) {
-		onEnter(new Node("MapLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MapLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMapLiteral.push(true);
 	}
 
@@ -1597,7 +1599,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterParameter(com.generator.generators.cypher.parser.CypherParser.ParameterContext arg) {
-		onEnter(new Node("Parameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Parameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParameter.push(true);
 	}
 
@@ -1614,7 +1616,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyExpression(com.generator.generators.cypher.parser.CypherParser.PropertyExpressionContext arg) {
-		onEnter(new Node("PropertyExpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyExpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyExpression.push(true);
 	}
 
@@ -1631,7 +1633,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterPropertyKeyName(com.generator.generators.cypher.parser.CypherParser.PropertyKeyNameContext arg) {
-		onEnter(new Node("PropertyKeyName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyKeyName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyKeyName.push(true);
 	}
 
@@ -1648,7 +1650,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterIntegerLiteral(com.generator.generators.cypher.parser.CypherParser.IntegerLiteralContext arg) {
-		onEnter(new Node("IntegerLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("IntegerLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIntegerLiteral.push(true);
 	}
 
@@ -1665,7 +1667,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterDoubleLiteral(com.generator.generators.cypher.parser.CypherParser.DoubleLiteralContext arg) {
-		onEnter(new Node("DoubleLiteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("DoubleLiteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDoubleLiteral.push(true);
 	}
 
@@ -1682,7 +1684,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSchemaName(com.generator.generators.cypher.parser.CypherParser.SchemaNameContext arg) {
-		onEnter(new Node("SchemaName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SchemaName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSchemaName.push(true);
 	}
 
@@ -1699,7 +1701,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterReservedWord(com.generator.generators.cypher.parser.CypherParser.ReservedWordContext arg) {
-		onEnter(new Node("ReservedWord", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ReservedWord", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReservedWord.push(true);
 	}
 
@@ -1716,7 +1718,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterSymbolicName(com.generator.generators.cypher.parser.CypherParser.SymbolicNameContext arg) {
-		onEnter(new Node("SymbolicName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("SymbolicName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSymbolicName.push(true);
 	}
 
@@ -1733,7 +1735,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterLeftArrowHead(com.generator.generators.cypher.parser.CypherParser.LeftArrowHeadContext arg) {
-		onEnter(new Node("LeftArrowHead", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("LeftArrowHead", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLeftArrowHead.push(true);
 	}
 
@@ -1750,7 +1752,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterRightArrowHead(com.generator.generators.cypher.parser.CypherParser.RightArrowHeadContext arg) {
-		onEnter(new Node("RightArrowHead", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RightArrowHead", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRightArrowHead.push(true);
 	}
 
@@ -1767,7 +1769,7 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	@Override
 	public void enterDash(com.generator.generators.cypher.parser.CypherParser.DashContext arg) {
-		onEnter(new Node("Dash", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Dash", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDash.push(true);
 	}
 

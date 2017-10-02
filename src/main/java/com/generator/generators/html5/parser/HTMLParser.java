@@ -91,23 +91,6 @@ public class HTMLParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
-
-
-	public static TokenStream createLexer(java.io.Reader reader) throws java.io.IOException {
-		final ANTLRInputStream input = new ANTLRInputStream(reader);
-		final HTMLLexer lexer = new HTMLLexer(input);
-		return new CommonTokenStream(lexer);
-	}
-
-	public static void visit(java.io.Reader reader, HTMLParserVisitor<?> visitor) throws java.io.IOException {
-		final ANTLRInputStream input = new ANTLRInputStream(reader);
-	    final HTMLLexer lexer = new HTMLLexer(input);
-	    final CommonTokenStream stream = new CommonTokenStream(lexer);
-	    final HTMLParser parser = new HTMLParser(stream);
-	    final HtmlDocumentContext tree = parser.htmlDocument();
-	    visitor.visit(tree);
-	}
-
 	public HTMLParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);

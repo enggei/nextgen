@@ -43,7 +43,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPropertiesFile.push(true);
 	}
@@ -61,7 +61,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Decl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inDecl.push(true);
 	}
@@ -79,7 +79,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inComment.push(true);
 	}
@@ -97,7 +97,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inRow.push(true);
 	}
@@ -115,7 +115,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inValue.push(true);
 	}
@@ -133,7 +133,7 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	@Override
 	public void enterKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Key"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKey.push(true);
 	}

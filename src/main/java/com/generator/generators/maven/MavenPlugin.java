@@ -71,17 +71,22 @@ public class MavenPlugin extends Plugin {
             final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("200dlu:grow", "100:grow");
             editor.add(new JScrollPane(txtXml), 1, 1);
 
-            SwingUtil.showDialog(editor, app, "Paste any element from pom", () -> getGraph().doInTransaction(new NeoModel.Committer() {
+            SwingUtil.showDialog(editor, app, "Paste any element from pom", new SwingUtil.ConfirmAction() {
                @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  fireNodesLoaded(traverse(parseXml(txtXml.getText().trim()), null));
-               }
+               public void verifyAndCommit() throws Exception {
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+                        fireNodesLoaded(traverse(parseXml(txtXml.getText().trim()), null));
+                     }
 
-               @Override
-               public void exception(Throwable throwable) {
-                  SwingUtil.showExceptionNoStack(app, throwable);
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
                }
-            }));
+            });
          }
       });
    }

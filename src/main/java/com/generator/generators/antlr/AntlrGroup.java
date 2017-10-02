@@ -66,8 +66,16 @@ public final class AntlrGroup {
       return new ruleST(stGroup);
    }
 
-   public fragmentST newfragment() {
-      return new fragmentST(stGroup);
+   public DomainElementST newDomainElement() {
+      return new DomainElementST(stGroup);
+   }
+
+   public DomainST newDomain() {
+      return new DomainST(stGroup);
+   }
+
+   public blockST newblock() {
+      return new blockST(stGroup);
    }
 
    public final class NeoListenerST implements AntlrGroupTemplate {
@@ -156,7 +164,6 @@ public final class AntlrGroup {
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _options = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _rules = new java.util.LinkedHashSet<>();
-      private java.util.Set<Object> _fragments = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
@@ -206,20 +213,6 @@ public final class AntlrGroup {
 
       public java.util.Set<Object> getRulesValues() {
       	return this._rules;
-      }
-
-      public grammarST addFragmentsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._fragments.add(value);
-      	template.add("fragments", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getFragmentsValues() {
-      	return this._fragments;
       }
 
       @Override
@@ -473,29 +466,15 @@ public final class AntlrGroup {
 
    public final class ruleST implements AntlrGroupTemplate {
 
-      private java.util.Set<Object> _alternatives = new java.util.LinkedHashSet<>();
       private Object _name;
       private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _alternatives = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
       private ruleST(STGroup group) {
    		template = group.getInstanceOf("rule");
    	}
-
-      public ruleST addAlternativesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._alternatives.add(value);
-      	template.add("alternatives", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getAlternativesValues() {
-      	return this._alternatives;
-      }
 
       public ruleST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
@@ -527,25 +506,7 @@ public final class AntlrGroup {
       	return this._comments;
       }
 
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class fragmentST implements AntlrGroupTemplate {
-
-      private java.util.Set<Object> _alternatives = new java.util.LinkedHashSet<>();
-      private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
-      private Object _name;
-
-      private final ST template;
-
-      private fragmentST(STGroup group) {
-   		template = group.getInstanceOf("fragment");
-   	}
-
-      public fragmentST addAlternativesValue(Object value) {
+      public ruleST addAlternativesValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -559,21 +520,40 @@ public final class AntlrGroup {
       	return this._alternatives;
       }
 
-      public fragmentST addCommentsValue(Object value) {
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DomainElementST implements AntlrGroupTemplate {
+
+      private Object _domain;
+      private Object _name;
+
+      private final ST template;
+
+      private DomainElementST(STGroup group) {
+   		template = group.getInstanceOf("DomainElement");
+   	}
+
+      public DomainElementST setDomain(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
-      	this._comments.add(value);
-      	template.add("comments", value);
+      	if (this._domain == null) {
+            this._domain = value;
+         	template.add("domain", value);
+         }
 
-         return this;
+      	return this;
       }
 
-      public java.util.Set<Object> getCommentsValues() {
-      	return this._comments;
+      public String getDomain() {
+      	return (String) this._domain;
       }
 
-      public fragmentST setName(Object value) {
+      public DomainElementST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -587,6 +567,117 @@ public final class AntlrGroup {
 
       public String getName() {
       	return (String) this._name;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class DomainST implements AntlrGroupTemplate {
+
+      private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private Object _package;
+
+      private final ST template;
+
+      private DomainST(STGroup group) {
+   		template = group.getInstanceOf("Domain");
+   	}
+
+      public DomainST addElementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._elements.add(value);
+      	template.add("elements", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getElementsValues() {
+      	return this._elements;
+      }
+
+      public DomainST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public DomainST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class blockST implements AntlrGroupTemplate {
+
+      private Object _ebnfSuffix;
+      private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private blockST(STGroup group) {
+   		template = group.getInstanceOf("block");
+   	}
+
+      public blockST setEbnfSuffix(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._ebnfSuffix == null) {
+            this._ebnfSuffix = value;
+         	template.add("ebnfSuffix", value);
+         }
+
+      	return this;
+      }
+
+      public String getEbnfSuffix() {
+      	return (String) this._ebnfSuffix;
+      }
+
+      public blockST addElementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._elements.add(value);
+      	template.add("elements", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getElementsValues() {
+      	return this._elements;
       }
 
       @Override
@@ -771,7 +862,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText());\n" + 
+		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endtoken\", arg.getStop().getText());\n" + 
 		"		onEnter(node);\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
@@ -786,7 +877,7 @@ public final class AntlrGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("grammar(name,options,rules,fragments) ::= <<parser grammar ~name~;\n" + 
+			.append("grammar(name,options,rules) ::= <<grammar ~name~;\n" + 
 		"\n" + 
 		"~if(options)~\n" + 
 		"options\n" + 
@@ -794,9 +885,6 @@ public final class AntlrGroup {
 		"~endif~\n" + 
 		"\n" + 
 		"~rules:{it|\n" + 
-		"~it~};separator=\"\\n\\n\"~\n" + 
-		"\n" + 
-		"~fragments:{it|\n" + 
 		"~it~};separator=\"\\n\\n\"~>>\n")
 			.append("NeoVisitor(packageName,parser,methods,name) ::= <<package ~packageName~;\n" + 
 		"\n" + 
@@ -831,7 +919,7 @@ public final class AntlrGroup {
 		"	@Override\n" + 
 		"	public Node visit~it.name~(~it.param~ arg) {\n" + 
 		"		System.out.println(\"~it.name~\");\n" + 
-		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText());\n" + 
+		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
 		"      onEnter(node);\n" + 
 		"      visitChildren(arg);\n" + 
 		"      onExit();\n" + 
@@ -847,11 +935,15 @@ public final class AntlrGroup {
 		"\n" + 
 		"      public final String name;\n" + 
 		"      public final String value;\n" + 
+		"      public final String startToken;\n" + 
+		"      public final String endToken;\n" + 
 		"      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();\n" + 
 		"\n" + 
-		"      public Node(String name, String value) {\n" + 
+		"      public Node(String name, String value, String startToken, String endToken) {\n" + 
 		"         this.name = name;\n" + 
 		"         this.value = value;\n" + 
+		"			this.startToken = startToken;\n" + 
+		"			this.endToken = endToken;\n" + 
 		"      }\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -870,7 +962,7 @@ public final class AntlrGroup {
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
+		"				if (debug) System.out.println(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -888,7 +980,7 @@ public final class AntlrGroup {
 		"~methods:{it|\n" + 
 		"	@Override\n" + 
 		"	public Node visit~it.name~(~it.param~ arg) {\n" + 
-		"		final Node node = new Node(\"~it.name~\", arg.getText());\n" + 
+		"		final Node node = new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
 		"		onEnter(node);\n" + 
 		"      visitChildren(arg);\n" + 
 		"      onExit();\n" + 
@@ -905,12 +997,14 @@ public final class AntlrGroup {
 		"      public final String name;\n" + 
 		"      public final String value;\n" + 
 		"      public final String startToken;\n" + 
+		"      public final String endToken;\n" + 
 		"      public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();\n" + 
 		"\n" + 
-		"      public Node(String name, String value, String startToken) {\n" + 
+		"      public Node(String name, String value, String startToken, String endToken) {\n" + 
 		"         this.name = name;\n" + 
 		"         this.value = value;\n" + 
 		"			this.startToken = startToken;\n" + 
+		"			this.endToken = endToken;\n" + 
 		"      }\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -929,7 +1023,7 @@ public final class AntlrGroup {
 		"   protected void onEnter(Node node) {\n" + 
 		"      if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);\n" + 
 		"      nodeStack.push(node);\n" + 
-		"		if (debug) System.out.println(delim.toString() + node.name + \" '\" + node.value + \"'\");\n" + 
+		"		if (debug) System.out.println(delim.toString() + node.name + \" : (\" + nodeStack.peek().startToken + \") (\" + node.value + \") (\" + nodeStack.peek().endToken + \")\");\n" + 
 		"		delim.append(\"\\t\");\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -949,7 +1043,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText()));\n" + 
+		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
@@ -963,14 +1057,24 @@ public final class AntlrGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("rule(alternatives,name,comments) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
+			.append("rule(name,comments,alternatives) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
 		"~name~\n" + 
 		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
 		"	;>>\n")
-			.append("fragment(alternatives,comments,name) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
-		"fragment\n" + 
-		"~name~\n" + 
-		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
-		"	;>>\n")
+			.append("DomainElement(domain,name) ::= <<public final class ~name~ extends ~domain~Symbol {\n" + 
+		"      \n" + 
+		"}>>\n")
+			.append("Domain(elements,name,package) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"public class ~name~ {\n" + 
+		" \n" + 
+		"   public class ~name~Symbol {\n" + 
+		"      \n" + 
+		"   }\n" + 
+		"~elements:{it|\n" + 
+		"   ~it~\n" + 
+		"};separator=\"\\n\"~   \n" + 
+		"}>>\n")
+			.append("block(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
 		.toString();
 }

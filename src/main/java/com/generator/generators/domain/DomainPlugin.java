@@ -193,27 +193,32 @@ public class DomainPlugin extends Plugin {
                editor.add(txtEntityName, 3, 5);
                editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-               SwingUtil.showDialog(editor, app, "New Relation", () -> getGraph().doInTransaction(new NeoModel.Committer() {
+               SwingUtil.showDialog(editor, app, "New Relation", new SwingUtil.ConfirmAction() {
                   @Override
-                  public void doAction(Transaction tx14) throws Throwable {
+                  public void verifyAndCommit() throws Exception {
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx14) throws Throwable {
 
-                     final String name = StringUtil.toUpper(txtName.getText().trim());
-                     final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
+                           final String name = StringUtil.toUpper(txtName.getText().trim());
+                           final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
 
-                     if (name.length() == 0)
-                        throw new IllegalStateException("Relation Name is required");
-                     if (txtEntityName.getText().trim().length() == 0)
-                        throw new IllegalStateException("Entity must have a name");
+                           if (name.length() == 0)
+                              throw new IllegalStateException("Relation Name is required");
+                           if (txtEntityName.getText().trim().length() == 0)
+                              throw new IllegalStateException("Entity must have a name");
 
-                     final Node newEntityNode = getGraph().findOrCreate(Entities.Entity, AppMotif.Properties.name.name(), txtEntityName.getText().trim());
-                     fireNodesLoaded(newEntityNode, DomainMotif.newEntityRelation(getGraph(),node, name, relationCardinality, newEntityNode));
+                           final Node newEntityNode = getGraph().findOrCreate(Entities.Entity, AppMotif.Properties.name.name(), txtEntityName.getText().trim());
+                           fireNodesLoaded(newEntityNode, DomainMotif.newEntityRelation(getGraph(), node, name, relationCardinality, newEntityNode));
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showException(editor, throwable);
+                        }
+                     });
                   }
-
-                  @Override
-                  public void exception(Throwable throwable) {
-                     SwingUtil.showException(editor, throwable);
-                  }
-               }));
+               });
             }
          });
 
@@ -235,24 +240,29 @@ public class DomainPlugin extends Plugin {
                         editor.addLabel("Cardinality", 1, 3);
                         editor.add(cboCardinality, 3, 3);
 
-                        SwingUtil.showDialog(editor, app, "Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(node), () -> getGraph().doInTransaction(new NeoModel.Committer() {
+                        SwingUtil.showDialog(editor, app, "Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(node), new SwingUtil.ConfirmAction() {
                            @Override
-                           public void doAction(Transaction tx14) throws Throwable {
+                           public void verifyAndCommit() throws Exception {
+                              getGraph().doInTransaction(new NeoModel.Committer() {
+                                 @Override
+                                 public void doAction(Transaction tx14) throws Throwable {
 
-                              final String name = StringUtil.toUpper(txtName.getText().trim());
-                              final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
+                                    final String name = StringUtil.toUpper(txtName.getText().trim());
+                                    final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
 
-                              if (name.length() == 0)
-                                 throw new IllegalStateException("Relation Name is required");
+                                    if (name.length() == 0)
+                                       throw new IllegalStateException("Relation Name is required");
 
-                              fireNodesLoaded(DomainMotif.newEntityRelation(getGraph(),selectedNode.getNode(), name, relationCardinality, node));
+                                    fireNodesLoaded(DomainMotif.newEntityRelation(getGraph(), selectedNode.getNode(), name, relationCardinality, node));
+                                 }
+
+                                 @Override
+                                 public void exception(Throwable throwable) {
+                                    SwingUtil.showException(editor, throwable);
+                                 }
+                              });
                            }
-
-                           @Override
-                           public void exception(Throwable throwable) {
-                              SwingUtil.showException(editor, throwable);
-                           }
-                        }));
+                        });
                      }
                   });
 
@@ -300,7 +310,7 @@ public class DomainPlugin extends Plugin {
                }
 
                final Node newPropertyNode = getGraph().newNode(Entities.Property, AppMotif.Properties.name.name(), name);
-               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(),node, name, RelationCardinality.SINGLE, newPropertyNode));
+               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(), node, name, RelationCardinality.SINGLE, newPropertyNode));
             }
          });
 
@@ -467,9 +477,9 @@ public class DomainPlugin extends Plugin {
                               row += 2;
                            }
 
-                           SwingUtil.showDialog(editor, app, "Values", new SwingUtil.OnSave() {
+                           SwingUtil.showDialog(editor, app, "Values", new SwingUtil.ConfirmAction() {
                               @Override
-                              public void verifyAndSave() throws Exception {
+                              public void verifyAndCommit() throws Exception {
 
                                  getGraph().doInTransaction(new NeoModel.Committer() {
                                     @Override
@@ -559,9 +569,9 @@ public class DomainPlugin extends Plugin {
                      }
                      editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-                     SwingUtil.showDialog(editor, app, "Set Properties", new SwingUtil.OnSave() {
+                     SwingUtil.showDialog(editor, app, "Set Properties", new SwingUtil.ConfirmAction() {
                         @Override
-                        public void verifyAndSave() throws Exception {
+                        public void verifyAndCommit() throws Exception {
                            getGraph().doInTransaction(new NeoModel.Committer() {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
@@ -667,9 +677,9 @@ public class DomainPlugin extends Plugin {
       }
       editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-      SwingUtil.showDialog(editor, app, "New " + getNameAndLabelsFrom(instanceNode), new SwingUtil.OnSave() {
+      SwingUtil.showDialog(editor, app, "New " + getNameAndLabelsFrom(instanceNode), new SwingUtil.ConfirmAction() {
          @Override
-         public void verifyAndSave() throws Exception {
+         public void verifyAndCommit() throws Exception {
             getGraph().doInTransaction(new NeoModel.Committer() {
                @Override
                public void doAction(Transaction tx) throws Throwable {

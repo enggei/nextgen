@@ -7,12 +7,14 @@ public class CPP14NodeListener extends CPP14BaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,28 +48,11 @@ public class CPP14NodeListener extends CPP14BaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inTranslationunit = new java.util.Stack<>();
 
 	@Override
 	public void enterTranslationunit(com.generator.generators.cpp.parser.CPP14Parser.TranslationunitContext arg) {
-		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Translationunit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTranslationunit.push(true);
 	}
 
@@ -84,7 +69,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Primaryexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPrimaryexpression.push(true);
 	}
 
@@ -101,7 +86,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Idexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIdexpression.push(true);
 	}
 
@@ -118,7 +103,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Unqualifiedid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnqualifiedid.push(true);
 	}
 
@@ -135,7 +120,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Qualifiedid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiedid.push(true);
 	}
 
@@ -152,7 +137,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Nestednamespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNestednamespecifier.push(true);
 	}
 
@@ -169,7 +154,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdaexpression(com.generator.generators.cpp.parser.CPP14Parser.LambdaexpressionContext arg) {
-		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Lambdaexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdaexpression.push(true);
 	}
 
@@ -186,7 +171,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdaintroducer(com.generator.generators.cpp.parser.CPP14Parser.LambdaintroducerContext arg) {
-		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Lambdaintroducer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdaintroducer.push(true);
 	}
 
@@ -203,7 +188,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdacapture(com.generator.generators.cpp.parser.CPP14Parser.LambdacaptureContext arg) {
-		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Lambdacapture", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdacapture.push(true);
 	}
 
@@ -220,7 +205,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapturedefault(com.generator.generators.cpp.parser.CPP14Parser.CapturedefaultContext arg) {
-		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Capturedefault", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCapturedefault.push(true);
 	}
 
@@ -237,7 +222,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapturelist(com.generator.generators.cpp.parser.CPP14Parser.CapturelistContext arg) {
-		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Capturelist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCapturelist.push(true);
 	}
 
@@ -254,7 +239,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCapture(com.generator.generators.cpp.parser.CPP14Parser.CaptureContext arg) {
-		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Capture", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCapture.push(true);
 	}
 
@@ -271,7 +256,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimplecapture(com.generator.generators.cpp.parser.CPP14Parser.SimplecaptureContext arg) {
-		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Simplecapture", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSimplecapture.push(true);
 	}
 
@@ -288,7 +273,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitcapture(com.generator.generators.cpp.parser.CPP14Parser.InitcaptureContext arg) {
-		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initcapture", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitcapture.push(true);
 	}
 
@@ -305,7 +290,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLambdadeclarator(com.generator.generators.cpp.parser.CPP14Parser.LambdadeclaratorContext arg) {
-		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Lambdadeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLambdadeclarator.push(true);
 	}
 
@@ -322,7 +307,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPostfixexpression(com.generator.generators.cpp.parser.CPP14Parser.PostfixexpressionContext arg) {
-		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Postfixexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPostfixexpression.push(true);
 	}
 
@@ -339,7 +324,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExpressionlist(com.generator.generators.cpp.parser.CPP14Parser.ExpressionlistContext arg) {
-		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Expressionlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExpressionlist.push(true);
 	}
 
@@ -356,7 +341,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPseudodestructorname(com.generator.generators.cpp.parser.CPP14Parser.PseudodestructornameContext arg) {
-		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Pseudodestructorname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPseudodestructorname.push(true);
 	}
 
@@ -373,7 +358,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnaryexpression(com.generator.generators.cpp.parser.CPP14Parser.UnaryexpressionContext arg) {
-		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Unaryexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnaryexpression.push(true);
 	}
 
@@ -390,7 +375,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnaryoperator(com.generator.generators.cpp.parser.CPP14Parser.UnaryoperatorContext arg) {
-		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Unaryoperator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnaryoperator.push(true);
 	}
 
@@ -407,7 +392,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewexpression(com.generator.generators.cpp.parser.CPP14Parser.NewexpressionContext arg) {
-		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Newexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNewexpression.push(true);
 	}
 
@@ -424,7 +409,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewplacement(com.generator.generators.cpp.parser.CPP14Parser.NewplacementContext arg) {
-		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Newplacement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNewplacement.push(true);
 	}
 
@@ -441,7 +426,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewtypeid(com.generator.generators.cpp.parser.CPP14Parser.NewtypeidContext arg) {
-		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Newtypeid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNewtypeid.push(true);
 	}
 
@@ -458,7 +443,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NewdeclaratorContext arg) {
-		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Newdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNewdeclarator.push(true);
 	}
 
@@ -475,7 +460,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrnewdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrnewdeclaratorContext arg) {
-		onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noptrnewdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoptrnewdeclarator.push(true);
 	}
 
@@ -492,7 +477,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNewinitializer(com.generator.generators.cpp.parser.CPP14Parser.NewinitializerContext arg) {
-		onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Newinitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNewinitializer.push(true);
 	}
 
@@ -509,7 +494,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeleteexpression(com.generator.generators.cpp.parser.CPP14Parser.DeleteexpressionContext arg) {
-		onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Deleteexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeleteexpression.push(true);
 	}
 
@@ -526,7 +511,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoexceptexpression(com.generator.generators.cpp.parser.CPP14Parser.NoexceptexpressionContext arg) {
-		onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noexceptexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoexceptexpression.push(true);
 	}
 
@@ -543,7 +528,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCastexpression(com.generator.generators.cpp.parser.CPP14Parser.CastexpressionContext arg) {
-		onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Castexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCastexpression.push(true);
 	}
 
@@ -560,7 +545,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPmexpression(com.generator.generators.cpp.parser.CPP14Parser.PmexpressionContext arg) {
-		onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Pmexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPmexpression.push(true);
 	}
 
@@ -577,7 +562,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMultiplicativeexpression(com.generator.generators.cpp.parser.CPP14Parser.MultiplicativeexpressionContext arg) {
-		onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Multiplicativeexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMultiplicativeexpression.push(true);
 	}
 
@@ -594,7 +579,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAdditiveexpression(com.generator.generators.cpp.parser.CPP14Parser.AdditiveexpressionContext arg) {
-		onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Additiveexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAdditiveexpression.push(true);
 	}
 
@@ -611,7 +596,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterShiftexpression(com.generator.generators.cpp.parser.CPP14Parser.ShiftexpressionContext arg) {
-		onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Shiftexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inShiftexpression.push(true);
 	}
 
@@ -628,7 +613,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRelationalexpression(com.generator.generators.cpp.parser.CPP14Parser.RelationalexpressionContext arg) {
-		onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Relationalexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRelationalexpression.push(true);
 	}
 
@@ -645,7 +630,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEqualityexpression(com.generator.generators.cpp.parser.CPP14Parser.EqualityexpressionContext arg) {
-		onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Equalityexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEqualityexpression.push(true);
 	}
 
@@ -662,7 +647,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAndexpression(com.generator.generators.cpp.parser.CPP14Parser.AndexpressionContext arg) {
-		onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Andexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAndexpression.push(true);
 	}
 
@@ -675,28 +660,11 @@ public class CPP14NodeListener extends CPP14BaseListener {
       return !inAndexpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText()));
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
 
 	@Override
 	public void enterExclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.ExclusiveorexpressionContext arg) {
-		onEnter(new Node("Exclusiveorexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Exclusiveorexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExclusiveorexpression.push(true);
 	}
 
@@ -713,7 +681,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInclusiveorexpression(com.generator.generators.cpp.parser.CPP14Parser.InclusiveorexpressionContext arg) {
-		onEnter(new Node("Inclusiveorexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Inclusiveorexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInclusiveorexpression.push(true);
 	}
 
@@ -730,7 +698,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLogicalandexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalandexpressionContext arg) {
-		onEnter(new Node("Logicalandexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Logicalandexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLogicalandexpression.push(true);
 	}
 
@@ -747,7 +715,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLogicalorexpression(com.generator.generators.cpp.parser.CPP14Parser.LogicalorexpressionContext arg) {
-		onEnter(new Node("Logicalorexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Logicalorexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLogicalorexpression.push(true);
 	}
 
@@ -764,7 +732,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConditionalexpression(com.generator.generators.cpp.parser.CPP14Parser.ConditionalexpressionContext arg) {
-		onEnter(new Node("Conditionalexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Conditionalexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConditionalexpression.push(true);
 	}
 
@@ -781,7 +749,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAssignmentexpression(com.generator.generators.cpp.parser.CPP14Parser.AssignmentexpressionContext arg) {
-		onEnter(new Node("Assignmentexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Assignmentexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAssignmentexpression.push(true);
 	}
 
@@ -798,7 +766,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAssignmentoperator(com.generator.generators.cpp.parser.CPP14Parser.AssignmentoperatorContext arg) {
-		onEnter(new Node("Assignmentoperator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Assignmentoperator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAssignmentoperator.push(true);
 	}
 
@@ -811,11 +779,28 @@ public class CPP14NodeListener extends CPP14BaseListener {
       return !inAssignmentoperator.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();
 
 	@Override
 	public void enterConstantexpression(com.generator.generators.cpp.parser.CPP14Parser.ConstantexpressionContext arg) {
-		onEnter(new Node("Constantexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Constantexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConstantexpression.push(true);
 	}
 
@@ -832,7 +817,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.cpp.parser.CPP14Parser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStatement.push(true);
 	}
 
@@ -849,7 +834,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLabeledstatement(com.generator.generators.cpp.parser.CPP14Parser.LabeledstatementContext arg) {
-		onEnter(new Node("Labeledstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Labeledstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLabeledstatement.push(true);
 	}
 
@@ -866,7 +851,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExpressionstatement(com.generator.generators.cpp.parser.CPP14Parser.ExpressionstatementContext arg) {
-		onEnter(new Node("Expressionstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Expressionstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExpressionstatement.push(true);
 	}
 
@@ -883,7 +868,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCompoundstatement(com.generator.generators.cpp.parser.CPP14Parser.CompoundstatementContext arg) {
-		onEnter(new Node("Compoundstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Compoundstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCompoundstatement.push(true);
 	}
 
@@ -900,7 +885,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatementseq(com.generator.generators.cpp.parser.CPP14Parser.StatementseqContext arg) {
-		onEnter(new Node("Statementseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Statementseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStatementseq.push(true);
 	}
 
@@ -917,7 +902,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSelectionstatement(com.generator.generators.cpp.parser.CPP14Parser.SelectionstatementContext arg) {
-		onEnter(new Node("Selectionstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Selectionstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSelectionstatement.push(true);
 	}
 
@@ -934,7 +919,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCondition(com.generator.generators.cpp.parser.CPP14Parser.ConditionContext arg) {
-		onEnter(new Node("Condition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Condition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCondition.push(true);
 	}
 
@@ -951,7 +936,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterIterationstatement(com.generator.generators.cpp.parser.CPP14Parser.IterationstatementContext arg) {
-		onEnter(new Node("Iterationstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Iterationstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIterationstatement.push(true);
 	}
 
@@ -968,7 +953,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForinitstatement(com.generator.generators.cpp.parser.CPP14Parser.ForinitstatementContext arg) {
-		onEnter(new Node("Forinitstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Forinitstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inForinitstatement.push(true);
 	}
 
@@ -985,7 +970,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForrangedeclaration(com.generator.generators.cpp.parser.CPP14Parser.ForrangedeclarationContext arg) {
-		onEnter(new Node("Forrangedeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Forrangedeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inForrangedeclaration.push(true);
 	}
 
@@ -1002,7 +987,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterForrangeinitializer(com.generator.generators.cpp.parser.CPP14Parser.ForrangeinitializerContext arg) {
-		onEnter(new Node("Forrangeinitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Forrangeinitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inForrangeinitializer.push(true);
 	}
 
@@ -1019,7 +1004,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterJumpstatement(com.generator.generators.cpp.parser.CPP14Parser.JumpstatementContext arg) {
-		onEnter(new Node("Jumpstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Jumpstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inJumpstatement.push(true);
 	}
 
@@ -1036,7 +1021,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarationstatement(com.generator.generators.cpp.parser.CPP14Parser.DeclarationstatementContext arg) {
-		onEnter(new Node("Declarationstatement", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declarationstatement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclarationstatement.push(true);
 	}
 
@@ -1053,7 +1038,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarationseq(com.generator.generators.cpp.parser.CPP14Parser.DeclarationseqContext arg) {
-		onEnter(new Node("Declarationseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declarationseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclarationseq.push(true);
 	}
 
@@ -1070,7 +1055,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclaration(com.generator.generators.cpp.parser.CPP14Parser.DeclarationContext arg) {
-		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclaration.push(true);
 	}
 
@@ -1087,7 +1072,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBlockdeclaration(com.generator.generators.cpp.parser.CPP14Parser.BlockdeclarationContext arg) {
-		onEnter(new Node("Blockdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Blockdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBlockdeclaration.push(true);
 	}
 
@@ -1104,7 +1089,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAliasdeclaration(com.generator.generators.cpp.parser.CPP14Parser.AliasdeclarationContext arg) {
-		onEnter(new Node("Aliasdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Aliasdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAliasdeclaration.push(true);
 	}
 
@@ -1121,7 +1106,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpledeclaration(com.generator.generators.cpp.parser.CPP14Parser.SimpledeclarationContext arg) {
-		onEnter(new Node("Simpledeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Simpledeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSimpledeclaration.push(true);
 	}
 
@@ -1138,7 +1123,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStatic_assertdeclaration(com.generator.generators.cpp.parser.CPP14Parser.Static_assertdeclarationContext arg) {
-		onEnter(new Node("Static_assertdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Static_assertdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStatic_assertdeclaration.push(true);
 	}
 
@@ -1155,7 +1140,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEmptydeclaration(com.generator.generators.cpp.parser.CPP14Parser.EmptydeclarationContext arg) {
-		onEnter(new Node("Emptydeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Emptydeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEmptydeclaration.push(true);
 	}
 
@@ -1172,7 +1157,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributedeclaration(com.generator.generators.cpp.parser.CPP14Parser.AttributedeclarationContext arg) {
-		onEnter(new Node("Attributedeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributedeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributedeclaration.push(true);
 	}
 
@@ -1189,7 +1174,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclspecifier(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierContext arg) {
-		onEnter(new Node("Declspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclspecifier.push(true);
 	}
 
@@ -1206,7 +1191,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.DeclspecifierseqContext arg) {
-		onEnter(new Node("Declspecifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declspecifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclspecifierseq.push(true);
 	}
 
@@ -1223,7 +1208,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterStorageclassspecifier(com.generator.generators.cpp.parser.CPP14Parser.StorageclassspecifierContext arg) {
-		onEnter(new Node("Storageclassspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Storageclassspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStorageclassspecifier.push(true);
 	}
 
@@ -1240,7 +1225,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctionspecifier(com.generator.generators.cpp.parser.CPP14Parser.FunctionspecifierContext arg) {
-		onEnter(new Node("Functionspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Functionspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctionspecifier.push(true);
 	}
 
@@ -1257,7 +1242,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypedefname(com.generator.generators.cpp.parser.CPP14Parser.TypedefnameContext arg) {
-		onEnter(new Node("Typedefname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typedefname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypedefname.push(true);
 	}
 
@@ -1274,7 +1259,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierContext arg) {
-		onEnter(new Node("Typespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypespecifier.push(true);
 	}
 
@@ -1291,7 +1276,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierContext arg) {
-		onEnter(new Node("Trailingtypespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Trailingtypespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTrailingtypespecifier.push(true);
 	}
 
@@ -1308,7 +1293,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TypespecifierseqContext arg) {
-		onEnter(new Node("Typespecifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typespecifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypespecifierseq.push(true);
 	}
 
@@ -1325,7 +1310,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingtypespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.TrailingtypespecifierseqContext arg) {
-		onEnter(new Node("Trailingtypespecifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Trailingtypespecifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTrailingtypespecifierseq.push(true);
 	}
 
@@ -1342,7 +1327,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpletypespecifier(com.generator.generators.cpp.parser.CPP14Parser.SimpletypespecifierContext arg) {
-		onEnter(new Node("Simpletypespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Simpletypespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSimpletypespecifier.push(true);
 	}
 
@@ -1359,7 +1344,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypename(com.generator.generators.cpp.parser.CPP14Parser.TypenameContext arg) {
-		onEnter(new Node("Typename", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typename", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypename.push(true);
 	}
 
@@ -1376,7 +1361,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDecltypespecifier(com.generator.generators.cpp.parser.CPP14Parser.DecltypespecifierContext arg) {
-		onEnter(new Node("Decltypespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Decltypespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDecltypespecifier.push(true);
 	}
 
@@ -1393,7 +1378,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterElaboratedtypespecifier(com.generator.generators.cpp.parser.CPP14Parser.ElaboratedtypespecifierContext arg) {
-		onEnter(new Node("Elaboratedtypespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Elaboratedtypespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElaboratedtypespecifier.push(true);
 	}
 
@@ -1410,7 +1395,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumname(com.generator.generators.cpp.parser.CPP14Parser.EnumnameContext arg) {
-		onEnter(new Node("Enumname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumname.push(true);
 	}
 
@@ -1427,7 +1412,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumspecifier(com.generator.generators.cpp.parser.CPP14Parser.EnumspecifierContext arg) {
-		onEnter(new Node("Enumspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumspecifier.push(true);
 	}
 
@@ -1444,7 +1429,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumhead(com.generator.generators.cpp.parser.CPP14Parser.EnumheadContext arg) {
-		onEnter(new Node("Enumhead", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumhead", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumhead.push(true);
 	}
 
@@ -1461,7 +1446,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOpaqueenumdeclaration(com.generator.generators.cpp.parser.CPP14Parser.OpaqueenumdeclarationContext arg) {
-		onEnter(new Node("Opaqueenumdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Opaqueenumdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOpaqueenumdeclaration.push(true);
 	}
 
@@ -1478,7 +1463,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumkey(com.generator.generators.cpp.parser.CPP14Parser.EnumkeyContext arg) {
-		onEnter(new Node("Enumkey", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumkey", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumkey.push(true);
 	}
 
@@ -1495,7 +1480,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumbase(com.generator.generators.cpp.parser.CPP14Parser.EnumbaseContext arg) {
-		onEnter(new Node("Enumbase", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumbase", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumbase.push(true);
 	}
 
@@ -1512,7 +1497,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratorlist(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorlistContext arg) {
-		onEnter(new Node("Enumeratorlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumeratorlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumeratorlist.push(true);
 	}
 
@@ -1529,7 +1514,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumeratordefinition(com.generator.generators.cpp.parser.CPP14Parser.EnumeratordefinitionContext arg) {
-		onEnter(new Node("Enumeratordefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumeratordefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumeratordefinition.push(true);
 	}
 
@@ -1546,7 +1531,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterEnumerator(com.generator.generators.cpp.parser.CPP14Parser.EnumeratorContext arg) {
-		onEnter(new Node("Enumerator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Enumerator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumerator.push(true);
 	}
 
@@ -1563,7 +1548,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacename(com.generator.generators.cpp.parser.CPP14Parser.NamespacenameContext arg) {
-		onEnter(new Node("Namespacename", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespacename", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespacename.push(true);
 	}
 
@@ -1580,7 +1565,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacename(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacenameContext arg) {
-		onEnter(new Node("Originalnamespacename", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Originalnamespacename", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOriginalnamespacename.push(true);
 	}
 
@@ -1597,7 +1582,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacedefinitionContext arg) {
-		onEnter(new Node("Namespacedefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespacedefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespacedefinition.push(true);
 	}
 
@@ -1614,7 +1599,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.NamednamespacedefinitionContext arg) {
-		onEnter(new Node("Namednamespacedefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namednamespacedefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamednamespacedefinition.push(true);
 	}
 
@@ -1631,7 +1616,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOriginalnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.OriginalnamespacedefinitionContext arg) {
-		onEnter(new Node("Originalnamespacedefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Originalnamespacedefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOriginalnamespacedefinition.push(true);
 	}
 
@@ -1648,7 +1633,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExtensionnamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.ExtensionnamespacedefinitionContext arg) {
-		onEnter(new Node("Extensionnamespacedefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Extensionnamespacedefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExtensionnamespacedefinition.push(true);
 	}
 
@@ -1665,7 +1650,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUnnamednamespacedefinition(com.generator.generators.cpp.parser.CPP14Parser.UnnamednamespacedefinitionContext arg) {
-		onEnter(new Node("Unnamednamespacedefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Unnamednamespacedefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUnnamednamespacedefinition.push(true);
 	}
 
@@ -1682,7 +1667,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacebody(com.generator.generators.cpp.parser.CPP14Parser.NamespacebodyContext arg) {
-		onEnter(new Node("Namespacebody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespacebody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespacebody.push(true);
 	}
 
@@ -1699,7 +1684,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealias(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasContext arg) {
-		onEnter(new Node("Namespacealias", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespacealias", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespacealias.push(true);
 	}
 
@@ -1716,7 +1701,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNamespacealiasdefinition(com.generator.generators.cpp.parser.CPP14Parser.NamespacealiasdefinitionContext arg) {
-		onEnter(new Node("Namespacealiasdefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Namespacealiasdefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNamespacealiasdefinition.push(true);
 	}
 
@@ -1733,7 +1718,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterQualifiednamespacespecifier(com.generator.generators.cpp.parser.CPP14Parser.QualifiednamespacespecifierContext arg) {
-		onEnter(new Node("Qualifiednamespacespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Qualifiednamespacespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiednamespacespecifier.push(true);
 	}
 
@@ -1750,7 +1735,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdeclaration(com.generator.generators.cpp.parser.CPP14Parser.UsingdeclarationContext arg) {
-		onEnter(new Node("Usingdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Usingdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUsingdeclaration.push(true);
 	}
 
@@ -1767,7 +1752,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUsingdirective(com.generator.generators.cpp.parser.CPP14Parser.UsingdirectiveContext arg) {
-		onEnter(new Node("Usingdirective", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Usingdirective", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUsingdirective.push(true);
 	}
 
@@ -1784,7 +1769,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAsmdefinition(com.generator.generators.cpp.parser.CPP14Parser.AsmdefinitionContext arg) {
-		onEnter(new Node("Asmdefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Asmdefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAsmdefinition.push(true);
 	}
 
@@ -1801,7 +1786,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLinkagespecification(com.generator.generators.cpp.parser.CPP14Parser.LinkagespecificationContext arg) {
-		onEnter(new Node("Linkagespecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Linkagespecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLinkagespecification.push(true);
 	}
 
@@ -1818,7 +1803,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifierseq(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierseqContext arg) {
-		onEnter(new Node("Attributespecifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributespecifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributespecifierseq.push(true);
 	}
 
@@ -1835,7 +1820,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributespecifier(com.generator.generators.cpp.parser.CPP14Parser.AttributespecifierContext arg) {
-		onEnter(new Node("Attributespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributespecifier.push(true);
 	}
 
@@ -1852,7 +1837,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAlignmentspecifier(com.generator.generators.cpp.parser.CPP14Parser.AlignmentspecifierContext arg) {
-		onEnter(new Node("Alignmentspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Alignmentspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAlignmentspecifier.push(true);
 	}
 
@@ -1869,7 +1854,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributelist(com.generator.generators.cpp.parser.CPP14Parser.AttributelistContext arg) {
-		onEnter(new Node("Attributelist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributelist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributelist.push(true);
 	}
 
@@ -1886,7 +1871,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.cpp.parser.CPP14Parser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttribute.push(true);
 	}
 
@@ -1903,7 +1888,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributetoken(com.generator.generators.cpp.parser.CPP14Parser.AttributetokenContext arg) {
-		onEnter(new Node("Attributetoken", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributetoken", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributetoken.push(true);
 	}
 
@@ -1920,7 +1905,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributescopedtoken(com.generator.generators.cpp.parser.CPP14Parser.AttributescopedtokenContext arg) {
-		onEnter(new Node("Attributescopedtoken", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributescopedtoken", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributescopedtoken.push(true);
 	}
 
@@ -1937,7 +1922,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributenamespace(com.generator.generators.cpp.parser.CPP14Parser.AttributenamespaceContext arg) {
-		onEnter(new Node("Attributenamespace", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributenamespace", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributenamespace.push(true);
 	}
 
@@ -1954,7 +1939,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAttributeargumentclause(com.generator.generators.cpp.parser.CPP14Parser.AttributeargumentclauseContext arg) {
-		onEnter(new Node("Attributeargumentclause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attributeargumentclause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttributeargumentclause.push(true);
 	}
 
@@ -1971,7 +1956,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBalancedtokenseq(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenseqContext arg) {
-		onEnter(new Node("Balancedtokenseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Balancedtokenseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBalancedtokenseq.push(true);
 	}
 
@@ -1988,7 +1973,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBalancedtoken(com.generator.generators.cpp.parser.CPP14Parser.BalancedtokenContext arg) {
-		onEnter(new Node("Balancedtoken", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Balancedtoken", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBalancedtoken.push(true);
 	}
 
@@ -2005,7 +1990,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorlistContext arg) {
-		onEnter(new Node("Initdeclaratorlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initdeclaratorlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitdeclaratorlist.push(true);
 	}
 
@@ -2022,7 +2007,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitdeclarator(com.generator.generators.cpp.parser.CPP14Parser.InitdeclaratorContext arg) {
-		onEnter(new Node("Initdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitdeclarator.push(true);
 	}
 
@@ -2039,7 +2024,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclarator(com.generator.generators.cpp.parser.CPP14Parser.DeclaratorContext arg) {
-		onEnter(new Node("Declarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclarator.push(true);
 	}
 
@@ -2056,7 +2041,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrdeclaratorContext arg) {
-		onEnter(new Node("Ptrdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Ptrdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPtrdeclarator.push(true);
 	}
 
@@ -2073,7 +2058,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrdeclaratorContext arg) {
-		onEnter(new Node("Noptrdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noptrdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoptrdeclarator.push(true);
 	}
 
@@ -2090,7 +2075,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParametersandqualifiers(com.generator.generators.cpp.parser.CPP14Parser.ParametersandqualifiersContext arg) {
-		onEnter(new Node("Parametersandqualifiers", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Parametersandqualifiers", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParametersandqualifiers.push(true);
 	}
 
@@ -2107,7 +2092,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTrailingreturntype(com.generator.generators.cpp.parser.CPP14Parser.TrailingreturntypeContext arg) {
-		onEnter(new Node("Trailingreturntype", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Trailingreturntype", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTrailingreturntype.push(true);
 	}
 
@@ -2124,7 +2109,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtroperator(com.generator.generators.cpp.parser.CPP14Parser.PtroperatorContext arg) {
-		onEnter(new Node("Ptroperator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Ptroperator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPtroperator.push(true);
 	}
 
@@ -2141,7 +2126,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifierseq(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierseqContext arg) {
-		onEnter(new Node("Cvqualifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Cvqualifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCvqualifierseq.push(true);
 	}
 
@@ -2158,7 +2143,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCvqualifier(com.generator.generators.cpp.parser.CPP14Parser.CvqualifierContext arg) {
-		onEnter(new Node("Cvqualifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Cvqualifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCvqualifier.push(true);
 	}
 
@@ -2175,7 +2160,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRefqualifier(com.generator.generators.cpp.parser.CPP14Parser.RefqualifierContext arg) {
-		onEnter(new Node("Refqualifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Refqualifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRefqualifier.push(true);
 	}
 
@@ -2192,7 +2177,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDeclaratorid(com.generator.generators.cpp.parser.CPP14Parser.DeclaratoridContext arg) {
-		onEnter(new Node("Declaratorid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Declaratorid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDeclaratorid.push(true);
 	}
 
@@ -2209,7 +2194,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeid(com.generator.generators.cpp.parser.CPP14Parser.TypeidContext arg) {
-		onEnter(new Node("Typeid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typeid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeid.push(true);
 	}
 
@@ -2226,7 +2211,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractdeclaratorContext arg) {
-		onEnter(new Node("Abstractdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Abstractdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAbstractdeclarator.push(true);
 	}
 
@@ -2243,7 +2228,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPtrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.PtrabstractdeclaratorContext arg) {
-		onEnter(new Node("Ptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Ptrabstractdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPtrabstractdeclarator.push(true);
 	}
 
@@ -2260,7 +2245,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractdeclaratorContext arg) {
-		onEnter(new Node("Noptrabstractdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noptrabstractdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoptrabstractdeclarator.push(true);
 	}
 
@@ -2277,7 +2262,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAbstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.AbstractpackdeclaratorContext arg) {
-		onEnter(new Node("Abstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Abstractpackdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAbstractpackdeclarator.push(true);
 	}
 
@@ -2294,7 +2279,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoptrabstractpackdeclarator(com.generator.generators.cpp.parser.CPP14Parser.NoptrabstractpackdeclaratorContext arg) {
-		onEnter(new Node("Noptrabstractpackdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noptrabstractpackdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoptrabstractpackdeclarator.push(true);
 	}
 
@@ -2311,7 +2296,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationclause(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationclauseContext arg) {
-		onEnter(new Node("Parameterdeclarationclause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Parameterdeclarationclause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParameterdeclarationclause.push(true);
 	}
 
@@ -2328,7 +2313,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclarationlist(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationlistContext arg) {
-		onEnter(new Node("Parameterdeclarationlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Parameterdeclarationlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParameterdeclarationlist.push(true);
 	}
 
@@ -2345,7 +2330,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterParameterdeclaration(com.generator.generators.cpp.parser.CPP14Parser.ParameterdeclarationContext arg) {
-		onEnter(new Node("Parameterdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Parameterdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inParameterdeclaration.push(true);
 	}
 
@@ -2362,7 +2347,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiondefinition(com.generator.generators.cpp.parser.CPP14Parser.FunctiondefinitionContext arg) {
-		onEnter(new Node("Functiondefinition", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Functiondefinition", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctiondefinition.push(true);
 	}
 
@@ -2379,7 +2364,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctionbody(com.generator.generators.cpp.parser.CPP14Parser.FunctionbodyContext arg) {
-		onEnter(new Node("Functionbody", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Functionbody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctionbody.push(true);
 	}
 
@@ -2396,7 +2381,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializer(com.generator.generators.cpp.parser.CPP14Parser.InitializerContext arg) {
-		onEnter(new Node("Initializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitializer.push(true);
 	}
 
@@ -2413,7 +2398,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBraceorequalinitializer(com.generator.generators.cpp.parser.CPP14Parser.BraceorequalinitializerContext arg) {
-		onEnter(new Node("Braceorequalinitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Braceorequalinitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBraceorequalinitializer.push(true);
 	}
 
@@ -2430,7 +2415,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerclause(com.generator.generators.cpp.parser.CPP14Parser.InitializerclauseContext arg) {
-		onEnter(new Node("Initializerclause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initializerclause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitializerclause.push(true);
 	}
 
@@ -2447,7 +2432,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterInitializerlist(com.generator.generators.cpp.parser.CPP14Parser.InitializerlistContext arg) {
-		onEnter(new Node("Initializerlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Initializerlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInitializerlist.push(true);
 	}
 
@@ -2464,7 +2449,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBracedinitlist(com.generator.generators.cpp.parser.CPP14Parser.BracedinitlistContext arg) {
-		onEnter(new Node("Bracedinitlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Bracedinitlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBracedinitlist.push(true);
 	}
 
@@ -2481,7 +2466,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassname(com.generator.generators.cpp.parser.CPP14Parser.ClassnameContext arg) {
-		onEnter(new Node("Classname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassname.push(true);
 	}
 
@@ -2498,7 +2483,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassspecifierContext arg) {
-		onEnter(new Node("Classspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassspecifier.push(true);
 	}
 
@@ -2515,7 +2500,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasshead(com.generator.generators.cpp.parser.CPP14Parser.ClassheadContext arg) {
-		onEnter(new Node("Classhead", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classhead", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClasshead.push(true);
 	}
 
@@ -2532,7 +2517,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassheadname(com.generator.generators.cpp.parser.CPP14Parser.ClassheadnameContext arg) {
-		onEnter(new Node("Classheadname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classheadname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassheadname.push(true);
 	}
 
@@ -2549,7 +2534,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassvirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.ClassvirtspecifierContext arg) {
-		onEnter(new Node("Classvirtspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classvirtspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassvirtspecifier.push(true);
 	}
 
@@ -2566,7 +2551,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClasskey(com.generator.generators.cpp.parser.CPP14Parser.ClasskeyContext arg) {
-		onEnter(new Node("Classkey", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classkey", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClasskey.push(true);
 	}
 
@@ -2583,7 +2568,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberspecification(com.generator.generators.cpp.parser.CPP14Parser.MemberspecificationContext arg) {
-		onEnter(new Node("Memberspecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Memberspecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMemberspecification.push(true);
 	}
 
@@ -2600,7 +2585,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaration(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclarationContext arg) {
-		onEnter(new Node("Memberdeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Memberdeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMemberdeclaration.push(true);
 	}
 
@@ -2617,7 +2602,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclaratorlist(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorlistContext arg) {
-		onEnter(new Node("Memberdeclaratorlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Memberdeclaratorlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMemberdeclaratorlist.push(true);
 	}
 
@@ -2634,7 +2619,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMemberdeclarator(com.generator.generators.cpp.parser.CPP14Parser.MemberdeclaratorContext arg) {
-		onEnter(new Node("Memberdeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Memberdeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMemberdeclarator.push(true);
 	}
 
@@ -2651,7 +2636,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifierseq(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierseqContext arg) {
-		onEnter(new Node("Virtspecifierseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Virtspecifierseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVirtspecifierseq.push(true);
 	}
 
@@ -2668,7 +2653,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterVirtspecifier(com.generator.generators.cpp.parser.CPP14Parser.VirtspecifierContext arg) {
-		onEnter(new Node("Virtspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Virtspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inVirtspecifier.push(true);
 	}
 
@@ -2685,7 +2670,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPurespecifier(com.generator.generators.cpp.parser.CPP14Parser.PurespecifierContext arg) {
-		onEnter(new Node("Purespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Purespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPurespecifier.push(true);
 	}
 
@@ -2702,7 +2687,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBaseclause(com.generator.generators.cpp.parser.CPP14Parser.BaseclauseContext arg) {
-		onEnter(new Node("Baseclause", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Baseclause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBaseclause.push(true);
 	}
 
@@ -2719,7 +2704,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifierlist(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierlistContext arg) {
-		onEnter(new Node("Basespecifierlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Basespecifierlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBasespecifierlist.push(true);
 	}
 
@@ -2736,7 +2721,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasespecifierContext arg) {
-		onEnter(new Node("Basespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Basespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBasespecifier.push(true);
 	}
 
@@ -2753,7 +2738,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterClassordecltype(com.generator.generators.cpp.parser.CPP14Parser.ClassordecltypeContext arg) {
-		onEnter(new Node("Classordecltype", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Classordecltype", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassordecltype.push(true);
 	}
 
@@ -2770,7 +2755,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBasetypespecifier(com.generator.generators.cpp.parser.CPP14Parser.BasetypespecifierContext arg) {
-		onEnter(new Node("Basetypespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Basetypespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBasetypespecifier.push(true);
 	}
 
@@ -2787,7 +2772,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterAccessspecifier(com.generator.generators.cpp.parser.CPP14Parser.AccessspecifierContext arg) {
-		onEnter(new Node("Accessspecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Accessspecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAccessspecifier.push(true);
 	}
 
@@ -2804,7 +2789,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversionfunctionid(com.generator.generators.cpp.parser.CPP14Parser.ConversionfunctionidContext arg) {
-		onEnter(new Node("Conversionfunctionid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Conversionfunctionid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConversionfunctionid.push(true);
 	}
 
@@ -2821,7 +2806,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiontypeid(com.generator.generators.cpp.parser.CPP14Parser.ConversiontypeidContext arg) {
-		onEnter(new Node("Conversiontypeid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Conversiontypeid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConversiontypeid.push(true);
 	}
 
@@ -2838,7 +2823,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterConversiondeclarator(com.generator.generators.cpp.parser.CPP14Parser.ConversiondeclaratorContext arg) {
-		onEnter(new Node("Conversiondeclarator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Conversiondeclarator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConversiondeclarator.push(true);
 	}
 
@@ -2855,7 +2840,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterCtorinitializer(com.generator.generators.cpp.parser.CPP14Parser.CtorinitializerContext arg) {
-		onEnter(new Node("Ctorinitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Ctorinitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCtorinitializer.push(true);
 	}
 
@@ -2872,7 +2857,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerlist(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerlistContext arg) {
-		onEnter(new Node("Meminitializerlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Meminitializerlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMeminitializerlist.push(true);
 	}
 
@@ -2889,7 +2874,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializer(com.generator.generators.cpp.parser.CPP14Parser.MeminitializerContext arg) {
-		onEnter(new Node("Meminitializer", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Meminitializer", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMeminitializer.push(true);
 	}
 
@@ -2906,7 +2891,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterMeminitializerid(com.generator.generators.cpp.parser.CPP14Parser.MeminitializeridContext arg) {
-		onEnter(new Node("Meminitializerid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Meminitializerid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMeminitializerid.push(true);
 	}
 
@@ -2923,7 +2908,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperatorfunctionid(com.generator.generators.cpp.parser.CPP14Parser.OperatorfunctionidContext arg) {
-		onEnter(new Node("Operatorfunctionid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Operatorfunctionid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOperatorfunctionid.push(true);
 	}
 
@@ -2940,7 +2925,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterLiteraloperatorid(com.generator.generators.cpp.parser.CPP14Parser.LiteraloperatoridContext arg) {
-		onEnter(new Node("Literaloperatorid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Literaloperatorid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLiteraloperatorid.push(true);
 	}
 
@@ -2957,7 +2942,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatedeclaration(com.generator.generators.cpp.parser.CPP14Parser.TemplatedeclarationContext arg) {
-		onEnter(new Node("Templatedeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templatedeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplatedeclaration.push(true);
 	}
 
@@ -2974,7 +2959,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameterlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterlistContext arg) {
-		onEnter(new Node("Templateparameterlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templateparameterlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplateparameterlist.push(true);
 	}
 
@@ -2991,7 +2976,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateparameter(com.generator.generators.cpp.parser.CPP14Parser.TemplateparameterContext arg) {
-		onEnter(new Node("Templateparameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templateparameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplateparameter.push(true);
 	}
 
@@ -3008,7 +2993,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeparameter(com.generator.generators.cpp.parser.CPP14Parser.TypeparameterContext arg) {
-		onEnter(new Node("Typeparameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typeparameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeparameter.push(true);
 	}
 
@@ -3025,7 +3010,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterSimpletemplateid(com.generator.generators.cpp.parser.CPP14Parser.SimpletemplateidContext arg) {
-		onEnter(new Node("Simpletemplateid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Simpletemplateid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSimpletemplateid.push(true);
 	}
 
@@ -3042,7 +3027,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateid(com.generator.generators.cpp.parser.CPP14Parser.TemplateidContext arg) {
-		onEnter(new Node("Templateid", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templateid", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplateid.push(true);
 	}
 
@@ -3059,7 +3044,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplatename(com.generator.generators.cpp.parser.CPP14Parser.TemplatenameContext arg) {
-		onEnter(new Node("Templatename", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templatename", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplatename.push(true);
 	}
 
@@ -3076,7 +3061,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargumentlist(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentlistContext arg) {
-		onEnter(new Node("Templateargumentlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templateargumentlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplateargumentlist.push(true);
 	}
 
@@ -3093,7 +3078,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTemplateargument(com.generator.generators.cpp.parser.CPP14Parser.TemplateargumentContext arg) {
-		onEnter(new Node("Templateargument", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Templateargument", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplateargument.push(true);
 	}
 
@@ -3110,7 +3095,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypenamespecifier(com.generator.generators.cpp.parser.CPP14Parser.TypenamespecifierContext arg) {
-		onEnter(new Node("Typenamespecifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typenamespecifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypenamespecifier.push(true);
 	}
 
@@ -3127,7 +3112,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitinstantiation(com.generator.generators.cpp.parser.CPP14Parser.ExplicitinstantiationContext arg) {
-		onEnter(new Node("Explicitinstantiation", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Explicitinstantiation", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExplicitinstantiation.push(true);
 	}
 
@@ -3144,7 +3129,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExplicitspecialization(com.generator.generators.cpp.parser.CPP14Parser.ExplicitspecializationContext arg) {
-		onEnter(new Node("Explicitspecialization", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Explicitspecialization", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExplicitspecialization.push(true);
 	}
 
@@ -3161,7 +3146,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTryblock(com.generator.generators.cpp.parser.CPP14Parser.TryblockContext arg) {
-		onEnter(new Node("Tryblock", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Tryblock", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTryblock.push(true);
 	}
 
@@ -3178,7 +3163,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterFunctiontryblock(com.generator.generators.cpp.parser.CPP14Parser.FunctiontryblockContext arg) {
-		onEnter(new Node("Functiontryblock", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Functiontryblock", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFunctiontryblock.push(true);
 	}
 
@@ -3195,7 +3180,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandlerseq(com.generator.generators.cpp.parser.CPP14Parser.HandlerseqContext arg) {
-		onEnter(new Node("Handlerseq", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Handlerseq", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inHandlerseq.push(true);
 	}
 
@@ -3212,7 +3197,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterHandler(com.generator.generators.cpp.parser.CPP14Parser.HandlerContext arg) {
-		onEnter(new Node("Handler", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Handler", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inHandler.push(true);
 	}
 
@@ -3229,7 +3214,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptiondeclaration(com.generator.generators.cpp.parser.CPP14Parser.ExceptiondeclarationContext arg) {
-		onEnter(new Node("Exceptiondeclaration", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Exceptiondeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExceptiondeclaration.push(true);
 	}
 
@@ -3246,7 +3231,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterThrowexpression(com.generator.generators.cpp.parser.CPP14Parser.ThrowexpressionContext arg) {
-		onEnter(new Node("Throwexpression", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Throwexpression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inThrowexpression.push(true);
 	}
 
@@ -3263,7 +3248,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterExceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.ExceptionspecificationContext arg) {
-		onEnter(new Node("Exceptionspecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Exceptionspecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExceptionspecification.push(true);
 	}
 
@@ -3280,7 +3265,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterDynamicexceptionspecification(com.generator.generators.cpp.parser.CPP14Parser.DynamicexceptionspecificationContext arg) {
-		onEnter(new Node("Dynamicexceptionspecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Dynamicexceptionspecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDynamicexceptionspecification.push(true);
 	}
 
@@ -3297,7 +3282,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterTypeidlist(com.generator.generators.cpp.parser.CPP14Parser.TypeidlistContext arg) {
-		onEnter(new Node("Typeidlist", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Typeidlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTypeidlist.push(true);
 	}
 
@@ -3314,7 +3299,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterNoexceptspecification(com.generator.generators.cpp.parser.CPP14Parser.NoexceptspecificationContext arg) {
-		onEnter(new Node("Noexceptspecification", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Noexceptspecification", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inNoexceptspecification.push(true);
 	}
 
@@ -3331,7 +3316,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShift(com.generator.generators.cpp.parser.CPP14Parser.RightShiftContext arg) {
-		onEnter(new Node("RightShift", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RightShift", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRightShift.push(true);
 	}
 
@@ -3348,7 +3333,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterRightShiftAssign(com.generator.generators.cpp.parser.CPP14Parser.RightShiftAssignContext arg) {
-		onEnter(new Node("RightShiftAssign", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("RightShiftAssign", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRightShiftAssign.push(true);
 	}
 
@@ -3365,7 +3350,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterOperator(com.generator.generators.cpp.parser.CPP14Parser.OperatorContext arg) {
-		onEnter(new Node("Operator", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Operator", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inOperator.push(true);
 	}
 
@@ -3382,7 +3367,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterBooleanliteral(com.generator.generators.cpp.parser.CPP14Parser.BooleanliteralContext arg) {
-		onEnter(new Node("Booleanliteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Booleanliteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inBooleanliteral.push(true);
 	}
 
@@ -3399,7 +3384,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterPointerliteral(com.generator.generators.cpp.parser.CPP14Parser.PointerliteralContext arg) {
-		onEnter(new Node("Pointerliteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Pointerliteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPointerliteral.push(true);
 	}
 
@@ -3416,7 +3401,7 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	@Override
 	public void enterUserdefinedliteral(com.generator.generators.cpp.parser.CPP14Parser.UserdefinedliteralContext arg) {
-		onEnter(new Node("Userdefinedliteral", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Userdefinedliteral", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUserdefinedliteral.push(true);
 	}
 
@@ -3427,6 +3412,23 @@ public class CPP14NodeListener extends CPP14BaseListener {
 
 	public boolean inUserdefinedliteral() {
       return !inUserdefinedliteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cpp.parser.CPP14Parser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 }

@@ -1,15 +1,12 @@
 package com.generator.generators.antlr;
 
 import com.generator.app.App;
-import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserDomainVisitor;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNeoVisitor;
-import com.generator.generators.domain.DomainPlugin;
-import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -22,6 +19,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Set;
+import java.util.Stack;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -35,7 +33,7 @@ public class ANTLRPlugin extends Plugin {
    }
 
    enum Properties {
-      text
+      text, startToken
    }
 
    public ANTLRPlugin(App app) {
@@ -74,9 +72,8 @@ public class ANTLRPlugin extends Plugin {
 
    @Override
    public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-      if(hasLabel(neoNode.getNode(), Entities.GrammarSpec)) {
+      if (hasLabel(neoNode.getNode(), Entities.GrammarSpec))
          tabbedPane.add(getNameOrLabelFrom(neoNode.getNode()), new GrammarEditor(neoNode));
-      }
    }
 
    private final class GrammarEditor extends JPanel {
@@ -86,21 +83,41 @@ public class ANTLRPlugin extends Plugin {
          final JTextArea txtEditor = new JTextArea();
          txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
          txtEditor.setTabSize(3);
-         txtEditor.setCaretPosition(0);
 
-         final StringBuilder out = new StringBuilder();
+         final AntlrGroup antlrGroup = new AntlrGroup();
+         final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar();
 
-         // todo: auto-generate a NeoVisitor for ParserNeoVisitor
          new ANTLRv4ParserDomainVisitor() {
 
+            final Stack<AntlrGroup.ruleST> ruleSTStack = new Stack<>();
+            final Stack<AntlrGroup.blockST> blockSTStack = new Stack<>();
+
             @Override
-            public void visitGrammarSpec(Node node) {
-               out.append(getString(node, Properties.text.name()));
-               super.visitGrammarSpec(node);
+            public void visitIdentifier(Node node) {
+               grammarST.setName(getString(node, Properties.startToken.name()));
+               super.visitIdentifier(node);
+            }
+
+            @Override
+            public void visitRuleSpec(Node node) {
+               final AntlrGroup.ruleST ruleST = antlrGroup.newrule().setName(getString(node, Properties.startToken.name()));
+               ruleSTStack.push(ruleST);
+               System.out.println("ruleST = " + ruleST);
+               super.visitRuleSpec(node);
+               grammarST.addRulesValue(ruleSTStack.pop());
+            }
+
+            @Override
+            public void visitBlock(Node node) {
+               final AntlrGroup.blockST blockST = antlrGroup.newblock();
+               blockSTStack.push(blockST);
+               super.visitBlock(node);
+               ruleSTStack.peek().addAlternativesValue(blockST);
             }
          }.visit(node.getNode());
 
-         txtEditor.setText(out.toString().trim());
+         txtEditor.setText(grammarST.toString());
+         txtEditor.setCaretPosition(0);
 
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }

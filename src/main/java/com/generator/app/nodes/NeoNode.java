@@ -2,6 +2,8 @@ package com.generator.app.nodes;
 
 import com.generator.app.*;
 import com.generator.generators.cypher.CypherGroup;
+import com.generator.generators.domain.DomainPlugin;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
@@ -46,7 +48,7 @@ public class NeoNode extends PNode {
       this.workspace = workspace;
       this.nodeCanvas = nodeCanvas;
 
-      delegate = new PText(Workspace.getNodeText(nodeCanvas.nodePaintStrategy, node));
+      delegate = new PText(getNodeText(nodeCanvas.nodePaintStrategy, node));
       addChild(delegate);
 
       addAttribute("id", node.getId());
@@ -387,7 +389,7 @@ public class NeoNode extends PNode {
    }
 
    public void setPaintStrategy(AppMotif.NodePaintStrategy nodePaintStrategy) {
-      delegate.setText(Workspace.getNodeText(nodePaintStrategy, getNode()));
+      delegate.setText(getNodeText(nodePaintStrategy, getNode()));
    }
 
    private void onRightClick(PInputEvent event) {
@@ -504,31 +506,33 @@ public class NeoNode extends PNode {
 
                      editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-                     SwingUtil.showDialog(editor, workspace.app, "Add relationships", () -> {
+                     SwingUtil.showDialog(editor, workspace.app, "Add relationships", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+                           final String selected = (String) cboRelationships.getSelectedItem();
 
-                        final String selected = (String) cboRelationships.getSelectedItem();
+                           workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx1) throws Throwable {
+                                 for (NeoNode selectedNode : selectedNodes) {
+                                    if (radOneToMany.isSelected() && NeoUtil.isRelated(getNode(), selectedNode.getNode(), RelationshipType.withName(selected)))
+                                       continue;
+                                    else if (radManyToOne.isSelected() && NeoUtil.isRelated(selectedNode.getNode(), getNode(), RelationshipType.withName(selected)))
+                                       continue;
 
-                        workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
-                           @Override
-                           public void doAction(Transaction tx1) throws Throwable {
-                              for (NeoNode selectedNode : selectedNodes) {
-                                 if (radOneToMany.isSelected() && NeoUtil.isRelated(getNode(), selectedNode.getNode(), RelationshipType.withName(selected)))
-                                    continue;
-                                 else if (radManyToOne.isSelected() && NeoUtil.isRelated(selectedNode.getNode(), getNode(), RelationshipType.withName(selected)))
-                                    continue;
-
-                                 if (radOneToMany.isSelected())
-                                    getNode().createRelationshipTo(selectedNode.getNode(), RelationshipType.withName(selected));
-                                 if (radManyToOne.isSelected())
-                                    selectedNode.getNode().createRelationshipTo(getNode(), RelationshipType.withName(selected));
+                                    if (radOneToMany.isSelected())
+                                       getNode().createRelationshipTo(selectedNode.getNode(), RelationshipType.withName(selected));
+                                    if (radManyToOne.isSelected())
+                                       selectedNode.getNode().createRelationshipTo(getNode(), RelationshipType.withName(selected));
+                                 }
                               }
-                           }
 
-                           @Override
-                           public void exception(Throwable throwable) {
-                              SwingUtil.showExceptionNoStack(workspace.app, throwable);
-                           }
-                        });
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showExceptionNoStack(workspace.app, throwable);
+                              }
+                           });
+                        }
                      });
                   }
                });
@@ -745,5 +749,46 @@ public class NeoNode extends PNode {
    @Override
    public int hashCode() {
       return getAttribute("id").hashCode();
+   }
+
+   public static String getNodeText(AppMotif.NodePaintStrategy nodePaintStrategy, Node node) {
+      switch (nodePaintStrategy) {
+         case showNameAndLabels:
+            return getNameAndLabelsFrom(node) + " (" + node.getId() + ")";
+         case showName:
+            return getString(node, AppMotif.Properties.name.name(), "()");
+         case showLabels:
+            return labelsFor(node);
+         case showProperties:
+            final StringBuilder out = new StringBuilder();
+            boolean first = true;
+            for (String key : node.getPropertyKeys()) {
+               if (AppMotif.Properties.x.name().equals(key)) continue;
+               if (AppMotif.Properties.y.name().equals(key)) continue;
+               if (AppMotif.Properties._color.name().equals(key)) continue;
+               if (AppMotif.Properties._lastLayout.name().equals(key)) continue;
+               if (TAG_UUID.equals(key)) continue;
+               if (!first) out.append(", ");
+               out.append(key).append(": '").append(node.getProperty(key)).append("'");
+               first = false;
+            }
+            return out.toString();
+         case showValues:
+
+            if (hasLabel(node, DomainPlugin.Entities.Value)) {
+               return getString(node, AppMotif.Properties.name.name(), "()");
+            } else {
+
+               for (Relationship instanceRelation : incoming(node, DomainPlugin.Relations.INSTANCE)) {
+                  final Node instanceNode = other(node, instanceRelation);
+                  if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+                     return StringTemplatePlugin.renderStatement(node, instanceNode);
+
+                  }
+               }
+            }
+      }
+
+      return "?";
    }
 }

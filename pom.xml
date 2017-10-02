@@ -222,6 +222,14 @@
             <version>1.0.3</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.espertech/esper -->
+        <!--<dependency>-->
+            <!--<groupId>com.espertech</groupId>-->
+            <!--<artifactId>esper</artifactId>-->
+            <!--<version>6.1.0</version>-->
+        <!--</dependency>-->
+
+
         <!-- aspectJ -->
 
         <!--<dependency>-->

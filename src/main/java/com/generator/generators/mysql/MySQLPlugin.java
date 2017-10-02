@@ -79,25 +79,27 @@ public class MySQLPlugin extends Plugin {
 
             final JTextArea txtSql = new JTextArea(20, 30);
 
-            SwingUtil.showTextInput("Sql", txtSql, app, () -> {
+            SwingUtil.showTextInput("Sql", txtSql, app, new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+                  final String sql = txtSql.getText().trim();
+                  if (sql.length() == 0) return;
 
-               final String sql = txtSql.getText().trim();
-               if (sql.length() == 0) return;
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx1) throws Throwable {
+                        final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(MySQLSession.preprocessSQL(sql)))));
+                        final MySqlParserNeoVisitor visitor = new MySqlParserNeoVisitor(getGraph());
+                        visitor.visit(parser.sql_statements());
+                        if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
+                     }
 
-               getGraph().doInTransaction(new NeoModel.Committer() {
-                  @Override
-                  public void doAction(Transaction tx1) throws Throwable {
-                     final MySqlParser parser = new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(MySQLSession.preprocessSQL(sql)))));
-                     final MySqlParserNeoVisitor visitor = new MySqlParserNeoVisitor(getGraph());
-                     visitor.visit(parser.sql_statements());
-                     if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
-                  }
-
-                  @Override
-                  public void exception(Throwable throwable) {
-                     SwingUtil.showExceptionNoStack(app, throwable);
-                  }
-               });
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
+               }
             });
          }
       });
@@ -121,35 +123,43 @@ public class MySQLPlugin extends Plugin {
             login.addLabel("Password", 1, 7);
             login.add(txtPassword, 3, 7);
 
-            SwingUtil.showDialog(login, app, "Database", () -> getGraph().doInTransaction(new NeoModel.Committer() {
+            SwingUtil.showDialog(login, app, "Database", new SwingUtil.ConfirmAction() {
                @Override
-               public void doAction(Transaction tx12) throws Throwable {
+               public void verifyAndCommit() throws Exception {
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx12) throws Throwable {
 
-                  if (txtHost.getText().length() == 0) throw new IllegalArgumentException("host must be set");
-                  if (txtDatabase.getText().length() == 0) throw new IllegalArgumentException("database must be set");
-                  if (txtUsername.getText().length() == 0) throw new IllegalArgumentException("username must be set");
-                  if (txtPassword.getPassword().length == 0) throw new IllegalArgumentException("password must be set");
+                        if (txtHost.getText().length() == 0) throw new IllegalArgumentException("host must be set");
+                        if (txtDatabase.getText().length() == 0)
+                           throw new IllegalArgumentException("database must be set");
+                        if (txtUsername.getText().length() == 0)
+                           throw new IllegalArgumentException("username must be set");
+                        if (txtPassword.getPassword().length == 0)
+                           throw new IllegalArgumentException("password must be set");
 
-                  final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getPassword());
+                        final MySQLSession db = new MySQLSession(txtHost.getText(), txtDatabase.getText(), txtUsername.getText(), txtPassword.getPassword());
 
-                  final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase());
+                        final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase());
 
-                  for (String table : db.getTables()) {
-                     final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
-                     new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
-                     relate(databaseNode, neoListener.done(), Relations.TABLE);
-                  }
+                        for (String table : db.getTables()) {
+                           final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
+                           new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+                           relate(databaseNode, neoListener.done(), Relations.TABLE);
+                        }
 
-                  fireNodesLoaded(databaseNode);
+                        fireNodesLoaded(databaseNode);
 
-                  db.close();
+                        db.close();
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showExceptionNoStack(app, throwable);
+                     }
+                  });
                }
-
-               @Override
-               public void exception(Throwable throwable) {
-                  SwingUtil.showExceptionNoStack(app, throwable);
-               }
-            }));
+            });
          }
       });
    }

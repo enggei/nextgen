@@ -7,12 +7,14 @@ public class urlNodeListener extends urlBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class urlNodeListener extends urlBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,28 +48,11 @@ public class urlNodeListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText()));
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return !inString.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
 
 	@Override
 	public void enterUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
-		onEnter(new Node("Url", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Url", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUrl.push(true);
 	}
 
@@ -84,7 +69,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterUri(com.generator.generators.url.parser.urlParser.UriContext arg) {
-		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Uri", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUri.push(true);
 	}
 
@@ -101,7 +86,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterScheme(com.generator.generators.url.parser.urlParser.SchemeContext arg) {
-		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Scheme", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inScheme.push(true);
 	}
 
@@ -118,7 +103,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterHost(com.generator.generators.url.parser.urlParser.HostContext arg) {
-		onEnter(new Node("Host", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Host", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inHost.push(true);
 	}
 
@@ -135,7 +120,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterHostname(com.generator.generators.url.parser.urlParser.HostnameContext arg) {
-		onEnter(new Node("Hostname", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Hostname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inHostname.push(true);
 	}
 
@@ -152,7 +137,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterHostnumber(com.generator.generators.url.parser.urlParser.HostnumberContext arg) {
-		onEnter(new Node("Hostnumber", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Hostnumber", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inHostnumber.push(true);
 	}
 
@@ -169,7 +154,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterPort(com.generator.generators.url.parser.urlParser.PortContext arg) {
-		onEnter(new Node("Port", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Port", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPort.push(true);
 	}
 
@@ -186,7 +171,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterPath(com.generator.generators.url.parser.urlParser.PathContext arg) {
-		onEnter(new Node("Path", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Path", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPath.push(true);
 	}
 
@@ -203,7 +188,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
-		onEnter(new Node("User", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("User", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inUser.push(true);
 	}
 
@@ -220,7 +205,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		onEnter(new Node("Login", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Login", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inLogin.push(true);
 	}
 
@@ -237,7 +222,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
-		onEnter(new Node("Password", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Password", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPassword.push(true);
 	}
 
@@ -254,7 +239,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		onEnter(new Node("Frag", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Frag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFrag.push(true);
 	}
 
@@ -271,7 +256,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		onEnter(new Node("Search", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSearch.push(true);
 	}
 
@@ -288,7 +273,7 @@ public class urlNodeListener extends urlBaseListener {
 
 	@Override
 	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		onEnter(new Node("Searchparameter", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Searchparameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inSearchparameter.push(true);
 	}
 
@@ -301,11 +286,28 @@ public class urlNodeListener extends urlBaseListener {
       return !inSearchparameter.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return !inString.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
 
 	@Override
 	public void enterQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		onEnter(new Node("Query", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQuery.push(true);
 	}
 

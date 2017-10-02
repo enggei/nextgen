@@ -7,12 +7,14 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,11 +48,28 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
+
+	@Override
+	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		onEnter(new Node("Message", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inMessage.push(true);
+	}
+
+	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		onExit();
+		this.inMessage.pop();
+	}
+
+	public boolean inMessage() {
+      return !inMessage.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
 
 	@Override
 	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("StartRule", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStartRule.push(true);
 	}
 
@@ -67,7 +86,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		onEnter(new Node("StackTrace", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("StackTrace", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStackTrace.push(true);
 	}
 
@@ -84,7 +103,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		onEnter(new Node("StackTraceLine", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("StackTraceLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inStackTraceLine.push(true);
 	}
 
@@ -101,7 +120,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		onEnter(new Node("AtLine", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("AtLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAtLine.push(true);
 	}
 
@@ -118,7 +137,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
-		onEnter(new Node("CausedByLine", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("CausedByLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inCausedByLine.push(true);
 	}
 
@@ -135,7 +154,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		onEnter(new Node("EllipsisLine", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EllipsisLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEllipsisLine.push(true);
 	}
 
@@ -152,7 +171,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		onEnter(new Node("MessageLine", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MessageLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMessageLine.push(true);
 	}
 
@@ -169,7 +188,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
-		onEnter(new Node("QualifiedClass", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("QualifiedClass", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiedClass.push(true);
 	}
 
@@ -186,7 +205,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		onEnter(new Node("ClassFile", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassFile.push(true);
 	}
 
@@ -203,7 +222,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
-		onEnter(new Node("InnerClassName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("InnerClassName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inInnerClassName.push(true);
 	}
 
@@ -220,7 +239,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
-		onEnter(new Node("QualifiedMethod", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("QualifiedMethod", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inQualifiedMethod.push(true);
 	}
 
@@ -237,7 +256,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
-		onEnter(new Node("Constructor", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Constructor", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inConstructor.push(true);
 	}
 
@@ -254,7 +273,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
-		onEnter(new Node("MethodName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MethodName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMethodName.push(true);
 	}
 
@@ -271,7 +290,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
-		onEnter(new Node("PackagePath", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PackagePath", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPackagePath.push(true);
 	}
 
@@ -288,7 +307,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Identifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inIdentifier.push(true);
 	}
 
@@ -305,7 +324,7 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ClassName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inClassName.push(true);
 	}
 
@@ -316,23 +335,6 @@ public class StackTraceNodeListener extends StackTraceBaseListener {
 
 	public boolean inClassName() {
       return !inClassName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
-
-	@Override
-	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		onEnter(new Node("Message", arg.getText(), arg.getStart().getText()));
-		this.inMessage.push(true);
-	}
-
-	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		onExit();
-		this.inMessage.pop();
-	}
-
-	public boolean inMessage() {
-      return !inMessage.isEmpty(); 
    }
 
 }

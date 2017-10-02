@@ -177,20 +177,22 @@ public class App extends JFrame {
                editor.addLabel("Password", 1, 5);
                editor.add(txtPassword, 3, 5);
 
-               SwingUtil.showDialog(editor, App.this, "Login", () -> {
+               SwingUtil.showDialog(editor, App.this, "Login", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+                     final String uri = txtUri.getText();
+                     if (uri == null || uri.length() == 0 || !uri.toLowerCase().startsWith("bolt://")) return;
+                     if (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0) return;
 
-                  final String uri = txtUri.getText();
-                  if (uri == null || uri.length() == 0 || !uri.toLowerCase().startsWith("bolt://")) return;
-                  if (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0) return;
+                     final RemoteNeoModel remote = new RemoteNeoModel(uri, txtUsername.getText(), new String(txtPassword.getPassword()),
+                           model -> System.out.println("closed"));
 
-                  final RemoteNeoModel remote = new RemoteNeoModel(uri, txtUsername.getText(), new String(txtPassword.getPassword()),
-                        model -> System.out.println("closed"));
-
-                  SwingUtilities.invokeLater(() -> {
-                     model.setDatabase(remote);
-                     model.setProperties("current.database", uri);
-                     model.setProperties("current.database.credentials", txtUsername.getText() + " " + new String(txtPassword.getPassword()));
-                  });
+                     SwingUtilities.invokeLater(() -> {
+                        model.setDatabase(remote);
+                        model.setProperties("current.database", uri);
+                        model.setProperties("current.database.credentials", txtUsername.getText() + " " + new String(txtPassword.getPassword()));
+                     });
+                  }
                });
             }
          });
@@ -372,7 +374,7 @@ public class App extends JFrame {
          return AppMotif.NodePaintStrategy.valueOf(properties.getProperty("node.paint.strategy", AppMotif.NodePaintStrategy.showNameAndLabels.name()));
       }
 
-      String getCurrentCanvasColor() {
+      String getCanvasColor() {
          return properties.getProperty("canvas.color", "#edf8fb");
       }
 
@@ -502,7 +504,6 @@ public class App extends JFrame {
             node.delete();
          }
       }
-
 
 
       public class TransactionHistory {

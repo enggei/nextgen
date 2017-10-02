@@ -7,12 +7,14 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -46,45 +48,11 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText()));
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText()));
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
 
 	@Override
 	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPackageDecl.push(true);
 	}
 
@@ -101,7 +69,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
-		onEnter(new Node("PackageName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PackageName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPackageName.push(true);
 	}
 
@@ -118,7 +86,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterImports(com.generator.generators.protobuf.parser.ProtobufParser.ImportsContext arg) {
-		onEnter(new Node("Imports", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Imports", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inImports.push(true);
 	}
 
@@ -135,7 +103,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterMessage(com.generator.generators.protobuf.parser.ProtobufParser.MessageContext arg) {
-		onEnter(new Node("Message", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Message", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMessage.push(true);
 	}
 
@@ -152,7 +120,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterEnumName(com.generator.generators.protobuf.parser.ProtobufParser.EnumNameContext arg) {
-		onEnter(new Node("EnumName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("EnumName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inEnumName.push(true);
 	}
 
@@ -169,7 +137,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterMessageContent(com.generator.generators.protobuf.parser.ProtobufParser.MessageContentContext arg) {
-		onEnter(new Node("MessageContent", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("MessageContent", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMessageContent.push(true);
 	}
 
@@ -186,7 +154,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterProperty(com.generator.generators.protobuf.parser.ProtobufParser.PropertyContext arg) {
-		onEnter(new Node("Property", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Property", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inProperty.push(true);
 	}
 
@@ -203,7 +171,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
-		onEnter(new Node("PackedValue", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PackedValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPackedValue.push(true);
 	}
 
@@ -220,7 +188,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
-		onEnter(new Node("Extensions", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Extensions", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExtensions.push(true);
 	}
 
@@ -237,7 +205,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
-		onEnter(new Node("PropertyType", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyType.push(true);
 	}
 
@@ -254,7 +222,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
-		onEnter(new Node("ExtensionMax", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("ExtensionMax", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inExtensionMax.push(true);
 	}
 
@@ -267,11 +235,45 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       return !inExtensionMax.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();
 
 	@Override
 	public void enterPropertyName(com.generator.generators.protobuf.parser.ProtobufParser.PropertyNameContext arg) {
-		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertyName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertyName.push(true);
 	}
 
@@ -288,7 +290,7 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	@Override
 	public void enterDefaultValue(com.generator.generators.protobuf.parser.ProtobufParser.DefaultValueContext arg) {
-		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("DefaultValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDefaultValue.push(true);
 	}
 

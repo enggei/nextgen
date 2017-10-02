@@ -7,12 +7,14 @@ public class propertiesNodeListener extends propertiesBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPropertiesFile.push(true);
 	}
 
@@ -67,7 +69,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		onEnter(new Node("Decl", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Decl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDecl.push(true);
 	}
 
@@ -84,7 +86,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		onEnter(new Node("Comment", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Comment", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inComment.push(true);
 	}
 
@@ -101,7 +103,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		onEnter(new Node("Row", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Row", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inRow.push(true);
 	}
 
@@ -118,7 +120,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inValue.push(true);
 	}
 
@@ -135,7 +137,7 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	@Override
 	public void enterKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
-		onEnter(new Node("Key", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Key", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inKey.push(true);
 	}
 

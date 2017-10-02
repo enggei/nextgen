@@ -7,27 +7,7 @@ public abstract class ClojureDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Dispatch")) visitDispatch(node);
-		else if(hasLabel(node, "Regex")) visitRegex(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
-		else if(hasLabel(node, "String")) visitString(node);
-		else if(hasLabel(node, "Hex")) visitHex(node);
-		else if(hasLabel(node, "Bin")) visitBin(node);
-		else if(hasLabel(node, "Bign")) visitBign(node);
-		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Character")) visitCharacter(node);
-		else if(hasLabel(node, "Named_char")) visitNamed_char(node);
-		else if(hasLabel(node, "Any_char")) visitAny_char(node);
-		else if(hasLabel(node, "U_hex_quad")) visitU_hex_quad(node);
-		else if(hasLabel(node, "Nil")) visitNil(node);
-		else if(hasLabel(node, "Keyword")) visitKeyword(node);
-		else if(hasLabel(node, "Simple_keyword")) visitSimple_keyword(node);
-		else if(hasLabel(node, "Macro_keyword")) visitMacro_keyword(node);
-		else if(hasLabel(node, "Symbol")) visitSymbol(node);
-		else if(hasLabel(node, "Simple_sym")) visitSimple_sym(node);
-		else if(hasLabel(node, "Ns_symbol")) visitNs_symbol(node);
-		else if(hasLabel(node, "Param_name")) visitParam_name(node);
-		else if(hasLabel(node, "File")) visitFile(node);
+		if(hasLabel(node, "File")) visitFile(node);
 		else if(hasLabel(node, "Form")) visitForm(node);
 		else if(hasLabel(node, "Forms")) visitForms(node);
 		else if(hasLabel(node, "List")) visitList(node);
@@ -47,127 +27,27 @@ public abstract class ClojureDomainVisitor {
 		else if(hasLabel(node, "Var_quote")) visitVar_quote(node);
 		else if(hasLabel(node, "Host_expr")) visitHost_expr(node);
 		else if(hasLabel(node, "Discard")) visitDiscard(node);
+		else if(hasLabel(node, "Dispatch")) visitDispatch(node);
+		else if(hasLabel(node, "Regex")) visitRegex(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
+		else if(hasLabel(node, "String")) visitString(node);
+		else if(hasLabel(node, "Hex")) visitHex(node);
+		else if(hasLabel(node, "Bin")) visitBin(node);
+		else if(hasLabel(node, "Bign")) visitBign(node);
+		else if(hasLabel(node, "Number")) visitNumber(node);
+		else if(hasLabel(node, "Character")) visitCharacter(node);
+		else if(hasLabel(node, "Named_char")) visitNamed_char(node);
+		else if(hasLabel(node, "Any_char")) visitAny_char(node);
+		else if(hasLabel(node, "U_hex_quad")) visitU_hex_quad(node);
+		else if(hasLabel(node, "Nil")) visitNil(node);
+		else if(hasLabel(node, "Keyword")) visitKeyword(node);
+		else if(hasLabel(node, "Simple_keyword")) visitSimple_keyword(node);
+		else if(hasLabel(node, "Macro_keyword")) visitMacro_keyword(node);
+		else if(hasLabel(node, "Symbol")) visitSymbol(node);
+		else if(hasLabel(node, "Simple_sym")) visitSimple_sym(node);
+		else if(hasLabel(node, "Ns_symbol")) visitNs_symbol(node);
+		else if(hasLabel(node, "Param_name")) visitParam_name(node);
    }
-
-	public void visitDispatch(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRegex(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitString(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHex(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBin(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBign(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNumber(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCharacter(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNamed_char(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAny_char(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitU_hex_quad(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNil(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitKeyword(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSimple_keyword(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMacro_keyword(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSymbol(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSimple_sym(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNs_symbol(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitParam_name(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitFile(Node node) {
 		if (visited.contains(node)) return;
@@ -289,6 +169,126 @@ public abstract class ClojureDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitDispatch(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRegex(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitString(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHex(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBin(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBign(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNumber(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCharacter(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamed_char(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAny_char(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitU_hex_quad(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNil(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitKeyword(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSimple_keyword(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMacro_keyword(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSymbol(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSimple_sym(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNs_symbol(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitParam_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	private boolean hasLabel(Node node, String label) {
    	for (org.neo4j.graphdb.Label lbl : node.getLabels())
       	if (lbl.name().equals(label)) return true;
@@ -296,12 +296,19 @@ public abstract class ClojureDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

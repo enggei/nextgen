@@ -8,12 +8,13 @@ public abstract class ECMAScriptDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Keyword")) visitKeyword(node);
-		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "NotExpression")) visitNotExpression(node);
 		else if(hasLabel(node, "ParenthesizedExpression")) visitParenthesizedExpression(node);
 		else if(hasLabel(node, "ReservedWord")) visitReservedWord(node);
+		else if(hasLabel(node, "DoStatement")) visitDoStatement(node);
 		else if(hasLabel(node, "WhileStatement")) visitWhileStatement(node);
 		else if(hasLabel(node, "ForStatement")) visitForStatement(node);
 		else if(hasLabel(node, "ForVarStatement")) visitForVarStatement(node);
@@ -104,10 +105,15 @@ public abstract class ECMAScriptDomainVisitor {
 		else if(hasLabel(node, "EmptyStatement")) visitEmptyStatement(node);
 		else if(hasLabel(node, "ExpressionStatement")) visitExpressionStatement(node);
 		else if(hasLabel(node, "IfStatement")) visitIfStatement(node);
-		else if(hasLabel(node, "DoStatement")) visitDoStatement(node);
    }
 
 	public void visitBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -120,12 +126,6 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitKeyword(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -144,6 +144,12 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitReservedWord(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDoStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -689,12 +695,6 @@ public abstract class ECMAScriptDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitDoStatement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	private boolean hasLabel(Node node, String label) {
    	for (org.neo4j.graphdb.Label lbl : node.getLabels())
       	if (lbl.name().equals(label)) return true;
@@ -702,12 +702,19 @@ public abstract class ECMAScriptDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

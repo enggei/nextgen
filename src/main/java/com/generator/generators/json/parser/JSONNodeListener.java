@@ -7,12 +7,14 @@ public class JSONNodeListener extends JSONBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class JSONNodeListener extends JSONBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		onEnter(new Node("Value", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inValue.push(true);
 	}
 
@@ -67,7 +69,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onEnter(new Node("Json", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inJson.push(true);
 	}
 
@@ -84,7 +86,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inObj.push(true);
 	}
 
@@ -101,7 +103,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inPair.push(true);
 	}
 
@@ -118,7 +120,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onEnter(new Node("Array", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inArray.push(true);
 	}
 

@@ -30,24 +30,6 @@ parser grammar HTMLParser;
 
 options { tokenVocab=HTMLLexer; }
 
-@members {
-
-public static TokenStream createLexer(java.io.Reader reader) throws java.io.IOException {
-	final ANTLRInputStream input = new ANTLRInputStream(reader);
-	final HTMLLexer lexer = new HTMLLexer(input);
-	return new CommonTokenStream(lexer);
-}
-
-public static void visit(java.io.Reader reader, HTMLParserVisitor<?> visitor) throws java.io.IOException {
-	final ANTLRInputStream input = new ANTLRInputStream(reader);
-    final HTMLLexer lexer = new HTMLLexer(input);
-    final CommonTokenStream stream = new CommonTokenStream(lexer);
-    final HTMLParser parser = new HTMLParser(stream);
-    final HtmlDocumentContext tree = parser.htmlDocument();
-    visitor.visit(tree);
-}
-}
-
 htmlDocument
     : (scriptlet | SEA_WS)* xml? (scriptlet | SEA_WS)* dtd? (scriptlet | SEA_WS)* htmlElements*
     ;

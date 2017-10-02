@@ -28,19 +28,9 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		System.out.println("Field");
-		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
 		System.out.println("Hdr");
-		final Node node = model.findOrCreate(Label.label("Hdr"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -50,7 +40,7 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 	@Override
 	public Node visitRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
 		System.out.println("Row");
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -60,7 +50,17 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 	@Override
 	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
 		System.out.println("CsvFile");
-		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		System.out.println("Field");
+		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

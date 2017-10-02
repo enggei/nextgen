@@ -4,15 +4,13 @@ import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
-import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Stack;
 
 /**
  * Created 25.08.17.
@@ -46,11 +44,6 @@ public class Tests {
             addAlternativesValue("tokensSpec").
             addAlternativesValue("channelsSpec").
             addAlternativesValue("action"));
-
-      grammarST.addFragmentsValue(group.newfragment().
-            setName("WS").
-            addAlternativesValue("[ \\n\\r\\t,]"));
-
       System.out.println(grammarST);
    }
 
@@ -65,32 +58,47 @@ public class Tests {
             "csv/parser/CSV.g4"
       };
 
+      final AntlrGroup antlrGroup = new AntlrGroup();
+
       for (String fileName : grammarFiles) {
 
-         final Set<String> terminals = new LinkedHashSet<>();
+         final AntlrGroup.DomainST domainST = antlrGroup.newDomain().
+               setPackage("com.generator.generators.csv.parser");
 
          final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + fileName))));
          final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
-            @Override
-            public void enterRuleSpec(ANTLRv4Parser.RuleSpecContext arg) {
-               super.enterRuleSpec(arg);
 
-               System.out.println(delim + "Rule name " + nodeStack.peek().startToken);
+            final Stack<AntlrGroup.DomainElementST> domainElementSTStack = new Stack<>();
+
+            @Override
+            public void enterIdentifier(ANTLRv4Parser.IdentifierContext arg) {
+               super.enterIdentifier(arg);
+               domainST.setName(arg.getText() + "Domain");
             }
 
             @Override
-            public void enterTerminal(ANTLRv4Parser.TerminalContext arg) {
-               super.enterTerminal(arg);
-
-               terminals.add(arg.getText());
+            public void enterRuleSpec(ANTLRv4Parser.RuleSpecContext arg) {
+               super.enterRuleSpec(arg);
+               final AntlrGroup.DomainElementST domainElementST = antlrGroup.newDomainElement().
+                     setDomain(domainST.getName()).
+                     setName(arg.getStart().getText());
+               domainElementSTStack.push(domainElementST);
+               domainST.addElementsValue(domainElementSTStack.peek());
             }
          };
          new ParseTreeWalker().walk(listener, parser.grammarSpec());
 
-         System.out.println("terminals: ");
-         for (String terminal : terminals) {
-            System.out.print(" " + terminal);
-         }
+         final ANTLRv4ParserNodeListener.Node root = listener.getRoot();
+         visit(root, domainST,"");
+
+         System.out.println(domainST);
+      }
+   }
+
+   private void visit(ANTLRv4ParserNodeListener.Node node, AntlrGroup.DomainST domainST, String delim) {
+      System.out.println(delim + node.startToken + " " + node.name);
+      for (ANTLRv4ParserNodeListener.Node child : node.children) {
+         visit(child, domainST, delim + " ");
       }
    }
 

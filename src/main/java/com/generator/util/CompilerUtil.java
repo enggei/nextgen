@@ -24,6 +24,7 @@ public class CompilerUtil {
       this.compiler = ToolProvider.getSystemJavaCompiler();
    }
 
+   @SuppressWarnings("unchecked")
    public <T> T newInstance(String canonicalName, Object content, DiagnosticCollector<JavaFileObject> diagnostics) {
 
       // compilation-units
@@ -94,7 +95,7 @@ public class CompilerUtil {
       }
    }
 
-   private static class ClassFileManager extends ForwardingJavaFileManager {
+   private static class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> {
 
       private JavaClassObject jclassObject;
 

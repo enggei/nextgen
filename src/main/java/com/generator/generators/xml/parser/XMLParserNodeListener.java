@@ -7,12 +7,14 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onEnter(new Node("Document", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Document", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDocument.push(true);
 	}
 
@@ -67,7 +69,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inProlog.push(true);
 	}
 
@@ -84,7 +86,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		onEnter(new Node("Content", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Content", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inContent.push(true);
 	}
 
@@ -101,7 +103,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inReference.push(true);
 	}
 
@@ -118,7 +120,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inChardata.push(true);
 	}
 
@@ -135,7 +137,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
-		onEnter(new Node("Misc", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Misc", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inMisc.push(true);
 	}
 
@@ -152,7 +154,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inElement.push(true);
 	}
 
@@ -169,7 +171,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inAttribute.push(true);
 	}
 

@@ -6,11 +6,15 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 
       public final String name;
       public final String value;
+      public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
+			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -29,7 +33,7 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+				if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -45,134 +49,8 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
    }
 
 	@Override
-	public Node visitCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
-		final Node node = new Node("CausedByLine", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		final Node node = new Node("EllipsisLine", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
-		final Node node = new Node("QualifiedClass", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
-		final Node node = new Node("InnerClassName", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		final Node node = new Node("ClassFile", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
-		final Node node = new Node("QualifiedMethod", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
-		final Node node = new Node("Constructor", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
-		final Node node = new Node("MethodName", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
-		final Node node = new Node("PackagePath", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		final Node node = new Node("Identifier", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		final Node node = new Node("Message", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		final Node node = new Node("ClassName", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		final Node node = new Node("StackTraceLine", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		final Node node = new Node("AtLine", arg.getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		final Node node = new Node("MessageLine", arg.getText());
+		final Node node = new Node("Message", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -181,7 +59,52 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 
 	@Override
 	public Node visitStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		final Node node = new Node("StartRule", arg.getText());
+		final Node node = new Node("StartRule", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
+		final Node node = new Node("Constructor", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
+		final Node node = new Node("MethodName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
+		final Node node = new Node("PackagePath", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+		final Node node = new Node("Identifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		final Node node = new Node("ClassName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -190,7 +113,88 @@ public class StackTraceNodeVisitor extends StackTraceBaseVisitor<StackTraceNodeV
 
 	@Override
 	public Node visitStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		final Node node = new Node("StackTrace", arg.getText());
+		final Node node = new Node("StackTrace", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		final Node node = new Node("StackTraceLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		final Node node = new Node("AtLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
+		final Node node = new Node("CausedByLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
+		final Node node = new Node("EllipsisLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
+		final Node node = new Node("MessageLine", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
+		final Node node = new Node("QualifiedClass", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
+		final Node node = new Node("InnerClassName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		final Node node = new Node("ClassFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
+		final Node node = new Node("QualifiedMethod", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

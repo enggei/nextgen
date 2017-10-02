@@ -303,47 +303,53 @@ public class ProjectPlugin extends Plugin {
                      editor.add(txtExtension, 5, 15);
 
                      editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-                     SwingUtil.showDialog(editor, app, "Renderer", () -> getGraph().doInTransaction(new NeoModel.Committer() {
+                     SwingUtil.showDialog(editor, app, "Renderer", new SwingUtil.ConfirmAction() {
                         @Override
-                        public void doAction(Transaction tx1) throws Throwable {
-                           final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+                        public void verifyAndCommit() throws Exception {
 
-                           if (radJavaFile.isSelected()) {
-                              if (cboPackageProperty.getSelectedItem().toString().equals(cboClassnameProperty.getSelectedItem().toString()))
-                                 throw new IllegalStateException("package and classname are using same parameter.");
-                              rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
-                              rendererRelationship.setProperty("package", cboPackageProperty.getSelectedItem().toString());
-                              rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx1) throws Throwable {
+                                 final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
 
-                           } else if (radPlainFile.isSelected()) {
+                                 if (radJavaFile.isSelected()) {
+                                    if (cboPackageProperty.getSelectedItem().toString().equals(cboClassnameProperty.getSelectedItem().toString()))
+                                       throw new IllegalStateException("package and classname are using same parameter.");
+                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
+                                    rendererRelationship.setProperty("package", cboPackageProperty.getSelectedItem().toString());
+                                    rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
+
+                                 } else if (radPlainFile.isSelected()) {
 //                              if (txtPlainFileExtension.getText().trim().length() == 0)
 //                                 throw new IllegalStateException("file must have an extension");
-                              if (txtFilename.getText().trim().length() == 0)
-                                 throw new IllegalStateException("file must be set");
+                                    if (txtFilename.getText().trim().length() == 0)
+                                       throw new IllegalStateException("file must be set");
 //                                 if (txtPlainFileDir.getText().trim().length() == 0)
 //                                    throw new IllegalStateException("file must have a path");
-                              rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
-                              rendererRelationship.setProperty(Properties.dir.name(), txtPlainFileDir.getText().trim());
-                              rendererRelationship.setProperty(Properties.file.name(), txtFilename.getText().trim());
-                              rendererRelationship.setProperty(Properties.extension.name(), txtPlainFileExtension.getText().trim());
+                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                                    rendererRelationship.setProperty(Properties.dir.name(), txtPlainFileDir.getText().trim());
+                                    rendererRelationship.setProperty(Properties.file.name(), txtFilename.getText().trim());
+                                    rendererRelationship.setProperty(Properties.extension.name(), txtPlainFileExtension.getText().trim());
 
-                           } else if (radNamedFile.isSelected()) {
-                              if (txtExtension.getText().trim().length() == 0)
-                                 throw new IllegalStateException("file must have an extension");
-                              if (txtNamedFileDir.getText().trim().length() == 0)
-                                 throw new IllegalStateException("file must have a path");
-                              rendererRelationship.setProperty(Properties.fileType.name(), Filetype.namedFile.name());
-                              rendererRelationship.setProperty(Properties.filename.name(), cboFilenameProperty.getSelectedItem().toString());
-                              rendererRelationship.setProperty(Properties.dir.name(), txtNamedFileDir.getText().trim());
-                              rendererRelationship.setProperty(Properties.extension.name(), txtExtension.getText().trim());
-                           }
-                        }
+                                 } else if (radNamedFile.isSelected()) {
+                                    if (txtExtension.getText().trim().length() == 0)
+                                       throw new IllegalStateException("file must have an extension");
+                                    if (txtNamedFileDir.getText().trim().length() == 0)
+                                       throw new IllegalStateException("file must have a path");
+                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.namedFile.name());
+                                    rendererRelationship.setProperty(Properties.filename.name(), cboFilenameProperty.getSelectedItem().toString());
+                                    rendererRelationship.setProperty(Properties.dir.name(), txtNamedFileDir.getText().trim());
+                                    rendererRelationship.setProperty(Properties.extension.name(), txtExtension.getText().trim());
+                                 }
+                              }
 
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showException(editor, throwable);
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(editor, throwable);
+                              }
+                           });
                         }
-                     }));
+                     });
                   }
 
                   private Object[] asArray(Node templateNode) {

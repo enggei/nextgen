@@ -325,9 +325,9 @@ final class InformationPanel extends JPanel {
                editor.add(txtNewLabel, 3, 5);
                editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.OnSave() {
+               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.ConfirmAction() {
                   @Override
-                  public void verifyAndSave() throws Exception {
+                  public void verifyAndCommit() throws Exception {
 
                      final Label toBeReplaced = Label.label((String) cboExisting.getSelectedItem());
                      final Label replacement = Label.label(txtNewLabel.getText().trim().length() == 0 ? (String) cboReplacements.getSelectedItem() : txtNewLabel.getText().trim());
@@ -400,9 +400,9 @@ final class InformationPanel extends JPanel {
                editor.add(txtNewLabel, 3, 3);
                editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.OnSave() {
+               SwingUtil.showDialog(editor, app, "Change Label", new SwingUtil.ConfirmAction() {
                   @Override
-                  public void verifyAndSave() throws Exception {
+                  public void verifyAndCommit() throws Exception {
 
                      final Label toBeReplaced = (Label) getUserObject();
                      final Label replacement = Label.label(txtNewLabel.getText().trim().length() == 0 ? (String) cboReplacements.getSelectedItem() : txtNewLabel.getText().trim());
@@ -437,9 +437,9 @@ final class InformationPanel extends JPanel {
 
                final ColorBrewerSelector editor = new ColorBrewerSelector();
 
-               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.OnSave() {
+               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.ConfirmAction() {
                   @Override
-                  public void verifyAndSave() throws Exception {
+                  public void verifyAndCommit() throws Exception {
                      final Color color = editor.getSelectedColor();
                      if (color == null) return;
 
@@ -449,8 +449,7 @@ final class InformationPanel extends JPanel {
                            Node colorNode = app.model.graph().findNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name());
                            if (colorNode == null)
                               colorNode = app.model.graph().newNode(AppMotif.Entities._Color, "label", ((Label) getUserObject()).name(), AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", Color.BLACK.getRed(), Color.BLACK.getGreen(), Color.BLACK.getBlue()));
-                           final String hex = String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
-                           colorNode.setProperty(AppMotif.Properties._color.name(), hex);
+                           colorNode.setProperty(AppMotif.Properties._color.name(), String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
                            app.events.firePropertyChange(NODE_COLOR_CHANGED, ((Label) getUserObject()).name(), color);
                         }
 
@@ -523,9 +522,9 @@ final class InformationPanel extends JPanel {
 
                final ColorBrewerSelector editor = new ColorBrewerSelector();
 
-               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.OnSave() {
+               SwingUtil.showDialog(editor, app, "Select color", new SwingUtil.ConfirmAction() {
                   @Override
-                  public void verifyAndSave() throws Exception {
+                  public void verifyAndCommit() throws Exception {
                      final Color color = editor.getSelectedColor();
                      if (color == null) return;
 

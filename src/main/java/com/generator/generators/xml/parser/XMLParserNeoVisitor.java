@@ -28,9 +28,19 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		System.out.println("Document");
+		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
 		System.out.println("Prolog");
-		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -40,7 +50,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
 		System.out.println("Content");
-		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -50,7 +60,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		System.out.println("Reference");
-		final Node node = model.findOrCreate(Label.label("Reference"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Reference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -60,7 +70,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
 		System.out.println("Chardata");
-		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -70,7 +80,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		System.out.println("Misc");
-		final Node node = model.findOrCreate(Label.label("Misc"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Misc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -80,7 +90,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
 		System.out.println("Element");
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -90,17 +100,7 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	@Override
 	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		System.out.println("Attribute");
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		System.out.println("Document");
-		final Node node = model.findOrCreate(Label.label("Document"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -7,12 +7,14 @@ public class STGParserNodeListener extends STGParserBaseListener {
       public final String name;
       public final String value;
       public final String startToken;
+      public final String endToken;
       public final java.util.Set<Node> children = new java.util.LinkedHashSet<>();
 
-      public Node(String name, String value, String startToken) {
+      public Node(String name, String value, String startToken, String endToken) {
          this.name = name;
          this.value = value;
 			this.startToken = startToken;
+			this.endToken = endToken;
       }
    }
 
@@ -31,7 +33,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
    protected void onEnter(Node node) {
       if (!nodeStack.isEmpty()) nodeStack.peek().children.add(node);
       nodeStack.push(node);
-		if (debug) System.out.println(delim.toString() + node.name + " '" + node.value + "'");
+		if (debug) System.out.println(delim.toString() + node.name + " : (" + nodeStack.peek().startToken + ") (" + node.value + ") (" + nodeStack.peek().endToken + ")");
 		delim.append("\t");
    }
 
@@ -50,7 +52,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onEnter(new Node("Template", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inTemplate.push(true);
 	}
 
@@ -67,7 +69,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		onEnter(new Node("Imports", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Imports", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inImports.push(true);
 	}
 
@@ -84,7 +86,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		onEnter(new Node("Group", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Group", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inGroup.push(true);
 	}
 
@@ -101,7 +103,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDelimiters(com.generator.generators.stringtemplate.parserg4.STGParser.DelimitersContext arg) {
-		onEnter(new Node("Delimiters", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Delimiters", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDelimiters.push(true);
 	}
 
@@ -118,7 +120,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
-		onEnter(new Node("FormalArgs", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FormalArgs", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFormalArgs.push(true);
 	}
 
@@ -135,7 +137,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
-		onEnter(new Node("FormalArg", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("FormalArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inFormalArg.push(true);
 	}
 
@@ -152,7 +154,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDict(com.generator.generators.stringtemplate.parserg4.STGParser.DictContext arg) {
-		onEnter(new Node("Dict", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("Dict", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDict.push(true);
 	}
 
@@ -169,7 +171,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
-		onEnter(new Node("DictPairs", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("DictPairs", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDictPairs.push(true);
 	}
 
@@ -186,7 +188,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		onEnter(new Node("KeyValuePair", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("KeyValuePair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inKeyValuePair.push(true);
 	}
 
@@ -203,7 +205,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		onEnter(new Node("DefaultValuePair", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("DefaultValuePair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inDefaultValuePair.push(true);
 	}
 
@@ -220,7 +222,7 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	@Override
 	public void enterKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
-		onEnter(new Node("KeyValue", arg.getText(), arg.getStart().getText()));
+		onEnter(new Node("KeyValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
 		this.inKeyValue.push(true);
 	}
 

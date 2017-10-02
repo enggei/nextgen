@@ -1,6 +1,6 @@
 package com.generator.neo.remote;
 
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 import org.neo4j.driver.v1.Transaction;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;

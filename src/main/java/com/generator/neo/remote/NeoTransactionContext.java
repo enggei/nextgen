@@ -1,6 +1,7 @@
 package com.generator.neo.remote;
 
-import com.sun.istack.internal.NotNull;
+
+import org.jetbrains.annotations.NotNull;
 
 public class NeoTransactionContext {
 

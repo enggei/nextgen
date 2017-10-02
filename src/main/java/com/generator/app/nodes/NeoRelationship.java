@@ -152,24 +152,26 @@ public class NeoRelationship implements PropertyChangeListener {
                         editor.add(txtNew, 3, 5);
                         editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-                        SwingUtil.showDialog(editor, workspace.app, "Change type", () -> {
+                        SwingUtil.showDialog(editor, workspace.app, "Change type", new SwingUtil.ConfirmAction() {
+                           @Override
+                           public void verifyAndCommit() throws Exception {
+                              final String newType = txtNew.getText().trim().length() == 0 ? (String) cboRelationships.getSelectedItem() : txtNew.getText().trim().toUpperCase();
 
-                           final String newType = txtNew.getText().trim().length() == 0 ? (String) cboRelationships.getSelectedItem() : txtNew.getText().trim().toUpperCase();
+                              workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
+                                 @Override
+                                 public void doAction(Transaction tx1) throws Throwable {
+                                    final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
+                                    for (String key : relationship.getPropertyKeys())
+                                       newRelationship.setProperty(key, relationship.getProperty(key));
+                                    relationship.delete();
+                                 }
 
-                           workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
-                              @Override
-                              public void doAction(Transaction tx1) throws Throwable {
-                                 final Relationship newRelationship = relationship.getStartNode().createRelationshipTo(relationship.getEndNode(), RelationshipType.withName(newType));
-                                 for (String key : relationship.getPropertyKeys())
-                                    newRelationship.setProperty(key, relationship.getProperty(key));
-                                 relationship.delete();
-                              }
-
-                              @Override
-                              public void exception(Throwable throwable) {
-                                 SwingUtil.showExceptionNoStack(workspace.app, throwable);
-                              }
-                           });
+                                 @Override
+                                 public void exception(Throwable throwable) {
+                                    SwingUtil.showExceptionNoStack(workspace.app, throwable);
+                                 }
+                              });
+                           }
                         });
                      }
                   });

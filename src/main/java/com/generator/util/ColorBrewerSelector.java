@@ -20,6 +20,7 @@ public class ColorBrewerSelector extends JPanel {
       tabbedPane.add("Sequential", new PalettePanel(ColorBrewer.getSequentialColorPalettes()));
       tabbedPane.add("Diverging", new PalettePanel(ColorBrewer.getDivergingColorPalettes(false)));
       tabbedPane.add("Qualitative", new PalettePanel(ColorBrewer.getQualitativeColorPalettes(false)));
+      tabbedPane.add("Custom", new PalettePanel(ColorBrewer.getQualitativeColorPalettes(false)));
       add(tabbedPane, BorderLayout.CENTER);
    }
 
@@ -58,7 +59,7 @@ public class ColorBrewerSelector extends JPanel {
                col += 2;
             }
 
-            palettesPanel.add(paletteForm);
+            palettesPanel.add(paletteForm.build());
          }
 
          final Dimension preferredSize = new Dimension(500, 400);
@@ -80,13 +81,14 @@ public class ColorBrewerSelector extends JPanel {
 
       final JFrame owner = new JFrame();
       owner.setSize(new Dimension(800, 600));
-      SwingUtil.showDialog(editor, owner, "Select color", () -> {
-
-         final Color color = editor.getSelectedColor();
-         System.out.println("color " + color);
+      SwingUtil.showDialog(editor, owner, "Select color", new SwingUtil.ConfirmAction() {
+         @Override
+         public void verifyAndCommit() throws Exception {
+            final Color color = editor.getSelectedColor();
+            System.out.println("color " + color);
+         }
       });
    }
-
 
    /**
     * The data values were extracted from the RColorBrewer R package.

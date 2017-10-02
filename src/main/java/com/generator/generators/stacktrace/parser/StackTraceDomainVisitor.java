@@ -7,7 +7,8 @@ public abstract class StackTraceDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "StartRule")) visitStartRule(node);
+		if(hasLabel(node, "Message")) visitMessage(node);
+		else if(hasLabel(node, "StartRule")) visitStartRule(node);
 		else if(hasLabel(node, "StackTrace")) visitStackTrace(node);
 		else if(hasLabel(node, "StackTraceLine")) visitStackTraceLine(node);
 		else if(hasLabel(node, "AtLine")) visitAtLine(node);
@@ -23,8 +24,13 @@ public abstract class StackTraceDomainVisitor {
 		else if(hasLabel(node, "PackagePath")) visitPackagePath(node);
 		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
 		else if(hasLabel(node, "ClassName")) visitClassName(node);
-		else if(hasLabel(node, "Message")) visitMessage(node);
    }
+
+	public void visitMessage(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitStartRule(Node node) {
 		if (visited.contains(node)) return;
@@ -122,12 +128,6 @@ public abstract class StackTraceDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitMessage(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	private boolean hasLabel(Node node, String label) {
    	for (org.neo4j.graphdb.Label lbl : node.getLabels())
       	if (lbl.name().equals(label)) return true;
@@ -135,12 +135,19 @@ public abstract class StackTraceDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

@@ -43,7 +43,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.css.parser.css3Parser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBlock.push(true);
 	}
@@ -57,29 +57,11 @@ public class css3NeoListener extends css3BaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText());
-		onEnter(node);
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
 	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inExpression.push(true);
 	}
@@ -93,11 +75,29 @@ public class css3NeoListener extends css3BaseListener {
       return !inExpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		final Node node = model.findOrCreate(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
+		onEnter(node);
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
 
 	@Override
 	public void enterStylesheet(com.generator.generators.css.parser.css3Parser.StylesheetContext arg) {
-		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Stylesheet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inStylesheet.push(true);
 	}
@@ -115,7 +115,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodCharset"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GoodCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGoodCharset.push(true);
 	}
@@ -133,7 +133,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadCharset"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadCharset.push(true);
 	}
@@ -151,7 +151,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GoodImport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGoodImport.push(true);
 	}
@@ -169,7 +169,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadImport"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadImport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadImport.push(true);
 	}
@@ -187,7 +187,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGoodNamespace(com.generator.generators.css.parser.css3Parser.GoodNamespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodNamespace"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GoodNamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGoodNamespace.push(true);
 	}
@@ -205,7 +205,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadNamespace(com.generator.generators.css.parser.css3Parser.BadNamespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadNamespace"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadNamespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadNamespace.push(true);
 	}
@@ -223,7 +223,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterNamespacePrefix(com.generator.generators.css.parser.css3Parser.NamespacePrefixContext arg) {
-		final Node node = model.findOrCreate(Label.label("NamespacePrefix"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("NamespacePrefix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inNamespacePrefix.push(true);
 	}
@@ -241,7 +241,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMedia(com.generator.generators.css.parser.css3Parser.MediaContext arg) {
-		final Node node = model.findOrCreate(Label.label("Media"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Media"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMedia.push(true);
 	}
@@ -259,7 +259,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMediaQueryList(com.generator.generators.css.parser.css3Parser.MediaQueryListContext arg) {
-		final Node node = model.findOrCreate(Label.label("MediaQueryList"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MediaQueryList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMediaQueryList.push(true);
 	}
@@ -277,7 +277,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("MediaQuery"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MediaQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMediaQuery.push(true);
 	}
@@ -295,7 +295,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMediaType(com.generator.generators.css.parser.css3Parser.MediaTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("MediaType"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MediaType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMediaType.push(true);
 	}
@@ -313,7 +313,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMediaExpression(com.generator.generators.css.parser.css3Parser.MediaExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MediaExpression"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MediaExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMediaExpression.push(true);
 	}
@@ -331,7 +331,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterMediaFeature(com.generator.generators.css.parser.css3Parser.MediaFeatureContext arg) {
-		final Node node = model.findOrCreate(Label.label("MediaFeature"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MediaFeature"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMediaFeature.push(true);
 	}
@@ -349,7 +349,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterPage(com.generator.generators.css.parser.css3Parser.PageContext arg) {
-		final Node node = model.findOrCreate(Label.label("Page"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Page"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPage.push(true);
 	}
@@ -367,7 +367,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterPseudoPage(com.generator.generators.css.parser.css3Parser.PseudoPageContext arg) {
-		final Node node = model.findOrCreate(Label.label("PseudoPage"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("PseudoPage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPseudoPage.push(true);
 	}
@@ -385,7 +385,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSelectorGroup(com.generator.generators.css.parser.css3Parser.SelectorGroupContext arg) {
-		final Node node = model.findOrCreate(Label.label("SelectorGroup"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SelectorGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSelectorGroup.push(true);
 	}
@@ -403,7 +403,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSelector(com.generator.generators.css.parser.css3Parser.SelectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Selector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSelector.push(true);
 	}
@@ -421,7 +421,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCombinator(com.generator.generators.css.parser.css3Parser.CombinatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Combinator"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Combinator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCombinator.push(true);
 	}
@@ -439,7 +439,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSimpleSelectorSequence(com.generator.generators.css.parser.css3Parser.SimpleSelectorSequenceContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleSelectorSequence"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SimpleSelectorSequence"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSimpleSelectorSequence.push(true);
 	}
@@ -457,7 +457,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeSelector"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("TypeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inTypeSelector.push(true);
 	}
@@ -475,7 +475,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeNamespacePrefix"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("TypeNamespacePrefix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inTypeNamespacePrefix.push(true);
 	}
@@ -493,7 +493,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("ElementName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inElementName.push(true);
 	}
@@ -511,7 +511,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUniversal(com.generator.generators.css.parser.css3Parser.UniversalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Universal"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Universal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUniversal.push(true);
 	}
@@ -529,7 +529,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterClassName(com.generator.generators.css.parser.css3Parser.ClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inClassName.push(true);
 	}
@@ -547,7 +547,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterAttrib(com.generator.generators.css.parser.css3Parser.AttribContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attrib"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Attrib"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inAttrib.push(true);
 	}
@@ -565,7 +565,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterPseudo(com.generator.generators.css.parser.css3Parser.PseudoContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pseudo"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Pseudo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPseudo.push(true);
 	}
@@ -583,7 +583,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFunctionalPseudo(com.generator.generators.css.parser.css3Parser.FunctionalPseudoContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionalPseudo"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FunctionalPseudo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFunctionalPseudo.push(true);
 	}
@@ -601,7 +601,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterNegation(com.generator.generators.css.parser.css3Parser.NegationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Negation"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Negation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inNegation.push(true);
 	}
@@ -619,7 +619,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterNegationArg(com.generator.generators.css.parser.css3Parser.NegationArgContext arg) {
-		final Node node = model.findOrCreate(Label.label("NegationArg"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("NegationArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inNegationArg.push(true);
 	}
@@ -637,7 +637,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGoodOperator(com.generator.generators.css.parser.css3Parser.GoodOperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodOperator"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GoodOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGoodOperator.push(true);
 	}
@@ -655,7 +655,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadOperator(com.generator.generators.css.parser.css3Parser.BadOperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadOperator"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadOperator.push(true);
 	}
@@ -673,7 +673,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGoodProperty(com.generator.generators.css.parser.css3Parser.GoodPropertyContext arg) {
-		final Node node = model.findOrCreate(Label.label("GoodProperty"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GoodProperty"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGoodProperty.push(true);
 	}
@@ -691,7 +691,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadProperty(com.generator.generators.css.parser.css3Parser.BadPropertyContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadProperty"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadProperty"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadProperty.push(true);
 	}
@@ -709,7 +709,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKnownRuleset(com.generator.generators.css.parser.css3Parser.KnownRulesetContext arg) {
-		final Node node = model.findOrCreate(Label.label("KnownRuleset"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KnownRuleset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKnownRuleset.push(true);
 	}
@@ -727,7 +727,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownRuleset(com.generator.generators.css.parser.css3Parser.UnknownRulesetContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownRuleset"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownRuleset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownRuleset.push(true);
 	}
@@ -745,7 +745,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterDeclarationList(com.generator.generators.css.parser.css3Parser.DeclarationListContext arg) {
-		final Node node = model.findOrCreate(Label.label("DeclarationList"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("DeclarationList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inDeclarationList.push(true);
 	}
@@ -763,7 +763,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKnownDeclaration(com.generator.generators.css.parser.css3Parser.KnownDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("KnownDeclaration"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KnownDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKnownDeclaration.push(true);
 	}
@@ -781,7 +781,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownDeclaration(com.generator.generators.css.parser.css3Parser.UnknownDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownDeclaration"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownDeclaration.push(true);
 	}
@@ -799,7 +799,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterPrio(com.generator.generators.css.parser.css3Parser.PrioContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prio"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Prio"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPrio.push(true);
 	}
@@ -817,7 +817,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.css.parser.css3Parser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inValue.push(true);
 	}
@@ -835,7 +835,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterExpr(com.generator.generators.css.parser.css3Parser.ExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inExpr.push(true);
 	}
@@ -853,7 +853,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKnownTerm(com.generator.generators.css.parser.css3Parser.KnownTermContext arg) {
-		final Node node = model.findOrCreate(Label.label("KnownTerm"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KnownTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKnownTerm.push(true);
 	}
@@ -871,7 +871,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownTerm(com.generator.generators.css.parser.css3Parser.UnknownTermContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownTerm"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownTerm.push(true);
 	}
@@ -889,7 +889,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterBadTerm(com.generator.generators.css.parser.css3Parser.BadTermContext arg) {
-		final Node node = model.findOrCreate(Label.label("BadTerm"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("BadTerm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inBadTerm.push(true);
 	}
@@ -907,7 +907,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFunction(com.generator.generators.css.parser.css3Parser.FunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFunction.push(true);
 	}
@@ -925,7 +925,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterDxImageTransform(com.generator.generators.css.parser.css3Parser.DxImageTransformContext arg) {
-		final Node node = model.findOrCreate(Label.label("DxImageTransform"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("DxImageTransform"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inDxImageTransform.push(true);
 	}
@@ -943,7 +943,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterHexcolor(com.generator.generators.css.parser.css3Parser.HexcolorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hexcolor"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Hexcolor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inHexcolor.push(true);
 	}
@@ -961,7 +961,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterPercentage(com.generator.generators.css.parser.css3Parser.PercentageContext arg) {
-		final Node node = model.findOrCreate(Label.label("Percentage"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Percentage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPercentage.push(true);
 	}
@@ -979,7 +979,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterDimension(com.generator.generators.css.parser.css3Parser.DimensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dimension"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inDimension.push(true);
 	}
@@ -997,7 +997,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownDimension(com.generator.generators.css.parser.css3Parser.UnknownDimensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownDimension"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownDimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownDimension.push(true);
 	}
@@ -1015,7 +1015,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterAny(com.generator.generators.css.parser.css3Parser.AnyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Any"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Any"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inAny.push(true);
 	}
@@ -1033,7 +1033,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownAtRule(com.generator.generators.css.parser.css3Parser.UnknownAtRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownAtRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownAtRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownAtRule.push(true);
 	}
@@ -1051,7 +1051,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterAtKeyword(com.generator.generators.css.parser.css3Parser.AtKeywordContext arg) {
-		final Node node = model.findOrCreate(Label.label("AtKeyword"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("AtKeyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inAtKeyword.push(true);
 	}
@@ -1069,7 +1069,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnused(com.generator.generators.css.parser.css3Parser.UnusedContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unused"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Unused"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnused.push(true);
 	}
@@ -1087,7 +1087,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterNestedStatement(com.generator.generators.css.parser.css3Parser.NestedStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("NestedStatement"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("NestedStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inNestedStatement.push(true);
 	}
@@ -1105,7 +1105,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGroupRuleBody(com.generator.generators.css.parser.css3Parser.GroupRuleBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("GroupRuleBody"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GroupRuleBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGroupRuleBody.push(true);
 	}
@@ -1123,7 +1123,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsRule(com.generator.generators.css.parser.css3Parser.SupportsRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsRule.push(true);
 	}
@@ -1141,7 +1141,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsCondition(com.generator.generators.css.parser.css3Parser.SupportsConditionContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsCondition"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsCondition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsCondition.push(true);
 	}
@@ -1159,7 +1159,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsConditionInParens(com.generator.generators.css.parser.css3Parser.SupportsConditionInParensContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsConditionInParens"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsConditionInParens"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsConditionInParens.push(true);
 	}
@@ -1177,7 +1177,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsNegation(com.generator.generators.css.parser.css3Parser.SupportsNegationContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsNegation"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsNegation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsNegation.push(true);
 	}
@@ -1195,7 +1195,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsConjunction(com.generator.generators.css.parser.css3Parser.SupportsConjunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsConjunction"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsConjunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsConjunction.push(true);
 	}
@@ -1213,7 +1213,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsDisjunction(com.generator.generators.css.parser.css3Parser.SupportsDisjunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsDisjunction"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsDisjunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsDisjunction.push(true);
 	}
@@ -1231,7 +1231,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterSupportsDeclarationCondition(com.generator.generators.css.parser.css3Parser.SupportsDeclarationConditionContext arg) {
-		final Node node = model.findOrCreate(Label.label("SupportsDeclarationCondition"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("SupportsDeclarationCondition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inSupportsDeclarationCondition.push(true);
 	}
@@ -1249,7 +1249,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterGeneralEnclosed(com.generator.generators.css.parser.css3Parser.GeneralEnclosedContext arg) {
-		final Node node = model.findOrCreate(Label.label("GeneralEnclosed"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("GeneralEnclosed"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inGeneralEnclosed.push(true);
 	}
@@ -1267,7 +1267,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterVar(com.generator.generators.css.parser.css3Parser.VarContext arg) {
-		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Var"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inVar.push(true);
 	}
@@ -1285,7 +1285,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCalc(com.generator.generators.css.parser.css3Parser.CalcContext arg) {
-		final Node node = model.findOrCreate(Label.label("Calc"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Calc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCalc.push(true);
 	}
@@ -1303,7 +1303,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCalcSum(com.generator.generators.css.parser.css3Parser.CalcSumContext arg) {
-		final Node node = model.findOrCreate(Label.label("CalcSum"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CalcSum"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCalcSum.push(true);
 	}
@@ -1321,7 +1321,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCalcProduct(com.generator.generators.css.parser.css3Parser.CalcProductContext arg) {
-		final Node node = model.findOrCreate(Label.label("CalcProduct"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CalcProduct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCalcProduct.push(true);
 	}
@@ -1339,7 +1339,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCalcValue(com.generator.generators.css.parser.css3Parser.CalcValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("CalcValue"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CalcValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCalcValue.push(true);
 	}
@@ -1357,7 +1357,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFontFaceRule(com.generator.generators.css.parser.css3Parser.FontFaceRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("FontFaceRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FontFaceRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFontFaceRule.push(true);
 	}
@@ -1375,7 +1375,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKnownFontFaceDeclaration(com.generator.generators.css.parser.css3Parser.KnownFontFaceDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("KnownFontFaceDeclaration"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KnownFontFaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKnownFontFaceDeclaration.push(true);
 	}
@@ -1393,7 +1393,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterUnknownFontFaceDeclaration(com.generator.generators.css.parser.css3Parser.UnknownFontFaceDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnknownFontFaceDeclaration"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("UnknownFontFaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inUnknownFontFaceDeclaration.push(true);
 	}
@@ -1411,7 +1411,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKeyframesRule(com.generator.generators.css.parser.css3Parser.KeyframesRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyframesRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KeyframesRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKeyframesRule.push(true);
 	}
@@ -1429,7 +1429,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKeyframesBlocks(com.generator.generators.css.parser.css3Parser.KeyframesBlocksContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyframesBlocks"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KeyframesBlocks"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKeyframesBlocks.push(true);
 	}
@@ -1447,7 +1447,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterKeyframeSelector(com.generator.generators.css.parser.css3Parser.KeyframeSelectorContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyframeSelector"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("KeyframeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inKeyframeSelector.push(true);
 	}
@@ -1465,7 +1465,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterViewport(com.generator.generators.css.parser.css3Parser.ViewportContext arg) {
-		final Node node = model.findOrCreate(Label.label("Viewport"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Viewport"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inViewport.push(true);
 	}
@@ -1483,7 +1483,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterCounterStyle(com.generator.generators.css.parser.css3Parser.CounterStyleContext arg) {
-		final Node node = model.findOrCreate(Label.label("CounterStyle"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CounterStyle"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCounterStyle.push(true);
 	}
@@ -1501,7 +1501,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFontFeatureValuesRule(com.generator.generators.css.parser.css3Parser.FontFeatureValuesRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("FontFeatureValuesRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FontFeatureValuesRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFontFeatureValuesRule.push(true);
 	}
@@ -1519,7 +1519,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFontFamilyNameList(com.generator.generators.css.parser.css3Parser.FontFamilyNameListContext arg) {
-		final Node node = model.findOrCreate(Label.label("FontFamilyNameList"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FontFamilyNameList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFontFamilyNameList.push(true);
 	}
@@ -1537,7 +1537,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFontFamilyName(com.generator.generators.css.parser.css3Parser.FontFamilyNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("FontFamilyName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FontFamilyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFontFamilyName.push(true);
 	}
@@ -1555,7 +1555,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFeatureValueBlock(com.generator.generators.css.parser.css3Parser.FeatureValueBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("FeatureValueBlock"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FeatureValueBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFeatureValueBlock.push(true);
 	}
@@ -1573,7 +1573,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFeatureType(com.generator.generators.css.parser.css3Parser.FeatureTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("FeatureType"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FeatureType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFeatureType.push(true);
 	}
@@ -1591,7 +1591,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterFeatureValueDefinition(com.generator.generators.css.parser.css3Parser.FeatureValueDefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("FeatureValueDefinition"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("FeatureValueDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inFeatureValueDefinition.push(true);
 	}
@@ -1609,7 +1609,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterIdent(com.generator.generators.css.parser.css3Parser.IdentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ident"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Ident"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inIdent.push(true);
 	}
@@ -1627,7 +1627,7 @@ public class css3NeoListener extends css3BaseListener {
 
 	@Override
 	public void enterWs(com.generator.generators.css.parser.css3Parser.WsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ws"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Ws"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inWs.push(true);
 	}

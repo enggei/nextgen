@@ -39,11 +39,29 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
+
+	@Override
+	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
+		onEnter(node);
+		this.inMessage.push(true);
+	}
+
+	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
+		onExit();
+		this.inMessage.pop();
+	}
+
+	public boolean inMessage() {
+      return !inMessage.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inStartRule = new java.util.Stack<>();
 
 	@Override
 	public void enterStartRule(com.generator.generators.stacktrace.parser.StackTraceParser.StartRuleContext arg) {
-		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("StartRule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inStartRule.push(true);
 	}
@@ -61,7 +79,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inStackTrace.push(true);
 	}
@@ -79,7 +97,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inStackTraceLine.push(true);
 	}
@@ -97,7 +115,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inAtLine.push(true);
 	}
@@ -115,7 +133,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterCausedByLine(com.generator.generators.stacktrace.parser.StackTraceParser.CausedByLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("CausedByLine"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("CausedByLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inCausedByLine.push(true);
 	}
@@ -133,7 +151,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inEllipsisLine.push(true);
 	}
@@ -151,7 +169,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMessageLine.push(true);
 	}
@@ -169,7 +187,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedClass"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("QualifiedClass"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inQualifiedClass.push(true);
 	}
@@ -187,7 +205,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inClassFile.push(true);
 	}
@@ -205,7 +223,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterInnerClassName(com.generator.generators.stacktrace.parser.StackTraceParser.InnerClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("InnerClassName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("InnerClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inInnerClassName.push(true);
 	}
@@ -223,7 +241,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterQualifiedMethod(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedMethodContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedMethod"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("QualifiedMethod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inQualifiedMethod.push(true);
 	}
@@ -241,7 +259,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterConstructor(com.generator.generators.stacktrace.parser.StackTraceParser.ConstructorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Constructor"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Constructor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inConstructor.push(true);
 	}
@@ -259,7 +277,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterMethodName(com.generator.generators.stacktrace.parser.StackTraceParser.MethodNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("MethodName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("MethodName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inMethodName.push(true);
 	}
@@ -277,7 +295,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterPackagePath(com.generator.generators.stacktrace.parser.StackTraceParser.PackagePathContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("PackagePath"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inPackagePath.push(true);
 	}
@@ -295,7 +313,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inIdentifier.push(true);
 	}
@@ -313,7 +331,7 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	@Override
 	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText());
+		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
 		this.inClassName.push(true);
 	}
@@ -325,24 +343,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	public boolean inClassName() {
       return !inClassName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
-
-	@Override
-	public void enterMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		final Node node = model.findOrCreate(Label.label("Message"), "text", arg.getText());
-		onEnter(node);
-		this.inMessage.push(true);
-	}
-
-	public void exitMessage(com.generator.generators.stacktrace.parser.StackTraceParser.MessageContext arg) {
-		onExit();
-		this.inMessage.pop();
-	}
-
-	public boolean inMessage() {
-      return !inMessage.isEmpty(); 
    }
 
 }

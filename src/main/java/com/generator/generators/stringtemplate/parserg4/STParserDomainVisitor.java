@@ -15,10 +15,6 @@ public abstract class STParserDomainVisitor {
 		else if(hasLabel(node, "Region")) visitRegion(node);
 		else if(hasLabel(node, "Subtemplate")) visitSubtemplate(node);
 		else if(hasLabel(node, "Ifstat")) visitIfstat(node);
-		else if(hasLabel(node, "Element")) visitElement(node);
-		else if(hasLabel(node, "Option")) visitOption(node);
-		else if(hasLabel(node, "List")) visitList(node);
-		else if(hasLabel(node, "Expr")) visitExpr(node);
 		else if(hasLabel(node, "Conditional")) visitConditional(node);
 		else if(hasLabel(node, "AndConditional")) visitAndConditional(node);
 		else if(hasLabel(node, "NotConditional")) visitNotConditional(node);
@@ -30,6 +26,10 @@ public abstract class STParserDomainVisitor {
 		else if(hasLabel(node, "IncludeExpr")) visitIncludeExpr(node);
 		else if(hasLabel(node, "ArgExprList")) visitArgExprList(node);
 		else if(hasLabel(node, "NamedArg")) visitNamedArg(node);
+		else if(hasLabel(node, "Option")) visitOption(node);
+		else if(hasLabel(node, "Element")) visitElement(node);
+		else if(hasLabel(node, "List")) visitList(node);
+		else if(hasLabel(node, "Expr")) visitExpr(node);
 		else if(hasLabel(node, "Primary")) visitPrimary(node);
 		else if(hasLabel(node, "Args")) visitArgs(node);
    }
@@ -77,30 +77,6 @@ public abstract class STParserDomainVisitor {
 	}
 
 	public void visitIfstat(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitElement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOption(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExpr(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -172,6 +148,30 @@ public abstract class STParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitOption(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitElement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitList(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExpr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitPrimary(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -191,12 +191,19 @@ public abstract class STParserDomainVisitor {
    }
 
 	protected Iterable<Relationship> outgoing(Node node, RelationshipType type) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING, type));
    }
 
 	protected Iterable<Relationship> outgoing(Node node) {
-     	return node == null ? java.util.Collections.emptyList() : node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING);
+     	return node == null ? java.util.Collections.emptyList() : sort(node.getRelationships(org.neo4j.graphdb.Direction.OUTGOING));
    }
+
+	protected static Iterable<Relationship> sort(Iterable<Relationship> relationships) {
+		final java.util.Set<Relationship> relations = new java.util.TreeSet<>(java.util.Comparator.comparingLong(Relationship::getId));
+		for (Relationship relationship : relationships)
+			relations.add(relationship);
+		return relations;
+	}
 
 	protected Node other(Node node, Relationship relationship) {
      	return relationship == null ? null : relationship.getOtherNode(node);

@@ -27,3 +27,4 @@ logs
 
 # Database
 src/test/tests/db/
+!/src/main/java/com/generator/generators/lua/parser/Lua.g4

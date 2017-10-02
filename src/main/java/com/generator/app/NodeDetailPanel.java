@@ -37,7 +37,6 @@ class NodeDetailPanel extends JPanel {
       super(new BorderLayout());
       this.app = app;
       this.workspace = workspace;
-      setBackground(Color.decode(app.model.getCurrentCanvasColor()));
 
       add(content, BorderLayout.CENTER);
 
