@@ -18,9 +18,9 @@ public class ColorBrewerSelector extends JPanel {
 
       final JTabbedPane tabbedPane = new JTabbedPane();
       tabbedPane.add("Sequential", new PalettePanel(ColorBrewer.getSequentialColorPalettes()));
-      tabbedPane.add("Diverging", new PalettePanel(ColorBrewer.getDivergingColorPalettes(false)));
-      tabbedPane.add("Qualitative", new PalettePanel(ColorBrewer.getQualitativeColorPalettes(false)));
-      tabbedPane.add("Custom", new PalettePanel(ColorBrewer.getQualitativeColorPalettes(false)));
+      tabbedPane.add("Diverging", new PalettePanel(ColorBrewer.getDivergingColorPalettes()));
+      tabbedPane.add("Qualitative", new PalettePanel(ColorBrewer.getQualitativeColorPalettes()));
+      tabbedPane.add("Custom", new PalettePanel(ColorBrewer.getCustomColorPalettes()));
       add(tabbedPane, BorderLayout.CENTER);
    }
 
@@ -97,6 +97,10 @@ public class ColorBrewerSelector extends JPanel {
     * @author Peter Rose
     */
    public enum ColorBrewer {
+      Custom(4, "Custom", true, new int[][]{
+            {0xffffff},
+            {0xffffff, 0x000000}
+      }),
       BrBG(1, "Brown-Blue-Green", true, new int[][]{
             {0xD8B365},
             {0xD8B365, 0x5AB4AC},
@@ -532,12 +536,10 @@ public class ColorBrewerSelector extends JPanel {
       private final int paletteType;
       private final String paletteDescription;
       private final int[][] hexColors;
-      private boolean colorBlindSave;
 
       ColorBrewer(int paletteType, String paletteDescription, boolean colorBlindSave, int[][] hexColors) {
          this.paletteType = paletteType;
          this.paletteDescription = paletteDescription;
-         this.colorBlindSave = colorBlindSave;
          this.hexColors = hexColors;
       }
 
@@ -548,11 +550,6 @@ public class ColorBrewerSelector extends JPanel {
       public int getMaximumColorCount() {
          return hexColors.length;
       }
-
-      public boolean isColorBlindSave() {
-         return colorBlindSave;
-      }
-
 
       public Color[] getColorPalette(int colorCount) {
          if (colorCount < getMaximumColorCount()) {
@@ -565,32 +562,28 @@ public class ColorBrewerSelector extends JPanel {
          }
       }
 
+      public static ColorBrewer[] getDivergingColorPalettes() {
+         return getPalettes(1);
+      }
+
+      public static ColorBrewer[] getQualitativeColorPalettes() {
+         return getPalettes(2);
+      }
+
       public static ColorBrewer[] getSequentialColorPalettes() {
-         return getPalettes(3, false);
+         return getPalettes(3);
       }
 
-      public static ColorBrewer[] getDivergingColorPalettes(boolean colorBlindSave) {
-         return getPalettes(1, colorBlindSave);
+      public static ColorBrewer[] getCustomColorPalettes() {
+         return getPalettes(4);
       }
 
-      public static ColorBrewer[] getQualitativeColorPalettes(boolean colorBlindSave) {
-         return getPalettes(2, colorBlindSave);
-      }
-
-      private static ColorBrewer[] getPalettes(int paletteType, boolean colorBlindSave) {
+      private static ColorBrewer[] getPalettes(int paletteType) {
          List<ColorBrewer> palettes = new ArrayList<ColorBrewer>();
 
-         if (colorBlindSave) {
-            for (ColorBrewer palette : values()) {
-               if (palette.paletteType == paletteType && palette.colorBlindSave) {
-                  palettes.add(palette);
-               }
-            }
-         } else {
-            for (ColorBrewer palette : values()) {
-               if (palette.paletteType == paletteType) {
-                  palettes.add(palette);
-               }
+         for (ColorBrewer palette : values()) {
+            if (palette.paletteType == paletteType) {
+               palettes.add(palette);
             }
          }
 
@@ -609,7 +602,7 @@ public class ColorBrewerSelector extends JPanel {
 
             Color c1 = new Color(hexColors[maxIndex][index]);
             float remainder = 0.0f;
-            Color c2 = null;
+            Color c2;
             if (index + 1 < hexColors.length) {
                c2 = new Color(hexColors[maxIndex][index + 1]);
                remainder = value - index;
