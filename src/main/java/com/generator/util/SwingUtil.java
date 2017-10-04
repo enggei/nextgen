@@ -1,5 +1,6 @@
 package com.generator.util;
 
+import com.generator.app.App;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -384,6 +385,12 @@ public class SwingUtil {
       if (defaultValue != null) comboBox.setSelectedItem(defaultValue);
    }
 
+   public static char[] showPasswordDialog(App app) {
+      final JPasswordField txtPassword = new JPasswordField();
+      int okCxl = JOptionPane.showConfirmDialog(app, txtPassword, "Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      return okCxl == JOptionPane.OK_OPTION ? txtPassword.getPassword() : null;
+   }
+
    public static abstract class ConfirmAction {
 
       private final String confirmTitle;
@@ -408,7 +415,9 @@ public class SwingUtil {
          return confirmTitle;
       }
 
-      String getCancelTitle() { return cancelTitle; }
+      String getCancelTitle() {
+         return cancelTitle;
+      }
    }
 
    public interface OnClosed {

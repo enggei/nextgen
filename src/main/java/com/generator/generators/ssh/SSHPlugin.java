@@ -13,6 +13,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreePath;
@@ -221,7 +222,8 @@ public class SSHPlugin extends Plugin {
       private final Stack<CommandNode> commandStack = new Stack<>();
       private final JTree commandTree;
 
-      private String password = null;
+      private char[] sudoPassword = null;
+      private String install = null;
 
       ChannelEditor(Channel channel) throws IOException {
          super(new BorderLayout());
@@ -231,6 +233,7 @@ public class SSHPlugin extends Plugin {
 
          final JTextArea txtOutput = new JTextArea();
          txtOutput.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtOutput.setEditable(false);
 
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
          final DataOutputStream dataOut = new DataOutputStream(channel.getOutputStream());
@@ -272,6 +275,17 @@ public class SSHPlugin extends Plugin {
                      }
                   });
 
+                  if (install != null) {
+                     pop.add(new AbstractAction("Install " + install) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           commandStack.push(new CommandNode("Install " + install, install).run(dataOut));
+                           install = null;
+                        }
+                     });
+                  }
+
+
                   pop.add(new AbstractAction("Run Ctrl+C") {
                      @Override
                      public void actionPerformed(ActionEvent e) {
@@ -287,25 +301,45 @@ public class SSHPlugin extends Plugin {
          new Thread(() -> {
             try {
 
-               byte[] bytes = new byte[1024];
+               byte[] bytes = new byte[2048];
                while (active.get()) {
                   if (dataIn.available() > 0) {
                      final int read = dataIn.read(bytes);
-                     cache.append(new String(bytes, 0, read));
-                     SwingUtilities.invokeLater(() -> txtOutput.setText(cache.toString()));
+                     cache.append(new String(bytes, 0, read, "UTF-8"));
 
-                     //todo: use expect ?
+                     final String s = cache.toString();
+                     SwingUtilities.invokeLater(() -> {
+                        txtOutput.setText(s);
+                        try {
+                           txtOutput.setCaretPosition(txtOutput.getLineStartOffset(txtOutput.getLineCount() - 1));
+                        } catch (BadLocationException e) {
+                           System.out.println("Ignoring caret position because of " + e.getMessage());
+                        }
+                     });
 
-                     if (cache.toString().contains("[sudo] password for ") && password == null) {
-                        final String s = JOptionPane.showInputDialog("Sudo password");
-                        if (s == null || s.length() == 0) return;
-                        this.password = s;
-                        dataOut.writeBytes(s + "\n");
+                     if (s.contains("[sudo] password for ") && sudoPassword == null) {
+                        final char[] p = SwingUtil.showPasswordDialog(app);
+                        if (p == null) return;
+                        this.sudoPassword = p;
+                        dataOut.writeBytes(new String(p) + "\n");
                         dataOut.flush();
-                     }
 
+                     } else if (s.endsWith("Do you want to continue? [Y/n] ")) {
+
+                        final boolean yes = SwingUtil.showConfirmDialog(app, "Do you want to continue ?");
+                        dataOut.writeBytes(yes ? "Y\n" : "n\n");
+                        dataOut.flush();
+
+                     } else {
+                        final String installTxt = "You can install it by typing:\r\n";
+                        if (s.contains(installTxt)) {
+                           final int beginIndex = s.indexOf(installTxt) + installTxt.length();
+                           install = s.substring(beginIndex, s.indexOf("\r\n", beginIndex));
+                        }
+                     }
                   }
-                  Thread.sleep(500L);
+
+                  Thread.sleep(100L);
                }
             } catch (Throwable t) {
                txtOutput.setText(SwingUtil.printStackTrace(t.getCause()));
@@ -338,15 +372,24 @@ public class SSHPlugin extends Plugin {
                      if (commandStack.isEmpty() || !selectedNode.equals(commandStack.peek())) {
                         commandStack.push(selectedNode);
                         selectedNode.run(dataOut);
+
                      } else {
 
+                        // allow to run command by right-click Run...
                         if (SwingUtilities.isRightMouseButton(e)) {
                            final JPopupMenu pop = new JPopupMenu();
 
-                           pop.add(new AbstractAction("Run " + selectedNode.label) {
+                           pop.add(new AbstractAction("Run") {
                               @Override
                               public void actionPerformed(ActionEvent e) {
                                  selectedNode.run(dataOut);
+                              }
+                           });
+
+                           pop.add(new AbstractAction("Run as sudo") {
+                              @Override
+                              public void actionPerformed(ActionEvent e) {
+                                 selectedNode.run(dataOut, true);
                               }
                            });
 
@@ -381,18 +424,51 @@ public class SSHPlugin extends Plugin {
 //         commands.add(context);
          final CommandNode system = new CommandNode("System");
          system.add(new CommandNode("Disk usage", "df -h"));
-         system.add(new CommandNode("Memory usage", "free -m"));
          system.add(new CommandNode("Top", "top"));
          system.add(new CommandNode("Kernel", "uname -a"));
+         system.add(new CommandNode("Uptime", "uptime"));
          system.add(new CommandNode("Linux version", "lsb_release -a"));
          system.add(new CommandNode("Network", "ifconfig"));
          system.add(new CommandNode("Wireless", "iwconfig"));
          system.add(new CommandNode("Processes", "ps"));
-         system.add(new CommandNode("PCI buses", "lspci"));
-         system.add(new CommandNode("USB buses", "lsusb"));
+         system.add(new CommandNode("Show system host name", "hostname"));
+         system.add(new CommandNode("Display the IP addresses of the host", "hostname -I"));
+         system.add(new CommandNode("Show system reboot history", "last reboot"));
+         system.add(new CommandNode("Show the current date and time", "date"));
+         system.add(new CommandNode("Show this month's calendar", "cal"));
+         system.add(new CommandNode("Display who is online", "w"));
+         system.add(new CommandNode("Who you are logged in as", "whoami"));
+         commands.add(system);
+
+         final CommandNode hardware = new CommandNode("Hardware");
+         hardware.add(new CommandNode("Display messages in kernel ring buffer", "dmesg"));
+         hardware.add(new CommandNode("Display CPU information", "cat /proc/cpuinfo"));
+         hardware.add(new CommandNode("Display memory information", "cat /proc/meminfo"));
+         hardware.add(new CommandNode("Display free and used memory ( -h for human readable, -m for MB, -g for GB.)", "free -h"));
+         hardware.add(new CommandNode("Display PCI devices", "lspci -tv"));
+         hardware.add(new CommandNode("Display USB devices", "lsusb -tv"));
+         hardware.add(new CommandNode("Display DMI/SMBIOS (hardware info) from the BIOS", "dmidecode"));
+         hardware.add(new CommandNode("Show info about disk sda", "hdparm -i /dev/sda"));
+         hardware.add(new CommandNode("Perform a read speed test on disk sda", "hdparm -tT /dev/sda"));
+         hardware.add(new CommandNode("Test for unreadable blocks on disk sda", "badblocks -s /dev/sda"));
          system.add(new CommandNode("HAL", "lshal"));
          system.add(new CommandNode("Hardware", "lshw"));
-         commands.add(system);
+         commands.add(hardware);
+
+         final CommandNode monitoring = new CommandNode("Monitoring");
+         monitoring.add(new CommandNode("Display and manage the top processes", "top"));
+         monitoring.add(new CommandNode("Interactive process viewer (top alternative)", "htop"));
+         monitoring.add(new CommandNode("Display processor related statistics", "mpstat 1"));
+         monitoring.add(new CommandNode("Display virtual memory statistics", "vmstat 1"));
+         monitoring.add(new CommandNode("Display I/O statistics", "iostat 1"));
+         monitoring.add(new CommandNode("Display the last 100 syslog messages", "tail -n 100 /var/log/syslog"));
+         monitoring.add(new CommandNode("Capture and display all packets on interface eth0", "tcpdump -i eth0"));
+         monitoring.add(new CommandNode("Monitor all traffic on port 80 ( HTTP )", "tcpdump -i eth0 'port 80'"));
+         monitoring.add(new CommandNode("List all open files on the system", "lsof"));
+         monitoring.add(new CommandNode("List files opened by user", "lsof -u user"));
+         monitoring.add(new CommandNode("Execute \"df -h\", showing periodic updates", "watch df -h"));
+
+         commands.add(monitoring);
 
          final CommandNode search = new CommandNode("Search");
          search.add(new CommandNode("Grep", "grep"));
@@ -431,14 +507,19 @@ public class SSHPlugin extends Plugin {
             return command != null;
          }
 
-         CommandNode run(DataOutputStream dataOut) {
+         CommandNode run(DataOutputStream dataOut, boolean asSudo) {
             try {
-               dataOut.writeBytes(command + "\n");
+               dataOut.writeBytes((asSudo ? "sudo " : "") + command + "\n");
                dataOut.flush();
             } catch (Exception e1) {
                e1.printStackTrace();
             }
+
             return this;
+         }
+
+         CommandNode run(DataOutputStream dataOut) {
+            return run(dataOut, false);
          }
       }
 

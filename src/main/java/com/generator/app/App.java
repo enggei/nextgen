@@ -1,7 +1,6 @@
 package com.generator.app;
 
 import com.generator.generators.antlr.ANTLRPlugin;
-import com.generator.generators.antlr.GrammarEditor;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -15,7 +14,9 @@ import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.neo.remote.RemoteNeoModel;
 import com.generator.util.FileUtil;
+import com.generator.util.ForEachPanel;
 import com.generator.util.SwingUtil;
+import com.generator.util.TextProcessingPanel;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.LabelEntry;
@@ -206,19 +207,25 @@ public class App extends JFrame {
                SwingUtilities.invokeLater(() -> showTextProcessor(""));
             }
          });
-         utilsMenu.add(new TransactionAction("Antlr4 Grammar Editor", App.this) {
+
+         utilsMenu.add(new AbstractAction("For each") {
             @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            public void actionPerformed(ActionEvent e) {
+               SwingUtilities.invokeLater(() -> {
 
-               final GrammarEditor editor = new GrammarEditor(App.this);
-               SwingUtil.showCloseDialog(editor, App.this, "Bnf test", new SwingUtil.OnClosed() {
-                  @Override
-                  public void onClosed() {
+                  final ForEachPanel editor = new ForEachPanel(App.this);
 
-                  }
+                  SwingUtil.showDialog(editor, App.this, "For each", new SwingUtil.ConfirmAction("Close") {
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                     }
+                  });
+
                });
             }
          });
+
          add(utilsMenu);
 
          events.addPropertyChangeListener(AppEvents.GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(App.this) {

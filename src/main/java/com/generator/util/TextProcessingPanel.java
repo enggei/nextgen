@@ -1,6 +1,4 @@
-package com.generator.app;
-
-import com.generator.util.SwingUtil;
+package com.generator.util;
 
 import javax.swing.*;
 import javax.swing.text.DefaultHighlighter;
@@ -13,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * Created 30.07.17.
  */
-class TextProcessingPanel extends JPanel {
+public final class TextProcessingPanel extends JPanel {
 
    private final JTextArea txtInput = newTextArea();
    private final String lineSeparator = System.getProperty("line.separator");
@@ -42,7 +40,7 @@ class TextProcessingPanel extends JPanel {
    private final JCheckBox chkTrimEmptyLines = new JCheckBox("Compress lines", true);
    private final JRadioButton radExtract = new JRadioButton("keep only matches");
 
-   TextProcessingPanel(String inputText, Set<String> patterns) {
+   public TextProcessingPanel(String inputText, Set<String> patterns) {
       super(new BorderLayout());
 
       final ButtonGroup group = new ButtonGroup();
