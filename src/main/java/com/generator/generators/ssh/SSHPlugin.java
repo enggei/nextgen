@@ -221,6 +221,7 @@ public class SSHPlugin extends Plugin {
       private final StringBuilder cache = new StringBuilder();
       private final Stack<CommandNode> commandStack = new Stack<>();
       private final JTree commandTree;
+      private final JList<CommandNode> historyList = new JList<>();
 
       private char[] sudoPassword = null;
       private String install = null;
@@ -243,12 +244,61 @@ public class SSHPlugin extends Plugin {
             final String trim = txtCommand.getText().trim();
             if (trim.length() == 0) return;
 
-            try {
-               dataOut.writeBytes(trim + "\n");
-               dataOut.flush();
-               txtCommand.setText("");
-            } catch (Throwable e1) {
-               txtOutput.setText(SwingUtil.printStackTrace(e1.getCause()));
+            runCommand(dataOut, new CommandNode("Run " + trim, trim));
+            txtCommand.setText("");
+         });
+
+         txtCommand.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+               final String trim = txtCommand.getText().trim();
+
+               if (SwingUtilities.isRightMouseButton(e)) {
+                  final JPopupMenu pop = new JPopupMenu();
+
+                  if (trim.length() > 0) {
+
+                     pop.add(new AbstractAction("Run " + trim) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           runCommand(dataOut, new CommandNode("Run " + trim, trim));
+                           //txtCommand.setText("");
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Run as sudo " + trim) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
+                           //txtCommand.setText("");
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Clear") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           txtCommand.setText("");
+                        }
+                     });
+                  }
+
+                  if (SwingUtil.fromClipboard() != null) {
+                     pop.add(new AbstractAction("Insert from clipboard") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final int caretPosition = txtCommand.getCaretPosition();
+                           try {
+                              txtCommand.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
+                           } catch (BadLocationException e1) {
+                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
+                           }
+                        }
+                     });
+                  }
+
+                  SwingUtilities.invokeLater(() -> pop.show(txtCommand, e.getX(), e.getY()));
+               }
             }
          });
 
@@ -262,7 +312,14 @@ public class SSHPlugin extends Plugin {
                      pop.add(new AbstractAction("Run " + txtOutput.getSelectedText()) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           commandStack.push(new CommandNode("Run " + txtOutput.getSelectedText(), txtOutput.getSelectedText()).run(dataOut));
+                           runCommand(dataOut, new CommandNode("Run " + txtOutput.getSelectedText(), txtOutput.getSelectedText()));
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Copy to clipboard ") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           SwingUtil.toClipboard(txtOutput.getSelectedText().trim());
                         }
                      });
                   }
@@ -275,21 +332,19 @@ public class SSHPlugin extends Plugin {
                      }
                   });
 
-                  if (install != null) {
+                  if (install != null && !commandStack.contains(new CommandNode("Install " + install, install))) {
                      pop.add(new AbstractAction("Install " + install) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           commandStack.push(new CommandNode("Install " + install, install).run(dataOut));
-                           install = null;
+                           runCommand(dataOut, new CommandNode("Install " + install, install));
                         }
                      });
                   }
 
-
                   pop.add(new AbstractAction("Run Ctrl+C") {
                      @Override
                      public void actionPerformed(ActionEvent e) {
-                        commandStack.push(new SignalCommandNode("Ctrl+C", 3).run(dataOut));
+                        new SignalCommandNode("Ctrl+C", 3).run(dataOut);
                      }
                   });
 
@@ -370,8 +425,7 @@ public class SSHPlugin extends Plugin {
 
                      // do not run last command if same as last
                      if (commandStack.isEmpty() || !selectedNode.equals(commandStack.peek())) {
-                        commandStack.push(selectedNode);
-                        selectedNode.run(dataOut);
+                        runCommand(dataOut, selectedNode);
 
                      } else {
 
@@ -393,6 +447,13 @@ public class SSHPlugin extends Plugin {
                               }
                            });
 
+                           pop.add(new AbstractAction("Copy to terminal") {
+                              @Override
+                              public void actionPerformed(ActionEvent e) {
+                                 SwingUtilities.invokeLater(() -> txtCommand.setText(selectedNode.command));
+                              }
+                           });
+
                            SwingUtilities.invokeLater(() -> pop.show(commandTree, e.getX(), e.getY()));
                         }
                      }
@@ -401,13 +462,43 @@ public class SSHPlugin extends Plugin {
             });
          }};
 
-         final JScrollPane newLeftComponent = new JScrollPane(commandTree);
+         historyList.setCellRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+               final CommandNode node = (CommandNode) value;
+               return super.getListCellRendererComponent(list, node.label, index, isSelected, cellHasFocus);
+            }
+         });
+         historyList.setModel(new CommandHistorListModel(commandStack));
+         historyList.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               final CommandNode commandNode = historyList.getSelectedValue();
+               if (commandNode == null) return;
+               commandNode.run(dataOut);
+            }
+         });
+
+         final JPanel commandPanel = new JPanel(new BorderLayout());
+         commandPanel.add(new JScrollPane(commandTree), BorderLayout.CENTER);
+         commandPanel.add(new JScrollPane(historyList), BorderLayout.SOUTH);
+
+         final JScrollPane newLeftComponent = new JScrollPane(commandPanel);
          newLeftComponent.getViewport().setPreferredSize(new Dimension(250, 1024));
          newLeftComponent.getViewport().setSize(new Dimension(250, 1024));
 
          final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, newLeftComponent, new JScrollPane(txtOutput));
          add(splitPane, BorderLayout.CENTER);
          add(txtCommand, BorderLayout.NORTH);
+      }
+
+      private void runCommand(DataOutputStream dataOut, CommandNode commandNode) {
+         runCommand(dataOut, commandNode, false);
+      }
+
+      private void runCommand(DataOutputStream dataOut, CommandNode commandNode, boolean asSudo) {
+         commandStack.push(commandNode.run(dataOut, asSudo));
+         ((CommandHistorListModel) historyList.getModel()).fireContenChanged();
       }
 
       @NotNull
@@ -420,15 +511,16 @@ public class SSHPlugin extends Plugin {
          directoryCommands.add(new CommandNode("Go home", "cd ~"));
          commands.add(directoryCommands);
 
-//         final CommandNode context = new CommandNode("Context");
-//         commands.add(context);
+         // todo:
+         // https://www.linuxtrainingacademy.com/linux-commands-cheat-sheet/
+
          final CommandNode system = new CommandNode("System");
          system.add(new CommandNode("Disk usage", "df -h"));
          system.add(new CommandNode("Top", "top"));
          system.add(new CommandNode("Kernel", "uname -a"));
          system.add(new CommandNode("Uptime", "uptime"));
          system.add(new CommandNode("Linux version", "lsb_release -a"));
-         system.add(new CommandNode("Network", "ifconfig"));
+         system.add(new CommandNode("ifconfig", "ifconfig"));
          system.add(new CommandNode("Wireless", "iwconfig"));
          system.add(new CommandNode("Processes", "ps"));
          system.add(new CommandNode("Show system host name", "hostname"));
@@ -438,6 +530,7 @@ public class SSHPlugin extends Plugin {
          system.add(new CommandNode("Show this month's calendar", "cal"));
          system.add(new CommandNode("Display who is online", "w"));
          system.add(new CommandNode("Who you are logged in as", "whoami"));
+         system.add(new CommandNode("Reboot now", "reboot now"));
          commands.add(system);
 
          final CommandNode hardware = new CommandNode("Hardware");
@@ -467,24 +560,16 @@ public class SSHPlugin extends Plugin {
          monitoring.add(new CommandNode("List all open files on the system", "lsof"));
          monitoring.add(new CommandNode("List files opened by user", "lsof -u user"));
          monitoring.add(new CommandNode("Execute \"df -h\", showing periodic updates", "watch df -h"));
-
          commands.add(monitoring);
 
-         final CommandNode search = new CommandNode("Search");
-         search.add(new CommandNode("Grep", "grep"));
-         search.add(new CommandNode("Sed", "sed"));
-         commands.add(search);
+         final CommandNode aptGet = new CommandNode("Apt-get");
+         aptGet.add(new CommandNode("Update", "apt-get update"));
+         aptGet.add(new CommandNode("Upgrade", "apt-get upgrade"));
 
-         final CommandNode history = new CommandNode("History");
-         commands.add(history);
 
          final CommandNode docker = new CommandNode("Docker");
          docker.add(new CommandNode("Running containers", "sudo docker ps"));
          commands.add(docker);
-
-         final CommandNode signalCommands = new CommandNode("Signals");
-         signalCommands.add(new SignalCommandNode("Ctrl+C", 3));
-         commands.add(signalCommands);
 
          return commands;
       }
@@ -521,6 +606,22 @@ public class SSHPlugin extends Plugin {
          CommandNode run(DataOutputStream dataOut) {
             return run(dataOut, false);
          }
+
+         @Override
+         public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            CommandNode that = (CommandNode) o;
+
+            if (this.command == null && that.command == null) return this.label.equals(that.label);
+            return command != null && command.equals(that.command);
+         }
+
+         @Override
+         public int hashCode() {
+            return command != null ? command.hashCode() : label.hashCode();
+         }
       }
 
       private class SignalCommandNode extends CommandNode {
@@ -547,6 +648,29 @@ public class SSHPlugin extends Plugin {
             }
             return this;
          }
+      }
+   }
+
+   private final class CommandHistorListModel extends AbstractListModel<ChannelEditor.CommandNode> {
+
+      private final Stack<ChannelEditor.CommandNode> commandStack;
+
+      CommandHistorListModel(Stack<ChannelEditor.CommandNode> commandStack) {
+         this.commandStack = commandStack;
+      }
+
+      void fireContenChanged() {
+         fireContentsChanged(this, 0, commandStack.size());
+      }
+
+      @Override
+      public int getSize() {
+         return commandStack.size();
+      }
+
+      @Override
+      public ChannelEditor.CommandNode getElementAt(int index) {
+         return commandStack.get(index);
       }
    }
 
@@ -577,12 +701,12 @@ public class SSHPlugin extends Plugin {
          sessions.put(uuidOf(sessionNode), session);
 
       } catch (Throwable t) {
-         SwingUtil.showException(app, t);
+         SwingUtil.showExceptionNoStack(app, t);
       }
    }
 
    private void closeSession(NeoNode sessionNode) {
-      app.events.firePropertyChange(AppEvents.NODES_CLOSED, sessionNode);
+      app.events.firePropertyChange(AppEvents.NODES_CLOSED, Collections.singleton(sessionNode));
       closeSession(sessionNode.getNode());
    }
 
@@ -602,7 +726,7 @@ public class SSHPlugin extends Plugin {
    }
 
    private void closeChannel(NeoNode channelNode) {
-      app.events.firePropertyChange(AppEvents.NODES_CLOSED, channelNode);
+      app.events.firePropertyChange(AppEvents.NODES_CLOSED, Collections.singleton(channelNode));
       closeChannel(channelNode.getNode());
    }
 
@@ -631,6 +755,7 @@ public class SSHPlugin extends Plugin {
 
       ActiveChannel connect() {
          try {
+            ((ChannelShell)channel).setPtyType("dumb");
             channel.connect();
          } catch (JSchException e) {
             throw new RuntimeException(e);
