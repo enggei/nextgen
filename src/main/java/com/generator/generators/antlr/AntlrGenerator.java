@@ -43,10 +43,15 @@ import com.generator.generators.url.parser.urlListener;
 import com.generator.generators.url.parser.urlVisitor;
 import com.generator.generators.xml.parser.XMLParserListener;
 import com.generator.generators.xml.parser.XMLParserVisitor;
+import com.generator.util.StringUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
 import static com.generator.ProjectConstants.MAIN_ROOT;
@@ -57,32 +62,114 @@ import static com.generator.ProjectConstants.MAIN_ROOT;
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cypher.parser", "Cypher", CypherVisitor.class, CypherListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".go.parser", "Golang", GolangVisitor.class, GolangListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".lua.parser", "Lua", LuaVisitor.class, LuaListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STParser", STParserVisitor.class, STParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cypher.parser", "Cypher", CypherVisitor.class, CypherListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".go.parser", "Golang", GolangVisitor.class, GolangListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".html5.parser", "HTMLParser", HTMLParserVisitor.class, HTMLParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".java.parser", "JavaParser", JavaParserVisitor.class, JavaParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".json.parser", "JSON", JSONVisitor.class, JSONListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".lua.parser", "Lua", LuaVisitor.class, LuaListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STParser", STParserVisitor.class, STParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
    }
 
    private static void generateVisitorAndListener(String root, String packageName, String g4Name, Class visitorInterface, Class listenerInterface) {
       new ParserNodeVisitorGenerator(root, packageName, g4Name).visit(visitorInterface);
       new ParserNodeListenerGenerator(root, packageName, g4Name).visit(listenerInterface);
       new NeoVisitorGenerator(root, packageName, g4Name).visit(listenerInterface);
+      new ParserDomainGenerator(root, packageName, g4Name).visit(listenerInterface);
+   }
+
+   private static final class ParserDomainGenerator extends BaseClassVisitor {
+
+      private final String root;
+      private final String packageName;
+      private final String visitorName;
+
+      private final AntlrGroup antlrGroup = new AntlrGroup();
+      private final AntlrGroup.domainGrammarST domainGrammarST;
+
+      ParserDomainGenerator(String root, String packageName, String parserName) {
+         this.root = root;
+         this.packageName = packageName;
+         this.visitorName = parserName + "Domain";
+
+         domainGrammarST = antlrGroup.newdomainGrammar().
+               setPackage(packageName).
+               setName(visitorName);
+      }
+
+      @Override
+      public void onPublicMethod(Method method) {
+
+         // only has one parameter
+         final Parameter parameter = method.getParameters()[0];
+         final String param = parameter.getType().getCanonicalName();
+
+         if (method.getName().startsWith("enter")) {
+
+            final AntlrGroup.domainContextST domainContextST = antlrGroup.newdomainContext().
+                  setDomain(domainGrammarST.getName()).
+                  setName(method.getName().substring(5));
+            System.out.println(param);
+
+            final Map<String, Method> distinct = new TreeMap<>();
+            new BaseClassVisitor() {
+               @Override
+               public void onPublicMethod(Method method) {
+                  if (method.getName().equals("getRuleIndex")) return;
+                  if (method.getName().equals("enterRule")) return;
+                  if (method.getName().equals("exitRule")) return;
+                  if (method.getName().equals("accept")) return;
+
+                  if (distinct.containsKey(method.getName())) {
+                     if (method.getReturnType().getName().endsWith("List")) {
+                        distinct.put(method.getName(), method);
+                     }
+                  } else {
+                     distinct.put(method.getName(), method);
+                  }
+                  System.out.println("\t" + method.getName() + " : " + method.getReturnType());
+               }
+
+            }.visit(parameter.getType());
+
+            for (Map.Entry<String, Method> m : distinct.entrySet()) {
+               final Method propertyMethod = m.getValue();
+
+               Object init = propertyMethod.getReturnType().getName().endsWith("List") ? "new java.util.ArrayList<>()" : null;
+               Object name = propertyMethod.getName();
+               Object type = propertyMethod.getReturnType().getName().endsWith("List") ? "java.util.List<" + propertyMethod.getName() + ">" : StringUtil.capitalize(propertyMethod.getName());
+               domainContextST.addPropertiesValue(init, name, type);
+            }
+
+            domainGrammarST.addContextsValue(domainContextST);
+         } else {
+            System.out.println("\tignoring " + method.getName() + " : " + method.getReturnType());
+         }
+      }
+
+      @Override
+      public void done() {
+         System.out.println(domainGrammarST);
+
+//         try {
+//            GeneratedFile.newJavaFile(root, packageName, visitorName).write(domainVisitorST);
+//         } catch (IOException e) {
+//            e.printStackTrace();
+//         }
+      }
    }
 
    private static final class NeoVisitorGenerator extends BaseClassVisitor {
@@ -109,7 +196,6 @@ public class AntlrGenerator {
 
          // only has one parameter
          final Parameter parameter = method.getParameters()[0];
-         final String param = parameter.getType().getCanonicalName();
 
          if (method.getName().startsWith("enter")) {
             domainVisitorST.addEntitiesValue(method.getName().substring(5), neoVisitorGroup.newentityVisit().setName(method.getName().substring(5)));

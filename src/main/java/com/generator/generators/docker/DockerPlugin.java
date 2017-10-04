@@ -141,8 +141,8 @@ public class DockerPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-
+   public JComponent getEditorFor(NeoNode neoNode) {
+      return null;
    }
 
    private static String findPath(Node targetNode, Node renderDirectory) {

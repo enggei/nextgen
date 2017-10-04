@@ -62,20 +62,20 @@ public final class AntlrGroup {
       return new BaseNodeListenerST(stGroup);
    }
 
-   public ruleST newrule() {
-      return new ruleST(stGroup);
+   public grammarParserRuleSpecST newgrammarParserRuleSpec() {
+      return new grammarParserRuleSpecST(stGroup);
    }
 
-   public DomainElementST newDomainElement() {
-      return new DomainElementST(stGroup);
+   public domainContextST newdomainContext() {
+      return new domainContextST(stGroup);
    }
 
-   public DomainST newDomain() {
-      return new DomainST(stGroup);
+   public domainGrammarST newdomainGrammar() {
+      return new domainGrammarST(stGroup);
    }
 
-   public blockST newblock() {
-      return new blockST(stGroup);
+   public grammarBlockST newgrammarBlock() {
+      return new grammarBlockST(stGroup);
    }
 
    public final class NeoListenerST implements AntlrGroupTemplate {
@@ -464,7 +464,7 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class ruleST implements AntlrGroupTemplate {
+   public final class grammarParserRuleSpecST implements AntlrGroupTemplate {
 
       private Object _name;
       private java.util.Set<Object> _comments = new java.util.LinkedHashSet<>();
@@ -472,11 +472,11 @@ public final class AntlrGroup {
 
       private final ST template;
 
-      private ruleST(STGroup group) {
-   		template = group.getInstanceOf("rule");
+      private grammarParserRuleSpecST(STGroup group) {
+   		template = group.getInstanceOf("grammarParserRuleSpec");
    	}
 
-      public ruleST setName(Object value) {
+      public grammarParserRuleSpecST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -492,7 +492,7 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public ruleST addCommentsValue(Object value) {
+      public grammarParserRuleSpecST addCommentsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -506,7 +506,7 @@ public final class AntlrGroup {
       	return this._comments;
       }
 
-      public ruleST addAlternativesValue(Object value) {
+      public grammarParserRuleSpecST addAlternativesValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -526,18 +526,34 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class DomainElementST implements AntlrGroupTemplate {
+   public final class domainContextST implements AntlrGroupTemplate {
 
+      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
       private Object _domain;
       private Object _name;
 
       private final ST template;
 
-      private DomainElementST(STGroup group) {
-   		template = group.getInstanceOf("DomainElement");
+      private domainContextST(STGroup group) {
+   		template = group.getInstanceOf("domainContext");
    	}
 
-      public DomainElementST setDomain(Object value) {
+      public domainContextST addPropertiesValue(Object init_, Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._properties.add(map);
+
+         template.addAggr("properties.{init, name, type}", map.get("init"), map.get("name"), map.get("type"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getProperties() {
+      	return this._properties;
+      }
+
+      public domainContextST setDomain(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -553,7 +569,7 @@ public final class AntlrGroup {
       	return (String) this._domain;
       }
 
-      public DomainElementST setName(Object value) {
+      public domainContextST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -575,33 +591,33 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class DomainST implements AntlrGroupTemplate {
+   public final class domainGrammarST implements AntlrGroupTemplate {
 
-      private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _contexts = new java.util.LinkedHashSet<>();
       private Object _name;
       private Object _package;
 
       private final ST template;
 
-      private DomainST(STGroup group) {
-   		template = group.getInstanceOf("Domain");
+      private domainGrammarST(STGroup group) {
+   		template = group.getInstanceOf("domainGrammar");
    	}
 
-      public DomainST addElementsValue(Object value) {
+      public domainGrammarST addContextsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
-      	this._elements.add(value);
-      	template.add("elements", value);
+      	this._contexts.add(value);
+      	template.add("contexts", value);
 
          return this;
       }
 
-      public java.util.Set<Object> getElementsValues() {
-      	return this._elements;
+      public java.util.Set<Object> getContextsValues() {
+      	return this._contexts;
       }
 
-      public DomainST setName(Object value) {
+      public domainGrammarST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -617,7 +633,7 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public DomainST setPackage(Object value) {
+      public domainGrammarST setPackage(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -639,18 +655,18 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class blockST implements AntlrGroupTemplate {
+   public final class grammarBlockST implements AntlrGroupTemplate {
 
       private Object _ebnfSuffix;
       private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
-      private blockST(STGroup group) {
-   		template = group.getInstanceOf("block");
+      private grammarBlockST(STGroup group) {
+   		template = group.getInstanceOf("grammarBlock");
    	}
 
-      public blockST setEbnfSuffix(Object value) {
+      public grammarBlockST setEbnfSuffix(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -666,7 +682,7 @@ public final class AntlrGroup {
       	return (String) this._ebnfSuffix;
       }
 
-      public blockST addElementsValue(Object value) {
+      public grammarBlockST addElementsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -1057,24 +1073,26 @@ public final class AntlrGroup {
 		"   ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
-			.append("rule(name,comments,alternatives) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
+			.append("grammarParserRuleSpec(name,comments,alternatives) ::= <<~comments:{it|// ~it~};separator=\"\\n\"~\n" + 
 		"~name~\n" + 
 		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
 		"	;>>\n")
-			.append("DomainElement(domain,name) ::= <<public final class ~name~ extends ~domain~Symbol {\n" + 
+			.append("domainContext(properties,domain,name) ::= <<public final class ~name~Symbol extends ~domain~Symbol {\n" + 
+		"\n" + 
+		"	~properties:{it|public ~it.type~Symbol ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
 		"      \n" + 
 		"}>>\n")
-			.append("Domain(elements,name,package) ::= <<package ~package~;\n" + 
+			.append("domainGrammar(contexts,name,package) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"public class ~name~ {\n" + 
 		" \n" + 
 		"   public class ~name~Symbol {\n" + 
-		"      \n" + 
 		"   }\n" + 
-		"~elements:{it|\n" + 
+		"\n" + 
+		"~contexts:{it|\n" + 
 		"   ~it~\n" + 
 		"};separator=\"\\n\"~   \n" + 
 		"}>>\n")
-			.append("block(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
+			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
 		.toString();
 }

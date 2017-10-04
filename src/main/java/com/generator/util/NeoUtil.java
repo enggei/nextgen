@@ -139,7 +139,7 @@ public abstract class NeoUtil {
       return relations;
    }
 
-   static UUID uuidOf(Node node) {
+   public static UUID uuidOf(Node node) {
       return node == null ? null : hasUUID(node) ? UUID.fromString(node.getProperty(TAG_UUID).toString()) : null;
    }
 

@@ -71,9 +71,10 @@ public class ANTLRPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
+   public JComponent getEditorFor(NeoNode neoNode) {
       if (hasLabel(neoNode.getNode(), Entities.GrammarSpec))
-         tabbedPane.add(getNameOrLabelFrom(neoNode.getNode()), new GrammarEditor(neoNode));
+         return new GrammarEditor(neoNode);
+      return null;
    }
 
    private final class GrammarEditor extends JPanel {
@@ -87,34 +88,34 @@ public class ANTLRPlugin extends Plugin {
          final AntlrGroup antlrGroup = new AntlrGroup();
          final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar();
 
-         new ANTLRv4ParserDomainVisitor() {
-
-            final Stack<AntlrGroup.ruleST> ruleSTStack = new Stack<>();
-            final Stack<AntlrGroup.blockST> blockSTStack = new Stack<>();
-
-            @Override
-            public void visitIdentifier(Node node) {
-               grammarST.setName(getString(node, Properties.startToken.name()));
-               super.visitIdentifier(node);
-            }
-
-            @Override
-            public void visitRuleSpec(Node node) {
-               final AntlrGroup.ruleST ruleST = antlrGroup.newrule().setName(getString(node, Properties.startToken.name()));
-               ruleSTStack.push(ruleST);
-               System.out.println("ruleST = " + ruleST);
-               super.visitRuleSpec(node);
-               grammarST.addRulesValue(ruleSTStack.pop());
-            }
-
-            @Override
-            public void visitBlock(Node node) {
-               final AntlrGroup.blockST blockST = antlrGroup.newblock();
-               blockSTStack.push(blockST);
-               super.visitBlock(node);
-               ruleSTStack.peek().addAlternativesValue(blockST);
-            }
-         }.visit(node.getNode());
+//         new ANTLRv4ParserDomainVisitor() {
+//
+//            final Stack<AntlrGroup.grammarRuleSpecST> ruleSTStack = new Stack<>();
+//            final Stack<AntlrGroup.blockST> blockSTStack = new Stack<>();
+//
+//            @Override
+//            public void visitIdentifier(Node node) {
+//               grammarST.setName(getString(node, Properties.startToken.name()));
+//               super.visitIdentifier(node);
+//            }
+//
+//            @Override
+//            public void visitRuleSpec(Node node) {
+//               final AntlrGroup.grammarRuleSpecST ruleST = antlrGroup.newgrammarRuleSpec().setName(getString(node, Properties.startToken.name()));
+//               ruleSTStack.push(ruleST);
+//               System.out.println("ruleST = " + ruleST);
+//               super.visitRuleSpec(node);
+//               grammarST.addRulesValue(ruleSTStack.pop());
+//            }
+//
+//            @Override
+//            public void visitBlock(Node node) {
+//               final AntlrGroup.blockST blockST = antlrGroup.newblock();
+//               blockSTStack.push(blockST);
+//               super.visitBlock(node);
+//               ruleSTStack.peek().addAlternativesValue(blockST);
+//            }
+//         }.visit(node.getNode());
 
          txtEditor.setText(grammarST.toString());
          txtEditor.setCaretPosition(0);

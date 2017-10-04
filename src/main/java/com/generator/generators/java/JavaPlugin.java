@@ -109,7 +109,7 @@ public class JavaPlugin extends Plugin {
                   // compile source and create instance :
                   final DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
                   final Object instance = new CompilerUtil().newInstance(packageName + "." + name, content, diagnostics);
-                  if(instance==null) {
+                  if (instance == null) {
                      CompilerUtil.printDiagnostics(diagnostics);
                      return;
                   }
@@ -191,9 +191,10 @@ public class JavaPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
+   public JComponent getEditorFor(NeoNode neoNode) {
       if (neoNode.getNode().hasLabel(Entities.Object))
-         tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new ObjectPanel(neoNode));
+         return new ObjectPanel(neoNode);
+      return null;
    }
 
    private final class ObjectPanel extends JPanel {

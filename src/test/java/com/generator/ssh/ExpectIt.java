@@ -83,7 +83,7 @@ public class ExpectIt {
    @Test
    public void testExpectItSshPKI() throws Exception {
       JSch jSch = new JSch();
-      jSch.addIdentity("/home/sogern/.ssh/id_rsa");
+      jSch.addIdentity("/home/goe/.ssh/id_rsa");
       Session session = jSch.getSession("sogern", "osiris.itware.no");
       Properties config = new Properties();
       config.put("StrictHostKeyChecking", "no");

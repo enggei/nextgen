@@ -28,9 +28,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		System.out.println("ChannelsSpec");
-		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		System.out.println("GrammarType");
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		System.out.println("GrammarType");
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -118,6 +118,16 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		System.out.println("ChannelsSpec");
+		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
 		System.out.println("IdList");
 		final Node node = model.findOrCreate(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -171,16 +181,6 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
 		System.out.println("ModeSpec");
 		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

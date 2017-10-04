@@ -132,8 +132,8 @@ public class MavenPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-
+   public JComponent getEditorFor(NeoNode neoNode) {
+      return null;
    }
 
    private Element parseXml(String xml) throws ParserConfigurationException, SAXException, IOException {

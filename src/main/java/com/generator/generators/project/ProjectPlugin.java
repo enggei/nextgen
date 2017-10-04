@@ -79,8 +79,8 @@ public class ProjectPlugin extends Plugin {
    @Override
    protected void addActionsTo(JMenu menu) {
 
-     addShowMenu(menu, Entities.Project);
-     addShowMenu(menu, Entities.Directory);
+      addShowMenu(menu, Entities.Project);
+      addShowMenu(menu, Entities.Directory);
 
       menu.add(new App.TransactionAction("New Project", app) {
          @Override
@@ -208,7 +208,7 @@ public class ProjectPlugin extends Plugin {
 //
                      final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
 
-                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model" , DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
+                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model", DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
                      relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
 
                      final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
@@ -230,7 +230,7 @@ public class ProjectPlugin extends Plugin {
 //
                      final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
 
-                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX App" , DomainPlugin.Properties.visitorClass.name(), MobXAppVisitor.class.getCanonicalName());
+                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX App", DomainPlugin.Properties.visitorClass.name(), MobXAppVisitor.class.getCanonicalName());
                      relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
 
                      final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
@@ -431,11 +431,10 @@ public class ProjectPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-
-      if (hasLabel(neoNode.getNode(), Entities.Directory)) {
-         tabbedPane.add("" + getFile(neoNode.getNode()), new DirectoryEditor(neoNode));
-      }
+   public JComponent getEditorFor(NeoNode neoNode) {
+      if (hasLabel(neoNode.getNode(), Entities.Directory))
+         return new DirectoryEditor(neoNode);
+      return null;
    }
 
    public static void renderToFile(Relationship rendererRelationship, Node statementNode, String content, Node dirNode, App app) {

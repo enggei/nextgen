@@ -1,6 +1,9 @@
 package com.generator.generators.domain;
 
-import com.generator.app.*;
+import com.generator.app.App;
+import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
+import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
@@ -712,13 +715,15 @@ public class DomainPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
+   public JComponent getEditorFor(NeoNode neoNode) {
       if (hasLabel(neoNode.getNode(), Entities.Visitor)) {
+         final JTabbedPane rendererPanels = new JTabbedPane();
          outgoing(neoNode.getNode(), DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
-            System.out.println("Visitor " + visitorRelation.getId());
-            tabbedPane.add(getNameOrLabelFrom(neoNode.getNode()), new VisitorRenderPanel(neoNode, visitorRelation));
+            rendererPanels.add(getNameOrLabelFrom(neoNode.getNode()), new VisitorRenderPanel(neoNode, visitorRelation));
          });
+         return rendererPanels;
       }
+      return null;
    }
 
    public static void renderDomainVisitor(Relationship rendererRelationship, Node node) {

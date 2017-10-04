@@ -215,15 +215,20 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-      if (neoNode.getNode().hasLabel(Entities.STTemplate))
-         tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new TemplateEditor(neoNode));
+   public JComponent getEditorFor(NeoNode neoNode) {
 
-      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
+      if (neoNode.getNode().hasLabel(Entities.STTemplate)) {
+         return new TemplateEditor(neoNode);
+
+      } else {
+         // try to render any STTemplate, by looking for STTEmplate-instance
+         final Relationship instanceRelation = singleIncoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE);
          final Node other = other(neoNode.getNode(), instanceRelation);
          if (hasLabel(other, Entities.STTemplate))
-            tabbedPane.add(getNameAndLabelsFrom(neoNode.getNode()), new TemplateRenderPanel(neoNode, other));
-      });
+            return new TemplateRenderPanel(neoNode, other);
+      }
+
+      return null;
    }
 
    private static DomainPlugin.RelationCardinality getCardinalityFor(TemplateEntities domainEntityType) {

@@ -39,6 +39,24 @@ public class CSVNeoListener extends CSVBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+
+	@Override
+	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
+		onEnter(node);
+		this.inField.push(true);
+	}
+
+	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		onExit();
+		this.inField.pop();
+	}
+
+	public boolean inField() {
+      return !inField.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
 
 	@Override
@@ -55,24 +73,6 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	public boolean inHdr() {
       return !inHdr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
-
-	@Override
-	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
-		onEnter(node);
-		this.inCsvFile.push(true);
-	}
-
-	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		onExit();
-		this.inCsvFile.pop();
-	}
-
-	public boolean inCsvFile() {
-      return !inCsvFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
@@ -93,22 +93,22 @@ public class CSVNeoListener extends CSVBaseListener {
       return !inRow.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
 
 	@Override
-	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		final Node node = model.findOrCreate(Label.label("Field"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
+	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endtoken", arg.getStop().getText());
 		onEnter(node);
-		this.inField.push(true);
+		this.inCsvFile.push(true);
 	}
 
-	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
 		onExit();
-		this.inField.pop();
+		this.inCsvFile.pop();
 	}
 
-	public boolean inField() {
-      return !inField.isEmpty(); 
+	public boolean inCsvFile() {
+      return !inCsvFile.isEmpty(); 
    }
 
 }

@@ -165,7 +165,7 @@ public class MySQLPlugin extends Plugin {
    }
 
    @Override
-   public void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane) {
-
+   public JComponent getEditorFor(NeoNode neoNode) {
+      return null;
    }
 }

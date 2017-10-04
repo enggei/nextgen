@@ -16,6 +16,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.generator.app.AppEvents.*;
 import static com.generator.util.NeoUtil.*;
@@ -32,6 +33,8 @@ class NodeDetailPanel extends JPanel {
    private PropertiesPanel propertiesPanel;
    private RelationsPanel nodeRelationsPanel;
    private RelationsPanel relationsPanel;
+
+   private final Map<Long, JComponent> pluginPanels = new ConcurrentHashMap<>();
 
    NodeDetailPanel(App app, Workspace workspace) {
       super(new BorderLayout());
@@ -70,9 +73,23 @@ class NodeDetailPanel extends JPanel {
       });
 
       app.events.addPropertyChangeListener(NODES_DELETED, evt -> {
-         labelsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
-         propertiesPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
-         nodeRelationsPanel.onNodesDeleted((Set<Long>) evt.getNewValue());
+         final Set<Long> nodeIds = (Set<Long>) evt.getNewValue();
+         labelsPanel.onNodesDeleted(nodeIds);
+         propertiesPanel.onNodesDeleted(nodeIds);
+         nodeRelationsPanel.onNodesDeleted(nodeIds);
+
+         // todo: remove from content-panel
+         for (Long nodeId : nodeIds) {
+            if (pluginPanels.containsKey(nodeId)) {
+               SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                     System.out.println("removing plugin panel for node " + nodeId);
+                     content.remove(pluginPanels.remove(nodeId));
+                  }
+               });
+            }
+         }
       });
 
       app.events.addPropertyChangeListener(RELATIONS_SELECTED, new AppEvents.TransactionalPropertyChangeListener(getClass(), NodeDetailPanel.this, app) {
@@ -97,6 +114,7 @@ class NodeDetailPanel extends JPanel {
    private void updatePanel() {
 
       content.removeAll();
+      pluginPanels.clear();
 
       final Set<NeoNode> currentNodes = app.workspace.nodeCanvas.getSelectedNodes();
       final Set<NeoRelationship> currentRelations = workspace.nodeCanvas.getSelectedRelations();
@@ -124,7 +142,11 @@ class NodeDetailPanel extends JPanel {
       if (currentNodes.size() < 20) {
          for (NeoNode currentNode : currentNodes) {
             for (Plugin plugin : app.plugins) {
-               plugin.showEditorFor(currentNode, content);
+               final JComponent editorComponent = plugin.getEditorFor(currentNode);
+               if (editorComponent != null) {
+                  content.add(getNameOrLabelFrom(currentNode.getNode()), editorComponent);
+                  pluginPanels.put(currentNode.id(), editorComponent);
+               }
             }
          }
       }

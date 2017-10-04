@@ -45,7 +45,7 @@ public abstract class Plugin {
       menu.add(showMenu);
    }
 
-   public abstract void showEditorFor(NeoNode neoNode, JTabbedPane tabbedPane);
+   public abstract JComponent getEditorFor(NeoNode neoNode);
 
    public NeoModel getGraph() {
       return app.model.graph();

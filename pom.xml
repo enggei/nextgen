@@ -258,21 +258,6 @@
 
         <plugins>
 
-            <!-- aspectJ plugin-->
-            <!--<plugin>-->
-            <!--<groupId>org.codehaus.mojo</groupId>-->
-            <!--<artifactId>aspectj-maven-plugin</artifactId>-->
-            <!--<version>1.10</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<goals>-->
-            <!--<goal>compile</goal>       &lt;!&ndash; use this goal to weave all your main classes &ndash;&gt;-->
-            <!--<goal>test-compile</goal>  &lt;!&ndash; use this goal to weave all your test classes &ndash;&gt;-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--</plugin>-->
-
             <!--fat-jar plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -285,6 +270,18 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
@@ -292,12 +289,12 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <manifestEntries>
                                         <Main-Class>io.vertx.core.Launcher</Main-Class>
-                                        <Main-Verticle>com.file.ScannerVerticle</Main-Verticle>
+                                        <Main-Verticle>com.network.Dlinksyslog</Main-Verticle>
                                     </manifestEntries>
                                 </transformer>
                             </transformers>
                             <artifactSet/>
-                            <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar
+                            <outputFile>target/${project.artifactId}-${project.version}-fat.jar
                             </outputFile>
                         </configuration>
                     </execution>
