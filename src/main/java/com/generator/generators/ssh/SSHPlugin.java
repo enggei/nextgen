@@ -44,7 +44,7 @@ public class SSHPlugin extends Plugin {
    }
 
    private enum Properties {
-      username, password, privateKeyPath
+      username, password, port, privateKeyPath
    }
 
    private final Map<UUID, Session> sessions = new LinkedHashMap<>();
@@ -81,6 +81,8 @@ public class SSHPlugin extends Plugin {
             final JTextField txtUsername = new JTextField();
             final JPasswordField txtPassword = new JPasswordField();
             final JTextField txtPrivateKeyPath = new JTextField();
+            final JTextField txtPort = new JTextField();
+            txtPort.setText("22");
 
             final JRadioButton radUserInfo = new JRadioButton();
             final JRadioButton radIdentityInfo = new JRadioButton();
@@ -101,17 +103,19 @@ public class SSHPlugin extends Plugin {
                txtPrivateKeyPath.setEnabled(true);
             });
 
-            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref");
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
             editor.addLabel("Uri", 3, 1);
             editor.add(txtUri, 5, 1);
-            editor.addLabel("Username", 3, 3);
-            editor.add(txtUsername, 5, 3);
-            editor.add(radUserInfo, 1, 5);
-            editor.addLabel("Password", 3, 5);
-            editor.add(txtPassword, 5, 5);
-            editor.add(radIdentityInfo, 1, 7);
-            editor.addLabel("Private key path", 3, 7);
-            editor.add(txtPrivateKeyPath, 5, 7);
+            editor.addLabel("Port", 3, 3);
+            editor.add(txtPort, 5, 3);
+            editor.addLabel("Username", 3, 5);
+            editor.add(txtUsername, 5, 5);
+            editor.add(radUserInfo, 1, 7);
+            editor.addLabel("Password", 3, 7);
+            editor.add(txtPassword, 5, 7);
+            editor.add(radIdentityInfo, 1, 9);
+            editor.addLabel("Private key path", 3, 9);
+            editor.add(txtPrivateKeyPath, 5, 9);
 
             SwingUtil.showDialog(editor, app, "Login", new SwingUtil.ConfirmAction() {
                @Override
@@ -119,6 +123,8 @@ public class SSHPlugin extends Plugin {
 
                   final String uri = txtUri.getText();
                   if (uri == null || uri.length() == 0) return;
+
+                  int port = parsePort(txtPort.getText());
 
                   if (radUserInfo.isSelected() && (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0))
                      return;
@@ -131,9 +137,18 @@ public class SSHPlugin extends Plugin {
                      public void doAction(Transaction tx) throws Throwable {
 
                         if (radUserInfo.isSelected())
-                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.password.name(), new String(txtPassword.getPassword())));
+                           fireNodesLoaded(getGraph().newNode(Entities.Host,
+                              AppMotif.Properties.name.name(), uri,
+                              Properties.username.name(), txtUsername.getText(),
+                              Properties.password.name(), new String(txtPassword.getPassword()),
+                              Properties.port.name(), port));
+
                         else if (radIdentityInfo.isSelected())
-                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim()));
+                           fireNodesLoaded(getGraph().newNode(Entities.Host,
+                              AppMotif.Properties.name.name(), uri,
+                              Properties.username.name(), txtUsername.getText(),
+                              Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim(),
+                              Properties.port.name(), port));
                      }
 
                      @Override
@@ -679,7 +694,9 @@ public class SSHPlugin extends Plugin {
 
          final JSch jSch = new JSch();
 
-         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()), getString(hostNode, AppMotif.Properties.name.name()));
+         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()),
+            getString(hostNode, AppMotif.Properties.name.name()),
+            hostNode.hasProperty(Properties.port.name()) ? (int)hostNode.getProperty(Properties.port.name()) : 22);
 
          final String privateKeyPath = getString(hostNode, Properties.privateKeyPath.name());
          if (privateKeyPath != null) {
@@ -741,6 +758,20 @@ public class SSHPlugin extends Plugin {
       incoming(channelNode, Relations.CHANNELS).forEach(Relationship::delete);
 
       app.model.deleteNodes(Collections.singleton(channelNode));
+   }
+
+   static int parsePort(final String input) {
+      int port = 22;
+
+      try {
+         port = Integer.parseInt(input);
+         if (port < 1 || port > 65535) port = 22;
+      }
+      catch (NumberFormatException e) {
+         System.err.println("port is not an integer! Got: " + input);
+      }
+
+      return port;
    }
 
    private final class ActiveChannel {
