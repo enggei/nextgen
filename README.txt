@@ -44,6 +44,9 @@ https://material.io/
 http://nd4j.org/
 https://deeplearning4j.org/gpu
 
+* Password manager / store so we're not storing passwords in clear text in the graph
+  - Suggestion: Secure with master password à la IntelliJ, FileZilla etc.
+
 TEST:
 * Add constraint på template group som definerer type av parametre
   Ex: Cpp - add public, må ta inn elementer av Method
