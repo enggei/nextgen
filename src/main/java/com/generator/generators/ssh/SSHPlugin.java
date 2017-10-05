@@ -360,7 +360,6 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            runCommand(dataOut, new CommandNode("Run " + trim, trim));
-                           //txtTerminal.setText("");
                         }
                      });
 
@@ -431,38 +430,23 @@ public class SSHPlugin extends Plugin {
                      pop.add(new AbstractAction("Insert from clipboard") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtTerminal.getCaretPosition();
-                           try {
-                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
-                           } catch (BadLocationException e1) {
-                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
-                           }
+                           insertInTerminal(SwingUtil.fromClipboard());
                         }
                      });
 
                      pop.add(new AbstractAction("Insert from clipboard and Run") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtTerminal.getCaretPosition();
-                           try {
-                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
-                              runCommand(dataOut, new CommandNode("Run " + trim, trim));
-                           } catch (BadLocationException e1) {
-                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
-                           }
+                           insertInTerminal(SwingUtil.fromClipboard());
+                           runCommand(dataOut, new CommandNode("Run " + trim, trim));
                         }
                      });
 
                      pop.add(new AbstractAction("Insert from clipboard and Run as Sudo") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtTerminal.getCaretPosition();
-                           try {
-                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
-                              runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
-                           } catch (BadLocationException e1) {
-                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
-                           }
+                           insertInTerminal(SwingUtil.fromClipboard());
+                           runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
                         }
                      });
                   }
@@ -470,6 +454,7 @@ public class SSHPlugin extends Plugin {
                   SwingUtilities.invokeLater(() -> pop.show(txtTerminal, e.getX(), e.getY()));
                }
             }
+
 
             private Set<LabelNode> getCategories(LabelNode root) {
                final Set<LabelNode> set = new TreeSet<>();
@@ -490,25 +475,22 @@ public class SSHPlugin extends Plugin {
                      pop.add(new AbstractAction("Insert into terminal") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtTerminal.getCaretPosition();
-                           try {
-                              txtTerminal.getDocument().insertString(caretPosition, txtOutput.getSelectedText(), null);
-                           } catch (BadLocationException e1) {
-                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
-                           }
+                           insertInTerminal(txtOutput.getSelectedText());
                         }
                      });
 
                      pop.add(new AbstractAction("Insert into terminal and Run") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtTerminal.getCaretPosition();
-                           try {
-                              txtTerminal.getDocument().insertString(caretPosition, txtOutput.getSelectedText(), null);
-                              runCommand(dataOut, new CommandNode("Run " + txtTerminal.getText().trim(), txtTerminal.getText().trim()));
-                           } catch (BadLocationException e1) {
-                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
-                           }
+                           insertInTerminal(txtOutput.getSelectedText());
+                           runCommand(dataOut, new CommandNode("Run " + txtTerminal.getText().trim(), txtTerminal.getText().trim()));
+                        }
+                     });
+
+                     pop.add(new AbstractAction("cd " + txtOutput.getSelectedText()) {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           runCommand(dataOut, new CommandNode("cd " + txtOutput.getSelectedText(), "cd " + txtOutput.getSelectedText()));
                         }
                      });
 
@@ -554,6 +536,8 @@ public class SSHPlugin extends Plugin {
                   SwingUtilities.invokeLater(() -> pop.show(txtOutput, e.getX(), e.getY()));
                }
             }
+
+
          });
 
          new Thread(() -> {
@@ -670,6 +654,20 @@ public class SSHPlugin extends Plugin {
          final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, newLeftComponent, new JScrollPane(txtOutput));
          add(splitPane, BorderLayout.CENTER);
          add(txtTerminal, BorderLayout.NORTH);
+      }
+
+      private void insertInTerminal(String str) {
+         try {
+            final String selectedText = txtTerminal.getSelectedText();
+            if (selectedText!=null && selectedText.length() > 0) {
+               txtTerminal.setText(txtTerminal.getText().replaceFirst(selectedText, str));
+            } else {
+               final int caretPosition = txtTerminal.getCaretPosition();
+               txtTerminal.getDocument().insertString(caretPosition, str, null);
+            }
+         } catch (BadLocationException e1) {
+            System.out.println("Could not insert string at caret position: " + e1.getMessage());
+         }
       }
 
       private void runCommand(DataOutputStream dataOut, CommandNode commandNode) {
