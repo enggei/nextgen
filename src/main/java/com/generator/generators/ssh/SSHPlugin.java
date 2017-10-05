@@ -105,21 +105,21 @@ public class SSHPlugin extends Plugin {
                txtPrivateKeyPath.setEnabled(true);
             });
 
-            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref");
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
             editor.addLabel("Name", 3, 1);
             editor.add(txtName, 5, 1);
-            editor.addLabel("Uri", 3, 1);
-            editor.add(txtUri, 5, 1);
-            editor.addLabel("Port", 3, 3);
-            editor.add(txtPort, 5, 3);
-            editor.addLabel("Username", 3, 5);
-            editor.add(txtUsername, 5, 5);
-            editor.add(radUserInfo, 1, 7);
-            editor.addLabel("Password", 3, 7);
-            editor.add(txtPassword, 5, 7);
-            editor.add(radIdentityInfo, 1, 9);
-            editor.addLabel("Private key path", 3, 9);
-            editor.add(txtPrivateKeyPath, 5, 9);
+            editor.addLabel("Uri", 3, 3);
+            editor.add(txtUri, 5, 3);
+            editor.addLabel("Port", 3, 5);
+            editor.add(txtPort, 5, 5);
+            editor.addLabel("Username", 3, 7);
+            editor.add(txtUsername, 5, 7);
+            editor.add(radUserInfo, 1, 9);
+            editor.addLabel("Password", 3, 9);
+            editor.add(txtPassword, 5, 9);
+            editor.add(radIdentityInfo, 1, 11);
+            editor.addLabel("Private key path", 3, 11);
+            editor.add(txtPrivateKeyPath, 5, 11);
 
             SwingUtil.showDialog(editor, app, "Login", new SwingUtil.ConfirmAction() {
                @Override
@@ -143,17 +143,19 @@ public class SSHPlugin extends Plugin {
 
                         if (radUserInfo.isSelected())
                            fireNodesLoaded(getGraph().newNode(Entities.Host,
-                              AppMotif.Properties.name.name(), uri,
-                              Properties.username.name(), txtUsername.getText(),
-                              Properties.password.name(), new String(txtPassword.getPassword()),
-                              Properties.port.name(), port));
+                                 AppMotif.Properties.name.name(), name,
+                                 Properties.ip.name(), uri,
+                                 Properties.username.name(), txtUsername.getText(),
+                                 Properties.password.name(), new String(txtPassword.getPassword()),
+                                 Properties.port.name(), port));
 
                         else if (radIdentityInfo.isSelected())
                            fireNodesLoaded(getGraph().newNode(Entities.Host,
-                              AppMotif.Properties.name.name(), uri,
-                              Properties.username.name(), txtUsername.getText(),
-                              Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim(),
-                              Properties.port.name(), port));
+                                 AppMotif.Properties.name.name(), name,
+                                 Properties.ip.name(), uri,
+                                 Properties.username.name(), txtUsername.getText(),
+                                 Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim(),
+                                 Properties.port.name(), port));
                      }
 
                      @Override
@@ -161,6 +163,19 @@ public class SSHPlugin extends Plugin {
                         SwingUtil.showExceptionNoStack(app, throwable);
                      }
                   });
+               }
+
+               private int parsePort(final String input) {
+                  int port = 22;
+
+                  try {
+                     port = Integer.parseInt(input);
+                     if (port < 1 || port > 65535) port = 22;
+                  } catch (NumberFormatException e) {
+                     System.err.println("port is not an integer! Got: " + input);
+                  }
+
+                  return port;
                }
             });
          }
@@ -357,7 +372,7 @@ public class SSHPlugin extends Plugin {
                         }
                      });
 
-                     final Set<LabelNode> categoryNodes = getCategories((LabelNode)commandTree.getModel().getRoot());
+                     final Set<LabelNode> categoryNodes = getCategories((LabelNode) commandTree.getModel().getRoot());
                      final JMenu addCategoryMenu = new JMenu("Add to ");
                      pop.add(addCategoryMenu);
 
@@ -988,10 +1003,10 @@ public class SSHPlugin extends Plugin {
 
          final JSch jSch = new JSch();
 
-         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()), getString(hostNode, Properties.ip.name()));
-         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()),
-            getString(hostNode, AppMotif.Properties.name.name()),
-            hostNode.hasProperty(Properties.port.name()) ? (int)hostNode.getProperty(Properties.port.name()) : 22);
+         final Session session = jSch.getSession(
+               getString(hostNode, Properties.username.name()),
+               getString(hostNode, Properties.ip.name()),
+               hostNode.hasProperty(Properties.port.name()) ? (int) hostNode.getProperty(Properties.port.name()) : 22);
 
          final String privateKeyPath = getString(hostNode, Properties.privateKeyPath.name());
          if (privateKeyPath != null) {
@@ -1055,19 +1070,6 @@ public class SSHPlugin extends Plugin {
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
-   static int parsePort(final String input) {
-      int port = 22;
-
-      try {
-         port = Integer.parseInt(input);
-         if (port < 1 || port > 65535) port = 22;
-      }
-      catch (NumberFormatException e) {
-         System.err.println("port is not an integer! Got: " + input);
-      }
-
-      return port;
-   }
 
    private final class ActiveChannel {
 
