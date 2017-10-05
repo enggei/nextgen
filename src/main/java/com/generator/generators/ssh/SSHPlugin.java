@@ -14,9 +14,7 @@ import org.neo4j.graphdb.*;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreePath;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -36,15 +34,15 @@ import static com.generator.util.NeoUtil.*;
 public class SSHPlugin extends Plugin {
 
    private enum Entities implements Label {
-      Host, Session, Channel
+      Host, Session, Channel, Command, CommandRoot, CommandCategory
    }
 
    private enum Relations implements RelationshipType {
-      SESSIONS, CHANNELS
+      SESSIONS, CHANNELS, COMMANDS, CATEGORIES
    }
 
    private enum Properties {
-      username, password, privateKeyPath
+      ip, username, password, privateKeyPath, cmdCommand, cmdCategory
    }
 
    private final Map<UUID, Session> sessions = new LinkedHashMap<>();
@@ -52,6 +50,9 @@ public class SSHPlugin extends Plugin {
 
    public SSHPlugin(App app) {
       super(app, "SSH");
+
+      // add command-root-node
+      getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
 
       JSch.setLogger(new Logger() {
          @Override
@@ -77,6 +78,7 @@ public class SSHPlugin extends Plugin {
          @Override
          public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
+            final JTextField txtName = new JTextField();
             final JTextField txtUri = new JTextField();
             final JTextField txtUsername = new JTextField();
             final JPasswordField txtPassword = new JPasswordField();
@@ -102,6 +104,8 @@ public class SSHPlugin extends Plugin {
             });
 
             final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref");
+            editor.addLabel("Name", 3, 1);
+            editor.add(txtName, 5, 1);
             editor.addLabel("Uri", 3, 1);
             editor.add(txtUri, 5, 1);
             editor.addLabel("Username", 3, 3);
@@ -118,7 +122,7 @@ public class SSHPlugin extends Plugin {
                public void verifyAndCommit() throws Exception {
 
                   final String uri = txtUri.getText();
-                  if (uri == null || uri.length() == 0) return;
+                  if (uri.length() == 0) return;
 
                   if (radUserInfo.isSelected() && (txtUsername.getText().length() == 0 || txtPassword.getPassword().length == 0))
                      return;
@@ -126,14 +130,14 @@ public class SSHPlugin extends Plugin {
                   if (radIdentityInfo.isSelected() && (txtUsername.getText().length() == 0 || txtPrivateKeyPath.getText().length() == 0 || !new File(txtPrivateKeyPath.getText().trim()).exists()))
                      return;
 
+                  final String name = txtName.getText().trim().length() == 0 ? uri : txtName.getText().trim();
                   getGraph().doInTransaction(new NeoModel.Committer() {
                      @Override
                      public void doAction(Transaction tx) throws Throwable {
-
                         if (radUserInfo.isSelected())
-                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.password.name(), new String(txtPassword.getPassword())));
+                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), name, Properties.ip.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.password.name(), new String(txtPassword.getPassword())));
                         else if (radIdentityInfo.isSelected())
-                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim()));
+                           fireNodesLoaded(getGraph().newNode(Entities.Host, AppMotif.Properties.name.name(), name, Properties.ip.name(), uri, Properties.username.name(), txtUsername.getText(), Properties.privateKeyPath.name(), txtPrivateKeyPath.getText().trim()));
                      }
 
                      @Override
@@ -143,6 +147,13 @@ public class SSHPlugin extends Plugin {
                   });
                }
             });
+         }
+      });
+
+      menu.add(new App.TransactionAction("Show Commands", app) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            fireNodesLoaded(getGraph().findNode(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name()));
          }
       });
    }
@@ -160,7 +171,6 @@ public class SSHPlugin extends Plugin {
          });
 
          if (!sessions.isEmpty()) {
-
             pop.add(new App.TransactionAction("Close all sessions", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -180,16 +190,17 @@ public class SSHPlugin extends Plugin {
                   final Session session = sessions.get(uuidOf(neoNode.getNode()));
                   final Channel channel = session.openChannel("shell");
 
-                  final ActiveChannel activeChannel = new ActiveChannel(channel).connect();
+                  // passing in session-node to retrieve host and host-commands:
+                  final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
 
-                  final Node newNode = getGraph().newNode(Entities.Channel, AppMotif.Properties.name.name(), "shell");
+                  final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
                   relate(neoNode.getNode(), newNode, Relations.CHANNELS);
                   channels.put(uuidOf(newNode), activeChannel);
                   fireNodesLoaded(newNode);
                }
             });
 
-            pop.add(new App.TransactionAction("Close", app) {
+            pop.add(new App.TransactionAction("Close Session", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                   closeSession(neoNode);
@@ -199,10 +210,64 @@ public class SSHPlugin extends Plugin {
 
       } else if (hasLabel(neoNode.getNode(), Entities.Channel)) {
 
-         pop.add(new App.TransactionAction("Close", app) {
+         if (channels.containsKey(uuidOf(neoNode.getNode()))) {
+            pop.add(new App.TransactionAction("Close Channel", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  closeChannel(neoNode.getNode());
+               }
+            });
+         }
+
+      } else if (hasLabel(neoNode.getNode(), Entities.CommandRoot)) {
+
+         pop.add(new App.TransactionAction("Add Command", app) {
             @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               closeChannel(neoNode);
+            public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final JTextField txtName = new JTextField();
+               final JTextField txtCommand = new JTextField();
+               final JTextField txtCategory = new JTextField();
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref");
+               editor.addLabel("Name", 3, 1);
+               editor.add(txtName, 5, 1);
+               editor.addLabel("Command", 3, 3);
+               editor.add(txtCommand, 5, 3);
+               editor.addLabel("Category", 3, 5);
+               editor.add(txtCategory, 5, 5);
+
+               SwingUtil.showDialog(editor, app, "Add Command", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+
+                     final String name = txtName.getText();
+                     final String command = txtCommand.getText();
+                     if (name.length() == 0 || command.length() == 0) return;
+
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+
+                           final Set<Node> nodesToLoad = new LinkedHashSet<>();
+                           final Node commandCategoryNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtCategory.getText().trim());
+                           nodesToLoad.add(commandCategoryNode);
+                           relate(neoNode.getNode(), commandCategoryNode, Relations.CATEGORIES);
+
+                           final Node commandNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                           nodesToLoad.add(commandNode);
+                           relate(commandCategoryNode, commandCategoryNode, Relations.COMMANDS);
+
+                           fireNodesLoaded(nodesToLoad);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
             }
          });
       }
@@ -217,6 +282,9 @@ public class SSHPlugin extends Plugin {
 
    private final class ChannelEditor extends JPanel {
 
+      final JTextField txtTerminal = new JTextField(15);
+      final JTextArea txtOutput = new JTextArea();
+
       final AtomicBoolean active = new AtomicBoolean(true);
       private final StringBuilder cache = new StringBuilder();
       private final Stack<CommandNode> commandStack = new Stack<>();
@@ -226,33 +294,31 @@ public class SSHPlugin extends Plugin {
       private char[] sudoPassword = null;
       private String install = null;
 
-      ChannelEditor(Channel channel) throws IOException {
+      ChannelEditor(Channel channel, NeoNode sessionNode) throws IOException {
          super(new BorderLayout());
 
-         final JTextField txtCommand = new JTextField(15);
-         txtCommand.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtTerminal.setFont(new Font("Hack", Font.PLAIN, 10));
 
-         final JTextArea txtOutput = new JTextArea();
          txtOutput.setFont(new Font("Hack", Font.PLAIN, 10));
          txtOutput.setEditable(false);
 
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
          final DataOutputStream dataOut = new DataOutputStream(channel.getOutputStream());
 
-         txtCommand.addActionListener(e -> {
+         txtTerminal.addActionListener(e -> {
 
-            final String trim = txtCommand.getText().trim();
+            final String trim = txtTerminal.getText().trim();
             if (trim.length() == 0) return;
 
             runCommand(dataOut, new CommandNode("Run " + trim, trim));
-            txtCommand.setText("");
+            txtTerminal.setText("");
          });
 
-         txtCommand.addMouseListener(new MouseAdapter() {
+         txtTerminal.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-               final String trim = txtCommand.getText().trim();
+               final String trim = txtTerminal.getText().trim();
 
                if (SwingUtilities.isRightMouseButton(e)) {
                   final JPopupMenu pop = new JPopupMenu();
@@ -263,7 +329,7 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            runCommand(dataOut, new CommandNode("Run " + trim, trim));
-                           //txtCommand.setText("");
+                           //txtTerminal.setText("");
                         }
                      });
 
@@ -271,14 +337,61 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
-                           //txtCommand.setText("");
+                           //txtTerminal.setText("");
                         }
                      });
+
+                     final Set<LabelNode> categoryNodes = getCategories((LabelNode)commandTree.getModel().getRoot());
+                     final JMenu addCategoryMenu = new JMenu("Add to ");
+                     pop.add(addCategoryMenu);
+
+                     for (LabelNode categoryNode : categoryNodes) {
+                        addCategoryMenu.add(new App.TransactionAction(categoryNode.label, app) {
+                           @Override
+                           protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                              final JTextField txtName = new JTextField(txtTerminal.getText());
+                              final JTextField txtCommand = new JTextField(txtTerminal.getText());
+
+                              final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+                              editor.addLabel("Name", 3, 1);
+                              editor.add(txtName, 5, 1);
+                              editor.addLabel("Command", 3, 3);
+                              editor.add(txtCommand, 5, 3);
+
+                              SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                                 @Override
+                                 public void verifyAndCommit() throws Exception {
+
+                                    final String name = txtName.getText();
+                                    final String command = txtCommand.getText();
+                                    if (name.length() == 0 || command.length() == 0) return;
+
+                                    getGraph().doInTransaction(new NeoModel.Committer() {
+                                       @Override
+                                       public void doAction(Transaction tx) throws Throwable {
+
+                                          final CommandNode commandNode = new CommandNode(txtName.getText(), txtCommand.getText());
+                                          final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                                          relate(categoryNode.node, newNode, Relations.COMMANDS);
+
+                                          SwingUtilities.invokeLater(() -> categoryNode.addChildNode(commandNode, categoryNode, commandTree));
+                                       }
+
+                                       @Override
+                                       public void exception(Throwable throwable) {
+                                          SwingUtil.showExceptionNoStack(app, throwable);
+                                       }
+                                    });
+                                 }
+                              });
+                           }
+                        });
+                     }
 
                      pop.add(new AbstractAction("Clear") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           txtCommand.setText("");
+                           txtTerminal.setText("");
                         }
                      });
                   }
@@ -287,9 +400,35 @@ public class SSHPlugin extends Plugin {
                      pop.add(new AbstractAction("Insert from clipboard") {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                           final int caretPosition = txtCommand.getCaretPosition();
+                           final int caretPosition = txtTerminal.getCaretPosition();
                            try {
-                              txtCommand.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
+                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
+                           } catch (BadLocationException e1) {
+                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
+                           }
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Insert from clipboard and Run") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final int caretPosition = txtTerminal.getCaretPosition();
+                           try {
+                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
+                              runCommand(dataOut, new CommandNode("Run " + trim, trim));
+                           } catch (BadLocationException e1) {
+                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
+                           }
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Insert from clipboard and Run as Sudo") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final int caretPosition = txtTerminal.getCaretPosition();
+                           try {
+                              txtTerminal.getDocument().insertString(caretPosition, SwingUtil.fromClipboard(), null);
+                              runCommand(dataOut, new CommandNode("Run " + trim, trim), true);
                            } catch (BadLocationException e1) {
                               System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
                            }
@@ -297,8 +436,15 @@ public class SSHPlugin extends Plugin {
                      });
                   }
 
-                  SwingUtilities.invokeLater(() -> pop.show(txtCommand, e.getX(), e.getY()));
+                  SwingUtilities.invokeLater(() -> pop.show(txtTerminal, e.getX(), e.getY()));
                }
+            }
+
+            private Set<LabelNode> getCategories(LabelNode root) {
+               final Set<LabelNode> set = new TreeSet<>();
+               for (int i = 0; i < root.getChildCount(); i++)
+                  set.add((LabelNode) root.getChildAt(i));
+               return set;
             }
          });
 
@@ -309,6 +455,32 @@ public class SSHPlugin extends Plugin {
                   final JPopupMenu pop = new JPopupMenu();
 
                   if (txtOutput.getSelectedText() != null && txtOutput.getSelectedText().length() > 0) {
+
+                     pop.add(new AbstractAction("Insert into terminal") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final int caretPosition = txtTerminal.getCaretPosition();
+                           try {
+                              txtTerminal.getDocument().insertString(caretPosition, txtOutput.getSelectedText(), null);
+                           } catch (BadLocationException e1) {
+                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
+                           }
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Insert into terminal and Run") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final int caretPosition = txtTerminal.getCaretPosition();
+                           try {
+                              txtTerminal.getDocument().insertString(caretPosition, txtOutput.getSelectedText(), null);
+                              runCommand(dataOut, new CommandNode("Run " + txtTerminal.getText().trim(), txtTerminal.getText().trim()));
+                           } catch (BadLocationException e1) {
+                              System.out.println("Could not insert string at caret position " + caretPosition + " : " + e1.getMessage());
+                           }
+                        }
+                     });
+
                      pop.add(new AbstractAction("Run " + txtOutput.getSelectedText()) {
                         @Override
                         public void actionPerformed(ActionEvent e) {
@@ -372,20 +544,18 @@ public class SSHPlugin extends Plugin {
                         }
                      });
 
+                     // todo use ExpectIt here ?
                      if (s.contains("[sudo] password for ") && sudoPassword == null) {
                         final char[] p = SwingUtil.showPasswordDialog(app);
                         if (p == null) return;
                         this.sudoPassword = p;
-                        dataOut.writeBytes(new String(p) + "\n");
-                        dataOut.flush();
+                        runCommand(dataOut, new CommandNode("passwd", new String(p)));
 
                      } else if (s.endsWith("Do you want to continue? [Y/n] ")) {
-
-                        final boolean yes = SwingUtil.showConfirmDialog(app, "Do you want to continue ?");
-                        dataOut.writeBytes(yes ? "Y\n" : "n\n");
-                        dataOut.flush();
+                        runCommand(dataOut, new CommandNode("continue", (SwingUtil.showConfirmDialog(app, "Do you want to continue ?")) ? "Y\n" : "n\n"));
 
                      } else {
+
                         final String installTxt = "You can install it by typing:\r\n";
                         if (s.contains(installTxt)) {
                            final int beginIndex = s.indexOf(installTxt) + installTxt.length();
@@ -401,14 +571,14 @@ public class SSHPlugin extends Plugin {
             }
          }).start();
 
-         commandTree = new JTree(getCommands()) {{
+         commandTree = new JTree(getCommands(sessionNode)) {{
 
             setRootVisible(true);
 
             setCellRenderer(new DefaultTreeCellRenderer() {
                @Override
                public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-                  final CommandNode nodeEntry = (CommandNode) value;
+                  final LabelNode nodeEntry = (LabelNode) value;
                   return super.getTreeCellRendererComponent(tree, nodeEntry.label, sel, expanded, leaf, row, hasFocus);
                }
             });
@@ -416,47 +586,22 @@ public class SSHPlugin extends Plugin {
             addMouseListener(new MouseAdapter() {
                @Override
                public void mouseClicked(MouseEvent e) {
-                  final TreePath selectionPath = ((JTree) e.getSource()).getSelectionPath();
+
+                  final TreePath selectionPath = ((JTree) e.getSource()).getPathForLocation(e.getX(), e.getY());
                   if (selectionPath == null) return;
-                  final CommandNode selectedNode = (CommandNode) selectionPath.getLastPathComponent();
+                  final LabelNode selectedNode = (LabelNode) selectionPath.getLastPathComponent();
                   if (selectedNode == null) return;
 
-                  if (selectedNode.isRunnable()) {
-
+                  if (SwingUtilities.isLeftMouseButton(e) && (selectedNode instanceof CommandNode)) {
                      // do not run last command if same as last
-                     if (commandStack.isEmpty() || !selectedNode.equals(commandStack.peek())) {
-                        runCommand(dataOut, selectedNode);
+                     if (commandStack.isEmpty() || !selectedNode.equals(commandStack.peek()))
+                        runCommand(dataOut, (CommandNode) selectedNode);
 
-                     } else {
+                  } else if (SwingUtilities.isRightMouseButton(e)) {
 
-                        // allow to run command by right-click Run...
-                        if (SwingUtilities.isRightMouseButton(e)) {
-                           final JPopupMenu pop = new JPopupMenu();
-
-                           pop.add(new AbstractAction("Run") {
-                              @Override
-                              public void actionPerformed(ActionEvent e) {
-                                 selectedNode.run(dataOut);
-                              }
-                           });
-
-                           pop.add(new AbstractAction("Run as sudo") {
-                              @Override
-                              public void actionPerformed(ActionEvent e) {
-                                 selectedNode.run(dataOut, true);
-                              }
-                           });
-
-                           pop.add(new AbstractAction("Copy to terminal") {
-                              @Override
-                              public void actionPerformed(ActionEvent e) {
-                                 SwingUtilities.invokeLater(() -> txtCommand.setText(selectedNode.command));
-                              }
-                           });
-
-                           SwingUtilities.invokeLater(() -> pop.show(commandTree, e.getX(), e.getY()));
-                        }
-                     }
+                     final JPopupMenu pop = new JPopupMenu();
+                     selectedNode.addRightClickActions(pop, selectionPath, ((JTree) e.getSource()), dataOut);
+                     SwingUtilities.invokeLater(() -> pop.show(commandTree, e.getX(), e.getY()));
                   }
                }
             });
@@ -473,7 +618,11 @@ public class SSHPlugin extends Plugin {
          historyList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-               final CommandNode commandNode = historyList.getSelectedValue();
+
+               final int locationToIndex = historyList.locationToIndex(e.getPoint());
+               if (locationToIndex == -1) return;
+
+               final CommandNode commandNode = historyList.getModel().getElementAt(locationToIndex);
                if (commandNode == null) return;
                commandNode.run(dataOut);
             }
@@ -489,7 +638,7 @@ public class SSHPlugin extends Plugin {
 
          final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, newLeftComponent, new JScrollPane(txtOutput));
          add(splitPane, BorderLayout.CENTER);
-         add(txtCommand, BorderLayout.NORTH);
+         add(txtTerminal, BorderLayout.NORTH);
       }
 
       private void runCommand(DataOutputStream dataOut, CommandNode commandNode) {
@@ -502,94 +651,265 @@ public class SSHPlugin extends Plugin {
       }
 
       @NotNull
-      private CommandNode getCommands() {
-         final CommandNode commands = new CommandNode("Commands");
+      private LabelNode getCommands(NeoNode sessionNode) {
 
-         final CommandNode directoryCommands = new CommandNode("Directories");
-         directoryCommands.add(new CommandNode("List dir", "ls -ltr"));
-         directoryCommands.add(new CommandNode("Show current directory", "pwd"));
-         directoryCommands.add(new CommandNode("Go home", "cd ~"));
-         commands.add(directoryCommands);
+         final LabelNode commands = new LabelNode("Commands");
 
-         // todo:
-         // https://www.linuxtrainingacademy.com/linux-commands-cheat-sheet/
+         // commands for host:
+         final Node hostNode = other(sessionNode.getNode(), singleIncoming(sessionNode.getNode(), Relations.SESSIONS));
+         final LabelNode hostCommands = new LabelNode("Host", hostNode);
+         outgoing(hostNode, Relations.COMMANDS).forEach(commandRelation -> {
+            final Node commandNode = other(hostNode, commandRelation);
+            hostCommands.add(new CommandNode(getString(commandNode, AppMotif.Properties.name.name()), getString(commandNode, Properties.cmdCommand.name())));
+         });
+         commands.add(hostCommands);
 
-         final CommandNode system = new CommandNode("System");
-         system.add(new CommandNode("Disk usage", "df -h"));
-         system.add(new CommandNode("Top", "top"));
-         system.add(new CommandNode("Kernel", "uname -a"));
-         system.add(new CommandNode("Uptime", "uptime"));
-         system.add(new CommandNode("Linux version", "lsb_release -a"));
-         system.add(new CommandNode("ifconfig", "ifconfig"));
-         system.add(new CommandNode("Wireless", "iwconfig"));
-         system.add(new CommandNode("Processes", "ps"));
-         system.add(new CommandNode("Show system host name", "hostname"));
-         system.add(new CommandNode("Display the IP addresses of the host", "hostname -I"));
-         system.add(new CommandNode("Show system reboot history", "last reboot"));
-         system.add(new CommandNode("Show the current date and time", "date"));
-         system.add(new CommandNode("Show this month's calendar", "cal"));
-         system.add(new CommandNode("Display who is online", "w"));
-         system.add(new CommandNode("Who you are logged in as", "whoami"));
-         system.add(new CommandNode("Reboot now", "reboot now"));
-         commands.add(system);
+         // all general-commands:
+         final Node commandRootNode = getGraph().findNode(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
+         outgoing(commandRootNode, Relations.CATEGORIES).forEach(categoryRelation -> {
 
-         final CommandNode hardware = new CommandNode("Hardware");
-         hardware.add(new CommandNode("Display messages in kernel ring buffer", "dmesg"));
-         hardware.add(new CommandNode("Display CPU information", "cat /proc/cpuinfo"));
-         hardware.add(new CommandNode("Display memory information", "cat /proc/meminfo"));
-         hardware.add(new CommandNode("Display free and used memory ( -h for human readable, -m for MB, -g for GB.)", "free -h"));
-         hardware.add(new CommandNode("Display PCI devices", "lspci -tv"));
-         hardware.add(new CommandNode("Display USB devices", "lsusb -tv"));
-         hardware.add(new CommandNode("Display DMI/SMBIOS (hardware info) from the BIOS", "dmidecode"));
-         hardware.add(new CommandNode("Show info about disk sda", "hdparm -i /dev/sda"));
-         hardware.add(new CommandNode("Perform a read speed test on disk sda", "hdparm -tT /dev/sda"));
-         hardware.add(new CommandNode("Test for unreadable blocks on disk sda", "badblocks -s /dev/sda"));
-         system.add(new CommandNode("HAL", "lshal"));
-         system.add(new CommandNode("Hardware", "lshw"));
-         commands.add(hardware);
+            final Node categoryNode = other(commandRootNode, categoryRelation);
+            final String categoryName = getString(categoryNode, AppMotif.Properties.name.name());
+            final LabelNode labelNode = new LabelNode(categoryName, categoryNode);
+            commands.add(labelNode);
 
-         final CommandNode monitoring = new CommandNode("Monitoring");
-         monitoring.add(new CommandNode("Display and manage the top processes", "top"));
-         monitoring.add(new CommandNode("Interactive process viewer (top alternative)", "htop"));
-         monitoring.add(new CommandNode("Display processor related statistics", "mpstat 1"));
-         monitoring.add(new CommandNode("Display virtual memory statistics", "vmstat 1"));
-         monitoring.add(new CommandNode("Display I/O statistics", "iostat 1"));
-         monitoring.add(new CommandNode("Display the last 100 syslog messages", "tail -n 100 /var/log/syslog"));
-         monitoring.add(new CommandNode("Capture and display all packets on interface eth0", "tcpdump -i eth0"));
-         monitoring.add(new CommandNode("Monitor all traffic on port 80 ( HTTP )", "tcpdump -i eth0 'port 80'"));
-         monitoring.add(new CommandNode("List all open files on the system", "lsof"));
-         monitoring.add(new CommandNode("List files opened by user", "lsof -u user"));
-         monitoring.add(new CommandNode("Execute \"df -h\", showing periodic updates", "watch df -h"));
-         commands.add(monitoring);
+            outgoing(categoryNode, Relations.COMMANDS).forEach(commandRelation -> {
+               final Node commandNode = other(categoryNode, commandRelation);
+               labelNode.add(new CommandNode(getString(commandNode, AppMotif.Properties.name.name()), getString(commandNode, Properties.cmdCommand.name())));
+            });
+         });
 
-         final CommandNode aptGet = new CommandNode("Apt-get");
-         aptGet.add(new CommandNode("Update", "apt-get update"));
-         aptGet.add(new CommandNode("Upgrade", "apt-get upgrade"));
+//         final LabelNode directoryCommands = new LabelNode("Directories");
+//         directoryCommands.add(new CommandNode("List dir", "ls -ltr"));
+//         directoryCommands.add(new CommandNode("Show current directory", "pwd"));
+//         directoryCommands.add(new CommandNode("Go home", "cd ~"));
+//         commands.add(directoryCommands);
+// todo:
+//https://www.linuxtrainingacademy.com/linux-commands-cheat-sheet/
+//         final LabelNode system = new LabelNode("System");
+//         system.add(new CommandNode("Disk usage", "df -h"));
+//         system.add(new CommandNode("Top", "top"));
+//         system.add(new CommandNode("Kernel", "uname -a"));
+//         system.add(new CommandNode("Uptime", "uptime"));
+//         system.add(new CommandNode("Linux version", "lsb_release -a"));
+//         system.add(new CommandNode("ifconfig", "ifconfig"));
+//         system.add(new CommandNode("Wireless", "iwconfig"));
+//         system.add(new CommandNode("Processes", "ps"));
+//         system.add(new CommandNode("Show system host name", "hostname"));
+//         system.add(new CommandNode("Display the IP addresses of the host", "hostname -I"));
+//         system.add(new CommandNode("Show system reboot history", "last reboot"));
+//         system.add(new CommandNode("Show the current date and time", "date"));
+//         system.add(new CommandNode("Show this month's calendar", "cal"));
+//         system.add(new CommandNode("Display who is online", "w"));
+//         system.add(new CommandNode("Who you are logged in as", "whoami"));
+//         system.add(new CommandNode("Reboot now", "reboot now"));
+//         commands.add(system);
+
+//         final LabelNode hardware = new LabelNode("Hardware");
+//         hardware.add(new CommandNode("Display messages in kernel ring buffer", "dmesg"));
+//         hardware.add(new CommandNode("Display CPU information", "cat /proc/cpuinfo"));
+//         hardware.add(new CommandNode("Display memory information", "cat /proc/meminfo"));
+//         hardware.add(new CommandNode("Display free and used memory ( -h for human readable, -m for MB, -g for GB.)", "free -h"));
+//         hardware.add(new CommandNode("Display PCI devices", "lspci -tv"));
+//         hardware.add(new CommandNode("Display USB devices", "lsusb -tv"));
+//         hardware.add(new CommandNode("Display DMI/SMBIOS (hardware info) from the BIOS", "dmidecode"));
+//         hardware.add(new CommandNode("Show info about disk sda", "hdparm -i /dev/sda"));
+//         hardware.add(new CommandNode("Perform a read speed test on disk sda", "hdparm -tT /dev/sda"));
+//         hardware.add(new CommandNode("Test for unreadable blocks on disk sda", "badblocks -s /dev/sda"));
+//         system.add(new CommandNode("HAL", "lshal"));
+//         system.add(new CommandNode("Hardware", "lshw"));
+//         commands.add(hardware);
+
+//         final LabelNode monitoring = new LabelNode("Monitoring");
+//         monitoring.add(new CommandNode("Display and manage the top processes", "top"));
+//         monitoring.add(new CommandNode("Interactive process viewer (top alternative)", "htop"));
+//         monitoring.add(new CommandNode("Display processor related statistics", "mpstat 1"));
+//         monitoring.add(new CommandNode("Display virtual memory statistics", "vmstat 1"));
+//         monitoring.add(new CommandNode("Display I/O statistics", "iostat 1"));
+//         monitoring.add(new CommandNode("Display the last 100 syslog messages", "tail -n 100 /var/log/syslog"));
+//         monitoring.add(new CommandNode("Capture and display all packets on interface eth0", "tcpdump -i eth0"));
+//         monitoring.add(new CommandNode("Monitor all traffic on port 80 ( HTTP )", "tcpdump -i eth0 'port 80'"));
+//         monitoring.add(new CommandNode("List all open files on the system", "lsof"));
+//         monitoring.add(new CommandNode("List files opened by user", "lsof -u user"));
+//         monitoring.add(new CommandNode("Execute \"df -h\", showing periodic updates", "watch df -h"));
+//         commands.add(monitoring);
+
+//         final LabelNode aptGet = new LabelNode("Apt-get");
+//         aptGet.add(new CommandNode("Update", "apt-get update"));
+//         aptGet.add(new CommandNode("Upgrade", "apt-get upgrade"));
 
 
-         final CommandNode docker = new CommandNode("Docker");
-         docker.add(new CommandNode("Running containers", "sudo docker ps"));
-         commands.add(docker);
+//         final LabelNode docker = new LabelNode("Docker");
+//         docker.add(new CommandNode("Running containers", "sudo docker ps"));
+//         commands.add(docker);
 
          return commands;
       }
 
-      private class CommandNode extends DefaultMutableTreeNode {
+      private class LabelNode extends DefaultMutableTreeNode implements Comparable<LabelNode> {
 
-         private String label = "";
-         private final String command;
+         final String label;
+         private final Node node;
 
-         CommandNode(String label) {
+         private LabelNode(String label) {
             this(label, null);
          }
 
-         CommandNode(String label, String command) {
+         private LabelNode(String label, Node node) {
             this.label = label;
+            this.node = node;
+         }
+
+         @Override
+         public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            LabelNode labelNode = (LabelNode) o;
+
+            return label.equals(labelNode.label);
+         }
+
+         @Override
+         public int hashCode() {
+            return label.hashCode();
+         }
+
+         @Override
+         public int compareTo(@NotNull LabelNode o) {
+            return this.label.compareTo(o.label);
+         }
+
+         void addChildNode(LabelNode treeNode, MutableTreeNode currentNode, JTree source) {
+            final DefaultTreeModel dm = (DefaultTreeModel) source.getModel();
+            dm.insertNodeInto(treeNode, currentNode, currentNode.getChildCount());
+            source.expandPath(new TreePath(dm.getPathToRoot(treeNode.getParent())));
+         }
+
+         public void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree jTree, DataOutputStream dataOut) {
+
+            if (isRoot()) {
+
+               pop.add(new AbstractAction("Add Category") {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+
+                     final JTextField txtName = new JTextField();
+
+                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
+                     editor.addLabel("Name", 3, 1);
+                     editor.add(txtName, 5, 1);
+
+                     SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+
+                           final String name = txtName.getText();
+                           if (name.length() == 0) return;
+
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+
+                                 final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
+                                 relate(getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name()), newNode, Relations.CATEGORIES);
+
+                                 SwingUtilities.invokeLater(() -> addChildNode(new LabelNode(name, newNode), LabelNode.this, commandTree));
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showExceptionNoStack(app, throwable);
+                              }
+                           });
+                        }
+                     });
+                  }
+               });
+
+            } else {
+
+               pop.add(new AbstractAction("Add Command") {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+
+                     final JTextField txtName = new JTextField();
+                     final JTextField txtCommand = new JTextField(txtTerminal.getText());
+
+                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+                     editor.addLabel("Name", 3, 1);
+                     editor.add(txtName, 5, 1);
+                     editor.addLabel("Command", 3, 3);
+                     editor.add(txtCommand, 5, 3);
+
+                     SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+
+                           final String name = txtName.getText();
+                           final String command = txtCommand.getText();
+                           if (name.length() == 0 || command.length() == 0) return;
+
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+
+                                 final CommandNode commandNode = new CommandNode(txtName.getText(), txtCommand.getText());
+                                 final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                                 relate(node, newNode, Relations.COMMANDS);
+
+                                 SwingUtilities.invokeLater(() -> addChildNode(commandNode, LabelNode.this, commandTree));
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showExceptionNoStack(app, throwable);
+                              }
+                           });
+                        }
+                     });
+                  }
+               });
+            }
+         }
+      }
+
+      private class CommandNode extends LabelNode {
+
+         final String command;
+
+         CommandNode(String label, String command) {
+            super(label);
             this.command = command;
          }
 
-         boolean isRunnable() {
-            return command != null;
+         @Override
+         public void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree jTree, DataOutputStream dataOut) {
+            pop.add(new AbstractAction("Run") {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                  run(dataOut);
+               }
+            });
+
+            pop.add(new AbstractAction("Run as sudo") {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                  run(dataOut, true);
+               }
+            });
+
+            pop.add(new AbstractAction("Copy to terminal") {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                  SwingUtilities.invokeLater(() -> txtTerminal.setText(command));
+               }
+            });
+         }
+
+         CommandNode run(DataOutputStream dataOut) {
+            run(dataOut, false);
+            return this;
          }
 
          CommandNode run(DataOutputStream dataOut, boolean asSudo) {
@@ -599,32 +919,11 @@ public class SSHPlugin extends Plugin {
             } catch (Exception e1) {
                e1.printStackTrace();
             }
-
             return this;
-         }
-
-         CommandNode run(DataOutputStream dataOut) {
-            return run(dataOut, false);
-         }
-
-         @Override
-         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            CommandNode that = (CommandNode) o;
-
-            if (this.command == null && that.command == null) return this.label.equals(that.label);
-            return command != null && command.equals(that.command);
-         }
-
-         @Override
-         public int hashCode() {
-            return command != null ? command.hashCode() : label.hashCode();
          }
       }
 
-      private class SignalCommandNode extends CommandNode {
+      private class SignalCommandNode extends LabelNode {
 
          private final Integer signal;
 
@@ -633,13 +932,7 @@ public class SSHPlugin extends Plugin {
             this.signal = signal;
          }
 
-         @Override
-         boolean isRunnable() {
-            return true;
-         }
-
-         @Override
-         public CommandNode run(DataOutputStream dataOut) {
+         public SignalCommandNode run(DataOutputStream dataOut) {
             try {
                dataOut.write(signal);
                dataOut.flush();
@@ -679,13 +972,13 @@ public class SSHPlugin extends Plugin {
 
          final JSch jSch = new JSch();
 
-         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()), getString(hostNode, AppMotif.Properties.name.name()));
+         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()), getString(hostNode, Properties.ip.name()));
 
          final String privateKeyPath = getString(hostNode, Properties.privateKeyPath.name());
          if (privateKeyPath != null) {
             jSch.addIdentity(privateKeyPath);
          } else {
-            session.setUserInfo(new SftpUserInfo(getString(hostNode, Properties.password.name())));
+            session.setUserInfo(new ChannelUserInfo(getString(hostNode, Properties.password.name())));
             session.setPassword(getString(hostNode, Properties.password.name()));
          }
 
@@ -721,13 +1014,10 @@ public class SSHPlugin extends Plugin {
 
       incoming(sessionNode, Relations.SESSIONS).forEach(Relationship::delete);
 
+      final NeoNode neoNode = app.workspace.layerNodes.get(sessionNode.getId());
+      if (neoNode != null) fireNodeClosed(neoNode);
 
       app.model.deleteNodes(Collections.singleton(sessionNode));
-   }
-
-   private void closeChannel(NeoNode channelNode) {
-      app.events.firePropertyChange(AppEvents.NODES_CLOSED, Collections.singleton(channelNode));
-      closeChannel(channelNode.getNode());
    }
 
    private void closeChannel(Node channelNode) {
@@ -740,6 +1030,9 @@ public class SSHPlugin extends Plugin {
 
       incoming(channelNode, Relations.CHANNELS).forEach(Relationship::delete);
 
+      final NeoNode neoNode = app.workspace.layerNodes.get(channelNode.getId());
+      if (neoNode != null) fireNodeClosed(neoNode);
+
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
@@ -748,14 +1041,14 @@ public class SSHPlugin extends Plugin {
       private final Channel channel;
       private final ChannelEditor editor;
 
-      ActiveChannel(Channel channel) throws IOException {
+      ActiveChannel(Channel channel, NeoNode sessionNode) throws IOException {
          this.channel = channel;
-         this.editor = new ChannelEditor(channel);
+         this.editor = new ChannelEditor(channel, sessionNode);
       }
 
       ActiveChannel connect() {
          try {
-            ((ChannelShell)channel).setPtyType("dumb");
+            ((ChannelShell) channel).setPtyType("dumb");
             channel.connect();
          } catch (JSchException e) {
             throw new RuntimeException(e);
@@ -764,11 +1057,11 @@ public class SSHPlugin extends Plugin {
       }
    }
 
-   private final class SftpUserInfo implements UserInfo {
+   private final class ChannelUserInfo implements UserInfo {
 
       private final String password;
 
-      private SftpUserInfo(String password) {
+      private ChannelUserInfo(String password) {
          this.password = password;
       }
 

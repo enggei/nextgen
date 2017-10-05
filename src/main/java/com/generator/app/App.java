@@ -14,7 +14,6 @@ import com.generator.neo.NeoModel;
 import com.generator.neo.embedded.EmbeddedNeoModel;
 import com.generator.neo.remote.RemoteNeoModel;
 import com.generator.util.FileUtil;
-import com.generator.util.ForEachPanel;
 import com.generator.util.SwingUtil;
 import com.generator.util.TextProcessingPanel;
 import org.neo4j.graphdb.Label;
@@ -207,25 +206,6 @@ public class App extends JFrame {
                SwingUtilities.invokeLater(() -> showTextProcessor(""));
             }
          });
-
-         utilsMenu.add(new AbstractAction("For each") {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-               SwingUtilities.invokeLater(() -> {
-
-                  final ForEachPanel editor = new ForEachPanel(App.this);
-
-                  SwingUtil.showDialog(editor, App.this, "For each", new SwingUtil.ConfirmAction("Close") {
-                     @Override
-                     public void verifyAndCommit() throws Exception {
-
-                     }
-                  });
-
-               });
-            }
-         });
-
          add(utilsMenu);
 
          events.addPropertyChangeListener(AppEvents.GRAPH_NEW, new AppEvents.TransactionalPropertyChangeListener(App.this) {

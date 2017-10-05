@@ -8,9 +8,11 @@ import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static com.generator.app.AppEvents.NODES_CLOSED;
 import static com.generator.app.AppEvents.NODE_CHANGED;
 import static com.generator.app.AppEvents.NODE_LOAD;
 import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
@@ -77,6 +79,10 @@ public abstract class Plugin {
 
    protected void fireNodeChanged(Node node) {
       app.events.firePropertyChange(NODE_CHANGED + node.getId());
+   }
+
+   protected void fireNodeClosed(NeoNode neoNode) {
+      app.events.firePropertyChange(NODES_CLOSED , Collections.singleton(neoNode));
    }
 
    protected void addNodeChangedListener(NeoNode neoNode, AppEvents.TransactionalPropertyChangeListener transactionHandler) {
