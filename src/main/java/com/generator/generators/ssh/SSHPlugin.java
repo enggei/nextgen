@@ -105,7 +105,7 @@ public class SSHPlugin extends Plugin {
                txtPrivateKeyPath.setEnabled(true);
             });
 
-            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref");
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
             editor.addLabel("Name", 3, 1);
             editor.add(txtName, 5, 1);
             editor.addLabel("Uri", 3, 1);
@@ -988,7 +988,6 @@ public class SSHPlugin extends Plugin {
 
          final JSch jSch = new JSch();
 
-         final Session session = jSch.getSession(getString(hostNode, Properties.username.name()), getString(hostNode, Properties.ip.name()));
          final Session session = jSch.getSession(getString(hostNode, Properties.username.name()),
             getString(hostNode, AppMotif.Properties.name.name()),
             hostNode.hasProperty(Properties.port.name()) ? (int)hostNode.getProperty(Properties.port.name()) : 22);
