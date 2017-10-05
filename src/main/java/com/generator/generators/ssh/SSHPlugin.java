@@ -859,7 +859,6 @@ public class SSHPlugin extends Plugin {
                });
 
             } else {
-
                pop.add(new AbstractAction("Add Command") {
                   @Override
                   public void actionPerformed(ActionEvent e) {
