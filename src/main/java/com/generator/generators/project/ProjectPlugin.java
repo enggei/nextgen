@@ -21,6 +21,8 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
@@ -35,11 +37,11 @@ import static com.generator.util.NeoUtil.*;
 public class ProjectPlugin extends Plugin {
 
    public enum Entities implements Label {
-      Project, Directory
+      Project, Directory, File
    }
 
    public enum Relations implements RelationshipType {
-      RENDERER, DIRECTORY, CHILD
+      RENDERER, DIRECTORY, CHILD, FILE
    }
 
    public enum Properties {
@@ -50,25 +52,8 @@ public class ProjectPlugin extends Plugin {
       java, plain, namedFile, groupFile
    }
 
-//   private final Node domainNode;
-//   private final Node projectNode;
-//   private final Node directoryNode;
-
    public ProjectPlugin(App app) {
       super(app, "Project");
-
-//      domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Project");
-//      // use domain-node outgoing to merge here, not findOrCreate
-//      projectNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Project.name());
-//      directoryNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Entities.Directory.name());
-//
-//      relate(domainNode, projectNode, DomainPlugin.Relations.ENTITY);
-//      newEntityProperty(projectNode, AppMotif.Properties.name.name());
-//      newEntityRelation(projectNode, Relations.DIRECTORY.name(), RelationCardinality.LIST, directoryNode);
-//
-//      newEntityProperty(directoryNode, AppMotif.Properties.name.name());
-//      newEntityProperty(directoryNode, Properties.path.name());
-//      newEntityRelation(directoryNode, Relations.CHILD.name(), RelationCardinality.LIST, directoryNode);
    }
 
    @Override
@@ -89,7 +74,6 @@ public class ProjectPlugin extends Plugin {
             if (name == null || name.length() == 0) return;
 
             final Node newNode = getGraph().newNode(Entities.Project);
-//            projectNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
             relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
@@ -123,6 +107,53 @@ public class ProjectPlugin extends Plugin {
                   app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                   renderDirectory(neoNode.getNode());
                   app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+               }
+            });
+         }
+
+         final File dir = getFile(neoNode.getNode());
+         if (dir != null && dir.exists()) {
+            pop.add(new App.TransactionAction("Add File", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final JTextField txtName = new JTextField();
+                  final JTextField txtExtension = new JTextField();
+
+                  SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu, 100dlu", "pref, 4dlu, pref");
+                  editor.addLabel("Name", 1, 1);
+                  editor.add(txtName, 3, 1);
+                  editor.addLabel("Extension", 1, 3);
+                  editor.add(txtExtension, 3, 3);
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                  SwingUtil.showDialog(editor, app, "New File", new SwingUtil.ConfirmAction() {
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        final String name = txtName.getText();
+                        final String extension = (txtExtension.getText().startsWith(".") ? txtExtension.getText() : ("." + txtExtension.getText()));
+                        if (name.length() == 0 || extension.length() == 0) return;
+
+                        final File newFile = FileUtil.tryToCreateFileIfNotExists(new File(dir, name + extension));
+
+                        if (newFile.exists()) {
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+                                 final Node fileNode = getGraph().newNode(Entities.File, AppMotif.Properties.name.name(), name, Properties.extension.name(), extension);
+                                 relate(neoNode.getNode(), fileNode, Relations.FILE);
+                                 fireNodesLoaded(fileNode);
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(app, throwable);
+                              }
+                           });
+                        }
+                     }
+                  });
                }
             });
          }
@@ -393,6 +424,50 @@ public class ProjectPlugin extends Plugin {
                }
             });
          }
+
+      } else if (hasLabel(neoNode.getNode(), Entities.File)) {
+
+         pop.add(new App.TransactionAction("Change name", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final String oldFilename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
+               final String newFilename = SwingUtil.showInputDialog("Filename", app, oldFilename);
+               if (newFilename == null || newFilename.length() == 0) return;
+
+               final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
+               final File getDir = getFile(directoryNode);
+
+               final String extension = getString(neoNode.getNode(), Properties.extension.name());
+               final File file = new File(getDir, oldFilename + extension);
+
+               if (file.renameTo(new File(getDir, newFilename + extension))) {
+                  neoNode.getNode().setProperty(AppMotif.Properties.name.name(), newFilename);
+                  fireNodeChanged(neoNode.getNode());
+               }
+            }
+         });
+
+         pop.add(new App.TransactionAction("Change type", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final String oldExtension = getString(neoNode.getNode(), Properties.extension.name());
+               final String newExtension = SwingUtil.showInputDialog("Type", app, oldExtension);
+               if (newExtension == null || newExtension.length() == 0) return;
+
+               final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
+               final File getDir = getFile(directoryNode);
+
+               final String filename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
+               final File file = new File(getDir, filename + oldExtension);
+
+               if (file.renameTo(new File(getDir, filename + newExtension))) {
+                  neoNode.getNode().setProperty(Properties.extension.name(), newExtension);
+                  fireNodeChanged(neoNode.getNode());
+               }
+            }
+         });
       }
    }
 
@@ -434,6 +509,8 @@ public class ProjectPlugin extends Plugin {
    public JComponent getEditorFor(NeoNode neoNode) {
       if (hasLabel(neoNode.getNode(), Entities.Directory))
          return new DirectoryEditor(neoNode);
+      if (hasLabel(neoNode.getNode(), Entities.File))
+         return new PlainFileEditor(neoNode);
       return null;
    }
 
@@ -488,7 +565,7 @@ public class ProjectPlugin extends Plugin {
          txtEditor.setTabSize(3);
 
          final StringBuilder out = new StringBuilder();
-         final File getDir = ProjectPlugin.getFile(node.getNode());
+         final File getDir = getFile(node.getNode());
          if (getDir != null) listDirectory(getDir, out);
          txtEditor.setText(out.toString().trim());
          txtEditor.setCaretPosition(0);
@@ -504,6 +581,47 @@ public class ProjectPlugin extends Plugin {
             if (file.isFile()) out.append(file.getPath()).append("\n");
             else listDirectory(file, out);
          }
+      }
+   }
+
+   private final class PlainFileEditor extends JPanel {
+      PlainFileEditor(NeoNode node) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = new JTextArea();
+         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setTabSize(3);
+
+         final Node directoryNode = other(node.getNode(), singleIncoming(node.getNode(), Relations.FILE));
+         final File getDir = getFile(directoryNode);
+         final File file = new File(getDir, getString(node.getNode(), AppMotif.Properties.name.name()) + "" + getString(node.getNode(), Properties.extension.name()));
+         final String text = FileUtil.readIntact(file).trim();
+
+         final Color uneditedColor = txtEditor.getBackground();
+         final Color editedColor = Color.decode("#fc8d59");
+
+         txtEditor.setText(text);
+         txtEditor.setCaretPosition(0);
+         txtEditor.addKeyListener(new KeyAdapter() {
+
+            String startText = text;
+
+            public void keyPressed(KeyEvent ke) {
+
+               if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
+                  final int oldCaret = txtEditor.getCaretPosition();
+                  final String newText = txtEditor.getText().trim();
+                  FileUtil.write(newText, file);
+                  txtEditor.setCaretPosition(Math.min(newText.length(), Math.max(0, oldCaret)));
+                  startText = txtEditor.getText().trim();
+                  txtEditor.setBackground(uneditedColor);
+               } else {
+                  SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
+               }
+            }
+         });
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
    }
 }

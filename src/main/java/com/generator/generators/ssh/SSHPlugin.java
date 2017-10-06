@@ -252,44 +252,29 @@ public class SSHPlugin extends Plugin {
 
       } else if (hasLabel(neoNode.getNode(), Entities.CommandRoot)) {
 
-         pop.add(new App.TransactionAction("Add Command", app) {
+         pop.add(new App.TransactionAction("Add Category", app) {
             @Override
             public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                final JTextField txtName = new JTextField();
-               final JTextField txtCommand = new JTextField();
-               final JTextField txtCategory = new JTextField();
 
-               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref");
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
                editor.addLabel("Name", 3, 1);
                editor.add(txtName, 5, 1);
-               editor.addLabel("Command", 3, 3);
-               editor.add(txtCommand, 5, 3);
-               editor.addLabel("Category", 3, 5);
-               editor.add(txtCategory, 5, 5);
 
-               SwingUtil.showDialog(editor, app, "Add Command", new SwingUtil.ConfirmAction() {
+               SwingUtil.showDialog(editor, app, "Add category", new SwingUtil.ConfirmAction() {
                   @Override
                   public void verifyAndCommit() throws Exception {
 
                      final String name = txtName.getText();
-                     final String command = txtCommand.getText();
-                     if (name.length() == 0 || command.length() == 0) return;
+                     if (name.length() == 0) return;
 
                      getGraph().doInTransaction(new NeoModel.Committer() {
                         @Override
                         public void doAction(Transaction tx) throws Throwable {
-
-                           final Set<Node> nodesToLoad = new LinkedHashSet<>();
-                           final Node commandCategoryNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtCategory.getText().trim());
-                           nodesToLoad.add(commandCategoryNode);
-                           relate(neoNode.getNode(), commandCategoryNode, Relations.CATEGORIES);
-
-                           final Node commandNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                           nodesToLoad.add(commandNode);
-                           relate(commandCategoryNode, commandCategoryNode, Relations.COMMANDS);
-
-                           fireNodesLoaded(nodesToLoad);
+                           final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
+                           relate(neoNode.getNode(), newNode, Relations.CATEGORIES);
+                           fireNodesLoaded(newNode);
                         }
 
                         @Override
@@ -829,7 +814,7 @@ public class SSHPlugin extends Plugin {
                      editor.addLabel("Name", 3, 1);
                      editor.add(txtName, 5, 1);
 
-                     SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                     SwingUtil.showDialog(editor, app, "Add Category", new SwingUtil.ConfirmAction() {
                         @Override
                         public void verifyAndCommit() throws Exception {
 
