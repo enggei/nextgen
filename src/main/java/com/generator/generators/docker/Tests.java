@@ -1,5 +1,6 @@
 package com.generator.generators.docker;
 
+import com.generator.ProjectConstants;
 import org.junit.Test;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
@@ -19,9 +20,7 @@ public class Tests {
    @Test
    public void testBuild() throws InterruptedException, TimeoutException, IOException {
 
-      final InputStream stream = new ByteArrayInputStream("bnt2st2\n" .getBytes(StandardCharsets.UTF_8.name()));
-
-      final File directory = new File("/home/goe/projects/nextgen/src/test/java");
+      final File directory = new File(ProjectConstants.TEST_ROOT);
 
       new ProcessExecutor().
             directory(directory).
@@ -32,7 +31,7 @@ public class Tests {
                   System.out.println(line);
                }
             }).
-            redirectInput(stream).
+//            redirectInput(stream).
             execute();
    }
 
