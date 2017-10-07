@@ -358,20 +358,7 @@ public class SSHPlugin extends Plugin {
 
       } else if (hasLabel(neoNode.getNode(), Entities.Path)) {
 
-         pop.add(new App.TransactionAction("Upload file here", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
-               if (file == null) return;
-
-               final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-               final Session session = getSession(hostNode);
-               upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
-               session.disconnect();
-            }
-         });
-
+         final Set<File> fileSet = new LinkedHashSet<>();
          for (NeoNode selectedNode : selectedNodes) {
             if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.File)) {
 
@@ -380,7 +367,44 @@ public class SSHPlugin extends Plugin {
                final File file = new File(getDir, getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + "" + getString(selectedNode.getNode(), ProjectPlugin.Properties.extension.name()));
                if (!file.exists()) return;
 
-               pop.add(new App.TransactionAction("Upload " + getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + " here", app) {
+               fileSet.add(file);
+            }
+         }
+
+         if (fileSet.isEmpty()) {
+            pop.add(new App.TransactionAction("Upload file here", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+                  if (file == null) return;
+
+                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+                  final Session session = getSession(hostNode);
+                  upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                  session.disconnect();
+               }
+            });
+
+         } else if (fileSet.size() == 1) {
+
+            final File file = fileSet.iterator().next();
+
+            pop.add(new App.TransactionAction("Upload " + file.getName(), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+                  final Session session = getSession(hostNode);
+                  upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                  session.disconnect();
+               }
+            });
+
+         } else if (fileSet.size() > 1) {
+
+            final JMenu fileuploadMenu = new JMenu("Upload...");
+            for (File file : fileSet) {
+               fileuploadMenu.add(new App.TransactionAction(file.getName(), app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
@@ -390,6 +414,21 @@ public class SSHPlugin extends Plugin {
                   }
                });
             }
+            pop.add(fileuploadMenu);
+
+            pop.add(new App.TransactionAction("Upload " + fileSet.size() + " files", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+
+                  final Session session = getSession(hostNode);
+                  for (File file : fileSet)
+                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                  session.disconnect();
+
+                  SwingUtil.showMessage(fileSet.size() + " files uploaded", app);
+               }
+            });
          }
 
 
