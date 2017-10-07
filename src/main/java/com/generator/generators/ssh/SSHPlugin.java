@@ -354,6 +354,22 @@ public class SSHPlugin extends Plugin {
             });
          }
 
+      } else if (hasLabel(neoNode.getNode(), Entities.Path)) {
+
+         pop.add(new App.TransactionAction("Upload file here", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+               if (file == null) return;
+
+               final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+               final Session session = getSession(hostNode);
+               upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+               session.disconnect();
+            }
+         });
+
       } else if (hasLabel(neoNode.getNode(), Entities.CommandRoot)) {
 
          pop.add(new App.TransactionAction("Add Category", app) {
@@ -897,7 +913,7 @@ public class SSHPlugin extends Plugin {
          final PathsNode hostPaths = new PathsNode("Paths", hostNode);
          outgoing(hostNode, Relations.PATHS).forEach(pathRelation -> {
             final Node pathNode = other(hostNode, pathRelation);
-            hostPaths.add(new PathNode(getString(pathNode, AppMotif.Properties.name.name())));
+            hostPaths.add(new PathNode(pathNode));
          });
          root.add(hostPaths);
 
@@ -1043,10 +1059,10 @@ public class SSHPlugin extends Plugin {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
 
-                              final PathNode pathNode = new PathNode(txtName.getText());
                               final Node newNode = getGraph().findOrCreate(Entities.Path, AppMotif.Properties.name.name(), txtName.getText());
                               relate(node, newNode, Relations.PATHS);
 
+                              final PathNode pathNode = new PathNode(newNode);
                               SwingUtilities.invokeLater(() -> addChildNode(pathNode, PathsNode.this, commandTree));
                            }
 
@@ -1116,8 +1132,8 @@ public class SSHPlugin extends Plugin {
 
       private class PathNode extends LabelNode {
 
-         PathNode(String label) {
-            super(label);
+         PathNode(Node pathNode) {
+            super(getString(pathNode, AppMotif.Properties.name.name()), pathNode);
          }
 
          @Override
@@ -1133,6 +1149,20 @@ public class SSHPlugin extends Plugin {
                @Override
                public void actionPerformed(ActionEvent e) {
                   runCommand(dataOut, new CommandNode(null, "ls -la " + label));
+               }
+            });
+
+            pop.add(new App.TransactionAction("Upload file here", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+                  if (file == null) return;
+
+                  final Node hostNode = other(node, singleIncoming(node, Relations.PATHS));
+                  final Session session = getSession(hostNode);
+                  upload(session, file.getAbsolutePath(), label);
+                  session.disconnect();
                }
             });
 
