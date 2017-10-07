@@ -563,7 +563,6 @@ public class SSHPlugin extends Plugin {
                            final String filename = txtOutput.getSelectedText().trim();
 
                            runCommand(dataOut, new CommandNode("pwd", "pwd"));
-
                         }
                      });
                   }
