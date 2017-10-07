@@ -626,7 +626,7 @@ public class SSHPlugin extends Plugin {
                         }
                      });
 
-                     final Set<LabelNode> categoryNodes = getCategories((LabelNode) commandTree.getModel().getRoot());
+                     final Set<CommandCategoryNode> categoryNodes = getCategories((TreeNode) commandTree.getModel().getRoot());
                      final JMenu addCategoryMenu = new JMenu("Add to ");
                      pop.add(addCategoryMenu);
 
@@ -711,11 +711,20 @@ public class SSHPlugin extends Plugin {
             }
 
 
-            private Set<LabelNode> getCategories(LabelNode root) {
-               final Set<LabelNode> set = new TreeSet<>();
+            private Set<CommandCategoryNode> getCategories(TreeNode root) {
+               final Set<CommandCategoryNode> set = new TreeSet<>();
                for (int i = 0; i < root.getChildCount(); i++)
-                  set.add((LabelNode) root.getChildAt(i));
+                  visit(root.getChildAt(i), set);
                return set;
+            }
+
+            private void visit(TreeNode treeNode, Set<CommandCategoryNode> set) {
+               if(treeNode instanceof CommandCategoryNode) {
+                  set.add((CommandCategoryNode) treeNode);
+               } else {
+                  for (int i = 0; i < treeNode.getChildCount(); i++)
+                     visit(treeNode.getChildAt(i), set);
+               }
             }
          });
 
