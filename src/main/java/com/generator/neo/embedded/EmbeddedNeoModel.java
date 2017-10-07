@@ -5,7 +5,6 @@ import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
-import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
 import org.stringtemplate.v4.ST;
 
@@ -33,10 +32,6 @@ public class EmbeddedNeoModel implements NeoModel {
    public interface NeoModelListener {
 
       void closed(EmbeddedNeoModel model);
-   }
-
-   public EmbeddedNeoModel(final GraphDatabaseService graphDb) {
-      this(graphDb, null);
    }
 
    public EmbeddedNeoModel(final GraphDatabaseService graphDb, NeoModelListener listener) {
@@ -69,11 +64,6 @@ public class EmbeddedNeoModel implements NeoModel {
    }
 
    @Override
-   public ResourceIterable<Label> getAllLabels() {
-      return graphDb.getAllLabels();
-   }
-
-   @Override
    public ResourceIterable<RelationshipType> getAllRelationshipTypes() {
       return graphDb.getAllRelationshipTypes();
    }
@@ -84,13 +74,13 @@ public class EmbeddedNeoModel implements NeoModel {
    }
 
    @Override
-   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      return graphDb.registerTransactionEventHandler(transactionEventHandler);
+   public void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      graphDb.registerTransactionEventHandler(transactionEventHandler);
    }
 
    @Override
-   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      return graphDb.unregisterTransactionEventHandler(transactionEventHandler);
+   public void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      graphDb.unregisterTransactionEventHandler(transactionEventHandler);
    }
 
    @Override
@@ -100,18 +90,13 @@ public class EmbeddedNeoModel implements NeoModel {
       isShutdown.set(true);
    }
 
-   public Result query(String query) {
-      //System.out.println(query);
-      final Result result = graphDb.execute(query);
-      //System.out.println("Query stats : \n" + result.getQueryStatistics().toString());
-      return result;
+   private Result query(String query) {
+      return graphDb.execute(query);
    }
 
    public Transaction beginTx() {
       return graphDb.beginTx();
    }
-
-
 
    public Node createNode(Label label) {
       return newNode(label.name(), UUID.randomUUID());
@@ -127,11 +112,6 @@ public class EmbeddedNeoModel implements NeoModel {
 
    public Node newNode(final UUID uuid, Object... kv) {
       return newNode(null, uuid, kv);
-   }
-
-   public Node mergeNode(final UUID uuid) {
-      final IndexHits<Node> indexHits = uuids.get(TAG_UUID, uuid);
-      return indexHits.size() == 0 ? newNode(uuid) : indexHits.getSingle();
    }
 
    public Node newNode(final String label, final UUID uuid, Object... kv) {
@@ -162,7 +142,6 @@ public class EmbeddedNeoModel implements NeoModel {
    }
 
    // NODES
-
    public Set<Node> getAll(String label) {
       final ST cypher = new ST("MATCH (entity~if(label)~:~label~~endif~) RETURN entity", '~', '~');
       if (label != null && label.length() != 0)
@@ -180,7 +159,7 @@ public class EmbeddedNeoModel implements NeoModel {
       return result;
    }
 
-   public Set<Node> getAll(String property, String value) {
+   private Set<Node> getAll(String property, String value) {
       final ST cypher = new ST("MATCH (entity) WHERE entity.~property~ = \"~value~\" RETURN entity", '~', '~');
       cypher.add("property", property);
       cypher.add("value", value);
@@ -194,11 +173,6 @@ public class EmbeddedNeoModel implements NeoModel {
 
    @Override
    public Set<Node> getAll(String label, String property, Object value) {
-      return null;
-   }
-
-   @Override
-   public Set<Node> getAll(String property, Object value) {
       return null;
    }
 
@@ -238,10 +212,5 @@ public class EmbeddedNeoModel implements NeoModel {
          node.setProperty(properties[i].toString(), properties[i + 1]);
 
       return node;
-   }
-
-   @Override
-   public IndexManager index() {
-      return graphDb.index();
    }
 }

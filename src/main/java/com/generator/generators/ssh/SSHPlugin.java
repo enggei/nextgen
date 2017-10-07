@@ -719,7 +719,7 @@ public class SSHPlugin extends Plugin {
             }
 
             private void visit(TreeNode treeNode, Set<CommandCategoryNode> set) {
-               if(treeNode instanceof CommandCategoryNode) {
+               if (treeNode instanceof CommandCategoryNode) {
                   set.add((CommandCategoryNode) treeNode);
                } else {
                   for (int i = 0; i < treeNode.getChildCount(); i++)
@@ -821,6 +821,11 @@ public class SSHPlugin extends Plugin {
                   if (dataIn.available() > 0) {
                      final int read = dataIn.read(bytes);
                      cache.append(new String(bytes, 0, read, "UTF-8"));
+
+//                     // todo test this, perhaps put in as cache-parameter
+//                     if (cache.length() > (20000)) {
+//                        cache.delete(0, 20000);
+//                     }
 
                      final String s = cache.toString();
                      SwingUtilities.invokeLater(() -> {

@@ -16,15 +16,13 @@ public interface NeoModel {
 
    ResourceIterable<RelationshipType> getAllRelationshipTypesInUse();
 
-   ResourceIterable<Label> getAllLabels();
-
    ResourceIterable<RelationshipType> getAllRelationshipTypes();
 
    ResourceIterable<String> getAllPropertyKeys();
 
-   TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
+   void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
 
-   TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
+   void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler);
 
    Node createNode(final Label label);
 
@@ -42,10 +40,6 @@ public interface NeoModel {
 
    Set<Node> getAll(String label, String property, Object value);
 
-   Set<Node> getAll(String property, Object value);
-
-   Result query(String query);
-
    Iterator<Node> findNodes(Label label);
 
    Iterator<Node> findNodes(Label label, String key, Object value);
@@ -55,8 +49,6 @@ public interface NeoModel {
    Node findNode(Label label, String key, Object value);
 
    Node findOrCreate(Label label, String key, Object value, Object ... properties);
-
-   IndexManager index();
 
    org.neo4j.graphdb.Transaction beginTx();
 

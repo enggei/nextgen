@@ -69,8 +69,6 @@ public class Tests {
       RemoteNeoModel remote = new RemoteNeoModel(NEO4J_URI, USERNAME, PASSWORD,
          model -> System.out.println("closed"));
 
-      remote.query(CYPHER_DROP_ALL);
-
       UUID uuid = TEST_NODE_UUID[0];
 
       remote.createNode(uuid,
@@ -334,8 +332,6 @@ public class Tests {
             System.out.println("after rollback: " + state);
          }
       });
-
-      neoModel.query(CYPHER_DROP_ALL);
 
       // Success
       neoModel.doInTransaction(tx -> {

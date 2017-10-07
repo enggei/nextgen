@@ -3,14 +3,10 @@ package com.generator.neo.remote;
 
 import com.generator.neo.NeoModel;
 import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
 import org.neo4j.graphdb.*;
 import org.neo4j.graphdb.event.TransactionEventHandler;
-import org.neo4j.graphdb.index.IndexManager;
 import org.neo4j.helpers.collection.Iterators;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -71,11 +67,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    }
 
    @Override
-   public IndexManager index() {
-      throw new UnsupportedOperationException("Refactor away the use of index()");
-   }
-
-   @Override
    public Iterable<Node> findNodesWithProperty(String property) {
 
       final Iterable<Node> nodes = getNodesWithProperty(property)
@@ -110,17 +101,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    }
 
    @Override
-   public ResourceIterable<Label> getAllLabels() {
-
-      final Iterable<Label> labels = readSingleStringColumn("CALL db.labels() YIELD label")
-         .stream()
-         .map(Label::label)
-         .collect(Collectors.toCollection(LinkedHashSet::new));
-
-      return () -> Iterators.asResourceIterator(labels.iterator());
-   }
-
-   @Override
    public ResourceIterable<RelationshipType> getAllRelationshipTypes() {
 
       final Iterable<RelationshipType> relationshipTypes = readSingleStringColumn("CALL db.relationshipTypes()")
@@ -134,7 +114,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    @Override
    public ResourceIterable<String> getAllPropertyKeys() {
       final Iterable<String> properties = new LinkedHashSet<>(readSingleStringColumn("CALL db.propertyKeys()"));
-
       return () -> Iterators.asResourceIterator(properties.iterator());
    }
 
@@ -174,23 +153,12 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
          // if node has labels, show all
          final StringBuilder lbl = new StringBuilder();
-         for (Label label : node.getLabels()) lbl.append(label).append(" ");
+         for (Label label : node.getLabels()) lbl.append(label.name()).append(" ");
          if (lbl.length() > 0) return lbl.toString().trim();
 
          // if no labels, show uuid:
          return hasUUID(node) ? uuidOf(node).toString() : "[" + node.getPropertyKeys() + "]";
       }
-   }
-
-   // Use node.hasProperty(key, defaultValue) instead
-   @Deprecated
-   public static Object getProperty(String name, Node node, Object defaultValue) {
-      return node.getProperty(name, defaultValue);
-//		return node.hasProperty(name) ? node.getProperty(name) : defaultValue;
-   }
-
-   public static boolean hasOutgoing(Node node, RelationshipType relationship) {
-      return node.hasRelationship(relationship, Direction.OUTGOING);
    }
 
    @Override
@@ -223,14 +191,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    }
 
    @Override
-   public Set<Node> getAll(String property, Object value) {
-      return readNodes(new Statement("MATCH (n {" + property + ": $value}) RETURN n", parameters("value", value)))
-            .stream()
-            .map(node -> fromDriverNode(this, node))
-            .collect(Collectors.toCollection(LinkedHashSet::new));
-   }
-
-   @Override
    public Iterator<Node> findNodes(Label label) {
       return getAll(label.name()).iterator();
    }
@@ -238,12 +198,6 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    @Override
    public Iterator<Node> findNodes(Label label, String key, Object value) {
       return getAll(label.name(), key, value).iterator();
-   }
-
-   public Result query(String query) {
-      // todo implement
-      //StatementResult statementResult = executeCypher(query);
-      throw new UnsupportedOperationException("Needs implementation to support query()");
    }
 
    @Override
@@ -272,13 +226,12 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
    }
 
    @Override
-   public TransactionEventHandler<Object> registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      return txEventHandler.registerTransactionEventHandler(transactionEventHandler);
+   public void registerTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      txEventHandler.registerTransactionEventHandler(transactionEventHandler);
    }
 
    @Override
-   public TransactionEventHandler<Object> unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
-      return txEventHandler.unregisterTransactionEventHandler(transactionEventHandler);
+   public void unregisterTransactionEventHandler(TransactionEventHandler<Object> transactionEventHandler) {
+      txEventHandler.unregisterTransactionEventHandler(transactionEventHandler);
    }
-
 }
