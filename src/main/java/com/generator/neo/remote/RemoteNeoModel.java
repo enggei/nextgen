@@ -72,8 +72,7 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
 
    @Override
    public IndexManager index() {
-      System.out.println("index() needs to be solved");
-      return null;
+      throw new UnsupportedOperationException("Refactor away the use of index()");
    }
 
    @Override
@@ -241,13 +240,10 @@ public class RemoteNeoModel extends NeoDriver implements NeoModel {
       return getAll(label.name(), key, value).iterator();
    }
 
-   @Override
    public Result query(String query) {
       // todo implement
-
-      StatementResult statementResult = executeCypher(query);
-
-      return null;
+      //StatementResult statementResult = executeCypher(query);
+      throw new UnsupportedOperationException("Needs implementation to support query()");
    }
 
    @Override
