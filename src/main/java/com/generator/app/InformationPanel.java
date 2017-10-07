@@ -161,7 +161,7 @@ final class InformationPanel extends JPanel {
 //            root.add(nodeIndices);
 //            for (String indexName : app.model.graph().index().nodeIndexNames())
 //               nodeIndices.add(new NodeIndexNode(indexName));
-
+//
 //            final InformationNode relationIndices = new InformationNode("Relationships Indices");
 //            root.add(relationIndices);
 //            for (String indexName : app.model.graph().index().relationshipIndexNames())

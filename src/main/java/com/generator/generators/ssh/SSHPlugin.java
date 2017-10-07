@@ -253,6 +253,45 @@ public class SSHPlugin extends Plugin {
             }
          });
 
+         pop.add(new AbstractAction("Add Command") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+               final JTextField txtName = new JTextField();
+               final JTextField txtCommand = new JTextField();
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+               editor.addLabel("Name", 3, 1);
+               editor.add(txtName, 5, 1);
+               editor.addLabel("Command", 3, 3);
+               editor.add(txtCommand, 5, 3);
+
+               SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+
+                     final String name = txtName.getText();
+                     final String command = txtCommand.getText();
+                     if (name.length() == 0 || command.length() == 0) return;
+
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                           relate(neoNode.getNode(), newNode, Relations.COMMANDS);
+                           fireNodesLoaded(newNode);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
+            }
+         });
+
          pop.add(new App.TransactionAction("Add Path", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -339,6 +378,46 @@ public class SSHPlugin extends Plugin {
                         public void doAction(Transaction tx) throws Throwable {
                            final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
                            relate(neoNode.getNode(), newNode, Relations.CATEGORIES);
+                           fireNodesLoaded(newNode);
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showExceptionNoStack(app, throwable);
+                        }
+                     });
+                  }
+               });
+            }
+         });
+      } else if (hasLabel(neoNode.getNode(), Entities.CommandCategory)) {
+
+         pop.add(new AbstractAction("Add Command") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+               final JTextField txtName = new JTextField();
+               final JTextField txtCommand = new JTextField();
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref");
+               editor.addLabel("Name", 3, 1);
+               editor.add(txtName, 5, 1);
+               editor.addLabel("Command", 3, 3);
+               editor.add(txtCommand, 5, 3);
+
+               SwingUtil.showDialog(editor, app, "Add command", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+
+                     final String name = txtName.getText();
+                     final String command = txtCommand.getText();
+                     if (name.length() == 0 || command.length() == 0) return;
+
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
+                           relate(neoNode.getNode(), newNode, Relations.COMMANDS);
                            fireNodesLoaded(newNode);
                         }
 
@@ -744,7 +823,50 @@ public class SSHPlugin extends Plugin {
 
          final LabelNode root = new LabelNode("Shell");
 
-         final LabelNode commands = new LabelNode("Commands");
+         final LabelNode commands = new LabelNode("Commands") {
+
+            private final LabelNode thisLabel = this;
+
+            @Override
+            public void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree jTree, DataOutputStream dataOut) {
+               pop.add(new AbstractAction("Add Category") {
+                  @Override
+                  public void actionPerformed(ActionEvent e) {
+
+                     final JTextField txtName = new JTextField();
+
+                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
+                     editor.addLabel("Name", 3, 1);
+                     editor.add(txtName, 5, 1);
+
+                     SwingUtil.showDialog(editor, app, "Add Category", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+
+                           final String name = txtName.getText();
+                           if (name.length() == 0) return;
+
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+
+                                 final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
+                                 relate(getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name()), newNode, Relations.CATEGORIES);
+
+                                 SwingUtilities.invokeLater(() -> addChildNode(new CommandCategoryNode(name, newNode), thisLabel, commandTree));
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showExceptionNoStack(app, throwable);
+                              }
+                           });
+                        }
+                     });
+                  }
+               });
+            }
+         };
          root.add(commands);
 
          // commands for host:
@@ -888,45 +1010,7 @@ public class SSHPlugin extends Plugin {
 
          public void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree jTree, DataOutputStream dataOut) {
 
-            if (isRoot()) {
 
-               pop.add(new AbstractAction("Add Category") {
-                  @Override
-                  public void actionPerformed(ActionEvent e) {
-
-                     final JTextField txtName = new JTextField();
-
-                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("10dlu,4dlu,75dlu,4dlu,100dlu", "pref");
-                     editor.addLabel("Name", 3, 1);
-                     editor.add(txtName, 5, 1);
-
-                     SwingUtil.showDialog(editor, app, "Add Category", new SwingUtil.ConfirmAction() {
-                        @Override
-                        public void verifyAndCommit() throws Exception {
-
-                           final String name = txtName.getText();
-                           if (name.length() == 0) return;
-
-                           getGraph().doInTransaction(new NeoModel.Committer() {
-                              @Override
-                              public void doAction(Transaction tx) throws Throwable {
-
-                                 final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
-                                 relate(getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name()), newNode, Relations.CATEGORIES);
-
-                                 SwingUtilities.invokeLater(() -> addChildNode(new LabelNode(name, newNode), LabelNode.this, commandTree));
-                              }
-
-                              @Override
-                              public void exception(Throwable throwable) {
-                                 SwingUtil.showExceptionNoStack(app, throwable);
-                              }
-                           });
-                        }
-                     });
-                  }
-               });
-            }
          }
       }
 
