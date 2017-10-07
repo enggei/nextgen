@@ -695,11 +695,11 @@ public class App extends JFrame {
 
          final JLabel lblHeader = new JLabel("N E X T G E N");
          lblHeader.setFont(new Font("Hack", Font.BOLD, 48));
-         lblHeader.setForeground(Color.BLACK);
+         lblHeader.setForeground(Color.DARK_GRAY);
 
          final JLabel lblVersion = new JLabel("Loading...");
          lblVersion.setFont(new Font("Hack", Font.BOLD, 15));
-         lblVersion.setForeground(Color.DARK_GRAY);
+         lblVersion.setForeground(Color.LIGHT_GRAY);
 
          content.setBackground(Color.WHITE);
          content.add(lblHeader, BorderLayout.CENTER);

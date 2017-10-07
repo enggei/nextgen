@@ -67,7 +67,56 @@ public class SSHPlugin extends Plugin {
       super(app, "SSH");
 
       // add command-root-node
-      getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
+      final Node commandRoot = getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
+
+      //https://www.linuxtrainingacademy.com/linux-commands-cheat-sheet/
+      // add default linux-commands
+      final Node linuxCategory = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), "Linux");
+      relate(commandRoot, linuxCategory, Relations.CATEGORIES);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "List dir", Properties.cmdCommand.name(), "ls -ltr"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Go home", Properties.cmdCommand.name(), "cd ~"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Disk usage", Properties.cmdCommand.name(), "df -h"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Top", Properties.cmdCommand.name(), "top"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Kernel", Properties.cmdCommand.name(), "uname -a"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Uptime", Properties.cmdCommand.name(), "uptime"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Linux version", Properties.cmdCommand.name(), "lsb_release -a"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "ifconfig", Properties.cmdCommand.name(), "ifconfig"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Wireless", Properties.cmdCommand.name(), "iwconfig"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Processes", Properties.cmdCommand.name(), "ps"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Host name", Properties.cmdCommand.name(), "hostname"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "IP address", Properties.cmdCommand.name(), "hostname -I"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Reboot history", Properties.cmdCommand.name(), "last reboot"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Datetime", Properties.cmdCommand.name(), "date"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Calendar", Properties.cmdCommand.name(), "cal"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Who is online", Properties.cmdCommand.name(), "w"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Whoami", Properties.cmdCommand.name(), "whoami"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Reboot now", Properties.cmdCommand.name(), "reboot now"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Shutdown now", Properties.cmdCommand.name(), "shutdown now"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Shutdown now", Properties.cmdCommand.name(), "shutdown now"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display messages in kernel ring buffer", Properties.cmdCommand.name(), "dmesg"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display CPU information", Properties.cmdCommand.name(), "cat /proc/cpuinfo"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display memory information", Properties.cmdCommand.name(), "cat /proc/meminfo"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display free and used memory ( -h for human readable, -m for MB, -g for GB.)", Properties.cmdCommand.name(), "free -h"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display PCI devices", Properties.cmdCommand.name(), "lspci -tv"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display USB devices", Properties.cmdCommand.name(), "lsusb -tv"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display DMI/SMBIOS (hardware info) from the BIOS", Properties.cmdCommand.name(), "dmidecode"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Show info about disk sda", Properties.cmdCommand.name(), "hdparm -i /dev/sda"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Perform a read speed test on disk sda", Properties.cmdCommand.name(), "hdparm -tT /dev/sda"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Test for unreadable blocks on disk sda", Properties.cmdCommand.name(), "badblocks -s /dev/sda"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "HAL", Properties.cmdCommand.name(), "lshal"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Hardware", Properties.cmdCommand.name(), "lshw"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display and manage the top processes", Properties.cmdCommand.name(), "top"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Interactive process viewer (top alternative)", Properties.cmdCommand.name(), "htop"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display processor related statistics", Properties.cmdCommand.name(), "mpstat 1"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display virtual memory statistics", Properties.cmdCommand.name(), "vmstat 1"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display I/O statistics", Properties.cmdCommand.name(), "iostat 1"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Display the last 100 syslog messages", Properties.cmdCommand.name(), "tail -n 100 /var/log/syslog"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Capture and display all packets on interface eth0", Properties.cmdCommand.name(), "tcpdump -i eth0"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Monitor all traffic on port 80 ( HTTP )", Properties.cmdCommand.name(), "tcpdump -i eth0 'port 80'"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "List all open files on the system", Properties.cmdCommand.name(), "lsof"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "List files opened by user", Properties.cmdCommand.name(), "lsof -u user"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Apt-get update", Properties.cmdCommand.name(), "apt-get update"), Relations.COMMANDS);
+      relate(linuxCategory, getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), "Apt-get upgrade", Properties.cmdCommand.name(), "apt-get upgrade"), Relations.COMMANDS);
 
       JSch.setLogger(new Logger() {
          @Override
@@ -979,69 +1028,6 @@ public class SSHPlugin extends Plugin {
          });
          root.add(hostPaths);
 
-//         final LabelNode directoryCommands = new LabelNode("Directories");
-//         directoryCommands.add(new CommandNode("List dir", "ls -ltr"));
-//         directoryCommands.add(new CommandNode("Show current directory", "pwd"));
-//         directoryCommands.add(new CommandNode("Go home", "cd ~"));
-//         commands.add(directoryCommands);
-// todo:
-//https://www.linuxtrainingacademy.com/linux-commands-cheat-sheet/
-//         final LabelNode system = new LabelNode("System");
-//         system.add(new CommandNode("Disk usage", "df -h"));
-//         system.add(new CommandNode("Top", "top"));
-//         system.add(new CommandNode("Kernel", "uname -a"));
-//         system.add(new CommandNode("Uptime", "uptime"));
-//         system.add(new CommandNode("Linux version", "lsb_release -a"));
-//         system.add(new CommandNode("ifconfig", "ifconfig"));
-//         system.add(new CommandNode("Wireless", "iwconfig"));
-//         system.add(new CommandNode("Processes", "ps"));
-//         system.add(new CommandNode("Show system host name", "hostname"));
-//         system.add(new CommandNode("Display the IP addresses of the host", "hostname -I"));
-//         system.add(new CommandNode("Show system reboot history", "last reboot"));
-//         system.add(new CommandNode("Show the current date and time", "date"));
-//         system.add(new CommandNode("Show this month's calendar", "cal"));
-//         system.add(new CommandNode("Display who is online", "w"));
-//         system.add(new CommandNode("Who you are logged in as", "whoami"));
-//         system.add(new CommandNode("Reboot now", "reboot now"));
-//         commands.add(system);
-
-//         final LabelNode hardware = new LabelNode("Hardware");
-//         hardware.add(new CommandNode("Display messages in kernel ring buffer", "dmesg"));
-//         hardware.add(new CommandNode("Display CPU information", "cat /proc/cpuinfo"));
-//         hardware.add(new CommandNode("Display memory information", "cat /proc/meminfo"));
-//         hardware.add(new CommandNode("Display free and used memory ( -h for human readable, -m for MB, -g for GB.)", "free -h"));
-//         hardware.add(new CommandNode("Display PCI devices", "lspci -tv"));
-//         hardware.add(new CommandNode("Display USB devices", "lsusb -tv"));
-//         hardware.add(new CommandNode("Display DMI/SMBIOS (hardware info) from the BIOS", "dmidecode"));
-//         hardware.add(new CommandNode("Show info about disk sda", "hdparm -i /dev/sda"));
-//         hardware.add(new CommandNode("Perform a read speed test on disk sda", "hdparm -tT /dev/sda"));
-//         hardware.add(new CommandNode("Test for unreadable blocks on disk sda", "badblocks -s /dev/sda"));
-//         system.add(new CommandNode("HAL", "lshal"));
-//         system.add(new CommandNode("Hardware", "lshw"));
-//         commands.add(hardware);
-
-//         final LabelNode monitoring = new LabelNode("Monitoring");
-//         monitoring.add(new CommandNode("Display and manage the top processes", "top"));
-//         monitoring.add(new CommandNode("Interactive process viewer (top alternative)", "htop"));
-//         monitoring.add(new CommandNode("Display processor related statistics", "mpstat 1"));
-//         monitoring.add(new CommandNode("Display virtual memory statistics", "vmstat 1"));
-//         monitoring.add(new CommandNode("Display I/O statistics", "iostat 1"));
-//         monitoring.add(new CommandNode("Display the last 100 syslog messages", "tail -n 100 /var/log/syslog"));
-//         monitoring.add(new CommandNode("Capture and display all packets on interface eth0", "tcpdump -i eth0"));
-//         monitoring.add(new CommandNode("Monitor all traffic on port 80 ( HTTP )", "tcpdump -i eth0 'port 80'"));
-//         monitoring.add(new CommandNode("List all open files on the system", "lsof"));
-//         monitoring.add(new CommandNode("List files opened by user", "lsof -u user"));
-//         monitoring.add(new CommandNode("Execute \"df -h\", showing periodic updates", "watch df -h"));
-//         commands.add(monitoring);
-
-//         final LabelNode aptGet = new LabelNode("Apt-get");
-//         aptGet.add(new CommandNode("Update", "apt-get update"));
-//         aptGet.add(new CommandNode("Upgrade", "apt-get upgrade"));
-
-
-//         final LabelNode docker = new LabelNode("Docker");
-//         docker.add(new CommandNode("Running containers", "sudo docker ps"));
-//         commands.add(docker);
 
          return root;
       }
