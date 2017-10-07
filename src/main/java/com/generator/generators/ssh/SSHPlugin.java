@@ -1042,12 +1042,14 @@ public class SSHPlugin extends Plugin {
             pop.add(new AbstractAction("cd to " + label) {
                @Override
                public void actionPerformed(ActionEvent e) {
-                  try {
-                     dataOut.writeBytes("cd " + label + "\n");
-                     dataOut.flush();
-                  } catch (Exception e1) {
-                     e1.printStackTrace();
-                  }
+                  runCommand(dataOut, new CommandNode(null, "cd " + label));
+               }
+            });
+
+            pop.add(new AbstractAction("list " + label) {
+               @Override
+               public void actionPerformed(ActionEvent e) {
+                  runCommand(dataOut, new CommandNode(null, "ls -la " + label));
                }
             });
 
