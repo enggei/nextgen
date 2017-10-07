@@ -5,6 +5,7 @@ import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
 import com.jcraft.jsch.*;
@@ -23,6 +24,7 @@ import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -369,6 +371,27 @@ public class SSHPlugin extends Plugin {
                session.disconnect();
             }
          });
+
+         for (NeoNode selectedNode : selectedNodes) {
+            if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.File)) {
+
+               final Node directoryNode = other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), ProjectPlugin.Relations.FILE));
+               final File getDir = getFile(directoryNode);
+               final File file = new File(getDir, getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + "" + getString(selectedNode.getNode(), ProjectPlugin.Properties.extension.name()));
+               if (!file.exists()) return;
+
+               pop.add(new App.TransactionAction("Upload " + getString(selectedNode.getNode(), AppMotif.Properties.name.name()) + " here", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+                     final Session session = getSession(hostNode);
+                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                     session.disconnect();
+                  }
+               });
+            }
+         }
+
 
       } else if (hasLabel(neoNode.getNode(), Entities.CommandRoot)) {
 
