@@ -24,6 +24,3 @@ hs_err_pid*
 bak
 *.log*
 logs
-
-# Database
-src/test/tests/db/

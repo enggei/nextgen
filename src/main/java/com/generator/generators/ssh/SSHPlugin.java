@@ -232,7 +232,23 @@ public class SSHPlugin extends Plugin {
                if (target == null || target.length() == 0) return;
 
                final Session session = getSession(neoNode.getNode());
-               copyTo(session, file.getAbsolutePath(), target);
+               upload(session, file.getAbsolutePath(), target);
+               session.disconnect();
+            }
+         });
+
+         pop.add(new App.TransactionAction("Download from host", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final String target = SwingUtil.showInputDialog("Path on host", app);
+               if (target == null || target.length() == 0) return;
+
+               final File file = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+               if (file == null) return;
+
+               final Session session = getSession(neoNode.getNode());
+               download(session, file.getAbsolutePath(), target);
                session.disconnect();
             }
          });
@@ -538,6 +554,16 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            SwingUtil.toClipboard(txtOutput.getSelectedText().trim());
+                        }
+                     });
+
+                     pop.add(new AbstractAction("Try to download (if file)") {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                           final String filename = txtOutput.getSelectedText().trim();
+
+                           runCommand(dataOut, new CommandNode("pwd", "pwd"));
+
                         }
                      });
                   }
@@ -1205,7 +1231,7 @@ public class SSHPlugin extends Plugin {
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
-   private static void copyTo(Session session, String lfile, String rfile) throws Exception {
+   private static void upload(Session session, String lfile, String rfile) throws Exception {
 
       final ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setCommand("scp -t " + rfile);
@@ -1238,6 +1264,84 @@ public class SSHPlugin extends Plugin {
 
       if (checkAck(in) != 0) throw new Exception("File complete Ack error");
       out.close();
+
+      channel.disconnect();
+   }
+
+   private static void download(Session session, String lfile, String rfile) throws Exception {
+
+      final String prefix = new File(lfile).isDirectory() ? (lfile + File.separator) : null;
+
+      final ChannelExec channel = (ChannelExec) session.openChannel("exec");
+      channel.setCommand("scp -f " + rfile);
+
+      final OutputStream out = channel.getOutputStream();
+      final InputStream in = channel.getInputStream();
+
+      channel.connect();
+      byte[] buf = new byte[1024];
+
+      // send '\0'
+      buf[0] = 0;
+      out.write(buf, 0, 1);
+      out.flush();
+
+      while (true) {
+
+         int c = checkAck(in);
+         if (c != 'C') break;
+
+         // read '0644 '
+         in.read(buf, 0, 5);
+
+         long filesize = 0L;
+         while (true) {
+            if (in.read(buf, 0, 1) < 0) break;
+            if (buf[0] == ' ') break;
+            filesize = filesize * 10L + (long) (buf[0] - '0');
+         }
+
+         String file;
+         for (int i = 0; ; i++) {
+            in.read(buf, i, 1);
+            if (buf[i] == (byte) 0x0a) {
+               file = new String(buf, 0, i);
+               break;
+            }
+         }
+
+         // send '\0'
+         buf[0] = 0;
+         out.write(buf, 0, 1);
+         out.flush();
+
+         // read content of lfile
+         final FileOutputStream fos = new FileOutputStream(prefix == null ? lfile : prefix + file);
+         int foo;
+         while (true) {
+
+            if (buf.length < filesize)
+               foo = buf.length;
+            else
+               foo = (int) filesize;
+
+            foo = in.read(buf, 0, foo);
+            if (foo < 0) break;
+
+            fos.write(buf, 0, foo);
+            filesize -= foo;
+
+            if (filesize == 0L) break;
+         }
+         fos.close();
+
+         if (checkAck(in) != 0) throw new Exception("Error after file transfer");
+
+         // send '\0'
+         buf[0] = 0;
+         out.write(buf, 0, 1);
+         out.flush();
+      }
 
       channel.disconnect();
    }
