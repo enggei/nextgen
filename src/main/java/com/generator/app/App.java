@@ -40,6 +40,7 @@ import static com.generator.util.NeoUtil.*;
  */
 public class App extends JFrame {
 
+
    public final AppEvents events = new AppEvents(new PropertyChangeSupport(this));
    public final AppModel model = new AppModel();
    public final Workspace workspace = new Workspace(this);
@@ -47,7 +48,7 @@ public class App extends JFrame {
 
    private final Stack<AppModel.TransactionHistory> transactionHistory = new Stack<>();
 
-   public App() throws HeadlessException {
+   public App(Splash splash) throws HeadlessException {
       super("App");
 
       addComponentListener(new ComponentAdapter() {
@@ -111,19 +112,29 @@ public class App extends JFrame {
             final String currentDatabaseDir = model.getCurrentDatabaseDir();
 
             if (!currentDatabaseDir.equals(System.getProperty("user.home"))) {
-               if (!currentDatabaseDir.toLowerCase().startsWith("bolt://")) {
+               if (currentDatabaseDir.toLowerCase().startsWith("bolt://")) {
+
+                  final String credentials = model.properties.getProperty("current.database.credentials");
+                  final RemoteNeoModel neoModel = new RemoteNeoModel(currentDatabaseDir, credentials.split(" ")[0], credentials.split(" ")[1],
+                        model -> System.out.println("closed"));
+
+                  SwingUtilities.invokeLater(() -> {
+                     model.setDatabase(neoModel);
+                     splash.closeSplash();
+                  });
+
+               } else {
+
                   final NeoModel neoModel = new EmbeddedNeoModel(new GraphDatabaseFactory()
                         .newEmbeddedDatabaseBuilder(new File(currentDatabaseDir))
                         .setConfig(GraphDatabaseSettings.allow_store_upgrade, "true")
                         .newGraphDatabase(),
                         model -> System.out.println("graph closed"));
-                  SwingUtilities.invokeLater(() -> model.setDatabase(neoModel));
 
-               } else {
-                  final String credentials = model.properties.getProperty("current.database.credentials");
-                  final RemoteNeoModel remote = new RemoteNeoModel(currentDatabaseDir, credentials.split(" ")[0], credentials.split(" ")[1],
-                        model -> System.out.println("closed"));
-                  SwingUtilities.invokeLater(() -> model.setDatabase(remote));
+                  SwingUtilities.invokeLater(() -> {
+                     model.setDatabase(neoModel);
+                     splash.closeSplash();
+                  });
                }
             }
          }
@@ -397,6 +408,20 @@ public class App extends JFrame {
 
          graph = neoModel;
 
+         // cleanup any previous ssh- sessions
+         neoModel.doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               SSHPlugin.cleanupPreviousSessions(neoModel);
+            }
+
+            @Override
+            public void exception(Throwable throwable) {
+               throwable.printStackTrace();
+               System.err.println("Could not clean up previous ssh-sessions from database. Cleanup manually. " + throwable.getMessage());
+            }
+         });
+
          graph.registerTransactionEventHandler(transactionEventHandler = new TransactionEventHandler<Object>() {
 
             private final Set<Long> deletedNodes = new LinkedHashSet<>();
@@ -640,12 +665,62 @@ public class App extends JFrame {
    }
 
    public static void main(String[] args) {
+
       SwingUtil.setLookAndFeel_Nimbus();
+
       SwingUtilities.invokeLater(() -> {
-         final App frame = new App();
-         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-         frame.pack();
-         frame.setVisible(true);
+
+         final Splash splash = new Splash();
+
+         new Thread(() -> {
+            final App frame = new App(splash);
+            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            frame.pack();
+            frame.setVisible(true);
+         }).start();
       });
+   }
+
+   static class Splash extends JWindow {
+
+      Splash() {
+         super();
+
+         setAlwaysOnTop(true);
+
+         final Dimension size = new Dimension(800, 400);
+
+         final JPanel content = new JPanel(new BorderLayout());
+         content.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+
+         final JLabel lblHeader = new JLabel("N E X T G E N");
+         lblHeader.setFont(new Font("Hack", Font.BOLD, 48));
+         lblHeader.setForeground(Color.BLACK);
+
+         final JLabel lblVersion = new JLabel("Loading...");
+         lblVersion.setFont(new Font("Hack", Font.BOLD, 15));
+         lblVersion.setForeground(Color.DARK_GRAY);
+
+         content.setBackground(Color.WHITE);
+         content.add(lblHeader, BorderLayout.CENTER);
+         content.add(lblVersion, BorderLayout.SOUTH);
+         setContentPane(content);
+
+         setSize(size);
+         setPreferredSize(size);
+         setMinimumSize(size);
+         setMaximumSize(size);
+
+         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+         setLocation(screenSize.width / 2 - (size.width / 2), screenSize.height / 2 - (size.height / 2));
+         setVisible(true);
+      }
+
+      void closeSplash() {
+         SwingUtilities.invokeLater(() -> {
+            setVisible(false);
+            dispose();
+         });
+      }
    }
 }

@@ -758,7 +758,7 @@ public class DomainPlugin extends Plugin {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea(25, 85);
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
          txtEditor.setEditable(false);
 

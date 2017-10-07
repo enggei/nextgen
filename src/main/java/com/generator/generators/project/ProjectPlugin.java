@@ -561,7 +561,7 @@ public class ProjectPlugin extends Plugin {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
 
          final StringBuilder out = new StringBuilder();
@@ -589,7 +589,7 @@ public class ProjectPlugin extends Plugin {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
 
          final Node directoryNode = other(node.getNode(), singleIncoming(node.getNode(), Relations.FILE));

@@ -91,7 +91,7 @@ public final class AppEvents {
          SwingUtilities.invokeLater(() -> {
             app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             final long start = System.currentTimeMillis();
-            System.out.println(owner.getSimpleName());
+//            System.out.println(owner.getSimpleName());
             app.model.graph().doInTransaction(new NeoModel.Committer() {
                @Override
                public void doAction(Transaction tx) throws Throwable {
@@ -104,7 +104,7 @@ public final class AppEvents {
                   SwingUtil.showException(parent, throwable);
                }
             });
-            System.out.println("\t " + (owner == null ? "?" : owner.getSimpleName()) + " " + evt.getPropertyName() + " " + FormatUtil.formatTime(System.currentTimeMillis() - start));
+//            System.out.println("\t " + (owner == null ? "?" : owner.getSimpleName()) + " " + evt.getPropertyName() + " " + FormatUtil.formatTime(System.currentTimeMillis() - start));
             app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
          });

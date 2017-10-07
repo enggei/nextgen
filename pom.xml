@@ -34,45 +34,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>22.0</version>
-        </dependency>
-
-        <!--VERTX-->
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-core</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dropwizard.metrics</groupId>
-            <artifactId>metrics-core</artifactId>
-            <version>${metrics.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-dropwizard-metrics</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
-            <artifactId>vertx-web-client</artifactId>
-            <version>${vertx.version}</version>
-        </dependency>
-
-        <!-- CHRONICLE -->
-        <dependency>
-            <groupId>net.openhft</groupId>
-            <artifactId>chronicle-queue</artifactId>
-            <version>${chronicle.version}</version>
-        </dependency>
 
         <!-- LOGGING -->
         <dependency>
@@ -81,7 +42,7 @@
             <version>${slf4j.version}</version>
         </dependency>
 
-        <!-- UNIT  -->
+        <!-- JUNIT  -->
         <dependency>
             <groupId>io.vertx</groupId>
             <artifactId>vertx-unit</artifactId>
@@ -130,15 +91,7 @@
             <version>${javaparser.version}</version>
         </dependency>
 
-        <!--EASY FLOW FSM-->
-        <dependency>
-            <groupId>au.com.datasymphony</groupId>
-            <artifactId>EasyFlow</artifactId>
-            <version>${easyflow.version}</version>
-        </dependency>
-
         <!-- user interface -->
-        <!--http://manual.openestate.org/extern/forms-1.2.1/tutorial/introduction.html-->
         <dependency>
             <groupId>com.jgoodies</groupId>
             <artifactId>jgoodies-forms</artifactId>
@@ -157,14 +110,11 @@
             <version>${piccolo2d.version}</version>
         </dependency>
 
-        <!--process executions-->
-        <!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-exec -->
         <dependency>
-            <groupId>org.zeroturnaround</groupId>
-            <artifactId>zt-exec</artifactId>
-            <version>1.10</version>
+            <groupId>org.abego.treelayout</groupId>
+            <artifactId>org.abego.treelayout.core</artifactId>
+            <version>1.0.3</version>
         </dependency>
-
 
         <!--ssh-->
         <dependency>
@@ -179,28 +129,77 @@
             <version>${jsch.version}</version>
         </dependency>
 
-        <!-- combinatorics (permutations and combinations) -->
+        <!--support-libraries-->
+
+        <!--VERTX-->
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-dropwizard-metrics</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web-client</artifactId>
+            <version>${vertx.version}</version>
+        </dependency>
+
+        <!-- CHRONICLE -->
+        <dependency>
+            <groupId>net.openhft</groupId>
+            <artifactId>chronicle-queue</artifactId>
+            <version>${chronicle.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
+
+        <!--FSM-->
+        <dependency>
+            <groupId>au.com.datasymphony</groupId>
+            <artifactId>EasyFlow</artifactId>
+            <version>${easyflow.version}</version>
+        </dependency>
+
+        <!--PROCESS-EXECUTION-->
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-exec</artifactId>
+            <version>1.10</version>
+        </dependency>
+
+        <!--COMBINATORICS-->
         <dependency>
             <groupId>com.github.dpaukov</groupId>
             <artifactId>combinatoricslib3</artifactId>
             <version>3.2.0</version>
         </dependency>
 
-        <!-- mysql-connector-java -->
+        <!--MYSQL-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>5.1.6</version>
         </dependency>
 
-        <!-- jsoup  -->
-        <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-            <version>1.10.2</version>
-        </dependency>
-
-        <!-- berkeley db  -->
+        <!--BERKELEY-DB-->
         <dependency>
             <groupId>com.sleepycat</groupId>
             <artifactId>je</artifactId>
@@ -208,41 +207,12 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- java reflection library-->
+        <!-- REFLECTION-->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/org.abego.treelayout/org.abego.treelayout.core -->
-        <dependency>
-            <groupId>org.abego.treelayout</groupId>
-            <artifactId>org.abego.treelayout.core</artifactId>
-            <version>1.0.3</version>
-        </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.espertech/esper -->
-        <!--<dependency>-->
-            <!--<groupId>com.espertech</groupId>-->
-            <!--<artifactId>esper</artifactId>-->
-            <!--<version>6.1.0</version>-->
-        <!--</dependency>-->
-
-
-        <!-- aspectJ -->
-
-        <!--<dependency>-->
-        <!--<groupId>org.aspectj</groupId>-->
-        <!--<artifactId>aspectjrt</artifactId>-->
-        <!--<version>1.8.9</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.aspectj</groupId>-->
-        <!--<artifactId>aspectjweaver</artifactId>-->
-        <!--<version>1.8.9</version>-->
-        <!--</dependency>-->
 
     </dependencies>
 
@@ -253,54 +223,5 @@
             <url>http://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
-
-    <build>
-
-        <plugins>
-
-            <!--fat-jar plugin-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>io.vertx.core.Launcher</Main-Class>
-                                        <Main-Verticle>com.network.Dlinksyslog</Main-Verticle>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                            <artifactSet/>
-                            <outputFile>target/${project.artifactId}-${project.version}-fat.jar
-                            </outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

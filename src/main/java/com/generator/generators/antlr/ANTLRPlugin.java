@@ -82,7 +82,7 @@ public class ANTLRPlugin extends Plugin {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
 
          final AntlrGroup antlrGroup = new AntlrGroup();

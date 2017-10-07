@@ -594,7 +594,7 @@ public class StringTemplatePlugin extends Plugin {
 
          final JTextArea txtEditor = new JTextArea();
          txtEditor.setText(get(templateNode.getNode(), StringTemplatePlugin.Properties.text.name(), ""));
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
          txtEditor.setCaretPosition(0);
 
@@ -952,7 +952,7 @@ public class StringTemplatePlugin extends Plugin {
          super(new BorderLayout());
 
          final JTextArea txtEditor = new JTextArea(25, 85);
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
          txtEditor.setEditable(false);
          txtEditor.setText(renderStatement(statementNode.getNode(), templateNode));

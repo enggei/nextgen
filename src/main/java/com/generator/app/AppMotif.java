@@ -2,22 +2,28 @@ package com.generator.app;
 
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.generator.util.NeoUtil.incoming;
-import static com.generator.util.NeoUtil.other;
-import static com.generator.util.NeoUtil.outgoing;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 18.07.17.
  */
 public final class AppMotif {
+
+   public static Font getDefaultFont() {
+      return new Font("Hack", Font.PLAIN, 10);
+   }
 
    public enum Entities implements Label {
       _Layout, _Color, _RegexpPattern, _Motif
@@ -45,10 +51,6 @@ public final class AppMotif {
 
    enum PropertiesToShow {
       all, hasValue
-   }
-
-   enum LayoutDirection {
-      left, right
    }
 
    static void saveLayout(Node layoutNode, Set<NeoNode> nodes) {

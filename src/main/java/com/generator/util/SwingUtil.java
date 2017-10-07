@@ -86,7 +86,7 @@ public class SwingUtil {
       panel.add(new JLabel(title + " : "), BorderLayout.NORTH);
 
       final JTextArea txtEditor = new JTextArea(text);
-      txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+      txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
       txtEditor.setTabSize(3);
       txtEditor.setCaretPosition(0);
       txtEditor.setEditable(false);
@@ -385,9 +385,9 @@ public class SwingUtil {
       if (defaultValue != null) comboBox.setSelectedItem(defaultValue);
    }
 
-   public static char[] showPasswordDialog(App app) {
+   public static char[] showPasswordDialog(Component parentComponent) {
       final JPasswordField txtPassword = new JPasswordField();
-      int okCxl = JOptionPane.showConfirmDialog(app, txtPassword, "Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+      int okCxl = JOptionPane.showConfirmDialog(parentComponent, txtPassword, "Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
       return okCxl == JOptionPane.OK_OPTION ? txtPassword.getPassword() : null;
    }
 
@@ -522,6 +522,8 @@ public class SwingUtil {
                row += 2;
             }
          }
+
+         setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
       }
 
       public JPanel build() {
