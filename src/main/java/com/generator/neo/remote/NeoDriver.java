@@ -548,7 +548,7 @@ public class NeoDriver implements AutoCloseable {
    public Node deleteNode(@NotNull final String label, @NotNull final UUID uuid) {
       return writeTransaction(tx -> {
          Statement statement = new Statement("MATCH (n:" + label + " {" + TAG_UUID + ": $uuid}) DELETE n RETURN ID(n)",
-               parameters("uuid", uuid));
+               parameters("uuid", uuid.toString()));
 
          System.out.println("deleteNode: " + statement.toString());
          final StatementResult result = tx.run(statement);
@@ -784,8 +784,10 @@ public class NeoDriver implements AutoCloseable {
          System.out.println("deleteRelationship: " + statement.toString());
          StatementResult result = tx.run(statement);
 //			System.out.println("deleteRelationship summary:" + debugSummary(result.summary()));
-         if (result.summary().counters().relationshipsDeleted() > 0)
-            return RemoteRelationship.deletedRelationship(result.single().get(0).asLong(), type);
+         if (result.summary().counters().relationshipsDeleted() > 0) {
+            // TODO: Investigate why this query returns >1 identical records. I.e. When deleting a _LAYOUT_MEMBER relationship, the same ID is returned > 1 times. Thus cannot call result.single()
+            return RemoteRelationship.deletedRelationship(result.peek().get(0).asLong(), type);
+         }
 
          return null;
 
