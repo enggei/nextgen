@@ -1,5 +1,6 @@
 package com.generator.neo.remote;
 
+import com.generator.util.Tuple;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.graphdb.*;
@@ -134,16 +135,20 @@ public class RemoteNode implements Node, NeoEntity {
 
    private static void merge(RemoteNode self, final Map<UUID, Relationship> other) {
       // Clear all that are not present in "other"
+      final List<Tuple<RemoteNode, RemoteRelationship>> toBeRemoved = new ArrayList<>();
+
       self.relationships.forEach((uuid, r) -> {
          final RemoteRelationship relationship = (RemoteRelationship)r;
          final RemoteNode otherNode = (RemoteNode)relationship.getOtherNode(self);
 
          // Clear if not present in "other"
-         if (!other.containsKey(uuid)) {
+         if (!other.containsKey(uuid)) toBeRemoved.add(new Tuple<>(otherNode, relationship));
+      });
 
-            otherNode.removeRelationship(relationship);
-            self.removeRelationship(relationship);
-         }
+      // Clear the relationship from both other and self
+      toBeRemoved.forEach(tuple -> {
+         tuple.getFirst().removeRelationship(tuple.getSecond());
+         self.removeRelationship(tuple.getSecond());
       });
 
       // Add or update remaining only present in "other"
@@ -431,7 +436,7 @@ public class RemoteNode implements Node, NeoEntity {
    public Iterable<Label> getLabels() {
       Set<Label> labels = new LinkedHashSet<>();
 
-      driverNode.labels().forEach(s -> labels.add(() -> s));
+      driverNode.labels().forEach(s -> labels.add(Label.label(s)));
 
       return labels;
    }
