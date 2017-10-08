@@ -54,12 +54,15 @@ fragment HEX
 
 
 NUMBER
-   : '-'? INT '.' [0-9] + EXP? | '-'? INT EXP | '-'? INT
+   : '-'? INT '.' [0-9]+ EXP?
+   | '-'? INT EXP
+   | '-'? INT
    ;
 
 
 fragment INT
-   : '0' | [1-9] [0-9]*
+   : '0'
+   | [1-9] [0-9]*
    ;
 
 // no leading zeros

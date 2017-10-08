@@ -66,12 +66,12 @@ public final class AntlrGroup {
       return new grammarParserRuleSpecST(stGroup);
    }
 
-   public domainContextST newdomainContext() {
-      return new domainContextST(stGroup);
+   public AntlrDomainST newAntlrDomain() {
+      return new AntlrDomainST(stGroup);
    }
 
-   public domainGrammarST newdomainGrammar() {
-      return new domainGrammarST(stGroup);
+   public AntlrNodeST newAntlrNode() {
+      return new AntlrNodeST(stGroup);
    }
 
    public grammarBlockST newgrammarBlock() {
@@ -526,98 +526,19 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class domainContextST implements AntlrGroupTemplate {
+   public final class AntlrDomainST implements AntlrGroupTemplate {
 
-      private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
-      private Object _domain;
-      private Object _name;
-
-      private final ST template;
-
-      private domainContextST(STGroup group) {
-   		template = group.getInstanceOf("domainContext");
-   	}
-
-      public domainContextST addPropertiesValue(Object init_, Object name_, Object type_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
-      	this._properties.add(map);
-
-         template.addAggr("properties.{init, name, type}", map.get("init"), map.get("name"), map.get("type"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getProperties() {
-      	return this._properties;
-      }
-
-      public domainContextST setDomain(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._domain == null) {
-            this._domain = value;
-         	template.add("domain", value);
-         }
-
-      	return this;
-      }
-
-      public String getDomain() {
-      	return (String) this._domain;
-      }
-
-      public domainContextST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class domainGrammarST implements AntlrGroupTemplate {
-
-      private java.util.Set<Object> _contexts = new java.util.LinkedHashSet<>();
       private Object _name;
       private Object _package;
+      private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
-      private domainGrammarST(STGroup group) {
-   		template = group.getInstanceOf("domainGrammar");
+      private AntlrDomainST(STGroup group) {
+   		template = group.getInstanceOf("AntlrDomain");
    	}
 
-      public domainGrammarST addContextsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._contexts.add(value);
-      	template.add("contexts", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getContextsValues() {
-      	return this._contexts;
-      }
-
-      public domainGrammarST setName(Object value) {
+      public AntlrDomainST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -633,7 +554,7 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public domainGrammarST setPackage(Object value) {
+      public AntlrDomainST setPackage(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -647,6 +568,84 @@ public final class AntlrGroup {
 
       public String getPackage() {
       	return (String) this._package;
+      }
+
+      public AntlrDomainST addNodesValue(Object declaration_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
+      	this._nodes.add(map);
+
+         template.addAggr("nodes.{declaration}", map.get("declaration"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getNodes() {
+      	return this._nodes;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class AntlrNodeST implements AntlrGroupTemplate {
+
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
+      private Object _domain;
+
+      private final ST template;
+
+      private AntlrNodeST(STGroup group) {
+   		template = group.getInstanceOf("AntlrNode");
+   	}
+
+      public AntlrNodeST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public AntlrNodeST addChildrenValue(Object name_, Object accessor_, Object declaration_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("accessor", (accessor_ == null || accessor_.toString().length() == 0) ? null : accessor_);
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
+      	this._children.add(map);
+
+         template.addAggr("children.{name, accessor, declaration}", map.get("name"), map.get("accessor"), map.get("declaration"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getChildren() {
+      	return this._children;
+      }
+
+      public AntlrNodeST setDomain(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._domain == null) {
+            this._domain = value;
+         	template.add("domain", value);
+         }
+
+      	return this;
+      }
+
+      public String getDomain() {
+      	return (String) this._domain;
       }
 
       @Override
@@ -1077,21 +1076,30 @@ public final class AntlrGroup {
 		"~name~\n" + 
 		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
 		"	;>>\n")
-			.append("domainContext(properties,domain,name) ::= <<public final class ~name~Symbol extends ~domain~Symbol {\n" + 
+			.append("AntlrDomain(name,package,nodes) ::= <<package ~package~;\n" + 
 		"\n" + 
-		"	~properties:{it|public ~it.type~Symbol ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
-		"      \n" + 
-		"}>>\n")
-			.append("domainGrammar(contexts,name,package) ::= <<package ~package~;\n" + 
+		"import java.util.ArrayList;\n" + 
+		"import java.util.List;\n" + 
 		"\n" + 
 		"public class ~name~ {\n" + 
-		" \n" + 
-		"   public class ~name~Symbol {\n" + 
-		"   }\n" + 
 		"\n" + 
-		"~contexts:{it|\n" + 
-		"   ~it~\n" + 
-		"};separator=\"\\n\"~   \n" + 
+		"	public static abstract class ~name~Node {\n" + 
+		"		\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	~nodes:{it|~it.declaration~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"}>>\n")
+			.append("AntlrNode(name,children,domain) ::= <<public static class ~name~ extends ~domain~Node {\n" + 
+		"\n" + 
+		"~children:{it|\n" + 
+		"	// ~it.name~\n" + 
+		"	public ~it.declaration~;\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"	\n" + 
+		"~children:{it|\n" + 
+		"	public ~it.accessor~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
 			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
 		.toString();
