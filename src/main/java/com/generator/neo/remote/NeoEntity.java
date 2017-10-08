@@ -2,9 +2,6 @@ package com.generator.neo.remote;
 
 import org.neo4j.graphdb.Entity;
 
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.UUID;
 
 /**
