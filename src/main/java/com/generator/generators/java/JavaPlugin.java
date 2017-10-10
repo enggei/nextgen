@@ -1,6 +1,9 @@
 package com.generator.generators.java;
 
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.java.parser.JavaLexer;
+import com.generator.generators.java.parser.JavaParser;
+import com.generator.generators.java.parser.JavaParserNeoVisitor;
 import com.generator.util.NeoUtil;
 import com.generator.app.*;
 import com.generator.generators.domain.DomainPlugin;
@@ -8,6 +11,8 @@ import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.CompilerUtil;
 import com.generator.util.Reflect;
 import com.generator.util.SwingUtil;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.RelationshipType;
@@ -18,6 +23,7 @@ import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.LinkedHashMap;
@@ -81,6 +87,20 @@ public class JavaPlugin extends Plugin {
             final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
             instanceMap.put(getString(node, TAG_UUID), instance);
             fireNodesLoaded(node);
+         }
+      });
+
+      menu.add(new App.TransactionAction("Parse Java-file", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final File grammarFile = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+            if (grammarFile == null || !grammarFile.getName().toLowerCase().endsWith(".java")) return;
+
+            final JavaParser parser = new JavaParser(new CommonTokenStream(new JavaLexer(CharStreams.fromFileName(grammarFile.getAbsolutePath()))));
+            final JavaParserNeoVisitor visitor = new JavaParserNeoVisitor(getGraph());
+            visitor.visit(parser.compilationUnit());
+            if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
          }
       });
    }

@@ -1,47 +1,16 @@
 package com.generator.generators.antlr;
 
+import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
+import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
+import com.generator.generators.csv.parser.CSVListener;
+import com.generator.generators.csv.parser.CSVVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
-import com.generator.generators.ecmascript.parser.ECMAScriptListener;
-import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
-import com.generator.generators.go.parser.GolangListener;
-import com.generator.generators.go.parser.GolangVisitor;
-import com.generator.generators.html5.parser.HTMLParserListener;
-import com.generator.generators.html5.parser.HTMLParserVisitor;
-import com.generator.generators.java.parser.JavaParserListener;
-import com.generator.generators.java.parser.JavaParserVisitor;
 import com.generator.generators.java.BaseClassVisitor;
-import com.generator.generators.json.parser.JSONListener;
-import com.generator.generators.json.parser.JSONVisitor;
-import com.generator.generators.lua.parser.LuaListener;
-import com.generator.generators.lua.parser.LuaVisitor;
-import com.generator.generators.mysql.parser.MySqlParserListener;
-import com.generator.generators.mysql.parser.MySqlParserVisitor;
-import com.generator.generators.properties.parser.propertiesListener;
-import com.generator.generators.properties.parser.propertiesVisitor;
-import com.generator.generators.protobuf.parser.ProtobufListener;
-import com.generator.generators.protobuf.parser.ProtobufVisitor;
-import com.generator.generators.scala.parser.ScalaListener;
-import com.generator.generators.scala.parser.ScalaVisitor;
-import com.generator.generators.stacktrace.parser.StackTraceListener;
-import com.generator.generators.stacktrace.parser.StackTraceVisitor;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
-import com.generator.generators.stringtemplate.parserg4.STGParserListener;
-import com.generator.generators.stringtemplate.parserg4.STGParserVisitor;
-import com.generator.generators.stringtemplate.parserg4.STParserListener;
-import com.generator.generators.stringtemplate.parserg4.STParserVisitor;
-import com.generator.generators.url.parser.urlListener;
-import com.generator.generators.url.parser.urlVisitor;
-import com.generator.generators.xml.parser.XMLParserListener;
-import com.generator.generators.xml.parser.XMLParserVisitor;
-import com.generator.util.StringUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
 import static com.generator.ProjectConstants.MAIN_ROOT;
@@ -52,7 +21,7 @@ import static com.generator.ProjectConstants.MAIN_ROOT;
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
@@ -72,7 +41,6 @@ public class AntlrGenerator {
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
    }
 
    private static void generateVisitorAndListener(String root, String packageName, String g4Name, Class visitorInterface, Class listenerInterface) {
@@ -89,14 +57,14 @@ public class AntlrGenerator {
       private final String visitorName;
 
       private final AntlrGroup antlrGroup = new AntlrGroup();
-      private final AntlrGroup.domainGrammarST domainGrammarST;
+      private final AntlrGroup.AntlrDomainST antlrDomainST;
 
       ParserDomainGenerator(String root, String packageName, String parserName) {
          this.root = root;
          this.packageName = packageName;
          this.visitorName = parserName + "Domain";
 
-         domainGrammarST = antlrGroup.newdomainGrammar().
+         antlrDomainST = antlrGroup.newAntlrDomain().
                setPackage(packageName).
                setName(visitorName);
       }
@@ -106,60 +74,22 @@ public class AntlrGenerator {
 
          // only has one parameter
          final Parameter parameter = method.getParameters()[0];
-         final String param = parameter.getType().getCanonicalName();
 
          if (method.getName().startsWith("enter")) {
 
-            final AntlrGroup.domainContextST domainContextST = antlrGroup.newdomainContext().
-                  setDomain(domainGrammarST.getName()).
+            final AntlrGroup.AntlrNodeST antlrNodeST = antlrGroup.newAntlrNode().
                   setName(method.getName().substring(5));
-            System.out.println(param);
-
-            final Map<String, Method> distinct = new TreeMap<>();
-            new BaseClassVisitor() {
-               @Override
-               public void onPublicMethod(Method method) {
-                  if (method.getName().equals("getRuleIndex")) return;
-                  if (method.getName().equals("enterRule")) return;
-                  if (method.getName().equals("exitRule")) return;
-                  if (method.getName().equals("accept")) return;
-
-                  if (distinct.containsKey(method.getName())) {
-                     if (method.getReturnType().getName().endsWith("List")) {
-                        distinct.put(method.getName(), method);
-                     }
-                  } else {
-                     distinct.put(method.getName(), method);
-                  }
-                  System.out.println("\t" + method.getName() + " : " + method.getReturnType());
-               }
-
-            }.visit(parameter.getType());
-
-            for (Map.Entry<String, Method> m : distinct.entrySet()) {
-               final Method propertyMethod = m.getValue();
-
-               Object init = propertyMethod.getReturnType().getName().endsWith("List") ? "new java.util.ArrayList<>()" : null;
-               Object name = propertyMethod.getName();
-               Object type = propertyMethod.getReturnType().getName().endsWith("List") ? "java.util.List<" + propertyMethod.getName() + ">" : StringUtil.capitalize(propertyMethod.getName());
-               domainContextST.addPropertiesValue(init, name, type);
-            }
-
-            domainGrammarST.addContextsValue(domainContextST);
-         } else {
-            System.out.println("\tignoring " + method.getName() + " : " + method.getReturnType());
+            antlrDomainST.addNodesValue(antlrNodeST, method.getName().substring(5));
          }
       }
 
       @Override
       public void done() {
-         System.out.println(domainGrammarST);
-
-//         try {
-//            GeneratedFile.newJavaFile(root, packageName, visitorName).write(domainVisitorST);
-//         } catch (IOException e) {
-//            e.printStackTrace();
-//         }
+         try {
+            GeneratedFile.newJavaFile(root, packageName, visitorName).write(antlrDomainST);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
       }
    }
 

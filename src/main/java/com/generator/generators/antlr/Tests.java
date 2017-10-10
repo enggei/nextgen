@@ -4,15 +4,15 @@ import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
+import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Map;
-import java.util.Stack;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * Created 25.08.17.
@@ -20,53 +20,284 @@ import java.util.TreeMap;
 public class Tests {
 
    @Test
-   public void testDomainBuilder() throws IOException {
+   public void testAntlrGrammarModel() throws Exception {
+
+      final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/json/parser/JSON.g4"))));
+      final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true);
+      new ParseTreeWalker().walk(listener, parser.grammarSpec());
+   }
+
+   private class GrammarSymbol {
+
+      private String name;
+      private final Set<Relation> relations = new LinkedHashSet<>();
+
+      GrammarSymbol(String name) {
+         this.name = name;
+      }
+
+      public String toString(Map<String, GrammarSymbol> symbolMap) {
+         final StringBuilder out = new StringBuilder(name);
+         for (Relation relation : relations) {
+            out.append("\n\t").append(relation);
+         }
+         return out.toString();
+      }
+   }
+
+   public static class Relation {
+
+      private final String src;
+      private String ebnf = "";
+      private String dst;
+
+      Relation(String src, String dst) {
+         this.src = src;
+         this.dst = dst;
+      }
+
+      @Override
+      public String toString() {
+         return ebnf + " -> " + dst;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+         Relation relation = (Relation) o;
+         return src.equals(relation.src) && ebnf.equals(relation.ebnf) && dst.equals(relation.dst);
+      }
+
+      @Override
+      public int hashCode() {
+         int result = src.hashCode();
+         result = 31 * result + ebnf.hashCode();
+         result = 31 * result + dst.hashCode();
+         return result;
+      }
+   }
+
+   @Test
+   public void createSymbolGrammar() throws Exception {
+
+      final Map<String, GrammarSymbol> symbolMap = new LinkedHashMap<>();
+
+      final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
+
+         final Stack<Relation> relationStack = new Stack<>();
+
+         @Override
+         protected void onEnter(Node node) {
+
+            final String name = node.name;
+            symbolMap.computeIfAbsent(name, k -> new GrammarSymbol(name));
+
+            if (!nodeStack.isEmpty()) {
+               final Relation relation = new Relation(nodeStack.peek().name, name);
+               relationStack.push(relation);
+            }
+
+            super.onEnter(node);
+         }
+
+         @Override
+         protected void onExit() {
+            super.onExit();
+
+            if(!relationStack.isEmpty())
+               symbolMap.get(nodeStack.peek().name).relations.add(relationStack.peek());
+
+            if (!relationStack.isEmpty()) relationStack.pop();
+         }
+      };
+
+      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4")))).grammarSpec());
+      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Lexer.g4")))).grammarSpec());
+      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/LexBasic.g4")))).grammarSpec());
+//      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/parser/JSON.g4")))).grammarSpec());
 
       final AntlrGroup antlrGroup = new AntlrGroup();
 
-      final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar();
-      final AntlrGroup.domainGrammarST domainST = antlrGroup.newdomainGrammar().
-            setPackage("com.generator.generators.csv.parser");
+      final AntlrGroup.AntlrDomainST antlrDomainST = antlrGroup.newAntlrDomain().
+            setName("ANTLRv4Parser" + "Domain").
+            setPackage("com.generator.generators.antlr.parser");
 
-      final Map<String, AntlrGroup.domainContextST> distinct = new TreeMap<>();
+      for (GrammarSymbol grammarSymbol : symbolMap.values()) {
+         System.out.println(grammarSymbol.toString(symbolMap));
 
-//      final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4"))));
-      final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4"))));
-      final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
+         final AntlrGroup.AntlrNodeST nodeST = antlrGroup.newAntlrNode().
+               setName(grammarSymbol.name);
+
+         for (Relation child : grammarSymbol.relations) {
+            nodeST.addChildrenValue(child.dst);
+         }
+
+         antlrDomainST.addNodesValue(nodeST, grammarSymbol.name);
+      }
+
+      System.out.println(antlrDomainST);
+      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrDomainST.getPackage(), antlrDomainST.getName()).write(antlrDomainST);
+   }
+
+   @Test
+   public void createAntlrDomain() throws Exception {
+
+//      final Map<String, MetaNode> visitedNodes = new LinkedHashMap<>();
+//
+//      final Map<String, MetaNode> distinctMap = new LinkedHashMap<>();
+//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4"))))), distinctMap);
+//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Lexer.g4"))))), distinctMap);
+//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/LexBasic.g4"))))), distinctMap);
+//
+//      final AntlrGroup antlrGroup = new AntlrGroup();
+//
+//      final AntlrGroup.AntlrDomainST antlrDomainST = antlrGroup.newAntlrDomain().
+//            setName("ANTLRv4Parser" + "Domain").
+//            setPackage("com.generator.generators.antlr.parser");
+//
+//      for (Map.Entry<String, MetaNode> entry : distinctMap.entrySet()) {
+//         final MetaNode metaNode = entry.getValue();
+//         System.out.println(entry.getKey() + " has " + metaNode.children.size() + " entries: " + StringUtil.toString(metaNode.children.values(), ","));
+//
+//         final AntlrGroup.AntlrNodeST nodeST = antlrGroup.newAntlrNode().
+//               setName(entry.getKey()).
+//               setDomain(antlrDomainST.getName());
+//
+//         for (MetaRelation relation : metaNode.children.values()) {
+//            final String childName = relation.dst.name;
+//            switch (relation.ebnf) {
+//               case REQUIRED:
+//                  nodeST.addChildrenValue("", "void set" + childName + "(" + childName + " value) { this._" + childName + " = value; }", childName + " " + "_" + childName);
+//                  break;
+//               case OPTIONAL:
+//                  nodeST.addChildrenValue("", "void set" + childName + "(" + childName + " value) { this._" + childName + " = value; }", childName + " " + "_" + childName);
+//                  break;
+//               case ONE_OR_MORE:
+//                  nodeST.addChildrenValue("", "void add" + childName + "(" + childName + " value) { this._" + childName + ".add(value); }", "java.util.List<" + childName + "> _" + childName + " = new ArrayList<>();");
+//                  break;
+//               case ZERO_OR_MORE:
+//                  nodeST.addChildrenValue("", "void add" + childName + "(" + childName + " value) { this._" + childName + ".add(value); }", "java.util.List<" + childName + "> _" + childName + " = new ArrayList<>();");
+//                  break;
+//            }
+//         }
+//
+//         antlrDomainST.addNodesValue(nodeST);
+//      }
+//
+//      System.out.println(antlrDomainST);
+
+//      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrDomainST.getPackage(), antlrDomainST.getName()).write(antlrDomainST);
+   }
+
+   private void visit(ANTLRv4ParserNodeListener.Node node, Map<String, MetaNode> distinctMap) {
+
+      final MetaNode metaNode = new MetaNode(node);
+
+      if (!distinctMap.containsKey(node.name)) distinctMap.put(node.name, metaNode);
+
+      for (ANTLRv4ParserNodeListener.Node child : node.children) {
+         final MetaNode dst = new MetaNode(child);
+         final MetaRelation metaRelation = new MetaRelation(metaNode, dst, Ebnf.REQUIRED);
+         distinctMap.get(node.name).children.put(child.name, metaRelation);
+         visit(child, distinctMap);
+      }
+   }
+
+   public ANTLRv4ParserNodeListener.Node parse(Map<String, MetaNode> visitedNodes, ANTLRv4Parser parser) {
+      ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
 
          @Override
          protected void onEnter(Node node) {
             super.onEnter(node);
 
-            if (distinct.containsKey(node.name)) {
+            if (!visitedNodes.containsKey(node.name))
+               visitedNodes.put(node.name, new MetaNode(node));
+         }
 
-            } else {
+         @Override
+         protected void onExit() {
+            final Node node = nodeStack.peek();
 
-               final AntlrGroup.domainContextST domainContextST = antlrGroup.newdomainContext().
-                     setDomain("Antlr").
-                     setName(node.name);
-               distinct.put(node.name, domainContextST);
-
+            final MetaNode metaNode = visitedNodes.get(node.name);
+            for (Node child : node.children) {
+               if (metaNode.children.containsKey(child.name)) continue;
+               metaNode.children.put(child.name, new MetaRelation(metaNode, visitedNodes.get(child.name), Ebnf.REQUIRED));
             }
+            super.onExit();
          }
       };
+
       new ParseTreeWalker().walk(listener, parser.grammarSpec());
-
-      final ANTLRv4ParserNodeListener.Node root = listener.getRoot();
-      visit(root, "");
-
-      for (Map.Entry<String, AntlrGroup.domainContextST> entry : distinct.entrySet()) {
-         System.out.println(entry.getValue());
-      }
-
-//      System.out.println(grammarST.toString());
-//      System.out.println(domainST.toString());
+      return listener.getRoot();
    }
 
-   private void visit(ANTLRv4ParserNodeListener.Node node, String delim) {
-      System.out.println(delim + node.startToken + " " + node.value);
-      for (ANTLRv4ParserNodeListener.Node child : node.children) {
-         visit(child, delim + "\t");
+   private final class MetaNode {
+
+      private final String name;
+      private final Map<String, MetaRelation> children = new LinkedHashMap<>();
+
+      MetaNode(ANTLRv4ParserNodeListener.Node node) {
+         this.name = node.name;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+
+         MetaNode metaNode = (MetaNode) o;
+
+         return name.equals(metaNode.name);
+      }
+
+      @Override
+      public int hashCode() {
+         return name.hashCode();
+      }
+
+      @Override
+      public String toString() {
+         return name;
+      }
+   }
+
+   enum Ebnf {
+      REQUIRED, OPTIONAL, ONE_OR_MORE, ZERO_OR_MORE
+   }
+
+   private final class MetaRelation {
+
+      private final MetaNode src;
+      private final MetaNode dst;
+      private final Ebnf ebnf;
+
+      MetaRelation(MetaNode src, MetaNode dst, Ebnf ebnf) {
+         this.src = src;
+         this.dst = dst;
+         this.ebnf = ebnf;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+
+         MetaRelation that = (MetaRelation) o;
+         return src.equals(that.src) && dst.equals(that.dst) && ebnf == that.ebnf;
+      }
+
+      @Override
+      public int hashCode() {
+         int result = src.hashCode();
+         result = 31 * result + dst.hashCode();
+         result = 31 * result + ebnf.hashCode();
+         return result;
+      }
+
+      @Override
+      public String toString() {
+         return src + " " + ebnf + " " + dst;
       }
    }
 
@@ -98,14 +329,6 @@ public class Tests {
             addAlternativesValue("channelsSpec").
             addAlternativesValue("action"));
       System.out.println(grammarST);
-   }
-
-   @Test
-   public void testAntlrGroup() {
-      System.out.println(new AntlrGroup().newBaseNodeVisitor().
-            setPackageName("com.").
-            setName("nam").
-            setParser("Parser"));
    }
 
    @Test

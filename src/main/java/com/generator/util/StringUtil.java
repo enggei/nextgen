@@ -509,7 +509,7 @@ public final class StringUtil {
       return out.append(text).toString();
    }
 
-   public static String toString(List<?> list, String delimiter) {
+   public static String toString(Collection<?> list, String delimiter) {
       final StringBuilder out = new StringBuilder();
       boolean first = true;
       for (Object aList : list) {
