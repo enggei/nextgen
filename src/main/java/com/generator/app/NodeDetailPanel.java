@@ -113,13 +113,15 @@ class NodeDetailPanel extends JPanel {
 
    private void updatePanel() {
 
+      final int selectedIndex = content.getSelectedIndex();
+
       content.removeAll();
       pluginPanels.clear();
 
       final Set<NeoNode> currentNodes = app.workspace.nodeCanvas.getSelectedNodes();
       final Set<NeoRelationship> currentRelations = workspace.nodeCanvas.getSelectedRelations();
 
-      int max = 0;
+      int maxIndex = 0;
       if (!currentNodes.isEmpty()) {
          content.add("Labels", labelsPanel = new LabelsPanel(currentNodes));
          content.add("Properties", propertiesPanel = new PropertiesPanel(currentNodes));
@@ -128,7 +130,7 @@ class NodeDetailPanel extends JPanel {
          for (NeoNode node : currentNodes)
             node.getNode().getRelationships(Direction.OUTGOING).forEach(elements::add);
          content.add("Node-Relations", nodeRelationsPanel = new RelationsPanel(elements));
-         max += 3;
+         maxIndex += 3;
       }
 
       if (!currentRelations.isEmpty()) {
@@ -136,7 +138,7 @@ class NodeDetailPanel extends JPanel {
          for (NeoRelationship currentRelation : currentRelations)
             elements.add(currentRelation.getRelationship());
          content.add("Relations", relationsPanel = new RelationsPanel(elements));
-         max += 1;
+         maxIndex += 1;
       }
 
       if (currentNodes.size() < 20) {
@@ -151,8 +153,14 @@ class NodeDetailPanel extends JPanel {
          }
       }
 
-      if (content.getTabCount() > max)
-         content.setSelectedIndex(content.getTabCount() - 1);
+      // try to select the tab that was open,
+      // or show the last-tab (usually the single node selected, and therefore the one user wants to see)
+      if (selectedIndex>-1 && selectedIndex <= 2 && content.getTabCount() > selectedIndex) {
+         content.setSelectedIndex(selectedIndex);
+      } else {
+         if (content.getTabCount() > maxIndex)
+            content.setSelectedIndex(content.getTabCount() - 1);
+      }
 
       SwingUtilities.invokeLater(() -> {
          content.revalidate();
