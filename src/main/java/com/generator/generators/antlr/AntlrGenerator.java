@@ -1,5 +1,7 @@
 package com.generator.generators.antlr;
 
+import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
+import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
 import com.generator.generators.csv.parser.CSVListener;
 import com.generator.generators.csv.parser.CSVVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
@@ -19,11 +21,11 @@ import static com.generator.ProjectConstants.MAIN_ROOT;
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cypher.parser", "Cypher", CypherVisitor.class, CypherListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".go.parser", "Golang", GolangVisitor.class, GolangListener.class);
@@ -45,6 +47,50 @@ public class AntlrGenerator {
       new ParserNodeVisitorGenerator(root, packageName, g4Name).visit(visitorInterface);
       new ParserNodeListenerGenerator(root, packageName, g4Name).visit(listenerInterface);
       new NeoVisitorGenerator(root, packageName, g4Name).visit(listenerInterface);
+      new ParserDomainGenerator(root, packageName, g4Name).visit(listenerInterface);
+   }
+
+   private static final class ParserDomainGenerator extends BaseClassVisitor {
+
+      private final String root;
+      private final String packageName;
+      private final String visitorName;
+
+      private final AntlrGroup antlrGroup = new AntlrGroup();
+      private final AntlrGroup.AntlrDomainST antlrDomainST;
+
+      ParserDomainGenerator(String root, String packageName, String parserName) {
+         this.root = root;
+         this.packageName = packageName;
+         this.visitorName = parserName + "Domain";
+
+         antlrDomainST = antlrGroup.newAntlrDomain().
+               setPackage(packageName).
+               setName(visitorName);
+      }
+
+      @Override
+      public void onPublicMethod(Method method) {
+
+         // only has one parameter
+         final Parameter parameter = method.getParameters()[0];
+
+         if (method.getName().startsWith("enter")) {
+
+            final AntlrGroup.AntlrNodeST antlrNodeST = antlrGroup.newAntlrNode().
+                  setName(method.getName().substring(5));
+            antlrDomainST.addNodesValue(antlrNodeST, method.getName().substring(5));
+         }
+      }
+
+      @Override
+      public void done() {
+         try {
+            GeneratedFile.newJavaFile(root, packageName, visitorName).write(antlrDomainST);
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
    }
 
    private static final class NeoVisitorGenerator extends BaseClassVisitor {

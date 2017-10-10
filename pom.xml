@@ -214,6 +214,13 @@
             <version>0.9.11</version>
         </dependency>
 
+        <!--chat-test-->
+        <dependency>
+            <groupId>com.rivescript</groupId>
+            <artifactId>rivescript-core</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>

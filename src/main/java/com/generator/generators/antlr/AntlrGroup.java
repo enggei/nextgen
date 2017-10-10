@@ -570,12 +570,13 @@ public final class AntlrGroup {
       	return (String) this._package;
       }
 
-      public AntlrDomainST addNodesValue(Object declaration_) {
+      public AntlrDomainST addNodesValue(Object declaration_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
       	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._nodes.add(map);
 
-         template.addAggr("nodes.{declaration}", map.get("declaration"));
+         template.addAggr("nodes.{declaration, name}", map.get("declaration"), map.get("name"));
          return this;
       }
 
@@ -591,15 +592,27 @@ public final class AntlrGroup {
 
    public final class AntlrNodeST implements AntlrGroupTemplate {
 
-      private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
-      private Object _domain;
+      private Object _name;
 
       private final ST template;
 
       private AntlrNodeST(STGroup group) {
    		template = group.getInstanceOf("AntlrNode");
    	}
+
+      public AntlrNodeST addChildrenValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._children.add(map);
+
+         template.addAggr("children.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getChildren() {
+      	return this._children;
+      }
 
       public AntlrNodeST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
@@ -615,37 +628,6 @@ public final class AntlrGroup {
 
       public String getName() {
       	return (String) this._name;
-      }
-
-      public AntlrNodeST addChildrenValue(Object name_, Object accessor_, Object declaration_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("accessor", (accessor_ == null || accessor_.toString().length() == 0) ? null : accessor_);
-      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
-      	this._children.add(map);
-
-         template.addAggr("children.{name, accessor, declaration}", map.get("name"), map.get("accessor"), map.get("declaration"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getChildren() {
-      	return this._children;
-      }
-
-      public AntlrNodeST setDomain(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._domain == null) {
-            this._domain = value;
-         	template.add("domain", value);
-         }
-
-      	return this;
-      }
-
-      public String getDomain() {
-      	return (String) this._domain;
       }
 
       @Override
@@ -1078,28 +1060,100 @@ public final class AntlrGroup {
 		"	;>>\n")
 			.append("AntlrDomain(name,package,nodes) ::= <<package ~package~;\n" + 
 		"\n" + 
-		"import java.util.ArrayList;\n" + 
-		"import java.util.List;\n" + 
+		"import com.generator.generators.antlr.AntlrGroup;\n" + 
+		"import com.generator.generators.antlr.bnf.Symbol;\n" + 
 		"\n" + 
-		"public class ~name~ {\n" + 
+		"import javax.swing.*;\n" + 
+		"import java.awt.*;\n" + 
+		"import java.awt.event.ActionEvent;\n" + 
+		"import java.beans.PropertyChangeSupport;\n" + 
+		"import java.util.Stack;\n" + 
 		"\n" + 
-		"	public static abstract class ~name~Node {\n" + 
-		"		\n" + 
+		"public class ~name~ extends ANTLRv4ParserNodeListener {\n" + 
+		"\n" + 
+		"	protected final Stack<Symbol> symbolStack = new Stack<>();\n" + 
+		"\n" + 
+		"	public ~name~() {\n" + 
 		"	}\n" + 
+		"\n" + 
+		"	public ~name~(boolean debug) {\n" + 
+		"		super(debug);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public GrammarSpec getGrammarSpec() {\n" + 
+		"      return (GrammarSpec) symbolStack.peek();\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~nodes:{it|\n" + 
+		"	@Override\n" + 
+		"	public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"		super.enter~it.name~(arg);\n" + 
+		"		final ~it.name~ symbol = new~it.name~();\n" + 
+		"      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
+		"      symbolStack.push(symbol);\n" + 
+		"		symbol.name = arg.getStart().getText();\n" + 
+		"	~eom()~\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public void exit~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"		super.exit~it.name~(arg);\n" + 
+		"		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
+		"	~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~nodes:{it|~it.declaration~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"}>>\n")
-			.append("AntlrNode(name,children,domain) ::= <<public static class ~name~ extends ~domain~Node {\n" + 
+			.append("AntlrNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~() {\n" + 
+		"	return new ~name~();\n" + 
+		"}\n" + 
+		"\n" + 
+		"public ~name~ new~name;format=\"capitalize\"~(String name) {\n" + 
+		"	return new ~name~(name);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public class ~name~ extends Symbol {\n" + 
+		"\n" + 
+		"	public ~name~() {\n" + 
+		"		this.type = \"~name~\";\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ~name~(String name) {\n" + 
+		"		super(name);\n" + 
+		"		this.type = \"~name~\";\n" + 
+		"	}\n" + 
 		"\n" + 
 		"~children:{it|\n" + 
-		"	// ~it.name~\n" + 
-		"	public ~it.declaration~;\n" + 
+		"	public Symbol add~it.name;format=\"capitalize\"~(~it.name~ child) { return super.addChild(child); ~eom()~\n" + 
+		"	public Symbol set~it.name;format=\"capitalize\"~(~it.name~ child) { return super.setChild(child); ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {\n" + 
+		"   	return super.paint(startX, startY, g, shapeMap);\n" + 
+		"	}\n" + 
 		"	\n" + 
+		"	@Override\n" + 
+		"	public void addActionsTo(JMenu menu, PropertyChangeSupport modelChangeSupport) {\n" + 
+		"\n" + 
 		"~children:{it|\n" + 
-		"	public ~it.accessor~\n" + 
+		"		menu.add(new AbstractAction(\"Add ~it.name~\") {\n" + 
+		"			@Override\n" + 
+		"			public void actionPerformed(ActionEvent e) {\n" + 
+		"				final ~it.name~ child = new~it.name;format=\"capitalize\"~();\n" + 
+		"				add~it.name;format=\"capitalize\"~(child);\n" + 
+		"				modelChangeSupport.firePropertyChange(\"~it.name~\", \"Add\", child);\n" + 
+		"			~eom()~\n" + 
+		"		~eom()~);\n" + 
 		"};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"		super.addActionsTo(menu, modelChangeSupport);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	@Override\n" + 
+		"	public Object toGrammar(AntlrGroup antlrGroup) {\n" + 
+		"		return super.toGrammar(antlrGroup);\n" + 
+		"	}\n" + 
 		"}>>\n")
 			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
 		.toString();
