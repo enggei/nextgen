@@ -1,17 +1,5 @@
 package com.generator.generators.antlr;
 
-import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
-import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
-import com.generator.generators.clojure.parser.ClojureListener;
-import com.generator.generators.clojure.parser.ClojureVisitor;
-import com.generator.generators.cpp.parser.CPP14Listener;
-import com.generator.generators.cpp.parser.CPP14Visitor;
-import com.generator.generators.css.parser.css3Listener;
-import com.generator.generators.css.parser.css3Visitor;
-import com.generator.generators.csv.parser.CSVListener;
-import com.generator.generators.csv.parser.CSVVisitor;
-import com.generator.generators.cypher.parser.CypherListener;
-import com.generator.generators.cypher.parser.CypherVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
 import com.generator.generators.ecmascript.parser.ECMAScriptListener;
 import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
@@ -32,6 +20,8 @@ import com.generator.generators.properties.parser.propertiesListener;
 import com.generator.generators.properties.parser.propertiesVisitor;
 import com.generator.generators.protobuf.parser.ProtobufListener;
 import com.generator.generators.protobuf.parser.ProtobufVisitor;
+import com.generator.generators.scala.parser.ScalaListener;
+import com.generator.generators.scala.parser.ScalaVisitor;
 import com.generator.generators.stacktrace.parser.StackTraceListener;
 import com.generator.generators.stacktrace.parser.StackTraceVisitor;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
@@ -66,7 +56,7 @@ public class AntlrGenerator {
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);
-      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
+//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".csv.parser", "CSV", CSVVisitor.class, CSVListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cypher.parser", "Cypher", CypherVisitor.class, CypherListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".ecmascript.parser", "ECMAScript", ECMAScriptVisitor.class, ECMAScriptListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".go.parser", "Golang", GolangVisitor.class, GolangListener.class);
@@ -82,6 +72,7 @@ public class AntlrGenerator {
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
    }
 
    private static void generateVisitorAndListener(String root, String packageName, String g4Name, Class visitorInterface, Class listenerInterface) {
