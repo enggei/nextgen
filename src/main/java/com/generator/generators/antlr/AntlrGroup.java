@@ -78,6 +78,10 @@ public final class AntlrGroup {
       return new grammarBlockST(stGroup);
    }
 
+   public AntlrDomainGrammarVisitorST newAntlrDomainGrammarVisitor() {
+      return new AntlrDomainGrammarVisitorST(stGroup);
+   }
+
    public final class NeoListenerST implements AntlrGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _methods = new java.util.LinkedHashSet<>();
@@ -105,13 +109,13 @@ public final class AntlrGroup {
       	return this._methods;
       }
 
-      public NeoListenerST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public NeoListenerST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -171,13 +175,13 @@ public final class AntlrGroup {
    		template = group.getInstanceOf("grammar");
    	}
 
-      public grammarST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -201,12 +205,12 @@ public final class AntlrGroup {
       	return this._options;
       }
 
-      public grammarST addRulesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarST addRulesValue(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
-      	this._rules.add(value);
-      	template.add("rules", value);
+      	this._rules.add(text);
+      	template.add("rules", text);
 
          return this;
       }
@@ -234,13 +238,13 @@ public final class AntlrGroup {
    		template = group.getInstanceOf("NeoVisitor");
    	}
 
-      public NeoVisitorST setPackageName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public NeoVisitorST setPackageName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._packageName == null) {
-            this._packageName = value;
-         	template.add("packageName", value);
+            this._packageName = text;
+         	template.add("packageName", text);
          }
 
       	return this;
@@ -250,13 +254,13 @@ public final class AntlrGroup {
       	return (String) this._packageName;
       }
 
-      public NeoVisitorST setParser(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public NeoVisitorST setParser(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._parser == null) {
-            this._parser = value;
-         	template.add("parser", value);
+            this._parser = text;
+         	template.add("parser", text);
          }
 
       	return this;
@@ -280,13 +284,13 @@ public final class AntlrGroup {
       	return this._methods;
       }
 
-      public NeoVisitorST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public NeoVisitorST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -329,13 +333,13 @@ public final class AntlrGroup {
       	return this._methods;
       }
 
-      public BaseNodeVisitorST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeVisitorST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -345,13 +349,13 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public BaseNodeVisitorST setPackageName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeVisitorST setPackageName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._packageName == null) {
-            this._packageName = value;
-         	template.add("packageName", value);
+            this._packageName = text;
+         	template.add("packageName", text);
          }
 
       	return this;
@@ -361,13 +365,13 @@ public final class AntlrGroup {
       	return (String) this._packageName;
       }
 
-      public BaseNodeVisitorST setParser(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeVisitorST setParser(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._parser == null) {
-            this._parser = value;
-         	template.add("parser", value);
+            this._parser = text;
+         	template.add("parser", text);
          }
 
       	return this;
@@ -410,13 +414,13 @@ public final class AntlrGroup {
       	return this._methods;
       }
 
-      public BaseNodeListenerST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeListenerST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -426,13 +430,13 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public BaseNodeListenerST setPackageName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeListenerST setPackageName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._packageName == null) {
-            this._packageName = value;
-         	template.add("packageName", value);
+            this._packageName = text;
+         	template.add("packageName", text);
          }
 
       	return this;
@@ -442,13 +446,13 @@ public final class AntlrGroup {
       	return (String) this._packageName;
       }
 
-      public BaseNodeListenerST setParser(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public BaseNodeListenerST setParser(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._parser == null) {
-            this._parser = value;
-         	template.add("parser", value);
+            this._parser = text;
+         	template.add("parser", text);
          }
 
       	return this;
@@ -476,13 +480,13 @@ public final class AntlrGroup {
    		template = group.getInstanceOf("grammarParserRuleSpec");
    	}
 
-      public grammarParserRuleSpecST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarParserRuleSpecST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -492,12 +496,12 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public grammarParserRuleSpecST addCommentsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarParserRuleSpecST addCommentsValue(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
-      	this._comments.add(value);
-      	template.add("comments", value);
+      	this._comments.add(text);
+      	template.add("comments", text);
 
          return this;
       }
@@ -506,12 +510,12 @@ public final class AntlrGroup {
       	return this._comments;
       }
 
-      public grammarParserRuleSpecST addAlternativesValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarParserRuleSpecST addAlternativesValue(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
-      	this._alternatives.add(value);
-      	template.add("alternatives", value);
+      	this._alternatives.add(text);
+      	template.add("alternatives", text);
 
          return this;
       }
@@ -538,13 +542,13 @@ public final class AntlrGroup {
    		template = group.getInstanceOf("AntlrDomain");
    	}
 
-      public AntlrDomainST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public AntlrDomainST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -554,13 +558,13 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public AntlrDomainST setPackage(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public AntlrDomainST setPackage(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._package == null) {
-            this._package = value;
-         	template.add("package", value);
+            this._package = text;
+         	template.add("package", text);
          }
 
       	return this;
@@ -614,13 +618,13 @@ public final class AntlrGroup {
       	return this._children;
       }
 
-      public AntlrNodeST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public AntlrNodeST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
+            this._name = text;
+         	template.add("name", text);
          }
 
       	return this;
@@ -647,13 +651,13 @@ public final class AntlrGroup {
    		template = group.getInstanceOf("grammarBlock");
    	}
 
-      public grammarBlockST setEbnfSuffix(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarBlockST setEbnfSuffix(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
       	if (this._ebnfSuffix == null) {
-            this._ebnfSuffix = value;
-         	template.add("ebnfSuffix", value);
+            this._ebnfSuffix = text;
+         	template.add("ebnfSuffix", text);
          }
 
       	return this;
@@ -663,12 +667,12 @@ public final class AntlrGroup {
       	return (String) this._ebnfSuffix;
       }
 
-      public grammarBlockST addElementsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
+      public grammarBlockST addElementsValue(Object text) {
+      	if (text == null || text.toString().length() == 0)
          	return this;
 
-      	this._elements.add(value);
-      	template.add("elements", value);
+      	this._elements.add(text);
+      	template.add("elements", text);
 
          return this;
       }
@@ -683,10 +687,73 @@ public final class AntlrGroup {
    	}
    }
 
-	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (value == null || value.toString().length() == 0) return true;
+   public final class AntlrDomainGrammarVisitorST implements AntlrGroupTemplate {
+
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
+      private Object _package;
+
+      private final ST template;
+
+      private AntlrDomainGrammarVisitorST(STGroup group) {
+   		template = group.getInstanceOf("AntlrDomainGrammarVisitor");
+   	}
+
+      public AntlrDomainGrammarVisitorST setName(Object text) {
+      	if (text == null || text.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = text;
+         	template.add("name", text);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public AntlrDomainGrammarVisitorST addNodesValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._nodes.add(map);
+
+         template.addAggr("nodes.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getNodes() {
+      	return this._nodes;
+      }
+
+      public AntlrDomainGrammarVisitorST setPackage(Object text) {
+      	if (text == null || text.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = text;
+         	template.add("package", text);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+	static boolean tryToSetListProperty(ST template, Object text, AtomicBoolean alreadySet, String name) {
+		if (text == null || text.toString().length() == 0) return true;
 		alreadySet.set(true);
-		template.add(name, value);
+		template.add(name, text);
 		return false;
 	}
 
@@ -859,7 +926,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endtoken\", arg.getStop().getText());\n" + 
+		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
 		"		onEnter(node);\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
@@ -916,7 +983,7 @@ public final class AntlrGroup {
 		"	@Override\n" + 
 		"	public Node visit~it.name~(~it.param~ arg) {\n" + 
 		"		System.out.println(\"~it.name~\");\n" + 
-		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
+		"		final Node node = model.newNode(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
 		"      onEnter(node);\n" + 
 		"      visitChildren(arg);\n" + 
 		"      onExit();\n" + 
@@ -1081,17 +1148,16 @@ public final class AntlrGroup {
 		"	}\n" + 
 		"\n" + 
 		"	public GrammarSpec getGrammarSpec() {\n" + 
-		"      return (GrammarSpec) symbolStack.peek();\n" + 
+		"      return symbolStack.isEmpty() ? null : (GrammarSpec) symbolStack.peek();\n" + 
 		"   }\n" + 
 		"\n" + 
 		"~nodes:{it|\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
 		"		super.enter~it.name~(arg);\n" + 
-		"		final ~it.name~ symbol = new~it.name~();\n" + 
+		"		final ~it.name~ symbol = new~it.name~(arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
 		"      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
 		"      symbolStack.push(symbol);\n" + 
-		"		symbol.name = arg.getStart().getText();\n" + 
 		"	~eom()~\n" + 
 		"\n" + 
 		"	@Override\n" + 
@@ -1104,25 +1170,15 @@ public final class AntlrGroup {
 		"	~nodes:{it|~it.declaration~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"}>>\n")
-			.append("AntlrNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~() {\n" + 
-		"	return new ~name~();\n" + 
-		"}\n" + 
-		"\n" + 
-		"public ~name~ new~name;format=\"capitalize\"~(String name) {\n" + 
-		"	return new ~name~(name);\n" + 
+			.append("AntlrNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~(String text, String startToken, String endToken) {\n" + 
+		"	return new ~name~(text, startToken, endToken);\n" + 
 		"}\n" + 
 		"\n" + 
 		"public class ~name~ extends Symbol {\n" + 
 		"\n" + 
-		"	public ~name~() {\n" + 
-		"		this.type = \"~name~\";\n" + 
+		"	public ~name~(String text, String startToken, String endToken) {\n" + 
+		"		super(\"~name~\", startToken, text, startToken, endToken);\n" + 
 		"	}\n" + 
-		"\n" + 
-		"	public ~name~(String name) {\n" + 
-		"		super(name);\n" + 
-		"		this.type = \"~name~\";\n" + 
-		"	}\n" + 
-		"\n" + 
 		"~children:{it|\n" + 
 		"	public Symbol add~it.name;format=\"capitalize\"~(~it.name~ child) { return super.addChild(child); ~eom()~\n" + 
 		"	public Symbol set~it.name;format=\"capitalize\"~(~it.name~ child) { return super.setChild(child); ~eom()~\n" + 
@@ -1140,7 +1196,7 @@ public final class AntlrGroup {
 		"		menu.add(new AbstractAction(\"Add ~it.name~\") {\n" + 
 		"			@Override\n" + 
 		"			public void actionPerformed(ActionEvent e) {\n" + 
-		"				final ~it.name~ child = new~it.name;format=\"capitalize\"~();\n" + 
+		"				final ~it.name~ child = new~it.name;format=\"capitalize\"~(\"\", \"\", \"\");\n" + 
 		"				add~it.name;format=\"capitalize\"~(child);\n" + 
 		"				modelChangeSupport.firePropertyChange(\"~it.name~\", \"Add\", child);\n" + 
 		"			~eom()~\n" + 
@@ -1156,5 +1212,34 @@ public final class AntlrGroup {
 		"	}\n" + 
 		"}>>\n")
 			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
+			.append("AntlrDomainGrammarVisitor(name,nodes,package) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.generator.generators.antlr.bnf.AntlrGrammarModel;\n" + 
+		"import com.generator.generators.antlr.bnf.Symbol;\n" + 
+		"import com.generator.util.NeoUtil;\n" + 
+		"import org.neo4j.graphdb.Node;\n" + 
+		"\n" + 
+		"import java.util.Stack;\n" + 
+		"\n" + 
+		"public class ~name~ extends ANTLRv4ParserDomainVisitor {\n" + 
+		"\n" + 
+		"   protected final Stack<Symbol> symbolStack = new Stack<>();\n" + 
+		"   private final AntlrGrammarModel grammarModel = new AntlrGrammarModel();\n" + 
+		"\n" + 
+		"	public ANTLRv4ParserDomain.GrammarSpec getGrammarSpec() {\n" + 
+		"      return symbolStack.isEmpty() ? null : (ANTLRv4ParserDomain.GrammarSpec) symbolStack.peek();\n" + 
+		"   }\n" + 
+		"\n" + 
+		"~nodes:{it|\n" + 
+		"	@Override\n" + 
+		"   public void visit~it.name~(Node node) {\n" + 
+		"      final ANTLRv4ParserDomain.~it.name~ symbol = grammarModel.new~it.name~(NeoUtil.getString(node, \"text\"), NeoUtil.getString(node, \"startToken\"), NeoUtil.getString(node, \"endToken\"));\n" + 
+		"      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
+		"      symbolStack.push(symbol);\n" + 
+		"      super.visit~it.name~(node);\n" + 
+		"		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
+		"   ~eom()~\n" + 
+		"};separator=\"\\n\"~ \n" + 
+		"}>>\n")
 		.toString();
 }

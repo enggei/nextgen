@@ -48,6 +48,8 @@ public class AntlrGenerator {
       new ParserNodeListenerGenerator(root, packageName, g4Name).visit(listenerInterface);
       new NeoVisitorGenerator(root, packageName, g4Name).visit(listenerInterface);
       new ParserDomainGenerator(root, packageName, g4Name).visit(listenerInterface);
+
+      // todo add
    }
 
    private static final class ParserDomainGenerator extends BaseClassVisitor {

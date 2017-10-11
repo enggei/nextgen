@@ -3,15 +3,17 @@ package com.generator.generators.antlr;
 import com.generator.app.App;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.antlr.parser.ANTLRv4Lexer;
-import com.generator.generators.antlr.parser.ANTLRv4Parser;
-import com.generator.generators.antlr.parser.ANTLRv4ParserDomainVisitor;
-import com.generator.generators.antlr.parser.ANTLRv4ParserNeoVisitor;
+import com.generator.generators.antlr.bnf.AntlrGrammarModel;
+import com.generator.generators.antlr.bnf.AntlrGrammarPanel;
+import com.generator.generators.antlr.bnf.Symbol;
+import com.generator.generators.antlr.parser.*;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -19,9 +21,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Set;
-import java.util.Stack;
 
-import static com.generator.util.NeoUtil.*;
+import static com.generator.util.NeoUtil.hasLabel;
 
 /**
  * Created 25.08.17.
@@ -63,11 +64,71 @@ public class ANTLRPlugin extends Plugin {
             if (visitor.getRoot() != null) fireNodesLoaded(visitor.getRoot());
          }
       });
+
+      menu.add(new App.TransactionAction("New Grammar", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel();
+
+            SwingUtil.showDialog(grammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  final ANTLRv4ParserDomain.GrammarSpec grammarSpec = grammarPanel.getGrammarSpec();
+                  if(grammarSpec==null) return;
+
+                  fireNodesLoaded(visit(grammarSpec));
+               }
+
+               Node visit(Symbol symbol) {
+                  final Node newNode = getGraph().newNode(Label.label(symbol.type()), "text", symbol.getText(), "startToken", symbol.getStartToken(), "endtoken", symbol.getEndToken());
+                  for (Symbol child : symbol.symbols)
+                     newNode.createRelationshipTo(visit(child), RelationshipType.withName("child"));
+                  return newNode;
+               }
+            });
+         }
+      });
    }
 
    @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      if (hasLabel(neoNode.getNode(), Entities.GrammarSpec)) {
+         pop.add(new App.TransactionAction("Edit", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
+               final ANTLRv4ParserGrammarVisitor visitor =new ANTLRv4ParserGrammarVisitor() {
+                  @Override
+                  public void visitEbnfSuffix(Node node) {
+
+                     if (symbolStack.peek() instanceof ANTLRv4ParserDomain.BlockSuffix) {
+                        final Symbol blockSuffix = symbolStack.pop();
+                        symbolStack.peek().ebnf = NeoUtil.getString(node, "startToken");
+                        symbolStack.push(blockSuffix);
+                     } else {
+                        symbolStack.peek().ebnf = NeoUtil.getString(node, "startToken");
+                     }
+
+                     super.visitEbnfSuffix(node);
+                  }
+               };
+               visitor.visit(neoNode.getNode());
+
+
+               final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel();
+               grammarPanel.setModel(new AntlrGrammarModel(visitor.getGrammarSpec()));
+
+               SwingUtil.showDialog(new JScrollPane(grammarPanel), app, "Grammar Panel", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+                     System.out.println();
+                  }
+               });
+            }
+         });
+      }
    }
 
    @Override
@@ -88,34 +149,6 @@ public class ANTLRPlugin extends Plugin {
          final AntlrGroup antlrGroup = new AntlrGroup();
          final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar();
 
-//         new ANTLRv4ParserDomainVisitor() {
-//
-//            final Stack<AntlrGroup.grammarRuleSpecST> ruleSTStack = new Stack<>();
-//            final Stack<AntlrGroup.blockST> blockSTStack = new Stack<>();
-//
-//            @Override
-//            public void visitIdentifier(Node node) {
-//               grammarST.setName(getString(node, Properties.startToken.name()));
-//               super.visitIdentifier(node);
-//            }
-//
-//            @Override
-//            public void visitRuleSpec(Node node) {
-//               final AntlrGroup.grammarRuleSpecST ruleST = antlrGroup.newgrammarRuleSpec().setName(getString(node, Properties.startToken.name()));
-//               ruleSTStack.push(ruleST);
-//               System.out.println("ruleST = " + ruleST);
-//               super.visitRuleSpec(node);
-//               grammarST.addRulesValue(ruleSTStack.pop());
-//            }
-//
-//            @Override
-//            public void visitBlock(Node node) {
-//               final AntlrGroup.blockST blockST = antlrGroup.newblock();
-//               blockSTStack.push(blockST);
-//               super.visitBlock(node);
-//               ruleSTStack.peek().addAlternativesValue(blockST);
-//            }
-//         }.visit(node.getNode());
 
          txtEditor.setText(grammarST.toString());
          txtEditor.setCaretPosition(0);

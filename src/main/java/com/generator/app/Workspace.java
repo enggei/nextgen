@@ -466,6 +466,12 @@ public final class Workspace extends JPanel {
                         });
                      }
 
+                     final StringBuilder out = new StringBuilder();
+                     if (!dependentNodes.isEmpty())
+                        for (Node dependentNode : dependentNodes)
+                           out.append(NeoUtil.getNameAndLabelsFrom(dependentNode)).append("\n");
+                     System.out.println(out);
+
                      if (dependentNodes.isEmpty() || SwingUtil.showConfirmDialog(app, "There are " + dependentNodes.size() + " nodes in graph which are dependent on nodes to delete. Are you sure you want to delete ?"))
                         app.model.deleteNodes(nodes);
                   }

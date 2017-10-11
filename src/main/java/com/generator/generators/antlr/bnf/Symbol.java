@@ -18,18 +18,38 @@ public class Symbol {
 
    private final UUID uuid = UUID.randomUUID();
    protected String type;
-   protected String ebnf = "";
 
-   public String name;
-   protected Symbol parent;
+   public Symbol parent;
+   public String label;
+   public String ebnf = "";
+   public String text;
+   public String startToken;
+   public String endToken;
 
    public final List<Symbol> symbols = new ArrayList<>();
 
-   public Symbol() {
+   public Symbol(String type, String label, String value, String startToken, String endToken) {
+      this.type = type;
+      this.label = label;
+      this.text = value;
+      this.startToken = startToken;
+      this.endToken = endToken;
    }
 
-   public Symbol(String name) {
-      this.name = name;
+   public String getText() {
+      return text;
+   }
+
+   public String getStartToken() {
+      return startToken;
+   }
+
+   public String getEndToken() {
+      return endToken;
+   }
+
+   public String type() {
+      return type;
    }
 
    public Symbol setChild(Symbol symbol) {
@@ -57,7 +77,7 @@ public class Symbol {
    public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, Rectangle2D> shapeMap) {
 //      final Rectangle2D.Double bounds = drawName(type + " (" + name + ")", Color.BLUE, startX, startY, g, shapeMap);
 //      return paintChildren(g, bounds, shapeMap);
-      return paintChildren(g, new Rectangle2D.Double(startX, startY, 0,0), shapeMap);
+      return paintChildren(g, new Rectangle2D.Double(startX, startY, 0, 0), shapeMap);
    }
 
    public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<Symbol, Rectangle2D> shapeMap) {
@@ -134,11 +154,11 @@ public class Symbol {
    }
 
    public void addActionsTo(JMenu menu, PropertyChangeSupport modelChangeSupport) {
-      menu.add(new AbstractAction("Remove " + (name == null ? type : name)) {
+      menu.add(new AbstractAction("Remove " + (label == null ? type : label)) {
          @Override
          public void actionPerformed(ActionEvent e) {
             parent.symbols.remove(Symbol.this);
-            modelChangeSupport.firePropertyChange(name == null ? type : name, "remove", Symbol.this);
+            modelChangeSupport.firePropertyChange(label == null ? type : label, "remove", Symbol.this);
          }
       });
    }

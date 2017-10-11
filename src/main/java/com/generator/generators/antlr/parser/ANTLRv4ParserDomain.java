@@ -21,16 +21,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	}
 
 	public GrammarSpec getGrammarSpec() {
-      return (GrammarSpec) symbolStack.peek();
+      return symbolStack.isEmpty() ? null : (GrammarSpec) symbolStack.peek();
    }
 
 	@Override
 	public void enterGrammarSpec(ANTLRv4Parser.GrammarSpecContext arg) {
 		super.enterGrammarSpec(arg);
-		final GrammarSpec symbol = newGrammarSpec();
+		final GrammarSpec symbol = newGrammarSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -42,10 +41,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterGrammarType(ANTLRv4Parser.GrammarTypeContext arg) {
 		super.enterGrammarType(arg);
-		final GrammarType symbol = newGrammarType();
+		final GrammarType symbol = newGrammarType(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -57,10 +55,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterIdentifier(ANTLRv4Parser.IdentifierContext arg) {
 		super.enterIdentifier(arg);
-		final Identifier symbol = newIdentifier();
+		final Identifier symbol = newIdentifier(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -72,10 +69,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterPrequelConstruct(ANTLRv4Parser.PrequelConstructContext arg) {
 		super.enterPrequelConstruct(arg);
-		final PrequelConstruct symbol = newPrequelConstruct();
+		final PrequelConstruct symbol = newPrequelConstruct(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -87,10 +83,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterOptionsSpec(ANTLRv4Parser.OptionsSpecContext arg) {
 		super.enterOptionsSpec(arg);
-		final OptionsSpec symbol = newOptionsSpec();
+		final OptionsSpec symbol = newOptionsSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -102,10 +97,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterOption(ANTLRv4Parser.OptionContext arg) {
 		super.enterOption(arg);
-		final Option symbol = newOption();
+		final Option symbol = newOption(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -117,10 +111,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterOptionValue(ANTLRv4Parser.OptionValueContext arg) {
 		super.enterOptionValue(arg);
-		final OptionValue symbol = newOptionValue();
+		final OptionValue symbol = newOptionValue(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -132,10 +125,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterRules(ANTLRv4Parser.RulesContext arg) {
 		super.enterRules(arg);
-		final Rules symbol = newRules();
+		final Rules symbol = newRules(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -147,10 +139,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterRuleSpec(ANTLRv4Parser.RuleSpecContext arg) {
 		super.enterRuleSpec(arg);
-		final RuleSpec symbol = newRuleSpec();
+		final RuleSpec symbol = newRuleSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -162,10 +153,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext arg) {
 		super.enterParserRuleSpec(arg);
-		final ParserRuleSpec symbol = newParserRuleSpec();
+		final ParserRuleSpec symbol = newParserRuleSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -177,10 +167,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterRuleBlock(ANTLRv4Parser.RuleBlockContext arg) {
 		super.enterRuleBlock(arg);
-		final RuleBlock symbol = newRuleBlock();
+		final RuleBlock symbol = newRuleBlock(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -192,10 +181,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterRuleAltList(ANTLRv4Parser.RuleAltListContext arg) {
 		super.enterRuleAltList(arg);
-		final RuleAltList symbol = newRuleAltList();
+		final RuleAltList symbol = newRuleAltList(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -207,10 +195,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLabeledAlt(ANTLRv4Parser.LabeledAltContext arg) {
 		super.enterLabeledAlt(arg);
-		final LabeledAlt symbol = newLabeledAlt();
+		final LabeledAlt symbol = newLabeledAlt(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -222,10 +209,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterAlternative(ANTLRv4Parser.AlternativeContext arg) {
 		super.enterAlternative(arg);
-		final Alternative symbol = newAlternative();
+		final Alternative symbol = newAlternative(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -237,10 +223,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterElement(ANTLRv4Parser.ElementContext arg) {
 		super.enterElement(arg);
-		final Element symbol = newElement();
+		final Element symbol = newElement(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -252,10 +237,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterAtom(ANTLRv4Parser.AtomContext arg) {
 		super.enterAtom(arg);
-		final Atom symbol = newAtom();
+		final Atom symbol = newAtom(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -267,10 +251,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterTerminal(ANTLRv4Parser.TerminalContext arg) {
 		super.enterTerminal(arg);
-		final Terminal symbol = newTerminal();
+		final Terminal symbol = newTerminal(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -282,10 +265,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterEbnfSuffix(ANTLRv4Parser.EbnfSuffixContext arg) {
 		super.enterEbnfSuffix(arg);
-		final EbnfSuffix symbol = newEbnfSuffix();
+		final EbnfSuffix symbol = newEbnfSuffix(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -297,10 +279,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterRuleref(ANTLRv4Parser.RulerefContext arg) {
 		super.enterRuleref(arg);
-		final Ruleref symbol = newRuleref();
+		final Ruleref symbol = newRuleref(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -312,10 +293,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterExceptionGroup(ANTLRv4Parser.ExceptionGroupContext arg) {
 		super.enterExceptionGroup(arg);
-		final ExceptionGroup symbol = newExceptionGroup();
+		final ExceptionGroup symbol = newExceptionGroup(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -327,10 +307,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterEbnf(ANTLRv4Parser.EbnfContext arg) {
 		super.enterEbnf(arg);
-		final Ebnf symbol = newEbnf();
+		final Ebnf symbol = newEbnf(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -342,10 +321,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterBlock(ANTLRv4Parser.BlockContext arg) {
 		super.enterBlock(arg);
-		final Block symbol = newBlock();
+		final Block symbol = newBlock(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -357,10 +335,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterAltList(ANTLRv4Parser.AltListContext arg) {
 		super.enterAltList(arg);
-		final AltList symbol = newAltList();
+		final AltList symbol = newAltList(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -372,10 +349,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterBlockSuffix(ANTLRv4Parser.BlockSuffixContext arg) {
 		super.enterBlockSuffix(arg);
-		final BlockSuffix symbol = newBlockSuffix();
+		final BlockSuffix symbol = newBlockSuffix(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -387,10 +363,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterDelegateGrammars(ANTLRv4Parser.DelegateGrammarsContext arg) {
 		super.enterDelegateGrammars(arg);
-		final DelegateGrammars symbol = newDelegateGrammars();
+		final DelegateGrammars symbol = newDelegateGrammars(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -402,10 +377,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterDelegateGrammar(ANTLRv4Parser.DelegateGrammarContext arg) {
 		super.enterDelegateGrammar(arg);
-		final DelegateGrammar symbol = newDelegateGrammar();
+		final DelegateGrammar symbol = newDelegateGrammar(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -417,10 +391,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterTokensSpec(ANTLRv4Parser.TokensSpecContext arg) {
 		super.enterTokensSpec(arg);
-		final TokensSpec symbol = newTokensSpec();
+		final TokensSpec symbol = newTokensSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -432,10 +405,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterIdList(ANTLRv4Parser.IdListContext arg) {
 		super.enterIdList(arg);
-		final IdList symbol = newIdList();
+		final IdList symbol = newIdList(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -447,10 +419,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterChannelsSpec(ANTLRv4Parser.ChannelsSpecContext arg) {
 		super.enterChannelsSpec(arg);
-		final ChannelsSpec symbol = newChannelsSpec();
+		final ChannelsSpec symbol = newChannelsSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -462,10 +433,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext arg) {
 		super.enterLexerRuleSpec(arg);
-		final LexerRuleSpec symbol = newLexerRuleSpec();
+		final LexerRuleSpec symbol = newLexerRuleSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -477,10 +447,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerRuleBlock(ANTLRv4Parser.LexerRuleBlockContext arg) {
 		super.enterLexerRuleBlock(arg);
-		final LexerRuleBlock symbol = newLexerRuleBlock();
+		final LexerRuleBlock symbol = newLexerRuleBlock(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -492,10 +461,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerAltList(ANTLRv4Parser.LexerAltListContext arg) {
 		super.enterLexerAltList(arg);
-		final LexerAltList symbol = newLexerAltList();
+		final LexerAltList symbol = newLexerAltList(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -507,10 +475,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerAlt(ANTLRv4Parser.LexerAltContext arg) {
 		super.enterLexerAlt(arg);
-		final LexerAlt symbol = newLexerAlt();
+		final LexerAlt symbol = newLexerAlt(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -522,10 +489,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerElements(ANTLRv4Parser.LexerElementsContext arg) {
 		super.enterLexerElements(arg);
-		final LexerElements symbol = newLexerElements();
+		final LexerElements symbol = newLexerElements(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -537,10 +503,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerElement(ANTLRv4Parser.LexerElementContext arg) {
 		super.enterLexerElement(arg);
-		final LexerElement symbol = newLexerElement();
+		final LexerElement symbol = newLexerElement(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -552,10 +517,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerAtom(ANTLRv4Parser.LexerAtomContext arg) {
 		super.enterLexerAtom(arg);
-		final LexerAtom symbol = newLexerAtom();
+		final LexerAtom symbol = newLexerAtom(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -567,10 +531,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerCommands(ANTLRv4Parser.LexerCommandsContext arg) {
 		super.enterLexerCommands(arg);
-		final LexerCommands symbol = newLexerCommands();
+		final LexerCommands symbol = newLexerCommands(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -582,10 +545,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerCommand(ANTLRv4Parser.LexerCommandContext arg) {
 		super.enterLexerCommand(arg);
-		final LexerCommand symbol = newLexerCommand();
+		final LexerCommand symbol = newLexerCommand(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -597,10 +559,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerCommandName(ANTLRv4Parser.LexerCommandNameContext arg) {
 		super.enterLexerCommandName(arg);
-		final LexerCommandName symbol = newLexerCommandName();
+		final LexerCommandName symbol = newLexerCommandName(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -612,10 +573,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerCommandExpr(ANTLRv4Parser.LexerCommandExprContext arg) {
 		super.enterLexerCommandExpr(arg);
-		final LexerCommandExpr symbol = newLexerCommandExpr();
+		final LexerCommandExpr symbol = newLexerCommandExpr(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -627,10 +587,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterActionBlock(ANTLRv4Parser.ActionBlockContext arg) {
 		super.enterActionBlock(arg);
-		final ActionBlock symbol = newActionBlock();
+		final ActionBlock symbol = newActionBlock(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -642,10 +601,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterModeSpec(ANTLRv4Parser.ModeSpecContext arg) {
 		super.enterModeSpec(arg);
-		final ModeSpec symbol = newModeSpec();
+		final ModeSpec symbol = newModeSpec(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -657,10 +615,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterLexerBlock(ANTLRv4Parser.LexerBlockContext arg) {
 		super.enterLexerBlock(arg);
-		final LexerBlock symbol = newLexerBlock();
+		final LexerBlock symbol = newLexerBlock(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -672,10 +629,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterNotSet(ANTLRv4Parser.NotSetContext arg) {
 		super.enterNotSet(arg);
-		final NotSet symbol = newNotSet();
+		final NotSet symbol = newNotSet(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -687,10 +643,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterSetElement(ANTLRv4Parser.SetElementContext arg) {
 		super.enterSetElement(arg);
-		final SetElement symbol = newSetElement();
+		final SetElement symbol = newSetElement(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -702,10 +657,9 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	@Override
 	public void enterCharacterRange(ANTLRv4Parser.CharacterRangeContext arg) {
 		super.enterCharacterRange(arg);
-		final CharacterRange symbol = newCharacterRange();
+		final CharacterRange symbol = newCharacterRange(arg.getText(), arg.getStart().getText(), arg.getStop().getText());
       if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
       symbolStack.push(symbol);
-		symbol.name = arg.getStart().getText();
 	}
 
 	@Override
@@ -715,25 +669,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 	}
 
 
-	public GrammarSpec newGrammarSpec() {
-		return new GrammarSpec();
-	}
-
-	public GrammarSpec newGrammarSpec(String name) {
-		return new GrammarSpec(name);
+	public GrammarSpec newGrammarSpec(String text, String startToken, String endToken) {
+		return new GrammarSpec(text, startToken, endToken);
 	}
 
 	public class GrammarSpec extends Symbol {
 
-		public GrammarSpec() {
-			this.type = "GrammarSpec";
+		public GrammarSpec(String text, String startToken, String endToken) {
+			super("GrammarSpec", startToken, text, startToken, endToken);
 		}
-
-		public GrammarSpec(String name) {
-			super(name);
-			this.type = "GrammarSpec";
-		}
-
 		public Symbol addGrammarType(GrammarType child) { return super.addChild(child); }
 		public Symbol setGrammarType(GrammarType child) { return super.setChild(child); }
 
@@ -764,7 +708,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add GrammarType") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final GrammarType child = newGrammarType();
+					final GrammarType child = newGrammarType("", "", "");
 					addGrammarType(child);
 					modelChangeSupport.firePropertyChange("GrammarType", "Add", child);
 				}
@@ -773,7 +717,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -782,7 +726,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add PrequelConstruct") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final PrequelConstruct child = newPrequelConstruct();
+					final PrequelConstruct child = newPrequelConstruct("", "", "");
 					addPrequelConstruct(child);
 					modelChangeSupport.firePropertyChange("PrequelConstruct", "Add", child);
 				}
@@ -791,7 +735,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Rules") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Rules child = newRules();
+					final Rules child = newRules("", "", "");
 					addRules(child);
 					modelChangeSupport.firePropertyChange("Rules", "Add", child);
 				}
@@ -800,7 +744,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add ModeSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final ModeSpec child = newModeSpec();
+					final ModeSpec child = newModeSpec("", "", "");
 					addModeSpec(child);
 					modelChangeSupport.firePropertyChange("ModeSpec", "Add", child);
 				}
@@ -809,7 +753,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add GrammarSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final GrammarSpec child = newGrammarSpec();
+					final GrammarSpec child = newGrammarSpec("", "", "");
 					addGrammarSpec(child);
 					modelChangeSupport.firePropertyChange("GrammarSpec", "Add", child);
 				}
@@ -824,25 +768,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public GrammarType newGrammarType() {
-		return new GrammarType();
-	}
-
-	public GrammarType newGrammarType(String name) {
-		return new GrammarType(name);
+	public GrammarType newGrammarType(String text, String startToken, String endToken) {
+		return new GrammarType(text, startToken, endToken);
 	}
 
 	public class GrammarType extends Symbol {
 
-		public GrammarType() {
-			this.type = "GrammarType";
+		public GrammarType(String text, String startToken, String endToken) {
+			super("GrammarType", startToken, text, startToken, endToken);
 		}
-
-		public GrammarType(String name) {
-			super(name);
-			this.type = "GrammarType";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -861,25 +795,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Identifier newIdentifier() {
-		return new Identifier();
-	}
-
-	public Identifier newIdentifier(String name) {
-		return new Identifier(name);
+	public Identifier newIdentifier(String text, String startToken, String endToken) {
+		return new Identifier(text, startToken, endToken);
 	}
 
 	public class Identifier extends Symbol {
 
-		public Identifier() {
-			this.type = "Identifier";
+		public Identifier(String text, String startToken, String endToken) {
+			super("Identifier", startToken, text, startToken, endToken);
 		}
-
-		public Identifier(String name) {
-			super(name);
-			this.type = "Identifier";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -898,25 +822,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public PrequelConstruct newPrequelConstruct() {
-		return new PrequelConstruct();
-	}
-
-	public PrequelConstruct newPrequelConstruct(String name) {
-		return new PrequelConstruct(name);
+	public PrequelConstruct newPrequelConstruct(String text, String startToken, String endToken) {
+		return new PrequelConstruct(text, startToken, endToken);
 	}
 
 	public class PrequelConstruct extends Symbol {
 
-		public PrequelConstruct() {
-			this.type = "PrequelConstruct";
+		public PrequelConstruct(String text, String startToken, String endToken) {
+			super("PrequelConstruct", startToken, text, startToken, endToken);
 		}
-
-		public PrequelConstruct(String name) {
-			super(name);
-			this.type = "PrequelConstruct";
-		}
-
 		public Symbol addOptionsSpec(OptionsSpec child) { return super.addChild(child); }
 		public Symbol setOptionsSpec(OptionsSpec child) { return super.setChild(child); }
 
@@ -941,7 +855,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add OptionsSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final OptionsSpec child = newOptionsSpec();
+					final OptionsSpec child = newOptionsSpec("", "", "");
 					addOptionsSpec(child);
 					modelChangeSupport.firePropertyChange("OptionsSpec", "Add", child);
 				}
@@ -950,7 +864,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add DelegateGrammars") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final DelegateGrammars child = newDelegateGrammars();
+					final DelegateGrammars child = newDelegateGrammars("", "", "");
 					addDelegateGrammars(child);
 					modelChangeSupport.firePropertyChange("DelegateGrammars", "Add", child);
 				}
@@ -959,7 +873,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add TokensSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final TokensSpec child = newTokensSpec();
+					final TokensSpec child = newTokensSpec("", "", "");
 					addTokensSpec(child);
 					modelChangeSupport.firePropertyChange("TokensSpec", "Add", child);
 				}
@@ -968,7 +882,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add ChannelsSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final ChannelsSpec child = newChannelsSpec();
+					final ChannelsSpec child = newChannelsSpec("", "", "");
 					addChannelsSpec(child);
 					modelChangeSupport.firePropertyChange("ChannelsSpec", "Add", child);
 				}
@@ -983,25 +897,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public OptionsSpec newOptionsSpec() {
-		return new OptionsSpec();
-	}
-
-	public OptionsSpec newOptionsSpec(String name) {
-		return new OptionsSpec(name);
+	public OptionsSpec newOptionsSpec(String text, String startToken, String endToken) {
+		return new OptionsSpec(text, startToken, endToken);
 	}
 
 	public class OptionsSpec extends Symbol {
 
-		public OptionsSpec() {
-			this.type = "OptionsSpec";
+		public OptionsSpec(String text, String startToken, String endToken) {
+			super("OptionsSpec", startToken, text, startToken, endToken);
 		}
-
-		public OptionsSpec(String name) {
-			super(name);
-			this.type = "OptionsSpec";
-		}
-
 		public Symbol addOption(Option child) { return super.addChild(child); }
 		public Symbol setOption(Option child) { return super.setChild(child); }
 
@@ -1017,7 +921,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Option") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Option child = newOption();
+					final Option child = newOption("", "", "");
 					addOption(child);
 					modelChangeSupport.firePropertyChange("Option", "Add", child);
 				}
@@ -1032,25 +936,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Option newOption() {
-		return new Option();
-	}
-
-	public Option newOption(String name) {
-		return new Option(name);
+	public Option newOption(String text, String startToken, String endToken) {
+		return new Option(text, startToken, endToken);
 	}
 
 	public class Option extends Symbol {
 
-		public Option() {
-			this.type = "Option";
+		public Option(String text, String startToken, String endToken) {
+			super("Option", startToken, text, startToken, endToken);
 		}
-
-		public Option(String name) {
-			super(name);
-			this.type = "Option";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -1069,7 +963,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -1078,7 +972,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add OptionValue") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final OptionValue child = newOptionValue();
+					final OptionValue child = newOptionValue("", "", "");
 					addOptionValue(child);
 					modelChangeSupport.firePropertyChange("OptionValue", "Add", child);
 				}
@@ -1093,25 +987,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public OptionValue newOptionValue() {
-		return new OptionValue();
-	}
-
-	public OptionValue newOptionValue(String name) {
-		return new OptionValue(name);
+	public OptionValue newOptionValue(String text, String startToken, String endToken) {
+		return new OptionValue(text, startToken, endToken);
 	}
 
 	public class OptionValue extends Symbol {
 
-		public OptionValue() {
-			this.type = "OptionValue";
+		public OptionValue(String text, String startToken, String endToken) {
+			super("OptionValue", startToken, text, startToken, endToken);
 		}
-
-		public OptionValue(String name) {
-			super(name);
-			this.type = "OptionValue";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -1127,7 +1011,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -1142,25 +1026,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Rules newRules() {
-		return new Rules();
-	}
-
-	public Rules newRules(String name) {
-		return new Rules(name);
+	public Rules newRules(String text, String startToken, String endToken) {
+		return new Rules(text, startToken, endToken);
 	}
 
 	public class Rules extends Symbol {
 
-		public Rules() {
-			this.type = "Rules";
+		public Rules(String text, String startToken, String endToken) {
+			super("Rules", startToken, text, startToken, endToken);
 		}
-
-		public Rules(String name) {
-			super(name);
-			this.type = "Rules";
-		}
-
 		public Symbol addRuleSpec(RuleSpec child) { return super.addChild(child); }
 		public Symbol setRuleSpec(RuleSpec child) { return super.setChild(child); }
 
@@ -1176,7 +1050,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add RuleSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final RuleSpec child = newRuleSpec();
+					final RuleSpec child = newRuleSpec("", "", "");
 					addRuleSpec(child);
 					modelChangeSupport.firePropertyChange("RuleSpec", "Add", child);
 				}
@@ -1191,25 +1065,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public RuleSpec newRuleSpec() {
-		return new RuleSpec();
-	}
-
-	public RuleSpec newRuleSpec(String name) {
-		return new RuleSpec(name);
+	public RuleSpec newRuleSpec(String text, String startToken, String endToken) {
+		return new RuleSpec(text, startToken, endToken);
 	}
 
 	public class RuleSpec extends Symbol {
 
-		public RuleSpec() {
-			this.type = "RuleSpec";
+		public RuleSpec(String text, String startToken, String endToken) {
+			super("RuleSpec", startToken, text, startToken, endToken);
 		}
-
-		public RuleSpec(String name) {
-			super(name);
-			this.type = "RuleSpec";
-		}
-
 		public Symbol addParserRuleSpec(ParserRuleSpec child) { return super.addChild(child); }
 		public Symbol setParserRuleSpec(ParserRuleSpec child) { return super.setChild(child); }
 
@@ -1228,7 +1092,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add ParserRuleSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final ParserRuleSpec child = newParserRuleSpec();
+					final ParserRuleSpec child = newParserRuleSpec("", "", "");
 					addParserRuleSpec(child);
 					modelChangeSupport.firePropertyChange("ParserRuleSpec", "Add", child);
 				}
@@ -1237,7 +1101,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerRuleSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerRuleSpec child = newLexerRuleSpec();
+					final LexerRuleSpec child = newLexerRuleSpec("", "", "");
 					addLexerRuleSpec(child);
 					modelChangeSupport.firePropertyChange("LexerRuleSpec", "Add", child);
 				}
@@ -1252,25 +1116,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public ParserRuleSpec newParserRuleSpec() {
-		return new ParserRuleSpec();
-	}
-
-	public ParserRuleSpec newParserRuleSpec(String name) {
-		return new ParserRuleSpec(name);
+	public ParserRuleSpec newParserRuleSpec(String text, String startToken, String endToken) {
+		return new ParserRuleSpec(text, startToken, endToken);
 	}
 
 	public class ParserRuleSpec extends Symbol {
 
-		public ParserRuleSpec() {
-			this.type = "ParserRuleSpec";
+		public ParserRuleSpec(String text, String startToken, String endToken) {
+			super("ParserRuleSpec", startToken, text, startToken, endToken);
 		}
-
-		public ParserRuleSpec(String name) {
-			super(name);
-			this.type = "ParserRuleSpec";
-		}
-
 		public Symbol addRuleBlock(RuleBlock child) { return super.addChild(child); }
 		public Symbol setRuleBlock(RuleBlock child) { return super.setChild(child); }
 
@@ -1289,7 +1143,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add RuleBlock") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final RuleBlock child = newRuleBlock();
+					final RuleBlock child = newRuleBlock("", "", "");
 					addRuleBlock(child);
 					modelChangeSupport.firePropertyChange("RuleBlock", "Add", child);
 				}
@@ -1298,7 +1152,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add ExceptionGroup") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final ExceptionGroup child = newExceptionGroup();
+					final ExceptionGroup child = newExceptionGroup("", "", "");
 					addExceptionGroup(child);
 					modelChangeSupport.firePropertyChange("ExceptionGroup", "Add", child);
 				}
@@ -1313,25 +1167,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public RuleBlock newRuleBlock() {
-		return new RuleBlock();
-	}
-
-	public RuleBlock newRuleBlock(String name) {
-		return new RuleBlock(name);
+	public RuleBlock newRuleBlock(String text, String startToken, String endToken) {
+		return new RuleBlock(text, startToken, endToken);
 	}
 
 	public class RuleBlock extends Symbol {
 
-		public RuleBlock() {
-			this.type = "RuleBlock";
+		public RuleBlock(String text, String startToken, String endToken) {
+			super("RuleBlock", startToken, text, startToken, endToken);
 		}
-
-		public RuleBlock(String name) {
-			super(name);
-			this.type = "RuleBlock";
-		}
-
 		public Symbol addRuleAltList(RuleAltList child) { return super.addChild(child); }
 		public Symbol setRuleAltList(RuleAltList child) { return super.setChild(child); }
 
@@ -1347,7 +1191,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add RuleAltList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final RuleAltList child = newRuleAltList();
+					final RuleAltList child = newRuleAltList("", "", "");
 					addRuleAltList(child);
 					modelChangeSupport.firePropertyChange("RuleAltList", "Add", child);
 				}
@@ -1362,25 +1206,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public RuleAltList newRuleAltList() {
-		return new RuleAltList();
-	}
-
-	public RuleAltList newRuleAltList(String name) {
-		return new RuleAltList(name);
+	public RuleAltList newRuleAltList(String text, String startToken, String endToken) {
+		return new RuleAltList(text, startToken, endToken);
 	}
 
 	public class RuleAltList extends Symbol {
 
-		public RuleAltList() {
-			this.type = "RuleAltList";
+		public RuleAltList(String text, String startToken, String endToken) {
+			super("RuleAltList", startToken, text, startToken, endToken);
 		}
-
-		public RuleAltList(String name) {
-			super(name);
-			this.type = "RuleAltList";
-		}
-
 		public Symbol addLabeledAlt(LabeledAlt child) { return super.addChild(child); }
 		public Symbol setLabeledAlt(LabeledAlt child) { return super.setChild(child); }
 
@@ -1396,7 +1230,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LabeledAlt") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LabeledAlt child = newLabeledAlt();
+					final LabeledAlt child = newLabeledAlt("", "", "");
 					addLabeledAlt(child);
 					modelChangeSupport.firePropertyChange("LabeledAlt", "Add", child);
 				}
@@ -1411,25 +1245,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LabeledAlt newLabeledAlt() {
-		return new LabeledAlt();
-	}
-
-	public LabeledAlt newLabeledAlt(String name) {
-		return new LabeledAlt(name);
+	public LabeledAlt newLabeledAlt(String text, String startToken, String endToken) {
+		return new LabeledAlt(text, startToken, endToken);
 	}
 
 	public class LabeledAlt extends Symbol {
 
-		public LabeledAlt() {
-			this.type = "LabeledAlt";
+		public LabeledAlt(String text, String startToken, String endToken) {
+			super("LabeledAlt", startToken, text, startToken, endToken);
 		}
-
-		public LabeledAlt(String name) {
-			super(name);
-			this.type = "LabeledAlt";
-		}
-
 		public Symbol addAlternative(Alternative child) { return super.addChild(child); }
 		public Symbol setAlternative(Alternative child) { return super.setChild(child); }
 
@@ -1445,7 +1269,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Alternative") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Alternative child = newAlternative();
+					final Alternative child = newAlternative("", "", "");
 					addAlternative(child);
 					modelChangeSupport.firePropertyChange("Alternative", "Add", child);
 				}
@@ -1460,25 +1284,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Alternative newAlternative() {
-		return new Alternative();
-	}
-
-	public Alternative newAlternative(String name) {
-		return new Alternative(name);
+	public Alternative newAlternative(String text, String startToken, String endToken) {
+		return new Alternative(text, startToken, endToken);
 	}
 
 	public class Alternative extends Symbol {
 
-		public Alternative() {
-			this.type = "Alternative";
+		public Alternative(String text, String startToken, String endToken) {
+			super("Alternative", startToken, text, startToken, endToken);
 		}
-
-		public Alternative(String name) {
-			super(name);
-			this.type = "Alternative";
-		}
-
 		public Symbol addElement(Element child) { return super.addChild(child); }
 		public Symbol setElement(Element child) { return super.setChild(child); }
 
@@ -1494,7 +1308,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Element") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Element child = newElement();
+					final Element child = newElement("", "", "");
 					addElement(child);
 					modelChangeSupport.firePropertyChange("Element", "Add", child);
 				}
@@ -1509,25 +1323,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Element newElement() {
-		return new Element();
-	}
-
-	public Element newElement(String name) {
-		return new Element(name);
+	public Element newElement(String text, String startToken, String endToken) {
+		return new Element(text, startToken, endToken);
 	}
 
 	public class Element extends Symbol {
 
-		public Element() {
-			this.type = "Element";
+		public Element(String text, String startToken, String endToken) {
+			super("Element", startToken, text, startToken, endToken);
 		}
-
-		public Element(String name) {
-			super(name);
-			this.type = "Element";
-		}
-
 		public Symbol addAtom(Atom child) { return super.addChild(child); }
 		public Symbol setAtom(Atom child) { return super.setChild(child); }
 
@@ -1549,7 +1353,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Atom") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Atom child = newAtom();
+					final Atom child = newAtom("", "", "");
 					addAtom(child);
 					modelChangeSupport.firePropertyChange("Atom", "Add", child);
 				}
@@ -1558,7 +1362,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add EbnfSuffix") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final EbnfSuffix child = newEbnfSuffix();
+					final EbnfSuffix child = newEbnfSuffix("", "", "");
 					addEbnfSuffix(child);
 					modelChangeSupport.firePropertyChange("EbnfSuffix", "Add", child);
 				}
@@ -1567,7 +1371,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Ebnf") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Ebnf child = newEbnf();
+					final Ebnf child = newEbnf("", "", "");
 					addEbnf(child);
 					modelChangeSupport.firePropertyChange("Ebnf", "Add", child);
 				}
@@ -1582,25 +1386,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Atom newAtom() {
-		return new Atom();
-	}
-
-	public Atom newAtom(String name) {
-		return new Atom(name);
+	public Atom newAtom(String text, String startToken, String endToken) {
+		return new Atom(text, startToken, endToken);
 	}
 
 	public class Atom extends Symbol {
 
-		public Atom() {
-			this.type = "Atom";
+		public Atom(String text, String startToken, String endToken) {
+			super("Atom", startToken, text, startToken, endToken);
 		}
-
-		public Atom(String name) {
-			super(name);
-			this.type = "Atom";
-		}
-
 		public Symbol addTerminal(Terminal child) { return super.addChild(child); }
 		public Symbol setTerminal(Terminal child) { return super.setChild(child); }
 
@@ -1619,7 +1413,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Terminal") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Terminal child = newTerminal();
+					final Terminal child = newTerminal("", "", "");
 					addTerminal(child);
 					modelChangeSupport.firePropertyChange("Terminal", "Add", child);
 				}
@@ -1628,7 +1422,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Ruleref") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Ruleref child = newRuleref();
+					final Ruleref child = newRuleref("", "", "");
 					addRuleref(child);
 					modelChangeSupport.firePropertyChange("Ruleref", "Add", child);
 				}
@@ -1643,25 +1437,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Terminal newTerminal() {
-		return new Terminal();
-	}
-
-	public Terminal newTerminal(String name) {
-		return new Terminal(name);
+	public Terminal newTerminal(String text, String startToken, String endToken) {
+		return new Terminal(text, startToken, endToken);
 	}
 
 	public class Terminal extends Symbol {
 
-		public Terminal() {
-			this.type = "Terminal";
+		public Terminal(String text, String startToken, String endToken) {
+			super("Terminal", startToken, text, startToken, endToken);
 		}
-
-		public Terminal(String name) {
-			super(name);
-			this.type = "Terminal";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -1680,25 +1464,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public EbnfSuffix newEbnfSuffix() {
-		return new EbnfSuffix();
-	}
-
-	public EbnfSuffix newEbnfSuffix(String name) {
-		return new EbnfSuffix(name);
+	public EbnfSuffix newEbnfSuffix(String text, String startToken, String endToken) {
+		return new EbnfSuffix(text, startToken, endToken);
 	}
 
 	public class EbnfSuffix extends Symbol {
 
-		public EbnfSuffix() {
-			this.type = "EbnfSuffix";
+		public EbnfSuffix(String text, String startToken, String endToken) {
+			super("EbnfSuffix", startToken, text, startToken, endToken);
 		}
-
-		public EbnfSuffix(String name) {
-			super(name);
-			this.type = "EbnfSuffix";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -1717,25 +1491,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Ruleref newRuleref() {
-		return new Ruleref();
-	}
-
-	public Ruleref newRuleref(String name) {
-		return new Ruleref(name);
+	public Ruleref newRuleref(String text, String startToken, String endToken) {
+		return new Ruleref(text, startToken, endToken);
 	}
 
 	public class Ruleref extends Symbol {
 
-		public Ruleref() {
-			this.type = "Ruleref";
+		public Ruleref(String text, String startToken, String endToken) {
+			super("Ruleref", startToken, text, startToken, endToken);
 		}
-
-		public Ruleref(String name) {
-			super(name);
-			this.type = "Ruleref";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -1754,25 +1518,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public ExceptionGroup newExceptionGroup() {
-		return new ExceptionGroup();
-	}
-
-	public ExceptionGroup newExceptionGroup(String name) {
-		return new ExceptionGroup(name);
+	public ExceptionGroup newExceptionGroup(String text, String startToken, String endToken) {
+		return new ExceptionGroup(text, startToken, endToken);
 	}
 
 	public class ExceptionGroup extends Symbol {
 
-		public ExceptionGroup() {
-			this.type = "ExceptionGroup";
+		public ExceptionGroup(String text, String startToken, String endToken) {
+			super("ExceptionGroup", startToken, text, startToken, endToken);
 		}
-
-		public ExceptionGroup(String name) {
-			super(name);
-			this.type = "ExceptionGroup";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -1791,25 +1545,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Ebnf newEbnf() {
-		return new Ebnf();
-	}
-
-	public Ebnf newEbnf(String name) {
-		return new Ebnf(name);
+	public Ebnf newEbnf(String text, String startToken, String endToken) {
+		return new Ebnf(text, startToken, endToken);
 	}
 
 	public class Ebnf extends Symbol {
 
-		public Ebnf() {
-			this.type = "Ebnf";
+		public Ebnf(String text, String startToken, String endToken) {
+			super("Ebnf", startToken, text, startToken, endToken);
 		}
-
-		public Ebnf(String name) {
-			super(name);
-			this.type = "Ebnf";
-		}
-
 		public Symbol addBlock(Block child) { return super.addChild(child); }
 		public Symbol setBlock(Block child) { return super.setChild(child); }
 
@@ -1828,7 +1572,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Block") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Block child = newBlock();
+					final Block child = newBlock("", "", "");
 					addBlock(child);
 					modelChangeSupport.firePropertyChange("Block", "Add", child);
 				}
@@ -1837,7 +1581,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add BlockSuffix") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final BlockSuffix child = newBlockSuffix();
+					final BlockSuffix child = newBlockSuffix("", "", "");
 					addBlockSuffix(child);
 					modelChangeSupport.firePropertyChange("BlockSuffix", "Add", child);
 				}
@@ -1852,25 +1596,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public Block newBlock() {
-		return new Block();
-	}
-
-	public Block newBlock(String name) {
-		return new Block(name);
+	public Block newBlock(String text, String startToken, String endToken) {
+		return new Block(text, startToken, endToken);
 	}
 
 	public class Block extends Symbol {
 
-		public Block() {
-			this.type = "Block";
+		public Block(String text, String startToken, String endToken) {
+			super("Block", startToken, text, startToken, endToken);
 		}
-
-		public Block(String name) {
-			super(name);
-			this.type = "Block";
-		}
-
 		public Symbol addAltList(AltList child) { return super.addChild(child); }
 		public Symbol setAltList(AltList child) { return super.setChild(child); }
 
@@ -1886,7 +1620,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add AltList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final AltList child = newAltList();
+					final AltList child = newAltList("", "", "");
 					addAltList(child);
 					modelChangeSupport.firePropertyChange("AltList", "Add", child);
 				}
@@ -1901,25 +1635,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public AltList newAltList() {
-		return new AltList();
-	}
-
-	public AltList newAltList(String name) {
-		return new AltList(name);
+	public AltList newAltList(String text, String startToken, String endToken) {
+		return new AltList(text, startToken, endToken);
 	}
 
 	public class AltList extends Symbol {
 
-		public AltList() {
-			this.type = "AltList";
+		public AltList(String text, String startToken, String endToken) {
+			super("AltList", startToken, text, startToken, endToken);
 		}
-
-		public AltList(String name) {
-			super(name);
-			this.type = "AltList";
-		}
-
 		public Symbol addAlternative(Alternative child) { return super.addChild(child); }
 		public Symbol setAlternative(Alternative child) { return super.setChild(child); }
 
@@ -1935,7 +1659,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Alternative") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Alternative child = newAlternative();
+					final Alternative child = newAlternative("", "", "");
 					addAlternative(child);
 					modelChangeSupport.firePropertyChange("Alternative", "Add", child);
 				}
@@ -1950,25 +1674,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public BlockSuffix newBlockSuffix() {
-		return new BlockSuffix();
-	}
-
-	public BlockSuffix newBlockSuffix(String name) {
-		return new BlockSuffix(name);
+	public BlockSuffix newBlockSuffix(String text, String startToken, String endToken) {
+		return new BlockSuffix(text, startToken, endToken);
 	}
 
 	public class BlockSuffix extends Symbol {
 
-		public BlockSuffix() {
-			this.type = "BlockSuffix";
+		public BlockSuffix(String text, String startToken, String endToken) {
+			super("BlockSuffix", startToken, text, startToken, endToken);
 		}
-
-		public BlockSuffix(String name) {
-			super(name);
-			this.type = "BlockSuffix";
-		}
-
 		public Symbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
 		public Symbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
 
@@ -1984,7 +1698,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add EbnfSuffix") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final EbnfSuffix child = newEbnfSuffix();
+					final EbnfSuffix child = newEbnfSuffix("", "", "");
 					addEbnfSuffix(child);
 					modelChangeSupport.firePropertyChange("EbnfSuffix", "Add", child);
 				}
@@ -1999,25 +1713,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public DelegateGrammars newDelegateGrammars() {
-		return new DelegateGrammars();
-	}
-
-	public DelegateGrammars newDelegateGrammars(String name) {
-		return new DelegateGrammars(name);
+	public DelegateGrammars newDelegateGrammars(String text, String startToken, String endToken) {
+		return new DelegateGrammars(text, startToken, endToken);
 	}
 
 	public class DelegateGrammars extends Symbol {
 
-		public DelegateGrammars() {
-			this.type = "DelegateGrammars";
+		public DelegateGrammars(String text, String startToken, String endToken) {
+			super("DelegateGrammars", startToken, text, startToken, endToken);
 		}
-
-		public DelegateGrammars(String name) {
-			super(name);
-			this.type = "DelegateGrammars";
-		}
-
 		public Symbol addDelegateGrammar(DelegateGrammar child) { return super.addChild(child); }
 		public Symbol setDelegateGrammar(DelegateGrammar child) { return super.setChild(child); }
 
@@ -2033,7 +1737,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add DelegateGrammar") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final DelegateGrammar child = newDelegateGrammar();
+					final DelegateGrammar child = newDelegateGrammar("", "", "");
 					addDelegateGrammar(child);
 					modelChangeSupport.firePropertyChange("DelegateGrammar", "Add", child);
 				}
@@ -2048,25 +1752,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public DelegateGrammar newDelegateGrammar() {
-		return new DelegateGrammar();
-	}
-
-	public DelegateGrammar newDelegateGrammar(String name) {
-		return new DelegateGrammar(name);
+	public DelegateGrammar newDelegateGrammar(String text, String startToken, String endToken) {
+		return new DelegateGrammar(text, startToken, endToken);
 	}
 
 	public class DelegateGrammar extends Symbol {
 
-		public DelegateGrammar() {
-			this.type = "DelegateGrammar";
+		public DelegateGrammar(String text, String startToken, String endToken) {
+			super("DelegateGrammar", startToken, text, startToken, endToken);
 		}
-
-		public DelegateGrammar(String name) {
-			super(name);
-			this.type = "DelegateGrammar";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -2082,7 +1776,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -2097,25 +1791,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public TokensSpec newTokensSpec() {
-		return new TokensSpec();
-	}
-
-	public TokensSpec newTokensSpec(String name) {
-		return new TokensSpec(name);
+	public TokensSpec newTokensSpec(String text, String startToken, String endToken) {
+		return new TokensSpec(text, startToken, endToken);
 	}
 
 	public class TokensSpec extends Symbol {
 
-		public TokensSpec() {
-			this.type = "TokensSpec";
+		public TokensSpec(String text, String startToken, String endToken) {
+			super("TokensSpec", startToken, text, startToken, endToken);
 		}
-
-		public TokensSpec(String name) {
-			super(name);
-			this.type = "TokensSpec";
-		}
-
 		public Symbol addIdList(IdList child) { return super.addChild(child); }
 		public Symbol setIdList(IdList child) { return super.setChild(child); }
 
@@ -2131,7 +1815,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add IdList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final IdList child = newIdList();
+					final IdList child = newIdList("", "", "");
 					addIdList(child);
 					modelChangeSupport.firePropertyChange("IdList", "Add", child);
 				}
@@ -2146,25 +1830,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public IdList newIdList() {
-		return new IdList();
-	}
-
-	public IdList newIdList(String name) {
-		return new IdList(name);
+	public IdList newIdList(String text, String startToken, String endToken) {
+		return new IdList(text, startToken, endToken);
 	}
 
 	public class IdList extends Symbol {
 
-		public IdList() {
-			this.type = "IdList";
+		public IdList(String text, String startToken, String endToken) {
+			super("IdList", startToken, text, startToken, endToken);
 		}
-
-		public IdList(String name) {
-			super(name);
-			this.type = "IdList";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -2180,7 +1854,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -2195,25 +1869,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public ChannelsSpec newChannelsSpec() {
-		return new ChannelsSpec();
-	}
-
-	public ChannelsSpec newChannelsSpec(String name) {
-		return new ChannelsSpec(name);
+	public ChannelsSpec newChannelsSpec(String text, String startToken, String endToken) {
+		return new ChannelsSpec(text, startToken, endToken);
 	}
 
 	public class ChannelsSpec extends Symbol {
 
-		public ChannelsSpec() {
-			this.type = "ChannelsSpec";
+		public ChannelsSpec(String text, String startToken, String endToken) {
+			super("ChannelsSpec", startToken, text, startToken, endToken);
 		}
-
-		public ChannelsSpec(String name) {
-			super(name);
-			this.type = "ChannelsSpec";
-		}
-
 		public Symbol addIdList(IdList child) { return super.addChild(child); }
 		public Symbol setIdList(IdList child) { return super.setChild(child); }
 
@@ -2229,7 +1893,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add IdList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final IdList child = newIdList();
+					final IdList child = newIdList("", "", "");
 					addIdList(child);
 					modelChangeSupport.firePropertyChange("IdList", "Add", child);
 				}
@@ -2244,25 +1908,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerRuleSpec newLexerRuleSpec() {
-		return new LexerRuleSpec();
-	}
-
-	public LexerRuleSpec newLexerRuleSpec(String name) {
-		return new LexerRuleSpec(name);
+	public LexerRuleSpec newLexerRuleSpec(String text, String startToken, String endToken) {
+		return new LexerRuleSpec(text, startToken, endToken);
 	}
 
 	public class LexerRuleSpec extends Symbol {
 
-		public LexerRuleSpec() {
-			this.type = "LexerRuleSpec";
+		public LexerRuleSpec(String text, String startToken, String endToken) {
+			super("LexerRuleSpec", startToken, text, startToken, endToken);
 		}
-
-		public LexerRuleSpec(String name) {
-			super(name);
-			this.type = "LexerRuleSpec";
-		}
-
 		public Symbol addLexerRuleBlock(LexerRuleBlock child) { return super.addChild(child); }
 		public Symbol setLexerRuleBlock(LexerRuleBlock child) { return super.setChild(child); }
 
@@ -2278,7 +1932,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerRuleBlock") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerRuleBlock child = newLexerRuleBlock();
+					final LexerRuleBlock child = newLexerRuleBlock("", "", "");
 					addLexerRuleBlock(child);
 					modelChangeSupport.firePropertyChange("LexerRuleBlock", "Add", child);
 				}
@@ -2293,25 +1947,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerRuleBlock newLexerRuleBlock() {
-		return new LexerRuleBlock();
-	}
-
-	public LexerRuleBlock newLexerRuleBlock(String name) {
-		return new LexerRuleBlock(name);
+	public LexerRuleBlock newLexerRuleBlock(String text, String startToken, String endToken) {
+		return new LexerRuleBlock(text, startToken, endToken);
 	}
 
 	public class LexerRuleBlock extends Symbol {
 
-		public LexerRuleBlock() {
-			this.type = "LexerRuleBlock";
+		public LexerRuleBlock(String text, String startToken, String endToken) {
+			super("LexerRuleBlock", startToken, text, startToken, endToken);
 		}
-
-		public LexerRuleBlock(String name) {
-			super(name);
-			this.type = "LexerRuleBlock";
-		}
-
 		public Symbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
 		public Symbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
 
@@ -2327,7 +1971,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerAltList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerAltList child = newLexerAltList();
+					final LexerAltList child = newLexerAltList("", "", "");
 					addLexerAltList(child);
 					modelChangeSupport.firePropertyChange("LexerAltList", "Add", child);
 				}
@@ -2342,25 +1986,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerAltList newLexerAltList() {
-		return new LexerAltList();
-	}
-
-	public LexerAltList newLexerAltList(String name) {
-		return new LexerAltList(name);
+	public LexerAltList newLexerAltList(String text, String startToken, String endToken) {
+		return new LexerAltList(text, startToken, endToken);
 	}
 
 	public class LexerAltList extends Symbol {
 
-		public LexerAltList() {
-			this.type = "LexerAltList";
+		public LexerAltList(String text, String startToken, String endToken) {
+			super("LexerAltList", startToken, text, startToken, endToken);
 		}
-
-		public LexerAltList(String name) {
-			super(name);
-			this.type = "LexerAltList";
-		}
-
 		public Symbol addLexerAlt(LexerAlt child) { return super.addChild(child); }
 		public Symbol setLexerAlt(LexerAlt child) { return super.setChild(child); }
 
@@ -2376,7 +2010,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerAlt") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerAlt child = newLexerAlt();
+					final LexerAlt child = newLexerAlt("", "", "");
 					addLexerAlt(child);
 					modelChangeSupport.firePropertyChange("LexerAlt", "Add", child);
 				}
@@ -2391,25 +2025,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerAlt newLexerAlt() {
-		return new LexerAlt();
-	}
-
-	public LexerAlt newLexerAlt(String name) {
-		return new LexerAlt(name);
+	public LexerAlt newLexerAlt(String text, String startToken, String endToken) {
+		return new LexerAlt(text, startToken, endToken);
 	}
 
 	public class LexerAlt extends Symbol {
 
-		public LexerAlt() {
-			this.type = "LexerAlt";
+		public LexerAlt(String text, String startToken, String endToken) {
+			super("LexerAlt", startToken, text, startToken, endToken);
 		}
-
-		public LexerAlt(String name) {
-			super(name);
-			this.type = "LexerAlt";
-		}
-
 		public Symbol addLexerElements(LexerElements child) { return super.addChild(child); }
 		public Symbol setLexerElements(LexerElements child) { return super.setChild(child); }
 
@@ -2428,7 +2052,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerElements") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerElements child = newLexerElements();
+					final LexerElements child = newLexerElements("", "", "");
 					addLexerElements(child);
 					modelChangeSupport.firePropertyChange("LexerElements", "Add", child);
 				}
@@ -2437,7 +2061,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerCommands") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerCommands child = newLexerCommands();
+					final LexerCommands child = newLexerCommands("", "", "");
 					addLexerCommands(child);
 					modelChangeSupport.firePropertyChange("LexerCommands", "Add", child);
 				}
@@ -2452,25 +2076,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerElements newLexerElements() {
-		return new LexerElements();
-	}
-
-	public LexerElements newLexerElements(String name) {
-		return new LexerElements(name);
+	public LexerElements newLexerElements(String text, String startToken, String endToken) {
+		return new LexerElements(text, startToken, endToken);
 	}
 
 	public class LexerElements extends Symbol {
 
-		public LexerElements() {
-			this.type = "LexerElements";
+		public LexerElements(String text, String startToken, String endToken) {
+			super("LexerElements", startToken, text, startToken, endToken);
 		}
-
-		public LexerElements(String name) {
-			super(name);
-			this.type = "LexerElements";
-		}
-
 		public Symbol addLexerElement(LexerElement child) { return super.addChild(child); }
 		public Symbol setLexerElement(LexerElement child) { return super.setChild(child); }
 
@@ -2486,7 +2100,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerElement") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerElement child = newLexerElement();
+					final LexerElement child = newLexerElement("", "", "");
 					addLexerElement(child);
 					modelChangeSupport.firePropertyChange("LexerElement", "Add", child);
 				}
@@ -2501,25 +2115,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerElement newLexerElement() {
-		return new LexerElement();
-	}
-
-	public LexerElement newLexerElement(String name) {
-		return new LexerElement(name);
+	public LexerElement newLexerElement(String text, String startToken, String endToken) {
+		return new LexerElement(text, startToken, endToken);
 	}
 
 	public class LexerElement extends Symbol {
 
-		public LexerElement() {
-			this.type = "LexerElement";
+		public LexerElement(String text, String startToken, String endToken) {
+			super("LexerElement", startToken, text, startToken, endToken);
 		}
-
-		public LexerElement(String name) {
-			super(name);
-			this.type = "LexerElement";
-		}
-
 		public Symbol addLexerAtom(LexerAtom child) { return super.addChild(child); }
 		public Symbol setLexerAtom(LexerAtom child) { return super.setChild(child); }
 
@@ -2544,7 +2148,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerAtom") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerAtom child = newLexerAtom();
+					final LexerAtom child = newLexerAtom("", "", "");
 					addLexerAtom(child);
 					modelChangeSupport.firePropertyChange("LexerAtom", "Add", child);
 				}
@@ -2553,7 +2157,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add ActionBlock") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final ActionBlock child = newActionBlock();
+					final ActionBlock child = newActionBlock("", "", "");
 					addActionBlock(child);
 					modelChangeSupport.firePropertyChange("ActionBlock", "Add", child);
 				}
@@ -2562,7 +2166,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add EbnfSuffix") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final EbnfSuffix child = newEbnfSuffix();
+					final EbnfSuffix child = newEbnfSuffix("", "", "");
 					addEbnfSuffix(child);
 					modelChangeSupport.firePropertyChange("EbnfSuffix", "Add", child);
 				}
@@ -2571,7 +2175,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerBlock") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerBlock child = newLexerBlock();
+					final LexerBlock child = newLexerBlock("", "", "");
 					addLexerBlock(child);
 					modelChangeSupport.firePropertyChange("LexerBlock", "Add", child);
 				}
@@ -2586,25 +2190,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerAtom newLexerAtom() {
-		return new LexerAtom();
-	}
-
-	public LexerAtom newLexerAtom(String name) {
-		return new LexerAtom(name);
+	public LexerAtom newLexerAtom(String text, String startToken, String endToken) {
+		return new LexerAtom(text, startToken, endToken);
 	}
 
 	public class LexerAtom extends Symbol {
 
-		public LexerAtom() {
-			this.type = "LexerAtom";
+		public LexerAtom(String text, String startToken, String endToken) {
+			super("LexerAtom", startToken, text, startToken, endToken);
 		}
-
-		public LexerAtom(String name) {
-			super(name);
-			this.type = "LexerAtom";
-		}
-
 		public Symbol addTerminal(Terminal child) { return super.addChild(child); }
 		public Symbol setTerminal(Terminal child) { return super.setChild(child); }
 
@@ -2626,7 +2220,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Terminal") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Terminal child = newTerminal();
+					final Terminal child = newTerminal("", "", "");
 					addTerminal(child);
 					modelChangeSupport.firePropertyChange("Terminal", "Add", child);
 				}
@@ -2635,7 +2229,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add NotSet") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final NotSet child = newNotSet();
+					final NotSet child = newNotSet("", "", "");
 					addNotSet(child);
 					modelChangeSupport.firePropertyChange("NotSet", "Add", child);
 				}
@@ -2644,7 +2238,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add CharacterRange") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final CharacterRange child = newCharacterRange();
+					final CharacterRange child = newCharacterRange("", "", "");
 					addCharacterRange(child);
 					modelChangeSupport.firePropertyChange("CharacterRange", "Add", child);
 				}
@@ -2659,25 +2253,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerCommands newLexerCommands() {
-		return new LexerCommands();
-	}
-
-	public LexerCommands newLexerCommands(String name) {
-		return new LexerCommands(name);
+	public LexerCommands newLexerCommands(String text, String startToken, String endToken) {
+		return new LexerCommands(text, startToken, endToken);
 	}
 
 	public class LexerCommands extends Symbol {
 
-		public LexerCommands() {
-			this.type = "LexerCommands";
+		public LexerCommands(String text, String startToken, String endToken) {
+			super("LexerCommands", startToken, text, startToken, endToken);
 		}
-
-		public LexerCommands(String name) {
-			super(name);
-			this.type = "LexerCommands";
-		}
-
 		public Symbol addLexerCommand(LexerCommand child) { return super.addChild(child); }
 		public Symbol setLexerCommand(LexerCommand child) { return super.setChild(child); }
 
@@ -2693,7 +2277,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerCommand") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerCommand child = newLexerCommand();
+					final LexerCommand child = newLexerCommand("", "", "");
 					addLexerCommand(child);
 					modelChangeSupport.firePropertyChange("LexerCommand", "Add", child);
 				}
@@ -2708,25 +2292,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerCommand newLexerCommand() {
-		return new LexerCommand();
-	}
-
-	public LexerCommand newLexerCommand(String name) {
-		return new LexerCommand(name);
+	public LexerCommand newLexerCommand(String text, String startToken, String endToken) {
+		return new LexerCommand(text, startToken, endToken);
 	}
 
 	public class LexerCommand extends Symbol {
 
-		public LexerCommand() {
-			this.type = "LexerCommand";
+		public LexerCommand(String text, String startToken, String endToken) {
+			super("LexerCommand", startToken, text, startToken, endToken);
 		}
-
-		public LexerCommand(String name) {
-			super(name);
-			this.type = "LexerCommand";
-		}
-
 		public Symbol addLexerCommandName(LexerCommandName child) { return super.addChild(child); }
 		public Symbol setLexerCommandName(LexerCommandName child) { return super.setChild(child); }
 
@@ -2745,7 +2319,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerCommandName") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerCommandName child = newLexerCommandName();
+					final LexerCommandName child = newLexerCommandName("", "", "");
 					addLexerCommandName(child);
 					modelChangeSupport.firePropertyChange("LexerCommandName", "Add", child);
 				}
@@ -2754,7 +2328,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerCommandExpr") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerCommandExpr child = newLexerCommandExpr();
+					final LexerCommandExpr child = newLexerCommandExpr("", "", "");
 					addLexerCommandExpr(child);
 					modelChangeSupport.firePropertyChange("LexerCommandExpr", "Add", child);
 				}
@@ -2769,25 +2343,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerCommandName newLexerCommandName() {
-		return new LexerCommandName();
-	}
-
-	public LexerCommandName newLexerCommandName(String name) {
-		return new LexerCommandName(name);
+	public LexerCommandName newLexerCommandName(String text, String startToken, String endToken) {
+		return new LexerCommandName(text, startToken, endToken);
 	}
 
 	public class LexerCommandName extends Symbol {
 
-		public LexerCommandName() {
-			this.type = "LexerCommandName";
+		public LexerCommandName(String text, String startToken, String endToken) {
+			super("LexerCommandName", startToken, text, startToken, endToken);
 		}
-
-		public LexerCommandName(String name) {
-			super(name);
-			this.type = "LexerCommandName";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -2803,7 +2367,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -2818,25 +2382,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerCommandExpr newLexerCommandExpr() {
-		return new LexerCommandExpr();
-	}
-
-	public LexerCommandExpr newLexerCommandExpr(String name) {
-		return new LexerCommandExpr(name);
+	public LexerCommandExpr newLexerCommandExpr(String text, String startToken, String endToken) {
+		return new LexerCommandExpr(text, startToken, endToken);
 	}
 
 	public class LexerCommandExpr extends Symbol {
 
-		public LexerCommandExpr() {
-			this.type = "LexerCommandExpr";
+		public LexerCommandExpr(String text, String startToken, String endToken) {
+			super("LexerCommandExpr", startToken, text, startToken, endToken);
 		}
-
-		public LexerCommandExpr(String name) {
-			super(name);
-			this.type = "LexerCommandExpr";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -2852,7 +2406,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -2867,25 +2421,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public ActionBlock newActionBlock() {
-		return new ActionBlock();
-	}
-
-	public ActionBlock newActionBlock(String name) {
-		return new ActionBlock(name);
+	public ActionBlock newActionBlock(String text, String startToken, String endToken) {
+		return new ActionBlock(text, startToken, endToken);
 	}
 
 	public class ActionBlock extends Symbol {
 
-		public ActionBlock() {
-			this.type = "ActionBlock";
+		public ActionBlock(String text, String startToken, String endToken) {
+			super("ActionBlock", startToken, text, startToken, endToken);
 		}
-
-		public ActionBlock(String name) {
-			super(name);
-			this.type = "ActionBlock";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -2904,25 +2448,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public ModeSpec newModeSpec() {
-		return new ModeSpec();
-	}
-
-	public ModeSpec newModeSpec(String name) {
-		return new ModeSpec(name);
+	public ModeSpec newModeSpec(String text, String startToken, String endToken) {
+		return new ModeSpec(text, startToken, endToken);
 	}
 
 	public class ModeSpec extends Symbol {
 
-		public ModeSpec() {
-			this.type = "ModeSpec";
+		public ModeSpec(String text, String startToken, String endToken) {
+			super("ModeSpec", startToken, text, startToken, endToken);
 		}
-
-		public ModeSpec(String name) {
-			super(name);
-			this.type = "ModeSpec";
-		}
-
 		public Symbol addIdentifier(Identifier child) { return super.addChild(child); }
 		public Symbol setIdentifier(Identifier child) { return super.setChild(child); }
 
@@ -2941,7 +2475,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add Identifier") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final Identifier child = newIdentifier();
+					final Identifier child = newIdentifier("", "", "");
 					addIdentifier(child);
 					modelChangeSupport.firePropertyChange("Identifier", "Add", child);
 				}
@@ -2950,7 +2484,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerRuleSpec") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerRuleSpec child = newLexerRuleSpec();
+					final LexerRuleSpec child = newLexerRuleSpec("", "", "");
 					addLexerRuleSpec(child);
 					modelChangeSupport.firePropertyChange("LexerRuleSpec", "Add", child);
 				}
@@ -2965,25 +2499,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public LexerBlock newLexerBlock() {
-		return new LexerBlock();
-	}
-
-	public LexerBlock newLexerBlock(String name) {
-		return new LexerBlock(name);
+	public LexerBlock newLexerBlock(String text, String startToken, String endToken) {
+		return new LexerBlock(text, startToken, endToken);
 	}
 
 	public class LexerBlock extends Symbol {
 
-		public LexerBlock() {
-			this.type = "LexerBlock";
+		public LexerBlock(String text, String startToken, String endToken) {
+			super("LexerBlock", startToken, text, startToken, endToken);
 		}
-
-		public LexerBlock(String name) {
-			super(name);
-			this.type = "LexerBlock";
-		}
-
 		public Symbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
 		public Symbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
 
@@ -2999,7 +2523,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add LexerAltList") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final LexerAltList child = newLexerAltList();
+					final LexerAltList child = newLexerAltList("", "", "");
 					addLexerAltList(child);
 					modelChangeSupport.firePropertyChange("LexerAltList", "Add", child);
 				}
@@ -3014,25 +2538,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public NotSet newNotSet() {
-		return new NotSet();
-	}
-
-	public NotSet newNotSet(String name) {
-		return new NotSet(name);
+	public NotSet newNotSet(String text, String startToken, String endToken) {
+		return new NotSet(text, startToken, endToken);
 	}
 
 	public class NotSet extends Symbol {
 
-		public NotSet() {
-			this.type = "NotSet";
+		public NotSet(String text, String startToken, String endToken) {
+			super("NotSet", startToken, text, startToken, endToken);
 		}
-
-		public NotSet(String name) {
-			super(name);
-			this.type = "NotSet";
-		}
-
 		public Symbol addSetElement(SetElement child) { return super.addChild(child); }
 		public Symbol setSetElement(SetElement child) { return super.setChild(child); }
 
@@ -3048,7 +2562,7 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			menu.add(new AbstractAction("Add SetElement") {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					final SetElement child = newSetElement();
+					final SetElement child = newSetElement("", "", "");
 					addSetElement(child);
 					modelChangeSupport.firePropertyChange("SetElement", "Add", child);
 				}
@@ -3063,25 +2577,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public SetElement newSetElement() {
-		return new SetElement();
-	}
-
-	public SetElement newSetElement(String name) {
-		return new SetElement(name);
+	public SetElement newSetElement(String text, String startToken, String endToken) {
+		return new SetElement(text, startToken, endToken);
 	}
 
 	public class SetElement extends Symbol {
 
-		public SetElement() {
-			this.type = "SetElement";
+		public SetElement(String text, String startToken, String endToken) {
+			super("SetElement", startToken, text, startToken, endToken);
 		}
-
-		public SetElement(String name) {
-			super(name);
-			this.type = "SetElement";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
@@ -3100,25 +2604,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 			return super.toGrammar(antlrGroup);
 		}
 	}
-	public CharacterRange newCharacterRange() {
-		return new CharacterRange();
-	}
-
-	public CharacterRange newCharacterRange(String name) {
-		return new CharacterRange(name);
+	public CharacterRange newCharacterRange(String text, String startToken, String endToken) {
+		return new CharacterRange(text, startToken, endToken);
 	}
 
 	public class CharacterRange extends Symbol {
 
-		public CharacterRange() {
-			this.type = "CharacterRange";
+		public CharacterRange(String text, String startToken, String endToken) {
+			super("CharacterRange", startToken, text, startToken, endToken);
 		}
-
-		public CharacterRange(String name) {
-			super(name);
-			this.type = "CharacterRange";
-		}
-
 
 		@Override
 		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, java.awt.geom.Rectangle2D> shapeMap) {
