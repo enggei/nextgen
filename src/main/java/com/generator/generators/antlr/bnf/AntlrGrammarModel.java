@@ -161,8 +161,8 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
       return new Atom(value, startToken, endToken) {
          @Override
          public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
-            final AntlrSymbol child = symbols.iterator().next();
-            final Rectangle.Double nameBox = drawName(label, Color.decode((child instanceof Terminal ? "#33a02c" : "#e34a33")), startX, startY, g, shapeMap);
+            final AntlrSymbol child = symbols.isEmpty() ? null : symbols.iterator().next();
+            final Rectangle.Double nameBox = drawName(label, child==null ? Color.BLACK : (Color.decode((child instanceof Terminal ? "#33a02c" : "#e34a33"))), startX, startY, g, shapeMap);
             return paintChildren(g, nameBox, shapeMap);
          }
       };
