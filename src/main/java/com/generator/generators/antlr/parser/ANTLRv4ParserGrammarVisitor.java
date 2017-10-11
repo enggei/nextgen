@@ -1,7 +1,7 @@
 package com.generator.generators.antlr.parser;
 
 import com.generator.generators.antlr.bnf.AntlrGrammarModel;
-import com.generator.generators.antlr.bnf.Symbol;
+import com.generator.generators.antlr.bnf.AntlrSymbol;
 import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 
@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public class ANTLRv4ParserGrammarVisitor extends ANTLRv4ParserDomainVisitor {
 
-   protected final Stack<Symbol> symbolStack = new Stack<>();
+   protected final Stack<AntlrSymbol> symbolStack = new Stack<>();
    private final AntlrGrammarModel grammarModel = new AntlrGrammarModel();
 
 	public ANTLRv4ParserDomain.GrammarSpec getGrammarSpec() {

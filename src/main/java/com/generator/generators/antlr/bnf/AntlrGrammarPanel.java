@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AntlrGrammarPanel extends JPanel {
 
    private AntlrGrammarModel model;
-   private final Map<Symbol, Rectangle2D> shapeMap = new ConcurrentHashMap<>();
+   private final Map<AntlrSymbol, Rectangle2D> shapeMap = new ConcurrentHashMap<>();
 
    private final PropertyChangeSupport modelChangeSupport = new PropertyChangeSupport(this);
    private Dimension grammarSpecSize = new Dimension(1200, 640);
@@ -43,7 +43,7 @@ public class AntlrGrammarPanel extends JPanel {
 
                final JPopupMenu pop = new JPopupMenu();
 
-               for (Map.Entry<Symbol, Rectangle2D> entry : shapeMap.entrySet()) {
+               for (Map.Entry<AntlrSymbol, Rectangle2D> entry : shapeMap.entrySet()) {
                   if (!entry.getValue().contains(e.getX(), e.getY())) continue;
                   final JMenu symbolMenu = new JMenu(entry.getKey().label == null ? entry.getKey().type : entry.getKey().label);
                   entry.getKey().addActionsTo(symbolMenu, modelChangeSupport);
@@ -62,7 +62,7 @@ public class AntlrGrammarPanel extends JPanel {
 
                         final ANTLRv4ParserDomain.RuleSpec newRuleSpec = model.newRuleSpec(name, "", "");
 
-                        for (Symbol symbol : model.getGrammarSpec().symbols) {
+                        for (AntlrSymbol symbol : model.getGrammarSpec().symbols) {
                            if (symbol instanceof ANTLRv4ParserDomain.Rules) {
                               ((ANTLRv4ParserDomain.Rules) symbol).addRuleSpec(newRuleSpec);
                               requestRepaint();

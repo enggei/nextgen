@@ -5,7 +5,7 @@ import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.antlr.bnf.AntlrGrammarModel;
 import com.generator.generators.antlr.bnf.AntlrGrammarPanel;
-import com.generator.generators.antlr.bnf.Symbol;
+import com.generator.generators.antlr.bnf.AntlrSymbol;
 import com.generator.generators.antlr.parser.*;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
@@ -81,9 +81,9 @@ public class ANTLRPlugin extends Plugin {
                   fireNodesLoaded(visit(grammarSpec));
                }
 
-               Node visit(Symbol symbol) {
+               Node visit(AntlrSymbol symbol) {
                   final Node newNode = getGraph().newNode(Label.label(symbol.type()), "text", symbol.getText(), "startToken", symbol.getStartToken(), "endtoken", symbol.getEndToken());
-                  for (Symbol child : symbol.symbols)
+                  for (AntlrSymbol child : symbol.symbols)
                      newNode.createRelationshipTo(visit(child), RelationshipType.withName("child"));
                   return newNode;
                }
@@ -104,7 +104,7 @@ public class ANTLRPlugin extends Plugin {
                   public void visitEbnfSuffix(Node node) {
 
                      if (symbolStack.peek() instanceof ANTLRv4ParserDomain.BlockSuffix) {
-                        final Symbol blockSuffix = symbolStack.pop();
+                        final AntlrSymbol blockSuffix = symbolStack.pop();
                         symbolStack.peek().ebnf = NeoUtil.getString(node, "startToken");
                         symbolStack.push(blockSuffix);
                      } else {
