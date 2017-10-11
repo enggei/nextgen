@@ -39,420 +39,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inOptionValue.push(true);
-	}
-
-	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		onExit();
-		this.inOptionValue.pop();
-	}
-
-	public boolean inOptionValue() {
-      return !inOptionValue.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
-
-	@Override
-	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		final Node node = model.findOrCreate(Label.label("DelegateGrammars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inDelegateGrammars.push(true);
-	}
-
-	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		onExit();
-		this.inDelegateGrammars.pop();
-	}
-
-	public boolean inDelegateGrammars() {
-      return !inDelegateGrammars.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDelegateGrammar = new java.util.Stack<>();
-
-	@Override
-	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		final Node node = model.findOrCreate(Label.label("DelegateGrammar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inDelegateGrammar.push(true);
-	}
-
-	public void exitDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
-		onExit();
-		this.inDelegateGrammar.pop();
-	}
-
-	public boolean inDelegateGrammar() {
-      return !inDelegateGrammar.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTokensSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("TokensSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inTokensSpec.push(true);
-	}
-
-	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
-		onExit();
-		this.inTokensSpec.pop();
-	}
-
-	public boolean inTokensSpec() {
-      return !inTokensSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inChannelsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inChannelsSpec.push(true);
-	}
-
-	public void exitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
-		onExit();
-		this.inChannelsSpec.pop();
-	}
-
-	public boolean inChannelsSpec() {
-      return !inChannelsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdList = new java.util.Stack<>();
-
-	@Override
-	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inIdList.push(true);
-	}
-
-	public void exitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		onExit();
-		this.inIdList.pop();
-	}
-
-	public boolean inIdList() {
-      return !inIdList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAction = new java.util.Stack<>();
-
-	@Override
-	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inAction.push(true);
-	}
-
-	public void exitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		onExit();
-		this.inAction.pop();
-	}
-
-	public boolean inAction() {
-      return !inAction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inActionScopeName = new java.util.Stack<>();
-
-	@Override
-	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inActionScopeName.push(true);
-	}
-
-	public void exitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		onExit();
-		this.inActionScopeName.pop();
-	}
-
-	public boolean inActionScopeName() {
-      return !inActionScopeName.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inActionBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inActionBlock.push(true);
-	}
-
-	public void exitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		onExit();
-		this.inActionBlock.pop();
-	}
-
-	public boolean inActionBlock() {
-      return !inActionBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArgActionBlock = new java.util.Stack<>();
-
-	@Override
-	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inArgActionBlock.push(true);
-	}
-
-	public void exitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
-		onExit();
-		this.inArgActionBlock.pop();
-	}
-
-	public boolean inArgActionBlock() {
-      return !inArgActionBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inModeSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inModeSpec.push(true);
-	}
-
-	public void exitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		onExit();
-		this.inModeSpec.pop();
-	}
-
-	public boolean inModeSpec() {
-      return !inModeSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRules = new java.util.Stack<>();
-
-	@Override
-	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRules.push(true);
-	}
-
-	public void exitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		onExit();
-		this.inRules.pop();
-	}
-
-	public boolean inRules() {
-      return !inRules.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRuleSpec.push(true);
-	}
-
-	public void exitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		onExit();
-		this.inRuleSpec.pop();
-	}
-
-	public boolean inRuleSpec() {
-      return !inRuleSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParserRuleSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParserRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inParserRuleSpec.push(true);
-	}
-
-	public void exitParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
-		onExit();
-		this.inParserRuleSpec.pop();
-	}
-
-	public boolean inParserRuleSpec() {
-      return !inParserRuleSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExceptionGroup = new java.util.Stack<>();
-
-	@Override
-	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExceptionGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inExceptionGroup.push(true);
-	}
-
-	public void exitExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
-		onExit();
-		this.inExceptionGroup.pop();
-	}
-
-	public boolean inExceptionGroup() {
-      return !inExceptionGroup.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExceptionHandler = new java.util.Stack<>();
-
-	@Override
-	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExceptionHandler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inExceptionHandler.push(true);
-	}
-
-	public void exitExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
-		onExit();
-		this.inExceptionHandler.pop();
-	}
-
-	public boolean inExceptionHandler() {
-      return !inExceptionHandler.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFinallyClause = new java.util.Stack<>();
-
-	@Override
-	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("FinallyClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inFinallyClause.push(true);
-	}
-
-	public void exitFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
-		onExit();
-		this.inFinallyClause.pop();
-	}
-
-	public boolean inFinallyClause() {
-      return !inFinallyClause.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRulePrequel = new java.util.Stack<>();
-
-	@Override
-	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRulePrequel.push(true);
-	}
-
-	public void exitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
-		onExit();
-		this.inRulePrequel.pop();
-	}
-
-	public boolean inRulePrequel() {
-      return !inRulePrequel.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleReturns = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRuleReturns.push(true);
-	}
-
-	public void exitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
-		onExit();
-		this.inRuleReturns.pop();
-	}
-
-	public boolean inRuleReturns() {
-      return !inRuleReturns.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inThrowsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("ThrowsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inThrowsSpec.push(true);
-	}
-
-	public void exitThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
-		onExit();
-		this.inThrowsSpec.pop();
-	}
-
-	public boolean inThrowsSpec() {
-      return !inThrowsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLocalsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("LocalsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inLocalsSpec.push(true);
-	}
-
-	public void exitLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
-		onExit();
-		this.inLocalsSpec.pop();
-	}
-
-	public boolean inLocalsSpec() {
-      return !inLocalsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleAction = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRuleAction.push(true);
-	}
-
-	public void exitRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
-		onExit();
-		this.inRuleAction.pop();
-	}
-
-	public boolean inRuleAction() {
-      return !inRuleAction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleModifiers = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		final Node node = model.findOrCreate(Label.label("RuleModifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRuleModifiers.push(true);
-	}
-
-	public void exitRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		onExit();
-		this.inRuleModifiers.pop();
-	}
-
-	public boolean inRuleModifiers() {
-      return !inRuleModifiers.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inRuleModifier = new java.util.Stack<>();
 
 	@Override
@@ -559,96 +145,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inLexerRuleBlock() {
       return !inLexerRuleBlock.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inGrammarSpec.push(true);
-	}
-
-	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		onExit();
-		this.inGrammarSpec.pop();
-	}
-
-	public boolean inGrammarSpec() {
-      return !inGrammarSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inGrammarType.push(true);
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onExit();
-		this.inGrammarType.pop();
-	}
-
-	public boolean inGrammarType() {
-      return !inGrammarType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
-
-	@Override
-	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inPrequelConstruct.push(true);
-	}
-
-	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
-		onExit();
-		this.inPrequelConstruct.pop();
-	}
-
-	public boolean inPrequelConstruct() {
-      return !inPrequelConstruct.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inOptionsSpec.push(true);
-	}
-
-	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
-		onExit();
-		this.inOptionsSpec.pop();
-	}
-
-	public boolean inOptionsSpec() {
-      return !inOptionsSpec.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
@@ -1171,6 +667,510 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inIdentifier() {
       return !inIdentifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inGrammarSpec.push(true);
+	}
+
+	public void exitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		onExit();
+		this.inGrammarSpec.pop();
+	}
+
+	public boolean inGrammarSpec() {
+      return !inGrammarSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
+
+	@Override
+	public void enterPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		final Node node = model.findOrCreate(Label.label("PrequelConstruct"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inPrequelConstruct.push(true);
+	}
+
+	public void exitPrequelConstruct(com.generator.generators.antlr.parser.ANTLRv4Parser.PrequelConstructContext arg) {
+		onExit();
+		this.inPrequelConstruct.pop();
+	}
+
+	public boolean inPrequelConstruct() {
+      return !inPrequelConstruct.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
+
+	@Override
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		final Node node = model.findOrCreate(Label.label("GrammarType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inGrammarType.push(true);
+	}
+
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		onExit();
+		this.inGrammarType.pop();
+	}
+
+	public boolean inGrammarType() {
+      return !inGrammarType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inOptionsSpec.push(true);
+	}
+
+	public void exitOptionsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionsSpecContext arg) {
+		onExit();
+		this.inOptionsSpec.pop();
+	}
+
+	public boolean inOptionsSpec() {
+      return !inOptionsSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
+
+	@Override
+	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inOptionValue.push(true);
+	}
+
+	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		onExit();
+		this.inOptionValue.pop();
+	}
+
+	public boolean inOptionValue() {
+      return !inOptionValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
+
+	@Override
+	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		final Node node = model.findOrCreate(Label.label("DelegateGrammars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inDelegateGrammars.push(true);
+	}
+
+	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		onExit();
+		this.inDelegateGrammars.pop();
+	}
+
+	public boolean inDelegateGrammars() {
+      return !inDelegateGrammars.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelegateGrammar = new java.util.Stack<>();
+
+	@Override
+	public void enterDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
+		final Node node = model.findOrCreate(Label.label("DelegateGrammar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inDelegateGrammar.push(true);
+	}
+
+	public void exitDelegateGrammar(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarContext arg) {
+		onExit();
+		this.inDelegateGrammar.pop();
+	}
+
+	public boolean inDelegateGrammar() {
+      return !inDelegateGrammar.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTokensSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("TokensSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inTokensSpec.push(true);
+	}
+
+	public void exitTokensSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.TokensSpecContext arg) {
+		onExit();
+		this.inTokensSpec.pop();
+	}
+
+	public boolean inTokensSpec() {
+      return !inTokensSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inChannelsSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("ChannelsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inChannelsSpec.push(true);
+	}
+
+	public void exitChannelsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ChannelsSpecContext arg) {
+		onExit();
+		this.inChannelsSpec.pop();
+	}
+
+	public boolean inChannelsSpec() {
+      return !inChannelsSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdList = new java.util.Stack<>();
+
+	@Override
+	public void enterIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		final Node node = model.findOrCreate(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inIdList.push(true);
+	}
+
+	public void exitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		onExit();
+		this.inIdList.pop();
+	}
+
+	public boolean inIdList() {
+      return !inIdList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAction = new java.util.Stack<>();
+
+	@Override
+	public void enterAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inAction.push(true);
+	}
+
+	public void exitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		onExit();
+		this.inAction.pop();
+	}
+
+	public boolean inAction() {
+      return !inAction.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inActionScopeName = new java.util.Stack<>();
+
+	@Override
+	public void enterActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		final Node node = model.findOrCreate(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inActionScopeName.push(true);
+	}
+
+	public void exitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		onExit();
+		this.inActionScopeName.pop();
+	}
+
+	public boolean inActionScopeName() {
+      return !inActionScopeName.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inActionBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		final Node node = model.findOrCreate(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inActionBlock.push(true);
+	}
+
+	public void exitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		onExit();
+		this.inActionBlock.pop();
+	}
+
+	public boolean inActionBlock() {
+      return !inActionBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArgActionBlock = new java.util.Stack<>();
+
+	@Override
+	public void enterArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
+		final Node node = model.findOrCreate(Label.label("ArgActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inArgActionBlock.push(true);
+	}
+
+	public void exitArgActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ArgActionBlockContext arg) {
+		onExit();
+		this.inArgActionBlock.pop();
+	}
+
+	public boolean inArgActionBlock() {
+      return !inArgActionBlock.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModeSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inModeSpec.push(true);
+	}
+
+	public void exitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		onExit();
+		this.inModeSpec.pop();
+	}
+
+	public boolean inModeSpec() {
+      return !inModeSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRules = new java.util.Stack<>();
+
+	@Override
+	public void enterRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		final Node node = model.findOrCreate(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRules.push(true);
+	}
+
+	public void exitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		onExit();
+		this.inRules.pop();
+	}
+
+	public boolean inRules() {
+      return !inRules.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRuleSpec.push(true);
+	}
+
+	public void exitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		onExit();
+		this.inRuleSpec.pop();
+	}
+
+	public boolean inRuleSpec() {
+      return !inRuleSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inParserRuleSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("ParserRuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inParserRuleSpec.push(true);
+	}
+
+	public void exitParserRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ParserRuleSpecContext arg) {
+		onExit();
+		this.inParserRuleSpec.pop();
+	}
+
+	public boolean inParserRuleSpec() {
+      return !inParserRuleSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExceptionGroup = new java.util.Stack<>();
+
+	@Override
+	public void enterExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
+		final Node node = model.findOrCreate(Label.label("ExceptionGroup"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inExceptionGroup.push(true);
+	}
+
+	public void exitExceptionGroup(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionGroupContext arg) {
+		onExit();
+		this.inExceptionGroup.pop();
+	}
+
+	public boolean inExceptionGroup() {
+      return !inExceptionGroup.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExceptionHandler = new java.util.Stack<>();
+
+	@Override
+	public void enterExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
+		final Node node = model.findOrCreate(Label.label("ExceptionHandler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inExceptionHandler.push(true);
+	}
+
+	public void exitExceptionHandler(com.generator.generators.antlr.parser.ANTLRv4Parser.ExceptionHandlerContext arg) {
+		onExit();
+		this.inExceptionHandler.pop();
+	}
+
+	public boolean inExceptionHandler() {
+      return !inExceptionHandler.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFinallyClause = new java.util.Stack<>();
+
+	@Override
+	public void enterFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
+		final Node node = model.findOrCreate(Label.label("FinallyClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inFinallyClause.push(true);
+	}
+
+	public void exitFinallyClause(com.generator.generators.antlr.parser.ANTLRv4Parser.FinallyClauseContext arg) {
+		onExit();
+		this.inFinallyClause.pop();
+	}
+
+	public boolean inFinallyClause() {
+      return !inFinallyClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRulePrequel = new java.util.Stack<>();
+
+	@Override
+	public void enterRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
+		final Node node = model.findOrCreate(Label.label("RulePrequel"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRulePrequel.push(true);
+	}
+
+	public void exitRulePrequel(com.generator.generators.antlr.parser.ANTLRv4Parser.RulePrequelContext arg) {
+		onExit();
+		this.inRulePrequel.pop();
+	}
+
+	public boolean inRulePrequel() {
+      return !inRulePrequel.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleReturns = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
+		final Node node = model.findOrCreate(Label.label("RuleReturns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRuleReturns.push(true);
+	}
+
+	public void exitRuleReturns(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleReturnsContext arg) {
+		onExit();
+		this.inRuleReturns.pop();
+	}
+
+	public boolean inRuleReturns() {
+      return !inRuleReturns.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inThrowsSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("ThrowsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inThrowsSpec.push(true);
+	}
+
+	public void exitThrowsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ThrowsSpecContext arg) {
+		onExit();
+		this.inThrowsSpec.pop();
+	}
+
+	public boolean inThrowsSpec() {
+      return !inThrowsSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLocalsSpec = new java.util.Stack<>();
+
+	@Override
+	public void enterLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
+		final Node node = model.findOrCreate(Label.label("LocalsSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inLocalsSpec.push(true);
+	}
+
+	public void exitLocalsSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.LocalsSpecContext arg) {
+		onExit();
+		this.inLocalsSpec.pop();
+	}
+
+	public boolean inLocalsSpec() {
+      return !inLocalsSpec.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleAction = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
+		final Node node = model.findOrCreate(Label.label("RuleAction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRuleAction.push(true);
+	}
+
+	public void exitRuleAction(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleActionContext arg) {
+		onExit();
+		this.inRuleAction.pop();
+	}
+
+	public boolean inRuleAction() {
+      return !inRuleAction.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleModifiers = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
+		final Node node = model.findOrCreate(Label.label("RuleModifiers"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRuleModifiers.push(true);
+	}
+
+	public void exitRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
+		onExit();
+		this.inRuleModifiers.pop();
+	}
+
+	public boolean inRuleModifiers() {
+      return !inRuleModifiers.isEmpty(); 
    }
 
 }
