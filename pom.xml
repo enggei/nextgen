@@ -215,6 +215,7 @@
         </dependency>
 
         <!--chat-test-->
+        <!--https://github.com/aichaos/rivescript-java-->
         <dependency>
             <groupId>com.rivescript</groupId>
             <artifactId>rivescript-core</artifactId>

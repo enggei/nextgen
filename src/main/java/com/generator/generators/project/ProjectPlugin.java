@@ -7,12 +7,14 @@ import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.mobx.MobXAppVisitor;
 import com.generator.generators.mobx.MobXModelVisitor;
+import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
+import com.jcraft.jsch.Session;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 import org.zeroturnaround.exec.ProcessExecutor;
@@ -178,6 +180,26 @@ public class ProjectPlugin extends Plugin {
                      rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
                      rendererRelationship.setProperty("package", packageName);
                      rendererRelationship.setProperty(Properties.className.name(), className + "Group");
+                  }
+               });
+            }
+
+            if (NeoUtil.hasLabel(selectedNode.getNode(), SSHPlugin.Entities.Path)) {
+
+               pop.add(new App.TransactionAction("Download file from host", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final String hostPath = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+                     final String target = SwingUtil.showInputDialog("File relative to " + hostPath, app);
+                     if (target == null || target.length() == 0) return;
+
+                     final File localDirectory = getFile(neoNode.getNode());
+
+                     final Session session = SSHPlugin.getSession(other(selectedNode.getNode(),singleIncoming(selectedNode.getNode(), SSHPlugin.Relations.PATHS)));
+
+                     SSHPlugin.download(session, localDirectory.getAbsolutePath(), hostPath + target);
+                     session.disconnect();
                   }
                });
             }
