@@ -28,6 +28,16 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		System.out.println("Comment");
+		final Node node = model.newNode(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
 		System.out.println("PropertiesFile");
 		final Node node = model.newNode(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -48,9 +58,9 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		System.out.println("Comment");
-		final Node node = model.newNode(Label.label("Comment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
+		System.out.println("Value");
+		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -61,16 +71,6 @@ public class propertiesNeoVisitor extends propertiesBaseVisitor<Node> {
 	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
 		System.out.println("Row");
 		final Node node = model.newNode(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		System.out.println("Value");
-		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

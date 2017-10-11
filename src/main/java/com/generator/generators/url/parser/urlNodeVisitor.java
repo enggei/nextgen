@@ -49,6 +49,33 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
    }
 
 	@Override
+	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		final Node node = new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
 		final Node node = new Node("Url", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -157,35 +184,8 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		final Node node = new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
 		final Node node = new Node("Searchparameter", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

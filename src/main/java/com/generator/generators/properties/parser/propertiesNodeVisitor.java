@@ -49,6 +49,15 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
    }
 
 	@Override
+	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
+		final Node node = new Node("Comment", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
 		final Node node = new Node("PropertiesFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -67,8 +76,8 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
-	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
-		final Node node = new Node("Comment", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
+		final Node node = new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -78,15 +87,6 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	@Override
 	public Node visitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
 		final Node node = new Node("Row", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitValue(com.generator.generators.properties.parser.propertiesParser.ValueContext arg) {
-		final Node node = new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

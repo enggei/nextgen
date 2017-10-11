@@ -9,15 +9,17 @@ public abstract class ScalaDomainVisitor {
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
-		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
-		else if(hasLabel(node, "QualId")) visitQualId(node);
-		else if(hasLabel(node, "Ids")) visitIds(node);
-		else if(hasLabel(node, "StableId")) visitStableId(node);
+		else if(hasLabel(node, "Expr")) visitExpr(node);
+		else if(hasLabel(node, "Pattern")) visitPattern(node);
+		else if(hasLabel(node, "CaseClauses")) visitCaseClauses(node);
+		else if(hasLabel(node, "CaseClause")) visitCaseClause(node);
 		else if(hasLabel(node, "Type")) visitType(node);
+		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
+		else if(hasLabel(node, "Modifier")) visitModifier(node);
+		else if(hasLabel(node, "Annotation")) visitAnnotation(node);
 		else if(hasLabel(node, "FunctionArgTypes")) visitFunctionArgTypes(node);
 		else if(hasLabel(node, "ExistentialClause")) visitExistentialClause(node);
 		else if(hasLabel(node, "ExistentialDcl")) visitExistentialDcl(node);
-		else if(hasLabel(node, "InfixType")) visitInfixType(node);
 		else if(hasLabel(node, "CompoundType")) visitCompoundType(node);
 		else if(hasLabel(node, "AnnotType")) visitAnnotType(node);
 		else if(hasLabel(node, "SimpleType")) visitSimpleType(node);
@@ -26,8 +28,12 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "Refinement")) visitRefinement(node);
 		else if(hasLabel(node, "RefineStat")) visitRefineStat(node);
 		else if(hasLabel(node, "TypePat")) visitTypePat(node);
+		else if(hasLabel(node, "QualId")) visitQualId(node);
+		else if(hasLabel(node, "Ids")) visitIds(node);
+		else if(hasLabel(node, "StableId")) visitStableId(node);
+		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
+		else if(hasLabel(node, "InfixType")) visitInfixType(node);
 		else if(hasLabel(node, "Ascription")) visitAscription(node);
-		else if(hasLabel(node, "Expr")) visitExpr(node);
 		else if(hasLabel(node, "Expr1")) visitExpr1(node);
 		else if(hasLabel(node, "PostfixExpr")) visitPostfixExpr(node);
 		else if(hasLabel(node, "InfixExpr")) visitInfixExpr(node);
@@ -40,10 +46,7 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "ResultExpr")) visitResultExpr(node);
 		else if(hasLabel(node, "Enumerators")) visitEnumerators(node);
 		else if(hasLabel(node, "Generator")) visitGenerator(node);
-		else if(hasLabel(node, "CaseClauses")) visitCaseClauses(node);
-		else if(hasLabel(node, "CaseClause")) visitCaseClause(node);
 		else if(hasLabel(node, "Guard")) visitGuard(node);
-		else if(hasLabel(node, "Pattern")) visitPattern(node);
 		else if(hasLabel(node, "Pattern1")) visitPattern1(node);
 		else if(hasLabel(node, "Pattern2")) visitPattern2(node);
 		else if(hasLabel(node, "Pattern3")) visitPattern3(node);
@@ -64,11 +67,9 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
 		else if(hasLabel(node, "Bindings")) visitBindings(node);
 		else if(hasLabel(node, "Binding")) visitBinding(node);
-		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "LocalModifier")) visitLocalModifier(node);
 		else if(hasLabel(node, "AccessModifier")) visitAccessModifier(node);
 		else if(hasLabel(node, "AccessQualifier")) visitAccessQualifier(node);
-		else if(hasLabel(node, "Annotation")) visitAnnotation(node);
 		else if(hasLabel(node, "ConstrAnnotation")) visitConstrAnnotation(node);
 		else if(hasLabel(node, "TemplateBody")) visitTemplateBody(node);
 		else if(hasLabel(node, "TemplateStat")) visitTemplateStat(node);
@@ -109,7 +110,6 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "TopStat")) visitTopStat(node);
 		else if(hasLabel(node, "Packaging")) visitPackaging(node);
 		else if(hasLabel(node, "PackageObject")) visitPackageObject(node);
-		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
    }
 
 	public void visitBlock(Node node) {
@@ -124,31 +124,49 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassQualifier(Node node) {
+	public void visitExpr(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitQualId(Node node) {
+	public void visitPattern(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitIds(Node node) {
+	public void visitCaseClauses(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitStableId(Node node) {
+	public void visitCaseClause(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
 	public void visitType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCompilationUnit(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitModifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAnnotation(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -167,12 +185,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitExistentialDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitInfixType(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -226,13 +238,37 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitAscription(Node node) {
+	public void visitQualId(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpr(Node node) {
+	public void visitIds(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStableId(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassQualifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitInfixType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAscription(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -310,25 +346,7 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitCaseClauses(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCaseClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitGuard(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPattern(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -454,12 +472,6 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitModifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitLocalModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -473,12 +485,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitAccessQualifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAnnotation(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -719,12 +725,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitPackageObject(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCompilationUnit(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

@@ -65,91 +65,6 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
       return !inNotExpression.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inRoot = new java.util.Stack<>();
-
-	@Override
-	public void enterRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		onEnter(new Node("Root", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRoot.push(true);
-	}
-
-	public void exitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		onExit();
-		this.inRoot.pop();
-	}
-
-	public boolean inRoot() {
-      return !inRoot.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSql_statements = new java.util.Stack<>();
-
-	@Override
-	public void enterSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		onEnter(new Node("Sql_statements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inSql_statements.push(true);
-	}
-
-	public void exitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		onExit();
-		this.inSql_statements.pop();
-	}
-
-	public boolean inSql_statements() {
-      return !inSql_statements.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSql_statement = new java.util.Stack<>();
-
-	@Override
-	public void enterSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		onEnter(new Node("Sql_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inSql_statement.push(true);
-	}
-
-	public void exitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		onExit();
-		this.inSql_statement.pop();
-	}
-
-	public boolean inSql_statement() {
-      return !inSql_statement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEmpty_statement = new java.util.Stack<>();
-
-	@Override
-	public void enterEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		onEnter(new Node("Empty_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inEmpty_statement.push(true);
-	}
-
-	public void exitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		onExit();
-		this.inEmpty_statement.pop();
-	}
-
-	public boolean inEmpty_statement() {
-      return !inEmpty_statement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDdl_statement = new java.util.Stack<>();
-
-	@Override
-	public void enterDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
-		onEnter(new Node("Ddl_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inDdl_statement.push(true);
-	}
-
-	public void exitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
-		onExit();
-		this.inDdl_statement.pop();
-	}
-
-	public boolean inDdl_statement() {
-      return !inDdl_statement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDml_statement = new java.util.Stack<>();
 
 	@Override
@@ -303,6 +218,91 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
       return !inCreate_event.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inRoot = new java.util.Stack<>();
+
+	@Override
+	public void enterRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		onEnter(new Node("Root", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRoot.push(true);
+	}
+
+	public void exitRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
+		onExit();
+		this.inRoot.pop();
+	}
+
+	public boolean inRoot() {
+      return !inRoot.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSql_statements = new java.util.Stack<>();
+
+	@Override
+	public void enterSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		onEnter(new Node("Sql_statements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inSql_statements.push(true);
+	}
+
+	public void exitSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
+		onExit();
+		this.inSql_statements.pop();
+	}
+
+	public boolean inSql_statements() {
+      return !inSql_statements.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSql_statement = new java.util.Stack<>();
+
+	@Override
+	public void enterSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		onEnter(new Node("Sql_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inSql_statement.push(true);
+	}
+
+	public void exitSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
+		onExit();
+		this.inSql_statement.pop();
+	}
+
+	public boolean inSql_statement() {
+      return !inSql_statement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEmpty_statement = new java.util.Stack<>();
+
+	@Override
+	public void enterEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
+		onEnter(new Node("Empty_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inEmpty_statement.push(true);
+	}
+
+	public void exitEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
+		onExit();
+		this.inEmpty_statement.pop();
+	}
+
+	public boolean inEmpty_statement() {
+      return !inEmpty_statement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDdl_statement = new java.util.Stack<>();
+
+	@Override
+	public void enterDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
+		onEnter(new Node("Ddl_statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inDdl_statement.push(true);
+	}
+
+	public void exitDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
+		onExit();
+		this.inDdl_statement.pop();
+	}
+
+	public boolean inDdl_statement() {
+      return !inDdl_statement.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inCreate_index = new java.util.Stack<>();
 
 	@Override
@@ -318,6 +318,23 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 
 	public boolean inCreate_index() {
       return !inCreate_index.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCreate_view = new java.util.Stack<>();
+
+	@Override
+	public void enterCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		onEnter(new Node("Create_view", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inCreate_view.push(true);
+	}
+
+	public void exitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
+		onExit();
+		this.inCreate_view.pop();
+	}
+
+	public boolean inCreate_view() {
+      return !inCreate_view.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_logfile_group = new java.util.Stack<>();
@@ -488,23 +505,6 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 
 	public boolean inCreate_trigger() {
       return !inCreate_trigger.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCreate_view = new java.util.Stack<>();
-
-	@Override
-	public void enterCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		onEnter(new Node("Create_view", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inCreate_view.push(true);
-	}
-
-	public void exitCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		onExit();
-		this.inCreate_view.pop();
-	}
-
-	public boolean inCreate_view() {
-      return !inCreate_view.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCreate_database_option = new java.util.Stack<>();

@@ -201,96 +201,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inTypeList.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
-
-	@Override
-	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		final Node node = model.findOrCreate(Label.label("CompilationUnit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inCompilationUnit.push(true);
-	}
-
-	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		onExit();
-		this.inCompilationUnit.pop();
-	}
-
-	public boolean inCompilationUnit() {
-      return !inCompilationUnit.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inPackageDeclaration.push(true);
-	}
-
-	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		onExit();
-		this.inPackageDeclaration.pop();
-	}
-
-	public boolean inPackageDeclaration() {
-      return !inPackageDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("ImportDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inImportDeclaration.push(true);
-	}
-
-	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		onExit();
-		this.inImportDeclaration.pop();
-	}
-
-	public boolean inImportDeclaration() {
-      return !inImportDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inTypeDeclaration.push(true);
-	}
-
-	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		onExit();
-		this.inTypeDeclaration.pop();
-	}
-
-	public boolean inTypeDeclaration() {
-      return !inTypeDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inModifier.push(true);
-	}
-
-	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onExit();
-		this.inModifier.pop();
-	}
-
-	public boolean inModifier() {
-      return !inModifier.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
 
 	@Override
@@ -471,24 +381,6 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
       return !inEnumBodyDeclarations.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("InterfaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inInterfaceDeclaration.push(true);
-	}
-
-	public void exitInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		onExit();
-		this.inInterfaceDeclaration.pop();
-	}
-
-	public boolean inInterfaceDeclaration() {
-      return !inInterfaceDeclaration.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inClassBody = new java.util.Stack<>();
 
 	@Override
@@ -505,6 +397,96 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inClassBody() {
       return !inClassBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
+
+	@Override
+	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		final Node node = model.findOrCreate(Label.label("CompilationUnit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inCompilationUnit.push(true);
+	}
+
+	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		onExit();
+		this.inCompilationUnit.pop();
+	}
+
+	public boolean inCompilationUnit() {
+      return !inCompilationUnit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("PackageDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inPackageDeclaration.push(true);
+	}
+
+	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		onExit();
+		this.inPackageDeclaration.pop();
+	}
+
+	public boolean inPackageDeclaration() {
+      return !inPackageDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("ImportDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inImportDeclaration.push(true);
+	}
+
+	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		onExit();
+		this.inImportDeclaration.pop();
+	}
+
+	public boolean inImportDeclaration() {
+      return !inImportDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("TypeDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inTypeDeclaration.push(true);
+	}
+
+	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
+		onExit();
+		this.inTypeDeclaration.pop();
+	}
+
+	public boolean inTypeDeclaration() {
+      return !inTypeDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
+		final Node node = model.findOrCreate(Label.label("InterfaceDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inInterfaceDeclaration.push(true);
+	}
+
+	public void exitInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
+		onExit();
+		this.inInterfaceDeclaration.pop();
+	}
+
+	public boolean inInterfaceDeclaration() {
+      return !inInterfaceDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceBody = new java.util.Stack<>();
@@ -919,6 +901,24 @@ public class JavaParserNeoListener extends JavaParserBaseListener {
 
 	public boolean inClassOrInterfaceType() {
       return !inClassOrInterfaceType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		final Node node = model.findOrCreate(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inModifier.push(true);
+	}
+
+	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onExit();
+		this.inModifier.pop();
+	}
+
+	public boolean inModifier() {
+      return !inModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();

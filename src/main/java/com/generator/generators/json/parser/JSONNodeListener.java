@@ -65,23 +65,6 @@ public class JSONNodeListener extends JSONBaseListener {
       return !inValue.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
-
-	@Override
-	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onEnter(new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inJson.push(true);
-	}
-
-	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onExit();
-		this.inJson.pop();
-	}
-
-	public boolean inJson() {
-      return !inJson.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inObj = new java.util.Stack<>();
 
 	@Override
@@ -131,6 +114,23 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	public boolean inArray() {
       return !inArray.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inJson = new java.util.Stack<>();
+
+	@Override
+	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		onEnter(new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inJson.push(true);
+	}
+
+	public void exitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
+		onExit();
+		this.inJson.pop();
+	}
+
+	public boolean inJson() {
+      return !inJson.isEmpty(); 
    }
 
 }

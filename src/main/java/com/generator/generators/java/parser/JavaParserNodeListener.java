@@ -201,91 +201,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inTypeList.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
-
-	@Override
-	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inCompilationUnit.push(true);
-	}
-
-	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
-		onExit();
-		this.inCompilationUnit.pop();
-	}
-
-	public boolean inCompilationUnit() {
-      return !inCompilationUnit.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inPackageDeclaration.push(true);
-	}
-
-	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
-		onExit();
-		this.inPackageDeclaration.pop();
-	}
-
-	public boolean inPackageDeclaration() {
-      return !inPackageDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inImportDeclaration.push(true);
-	}
-
-	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
-		onExit();
-		this.inImportDeclaration.pop();
-	}
-
-	public boolean inImportDeclaration() {
-      return !inImportDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inTypeDeclaration.push(true);
-	}
-
-	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
-		onExit();
-		this.inTypeDeclaration.pop();
-	}
-
-	public boolean inTypeDeclaration() {
-      return !inTypeDeclaration.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inModifier.push(true);
-	}
-
-	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
-		onExit();
-		this.inModifier.pop();
-	}
-
-	public boolean inModifier() {
-      return !inModifier.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inClassOrInterfaceModifier = new java.util.Stack<>();
 
 	@Override
@@ -456,23 +371,6 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
       return !inEnumBodyDeclarations.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
-
-	@Override
-	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		onEnter(new Node("InterfaceDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inInterfaceDeclaration.push(true);
-	}
-
-	public void exitInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
-		onExit();
-		this.inInterfaceDeclaration.pop();
-	}
-
-	public boolean inInterfaceDeclaration() {
-      return !inInterfaceDeclaration.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inClassBody = new java.util.Stack<>();
 
 	@Override
@@ -488,6 +386,91 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inClassBody() {
       return !inClassBody.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompilationUnit = new java.util.Stack<>();
+
+	@Override
+	public void enterCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		onEnter(new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inCompilationUnit.push(true);
+	}
+
+	public void exitCompilationUnit(com.generator.generators.java.parser.JavaParser.CompilationUnitContext arg) {
+		onExit();
+		this.inCompilationUnit.pop();
+	}
+
+	public boolean inCompilationUnit() {
+      return !inCompilationUnit.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		onEnter(new Node("PackageDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inPackageDeclaration.push(true);
+	}
+
+	public void exitPackageDeclaration(com.generator.generators.java.parser.JavaParser.PackageDeclarationContext arg) {
+		onExit();
+		this.inPackageDeclaration.pop();
+	}
+
+	public boolean inPackageDeclaration() {
+      return !inPackageDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImportDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		onEnter(new Node("ImportDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inImportDeclaration.push(true);
+	}
+
+	public void exitImportDeclaration(com.generator.generators.java.parser.JavaParser.ImportDeclarationContext arg) {
+		onExit();
+		this.inImportDeclaration.pop();
+	}
+
+	public boolean inImportDeclaration() {
+      return !inImportDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTypeDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
+		onEnter(new Node("TypeDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inTypeDeclaration.push(true);
+	}
+
+	public void exitTypeDeclaration(com.generator.generators.java.parser.JavaParser.TypeDeclarationContext arg) {
+		onExit();
+		this.inTypeDeclaration.pop();
+	}
+
+	public boolean inTypeDeclaration() {
+      return !inTypeDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inInterfaceDeclaration = new java.util.Stack<>();
+
+	@Override
+	public void enterInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
+		onEnter(new Node("InterfaceDeclaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inInterfaceDeclaration.push(true);
+	}
+
+	public void exitInterfaceDeclaration(com.generator.generators.java.parser.JavaParser.InterfaceDeclarationContext arg) {
+		onExit();
+		this.inInterfaceDeclaration.pop();
+	}
+
+	public boolean inInterfaceDeclaration() {
+      return !inInterfaceDeclaration.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInterfaceBody = new java.util.Stack<>();
@@ -879,6 +862,23 @@ public class JavaParserNodeListener extends JavaParserBaseListener {
 
 	public boolean inClassOrInterfaceType() {
       return !inClassOrInterfaceType.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onEnter(new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inModifier.push(true);
+	}
+
+	public void exitModifier(com.generator.generators.java.parser.JavaParser.ModifierContext arg) {
+		onExit();
+		this.inModifier.pop();
+	}
+
+	public boolean inModifier() {
+      return !inModifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inTypeArgument = new java.util.Stack<>();

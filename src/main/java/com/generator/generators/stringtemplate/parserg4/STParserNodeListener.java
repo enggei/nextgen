@@ -48,6 +48,142 @@ public class STParserNodeListener extends STParserBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
+
+	@Override
+	public void enterElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inElement.push(true);
+	}
+
+	public void exitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
+		onExit();
+		this.inElement.pop();
+	}
+
+	public boolean inElement() {
+      return !inElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
+
+	@Override
+	public void enterList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
+		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inList.push(true);
+	}
+
+	public void exitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
+		onExit();
+		this.inList.pop();
+	}
+
+	public boolean inList() {
+      return !inList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
+		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExpr.push(true);
+	}
+
+	public void exitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
+		onExit();
+		this.inExpr.pop();
+	}
+
+	public boolean inExpr() {
+      return !inExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPrimary = new java.util.Stack<>();
+
+	@Override
+	public void enterPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
+		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inPrimary.push(true);
+	}
+
+	public void exitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
+		onExit();
+		this.inPrimary.pop();
+	}
+
+	public boolean inPrimary() {
+      return !inPrimary.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArgs = new java.util.Stack<>();
+
+	@Override
+	public void enterArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
+		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inArgs.push(true);
+	}
+
+	public void exitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
+		onExit();
+		this.inArgs.pop();
+	}
+
+	public boolean inArgs() {
+      return !inArgs.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExprTag = new java.util.Stack<>();
+
+	@Override
+	public void enterExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
+		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExprTag.push(true);
+	}
+
+	public void exitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
+		onExit();
+		this.inExprTag.pop();
+	}
+
+	public boolean inExprTag() {
+      return !inExprTag.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegion = new java.util.Stack<>();
+
+	@Override
+	public void enterRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
+		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRegion.push(true);
+	}
+
+	public void exitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
+		onExit();
+		this.inRegion.pop();
+	}
+
+	public boolean inRegion() {
+      return !inRegion.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSubtemplate = new java.util.Stack<>();
 
 	@Override
@@ -218,6 +354,57 @@ public class STParserNodeListener extends STParserBaseListener {
       return !inMapTemplateRef.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inIncludeExpr = new java.util.Stack<>();
+
+	@Override
+	public void enterIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
+		onEnter(new Node("IncludeExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inIncludeExpr.push(true);
+	}
+
+	public void exitIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
+		onExit();
+		this.inIncludeExpr.pop();
+	}
+
+	public boolean inIncludeExpr() {
+      return !inIncludeExpr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inArgExprList = new java.util.Stack<>();
+
+	@Override
+	public void enterArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
+		onEnter(new Node("ArgExprList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inArgExprList.push(true);
+	}
+
+	public void exitArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
+		onExit();
+		this.inArgExprList.pop();
+	}
+
+	public boolean inArgExprList() {
+      return !inArgExprList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNamedArg = new java.util.Stack<>();
+
+	@Override
+	public void enterNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
+		onEnter(new Node("NamedArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inNamedArg.push(true);
+	}
+
+	public void exitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
+		onExit();
+		this.inNamedArg.pop();
+	}
+
+	public boolean inNamedArg() {
+      return !inNamedArg.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
 
 	@Override
@@ -284,193 +471,6 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	public boolean inCompoundElement() {
       return !inCompoundElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExprTag = new java.util.Stack<>();
-
-	@Override
-	public void enterExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inExprTag.push(true);
-	}
-
-	public void exitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		onExit();
-		this.inExprTag.pop();
-	}
-
-	public boolean inExprTag() {
-      return !inExprTag.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegion = new java.util.Stack<>();
-
-	@Override
-	public void enterRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRegion.push(true);
-	}
-
-	public void exitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		onExit();
-		this.inRegion.pop();
-	}
-
-	public boolean inRegion() {
-      return !inRegion.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIncludeExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
-		onEnter(new Node("IncludeExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inIncludeExpr.push(true);
-	}
-
-	public void exitIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
-		onExit();
-		this.inIncludeExpr.pop();
-	}
-
-	public boolean inIncludeExpr() {
-      return !inIncludeExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArgExprList = new java.util.Stack<>();
-
-	@Override
-	public void enterArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
-		onEnter(new Node("ArgExprList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inArgExprList.push(true);
-	}
-
-	public void exitArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
-		onExit();
-		this.inArgExprList.pop();
-	}
-
-	public boolean inArgExprList() {
-      return !inArgExprList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNamedArg = new java.util.Stack<>();
-
-	@Override
-	public void enterNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
-		onEnter(new Node("NamedArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inNamedArg.push(true);
-	}
-
-	public void exitNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
-		onExit();
-		this.inNamedArg.pop();
-	}
-
-	public boolean inNamedArg() {
-      return !inNamedArg.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return !inElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
-
-	@Override
-	public void enterList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inList.push(true);
-	}
-
-	public void exitList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		onExit();
-		this.inList.pop();
-	}
-
-	public boolean inList() {
-      return !inList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpr = new java.util.Stack<>();
-
-	@Override
-	public void enterExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inExpr.push(true);
-	}
-
-	public void exitExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		onExit();
-		this.inExpr.pop();
-	}
-
-	public boolean inExpr() {
-      return !inExpr.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrimary = new java.util.Stack<>();
-
-	@Override
-	public void enterPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inPrimary.push(true);
-	}
-
-	public void exitPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		onExit();
-		this.inPrimary.pop();
-	}
-
-	public boolean inPrimary() {
-      return !inPrimary.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inArgs = new java.util.Stack<>();
-
-	@Override
-	public void enterArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inArgs.push(true);
-	}
-
-	public void exitArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		onExit();
-		this.inArgs.pop();
-	}
-
-	public boolean inArgs() {
-      return !inArgs.isEmpty(); 
    }
 
 }

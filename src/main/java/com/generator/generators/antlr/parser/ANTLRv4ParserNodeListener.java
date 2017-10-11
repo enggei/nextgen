@@ -48,6 +48,40 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inRuleModifiers = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
+		onEnter(new Node("RuleModifiers", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRuleModifiers.push(true);
+	}
+
+	public void exitRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
+		onExit();
+		this.inRuleModifiers.pop();
+	}
+
+	public boolean inRuleModifiers() {
+      return !inRuleModifiers.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRuleModifier = new java.util.Stack<>();
+
+	@Override
+	public void enterRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
+		onEnter(new Node("RuleModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRuleModifier.push(true);
+	}
+
+	public void exitRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
+		onExit();
+		this.inRuleModifier.pop();
+	}
+
+	public boolean inRuleModifier() {
+      return !inRuleModifier.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inRuleBlock = new java.util.Stack<>();
 
 	@Override
@@ -643,23 +677,6 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return !inGrammarSpec.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
-
-	@Override
-	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onEnter(new Node("GrammarType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inGrammarType.push(true);
-	}
-
-	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
-		onExit();
-		this.inGrammarType.pop();
-	}
-
-	public boolean inGrammarType() {
-      return !inGrammarType.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inPrequelConstruct = new java.util.Stack<>();
 
 	@Override
@@ -677,21 +694,21 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
       return !inPrequelConstruct.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inGrammarType = new java.util.Stack<>();
 
 	@Override
-	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
-		onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inDelegateGrammars.push(true);
+	public void enterGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
+		onEnter(new Node("GrammarType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inGrammarType.push(true);
 	}
 
-	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+	public void exitGrammarType(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarTypeContext arg) {
 		onExit();
-		this.inDelegateGrammars.pop();
+		this.inGrammarType.pop();
 	}
 
-	public boolean inDelegateGrammars() {
-      return !inDelegateGrammars.isEmpty(); 
+	public boolean inGrammarType() {
+      return !inGrammarType.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inOptionsSpec = new java.util.Stack<>();
@@ -743,6 +760,23 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inOptionValue() {
       return !inOptionValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
+
+	@Override
+	public void enterDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		onEnter(new Node("DelegateGrammars", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inDelegateGrammars.push(true);
+	}
+
+	public void exitDelegateGrammars(com.generator.generators.antlr.parser.ANTLRv4Parser.DelegateGrammarsContext arg) {
+		onExit();
+		this.inDelegateGrammars.pop();
+	}
+
+	public boolean inDelegateGrammars() {
+      return !inDelegateGrammars.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelegateGrammar = new java.util.Stack<>();
@@ -1083,40 +1117,6 @@ public class ANTLRv4ParserNodeListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inRuleAction() {
       return !inRuleAction.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleModifiers = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		onEnter(new Node("RuleModifiers", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRuleModifiers.push(true);
-	}
-
-	public void exitRuleModifiers(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifiersContext arg) {
-		onExit();
-		this.inRuleModifiers.pop();
-	}
-
-	public boolean inRuleModifiers() {
-      return !inRuleModifiers.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRuleModifier = new java.util.Stack<>();
-
-	@Override
-	public void enterRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
-		onEnter(new Node("RuleModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRuleModifier.push(true);
-	}
-
-	public void exitRuleModifier(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleModifierContext arg) {
-		onExit();
-		this.inRuleModifier.pop();
-	}
-
-	public boolean inRuleModifier() {
-      return !inRuleModifier.isEmpty(); 
    }
 
 }

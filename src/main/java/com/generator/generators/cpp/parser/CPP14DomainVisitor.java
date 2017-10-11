@@ -9,11 +9,6 @@ public abstract class CPP14DomainVisitor {
    public void visit(Node node) {
 		if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Translationunit")) visitTranslationunit(node);
-		else if(hasLabel(node, "Primaryexpression")) visitPrimaryexpression(node);
-		else if(hasLabel(node, "Idexpression")) visitIdexpression(node);
-		else if(hasLabel(node, "Unqualifiedid")) visitUnqualifiedid(node);
-		else if(hasLabel(node, "Qualifiedid")) visitQualifiedid(node);
-		else if(hasLabel(node, "Nestednamespecifier")) visitNestednamespecifier(node);
 		else if(hasLabel(node, "Lambdaexpression")) visitLambdaexpression(node);
 		else if(hasLabel(node, "Lambdaintroducer")) visitLambdaintroducer(node);
 		else if(hasLabel(node, "Lambdacapture")) visitLambdacapture(node);
@@ -24,6 +19,11 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Initcapture")) visitInitcapture(node);
 		else if(hasLabel(node, "Lambdadeclarator")) visitLambdadeclarator(node);
 		else if(hasLabel(node, "Postfixexpression")) visitPostfixexpression(node);
+		else if(hasLabel(node, "Qualifiedid")) visitQualifiedid(node);
+		else if(hasLabel(node, "Primaryexpression")) visitPrimaryexpression(node);
+		else if(hasLabel(node, "Idexpression")) visitIdexpression(node);
+		else if(hasLabel(node, "Unqualifiedid")) visitUnqualifiedid(node);
+		else if(hasLabel(node, "Nestednamespecifier")) visitNestednamespecifier(node);
 		else if(hasLabel(node, "Expressionlist")) visitExpressionlist(node);
 		else if(hasLabel(node, "Pseudodestructorname")) visitPseudodestructorname(node);
 		else if(hasLabel(node, "Unaryexpression")) visitUnaryexpression(node);
@@ -44,7 +44,6 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Relationalexpression")) visitRelationalexpression(node);
 		else if(hasLabel(node, "Equalityexpression")) visitEqualityexpression(node);
 		else if(hasLabel(node, "Andexpression")) visitAndexpression(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Exclusiveorexpression")) visitExclusiveorexpression(node);
 		else if(hasLabel(node, "Inclusiveorexpression")) visitInclusiveorexpression(node);
 		else if(hasLabel(node, "Logicalandexpression")) visitLogicalandexpression(node);
@@ -52,6 +51,7 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Conditionalexpression")) visitConditionalexpression(node);
 		else if(hasLabel(node, "Assignmentexpression")) visitAssignmentexpression(node);
 		else if(hasLabel(node, "Assignmentoperator")) visitAssignmentoperator(node);
+		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Constantexpression")) visitConstantexpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Labeledstatement")) visitLabeledstatement(node);
@@ -220,36 +220,6 @@ public abstract class CPP14DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitPrimaryexpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitIdexpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUnqualifiedid(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQualifiedid(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNestednamespecifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitLambdaexpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -305,6 +275,36 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitPostfixexpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQualifiedid(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrimaryexpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitIdexpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUnqualifiedid(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNestednamespecifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -430,12 +430,6 @@ public abstract class CPP14DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitExclusiveorexpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -473,6 +467,12 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitAssignmentoperator(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

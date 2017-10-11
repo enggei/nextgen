@@ -7,24 +7,36 @@ public abstract class StackTraceDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Message")) visitMessage(node);
+		if(hasLabel(node, "Identifier")) visitIdentifier(node);
+		else if(hasLabel(node, "ClassName")) visitClassName(node);
+		else if(hasLabel(node, "Message")) visitMessage(node);
 		else if(hasLabel(node, "StartRule")) visitStartRule(node);
-		else if(hasLabel(node, "StackTrace")) visitStackTrace(node);
-		else if(hasLabel(node, "StackTraceLine")) visitStackTraceLine(node);
-		else if(hasLabel(node, "AtLine")) visitAtLine(node);
 		else if(hasLabel(node, "CausedByLine")) visitCausedByLine(node);
-		else if(hasLabel(node, "EllipsisLine")) visitEllipsisLine(node);
-		else if(hasLabel(node, "MessageLine")) visitMessageLine(node);
-		else if(hasLabel(node, "QualifiedClass")) visitQualifiedClass(node);
-		else if(hasLabel(node, "ClassFile")) visitClassFile(node);
 		else if(hasLabel(node, "InnerClassName")) visitInnerClassName(node);
 		else if(hasLabel(node, "QualifiedMethod")) visitQualifiedMethod(node);
 		else if(hasLabel(node, "Constructor")) visitConstructor(node);
 		else if(hasLabel(node, "MethodName")) visitMethodName(node);
 		else if(hasLabel(node, "PackagePath")) visitPackagePath(node);
-		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
-		else if(hasLabel(node, "ClassName")) visitClassName(node);
+		else if(hasLabel(node, "QualifiedClass")) visitQualifiedClass(node);
+		else if(hasLabel(node, "ClassFile")) visitClassFile(node);
+		else if(hasLabel(node, "StackTrace")) visitStackTrace(node);
+		else if(hasLabel(node, "StackTraceLine")) visitStackTraceLine(node);
+		else if(hasLabel(node, "AtLine")) visitAtLine(node);
+		else if(hasLabel(node, "EllipsisLine")) visitEllipsisLine(node);
+		else if(hasLabel(node, "MessageLine")) visitMessageLine(node);
    }
+
+	public void visitIdentifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassName(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitMessage(Node node) {
 		if (visited.contains(node)) return;
@@ -38,49 +50,7 @@ public abstract class StackTraceDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitStackTrace(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStackTraceLine(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAtLine(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitCausedByLine(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEllipsisLine(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMessageLine(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQualifiedClass(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassFile(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -116,13 +86,43 @@ public abstract class StackTraceDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitIdentifier(Node node) {
+	public void visitQualifiedClass(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassName(Node node) {
+	public void visitClassFile(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStackTrace(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStackTraceLine(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAtLine(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEllipsisLine(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMessageLine(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

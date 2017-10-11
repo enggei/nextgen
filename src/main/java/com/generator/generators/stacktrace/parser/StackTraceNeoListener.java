@@ -39,6 +39,42 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
+
+	@Override
+	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inIdentifier.push(true);
+	}
+
+	public void exitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+		onExit();
+		this.inIdentifier.pop();
+	}
+
+	public boolean inIdentifier() {
+      return !inIdentifier.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
+
+	@Override
+	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inClassName.push(true);
+	}
+
+	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+		onExit();
+		this.inClassName.pop();
+	}
+
+	public boolean inClassName() {
+      return !inClassName.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inMessage = new java.util.Stack<>();
 
 	@Override
@@ -75,60 +111,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return !inStartRule.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();
-
-	@Override
-	public void enterStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inStackTrace.push(true);
-	}
-
-	public void exitStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
-		onExit();
-		this.inStackTrace.pop();
-	}
-
-	public boolean inStackTrace() {
-      return !inStackTrace.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStackTraceLine = new java.util.Stack<>();
-
-	@Override
-	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inStackTraceLine.push(true);
-	}
-
-	public void exitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
-		onExit();
-		this.inStackTraceLine.pop();
-	}
-
-	public boolean inStackTraceLine() {
-      return !inStackTraceLine.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAtLine = new java.util.Stack<>();
-
-	@Override
-	public void enterAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inAtLine.push(true);
-	}
-
-	public void exitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
-		onExit();
-		this.inAtLine.pop();
-	}
-
-	public boolean inAtLine() {
-      return !inAtLine.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inCausedByLine = new java.util.Stack<>();
 
 	@Override
@@ -145,78 +127,6 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
 
 	public boolean inCausedByLine() {
       return !inCausedByLine.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inEllipsisLine = new java.util.Stack<>();
-
-	@Override
-	public void enterEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inEllipsisLine.push(true);
-	}
-
-	public void exitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
-		onExit();
-		this.inEllipsisLine.pop();
-	}
-
-	public boolean inEllipsisLine() {
-      return !inEllipsisLine.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMessageLine = new java.util.Stack<>();
-
-	@Override
-	public void enterMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inMessageLine.push(true);
-	}
-
-	public void exitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
-		onExit();
-		this.inMessageLine.pop();
-	}
-
-	public boolean inMessageLine() {
-      return !inMessageLine.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQualifiedClass = new java.util.Stack<>();
-
-	@Override
-	public void enterQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
-		final Node node = model.findOrCreate(Label.label("QualifiedClass"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inQualifiedClass.push(true);
-	}
-
-	public void exitQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
-		onExit();
-		this.inQualifiedClass.pop();
-	}
-
-	public boolean inQualifiedClass() {
-      return !inQualifiedClass.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
-
-	@Override
-	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inClassFile.push(true);
-	}
-
-	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
-		onExit();
-		this.inClassFile.pop();
-	}
-
-	public boolean inClassFile() {
-      return !inClassFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inInnerClassName = new java.util.Stack<>();
@@ -309,40 +219,130 @@ public class StackTraceNeoListener extends StackTraceBaseListener {
       return !inPackagePath.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inIdentifier = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inQualifiedClass = new java.util.Stack<>();
 
 	@Override
-	public void enterIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Identifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
+		final Node node = model.findOrCreate(Label.label("QualifiedClass"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inIdentifier.push(true);
+		this.inQualifiedClass.push(true);
 	}
 
-	public void exitIdentifier(com.generator.generators.stacktrace.parser.StackTraceParser.IdentifierContext arg) {
+	public void exitQualifiedClass(com.generator.generators.stacktrace.parser.StackTraceParser.QualifiedClassContext arg) {
 		onExit();
-		this.inIdentifier.pop();
+		this.inQualifiedClass.pop();
 	}
 
-	public boolean inIdentifier() {
-      return !inIdentifier.isEmpty(); 
+	public boolean inQualifiedClass() {
+      return !inQualifiedClass.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassName = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inClassFile = new java.util.Stack<>();
 
 	@Override
-	public void enterClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inClassName.push(true);
+		this.inClassFile.push(true);
 	}
 
-	public void exitClassName(com.generator.generators.stacktrace.parser.StackTraceParser.ClassNameContext arg) {
+	public void exitClassFile(com.generator.generators.stacktrace.parser.StackTraceParser.ClassFileContext arg) {
 		onExit();
-		this.inClassName.pop();
+		this.inClassFile.pop();
 	}
 
-	public boolean inClassName() {
-      return !inClassName.isEmpty(); 
+	public boolean inClassFile() {
+      return !inClassFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStackTrace = new java.util.Stack<>();
+
+	@Override
+	public void enterStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
+		final Node node = model.findOrCreate(Label.label("StackTrace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inStackTrace.push(true);
+	}
+
+	public void exitStackTrace(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceContext arg) {
+		onExit();
+		this.inStackTrace.pop();
+	}
+
+	public boolean inStackTrace() {
+      return !inStackTrace.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStackTraceLine = new java.util.Stack<>();
+
+	@Override
+	public void enterStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		final Node node = model.findOrCreate(Label.label("StackTraceLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inStackTraceLine.push(true);
+	}
+
+	public void exitStackTraceLine(com.generator.generators.stacktrace.parser.StackTraceParser.StackTraceLineContext arg) {
+		onExit();
+		this.inStackTraceLine.pop();
+	}
+
+	public boolean inStackTraceLine() {
+      return !inStackTraceLine.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAtLine = new java.util.Stack<>();
+
+	@Override
+	public void enterAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		final Node node = model.findOrCreate(Label.label("AtLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inAtLine.push(true);
+	}
+
+	public void exitAtLine(com.generator.generators.stacktrace.parser.StackTraceParser.AtLineContext arg) {
+		onExit();
+		this.inAtLine.pop();
+	}
+
+	public boolean inAtLine() {
+      return !inAtLine.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inEllipsisLine = new java.util.Stack<>();
+
+	@Override
+	public void enterEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
+		final Node node = model.findOrCreate(Label.label("EllipsisLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inEllipsisLine.push(true);
+	}
+
+	public void exitEllipsisLine(com.generator.generators.stacktrace.parser.StackTraceParser.EllipsisLineContext arg) {
+		onExit();
+		this.inEllipsisLine.pop();
+	}
+
+	public boolean inEllipsisLine() {
+      return !inEllipsisLine.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMessageLine = new java.util.Stack<>();
+
+	@Override
+	public void enterMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
+		final Node node = model.findOrCreate(Label.label("MessageLine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inMessageLine.push(true);
+	}
+
+	public void exitMessageLine(com.generator.generators.stacktrace.parser.StackTraceParser.MessageLineContext arg) {
+		onExit();
+		this.inMessageLine.pop();
+	}
+
+	public boolean inMessageLine() {
+      return !inMessageLine.isEmpty(); 
    }
 
 }

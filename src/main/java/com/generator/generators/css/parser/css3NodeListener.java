@@ -82,23 +82,6 @@ public class css3NodeListener extends css3BaseListener {
       return !inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();
 
 	@Override
@@ -116,72 +99,21 @@ public class css3NodeListener extends css3BaseListener {
       return !inStylesheet.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inGoodCharset = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
-	public void enterGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		onEnter(new Node("GoodCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inGoodCharset.push(true);
+	public void enterExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExpression.push(true);
 	}
 
-	public void exitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+	public void exitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
 		onExit();
-		this.inGoodCharset.pop();
+		this.inExpression.pop();
 	}
 
-	public boolean inGoodCharset() {
-      return !inGoodCharset.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBadCharset = new java.util.Stack<>();
-
-	@Override
-	public void enterBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		onEnter(new Node("BadCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inBadCharset.push(true);
-	}
-
-	public void exitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		onExit();
-		this.inBadCharset.pop();
-	}
-
-	public boolean inBadCharset() {
-      return !inBadCharset.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
-
-	@Override
-	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		onEnter(new Node("GoodImport", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inGoodImport.push(true);
-	}
-
-	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
-		onExit();
-		this.inGoodImport.pop();
-	}
-
-	public boolean inGoodImport() {
-      return !inGoodImport.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();
-
-	@Override
-	public void enterBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		onEnter(new Node("BadImport", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inBadImport.push(true);
-	}
-
-	public void exitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
-		onExit();
-		this.inBadImport.pop();
-	}
-
-	public boolean inBadImport() {
-      return !inBadImport.isEmpty(); 
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGoodNamespace = new java.util.Stack<>();
@@ -403,6 +335,74 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inSelector() {
       return !inSelector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodCharset = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		onEnter(new Node("GoodCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inGoodCharset.push(true);
+	}
+
+	public void exitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		onExit();
+		this.inGoodCharset.pop();
+	}
+
+	public boolean inGoodCharset() {
+      return !inGoodCharset.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBadCharset = new java.util.Stack<>();
+
+	@Override
+	public void enterBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		onEnter(new Node("BadCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inBadCharset.push(true);
+	}
+
+	public void exitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		onExit();
+		this.inBadCharset.pop();
+	}
+
+	public boolean inBadCharset() {
+      return !inBadCharset.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGoodImport = new java.util.Stack<>();
+
+	@Override
+	public void enterGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		onEnter(new Node("GoodImport", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inGoodImport.push(true);
+	}
+
+	public void exitGoodImport(com.generator.generators.css.parser.css3Parser.GoodImportContext arg) {
+		onExit();
+		this.inGoodImport.pop();
+	}
+
+	public boolean inGoodImport() {
+      return !inGoodImport.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBadImport = new java.util.Stack<>();
+
+	@Override
+	public void enterBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		onEnter(new Node("BadImport", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inBadImport.push(true);
+	}
+
+	public void exitBadImport(com.generator.generators.css.parser.css3Parser.BadImportContext arg) {
+		onExit();
+		this.inBadImport.pop();
+	}
+
+	public boolean inBadImport() {
+      return !inBadImport.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCombinator = new java.util.Stack<>();

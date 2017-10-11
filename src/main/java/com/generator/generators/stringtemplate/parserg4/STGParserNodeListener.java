@@ -65,23 +65,6 @@ public class STGParserNodeListener extends STGParserBaseListener {
       return !inImports.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inTemplate.push(true);
-	}
-
-	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		onExit();
-		this.inTemplate.pop();
-	}
-
-	public boolean inTemplate() {
-      return !inTemplate.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inGroup = new java.util.Stack<>();
 
 	@Override
@@ -97,6 +80,23 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	public boolean inGroup() {
       return !inGroup.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inTemplate.push(true);
+	}
+
+	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		onExit();
+		this.inTemplate.pop();
+	}
+
+	public boolean inTemplate() {
+      return !inTemplate.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inDelimiters = new java.util.Stack<>();
@@ -184,23 +184,6 @@ public class STGParserNodeListener extends STGParserBaseListener {
       return !inDictPairs.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inKeyValuePair = new java.util.Stack<>();
-
-	@Override
-	public void enterKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		onEnter(new Node("KeyValuePair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inKeyValuePair.push(true);
-	}
-
-	public void exitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		onExit();
-		this.inKeyValuePair.pop();
-	}
-
-	public boolean inKeyValuePair() {
-      return !inKeyValuePair.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDefaultValuePair = new java.util.Stack<>();
 
 	@Override
@@ -233,6 +216,23 @@ public class STGParserNodeListener extends STGParserBaseListener {
 
 	public boolean inKeyValue() {
       return !inKeyValue.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inKeyValuePair = new java.util.Stack<>();
+
+	@Override
+	public void enterKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		onEnter(new Node("KeyValuePair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inKeyValuePair.push(true);
+	}
+
+	public void exitKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
+		onExit();
+		this.inKeyValuePair.pop();
+	}
+
+	public boolean inKeyValuePair() {
+      return !inKeyValuePair.isEmpty(); 
    }
 
 }

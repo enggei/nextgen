@@ -7,11 +7,7 @@ public abstract class ClojureDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Dispatch")) visitDispatch(node);
-		else if(hasLabel(node, "File")) visitFile(node);
-		else if(hasLabel(node, "Form")) visitForm(node);
-		else if(hasLabel(node, "Forms")) visitForms(node);
-		else if(hasLabel(node, "List")) visitList(node);
+		if(hasLabel(node, "List")) visitList(node);
 		else if(hasLabel(node, "Vector")) visitVector(node);
 		else if(hasLabel(node, "Map")) visitMap(node);
 		else if(hasLabel(node, "Set")) visitSet(node);
@@ -27,7 +23,10 @@ public abstract class ClojureDomainVisitor {
 		else if(hasLabel(node, "Meta_data")) visitMeta_data(node);
 		else if(hasLabel(node, "Var_quote")) visitVar_quote(node);
 		else if(hasLabel(node, "Host_expr")) visitHost_expr(node);
-		else if(hasLabel(node, "Discard")) visitDiscard(node);
+		else if(hasLabel(node, "Form")) visitForm(node);
+		else if(hasLabel(node, "Forms")) visitForms(node);
+		else if(hasLabel(node, "Param_name")) visitParam_name(node);
+		else if(hasLabel(node, "Dispatch")) visitDispatch(node);
 		else if(hasLabel(node, "Regex")) visitRegex(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "String")) visitString(node);
@@ -46,32 +45,9 @@ public abstract class ClojureDomainVisitor {
 		else if(hasLabel(node, "Symbol")) visitSymbol(node);
 		else if(hasLabel(node, "Simple_sym")) visitSimple_sym(node);
 		else if(hasLabel(node, "Ns_symbol")) visitNs_symbol(node);
-		else if(hasLabel(node, "Param_name")) visitParam_name(node);
+		else if(hasLabel(node, "File")) visitFile(node);
+		else if(hasLabel(node, "Discard")) visitDiscard(node);
    }
-
-	public void visitDispatch(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFile(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitForm(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitForms(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitList(Node node) {
 		if (visited.contains(node)) return;
@@ -169,7 +145,25 @@ public abstract class ClojureDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitDiscard(Node node) {
+	public void visitForm(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitForms(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitParam_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDispatch(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -283,7 +277,13 @@ public abstract class ClojureDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitParam_name(Node node) {
+	public void visitFile(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDiscard(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

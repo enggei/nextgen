@@ -8,19 +8,13 @@ public abstract class JSONDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Value")) visitValue(node);
-		else if(hasLabel(node, "Json")) visitJson(node);
 		else if(hasLabel(node, "Obj")) visitObj(node);
 		else if(hasLabel(node, "Pair")) visitPair(node);
 		else if(hasLabel(node, "Array")) visitArray(node);
+		else if(hasLabel(node, "Json")) visitJson(node);
    }
 
 	public void visitValue(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitJson(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -39,6 +33,12 @@ public abstract class JSONDomainVisitor {
 	}
 
 	public void visitArray(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitJson(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

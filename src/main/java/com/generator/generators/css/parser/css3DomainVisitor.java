@@ -9,12 +9,8 @@ public abstract class css3DomainVisitor {
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
 		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Stylesheet")) visitStylesheet(node);
-		else if(hasLabel(node, "GoodCharset")) visitGoodCharset(node);
-		else if(hasLabel(node, "BadCharset")) visitBadCharset(node);
-		else if(hasLabel(node, "GoodImport")) visitGoodImport(node);
-		else if(hasLabel(node, "BadImport")) visitBadImport(node);
+		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "GoodNamespace")) visitGoodNamespace(node);
 		else if(hasLabel(node, "BadNamespace")) visitBadNamespace(node);
 		else if(hasLabel(node, "NamespacePrefix")) visitNamespacePrefix(node);
@@ -28,6 +24,10 @@ public abstract class css3DomainVisitor {
 		else if(hasLabel(node, "PseudoPage")) visitPseudoPage(node);
 		else if(hasLabel(node, "SelectorGroup")) visitSelectorGroup(node);
 		else if(hasLabel(node, "Selector")) visitSelector(node);
+		else if(hasLabel(node, "GoodCharset")) visitGoodCharset(node);
+		else if(hasLabel(node, "BadCharset")) visitBadCharset(node);
+		else if(hasLabel(node, "GoodImport")) visitGoodImport(node);
+		else if(hasLabel(node, "BadImport")) visitBadImport(node);
 		else if(hasLabel(node, "Combinator")) visitCombinator(node);
 		else if(hasLabel(node, "SimpleSelectorSequence")) visitSimpleSelectorSequence(node);
 		else if(hasLabel(node, "TypeSelector")) visitTypeSelector(node);
@@ -110,37 +110,13 @@ public abstract class css3DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitStylesheet(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitGoodCharset(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBadCharset(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitGoodImport(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBadImport(Node node) {
+	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -219,6 +195,30 @@ public abstract class css3DomainVisitor {
 	}
 
 	public void visitSelector(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGoodCharset(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBadCharset(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGoodImport(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBadImport(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

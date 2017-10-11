@@ -16,11 +16,6 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "ExpressionList")) visitExpressionList(node);
 		else if(hasLabel(node, "TypeList")) visitTypeList(node);
-		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
-		else if(hasLabel(node, "PackageDeclaration")) visitPackageDeclaration(node);
-		else if(hasLabel(node, "ImportDeclaration")) visitImportDeclaration(node);
-		else if(hasLabel(node, "TypeDeclaration")) visitTypeDeclaration(node);
-		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "ClassOrInterfaceModifier")) visitClassOrInterfaceModifier(node);
 		else if(hasLabel(node, "VariableModifier")) visitVariableModifier(node);
 		else if(hasLabel(node, "ClassDeclaration")) visitClassDeclaration(node);
@@ -31,8 +26,12 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "EnumConstants")) visitEnumConstants(node);
 		else if(hasLabel(node, "EnumConstant")) visitEnumConstant(node);
 		else if(hasLabel(node, "EnumBodyDeclarations")) visitEnumBodyDeclarations(node);
-		else if(hasLabel(node, "InterfaceDeclaration")) visitInterfaceDeclaration(node);
 		else if(hasLabel(node, "ClassBody")) visitClassBody(node);
+		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
+		else if(hasLabel(node, "PackageDeclaration")) visitPackageDeclaration(node);
+		else if(hasLabel(node, "ImportDeclaration")) visitImportDeclaration(node);
+		else if(hasLabel(node, "TypeDeclaration")) visitTypeDeclaration(node);
+		else if(hasLabel(node, "InterfaceDeclaration")) visitInterfaceDeclaration(node);
 		else if(hasLabel(node, "InterfaceBody")) visitInterfaceBody(node);
 		else if(hasLabel(node, "ClassBodyDeclaration")) visitClassBodyDeclaration(node);
 		else if(hasLabel(node, "MemberDeclaration")) visitMemberDeclaration(node);
@@ -56,6 +55,7 @@ public abstract class JavaParserDomainVisitor {
 		else if(hasLabel(node, "VariableInitializer")) visitVariableInitializer(node);
 		else if(hasLabel(node, "ArrayInitializer")) visitArrayInitializer(node);
 		else if(hasLabel(node, "ClassOrInterfaceType")) visitClassOrInterfaceType(node);
+		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "TypeArgument")) visitTypeArgument(node);
 		else if(hasLabel(node, "QualifiedNameList")) visitQualifiedNameList(node);
 		else if(hasLabel(node, "FormalParameters")) visitFormalParameters(node);
@@ -165,36 +165,6 @@ public abstract class JavaParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitCompilationUnit(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPackageDeclaration(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImportDeclaration(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTypeDeclaration(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitModifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitClassOrInterfaceModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -255,13 +225,37 @@ public abstract class JavaParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitInterfaceDeclaration(Node node) {
+	public void visitClassBody(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassBody(Node node) {
+	public void visitCompilationUnit(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPackageDeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImportDeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTypeDeclaration(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitInterfaceDeclaration(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -400,6 +394,12 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitClassOrInterfaceType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

@@ -14,10 +14,6 @@ public abstract class ECMAScriptDomainVisitor {
 		else if(hasLabel(node, "NotExpression")) visitNotExpression(node);
 		else if(hasLabel(node, "ParenthesizedExpression")) visitParenthesizedExpression(node);
 		else if(hasLabel(node, "ReservedWord")) visitReservedWord(node);
-		else if(hasLabel(node, "Program")) visitProgram(node);
-		else if(hasLabel(node, "SourceElements")) visitSourceElements(node);
-		else if(hasLabel(node, "SourceElement")) visitSourceElement(node);
-		else if(hasLabel(node, "StatementList")) visitStatementList(node);
 		else if(hasLabel(node, "VariableStatement")) visitVariableStatement(node);
 		else if(hasLabel(node, "VariableDeclarationList")) visitVariableDeclarationList(node);
 		else if(hasLabel(node, "VariableDeclaration")) visitVariableDeclaration(node);
@@ -27,6 +23,10 @@ public abstract class ECMAScriptDomainVisitor {
 		else if(hasLabel(node, "IfStatement")) visitIfStatement(node);
 		else if(hasLabel(node, "DoStatement")) visitDoStatement(node);
 		else if(hasLabel(node, "WhileStatement")) visitWhileStatement(node);
+		else if(hasLabel(node, "Program")) visitProgram(node);
+		else if(hasLabel(node, "SourceElements")) visitSourceElements(node);
+		else if(hasLabel(node, "SourceElement")) visitSourceElement(node);
+		else if(hasLabel(node, "StatementList")) visitStatementList(node);
 		else if(hasLabel(node, "ForStatement")) visitForStatement(node);
 		else if(hasLabel(node, "ForVarStatement")) visitForVarStatement(node);
 		else if(hasLabel(node, "ForInStatement")) visitForInStatement(node);
@@ -56,10 +56,10 @@ public abstract class ECMAScriptDomainVisitor {
 		else if(hasLabel(node, "PropertyNameAndValueList")) visitPropertyNameAndValueList(node);
 		else if(hasLabel(node, "PropertyExpressionAssignment")) visitPropertyExpressionAssignment(node);
 		else if(hasLabel(node, "PropertyGetter")) visitPropertyGetter(node);
+		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "PropertySetter")) visitPropertySetter(node);
 		else if(hasLabel(node, "PropertyName")) visitPropertyName(node);
 		else if(hasLabel(node, "PropertySetParameterList")) visitPropertySetParameterList(node);
-		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "ArgumentList")) visitArgumentList(node);
 		else if(hasLabel(node, "ExpressionSequence")) visitExpressionSequence(node);
 		else if(hasLabel(node, "TernaryExpression")) visitTernaryExpression(node);
@@ -149,30 +149,6 @@ public abstract class ECMAScriptDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitProgram(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSourceElements(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSourceElement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStatementList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitVariableStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -222,6 +198,30 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitWhileStatement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitProgram(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSourceElements(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSourceElement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStatementList(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -401,6 +401,12 @@ public abstract class ECMAScriptDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitArguments(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitPropertySetter(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -414,12 +420,6 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitPropertySetParameterList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitArguments(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

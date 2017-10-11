@@ -67,6 +67,15 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
 		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -85,35 +94,8 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
 		final Node node = new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		final Node node = new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -184,44 +166,8 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
-		final Node node = new Node("MultiPartQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
-		final Node node = new Node("ReadPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
-		final Node node = new Node("UpdatingPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
-		final Node node = new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
-		final Node node = new Node("UpdatingClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		final Node node = new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -285,6 +231,60 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	@Override
 	public Node visitSetItem(com.generator.generators.cypher.parser.CypherParser.SetItemContext arg) {
 		final Node node = new Node("SetItem", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		final Node node = new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMultiPartQuery(com.generator.generators.cypher.parser.CypherParser.MultiPartQueryContext arg) {
+		final Node node = new Node("MultiPartQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReadPart(com.generator.generators.cypher.parser.CypherParser.ReadPartContext arg) {
+		final Node node = new Node("ReadPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUpdatingPart(com.generator.generators.cypher.parser.CypherParser.UpdatingPartContext arg) {
+		final Node node = new Node("UpdatingPart", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUpdatingStartClause(com.generator.generators.cypher.parser.CypherParser.UpdatingStartClauseContext arg) {
+		final Node node = new Node("UpdatingStartClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUpdatingClause(com.generator.generators.cypher.parser.CypherParser.UpdatingClauseContext arg) {
+		final Node node = new Node("UpdatingClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -67,8 +67,89 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
+		final Node node = new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
+		final Node node = new Node("Pattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
+		final Node node = new Node("CaseClauses", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
+		final Node node = new Node("CaseClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
+		final Node node = new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
+		final Node node = new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
+		final Node node = new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
+		final Node node = new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
 		final Node node = new Node("QualId", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassQualifier(com.generator.generators.scala.parser.ScalaParser.ClassQualifierContext arg) {
+		final Node node = new Node("ClassQualifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -94,33 +175,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitClassQualifier(com.generator.generators.scala.parser.ScalaParser.ClassQualifierContext arg) {
-		final Node node = new Node("ClassQualifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
-		final Node node = new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
-		final Node node = new Node("InfixType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
 		final Node node = new Node("FunctionArgTypes", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -132,6 +186,15 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitExistentialClause(com.generator.generators.scala.parser.ScalaParser.ExistentialClauseContext arg) {
 		final Node node = new Node("ExistentialClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
+		final Node node = new Node("InfixType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -222,15 +285,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitAscription(com.generator.generators.scala.parser.ScalaParser.AscriptionContext arg) {
 		final Node node = new Node("Ascription", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr(com.generator.generators.scala.parser.ScalaParser.ExprContext arg) {
-		final Node node = new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -346,35 +400,8 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitCaseClauses(com.generator.generators.scala.parser.ScalaParser.CaseClausesContext arg) {
-		final Node node = new Node("CaseClauses", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCaseClause(com.generator.generators.scala.parser.ScalaParser.CaseClauseContext arg) {
-		final Node node = new Node("CaseClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitGuard(com.generator.generators.scala.parser.ScalaParser.GuardContext arg) {
 		final Node node = new Node("Guard", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPattern(com.generator.generators.scala.parser.ScalaParser.PatternContext arg) {
-		final Node node = new Node("Pattern", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -562,15 +589,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
-		final Node node = new Node("Modifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitLocalModifier(com.generator.generators.scala.parser.ScalaParser.LocalModifierContext arg) {
 		final Node node = new Node("LocalModifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -591,15 +609,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitAccessQualifier(com.generator.generators.scala.parser.ScalaParser.AccessQualifierContext arg) {
 		final Node node = new Node("AccessQualifier", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
-		final Node node = new Node("Annotation", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -960,15 +969,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitPackageObject(com.generator.generators.scala.parser.ScalaParser.PackageObjectContext arg) {
 		final Node node = new Node("PackageObject", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
-		final Node node = new Node("CompilationUnit", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

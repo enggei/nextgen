@@ -7,7 +7,9 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "RuleBlock")) visitRuleBlock(node);
+		if(hasLabel(node, "RuleModifiers")) visitRuleModifiers(node);
+		else if(hasLabel(node, "RuleModifier")) visitRuleModifier(node);
+		else if(hasLabel(node, "RuleBlock")) visitRuleBlock(node);
 		else if(hasLabel(node, "RuleAltList")) visitRuleAltList(node);
 		else if(hasLabel(node, "LabeledAlt")) visitLabeledAlt(node);
 		else if(hasLabel(node, "LexerRuleSpec")) visitLexerRuleSpec(node);
@@ -42,12 +44,12 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "ElementOption")) visitElementOption(node);
 		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
 		else if(hasLabel(node, "GrammarSpec")) visitGrammarSpec(node);
-		else if(hasLabel(node, "GrammarType")) visitGrammarType(node);
 		else if(hasLabel(node, "PrequelConstruct")) visitPrequelConstruct(node);
-		else if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
+		else if(hasLabel(node, "GrammarType")) visitGrammarType(node);
 		else if(hasLabel(node, "OptionsSpec")) visitOptionsSpec(node);
 		else if(hasLabel(node, "Option")) visitOption(node);
 		else if(hasLabel(node, "OptionValue")) visitOptionValue(node);
+		else if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
 		else if(hasLabel(node, "DelegateGrammar")) visitDelegateGrammar(node);
 		else if(hasLabel(node, "TokensSpec")) visitTokensSpec(node);
 		else if(hasLabel(node, "ChannelsSpec")) visitChannelsSpec(node);
@@ -68,9 +70,19 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "ThrowsSpec")) visitThrowsSpec(node);
 		else if(hasLabel(node, "LocalsSpec")) visitLocalsSpec(node);
 		else if(hasLabel(node, "RuleAction")) visitRuleAction(node);
-		else if(hasLabel(node, "RuleModifiers")) visitRuleModifiers(node);
-		else if(hasLabel(node, "RuleModifier")) visitRuleModifier(node);
    }
+
+	public void visitRuleModifiers(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRuleModifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitRuleBlock(Node node) {
 		if (visited.contains(node)) return;
@@ -282,19 +294,13 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitGrammarType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitPrequelConstruct(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitDelegateGrammars(Node node) {
+	public void visitGrammarType(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -313,6 +319,12 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	}
 
 	public void visitOptionValue(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDelegateGrammars(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -433,18 +445,6 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	}
 
 	public void visitRuleAction(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRuleModifiers(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRuleModifier(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

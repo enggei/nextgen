@@ -20,7 +20,6 @@ public abstract class GolangDomainVisitor {
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "Eos")) visitEos(node);
 		else if(hasLabel(node, "SourceFile")) visitSourceFile(node);
-		else if(hasLabel(node, "PackageClause")) visitPackageClause(node);
 		else if(hasLabel(node, "ImportDecl")) visitImportDecl(node);
 		else if(hasLabel(node, "ImportSpec")) visitImportSpec(node);
 		else if(hasLabel(node, "ImportPath")) visitImportPath(node);
@@ -62,6 +61,7 @@ public abstract class GolangDomainVisitor {
 		else if(hasLabel(node, "TypeSwitchCase")) visitTypeSwitchCase(node);
 		else if(hasLabel(node, "TypeList")) visitTypeList(node);
 		else if(hasLabel(node, "SelectStmt")) visitSelectStmt(node);
+		else if(hasLabel(node, "PackageClause")) visitPackageClause(node);
 		else if(hasLabel(node, "CommClause")) visitCommClause(node);
 		else if(hasLabel(node, "CommCase")) visitCommCase(node);
 		else if(hasLabel(node, "RecvStmt")) visitRecvStmt(node);
@@ -183,12 +183,6 @@ public abstract class GolangDomainVisitor {
 	}
 
 	public void visitSourceFile(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPackageClause(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -435,6 +429,12 @@ public abstract class GolangDomainVisitor {
 	}
 
 	public void visitSelectStmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPackageClause(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

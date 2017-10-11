@@ -8,11 +8,6 @@ public abstract class MySqlParserDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "NotExpression")) visitNotExpression(node);
-		else if(hasLabel(node, "Root")) visitRoot(node);
-		else if(hasLabel(node, "Sql_statements")) visitSql_statements(node);
-		else if(hasLabel(node, "Sql_statement")) visitSql_statement(node);
-		else if(hasLabel(node, "Empty_statement")) visitEmpty_statement(node);
-		else if(hasLabel(node, "Ddl_statement")) visitDdl_statement(node);
 		else if(hasLabel(node, "Dml_statement")) visitDml_statement(node);
 		else if(hasLabel(node, "Transaction_statement")) visitTransaction_statement(node);
 		else if(hasLabel(node, "Replication_statement")) visitReplication_statement(node);
@@ -22,7 +17,13 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "Utility_statement")) visitUtility_statement(node);
 		else if(hasLabel(node, "Create_database")) visitCreate_database(node);
 		else if(hasLabel(node, "Create_event")) visitCreate_event(node);
+		else if(hasLabel(node, "Root")) visitRoot(node);
+		else if(hasLabel(node, "Sql_statements")) visitSql_statements(node);
+		else if(hasLabel(node, "Sql_statement")) visitSql_statement(node);
+		else if(hasLabel(node, "Empty_statement")) visitEmpty_statement(node);
+		else if(hasLabel(node, "Ddl_statement")) visitDdl_statement(node);
 		else if(hasLabel(node, "Create_index")) visitCreate_index(node);
+		else if(hasLabel(node, "Create_view")) visitCreate_view(node);
 		else if(hasLabel(node, "Create_logfile_group")) visitCreate_logfile_group(node);
 		else if(hasLabel(node, "Create_procedure")) visitCreate_procedure(node);
 		else if(hasLabel(node, "Create_function")) visitCreate_function(node);
@@ -33,7 +34,6 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "Create_tablespace_innodb")) visitCreate_tablespace_innodb(node);
 		else if(hasLabel(node, "Create_tablespace_ndb")) visitCreate_tablespace_ndb(node);
 		else if(hasLabel(node, "Create_trigger")) visitCreate_trigger(node);
-		else if(hasLabel(node, "Create_view")) visitCreate_view(node);
 		else if(hasLabel(node, "Create_database_option")) visitCreate_database_option(node);
 		else if(hasLabel(node, "Owner_statement")) visitOwner_statement(node);
 		else if(hasLabel(node, "PreciseSchedule")) visitPreciseSchedule(node);
@@ -480,36 +480,6 @@ public abstract class MySqlParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitRoot(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSql_statements(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSql_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEmpty_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDdl_statement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitDml_statement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -564,7 +534,43 @@ public abstract class MySqlParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitRoot(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSql_statements(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSql_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEmpty_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDdl_statement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitCreate_index(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCreate_view(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -625,12 +631,6 @@ public abstract class MySqlParserDomainVisitor {
 	}
 
 	public void visitCreate_trigger(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCreate_view(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

@@ -28,9 +28,9 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		System.out.println("Document");
-		final Node node = model.newNode(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		System.out.println("Element");
+		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,19 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		System.out.println("Prolog");
-		final Node node = model.newNode(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		System.out.println("Attribute");
+		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
+		System.out.println("Document");
+		final Node node = model.newNode(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -88,19 +98,9 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		System.out.println("Element");
-		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		System.out.println("Attribute");
-		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		System.out.println("Prolog");
+		final Node node = model.newNode(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

@@ -129,96 +129,6 @@ public class CypherNeoListener extends CypherBaseListener {
       return !inStatement.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
-
-	@Override
-	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cypher"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inCypher.push(true);
-	}
-
-	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onExit();
-		this.inCypher.pop();
-	}
-
-	public boolean inCypher() {
-      return !inCypher.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inQuery.push(true);
-	}
-
-	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onExit();
-		this.inQuery.pop();
-	}
-
-	public boolean inQuery() {
-      return !inQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("RegularQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRegularQuery.push(true);
-	}
-
-	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onExit();
-		this.inRegularQuery.pop();
-	}
-
-	public boolean inRegularQuery() {
-      return !inRegularQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
-
-	@Override
-	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Union"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inUnion.push(true);
-	}
-
-	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onExit();
-		this.inUnion.pop();
-	}
-
-	public boolean inUnion() {
-      return !inUnion.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("SingleQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inSingleQuery.push(true);
-	}
-
-	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onExit();
-		this.inSingleQuery.pop();
-	}
-
-	public boolean inSingleQuery() {
-      return !inSingleQuery.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
 
 	@Override
@@ -399,6 +309,78 @@ public class CypherNeoListener extends CypherBaseListener {
       return !inReadingClause.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
+
+	@Override
+	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		final Node node = model.findOrCreate(Label.label("Cypher"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inCypher.push(true);
+	}
+
+	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onExit();
+		this.inCypher.pop();
+	}
+
+	public boolean inCypher() {
+      return !inCypher.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return !inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
+
+	@Override
+	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Union"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inUnion.push(true);
+	}
+
+	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onExit();
+		this.inUnion.pop();
+	}
+
+	public boolean inUnion() {
+      return !inUnion.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		final Node node = model.findOrCreate(Label.label("SingleQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inSingleQuery.push(true);
+	}
+
+	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onExit();
+		this.inSingleQuery.pop();
+	}
+
+	public boolean inSingleQuery() {
+      return !inSingleQuery.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
 
 	@Override
@@ -415,6 +397,24 @@ public class CypherNeoListener extends CypherBaseListener {
 
 	public boolean inCyper_match() {
       return !inCyper_match.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		final Node node = model.findOrCreate(Label.label("RegularQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRegularQuery.push(true);
+	}
+
+	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onExit();
+		this.inRegularQuery.pop();
+	}
+
+	public boolean inRegularQuery() {
+      return !inRegularQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();
