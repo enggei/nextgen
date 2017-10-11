@@ -76,8 +76,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		final Node node = new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -85,8 +85,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		final Node node = new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		final Node node = new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -112,8 +112,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		final Node node = new Node("Retstat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -121,8 +121,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
+		final Node node = new Node("Retstat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

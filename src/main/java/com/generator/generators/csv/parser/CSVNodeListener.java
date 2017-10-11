@@ -48,40 +48,6 @@ public class CSVNodeListener extends CSVBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
-
-	@Override
-	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inField.push(true);
-	}
-
-	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		onExit();
-		this.inField.pop();
-	}
-
-	public boolean inField() {
-      return !inField.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
-
-	@Override
-	public void enterHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		onEnter(new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inHdr.push(true);
-	}
-
-	public void exitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		onExit();
-		this.inHdr.pop();
-	}
-
-	public boolean inHdr() {
-      return !inHdr.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
 
 	@Override
@@ -114,6 +80,40 @@ public class CSVNodeListener extends CSVBaseListener {
 
 	public boolean inCsvFile() {
       return !inCsvFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
+
+	@Override
+	public void enterHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
+		onEnter(new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inHdr.push(true);
+	}
+
+	public void exitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
+		onExit();
+		this.inHdr.pop();
+	}
+
+	public boolean inHdr() {
+      return !inHdr.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+
+	@Override
+	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inField.push(true);
+	}
+
+	public void exitField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
+		onExit();
+		this.inField.pop();
+	}
+
+	public boolean inField() {
+      return !inField.isEmpty(); 
    }
 
 }

@@ -48,6 +48,23 @@ public class ClojureNodeListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
+
+	@Override
+	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		onEnter(new Node("Dispatch", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inDispatch.push(true);
+	}
+
+	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		onExit();
+		this.inDispatch.pop();
+	}
+
+	public boolean inDispatch() {
+      return !inDispatch.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
 
 	@Override
@@ -386,23 +403,6 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	public boolean inDiscard() {
       return !inDiscard.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
-
-	@Override
-	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		onEnter(new Node("Dispatch", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inDispatch.push(true);
-	}
-
-	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		onExit();
-		this.inDispatch.pop();
-	}
-
-	public boolean inDispatch() {
-      return !inDispatch.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRegex = new java.util.Stack<>();

@@ -67,6 +67,15 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
+		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
 		final Node node = new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -94,15 +103,6 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
-	public Node visitSet(com.generator.generators.cypher.parser.CypherParser.SetContext arg) {
-		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
 		final Node node = new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -121,6 +121,15 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	}
 
 	@Override
+	public Node visitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		final Node node = new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
 		final Node node = new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -132,15 +141,6 @@ public class CypherNodeVisitor extends CypherBaseVisitor<CypherNodeVisitor.Node>
 	@Override
 	public Node visitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
 		final Node node = new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		final Node node = new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
