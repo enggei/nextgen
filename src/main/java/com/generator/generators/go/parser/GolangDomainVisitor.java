@@ -9,16 +9,16 @@ public abstract class GolangDomainVisitor {
    public void visit(Node node) {
 		if(hasLabel(node, "Element")) visitElement(node);
 		else if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Declaration")) visitDeclaration(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Selector")) visitSelector(node);
 		else if(hasLabel(node, "Function")) visitFunction(node);
+		else if(hasLabel(node, "StatementList")) visitStatementList(node);
 		else if(hasLabel(node, "ElementList")) visitElementList(node);
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
 		else if(hasLabel(node, "Eos")) visitEos(node);
-		else if(hasLabel(node, "StatementList")) visitStatementList(node);
 		else if(hasLabel(node, "SourceFile")) visitSourceFile(node);
 		else if(hasLabel(node, "PackageClause")) visitPackageClause(node);
 		else if(hasLabel(node, "ImportDecl")) visitImportDecl(node);
@@ -122,6 +122,12 @@ public abstract class GolangDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -140,12 +146,6 @@ public abstract class GolangDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitSelector(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -153,6 +153,12 @@ public abstract class GolangDomainVisitor {
 	}
 
 	public void visitFunction(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStatementList(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -171,12 +177,6 @@ public abstract class GolangDomainVisitor {
 	}
 
 	public void visitEos(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStatementList(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

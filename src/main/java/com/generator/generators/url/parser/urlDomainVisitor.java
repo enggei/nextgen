@@ -7,12 +7,7 @@ public abstract class urlDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Url")) visitUrl(node);
-		else if(hasLabel(node, "Uri")) visitUri(node);
-		else if(hasLabel(node, "Scheme")) visitScheme(node);
-		else if(hasLabel(node, "Host")) visitHost(node);
-		else if(hasLabel(node, "Hostname")) visitHostname(node);
-		else if(hasLabel(node, "Hostnumber")) visitHostnumber(node);
+		if(hasLabel(node, "Hostnumber")) visitHostnumber(node);
 		else if(hasLabel(node, "Port")) visitPort(node);
 		else if(hasLabel(node, "Path")) visitPath(node);
 		else if(hasLabel(node, "User")) visitUser(node);
@@ -20,40 +15,15 @@ public abstract class urlDomainVisitor {
 		else if(hasLabel(node, "Password")) visitPassword(node);
 		else if(hasLabel(node, "Frag")) visitFrag(node);
 		else if(hasLabel(node, "Search")) visitSearch(node);
+		else if(hasLabel(node, "Url")) visitUrl(node);
+		else if(hasLabel(node, "Uri")) visitUri(node);
+		else if(hasLabel(node, "Scheme")) visitScheme(node);
+		else if(hasLabel(node, "Host")) visitHost(node);
+		else if(hasLabel(node, "Hostname")) visitHostname(node);
 		else if(hasLabel(node, "Searchparameter")) visitSearchparameter(node);
 		else if(hasLabel(node, "String")) visitString(node);
 		else if(hasLabel(node, "Query")) visitQuery(node);
    }
-
-	public void visitUrl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUri(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitScheme(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHost(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHostname(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitHostnumber(Node node) {
 		if (visited.contains(node)) return;
@@ -98,6 +68,36 @@ public abstract class urlDomainVisitor {
 	}
 
 	public void visitSearch(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUrl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUri(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitScheme(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHost(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHostname(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

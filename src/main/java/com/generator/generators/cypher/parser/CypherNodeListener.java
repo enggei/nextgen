@@ -65,40 +65,6 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inAtom.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
 
 	@Override
@@ -131,6 +97,40 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inLiteral() {
       return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cypher.parser.CypherParser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.cypher.parser.CypherParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();

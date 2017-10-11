@@ -5,7 +5,6 @@ import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
-import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -18,14 +17,6 @@ import java.util.*;
  * Created 25.08.17.
  */
 public class Tests {
-
-   @Test
-   public void testAntlrGrammarModel() throws Exception {
-
-      final ANTLRv4Parser parser = new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName("/home/goe/projects/nextgen/src/main/java/com/generator/generators/json/parser/JSON.g4"))));
-      final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true);
-      new ParseTreeWalker().walk(listener, parser.grammarSpec());
-   }
 
    private class GrammarSymbol {
 
@@ -115,7 +106,6 @@ public class Tests {
       new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4")))).grammarSpec());
       new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Lexer.g4")))).grammarSpec());
       new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/LexBasic.g4")))).grammarSpec());
-//      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/parser/JSON.g4")))).grammarSpec());
 
       final AntlrGroup antlrGroup = new AntlrGroup();
 
@@ -123,72 +113,29 @@ public class Tests {
             setName("ANTLRv4Parser" + "Domain").
             setPackage("com.generator.generators.antlr.parser");
 
+      final AntlrGroup.AntlrDomainGrammarVisitorST grammarVisitor = antlrGroup.newAntlrDomainGrammarVisitor().
+            setPackage("com.generator.generators.antlr.parser").
+            setName("ANTLRv4ParserGrammarVisitor");
+
       for (GrammarSymbol grammarSymbol : symbolMap.values()) {
          System.out.println(grammarSymbol.toString(symbolMap));
 
          final AntlrGroup.AntlrNodeST nodeST = antlrGroup.newAntlrNode().
                setName(grammarSymbol.name);
 
-         for (Relation child : grammarSymbol.relations) {
+         grammarVisitor.addNodesValue(grammarSymbol.name);
+
+         for (Relation child : grammarSymbol.relations)
             nodeST.addChildrenValue(child.dst);
-         }
 
          antlrDomainST.addNodesValue(nodeST, grammarSymbol.name);
       }
 
-      System.out.println(antlrDomainST);
+      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, grammarVisitor.getPackage(), grammarVisitor.getName()).write(grammarVisitor);
       GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrDomainST.getPackage(), antlrDomainST.getName()).write(antlrDomainST);
    }
 
-   @Test
-   public void createAntlrDomain() throws Exception {
 
-//      final Map<String, MetaNode> visitedNodes = new LinkedHashMap<>();
-//
-//      final Map<String, MetaNode> distinctMap = new LinkedHashMap<>();
-//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4"))))), distinctMap);
-//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Lexer.g4"))))), distinctMap);
-//      visit(parse(visitedNodes, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/LexBasic.g4"))))), distinctMap);
-//
-//      final AntlrGroup antlrGroup = new AntlrGroup();
-//
-//      final AntlrGroup.AntlrDomainST antlrDomainST = antlrGroup.newAntlrDomain().
-//            setName("ANTLRv4Parser" + "Domain").
-//            setPackage("com.generator.generators.antlr.parser");
-//
-//      for (Map.Entry<String, MetaNode> entry : distinctMap.entrySet()) {
-//         final MetaNode metaNode = entry.getValue();
-//         System.out.println(entry.getKey() + " has " + metaNode.children.size() + " entries: " + StringUtil.toString(metaNode.children.values(), ","));
-//
-//         final AntlrGroup.AntlrNodeST nodeST = antlrGroup.newAntlrNode().
-//               setName(entry.getKey()).
-//               setDomain(antlrDomainST.getName());
-//
-//         for (MetaRelation relation : metaNode.children.values()) {
-//            final String childName = relation.dst.name;
-//            switch (relation.ebnf) {
-//               case REQUIRED:
-//                  nodeST.addChildrenValue("", "void set" + childName + "(" + childName + " value) { this._" + childName + " = value; }", childName + " " + "_" + childName);
-//                  break;
-//               case OPTIONAL:
-//                  nodeST.addChildrenValue("", "void set" + childName + "(" + childName + " value) { this._" + childName + " = value; }", childName + " " + "_" + childName);
-//                  break;
-//               case ONE_OR_MORE:
-//                  nodeST.addChildrenValue("", "void add" + childName + "(" + childName + " value) { this._" + childName + ".add(value); }", "java.util.List<" + childName + "> _" + childName + " = new ArrayList<>();");
-//                  break;
-//               case ZERO_OR_MORE:
-//                  nodeST.addChildrenValue("", "void add" + childName + "(" + childName + " value) { this._" + childName + ".add(value); }", "java.util.List<" + childName + "> _" + childName + " = new ArrayList<>();");
-//                  break;
-//            }
-//         }
-//
-//         antlrDomainST.addNodesValue(nodeST);
-//      }
-//
-//      System.out.println(antlrDomainST);
-
-//      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrDomainST.getPackage(), antlrDomainST.getName()).write(antlrDomainST);
-   }
 
    private void visit(ANTLRv4ParserNodeListener.Node node, Map<String, MetaNode> distinctMap) {
 

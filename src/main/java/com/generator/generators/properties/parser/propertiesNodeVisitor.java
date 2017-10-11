@@ -58,6 +58,15 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	}
 
 	@Override
+	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
+		final Node node = new Node("Decl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitComment(com.generator.generators.properties.parser.propertiesParser.CommentContext arg) {
 		final Node node = new Node("Comment", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -87,15 +96,6 @@ public class propertiesNodeVisitor extends propertiesBaseVisitor<propertiesNodeV
 	@Override
 	public Node visitKey(com.generator.generators.properties.parser.propertiesParser.KeyContext arg) {
 		final Node node = new Node("Key", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDecl(com.generator.generators.properties.parser.propertiesParser.DeclContext arg) {
-		final Node node = new Node("Decl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

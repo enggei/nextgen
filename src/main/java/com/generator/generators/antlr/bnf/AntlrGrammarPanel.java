@@ -25,12 +25,12 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AntlrGrammarPanel extends JPanel {
 
    private AntlrGrammarModel model;
-   private final Map<Symbol, Rectangle2D> shapeMap = new ConcurrentHashMap<>();
+   private final Map<AntlrSymbol, Rectangle2D> shapeMap = new ConcurrentHashMap<>();
 
    private final PropertyChangeSupport modelChangeSupport = new PropertyChangeSupport(this);
    private Dimension grammarSpecSize = new Dimension(1200, 640);
 
-   private AntlrGrammarPanel() {
+   public AntlrGrammarPanel() {
       super(null);
       setPreferredSize(grammarSpecSize);
 
@@ -43,9 +43,9 @@ public class AntlrGrammarPanel extends JPanel {
 
                final JPopupMenu pop = new JPopupMenu();
 
-               for (Map.Entry<Symbol, Rectangle2D> entry : shapeMap.entrySet()) {
+               for (Map.Entry<AntlrSymbol, Rectangle2D> entry : shapeMap.entrySet()) {
                   if (!entry.getValue().contains(e.getX(), e.getY())) continue;
-                  final JMenu symbolMenu = new JMenu(entry.getKey().name);
+                  final JMenu symbolMenu = new JMenu(entry.getKey().label == null ? entry.getKey().type : entry.getKey().label);
                   entry.getKey().addActionsTo(symbolMenu, modelChangeSupport);
                   pop.add(symbolMenu);
                }
@@ -60,9 +60,9 @@ public class AntlrGrammarPanel extends JPanel {
                         final String name = SwingUtil.showInputDialog("Name", AntlrGrammarPanel.this);
                         if (name == null || name.length() == 0) return;
 
-                        final ANTLRv4ParserDomain.RuleSpec newRuleSpec = model.newRuleSpec(name);
+                        final ANTLRv4ParserDomain.RuleSpec newRuleSpec = model.newRuleSpec(name, "", "");
 
-                        for (Symbol symbol : model.getGrammarSpec().symbols) {
+                        for (AntlrSymbol symbol : model.getGrammarSpec().symbols) {
                            if (symbol instanceof ANTLRv4ParserDomain.Rules) {
                               ((ANTLRv4ParserDomain.Rules) symbol).addRuleSpec(newRuleSpec);
                               requestRepaint();
@@ -70,7 +70,7 @@ public class AntlrGrammarPanel extends JPanel {
                            }
                         }
 
-                        final ANTLRv4ParserDomain.Rules rules = model.newRules();
+                        final ANTLRv4ParserDomain.Rules rules = model.newRules(name, "", "");
                         model.getGrammarSpec().addRules(rules);
                         rules.addRuleSpec(newRuleSpec);
                         requestRepaint();
@@ -101,19 +101,7 @@ public class AntlrGrammarPanel extends JPanel {
                      final File file = SwingUtil.showOpenFile(AntlrGrammarPanel.this, "/home/goe/projects/nextgen/src/main/java/com/generator/generators/json/parser/JSON.g4");
                      if (file == null || !file.getName().endsWith(".g4")) return;
 
-                     final File[] grammarFiles = FileUtil.list(file.getParent(), ".g4");
-
-                     final AntlrGrammarModel listener = new AntlrGrammarModel();
-                     for (File grammarFile : grammarFiles) {
-                        try {
-                           new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
-                        } catch (IOException e1) {
-                           SwingUtil.showException("Could not parse " + grammarFile.getAbsolutePath(), e1, AntlrGrammarPanel.this);
-                        }
-                     }
-
-                     listener.showDistinct();
-                     setModel(listener);
+                     setModel(parseAntlrFile(file, AntlrGrammarPanel.this));
                   }
                });
 
@@ -123,7 +111,11 @@ public class AntlrGrammarPanel extends JPanel {
       });
    }
 
-   private void setModel(AntlrGrammarModel model) {
+   public ANTLRv4ParserDomain.GrammarSpec getGrammarSpec() {
+      return model.getGrammarSpec();
+   }
+
+   public void setModel(AntlrGrammarModel model) {
       this.model = model;
       requestRepaint();
    }
@@ -133,6 +125,22 @@ public class AntlrGrammarPanel extends JPanel {
          shapeMap.clear();
          repaint();
       });
+   }
+
+   public static AntlrGrammarModel parseAntlrFile(File file, JComponent parent) {
+      final File[] grammarFiles = FileUtil.list(file.getParent(), ".g4");
+
+      final AntlrGrammarModel listener = new AntlrGrammarModel();
+      for (File grammarFile : grammarFiles) {
+         try {
+            new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
+         } catch (IOException e1) {
+            SwingUtil.showException("Could not parse " + grammarFile.getAbsolutePath(), e1, parent);
+         }
+      }
+
+      listener.showDistinct();
+      return listener;
    }
 
    @Override

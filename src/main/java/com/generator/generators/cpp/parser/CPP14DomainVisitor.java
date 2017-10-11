@@ -7,7 +7,8 @@ public abstract class CPP14DomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Translationunit")) visitTranslationunit(node);
+		if(hasLabel(node, "Literal")) visitLiteral(node);
+		else if(hasLabel(node, "Translationunit")) visitTranslationunit(node);
 		else if(hasLabel(node, "Primaryexpression")) visitPrimaryexpression(node);
 		else if(hasLabel(node, "Idexpression")) visitIdexpression(node);
 		else if(hasLabel(node, "Unqualifiedid")) visitUnqualifiedid(node);
@@ -43,6 +44,7 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Relationalexpression")) visitRelationalexpression(node);
 		else if(hasLabel(node, "Equalityexpression")) visitEqualityexpression(node);
 		else if(hasLabel(node, "Andexpression")) visitAndexpression(node);
+		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Exclusiveorexpression")) visitExclusiveorexpression(node);
 		else if(hasLabel(node, "Inclusiveorexpression")) visitInclusiveorexpression(node);
 		else if(hasLabel(node, "Logicalandexpression")) visitLogicalandexpression(node);
@@ -50,7 +52,6 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Conditionalexpression")) visitConditionalexpression(node);
 		else if(hasLabel(node, "Assignmentexpression")) visitAssignmentexpression(node);
 		else if(hasLabel(node, "Assignmentoperator")) visitAssignmentoperator(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Constantexpression")) visitConstantexpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Labeledstatement")) visitLabeledstatement(node);
@@ -205,8 +206,13 @@ public abstract class CPP14DomainVisitor {
 		else if(hasLabel(node, "Booleanliteral")) visitBooleanliteral(node);
 		else if(hasLabel(node, "Pointerliteral")) visitPointerliteral(node);
 		else if(hasLabel(node, "Userdefinedliteral")) visitUserdefinedliteral(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
    }
+
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitTranslationunit(Node node) {
 		if (visited.contains(node)) return;
@@ -424,6 +430,12 @@ public abstract class CPP14DomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitExclusiveorexpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -461,12 +473,6 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitAssignmentoperator(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -1391,12 +1397,6 @@ public abstract class CPP14DomainVisitor {
 	}
 
 	public void visitUserdefinedliteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

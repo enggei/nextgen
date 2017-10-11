@@ -48,108 +48,6 @@ public class STParserNodeListener extends STParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
-
-	@Override
-	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inTemplate.push(true);
-	}
-
-	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		onExit();
-		this.inTemplate.pop();
-	}
-
-	public boolean inTemplate() {
-      return !inTemplate.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inElements = new java.util.Stack<>();
-
-	@Override
-	public void enterElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		onEnter(new Node("Elements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inElements.push(true);
-	}
-
-	public void exitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		onExit();
-		this.inElements.pop();
-	}
-
-	public boolean inElements() {
-      return !inElements.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSingleElement = new java.util.Stack<>();
-
-	@Override
-	public void enterSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		onEnter(new Node("SingleElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inSingleElement.push(true);
-	}
-
-	public void exitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		onExit();
-		this.inSingleElement.pop();
-	}
-
-	public boolean inSingleElement() {
-      return !inSingleElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCompoundElement = new java.util.Stack<>();
-
-	@Override
-	public void enterCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
-		onEnter(new Node("CompoundElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inCompoundElement.push(true);
-	}
-
-	public void exitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
-		onExit();
-		this.inCompoundElement.pop();
-	}
-
-	public boolean inCompoundElement() {
-      return !inCompoundElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExprTag = new java.util.Stack<>();
-
-	@Override
-	public void enterExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inExprTag.push(true);
-	}
-
-	public void exitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		onExit();
-		this.inExprTag.pop();
-	}
-
-	public boolean inExprTag() {
-      return !inExprTag.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegion = new java.util.Stack<>();
-
-	@Override
-	public void enterRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRegion.push(true);
-	}
-
-	public void exitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		onExit();
-		this.inRegion.pop();
-	}
-
-	public boolean inRegion() {
-      return !inRegion.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inSubtemplate = new java.util.Stack<>();
 
 	@Override
@@ -318,6 +216,108 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	public boolean inMapTemplateRef() {
       return !inMapTemplateRef.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
+
+	@Override
+	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
+		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inTemplate.push(true);
+	}
+
+	public void exitTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
+		onExit();
+		this.inTemplate.pop();
+	}
+
+	public boolean inTemplate() {
+      return !inTemplate.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inElements = new java.util.Stack<>();
+
+	@Override
+	public void enterElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
+		onEnter(new Node("Elements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inElements.push(true);
+	}
+
+	public void exitElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
+		onExit();
+		this.inElements.pop();
+	}
+
+	public boolean inElements() {
+      return !inElements.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSingleElement = new java.util.Stack<>();
+
+	@Override
+	public void enterSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
+		onEnter(new Node("SingleElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inSingleElement.push(true);
+	}
+
+	public void exitSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
+		onExit();
+		this.inSingleElement.pop();
+	}
+
+	public boolean inSingleElement() {
+      return !inSingleElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompoundElement = new java.util.Stack<>();
+
+	@Override
+	public void enterCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
+		onEnter(new Node("CompoundElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inCompoundElement.push(true);
+	}
+
+	public void exitCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
+		onExit();
+		this.inCompoundElement.pop();
+	}
+
+	public boolean inCompoundElement() {
+      return !inCompoundElement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inExprTag = new java.util.Stack<>();
+
+	@Override
+	public void enterExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
+		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inExprTag.push(true);
+	}
+
+	public void exitExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
+		onExit();
+		this.inExprTag.pop();
+	}
+
+	public boolean inExprTag() {
+      return !inExprTag.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegion = new java.util.Stack<>();
+
+	@Override
+	public void enterRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
+		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRegion.push(true);
+	}
+
+	public void exitRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
+		onExit();
+		this.inRegion.pop();
+	}
+
+	public boolean inRegion() {
+      return !inRegion.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inIncludeExpr = new java.util.Stack<>();

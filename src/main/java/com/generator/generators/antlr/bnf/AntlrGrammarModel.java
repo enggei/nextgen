@@ -4,11 +4,8 @@ import com.generator.generators.antlr.AntlrGroup;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserDomain;
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeSupport;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -22,13 +19,13 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
 
    private final Map<String, Set<String>> distinctMap = new LinkedHashMap<>();
 
-   AntlrGrammarModel() {
+   public AntlrGrammarModel() {
       super(true);
-      symbolStack.push(newGrammarSpec());
+      symbolStack.push(newGrammarSpec("", "", ""));
    }
 
-   AntlrGrammarModel(GrammarSpec grammarSpec) {
-      symbolStack.push(newGrammarSpec());
+   public AntlrGrammarModel(GrammarSpec grammarSpec) {
+      symbolStack.push(grammarSpec);
    }
 
    public void showDistinct() {
@@ -55,14 +52,14 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
       super.enterRuleSpec(arg);
 
       if (arg.getStart().getText().equals("fragment")) {
-         symbolStack.peek().name = arg.getStart().getText() + " " + arg.getText().substring("fragment".length(), arg.getText().indexOf(":"));
+         symbolStack.peek().label = arg.getStart().getText() + " " + arg.getText().substring("fragment".length(), arg.getText().indexOf(":"));
       }
    }
 
    @Override
    public void enterEbnfSuffix(ANTLRv4Parser.EbnfSuffixContext arg) {
       if (symbolStack.peek() instanceof BlockSuffix) {
-         final Symbol blockSuffix = symbolStack.pop();
+         final AntlrSymbol blockSuffix = symbolStack.pop();
          symbolStack.peek().ebnf = arg.getStart().getText();
          symbolStack.push(blockSuffix);
       } else {
@@ -73,17 +70,17 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    @Override
-   public GrammarSpec newGrammarSpec() {
-      return new GrammarSpec() {
+   public GrammarSpec newGrammarSpec(String value, String startToken, String endToken) {
+      return new GrammarSpec(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<Symbol, Rectangle2D> shapeMap) {
+         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
 
             double startX = bounds.getX();
             double startY = bounds.getY();
 
             double x = startX + bounds.getWidth();
             double y = startY;
-            for (Symbol symbol : symbols) {
+            for (AntlrSymbol symbol : symbols) {
                final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap);
 
                y += rectangle.getHeight() + 15;
@@ -101,9 +98,9 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
          @Override
          public Object toGrammar(AntlrGroup antlrGroup) {
             final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar().
-                  setName(name);
+                  setName(label);
 
-            for (Symbol ruleSpec : symbols) {
+            for (AntlrSymbol ruleSpec : symbols) {
                grammarST.addRulesValue(ruleSpec.toGrammar(antlrGroup));
             }
             return grammarST.toString();
@@ -112,17 +109,17 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    @Override
-   public Rules newRules() {
-      return new Rules() {
+   public Rules newRules(String value, String startToken, String endToken) {
+      return new Rules(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<Symbol, Rectangle2D> shapeMap) {
+         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
 
             double startX = bounds.getX();
             double startY = bounds.getY();
 
             double x = startX + bounds.getWidth();
             double y = startY;
-            for (Symbol symbol : symbols) {
+            for (AntlrSymbol symbol : symbols) {
                final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap);
 
                y += rectangle.getHeight() + 15;
@@ -140,57 +137,19 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    @Override
-   public RuleSpec newRuleSpec() {
-      return new RuleSpec() {
+   public RuleSpec newRuleSpec(String value, String startToken, String endToken) {
+      return new RuleSpec(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, Rectangle2D> shapeMap) {
-            return paintChildren(g, drawName(this.name, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap);
-         }
-
-         @Override
-         public void addActionsTo(JMenu menu, PropertyChangeSupport modelChangeSupport) {
-
-            menu.add(new AbstractAction("Add RuleRef") {
-               @Override
-               public void actionPerformed(ActionEvent e) {
-
-                  final ParserRuleSpec parserRuleSpec = newParserRuleSpec();
-                  setParserRuleSpec(parserRuleSpec);
-
-                  final RuleBlock ruleBlock = newRuleBlock();
-                  parserRuleSpec.setChild(ruleBlock);
-
-                  final RuleAltList ruleAltList = newRuleAltList();
-                  ruleBlock.setChild(ruleAltList);
-
-                  final LabeledAlt labeledAlt = newLabeledAlt();
-                  ruleAltList.addChild(labeledAlt);
-
-                  final Alternative alternative = newAlternative();
-                  labeledAlt.setChild(alternative);
-
-                  final Element element = newElement();
-                  alternative.setChild(element);
-
-                  final Atom atom = newAtom();
-                  element.setChild(atom);
-
-                  final Ruleref ruleref = newRuleref("value");
-                  atom.setChild(ruleref);
-
-                  modelChangeSupport.firePropertyChange("Rulespec", "Add", ruleref);
-               }
-            });
-
-            super.addActionsTo(menu, modelChangeSupport);
+         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+            return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap);
          }
 
          @Override
          public Object toGrammar(AntlrGroup antlrGroup) {
             final AntlrGroup.grammarParserRuleSpecST ruleSpecST = antlrGroup.newgrammarParserRuleSpec().
-                  setName(name);
+                  setName(label);
 
-            for (Symbol symbol : symbols)
+            for (AntlrSymbol symbol : symbols)
                ruleSpecST.addAlternativesValue(symbol.toGrammar(antlrGroup));
             return ruleSpecST;
          }
@@ -198,43 +157,43 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    @Override
-   public Atom newAtom() {
-      return new Atom() {
+   public Atom newAtom(String value, String startToken, String endToken) {
+      return new Atom(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, Rectangle2D> shapeMap) {
-            final Symbol child = symbols.iterator().next();
-            final Rectangle.Double nameBox = drawName(this.name, Color.decode((child instanceof Terminal ? "#33a02c" : "#e34a33")), startX, startY, g, shapeMap);
+         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+            final AntlrSymbol child = symbols.iterator().next();
+            final Rectangle.Double nameBox = drawName(label, Color.decode((child instanceof Terminal ? "#33a02c" : "#e34a33")), startX, startY, g, shapeMap);
             return paintChildren(g, nameBox, shapeMap);
          }
       };
    }
 
    @Override
-   public LexerAtom newLexerAtom() {
-      return new LexerAtom() {
+   public LexerAtom newLexerAtom(String value, String startToken, String endToken) {
+      return new LexerAtom(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<Symbol, Rectangle2D> shapeMap) {
-            return paintChildren(g, drawName(this.name, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap);
+         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+            return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap);
          }
       };
    }
 
    @Override
-   public SetElement newSetElement() {
-      return new SetElement() {
+   public SetElement newSetElement(String value, String startToken, String endToken) {
+      return new SetElement(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<Symbol, Rectangle2D> shapeMap) {
-            final Rectangle.Double nameBox = drawName(this.name, Color.decode("#33a02c"), startX, startY, g, shapeMap);
+         public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrSymbol, Rectangle2D> shapeMap) {
+            final Rectangle.Double nameBox = drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
             return paintChildren(g, nameBox, shapeMap);
          }
       };
    }
 
    @Override
-   public RuleAltList newRuleAltList() {
-      return new RuleAltList() {
+   public RuleAltList newRuleAltList(String value, String startToken, String endToken) {
+      return new RuleAltList(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<Symbol, Rectangle2D> shapeMap) {
+         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
 
             double startX = bounds.getX();
             double startY = bounds.getY();
@@ -245,7 +204,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
             double y = startY;
 
             final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-            for (Symbol symbol : symbols) {
+            for (AntlrSymbol symbol : symbols) {
                final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap);
                childRect.add(rectangle);
                y += rectangle.getHeight() + 15;
@@ -258,7 +217,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
             }
 
             if (childRect.size() > 1) {
-               g.setColor(Color.BLUE);
+               g.setColor(Color.decode("#2b8cbe"));
                g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
                g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
                // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
@@ -272,10 +231,10 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    @Override
-   public LexerAltList newLexerAltList() {
-      return new LexerAltList() {
+   public LexerAltList newLexerAltList(String value, String startToken, String endToken) {
+      return new LexerAltList(value, startToken, endToken) {
          @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<Symbol, Rectangle2D> shapeMap) {
+         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
 
             double startX = bounds.getX();
             double startY = bounds.getY();
@@ -286,7 +245,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
             double y = startY;
 
             final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-            for (Symbol symbol : symbols) {
+            for (AntlrSymbol symbol : symbols) {
                final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap);
                childRect.add(rectangle);
                y += rectangle.getHeight() + 15;
@@ -298,7 +257,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
                bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
             }
             if (childRect.size() > 1) {
-               g.setColor(Color.BLUE);
+               g.setColor(Color.decode("#2b8cbe"));
                g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
                g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
                // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())

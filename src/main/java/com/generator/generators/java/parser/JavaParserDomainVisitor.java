@@ -8,9 +8,9 @@ public abstract class JavaParserDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "IntegerLiteral")) visitIntegerLiteral(node);
 		else if(hasLabel(node, "FormalParameterList")) visitFormalParameterList(node);
 		else if(hasLabel(node, "Arguments")) visitArguments(node);
@@ -117,6 +117,12 @@ public abstract class JavaParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -124,12 +130,6 @@ public abstract class JavaParserDomainVisitor {
 	}
 
 	public void visitStatement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

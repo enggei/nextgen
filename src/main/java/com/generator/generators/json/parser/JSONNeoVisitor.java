@@ -30,7 +30,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	@Override
 	public Node visitValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
 		System.out.println("Value");
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.newNode(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -40,7 +40,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	@Override
 	public Node visitJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
 		System.out.println("Json");
-		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.newNode(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -50,7 +50,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	@Override
 	public Node visitObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
 		System.out.println("Obj");
-		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.newNode(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -60,7 +60,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	@Override
 	public Node visitPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
 		System.out.println("Pair");
-		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.newNode(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -70,7 +70,7 @@ public class JSONNeoVisitor extends JSONBaseVisitor<Node> {
 	@Override
 	public Node visitArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
 		System.out.println("Array");
-		final Node node = model.findOrCreate(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.newNode(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
