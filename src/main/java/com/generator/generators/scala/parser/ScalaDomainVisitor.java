@@ -7,7 +7,15 @@ public abstract class ScalaDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "ExistentialClause")) visitExistentialClause(node);
+		if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
+		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
+		else if(hasLabel(node, "QualId")) visitQualId(node);
+		else if(hasLabel(node, "Ids")) visitIds(node);
+		else if(hasLabel(node, "StableId")) visitStableId(node);
+		else if(hasLabel(node, "Type")) visitType(node);
+		else if(hasLabel(node, "FunctionArgTypes")) visitFunctionArgTypes(node);
+		else if(hasLabel(node, "ExistentialClause")) visitExistentialClause(node);
 		else if(hasLabel(node, "ExistentialDcl")) visitExistentialDcl(node);
 		else if(hasLabel(node, "InfixType")) visitInfixType(node);
 		else if(hasLabel(node, "CompoundType")) visitCompoundType(node);
@@ -28,7 +36,6 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "Exprs")) visitExprs(node);
 		else if(hasLabel(node, "ArgumentExprs")) visitArgumentExprs(node);
 		else if(hasLabel(node, "BlockExpr")) visitBlockExpr(node);
-		else if(hasLabel(node, "Block")) visitBlock(node);
 		else if(hasLabel(node, "BlockStat")) visitBlockStat(node);
 		else if(hasLabel(node, "ResultExpr")) visitResultExpr(node);
 		else if(hasLabel(node, "Enumerators")) visitEnumerators(node);
@@ -55,13 +62,6 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "ClassParamClause")) visitClassParamClause(node);
 		else if(hasLabel(node, "ClassParams")) visitClassParams(node);
 		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
-		else if(hasLabel(node, "Ids")) visitIds(node);
-		else if(hasLabel(node, "QualId")) visitQualId(node);
-		else if(hasLabel(node, "StableId")) visitStableId(node);
-		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
-		else if(hasLabel(node, "Type")) visitType(node);
-		else if(hasLabel(node, "FunctionArgTypes")) visitFunctionArgTypes(node);
 		else if(hasLabel(node, "Bindings")) visitBindings(node);
 		else if(hasLabel(node, "Binding")) visitBinding(node);
 		else if(hasLabel(node, "Modifier")) visitModifier(node);
@@ -111,6 +111,54 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "PackageObject")) visitPackageObject(node);
 		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
    }
+
+	public void visitBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassQualifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQualId(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitIds(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStableId(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFunctionArgTypes(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitExistentialClause(Node node) {
 		if (visited.contains(node)) return;
@@ -233,12 +281,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitBlockExpr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBlock(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -395,48 +437,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitClassParam(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitIds(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQualId(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStableId(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassQualifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFunctionArgTypes(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

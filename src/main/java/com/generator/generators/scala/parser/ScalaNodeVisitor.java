@@ -49,17 +49,8 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
-		final Node node = new Node("StableId", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
-		final Node node = new Node("QualId", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
+		final Node node = new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -76,8 +67,26 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	}
 
 	@Override
+	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
+		final Node node = new Node("QualId", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitIds(com.generator.generators.scala.parser.ScalaParser.IdsContext arg) {
 		final Node node = new Node("Ids", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
+		final Node node = new Node("StableId", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -96,6 +105,15 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
 		final Node node = new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
+		final Node node = new Node("InfixType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -123,15 +141,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitExistentialDcl(com.generator.generators.scala.parser.ScalaParser.ExistentialDclContext arg) {
 		final Node node = new Node("ExistentialDcl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
-		final Node node = new Node("InfixType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -294,15 +303,6 @@ public class ScalaNodeVisitor extends ScalaBaseVisitor<ScalaNodeVisitor.Node> {
 	@Override
 	public Node visitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
 		final Node node = new Node("BlockExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
-		final Node node = new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -28,19 +28,9 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
-		System.out.println("StableId");
-		final Node node = model.findOrCreate(Label.label("StableId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
-		System.out.println("QualId");
-		final Node node = model.findOrCreate(Label.label("QualId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
+		System.out.println("Block");
+		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,9 +48,29 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
+		System.out.println("QualId");
+		final Node node = model.findOrCreate(Label.label("QualId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitIds(com.generator.generators.scala.parser.ScalaParser.IdsContext arg) {
 		System.out.println("Ids");
 		final Node node = model.findOrCreate(Label.label("Ids"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
+		System.out.println("StableId");
+		final Node node = model.findOrCreate(Label.label("StableId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -81,6 +91,16 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
 		System.out.println("Type");
 		final Node node = model.findOrCreate(Label.label("Type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
+		System.out.println("InfixType");
+		final Node node = model.findOrCreate(Label.label("InfixType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -111,16 +131,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitExistentialDcl(com.generator.generators.scala.parser.ScalaParser.ExistentialDclContext arg) {
 		System.out.println("ExistentialDcl");
 		final Node node = model.findOrCreate(Label.label("ExistentialDcl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInfixType(com.generator.generators.scala.parser.ScalaParser.InfixTypeContext arg) {
-		System.out.println("InfixType");
-		final Node node = model.findOrCreate(Label.label("InfixType"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -301,16 +311,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
 		System.out.println("BlockExpr");
 		final Node node = model.findOrCreate(Label.label("BlockExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
-		System.out.println("Block");
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
