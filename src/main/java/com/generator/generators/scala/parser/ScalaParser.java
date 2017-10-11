@@ -1,4 +1,4 @@
-// Generated from /media/Storage/projects/gullkode/nextgen/src/main/java/com/generator/generators/scala/parser/Scala.g4 by ANTLR 4.7
+// Generated from /home/goe/projects/nextgen/src/main/java/com/generator/generators/scala/parser/Scala.g4 by ANTLR 4.7
 package com.generator.generators.scala.parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
