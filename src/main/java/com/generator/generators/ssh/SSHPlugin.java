@@ -48,11 +48,11 @@ public class SSHPlugin extends Plugin {
       }));
    }
 
-   private enum Entities implements Label {
+   public enum Entities implements Label {
       Host, Session, Channel, Command, CommandRoot, CommandCategory, Path
    }
 
-   private enum Relations implements RelationshipType {
+   public enum Relations implements RelationshipType {
       SESSIONS, CHANNELS, COMMANDS, CATEGORIES, PATHS
    }
 
@@ -1346,7 +1346,7 @@ public class SSHPlugin extends Plugin {
    }
 
    @NotNull
-   private Session getSession(Node hostNode) throws JSchException {
+   public static Session getSession(Node hostNode) throws JSchException {
       final JSch jSch = new JSch();
 
       final Session session = jSch.getSession(
@@ -1408,7 +1408,7 @@ public class SSHPlugin extends Plugin {
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
-   private static void upload(Session session, String lfile, String rfile) throws Exception {
+   public static void upload(Session session, String lfile, String rfile) throws Exception {
 
       final ChannelExec channel = (ChannelExec) session.openChannel("exec");
       channel.setCommand("scp -t " + rfile);
@@ -1445,7 +1445,7 @@ public class SSHPlugin extends Plugin {
       channel.disconnect();
    }
 
-   private static void download(Session session, String lfile, String rfile) throws Exception {
+   public static void download(Session session, String lfile, String rfile) throws Exception {
 
       final String prefix = new File(lfile).isDirectory() ? (lfile + File.separator) : null;
 
@@ -1565,7 +1565,7 @@ public class SSHPlugin extends Plugin {
       }
    }
 
-   private final class ChannelUserInfo implements UserInfo {
+   private static final class ChannelUserInfo implements UserInfo {
 
       private final String password;
 
