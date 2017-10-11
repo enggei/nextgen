@@ -217,7 +217,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
             }
 
             if (childRect.size() > 1) {
-               g.setColor(Color.BLUE);
+               g.setColor(Color.decode("#2b8cbe"));
                g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
                g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
                // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
@@ -257,7 +257,7 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
                bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
             }
             if (childRect.size() > 1) {
-               g.setColor(Color.BLUE);
+               g.setColor(Color.decode("#2b8cbe"));
                g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
                g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
                // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())

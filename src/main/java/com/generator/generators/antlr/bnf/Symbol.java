@@ -104,21 +104,21 @@ public class Symbol {
    private Rectangle2D.Double paintEbnf(double startX, double startY, Rectangle2D.Double children, Graphics2D g) {
 
       if ("*".equals(ebnf)) {
-         g.setColor(Color.BLUE);
+         g.setColor(Color.decode("#6e016b"));
          g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY - 5);
          g.drawLine((int) startX, (int) startY - 5, (int) (startX + children.width), (int) startY - 5);
          g.drawLine((int) (startX + children.width), (int) startY - 5, (int) (startX + children.width), (int) startY + 10);
          return children;
 
       } else if ("?".equals(ebnf)) {
-         g.setColor(Color.BLUE);
+         g.setColor(Color.decode("#990000"));
          g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY + 30);
          g.drawLine((int) startX, (int) startY + 30, (int) (startX + children.width), (int) startY + 30);
          g.drawLine((int) (startX + children.width), (int) startY + 30, (int) (startX + children.width), (int) startY + 10);
          return children;
 
       } else if ("+".equals(ebnf)) {
-         g.setColor(Color.BLUE);
+         g.setColor(Color.decode("#08589e"));
          g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY - 5);
          g.drawLine((int) startX, (int) startY - 5, (int) (startX + children.width), (int) startY - 5);
          g.drawLine((int) (startX + children.width), (int) startY - 5, (int) (startX + children.width), (int) startY + 10);
