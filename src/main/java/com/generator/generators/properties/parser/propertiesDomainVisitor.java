@@ -7,13 +7,19 @@ public abstract class propertiesDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Decl")) visitDecl(node);
+		if(hasLabel(node, "PropertiesFile")) visitPropertiesFile(node);
+		else if(hasLabel(node, "Decl")) visitDecl(node);
 		else if(hasLabel(node, "Comment")) visitComment(node);
 		else if(hasLabel(node, "Value")) visitValue(node);
 		else if(hasLabel(node, "Row")) visitRow(node);
 		else if(hasLabel(node, "Key")) visitKey(node);
-		else if(hasLabel(node, "PropertiesFile")) visitPropertiesFile(node);
    }
+
+	public void visitPropertiesFile(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitDecl(Node node) {
 		if (visited.contains(node)) return;
@@ -40,12 +46,6 @@ public abstract class propertiesDomainVisitor {
 	}
 
 	public void visitKey(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPropertiesFile(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

@@ -1,7 +1,7 @@
 package com.generator.generators.antlr.parser;
 
 import com.generator.generators.antlr.AntlrGroup;
-import com.generator.generators.antlr.bnf.AntlrSymbol;
+import com.generator.generators.antlr.bnf.AntlrGrammarSymbol;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.util.Stack;
 
 public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 
-	protected final Stack<AntlrSymbol> symbolStack = new Stack<>();
+	public final Stack<AntlrGrammarSymbol> symbolStack = new Stack<>();
 
 	public ANTLRv4ParserDomain() {
 	}
@@ -673,33 +673,33 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new GrammarSpec(text, startToken, endToken);
 	}
 
-	public class GrammarSpec extends AntlrSymbol {
+	public class GrammarSpec extends AntlrGrammarSymbol {
 
 		public GrammarSpec(String text, String startToken, String endToken) {
 			super("GrammarSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addGrammarType(GrammarType child) { return super.addChild(child); }
-		public AntlrSymbol setGrammarType(GrammarType child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addGrammarType(GrammarType child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setGrammarType(GrammarType child) { return super.setChild(child); }
 
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
-		public AntlrSymbol addPrequelConstruct(PrequelConstruct child) { return super.addChild(child); }
-		public AntlrSymbol setPrequelConstruct(PrequelConstruct child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addPrequelConstruct(PrequelConstruct child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setPrequelConstruct(PrequelConstruct child) { return super.setChild(child); }
 
-		public AntlrSymbol addRules(Rules child) { return super.addChild(child); }
-		public AntlrSymbol setRules(Rules child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addRules(Rules child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setRules(Rules child) { return super.setChild(child); }
 
-		public AntlrSymbol addModeSpec(ModeSpec child) { return super.addChild(child); }
-		public AntlrSymbol setModeSpec(ModeSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addModeSpec(ModeSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setModeSpec(ModeSpec child) { return super.setChild(child); }
 
-		public AntlrSymbol addGrammarSpec(GrammarSpec child) { return super.addChild(child); }
-		public AntlrSymbol setGrammarSpec(GrammarSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addGrammarSpec(GrammarSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setGrammarSpec(GrammarSpec child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -772,15 +772,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new GrammarType(text, startToken, endToken);
 	}
 
-	public class GrammarType extends AntlrSymbol {
+	public class GrammarType extends AntlrGrammarSymbol {
 
 		public GrammarType(String text, String startToken, String endToken) {
 			super("GrammarType", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -799,15 +799,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Identifier(text, startToken, endToken);
 	}
 
-	public class Identifier extends AntlrSymbol {
+	public class Identifier extends AntlrGrammarSymbol {
 
 		public Identifier(String text, String startToken, String endToken) {
 			super("Identifier", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -826,27 +826,27 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new PrequelConstruct(text, startToken, endToken);
 	}
 
-	public class PrequelConstruct extends AntlrSymbol {
+	public class PrequelConstruct extends AntlrGrammarSymbol {
 
 		public PrequelConstruct(String text, String startToken, String endToken) {
 			super("PrequelConstruct", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addOptionsSpec(OptionsSpec child) { return super.addChild(child); }
-		public AntlrSymbol setOptionsSpec(OptionsSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addOptionsSpec(OptionsSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setOptionsSpec(OptionsSpec child) { return super.setChild(child); }
 
-		public AntlrSymbol addDelegateGrammars(DelegateGrammars child) { return super.addChild(child); }
-		public AntlrSymbol setDelegateGrammars(DelegateGrammars child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addDelegateGrammars(DelegateGrammars child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setDelegateGrammars(DelegateGrammars child) { return super.setChild(child); }
 
-		public AntlrSymbol addTokensSpec(TokensSpec child) { return super.addChild(child); }
-		public AntlrSymbol setTokensSpec(TokensSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addTokensSpec(TokensSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setTokensSpec(TokensSpec child) { return super.setChild(child); }
 
-		public AntlrSymbol addChannelsSpec(ChannelsSpec child) { return super.addChild(child); }
-		public AntlrSymbol setChannelsSpec(ChannelsSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addChannelsSpec(ChannelsSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setChannelsSpec(ChannelsSpec child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -901,18 +901,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new OptionsSpec(text, startToken, endToken);
 	}
 
-	public class OptionsSpec extends AntlrSymbol {
+	public class OptionsSpec extends AntlrGrammarSymbol {
 
 		public OptionsSpec(String text, String startToken, String endToken) {
 			super("OptionsSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addOption(Option child) { return super.addChild(child); }
-		public AntlrSymbol setOption(Option child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addOption(Option child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setOption(Option child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -940,21 +940,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Option(text, startToken, endToken);
 	}
 
-	public class Option extends AntlrSymbol {
+	public class Option extends AntlrGrammarSymbol {
 
 		public Option(String text, String startToken, String endToken) {
 			super("Option", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
-		public AntlrSymbol addOptionValue(OptionValue child) { return super.addChild(child); }
-		public AntlrSymbol setOptionValue(OptionValue child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addOptionValue(OptionValue child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setOptionValue(OptionValue child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -991,18 +991,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new OptionValue(text, startToken, endToken);
 	}
 
-	public class OptionValue extends AntlrSymbol {
+	public class OptionValue extends AntlrGrammarSymbol {
 
 		public OptionValue(String text, String startToken, String endToken) {
 			super("OptionValue", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1030,18 +1030,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Rules(text, startToken, endToken);
 	}
 
-	public class Rules extends AntlrSymbol {
+	public class Rules extends AntlrGrammarSymbol {
 
 		public Rules(String text, String startToken, String endToken) {
 			super("Rules", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addRuleSpec(RuleSpec child) { return super.addChild(child); }
-		public AntlrSymbol setRuleSpec(RuleSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addRuleSpec(RuleSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setRuleSpec(RuleSpec child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1069,21 +1069,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new RuleSpec(text, startToken, endToken);
 	}
 
-	public class RuleSpec extends AntlrSymbol {
+	public class RuleSpec extends AntlrGrammarSymbol {
 
 		public RuleSpec(String text, String startToken, String endToken) {
 			super("RuleSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addParserRuleSpec(ParserRuleSpec child) { return super.addChild(child); }
-		public AntlrSymbol setParserRuleSpec(ParserRuleSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addParserRuleSpec(ParserRuleSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setParserRuleSpec(ParserRuleSpec child) { return super.setChild(child); }
 
-		public AntlrSymbol addLexerRuleSpec(LexerRuleSpec child) { return super.addChild(child); }
-		public AntlrSymbol setLexerRuleSpec(LexerRuleSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerRuleSpec(LexerRuleSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerRuleSpec(LexerRuleSpec child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1120,21 +1120,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new ParserRuleSpec(text, startToken, endToken);
 	}
 
-	public class ParserRuleSpec extends AntlrSymbol {
+	public class ParserRuleSpec extends AntlrGrammarSymbol {
 
 		public ParserRuleSpec(String text, String startToken, String endToken) {
 			super("ParserRuleSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addRuleBlock(RuleBlock child) { return super.addChild(child); }
-		public AntlrSymbol setRuleBlock(RuleBlock child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addRuleBlock(RuleBlock child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setRuleBlock(RuleBlock child) { return super.setChild(child); }
 
-		public AntlrSymbol addExceptionGroup(ExceptionGroup child) { return super.addChild(child); }
-		public AntlrSymbol setExceptionGroup(ExceptionGroup child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addExceptionGroup(ExceptionGroup child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setExceptionGroup(ExceptionGroup child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1171,18 +1171,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new RuleBlock(text, startToken, endToken);
 	}
 
-	public class RuleBlock extends AntlrSymbol {
+	public class RuleBlock extends AntlrGrammarSymbol {
 
 		public RuleBlock(String text, String startToken, String endToken) {
 			super("RuleBlock", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addRuleAltList(RuleAltList child) { return super.addChild(child); }
-		public AntlrSymbol setRuleAltList(RuleAltList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addRuleAltList(RuleAltList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setRuleAltList(RuleAltList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1210,18 +1210,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new RuleAltList(text, startToken, endToken);
 	}
 
-	public class RuleAltList extends AntlrSymbol {
+	public class RuleAltList extends AntlrGrammarSymbol {
 
 		public RuleAltList(String text, String startToken, String endToken) {
 			super("RuleAltList", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLabeledAlt(LabeledAlt child) { return super.addChild(child); }
-		public AntlrSymbol setLabeledAlt(LabeledAlt child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLabeledAlt(LabeledAlt child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLabeledAlt(LabeledAlt child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1249,18 +1249,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LabeledAlt(text, startToken, endToken);
 	}
 
-	public class LabeledAlt extends AntlrSymbol {
+	public class LabeledAlt extends AntlrGrammarSymbol {
 
 		public LabeledAlt(String text, String startToken, String endToken) {
 			super("LabeledAlt", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addAlternative(Alternative child) { return super.addChild(child); }
-		public AntlrSymbol setAlternative(Alternative child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addAlternative(Alternative child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setAlternative(Alternative child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1288,18 +1288,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Alternative(text, startToken, endToken);
 	}
 
-	public class Alternative extends AntlrSymbol {
+	public class Alternative extends AntlrGrammarSymbol {
 
 		public Alternative(String text, String startToken, String endToken) {
 			super("Alternative", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addElement(Element child) { return super.addChild(child); }
-		public AntlrSymbol setElement(Element child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addElement(Element child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setElement(Element child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1327,24 +1327,24 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Element(text, startToken, endToken);
 	}
 
-	public class Element extends AntlrSymbol {
+	public class Element extends AntlrGrammarSymbol {
 
 		public Element(String text, String startToken, String endToken) {
 			super("Element", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addAtom(Atom child) { return super.addChild(child); }
-		public AntlrSymbol setAtom(Atom child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addAtom(Atom child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setAtom(Atom child) { return super.setChild(child); }
 
-		public AntlrSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
-		public AntlrSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
 
-		public AntlrSymbol addEbnf(Ebnf child) { return super.addChild(child); }
-		public AntlrSymbol setEbnf(Ebnf child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addEbnf(Ebnf child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setEbnf(Ebnf child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1390,21 +1390,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Atom(text, startToken, endToken);
 	}
 
-	public class Atom extends AntlrSymbol {
+	public class Atom extends AntlrGrammarSymbol {
 
 		public Atom(String text, String startToken, String endToken) {
 			super("Atom", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addTerminal(Terminal child) { return super.addChild(child); }
-		public AntlrSymbol setTerminal(Terminal child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addTerminal(Terminal child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setTerminal(Terminal child) { return super.setChild(child); }
 
-		public AntlrSymbol addRuleref(Ruleref child) { return super.addChild(child); }
-		public AntlrSymbol setRuleref(Ruleref child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addRuleref(Ruleref child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setRuleref(Ruleref child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1441,15 +1441,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Terminal(text, startToken, endToken);
 	}
 
-	public class Terminal extends AntlrSymbol {
+	public class Terminal extends AntlrGrammarSymbol {
 
 		public Terminal(String text, String startToken, String endToken) {
 			super("Terminal", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1468,15 +1468,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new EbnfSuffix(text, startToken, endToken);
 	}
 
-	public class EbnfSuffix extends AntlrSymbol {
+	public class EbnfSuffix extends AntlrGrammarSymbol {
 
 		public EbnfSuffix(String text, String startToken, String endToken) {
 			super("EbnfSuffix", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1495,15 +1495,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Ruleref(text, startToken, endToken);
 	}
 
-	public class Ruleref extends AntlrSymbol {
+	public class Ruleref extends AntlrGrammarSymbol {
 
 		public Ruleref(String text, String startToken, String endToken) {
 			super("Ruleref", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1522,15 +1522,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new ExceptionGroup(text, startToken, endToken);
 	}
 
-	public class ExceptionGroup extends AntlrSymbol {
+	public class ExceptionGroup extends AntlrGrammarSymbol {
 
 		public ExceptionGroup(String text, String startToken, String endToken) {
 			super("ExceptionGroup", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1549,21 +1549,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Ebnf(text, startToken, endToken);
 	}
 
-	public class Ebnf extends AntlrSymbol {
+	public class Ebnf extends AntlrGrammarSymbol {
 
 		public Ebnf(String text, String startToken, String endToken) {
 			super("Ebnf", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addBlock(Block child) { return super.addChild(child); }
-		public AntlrSymbol setBlock(Block child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addBlock(Block child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setBlock(Block child) { return super.setChild(child); }
 
-		public AntlrSymbol addBlockSuffix(BlockSuffix child) { return super.addChild(child); }
-		public AntlrSymbol setBlockSuffix(BlockSuffix child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addBlockSuffix(BlockSuffix child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setBlockSuffix(BlockSuffix child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1600,18 +1600,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new Block(text, startToken, endToken);
 	}
 
-	public class Block extends AntlrSymbol {
+	public class Block extends AntlrGrammarSymbol {
 
 		public Block(String text, String startToken, String endToken) {
 			super("Block", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addAltList(AltList child) { return super.addChild(child); }
-		public AntlrSymbol setAltList(AltList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addAltList(AltList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setAltList(AltList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1639,18 +1639,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new AltList(text, startToken, endToken);
 	}
 
-	public class AltList extends AntlrSymbol {
+	public class AltList extends AntlrGrammarSymbol {
 
 		public AltList(String text, String startToken, String endToken) {
 			super("AltList", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addAlternative(Alternative child) { return super.addChild(child); }
-		public AntlrSymbol setAlternative(Alternative child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addAlternative(Alternative child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setAlternative(Alternative child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1678,18 +1678,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new BlockSuffix(text, startToken, endToken);
 	}
 
-	public class BlockSuffix extends AntlrSymbol {
+	public class BlockSuffix extends AntlrGrammarSymbol {
 
 		public BlockSuffix(String text, String startToken, String endToken) {
 			super("BlockSuffix", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
-		public AntlrSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1717,18 +1717,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new DelegateGrammars(text, startToken, endToken);
 	}
 
-	public class DelegateGrammars extends AntlrSymbol {
+	public class DelegateGrammars extends AntlrGrammarSymbol {
 
 		public DelegateGrammars(String text, String startToken, String endToken) {
 			super("DelegateGrammars", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addDelegateGrammar(DelegateGrammar child) { return super.addChild(child); }
-		public AntlrSymbol setDelegateGrammar(DelegateGrammar child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addDelegateGrammar(DelegateGrammar child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setDelegateGrammar(DelegateGrammar child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1756,18 +1756,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new DelegateGrammar(text, startToken, endToken);
 	}
 
-	public class DelegateGrammar extends AntlrSymbol {
+	public class DelegateGrammar extends AntlrGrammarSymbol {
 
 		public DelegateGrammar(String text, String startToken, String endToken) {
 			super("DelegateGrammar", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1795,18 +1795,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new TokensSpec(text, startToken, endToken);
 	}
 
-	public class TokensSpec extends AntlrSymbol {
+	public class TokensSpec extends AntlrGrammarSymbol {
 
 		public TokensSpec(String text, String startToken, String endToken) {
 			super("TokensSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdList(IdList child) { return super.addChild(child); }
-		public AntlrSymbol setIdList(IdList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdList(IdList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdList(IdList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1834,18 +1834,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new IdList(text, startToken, endToken);
 	}
 
-	public class IdList extends AntlrSymbol {
+	public class IdList extends AntlrGrammarSymbol {
 
 		public IdList(String text, String startToken, String endToken) {
 			super("IdList", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1873,18 +1873,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new ChannelsSpec(text, startToken, endToken);
 	}
 
-	public class ChannelsSpec extends AntlrSymbol {
+	public class ChannelsSpec extends AntlrGrammarSymbol {
 
 		public ChannelsSpec(String text, String startToken, String endToken) {
 			super("ChannelsSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdList(IdList child) { return super.addChild(child); }
-		public AntlrSymbol setIdList(IdList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdList(IdList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdList(IdList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1912,18 +1912,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerRuleSpec(text, startToken, endToken);
 	}
 
-	public class LexerRuleSpec extends AntlrSymbol {
+	public class LexerRuleSpec extends AntlrGrammarSymbol {
 
 		public LexerRuleSpec(String text, String startToken, String endToken) {
 			super("LexerRuleSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerRuleBlock(LexerRuleBlock child) { return super.addChild(child); }
-		public AntlrSymbol setLexerRuleBlock(LexerRuleBlock child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerRuleBlock(LexerRuleBlock child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerRuleBlock(LexerRuleBlock child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1951,18 +1951,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerRuleBlock(text, startToken, endToken);
 	}
 
-	public class LexerRuleBlock extends AntlrSymbol {
+	public class LexerRuleBlock extends AntlrGrammarSymbol {
 
 		public LexerRuleBlock(String text, String startToken, String endToken) {
 			super("LexerRuleBlock", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
-		public AntlrSymbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -1990,18 +1990,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerAltList(text, startToken, endToken);
 	}
 
-	public class LexerAltList extends AntlrSymbol {
+	public class LexerAltList extends AntlrGrammarSymbol {
 
 		public LexerAltList(String text, String startToken, String endToken) {
 			super("LexerAltList", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerAlt(LexerAlt child) { return super.addChild(child); }
-		public AntlrSymbol setLexerAlt(LexerAlt child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerAlt(LexerAlt child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerAlt(LexerAlt child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2029,21 +2029,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerAlt(text, startToken, endToken);
 	}
 
-	public class LexerAlt extends AntlrSymbol {
+	public class LexerAlt extends AntlrGrammarSymbol {
 
 		public LexerAlt(String text, String startToken, String endToken) {
 			super("LexerAlt", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerElements(LexerElements child) { return super.addChild(child); }
-		public AntlrSymbol setLexerElements(LexerElements child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerElements(LexerElements child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerElements(LexerElements child) { return super.setChild(child); }
 
-		public AntlrSymbol addLexerCommands(LexerCommands child) { return super.addChild(child); }
-		public AntlrSymbol setLexerCommands(LexerCommands child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerCommands(LexerCommands child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerCommands(LexerCommands child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2080,18 +2080,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerElements(text, startToken, endToken);
 	}
 
-	public class LexerElements extends AntlrSymbol {
+	public class LexerElements extends AntlrGrammarSymbol {
 
 		public LexerElements(String text, String startToken, String endToken) {
 			super("LexerElements", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerElement(LexerElement child) { return super.addChild(child); }
-		public AntlrSymbol setLexerElement(LexerElement child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerElement(LexerElement child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerElement(LexerElement child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2119,27 +2119,27 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerElement(text, startToken, endToken);
 	}
 
-	public class LexerElement extends AntlrSymbol {
+	public class LexerElement extends AntlrGrammarSymbol {
 
 		public LexerElement(String text, String startToken, String endToken) {
 			super("LexerElement", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerAtom(LexerAtom child) { return super.addChild(child); }
-		public AntlrSymbol setLexerAtom(LexerAtom child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerAtom(LexerAtom child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerAtom(LexerAtom child) { return super.setChild(child); }
 
-		public AntlrSymbol addActionBlock(ActionBlock child) { return super.addChild(child); }
-		public AntlrSymbol setActionBlock(ActionBlock child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addActionBlock(ActionBlock child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setActionBlock(ActionBlock child) { return super.setChild(child); }
 
-		public AntlrSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
-		public AntlrSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addEbnfSuffix(EbnfSuffix child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setEbnfSuffix(EbnfSuffix child) { return super.setChild(child); }
 
-		public AntlrSymbol addLexerBlock(LexerBlock child) { return super.addChild(child); }
-		public AntlrSymbol setLexerBlock(LexerBlock child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerBlock(LexerBlock child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerBlock(LexerBlock child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2194,24 +2194,24 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerAtom(text, startToken, endToken);
 	}
 
-	public class LexerAtom extends AntlrSymbol {
+	public class LexerAtom extends AntlrGrammarSymbol {
 
 		public LexerAtom(String text, String startToken, String endToken) {
 			super("LexerAtom", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addTerminal(Terminal child) { return super.addChild(child); }
-		public AntlrSymbol setTerminal(Terminal child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addTerminal(Terminal child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setTerminal(Terminal child) { return super.setChild(child); }
 
-		public AntlrSymbol addNotSet(NotSet child) { return super.addChild(child); }
-		public AntlrSymbol setNotSet(NotSet child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addNotSet(NotSet child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setNotSet(NotSet child) { return super.setChild(child); }
 
-		public AntlrSymbol addCharacterRange(CharacterRange child) { return super.addChild(child); }
-		public AntlrSymbol setCharacterRange(CharacterRange child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addCharacterRange(CharacterRange child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setCharacterRange(CharacterRange child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2257,18 +2257,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerCommands(text, startToken, endToken);
 	}
 
-	public class LexerCommands extends AntlrSymbol {
+	public class LexerCommands extends AntlrGrammarSymbol {
 
 		public LexerCommands(String text, String startToken, String endToken) {
 			super("LexerCommands", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerCommand(LexerCommand child) { return super.addChild(child); }
-		public AntlrSymbol setLexerCommand(LexerCommand child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerCommand(LexerCommand child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerCommand(LexerCommand child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2296,21 +2296,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerCommand(text, startToken, endToken);
 	}
 
-	public class LexerCommand extends AntlrSymbol {
+	public class LexerCommand extends AntlrGrammarSymbol {
 
 		public LexerCommand(String text, String startToken, String endToken) {
 			super("LexerCommand", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerCommandName(LexerCommandName child) { return super.addChild(child); }
-		public AntlrSymbol setLexerCommandName(LexerCommandName child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerCommandName(LexerCommandName child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerCommandName(LexerCommandName child) { return super.setChild(child); }
 
-		public AntlrSymbol addLexerCommandExpr(LexerCommandExpr child) { return super.addChild(child); }
-		public AntlrSymbol setLexerCommandExpr(LexerCommandExpr child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerCommandExpr(LexerCommandExpr child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerCommandExpr(LexerCommandExpr child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2347,18 +2347,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerCommandName(text, startToken, endToken);
 	}
 
-	public class LexerCommandName extends AntlrSymbol {
+	public class LexerCommandName extends AntlrGrammarSymbol {
 
 		public LexerCommandName(String text, String startToken, String endToken) {
 			super("LexerCommandName", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2386,18 +2386,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerCommandExpr(text, startToken, endToken);
 	}
 
-	public class LexerCommandExpr extends AntlrSymbol {
+	public class LexerCommandExpr extends AntlrGrammarSymbol {
 
 		public LexerCommandExpr(String text, String startToken, String endToken) {
 			super("LexerCommandExpr", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2425,15 +2425,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new ActionBlock(text, startToken, endToken);
 	}
 
-	public class ActionBlock extends AntlrSymbol {
+	public class ActionBlock extends AntlrGrammarSymbol {
 
 		public ActionBlock(String text, String startToken, String endToken) {
 			super("ActionBlock", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2452,21 +2452,21 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new ModeSpec(text, startToken, endToken);
 	}
 
-	public class ModeSpec extends AntlrSymbol {
+	public class ModeSpec extends AntlrGrammarSymbol {
 
 		public ModeSpec(String text, String startToken, String endToken) {
 			super("ModeSpec", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addIdentifier(Identifier child) { return super.addChild(child); }
-		public AntlrSymbol setIdentifier(Identifier child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addIdentifier(Identifier child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setIdentifier(Identifier child) { return super.setChild(child); }
 
-		public AntlrSymbol addLexerRuleSpec(LexerRuleSpec child) { return super.addChild(child); }
-		public AntlrSymbol setLexerRuleSpec(LexerRuleSpec child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerRuleSpec(LexerRuleSpec child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerRuleSpec(LexerRuleSpec child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2503,18 +2503,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new LexerBlock(text, startToken, endToken);
 	}
 
-	public class LexerBlock extends AntlrSymbol {
+	public class LexerBlock extends AntlrGrammarSymbol {
 
 		public LexerBlock(String text, String startToken, String endToken) {
 			super("LexerBlock", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
-		public AntlrSymbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addLexerAltList(LexerAltList child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setLexerAltList(LexerAltList child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2542,18 +2542,18 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new NotSet(text, startToken, endToken);
 	}
 
-	public class NotSet extends AntlrSymbol {
+	public class NotSet extends AntlrGrammarSymbol {
 
 		public NotSet(String text, String startToken, String endToken) {
 			super("NotSet", startToken, text, startToken, endToken);
 		}
-		public AntlrSymbol addSetElement(SetElement child) { return super.addChild(child); }
-		public AntlrSymbol setSetElement(SetElement child) { return super.setChild(child); }
+		public AntlrGrammarSymbol addSetElement(SetElement child) { return super.addChild(child); }
+		public AntlrGrammarSymbol setSetElement(SetElement child) { return super.setChild(child); }
 
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2581,15 +2581,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new SetElement(text, startToken, endToken);
 	}
 
-	public class SetElement extends AntlrSymbol {
+	public class SetElement extends AntlrGrammarSymbol {
 
 		public SetElement(String text, String startToken, String endToken) {
 			super("SetElement", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override
@@ -2608,15 +2608,15 @@ public class ANTLRv4ParserDomain extends ANTLRv4ParserNodeListener {
 		return new CharacterRange(text, startToken, endToken);
 	}
 
-	public class CharacterRange extends AntlrSymbol {
+	public class CharacterRange extends AntlrGrammarSymbol {
 
 		public CharacterRange(String text, String startToken, String endToken) {
 			super("CharacterRange", startToken, text, startToken, endToken);
 		}
 
 		@Override
-		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, java.awt.geom.Rectangle2D> shapeMap) {
-	   	return super.paint(startX, startY, g, shapeMap);
+		public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, java.awt.geom.Rectangle2D> shapeMap, int level) {
+	   	return super.paint(startX, startY, g, shapeMap, level);
 		}
 
 		@Override

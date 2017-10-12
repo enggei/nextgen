@@ -14,21 +14,24 @@ import java.util.UUID;
 /**
  * Created 09.10.17.
  */
-public class AntlrSymbol {
+public class AntlrGrammarSymbol {
 
    private final UUID uuid = UUID.randomUUID();
-   protected String type;
 
-   public AntlrSymbol parent;
+   protected String type;
+   public AntlrGrammarSymbol parent;
    public String label;
-   public String ebnf = "";
    public String text;
    public String startToken;
    public String endToken;
+   public String ebnf = "";
+   public final List<AntlrGrammarSymbol> symbols = new ArrayList<>();
 
-   public final List<AntlrSymbol> symbols = new ArrayList<>();
+   // rectangle-offset
+   private final int offset = 10;
+   private final int margin = 5;
 
-   public AntlrSymbol(String type, String label, String value, String startToken, String endToken) {
+   public AntlrGrammarSymbol(String type, String label, String value, String startToken, String endToken) {
       this.type = type;
       this.label = label;
       this.text = value;
@@ -52,7 +55,7 @@ public class AntlrSymbol {
       return type;
    }
 
-   public AntlrSymbol setChild(AntlrSymbol symbol) {
+   public AntlrGrammarSymbol setChild(AntlrGrammarSymbol symbol) {
       symbols.clear();
       symbols.add(symbol);
       symbol.parent = this;
@@ -60,34 +63,34 @@ public class AntlrSymbol {
       return this;
    }
 
-   public AntlrSymbol addChild(AntlrSymbol symbol) {
+   public AntlrGrammarSymbol addChild(AntlrGrammarSymbol symbol) {
       symbols.add(symbol);
       symbol.parent = this;
       //visit(this, "");
       return this;
    }
 
-   protected void visit(AntlrSymbol symbol, String delim) {
+   protected void visit(AntlrGrammarSymbol symbol, String delim) {
       System.out.println(delim + symbol);
-      for (AntlrSymbol child : symbol.symbols) {
+      for (AntlrGrammarSymbol child : symbol.symbols) {
          visit(child, delim + "\t");
       }
    }
 
-   public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+   public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 //      final Rectangle2D.Double bounds = drawName(type + " (" + name + ")", Color.BLUE, startX, startY, g, shapeMap);
 //      return paintChildren(g, bounds, shapeMap);
-      return paintChildren(g, new Rectangle2D.Double(startX, startY, 0, 0), shapeMap);
+      return paintChildren(g, new Rectangle2D.Double(startX, startY, 0, 0), shapeMap, level);
    }
 
-   public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+   public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
       double startX = bounds.getX();
       double startY = bounds.getY();
 
       double x = startX + bounds.getWidth();
-      for (AntlrSymbol symbol : symbols) {
-         final Rectangle.Double rectangle = symbol.paint(x, startY, g, shapeMap);
+      for (AntlrGrammarSymbol symbol : symbols) {
+         final Rectangle.Double rectangle = symbol.paint(x, startY, g, shapeMap, level);
          x += rectangle.getWidth();
          // calculate bounds of this.shape:
          double minX = Math.min(startX, rectangle.getX());
@@ -104,36 +107,37 @@ public class AntlrSymbol {
    private Rectangle2D.Double paintEbnf(double startX, double startY, Rectangle2D.Double children, Graphics2D g) {
 
       if ("*".equals(ebnf)) {
-         g.setColor(Color.decode("#6e016b"));
-         g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY - 5);
-         g.drawLine((int) startX, (int) startY - 5, (int) (startX + children.width), (int) startY - 5);
-         g.drawLine((int) (startX + children.width), (int) startY - 5, (int) (startX + children.width), (int) startY + 10);
+         g.setColor(Color.decode("#2b8cbe"));
+         g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY - margin);
+         g.drawLine((int) startX, (int) startY - margin, (int) (startX + children.width), (int) startY - margin);
+         g.drawLine((int) (startX + children.width), (int) startY - margin, (int) (startX + children.width), (int) startY + offset);
          return children;
 
       } else if ("?".equals(ebnf)) {
-         g.setColor(Color.decode("#990000"));
-         g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY + 30);
-         g.drawLine((int) startX, (int) startY + 30, (int) (startX + children.width), (int) startY + 30);
-         g.drawLine((int) (startX + children.width), (int) startY + 30, (int) (startX + children.width), (int) startY + 10);
+         g.setColor(Color.decode("#2b8cbe"));
+         g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY + (margin * 2 + offset * 2));
+         g.drawLine((int) startX, (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + (margin * 2 + offset * 2));
+         g.drawLine((int) (startX + children.width), (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + offset);
          return children;
 
       } else if ("+".equals(ebnf)) {
-         g.setColor(Color.decode("#08589e"));
-         g.drawLine((int) startX, (int) startY + 10, (int) startX, (int) startY - 5);
-         g.drawLine((int) startX, (int) startY - 5, (int) (startX + children.width), (int) startY - 5);
-         g.drawLine((int) (startX + children.width), (int) startY - 5, (int) (startX + children.width), (int) startY + 10);
+         g.setColor(Color.decode("#2b8cbe"));
+         g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY - margin);
+         g.drawLine((int) startX, (int) startY - margin, (int) (startX + children.width), (int) startY - margin);
+         g.drawLine((int) (startX + children.width), (int) startY - margin, (int) (startX + children.width), (int) startY + offset);
          return children;
       }
 
       return children;
    }
 
-   public Rectangle.Double drawName(String content, Color color, double x, double y, Graphics2D g, java.util.Map<AntlrSymbol, Rectangle2D> shapeMap) {
+   protected Rectangle.Double drawName(String content, Color color, double x, double y, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap) {
+
       if (content == null) return new Rectangle2D.Double(x, y, 0, 0);
+
       final int w = g.getFontMetrics().stringWidth(content);
       final int h = g.getFontMetrics().getHeight();
-      final int margin = 5;
-      final int offset = 10;
+
       final Rectangle.Double rectangle = new Rectangle.Double(x + offset, y, w + (margin * 2), h + (margin * 2));
       g.setColor(color);
       g.draw(rectangle);
@@ -143,7 +147,7 @@ public class AntlrSymbol {
       g.drawLine((int) x, (int) y + offset, (int) x + offset, (int) y + offset);
       g.drawLine((int) (x + offset + rectangle.width), (int) y + offset, (int) (x + offset + rectangle.width + offset), (int) y + offset);
 
-      final Rectangle2D.Double shape = new Rectangle.Double(x, y, rectangle.width + 20, rectangle.height);
+      final Rectangle2D.Double shape = new Rectangle.Double(x, y, rectangle.width + (offset * 2), rectangle.height);
       shapeMap.put(this, shape);
       return shape;
    }
@@ -157,8 +161,8 @@ public class AntlrSymbol {
       menu.add(new AbstractAction("Remove " + (label == null ? type : label)) {
          @Override
          public void actionPerformed(ActionEvent e) {
-            parent.symbols.remove(AntlrSymbol.this);
-            modelChangeSupport.firePropertyChange(label == null ? type : label, "remove", AntlrSymbol.this);
+            parent.symbols.remove(AntlrGrammarSymbol.this);
+            modelChangeSupport.firePropertyChange(label == null ? type : label, "remove", AntlrGrammarSymbol.this);
          }
       });
    }
@@ -168,7 +172,7 @@ public class AntlrSymbol {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 
-      AntlrSymbol symbol = (AntlrSymbol) o;
+      AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) o;
 
       return uuid.equals(symbol.uuid);
    }
@@ -180,7 +184,7 @@ public class AntlrSymbol {
 
    public Object toGrammar(AntlrGroup antlrGroup) {
       final StringBuilder out = new StringBuilder();
-      for (AntlrSymbol symbol : symbols) {
+      for (AntlrGrammarSymbol symbol : symbols) {
          final Object grammar = symbol.toGrammar(antlrGroup);
          if (grammar == null) continue;
          out.append(grammar);

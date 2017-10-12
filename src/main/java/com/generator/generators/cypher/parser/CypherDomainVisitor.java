@@ -12,6 +12,11 @@ public abstract class CypherDomainVisitor {
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
+		else if(hasLabel(node, "Cypher")) visitCypher(node);
+		else if(hasLabel(node, "Query")) visitQuery(node);
+		else if(hasLabel(node, "RegularQuery")) visitRegularQuery(node);
+		else if(hasLabel(node, "Union")) visitUnion(node);
+		else if(hasLabel(node, "SingleQuery")) visitSingleQuery(node);
 		else if(hasLabel(node, "SinglePartQuery")) visitSinglePartQuery(node);
 		else if(hasLabel(node, "ReadOnlyEnd")) visitReadOnlyEnd(node);
 		else if(hasLabel(node, "ReadUpdateEnd")) visitReadUpdateEnd(node);
@@ -22,12 +27,7 @@ public abstract class CypherDomainVisitor {
 		else if(hasLabel(node, "UpdatingStartClause")) visitUpdatingStartClause(node);
 		else if(hasLabel(node, "UpdatingClause")) visitUpdatingClause(node);
 		else if(hasLabel(node, "ReadingClause")) visitReadingClause(node);
-		else if(hasLabel(node, "Cypher")) visitCypher(node);
-		else if(hasLabel(node, "Query")) visitQuery(node);
-		else if(hasLabel(node, "Union")) visitUnion(node);
-		else if(hasLabel(node, "SingleQuery")) visitSingleQuery(node);
 		else if(hasLabel(node, "Cyper_match")) visitCyper_match(node);
-		else if(hasLabel(node, "RegularQuery")) visitRegularQuery(node);
 		else if(hasLabel(node, "Unwind")) visitUnwind(node);
 		else if(hasLabel(node, "Merge")) visitMerge(node);
 		else if(hasLabel(node, "MergeAction")) visitMergeAction(node);
@@ -141,6 +141,36 @@ public abstract class CypherDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitCypher(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRegularQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitUnion(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSingleQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitSinglePartQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -201,37 +231,7 @@ public abstract class CypherDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitCypher(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitUnion(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSingleQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitCyper_match(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRegularQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

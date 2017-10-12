@@ -7,23 +7,11 @@ public abstract class CSVDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Row")) visitRow(node);
-		else if(hasLabel(node, "Field")) visitField(node);
-		else if(hasLabel(node, "CsvFile")) visitCsvFile(node);
+		if(hasLabel(node, "CsvFile")) visitCsvFile(node);
 		else if(hasLabel(node, "Hdr")) visitHdr(node);
+		else if(hasLabel(node, "Row")) visitRow(node);
+		else if(hasLabel(node, "Field")) visitField(node);
    }
-
-	public void visitRow(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitField(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitCsvFile(Node node) {
 		if (visited.contains(node)) return;
@@ -32,6 +20,18 @@ public abstract class CSVDomainVisitor {
 	}
 
 	public void visitHdr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRow(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitField(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

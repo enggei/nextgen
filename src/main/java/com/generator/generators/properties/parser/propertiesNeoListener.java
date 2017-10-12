@@ -39,6 +39,24 @@ public class propertiesNeoListener extends propertiesBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inPropertiesFile.push(true);
+	}
+
+	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onExit();
+		this.inPropertiesFile.pop();
+	}
+
+	public boolean inPropertiesFile() {
+      return !inPropertiesFile.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inDecl = new java.util.Stack<>();
 
 	@Override
@@ -127,24 +145,6 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	public boolean inKey() {
       return !inKey.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inPropertiesFile.push(true);
-	}
-
-	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onExit();
-		this.inPropertiesFile.pop();
-	}
-
-	public boolean inPropertiesFile() {
-      return !inPropertiesFile.isEmpty(); 
    }
 
 }

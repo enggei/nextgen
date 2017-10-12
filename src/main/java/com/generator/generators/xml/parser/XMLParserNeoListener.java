@@ -39,42 +39,6 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
-
-	@Override
-	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inElement.push(true);
-	}
-
-	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onExit();
-		this.inElement.pop();
-	}
-
-	public boolean inElement() {
-      return !inElement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
-
-	@Override
-	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inAttribute.push(true);
-	}
-
-	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onExit();
-		this.inAttribute.pop();
-	}
-
-	public boolean inAttribute() {
-      return !inAttribute.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inDocument = new java.util.Stack<>();
 
 	@Override
@@ -91,6 +55,42 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
 
 	public boolean inDocument() {
       return !inDocument.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inProlog = new java.util.Stack<>();
+
+	@Override
+	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inProlog.push(true);
+	}
+
+	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		onExit();
+		this.inProlog.pop();
+	}
+
+	public boolean inProlog() {
+      return !inProlog.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inContent = new java.util.Stack<>();
+
+	@Override
+	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
+		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inContent.push(true);
+	}
+
+	public void exitContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
+		onExit();
+		this.inContent.pop();
+	}
+
+	public boolean inContent() {
+      return !inContent.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inReference = new java.util.Stack<>();
@@ -147,40 +147,40 @@ public class XMLParserNeoListener extends XMLParserBaseListener {
       return !inMisc.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inProlog = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inElement = new java.util.Stack<>();
 
 	@Override
-	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prolog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inProlog.push(true);
+		this.inElement.push(true);
 	}
 
-	public void exitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+	public void exitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
 		onExit();
-		this.inProlog.pop();
+		this.inElement.pop();
 	}
 
-	public boolean inProlog() {
-      return !inProlog.isEmpty(); 
+	public boolean inElement() {
+      return !inElement.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inContent = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inAttribute = new java.util.Stack<>();
 
 	@Override
-	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		final Node node = model.findOrCreate(Label.label("Content"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		final Node node = model.findOrCreate(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inContent.push(true);
+		this.inAttribute.push(true);
 	}
 
-	public void exitContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
+	public void exitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
 		onExit();
-		this.inContent.pop();
+		this.inAttribute.pop();
 	}
 
-	public boolean inContent() {
-      return !inContent.isEmpty(); 
+	public boolean inAttribute() {
+      return !inAttribute.isEmpty(); 
    }
 
 }

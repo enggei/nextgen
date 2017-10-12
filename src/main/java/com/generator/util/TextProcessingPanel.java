@@ -17,7 +17,7 @@ public final class TextProcessingPanel extends JPanel {
    private final String lineSeparator = System.getProperty("line.separator");
 
    private JTextArea newTextArea() {
-      final JTextArea txtEditor = new JTextArea(30,30);
+      final JTextArea txtEditor = new JTextArea(30, 30);
       txtEditor.setFont(new Font("Hack", Font.PLAIN, 12));
       txtEditor.setTabSize(3);
       return txtEditor;
@@ -39,9 +39,12 @@ public final class TextProcessingPanel extends JPanel {
    private final JRadioButton radRemoveLineAfter = new JRadioButton("remove line after");
    private final JCheckBox chkTrimEmptyLines = new JCheckBox("Compress lines", true);
    private final JRadioButton radExtract = new JRadioButton("keep only matches");
+   private final JButton btnSetAsInput = new JButton(" <- ");
 
    public TextProcessingPanel(String inputText, Set<String> patterns) {
       super(new BorderLayout());
+
+      btnSetAsInput.setToolTipText("Set output-text to inputText (for further processing)");
 
       final ButtonGroup group = new ButtonGroup();
       group.add(radReplace);
@@ -74,6 +77,13 @@ public final class TextProcessingPanel extends JPanel {
       });
 
       if (patterns.size() == 1) txtPattern.setText(patterns.iterator().next());
+
+      btnSetAsInput.addActionListener(e -> {
+         inputStack.push(txtInput.getText());
+         txtInput.setText(txtOutput.getText());
+         txtInput.setCaretPosition(0);
+         filter();
+      });
 
       txtPattern.addMouseListener(new MouseAdapter() {
          @Override
@@ -117,6 +127,7 @@ public final class TextProcessingPanel extends JPanel {
                      @Override
                      public void actionPerformed(ActionEvent e) {
                         txtInput.setText(inputStack.pop());
+                        txtInput.setCaretPosition(0);
                         filter();
                      }
                   });
@@ -126,6 +137,7 @@ public final class TextProcessingPanel extends JPanel {
                   @Override
                   public void actionPerformed(ActionEvent e) {
                      txtInput.setText(SwingUtil.fromClipboard());
+                     txtInput.setCaretPosition(0);
                      filter();
                   }
                });
@@ -165,28 +177,31 @@ public final class TextProcessingPanel extends JPanel {
       radRemoveLineAfter.addActionListener(e -> filter());
       radExtract.addActionListener(e -> filter());
 
+
+
       chkTrimEmptyLines.setToolTipText("Check to compress 2 or more empty lines into 1");
       chkTrimEmptyLines.addActionListener(e -> filter());
 
-      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("250dlu:grow,4dlu,100dlu,4dlu,250dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
-      editor.add(new JScrollPane(txtInput), 1, 1, 1, 31);
-      editor.addLabel("Pattern", 3, 1);
-      editor.add(txtPattern, 3, 3);
-      editor.addLabel("Insert", 3, 5);
-      editor.add(txtInsert, 3, 7);
-      editor.add(radReplace, 3, 9);
-      editor.add(radInsertAfter, 3, 11);
-      editor.add(radInsertLineAfter, 3, 13);
-      editor.add(radInsertBefore, 3, 15);
-      editor.add(radInsertLineBefore, 3, 17);
-      editor.add(radRemove, 3, 19);
-      editor.add(radRemoveLine, 3, 21);
-      editor.add(radRemoveLineBefore, 3, 23);
-      editor.add(radRemoveLineAfter, 3, 25);
-      editor.add(chkTrimEmptyLines, 3, 27);
-      editor.add(radExtract, 3, 29);
-      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 31);
-      editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("350dlu:grow,4dlu,100dlu,4dlu,350dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
+      int row = 1;
+      editor.add(new JScrollPane(txtInput), 1, row, 1, 35);
+      editor.addLabel("Pattern", 3, row+=2);
+      editor.add(txtPattern, 3, row+=2);
+      editor.addLabel("Insert", 3, row+=2);
+      editor.add(txtInsert, 3, row+=2);
+      editor.add(radReplace, 3, row+=2);
+      editor.add(radInsertAfter, 3, row+=2);
+      editor.add(radInsertLineAfter, 3, row+=2);
+      editor.add(radInsertBefore, 3, row+=2);
+      editor.add(radInsertLineBefore, 3, row+=2);
+      editor.add(radRemove, 3, row+=2);
+      editor.add(radRemoveLine, 3, row+=2);
+      editor.add(radRemoveLineBefore, 3, row+=2);
+      editor.add(radRemoveLineAfter, 3, row+=2);
+      editor.add(chkTrimEmptyLines, 3, row+=2);
+      editor.add(radExtract, 3, row+=2);
+      editor.add(btnSetAsInput, 3, row+=2);
+      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 35);
 
       txtOutput.addMouseListener(new MouseAdapter() {
          @Override
@@ -201,6 +216,7 @@ public final class TextProcessingPanel extends JPanel {
                   public void actionPerformed(ActionEvent e) {
                      inputStack.push(txtInput.getText());
                      txtInput.setText(txtOutput.getText());
+                     txtInput.setCaretPosition(0);
                      filter();
                   }
                });
@@ -220,7 +236,13 @@ public final class TextProcessingPanel extends JPanel {
 
       filter();
 
-      add(editor, BorderLayout.CENTER);
+      add(editor.build(), BorderLayout.CENTER);
+
+      txtPattern.requestFocusInWindow();
+   }
+
+   public String getOutputText() {
+      return txtOutput.getText();
    }
 
    private void showHelp() {
@@ -276,7 +298,7 @@ public final class TextProcessingPanel extends JPanel {
          if (txtPattern.getText().trim().length() == 0) return;
 
          final String inputText = txtInput.getText();
-         final Pattern pattern = Pattern.compile(txtPattern.getText().trim());
+         final Pattern pattern = Pattern.compile(txtPattern.getText());
          final Matcher matcher = pattern.matcher(inputText);
          final String replacement = txtInsert.getText();
 
@@ -304,13 +326,6 @@ public final class TextProcessingPanel extends JPanel {
                   currentIndex = end;
                } else if (radInsertAfter.isSelected()) {
                   filteredText.append(inputText.substring(currentIndex, end));
-                  int newStart = filteredText.length();
-                  filteredText.append(newLine);
-                  outputHighlights.put(newStart, filteredText.length());
-                  currentIndex = end;
-               } else if (radInsertLineAfter.isSelected()) {
-                  filteredText.append(inputText.substring(currentIndex, end));
-                  filteredText.append(lineSeparator);
                   int newStart = filteredText.length();
                   filteredText.append(newLine);
                   outputHighlights.put(newStart, filteredText.length());
@@ -397,9 +412,25 @@ public final class TextProcessingPanel extends JPanel {
                   currentIndex = endOfLine;
                }
 
-            } else if(radExtract.isSelected()) {
-               filteredText.append(inputText.substring(start,end)).append(lineSeparator);
+            } else if (radExtract.isSelected()) {
+               filteredText.append(inputText.substring(start, end)).append(lineSeparator);
                currentIndex = inputText.length();
+
+            } else if (radInsertLineAfter.isSelected()) {
+
+               String newLine = "";
+               if (replacement.length() > 0) {
+                  newLine = replacement;
+                  for (int i = 0; i < matcher.groupCount(); i++)
+                     newLine = newLine.replace("$" + (i + 1), matcher.group(i + 1));
+               }
+
+               filteredText.append(inputText.substring(currentIndex, end));
+               filteredText.append(lineSeparator);
+               int newStart = filteredText.length();
+               filteredText.append(newLine);
+               outputHighlights.put(newStart, filteredText.length());
+               currentIndex = end;
             }
          }
 
@@ -408,7 +439,7 @@ public final class TextProcessingPanel extends JPanel {
 
          final StringBuilder outputText = new StringBuilder();
          if (chkTrimEmptyLines.isSelected()) {
-            final String[] lines = filteredText.toString().trim().split(lineSeparator);
+            final String[] lines = filteredText.toString().split(lineSeparator);
             String previous = null;
             for (int i = 0; i < lines.length; i++) {
                String line = lines[i];

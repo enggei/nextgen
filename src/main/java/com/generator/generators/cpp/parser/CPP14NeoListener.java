@@ -75,6 +75,96 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return !inTranslationunit.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inPrimaryexpression.push(true);
+	}
+
+	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
+		onExit();
+		this.inPrimaryexpression.pop();
+	}
+
+	public boolean inPrimaryexpression() {
+      return !inPrimaryexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
+
+	@Override
+	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inIdexpression.push(true);
+	}
+
+	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
+		onExit();
+		this.inIdexpression.pop();
+	}
+
+	public boolean inIdexpression() {
+      return !inIdexpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inUnqualifiedid.push(true);
+	}
+
+	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
+		onExit();
+		this.inUnqualifiedid.pop();
+	}
+
+	public boolean inUnqualifiedid() {
+      return !inUnqualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
+
+	@Override
+	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inQualifiedid.push(true);
+	}
+
+	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
+		onExit();
+		this.inQualifiedid.pop();
+	}
+
+	public boolean inQualifiedid() {
+      return !inQualifiedid.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
+
+	@Override
+	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inNestednamespecifier.push(true);
+	}
+
+	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
+		onExit();
+		this.inNestednamespecifier.pop();
+	}
+
+	public boolean inNestednamespecifier() {
+      return !inNestednamespecifier.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inLambdaexpression = new java.util.Stack<>();
 
 	@Override
@@ -253,96 +343,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inPostfixexpression() {
       return !inPostfixexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Qualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inQualifiedid.push(true);
-	}
-
-	public void exitQualifiedid(com.generator.generators.cpp.parser.CPP14Parser.QualifiedidContext arg) {
-		onExit();
-		this.inQualifiedid.pop();
-	}
-
-	public boolean inQualifiedid() {
-      return !inQualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPrimaryexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Primaryexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inPrimaryexpression.push(true);
-	}
-
-	public void exitPrimaryexpression(com.generator.generators.cpp.parser.CPP14Parser.PrimaryexpressionContext arg) {
-		onExit();
-		this.inPrimaryexpression.pop();
-	}
-
-	public boolean inPrimaryexpression() {
-      return !inPrimaryexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIdexpression = new java.util.Stack<>();
-
-	@Override
-	public void enterIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Idexpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inIdexpression.push(true);
-	}
-
-	public void exitIdexpression(com.generator.generators.cpp.parser.CPP14Parser.IdexpressionContext arg) {
-		onExit();
-		this.inIdexpression.pop();
-	}
-
-	public boolean inIdexpression() {
-      return !inIdexpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnqualifiedid = new java.util.Stack<>();
-
-	@Override
-	public void enterUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unqualifiedid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inUnqualifiedid.push(true);
-	}
-
-	public void exitUnqualifiedid(com.generator.generators.cpp.parser.CPP14Parser.UnqualifiedidContext arg) {
-		onExit();
-		this.inUnqualifiedid.pop();
-	}
-
-	public boolean inUnqualifiedid() {
-      return !inUnqualifiedid.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNestednamespecifier = new java.util.Stack<>();
-
-	@Override
-	public void enterNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		final Node node = model.findOrCreate(Label.label("Nestednamespecifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inNestednamespecifier.push(true);
-	}
-
-	public void exitNestednamespecifier(com.generator.generators.cpp.parser.CPP14Parser.NestednamespecifierContext arg) {
-		onExit();
-		this.inNestednamespecifier.pop();
-	}
-
-	public boolean inNestednamespecifier() {
-      return !inNestednamespecifier.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inExpressionlist = new java.util.Stack<>();
@@ -705,6 +705,24 @@ public class CPP14NeoListener extends CPP14BaseListener {
       return !inAndexpression.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inExpression.push(true);
+	}
+
+	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
+		onExit();
+		this.inExpression.pop();
+	}
+
+	public boolean inExpression() {
+      return !inExpression.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inExclusiveorexpression = new java.util.Stack<>();
 
 	@Override
@@ -829,24 +847,6 @@ public class CPP14NeoListener extends CPP14BaseListener {
 
 	public boolean inAssignmentoperator() {
       return !inAssignmentoperator.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inExpression.push(true);
-	}
-
-	public void exitExpression(com.generator.generators.cpp.parser.CPP14Parser.ExpressionContext arg) {
-		onExit();
-		this.inExpression.pop();
-	}
-
-	public boolean inExpression() {
-      return !inExpression.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inConstantexpression = new java.util.Stack<>();

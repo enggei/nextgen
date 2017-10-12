@@ -39,6 +39,78 @@ public class ClojureNeoListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
+
+	@Override
+	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		final Node node = model.findOrCreate(Label.label("Dispatch"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inDispatch.push(true);
+	}
+
+	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		onExit();
+		this.inDispatch.pop();
+	}
+
+	public boolean inDispatch() {
+      return !inDispatch.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
+
+	@Override
+	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inForm.push(true);
+	}
+
+	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		onExit();
+		this.inForm.pop();
+	}
+
+	public boolean inForm() {
+      return !inForm.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
+
+	@Override
+	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inForms.push(true);
+	}
+
+	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		onExit();
+		this.inForms.pop();
+	}
+
+	public boolean inForms() {
+      return !inForms.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
 
 	@Override
@@ -327,76 +399,22 @@ public class ClojureNeoListener extends ClojureBaseListener {
       return !inHost_expr.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inDiscard = new java.util.Stack<>();
 
 	@Override
-	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		final Node node = model.findOrCreate(Label.label("Form"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
+		final Node node = model.findOrCreate(Label.label("Discard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inForm.push(true);
+		this.inDiscard.push(true);
 	}
 
-	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+	public void exitDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
 		onExit();
-		this.inForm.pop();
+		this.inDiscard.pop();
 	}
 
-	public boolean inForm() {
-      return !inForm.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
-
-	@Override
-	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Forms"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inForms.push(true);
-	}
-
-	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onExit();
-		this.inForms.pop();
-	}
-
-	public boolean inForms() {
-      return !inForms.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inParam_name = new java.util.Stack<>();
-
-	@Override
-	public void enterParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Param_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inParam_name.push(true);
-	}
-
-	public void exitParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
-		onExit();
-		this.inParam_name.pop();
-	}
-
-	public boolean inParam_name() {
-      return !inParam_name.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
-
-	@Override
-	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dispatch"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inDispatch.push(true);
-	}
-
-	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		onExit();
-		this.inDispatch.pop();
-	}
-
-	public boolean inDispatch() {
-      return !inDispatch.isEmpty(); 
+	public boolean inDiscard() {
+      return !inDiscard.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inRegex = new java.util.Stack<>();
@@ -723,40 +741,22 @@ public class ClojureNeoListener extends ClojureBaseListener {
       return !inNs_symbol.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inParam_name = new java.util.Stack<>();
 
 	@Override
-	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		final Node node = model.findOrCreate(Label.label("File"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
+		final Node node = model.findOrCreate(Label.label("Param_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inFile.push(true);
+		this.inParam_name.push(true);
 	}
 
-	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+	public void exitParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
 		onExit();
-		this.inFile.pop();
+		this.inParam_name.pop();
 	}
 
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDiscard = new java.util.Stack<>();
-
-	@Override
-	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		final Node node = model.findOrCreate(Label.label("Discard"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inDiscard.push(true);
-	}
-
-	public void exitDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		onExit();
-		this.inDiscard.pop();
-	}
-
-	public boolean inDiscard() {
-      return !inDiscard.isEmpty(); 
+	public boolean inParam_name() {
+      return !inParam_name.isEmpty(); 
    }
 
 }

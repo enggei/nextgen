@@ -183,24 +183,6 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inFunction.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
-
-	@Override
-	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inStatementList.push(true);
-	}
-
-	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onExit();
-		this.inStatementList.pop();
-	}
-
-	public boolean inStatementList() {
-      return !inStatementList.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inElementList = new java.util.Stack<>();
 
 	@Override
@@ -255,6 +237,24 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inEos.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
+
+	@Override
+	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inStatementList.push(true);
+	}
+
+	public void exitStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
+		onExit();
+		this.inStatementList.pop();
+	}
+
+	public boolean inStatementList() {
+      return !inStatementList.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSourceFile = new java.util.Stack<>();
 
 	@Override
@@ -271,6 +271,24 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inSourceFile() {
       return !inSourceFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		final Node node = model.findOrCreate(Label.label("PackageClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inPackageClause.push(true);
+	}
+
+	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		onExit();
+		this.inPackageClause.pop();
+	}
+
+	public boolean inPackageClause() {
+      return !inPackageClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inImportDecl = new java.util.Stack<>();
@@ -1009,24 +1027,6 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inSelectStmt() {
       return !inSelectStmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("PackageClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inPackageClause.push(true);
-	}
-
-	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		onExit();
-		this.inPackageClause.pop();
-	}
-
-	public boolean inPackageClause() {
-      return !inPackageClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCommClause = new java.util.Stack<>();

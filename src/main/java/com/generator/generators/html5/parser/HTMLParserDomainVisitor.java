@@ -7,7 +7,12 @@ public abstract class HTMLParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "HtmlAttributeName")) visitHtmlAttributeName(node);
+		if(hasLabel(node, "HtmlDocument")) visitHtmlDocument(node);
+		else if(hasLabel(node, "HtmlElements")) visitHtmlElements(node);
+		else if(hasLabel(node, "HtmlElement")) visitHtmlElement(node);
+		else if(hasLabel(node, "HtmlContent")) visitHtmlContent(node);
+		else if(hasLabel(node, "HtmlAttribute")) visitHtmlAttribute(node);
+		else if(hasLabel(node, "HtmlAttributeName")) visitHtmlAttributeName(node);
 		else if(hasLabel(node, "HtmlAttributeValue")) visitHtmlAttributeValue(node);
 		else if(hasLabel(node, "HtmlTagName")) visitHtmlTagName(node);
 		else if(hasLabel(node, "HtmlChardata")) visitHtmlChardata(node);
@@ -18,13 +23,38 @@ public abstract class HTMLParserDomainVisitor {
 		else if(hasLabel(node, "Xml")) visitXml(node);
 		else if(hasLabel(node, "Scriptlet")) visitScriptlet(node);
 		else if(hasLabel(node, "Script")) visitScript(node);
-		else if(hasLabel(node, "HtmlDocument")) visitHtmlDocument(node);
 		else if(hasLabel(node, "Style")) visitStyle(node);
-		else if(hasLabel(node, "HtmlElements")) visitHtmlElements(node);
-		else if(hasLabel(node, "HtmlAttribute")) visitHtmlAttribute(node);
-		else if(hasLabel(node, "HtmlElement")) visitHtmlElement(node);
-		else if(hasLabel(node, "HtmlContent")) visitHtmlContent(node);
    }
+
+	public void visitHtmlDocument(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHtmlElements(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHtmlElement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHtmlContent(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitHtmlAttribute(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitHtmlAttributeName(Node node) {
 		if (visited.contains(node)) return;
@@ -92,37 +122,7 @@ public abstract class HTMLParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitHtmlDocument(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitStyle(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHtmlElements(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHtmlAttribute(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHtmlElement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitHtmlContent(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

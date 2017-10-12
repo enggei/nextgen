@@ -9,6 +9,7 @@ import com.generator.generators.stringtemplate.parser.TemplateFileParser;
 import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
+import com.generator.util.TextProcessingPanel;
 import org.antlr.runtime.Token;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Label;
@@ -602,7 +603,18 @@ public class StringTemplatePlugin extends Plugin {
             @Override
             public void mouseClicked(MouseEvent e) {
                if (SwingUtilities.isRightMouseButton(e))
-                  SwingUtilities.invokeLater(() -> app.showTextProcessor(txtEditor.getText()));
+                  SwingUtilities.invokeLater(() -> {
+                     final TextProcessingPanel processingPanel = new TextProcessingPanel(txtEditor.getText(), Collections.emptySet());
+                     SwingUtil.showDialog(processingPanel, app, "Process Text", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+                           final String outputText = processingPanel.getOutputText();
+                           if(outputText.trim().length()==0) return;
+                           txtEditor.setText(outputText);
+                           SwingUtilities.invokeLater(() -> txtEditor.dispatchEvent(new KeyEvent(txtEditor, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n')));
+                        }
+                     });
+                  });
             }
          });
 

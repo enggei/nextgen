@@ -7,12 +7,10 @@ public abstract class STParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Element")) visitElement(node);
-		else if(hasLabel(node, "Option")) visitOption(node);
-		else if(hasLabel(node, "List")) visitList(node);
-		else if(hasLabel(node, "Expr")) visitExpr(node);
-		else if(hasLabel(node, "Primary")) visitPrimary(node);
-		else if(hasLabel(node, "Args")) visitArgs(node);
+		if(hasLabel(node, "Template")) visitTemplate(node);
+		else if(hasLabel(node, "Elements")) visitElements(node);
+		else if(hasLabel(node, "SingleElement")) visitSingleElement(node);
+		else if(hasLabel(node, "CompoundElement")) visitCompoundElement(node);
 		else if(hasLabel(node, "ExprTag")) visitExprTag(node);
 		else if(hasLabel(node, "Region")) visitRegion(node);
 		else if(hasLabel(node, "Subtemplate")) visitSubtemplate(node);
@@ -28,43 +26,33 @@ public abstract class STParserDomainVisitor {
 		else if(hasLabel(node, "IncludeExpr")) visitIncludeExpr(node);
 		else if(hasLabel(node, "ArgExprList")) visitArgExprList(node);
 		else if(hasLabel(node, "NamedArg")) visitNamedArg(node);
-		else if(hasLabel(node, "Template")) visitTemplate(node);
-		else if(hasLabel(node, "Elements")) visitElements(node);
-		else if(hasLabel(node, "SingleElement")) visitSingleElement(node);
-		else if(hasLabel(node, "CompoundElement")) visitCompoundElement(node);
+		else if(hasLabel(node, "Option")) visitOption(node);
+		else if(hasLabel(node, "Element")) visitElement(node);
+		else if(hasLabel(node, "List")) visitList(node);
+		else if(hasLabel(node, "Expr")) visitExpr(node);
+		else if(hasLabel(node, "Primary")) visitPrimary(node);
+		else if(hasLabel(node, "Args")) visitArgs(node);
    }
 
-	public void visitElement(Node node) {
+	public void visitTemplate(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitOption(Node node) {
+	public void visitElements(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitList(Node node) {
+	public void visitSingleElement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrimary(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitArgs(Node node) {
+	public void visitCompoundElement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -160,25 +148,37 @@ public abstract class STParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitTemplate(Node node) {
+	public void visitOption(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitElements(Node node) {
+	public void visitElement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitSingleElement(Node node) {
+	public void visitList(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitCompoundElement(Node node) {
+	public void visitExpr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrimary(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitArgs(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

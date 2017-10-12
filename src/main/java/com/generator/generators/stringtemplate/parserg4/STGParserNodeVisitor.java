@@ -67,8 +67,8 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		final Node node = new Node("Group", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
+		final Node node = new Node("FormalArgs", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -76,8 +76,17 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		final Node node = new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
+		final Node node = new Node("FormalArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDict(com.generator.generators.stringtemplate.parserg4.STGParser.DictContext arg) {
+		final Node node = new Node("Dict", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -121,8 +130,8 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
-		final Node node = new Node("FormalArgs", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
+		final Node node = new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -130,17 +139,8 @@ public class STGParserNodeVisitor extends STGParserBaseVisitor<STGParserNodeVisi
 	}
 
 	@Override
-	public Node visitFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
-		final Node node = new Node("FormalArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDict(com.generator.generators.stringtemplate.parserg4.STGParser.DictContext arg) {
-		final Node node = new Node("Dict", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
+		final Node node = new Node("Group", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
