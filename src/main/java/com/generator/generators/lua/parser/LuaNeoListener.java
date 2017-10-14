@@ -129,6 +129,78 @@ public class LuaNeoListener extends LuaBaseListener {
       return !inField.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();
+
+	@Override
+	public void enterChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
+		final Node node = model.findOrCreate(Label.label("Chunk"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inChunk.push(true);
+	}
+
+	public void exitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
+		onExit();
+		this.inChunk.pop();
+	}
+
+	public boolean inChunk() {
+      return !inChunk.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inStat = new java.util.Stack<>();
+
+	@Override
+	public void enterStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
+		final Node node = model.findOrCreate(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inStat.push(true);
+	}
+
+	public void exitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
+		onExit();
+		this.inStat.pop();
+	}
+
+	public boolean inStat() {
+      return !inStat.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRetstat = new java.util.Stack<>();
+
+	@Override
+	public void enterRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
+		final Node node = model.findOrCreate(Label.label("Retstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inRetstat.push(true);
+	}
+
+	public void exitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
+		onExit();
+		this.inRetstat.pop();
+	}
+
+	public boolean inRetstat() {
+      return !inRetstat.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLabel = new java.util.Stack<>();
+
+	@Override
+	public void enterLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
+		final Node node = model.findOrCreate(Label.label("Label"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inLabel.push(true);
+	}
+
+	public void exitLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
+		onExit();
+		this.inLabel.pop();
+	}
+
+	public boolean inLabel() {
+      return !inLabel.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inFuncname = new java.util.Stack<>();
 
 	@Override
@@ -343,24 +415,6 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	public boolean inFunctiondef() {
       return !inFunctiondef.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();
-
-	@Override
-	public void enterChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		final Node node = model.findOrCreate(Label.label("Chunk"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inChunk.push(true);
-	}
-
-	public void exitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		onExit();
-		this.inChunk.pop();
-	}
-
-	public boolean inChunk() {
-      return !inChunk.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inFuncbody = new java.util.Stack<>();
@@ -613,60 +667,6 @@ public class LuaNeoListener extends LuaBaseListener {
 
 	public boolean inOperatorPower() {
       return !inOperatorPower.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStat = new java.util.Stack<>();
-
-	@Override
-	public void enterStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		final Node node = model.findOrCreate(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inStat.push(true);
-	}
-
-	public void exitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		onExit();
-		this.inStat.pop();
-	}
-
-	public boolean inStat() {
-      return !inStat.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRetstat = new java.util.Stack<>();
-
-	@Override
-	public void enterRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		final Node node = model.findOrCreate(Label.label("Retstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inRetstat.push(true);
-	}
-
-	public void exitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		onExit();
-		this.inRetstat.pop();
-	}
-
-	public boolean inRetstat() {
-      return !inRetstat.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLabel = new java.util.Stack<>();
-
-	@Override
-	public void enterLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
-		final Node node = model.findOrCreate(Label.label("Label"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inLabel.push(true);
-	}
-
-	public void exitLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
-		onExit();
-		this.inLabel.pop();
-	}
-
-	public boolean inLabel() {
-      return !inLabel.isEmpty(); 
    }
 
 }

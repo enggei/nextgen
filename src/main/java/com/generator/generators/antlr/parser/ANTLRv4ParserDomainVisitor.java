@@ -7,7 +7,28 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "RuleModifiers")) visitRuleModifiers(node);
+		if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
+		else if(hasLabel(node, "DelegateGrammar")) visitDelegateGrammar(node);
+		else if(hasLabel(node, "TokensSpec")) visitTokensSpec(node);
+		else if(hasLabel(node, "ChannelsSpec")) visitChannelsSpec(node);
+		else if(hasLabel(node, "IdList")) visitIdList(node);
+		else if(hasLabel(node, "Action")) visitAction(node);
+		else if(hasLabel(node, "ActionScopeName")) visitActionScopeName(node);
+		else if(hasLabel(node, "ActionBlock")) visitActionBlock(node);
+		else if(hasLabel(node, "ArgActionBlock")) visitArgActionBlock(node);
+		else if(hasLabel(node, "ModeSpec")) visitModeSpec(node);
+		else if(hasLabel(node, "Rules")) visitRules(node);
+		else if(hasLabel(node, "RuleSpec")) visitRuleSpec(node);
+		else if(hasLabel(node, "ParserRuleSpec")) visitParserRuleSpec(node);
+		else if(hasLabel(node, "ExceptionGroup")) visitExceptionGroup(node);
+		else if(hasLabel(node, "ExceptionHandler")) visitExceptionHandler(node);
+		else if(hasLabel(node, "FinallyClause")) visitFinallyClause(node);
+		else if(hasLabel(node, "RulePrequel")) visitRulePrequel(node);
+		else if(hasLabel(node, "RuleReturns")) visitRuleReturns(node);
+		else if(hasLabel(node, "ThrowsSpec")) visitThrowsSpec(node);
+		else if(hasLabel(node, "LocalsSpec")) visitLocalsSpec(node);
+		else if(hasLabel(node, "RuleAction")) visitRuleAction(node);
+		else if(hasLabel(node, "RuleModifiers")) visitRuleModifiers(node);
 		else if(hasLabel(node, "RuleModifier")) visitRuleModifier(node);
 		else if(hasLabel(node, "RuleBlock")) visitRuleBlock(node);
 		else if(hasLabel(node, "RuleAltList")) visitRuleAltList(node);
@@ -15,6 +36,11 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "LexerRuleSpec")) visitLexerRuleSpec(node);
 		else if(hasLabel(node, "LexerRuleBlock")) visitLexerRuleBlock(node);
 		else if(hasLabel(node, "LexerAltList")) visitLexerAltList(node);
+		else if(hasLabel(node, "GrammarSpec")) visitGrammarSpec(node);
+		else if(hasLabel(node, "GrammarType")) visitGrammarType(node);
+		else if(hasLabel(node, "PrequelConstruct")) visitPrequelConstruct(node);
+		else if(hasLabel(node, "OptionsSpec")) visitOptionsSpec(node);
+		else if(hasLabel(node, "Option")) visitOption(node);
 		else if(hasLabel(node, "LexerAlt")) visitLexerAlt(node);
 		else if(hasLabel(node, "LexerElements")) visitLexerElements(node);
 		else if(hasLabel(node, "LexerElement")) visitLexerElement(node);
@@ -43,34 +69,134 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "ElementOptions")) visitElementOptions(node);
 		else if(hasLabel(node, "ElementOption")) visitElementOption(node);
 		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
-		else if(hasLabel(node, "GrammarSpec")) visitGrammarSpec(node);
-		else if(hasLabel(node, "PrequelConstruct")) visitPrequelConstruct(node);
-		else if(hasLabel(node, "GrammarType")) visitGrammarType(node);
-		else if(hasLabel(node, "OptionsSpec")) visitOptionsSpec(node);
-		else if(hasLabel(node, "Option")) visitOption(node);
 		else if(hasLabel(node, "OptionValue")) visitOptionValue(node);
-		else if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
-		else if(hasLabel(node, "DelegateGrammar")) visitDelegateGrammar(node);
-		else if(hasLabel(node, "TokensSpec")) visitTokensSpec(node);
-		else if(hasLabel(node, "ChannelsSpec")) visitChannelsSpec(node);
-		else if(hasLabel(node, "IdList")) visitIdList(node);
-		else if(hasLabel(node, "Action")) visitAction(node);
-		else if(hasLabel(node, "ActionScopeName")) visitActionScopeName(node);
-		else if(hasLabel(node, "ActionBlock")) visitActionBlock(node);
-		else if(hasLabel(node, "ArgActionBlock")) visitArgActionBlock(node);
-		else if(hasLabel(node, "ModeSpec")) visitModeSpec(node);
-		else if(hasLabel(node, "Rules")) visitRules(node);
-		else if(hasLabel(node, "RuleSpec")) visitRuleSpec(node);
-		else if(hasLabel(node, "ParserRuleSpec")) visitParserRuleSpec(node);
-		else if(hasLabel(node, "ExceptionGroup")) visitExceptionGroup(node);
-		else if(hasLabel(node, "ExceptionHandler")) visitExceptionHandler(node);
-		else if(hasLabel(node, "FinallyClause")) visitFinallyClause(node);
-		else if(hasLabel(node, "RulePrequel")) visitRulePrequel(node);
-		else if(hasLabel(node, "RuleReturns")) visitRuleReturns(node);
-		else if(hasLabel(node, "ThrowsSpec")) visitThrowsSpec(node);
-		else if(hasLabel(node, "LocalsSpec")) visitLocalsSpec(node);
-		else if(hasLabel(node, "RuleAction")) visitRuleAction(node);
    }
+
+	public void visitDelegateGrammars(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDelegateGrammar(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTokensSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitChannelsSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitIdList(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAction(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitActionScopeName(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitActionBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitArgActionBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitModeSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRules(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRuleSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitParserRuleSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExceptionGroup(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExceptionHandler(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFinallyClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRulePrequel(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRuleReturns(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitThrowsSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLocalsSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRuleAction(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitRuleModifiers(Node node) {
 		if (visited.contains(node)) return;
@@ -115,6 +241,36 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	}
 
 	public void visitLexerAltList(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGrammarSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGrammarType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrequelConstruct(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOptionsSpec(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOption(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -288,163 +444,7 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitGrammarSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrequelConstruct(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitGrammarType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOptionsSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOption(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitOptionValue(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDelegateGrammars(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDelegateGrammar(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTokensSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitChannelsSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitIdList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAction(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitActionScopeName(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitActionBlock(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitArgActionBlock(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitModeSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRules(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRuleSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitParserRuleSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExceptionGroup(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExceptionHandler(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFinallyClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRulePrequel(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRuleReturns(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitThrowsSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLocalsSpec(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRuleAction(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

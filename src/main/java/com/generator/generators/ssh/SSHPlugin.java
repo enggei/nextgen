@@ -1364,6 +1364,10 @@ public class SSHPlugin extends Plugin {
 
       java.util.Properties config = new java.util.Properties();
       config.put("StrictHostKeyChecking", "no");
+      config.put("TCPKeepAlive", "yes");
+
+      session.setServerAliveInterval(120 * 1000);
+      session.setServerAliveCountMax(1000);
       session.setConfig(config);
 
       session.connect();

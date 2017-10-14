@@ -49,26 +49,17 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
    }
 
 	@Override
-	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		final Node node = new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		final Node node = new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		final Node node = new Node("Document", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
+		final Node node = new Node("Prolog", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -112,8 +103,17 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
 	}
 
 	@Override
-	public Node visitProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		final Node node = new Node("Prolog", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		final Node node = new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		final Node node = new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

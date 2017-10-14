@@ -133,6 +133,91 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inStatement.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
+
+	@Override
+	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inCypher.push(true);
+	}
+
+	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
+		onExit();
+		this.inCypher.pop();
+	}
+
+	public boolean inCypher() {
+      return !inCypher.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return !inQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inRegularQuery.push(true);
+	}
+
+	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
+		onExit();
+		this.inRegularQuery.pop();
+	}
+
+	public boolean inRegularQuery() {
+      return !inRegularQuery.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
+
+	@Override
+	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onEnter(new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inUnion.push(true);
+	}
+
+	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
+		onExit();
+		this.inUnion.pop();
+	}
+
+	public boolean inUnion() {
+      return !inUnion.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		this.inSingleQuery.push(true);
+	}
+
+	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
+		onExit();
+		this.inSingleQuery.pop();
+	}
+
+	public boolean inSingleQuery() {
+      return !inSingleQuery.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSinglePartQuery = new java.util.Stack<>();
 
 	@Override
@@ -303,74 +388,6 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inReadingClause.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();
-
-	@Override
-	public void enterCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onEnter(new Node("Cypher", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inCypher.push(true);
-	}
-
-	public void exitCypher(com.generator.generators.cypher.parser.CypherParser.CypherContext arg) {
-		onExit();
-		this.inCypher.pop();
-	}
-
-	public boolean inCypher() {
-      return !inCypher.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onEnter(new Node("Query", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inQuery.push(true);
-	}
-
-	public void exitQuery(com.generator.generators.cypher.parser.CypherParser.QueryContext arg) {
-		onExit();
-		this.inQuery.pop();
-	}
-
-	public boolean inQuery() {
-      return !inQuery.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inUnion = new java.util.Stack<>();
-
-	@Override
-	public void enterUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onEnter(new Node("Union", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inUnion.push(true);
-	}
-
-	public void exitUnion(com.generator.generators.cypher.parser.CypherParser.UnionContext arg) {
-		onExit();
-		this.inUnion.pop();
-	}
-
-	public boolean inUnion() {
-      return !inUnion.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSingleQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onEnter(new Node("SingleQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inSingleQuery.push(true);
-	}
-
-	public void exitSingleQuery(com.generator.generators.cypher.parser.CypherParser.SingleQueryContext arg) {
-		onExit();
-		this.inSingleQuery.pop();
-	}
-
-	public boolean inSingleQuery() {
-      return !inSingleQuery.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inCyper_match = new java.util.Stack<>();
 
 	@Override
@@ -386,23 +403,6 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inCyper_match() {
       return !inCyper_match.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRegularQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onEnter(new Node("RegularQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inRegularQuery.push(true);
-	}
-
-	public void exitRegularQuery(com.generator.generators.cypher.parser.CypherParser.RegularQueryContext arg) {
-		onExit();
-		this.inRegularQuery.pop();
-	}
-
-	public boolean inRegularQuery() {
-      return !inRegularQuery.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUnwind = new java.util.Stack<>();

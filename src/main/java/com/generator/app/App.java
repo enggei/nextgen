@@ -485,7 +485,7 @@ public class App extends JFrame {
 
       public void setProperties(String... kv) {
 
-         if (kv.length % 2 != 0) throw new IllegalArgumentException("properties must be key-value pairs");
+         if (kv.length % 2 != 0) throw new IllegalArgumentException("properties must be key-text pairs");
 
          for (int i = 0; i < kv.length; i += 2)
             this.properties.put(kv[i], kv[i + 1]);
