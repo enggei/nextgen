@@ -1,10 +1,12 @@
 package com.generator.app;
 
 import com.generator.generators.antlr.ANTLRPlugin;
+import com.generator.generators.clojure.ClojurePlugin;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.java.JavaPlugin;
+import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
@@ -236,6 +238,8 @@ public class App extends JFrame {
                   plugins.add(new SSHPlugin(App.this));
                   plugins.add(new DomainPlugin(App.this));
                   plugins.add(new ProjectPlugin(App.this));
+                  plugins.add(new MathPlugin(App.this));
+                  plugins.add(new ClojurePlugin(App.this));
                }
             }
          });

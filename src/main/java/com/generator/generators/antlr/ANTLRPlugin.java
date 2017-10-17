@@ -3,11 +3,9 @@ package com.generator.generators.antlr;
 import com.generator.app.App;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.antlr.bnf.AntlrGrammarModel;
+import com.generator.generators.antlr.bnf.ANTLRv4ParserRenderer;
 import com.generator.generators.antlr.bnf.AntlrGrammarPanel;
-import com.generator.generators.antlr.bnf.AntlrGrammarSymbol;
 import com.generator.generators.antlr.parser.*;
-import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -69,20 +67,20 @@ public class ANTLRPlugin extends Plugin {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-            final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel(new AntlrGrammarModel());
+            final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel();
             SwingUtil.showDialog(grammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
                @Override
                public void verifyAndCommit() throws Exception {
 
-                  final ANTLRv4ParserDomain.GrammarSpec grammarSpec = grammarPanel.getGrammarSpec();
+                  final ANTLRv4ParserRenderer.GrammarSpec grammarSpec = grammarPanel.getGrammarSpec();
                   if(grammarSpec==null) return;
 
                   fireNodesLoaded(visit(grammarSpec));
                }
 
-               Node visit(AntlrGrammarSymbol symbol) {
+               Node visit(AntlrGrammarNode symbol) {
                   final Node newNode = getGraph().newNode(Label.label(symbol.type()), "text", symbol.getText(), "startToken", symbol.getStartToken(), "endtoken", symbol.getEndToken());
-                  for (AntlrGrammarSymbol child : symbol.symbols)
+                  for (AntlrGrammarNode child : symbol.children)
                      newNode.createRelationshipTo(visit(child), RelationshipType.withName("child"));
                   return newNode;
                }
@@ -98,61 +96,11 @@ public class ANTLRPlugin extends Plugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               AntlrGrammarModel grammarModel = new AntlrGrammarModel();
-               final ANTLRv4ParserGrammarVisitor visitor =new ANTLRv4ParserGrammarVisitor(grammarModel) {
-
-                  @Override
-                  public void visitGrammarSpec(Node node) {
-                     final ANTLRv4ParserDomain.GrammarSpec symbol = grammarModel.newGrammarSpec(NeoUtil.getString(node, "text"), NeoUtil.getString(node, "startToken"), NeoUtil.getString(node, "endToken"));
-                     if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
-                     grammarModel.symbolStack.push(symbol);
-                     symbolStack.push(symbol);
-                     super.visitGrammarSpec(node);
-                     if (symbolStack.size() > 1) symbolStack.pop();
-                  }
-
-                  @Override
-                  public void visitEbnfSuffix(Node node) {
-
-                     if (symbolStack.peek() instanceof ANTLRv4ParserDomain.BlockSuffix) {
-                        final AntlrGrammarSymbol blockSuffix = symbolStack.pop();
-                        symbolStack.peek().ebnf = NeoUtil.getString(node, "startToken");
-                        symbolStack.push(blockSuffix);
-                     } else {
-                        symbolStack.peek().ebnf = NeoUtil.getString(node, "startToken");
-                     }
-
-                     super.visitEbnfSuffix(node);
-                  }
-
-                  @Override
-                  public void visitParserRuleSpec(Node node) {
-                     final ANTLRv4ParserDomain.ParserRuleSpec symbol = grammarModel.newParserRuleSpec(NeoUtil.getString(node, "text"), NeoUtil.getString(node, "startToken"), NeoUtil.getString(node, "endToken"));
-                     if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
-                     symbolStack.push(symbol);
-                     grammarModel.ruleSpecs.put(symbol.label, symbol);
-                     super.visitParserRuleSpec(node);
-                     if (symbolStack.size() > 1) symbolStack.pop();
-                  }
-
-                  @Override
-                  public void visitLexerRuleSpec(Node node) {
-                     final ANTLRv4ParserDomain.LexerRuleSpec symbol = grammarModel.newLexerRuleSpec(NeoUtil.getString(node, "text"), NeoUtil.getString(node, "startToken"), NeoUtil.getString(node, "endToken"));
-                     if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);
-                     symbolStack.push(symbol);
-                     grammarModel.ruleSpecs.put(symbol.label, symbol);
-                     super.visitLexerRuleSpec(node);
-                     if (symbolStack.size() > 1) symbolStack.pop();
-                  }
-               };
-               visitor.visit(neoNode.getNode());
-
-               final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel(grammarModel);
-
+               final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel().setModel(neoNode.getNode());
                SwingUtil.showDialog(grammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
                   @Override
                   public void verifyAndCommit() throws Exception {
-                     System.out.println();
+                     System.out.println("save grammar spec, or print (should already be saved)");
                   }
                });
             }

@@ -4,7 +4,9 @@ import com.generator.ProjectConstants;
 import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
+import com.generator.generators.stringtemplate.TemplateGroupGroup;
 import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -17,6 +19,69 @@ import java.util.*;
  * Created 25.08.17.
  */
 public class Tests {
+
+   @Test
+   public void testG4ToStringTemplate() throws IOException {
+
+      final TemplateGroupGroup group = new TemplateGroupGroup();
+
+      final TemplateGroupGroup.stgST stgST = group.newstg().setDelimiter("~");
+
+      final ANTLRv4ParserNodeListener listener = new ANTLRv4ParserNodeListener(true) {
+
+         final Stack<TemplateGroupGroup.templateST> templateStack = new Stack<>();
+         StringBuilder templateContent = new StringBuilder();
+
+         @Override
+         public void enterParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext arg) {
+            super.enterParserRuleSpec(arg);
+
+            final TemplateGroupGroup.templateST templateST = group.newtemplate().setName(arg.getStart().getText());
+            templateStack.push(templateST);
+
+            templateContent = new StringBuilder();
+
+            stgST.addTemplatesValue(templateST);
+         }
+
+         @Override
+         public void enterRuleref(ANTLRv4Parser.RulerefContext arg) {
+            super.enterRuleref(arg);
+            templateContent.append("~" + arg.getText() + "~");
+         }
+
+         @Override
+         public void enterTerminal(ANTLRv4Parser.TerminalContext arg) {
+            super.enterTerminal(arg);
+            templateContent.append(arg.getText().startsWith("'") ? StringUtil.trimEnds(1, arg.getText()) : (""));
+         }
+
+         @Override
+         public void enterEbnfSuffix(ANTLRv4Parser.EbnfSuffixContext arg) {
+            super.enterEbnfSuffix(arg);
+
+            templateContent.append(arg.getText());
+
+//            if (grammarStack.peek() instanceof BlockSuffix) {
+//               final AntlrGrammarNode blockSuffix = grammarStack.pop();
+//               grammarStack.peek().ebnf = startToken;
+//               grammarStack.push(blockSuffix);
+//            } else {
+//               grammarStack.peek().ebnf = startToken;
+//            }
+         }
+
+         @Override
+         public void exitParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext arg) {
+            super.exitParserRuleSpec(arg);
+            templateStack.pop().setContent(templateContent.toString());
+         }
+      };
+
+      new ParseTreeWalker().walk(listener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
+
+      System.out.println(stgST);
+   }
 
    private class GrammarSymbol {
 
@@ -96,7 +161,7 @@ public class Tests {
          protected void onExit() {
             super.onExit();
 
-            if(!relationStack.isEmpty())
+            if (!relationStack.isEmpty())
                symbolMap.get(nodeStack.peek().name).relations.add(relationStack.peek());
 
             if (!relationStack.isEmpty()) relationStack.pop();
@@ -113,29 +178,31 @@ public class Tests {
             setName("ANTLRv4Parser" + "Domain").
             setPackage("com.generator.generators.antlr.parser");
 
-      final AntlrGroup.AntlrDomainGrammarVisitorST grammarVisitor = antlrGroup.newAntlrDomainGrammarVisitor().
-            setPackage("com.generator.generators.antlr.parser").
-            setName("ANTLRv4ParserGrammarVisitor");
+      // grammar-bnf renderer
+      final AntlrGroup.AntlrBnfRendererST antlrBnfRendererST = antlrGroup.newAntlrBnfRenderer().
+            setName("ANTLRv4Parser" + "Renderer").
+            setPackage("com.generator.generators.antlr.bnf");
 
       for (GrammarSymbol grammarSymbol : symbolMap.values()) {
          System.out.println(grammarSymbol.toString(symbolMap));
 
-         final AntlrGroup.AntlrNodeST nodeST = antlrGroup.newAntlrNode().
+         final AntlrGroup.AntlrGrammarNodeST antlrGrammarNodeST = antlrGroup.newAntlrGrammarNode().setName(grammarSymbol.name);
+
+         final AntlrGroup.AntlrSymbolNodeST nodeST = antlrGroup.newAntlrSymbolNode().
                setName(grammarSymbol.name);
 
-         grammarVisitor.addNodesValue(grammarSymbol.name);
-
-         for (Relation child : grammarSymbol.relations)
+         for (Relation child : grammarSymbol.relations) {
+            antlrGrammarNodeST.addChildrenValue(child.dst);
             nodeST.addChildrenValue(child.dst);
+         }
 
-         antlrDomainST.addNodesValue(nodeST, grammarSymbol.name);
+         antlrBnfRendererST.addNodesValue(nodeST, grammarSymbol.name);
+         antlrDomainST.addNodesValue(antlrGrammarNodeST, grammarSymbol.name);
       }
 
-      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, grammarVisitor.getPackage(), grammarVisitor.getName()).write(grammarVisitor);
       GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrDomainST.getPackage(), antlrDomainST.getName()).write(antlrDomainST);
+      GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, antlrBnfRendererST.getPackage(), antlrBnfRendererST.getName()).write(antlrBnfRendererST);
    }
-
-
 
    private void visit(ANTLRv4ParserNodeListener.Node node, Map<String, MetaNode> distinctMap) {
 

@@ -155,7 +155,7 @@ class NodeDetailPanel extends JPanel {
 
       // try to select the tab that was open,
       // or show the last-tab (usually the single node selected, and therefore the one user wants to see)
-      if (selectedIndex>-1 && selectedIndex <= 2 && content.getTabCount() > selectedIndex) {
+      if (selectedIndex>-1 && content.getTabCount() > selectedIndex) {
          content.setSelectedIndex(selectedIndex);
       } else {
          if (content.getTabCount() > maxIndex)

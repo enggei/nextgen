@@ -1,42 +1,24 @@
 package com.generator.generators.antlr.bnf;
 
-import com.generator.generators.antlr.AntlrGroup;
+import com.generator.generators.antlr.parser.AntlrGrammarNode;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created 09.10.17.
  */
-public class AntlrGrammarSymbol {
-
-   private final UUID uuid = UUID.randomUUID();
-
-   protected String type;
-   public AntlrGrammarSymbol parent;
-   public String label;
-   public String text;
-   public String startToken;
-   public String endToken;
-   public String ebnf = "";
-   public final List<AntlrGrammarSymbol> symbols = new ArrayList<>();
+public class AntlrGrammarSymbol extends AntlrGrammarNode {
 
    // rectangle-offset
    private final int offset = 10;
    private final int margin = 5;
 
-   public AntlrGrammarSymbol(String type, String label, String value, String startToken, String endToken) {
-      this.type = type;
-      this.label = label;
-      this.text = value;
-      this.startToken = startToken;
-      this.endToken = endToken;
+   AntlrGrammarSymbol(String type, String label, String value, String startToken, String endToken) {
+      super(type, label, value, startToken, endToken);
    }
 
    public String getText() {
@@ -55,28 +37,6 @@ public class AntlrGrammarSymbol {
       return type;
    }
 
-   public AntlrGrammarSymbol setChild(AntlrGrammarSymbol symbol) {
-      symbols.clear();
-      symbols.add(symbol);
-      symbol.parent = this;
-      //visit(this, "");
-      return this;
-   }
-
-   public AntlrGrammarSymbol addChild(AntlrGrammarSymbol symbol) {
-      symbols.add(symbol);
-      symbol.parent = this;
-      //visit(this, "");
-      return this;
-   }
-
-   protected void visit(AntlrGrammarSymbol symbol, String delim) {
-      System.out.println(delim + symbol);
-      for (AntlrGrammarSymbol child : symbol.symbols) {
-         visit(child, delim + "\t");
-      }
-   }
-
    public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 //      final Rectangle2D.Double bounds = drawName(type + " (" + name + ")", Color.BLUE, startX, startY, g, shapeMap);
 //      return paintChildren(g, bounds, shapeMap);
@@ -89,7 +49,9 @@ public class AntlrGrammarSymbol {
       double startY = bounds.getY();
 
       double x = startX + bounds.getWidth();
-      for (AntlrGrammarSymbol symbol : symbols) {
+      for (AntlrGrammarNode child : children) {
+         final AntlrGrammarSymbol symbol = (AntlrGrammarSymbol)child;
+
          final Rectangle.Double rectangle = symbol.paint(x, startY, g, shapeMap, level);
          x += rectangle.getWidth();
          // calculate bounds of this.shape:
@@ -106,11 +68,17 @@ public class AntlrGrammarSymbol {
 
    private Rectangle2D.Double paintEbnf(double startX, double startY, Rectangle2D.Double children, Graphics2D g) {
 
-      if ("*".equals(ebnf)) {
+      if ("*".equals(ebnf) || "*?".equals(ebnf)) {
          g.setColor(Color.decode("#2b8cbe"));
          g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY - margin);
          g.drawLine((int) startX, (int) startY - margin, (int) (startX + children.width), (int) startY - margin);
          g.drawLine((int) (startX + children.width), (int) startY - margin, (int) (startX + children.width), (int) startY + offset);
+
+         g.setColor(Color.decode("#2b8cbe"));
+         g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY + (margin * 2 + offset * 2));
+         g.drawLine((int) startX, (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + (margin * 2 + offset * 2));
+         g.drawLine((int) (startX + children.width), (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + offset);
+
          return children;
 
       } else if ("?".equals(ebnf)) {
@@ -131,7 +99,7 @@ public class AntlrGrammarSymbol {
       return children;
    }
 
-   protected Rectangle.Double drawName(String content, Color color, double x, double y, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap) {
+   Rectangle.Double drawName(String content, Color color, double x, double y, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap) {
 
       if (content == null) return new Rectangle2D.Double(x, y, 0, 0);
 
@@ -161,34 +129,9 @@ public class AntlrGrammarSymbol {
       menu.add(new AbstractAction("Remove " + (label == null ? type : label)) {
          @Override
          public void actionPerformed(ActionEvent e) {
-            parent.symbols.remove(AntlrGrammarSymbol.this);
+            parent.children.remove(AntlrGrammarSymbol.this);
             modelChangeSupport.firePropertyChange(label == null ? type : label, "remove", AntlrGrammarSymbol.this);
          }
       });
-   }
-
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
-
-      AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) o;
-
-      return uuid.equals(symbol.uuid);
-   }
-
-   @Override
-   public int hashCode() {
-      return uuid.hashCode();
-   }
-
-   public Object toGrammar(AntlrGroup antlrGroup) {
-      final StringBuilder out = new StringBuilder();
-      for (AntlrGrammarSymbol symbol : symbols) {
-         final Object grammar = symbol.toGrammar(antlrGroup);
-         if (grammar == null) continue;
-         out.append(grammar);
-      }
-      return out.length() == 0 ? null : out.toString();
    }
 }

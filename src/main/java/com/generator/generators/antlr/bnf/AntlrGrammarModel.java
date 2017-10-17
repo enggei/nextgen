@@ -1,16 +1,26 @@
 package com.generator.generators.antlr.bnf;
 
-import com.generator.generators.antlr.AntlrGroup;
+import com.generator.ProjectConstants;
+import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserDomain;
+import com.generator.generators.antlr.parser.AntlrGrammarNode;
+import com.generator.generators.csv.parser.CSVListener;
+import com.generator.generators.csv.parser.CSVNodeListener;
+import com.generator.generators.csv.parser.CSVParser;
+import com.generator.generators.json.parser.JSONLexer;
+import com.generator.generators.json.parser.JSONNodeListener;
+import com.generator.generators.json.parser.JSONParser;
+import com.generator.util.StringUtil;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created 09.10.17.
@@ -18,288 +28,365 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AntlrGrammarModel extends ANTLRv4ParserDomain {
 
-   private final Map<String, Set<String>> distinctMap = new LinkedHashMap<>();
+   // todo testing lexer-token values
+   private final Set<String> tokenValues = new LinkedHashSet<>();
+   private final Map<String, AntlrGrammarNode> ruleSpecs = new ConcurrentHashMap<>();
+   private final Map<String, Set<Relation>> relationMap = new ConcurrentHashMap<>();
 
-   // put RuleSpecs in map, to allow lookup:
-   public Map<String, AntlrGrammarSymbol> ruleSpecs = new ConcurrentHashMap<>();
-
-   public AntlrGrammarModel() {
-      super(true);
-   }
+   private static final Random random = new Random(System.currentTimeMillis());
 
    public void showDistinct() {
-      for (Map.Entry<String, Set<String>> entry : distinctMap.entrySet()) {
+
+      for (Map.Entry<String, Set<Relation>> entry : relationMap.entrySet()) {
          System.out.println(entry.getKey());
-         for (String s : entry.getValue()) {
-            System.out.println("\t" + s);
+         for (Relation relation : entry.getValue()) {
+            System.out.println("\t" + relation.toString());
          }
       }
-   }
 
-   @Override
-   protected void onEnter(Node node) {
-      if (!nodeStack.isEmpty()) {
-         final Set<String> children = distinctMap.computeIfAbsent(nodeStack.peek().name, k -> new LinkedHashSet<>());
-         children.add(node.name);
+      for (String tokenValue : tokenValues) {
+         System.out.println(tokenValue);
       }
-      super.onEnter(node);
+
+      for (Map.Entry<String, AntlrGrammarNode> entry : ruleSpecs.entrySet()) {
+         System.out.println(entry.getKey() + " -> " + entry.getValue());
+      }
+   }
+
+   public Map<String, Set<Relation>> getRelationMap() {
+      return relationMap;
    }
 
    @Override
-   public void enterRuleSpec(ANTLRv4Parser.RuleSpecContext arg) {
-      super.enterRuleSpec(arg);
-
-      if (arg.getStart().getText().equals("fragment"))
-         symbolStack.peek().label = arg.getStart().getText() + " " + arg.getText().substring("fragment".length(), arg.getText().indexOf(":"));
+   public void onNode(AntlrGrammarNode grammarNode) {
+      if (!grammarStack.isEmpty()) {
+         final Set<Relation> children = relationMap.computeIfAbsent(grammarStack.peek().type(), k -> new LinkedHashSet<>());
+         children.add(new Relation(grammarStack.peek().type(), grammarNode.type()));
+      }
    }
 
    @Override
-   public void enterParserRuleSpec(ANTLRv4Parser.ParserRuleSpecContext arg) {
-      super.enterParserRuleSpec(arg);
-      ruleSpecs.put(symbolStack.peek().label, symbolStack.peek());
+   public Rules newRules(String text, String startToken, String endToken) {
+      return new Rules(text, startToken, endToken) {
+         @Override
+         public String generateOutput(String delim) {
+            // assumes the first rule is the entry-point for parser:
+            return children.iterator().next().generateOutput(delim + "\t");
+         }
+      };
    }
 
    @Override
-   public void enterLexerRuleSpec(ANTLRv4Parser.LexerRuleSpecContext arg) {
-      super.enterLexerRuleSpec(arg);
-      ruleSpecs.put(symbolStack.peek().label, symbolStack.peek());
-   }
-
-   @Override
-   public void enterEbnfSuffix(ANTLRv4Parser.EbnfSuffixContext arg) {
-      if (symbolStack.peek() instanceof BlockSuffix) {
-         final AntlrGrammarSymbol blockSuffix = symbolStack.pop();
-         symbolStack.peek().ebnf = arg.getStart().getText();
-         symbolStack.push(blockSuffix);
+   public EbnfSuffix newEbnfSuffix(String text, String startToken, String endToken) {
+      if (grammarStack.peek() instanceof BlockSuffix) {
+         final AntlrGrammarNode blockSuffix = grammarStack.pop();
+         grammarStack.peek().ebnf = startToken;
+         grammarStack.push(blockSuffix);
       } else {
-         symbolStack.peek().ebnf = arg.getStart().getText();
+         grammarStack.peek().ebnf = startToken;
       }
 
-      super.enterEbnfSuffix(arg);
+      return super.newEbnfSuffix(text, startToken, endToken);
    }
 
    @Override
-   public GrammarSpec newGrammarSpec(String value, String startToken, String endToken) {
-      return new GrammarSpec(value, startToken, endToken) {
+   public RuleSpec newRuleSpec(String text, String startToken, String endToken) {
+      if (startToken.equals("fragment")) {
+         grammarStack.peek().label = startToken + " " + text.substring("fragment".length(), text.indexOf(":"));
+      }
+      return super.newRuleSpec(text, startToken, endToken);
+   }
+
+   @Override
+   public RuleAltList newRuleAltList(String text, String startToken, String endToken) {
+      return new RuleAltList(text, startToken, endToken) {
          @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+         public String generateOutput(String delim) {
+            final String s = children.get(random.nextInt(children.size())).generateOutput(delim + "\t");
+//            System.out.println(type + " " + s);
+            return s;
+         }
+      };
+   }
 
-            double startX = bounds.getX();
-            double startY = bounds.getY();
+   @Override
+   public ParserRuleSpec newParserRuleSpec(String text, String startToken, String endToken) {
+      ruleSpecs.put(grammarStack.peek().label, grammarStack.peek());
+      return new ParserRuleSpec(text, startToken, endToken);
+   }
 
-            double x = startX + bounds.getWidth();
-            double y = startY;
-            for (AntlrGrammarSymbol symbol : symbols) {
-               final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
+   @Override
+   public LexerRuleSpec newLexerRuleSpec(String text, String startToken, String endToken) {
 
-               y += rectangle.getHeight() + 15;
+      if (startToken.equals("fragment")) {
+         grammarStack.peek().label = text.substring("fragment".length(), text.indexOf(":"));
+      }
+      ruleSpecs.put(grammarStack.peek().label, grammarStack.peek());
 
-               double minX = Math.min(startX, rectangle.getX());
-               double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
-               double minY = Math.min(startY, rectangle.getY());
-               double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
-               bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+      return new LexerRuleSpec(text, startToken, endToken) {
+         @Override
+         public String generateOutput(String delim) {
+            return super.generateOutput(delim + "\t");
+         }
+      };
+   }
+
+   @Override
+   public LexerAltList newLexerAltList(String text, String startToken, String endToken) {
+      return new LexerAltList(text, startToken, endToken) {
+         @Override
+         public String generateOutput(String delim) {
+            final String s = children.get(random.nextInt(children.size())).generateOutput(delim + "\t");
+//            System.out.println(type + " " + s);
+            return s;
+         }
+      };
+   }
+
+   @Override
+   public LexerAtom newLexerAtom(String text, String startToken, String endToken) {
+
+      final Map<String, String> ranges = new HashMap<>();
+
+      if (text.startsWith("[")) {
+         System.out.println(text);
+         final String tmp = StringUtil.trimEnds(1, text);
+
+         // look for non-digit-range
+         Pattern pattern = Pattern.compile("((\\D)-(\\D))");
+         Matcher matcher = pattern.matcher(tmp);
+         while (matcher.find()) ranges.put(matcher.group(2), matcher.group(3));
+
+         // look for digit-range
+         pattern = Pattern.compile("((\\d)-(\\d))");
+         matcher = pattern.matcher(tmp);
+         while (matcher.find()) ranges.put(matcher.group(2), matcher.group(3));
+
+         return new LexerAtom(text, startToken, endToken) {
+            @Override
+            public String generateOutput(String delim) {
+               if (children.size() > 0) return super.generateOutput(delim + "\t");
+
+               if (ranges.isEmpty()) {
+                  final char c = tmp.toCharArray()[random.nextInt(tmp.toCharArray().length)];
+
+                  System.out.println(label + " " + c);
+
+                  if(c=='\\') {
+                     return "";
+                  } else if(c=='"')
+                     return "\\\"";
+
+                  return "" + c;
+
+               } else {
+
+                  final int n = random.nextInt(ranges.size());
+                  final String randomValue = (String) ranges.keySet().toArray()[n];
+                  final Character c = StringUtil.randomCharacter(Character.codePointAt(randomValue.toCharArray(), 0), Character.codePointAt(ranges.get(randomValue).toCharArray(), 0));
+
+                  System.out.println(label + " " + c);
+
+                  return "" + c;
+               }
+
             }
+         };
+      }
 
-            return bounds;
-         }
-
-         @Override
-         public Object toGrammar(AntlrGroup antlrGroup) {
-            final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar().
-                  setName(label);
-
-            for (AntlrGrammarSymbol ruleSpec : symbols) {
-               grammarST.addRulesValue(ruleSpec.toGrammar(antlrGroup));
-            }
-            return grammarST.toString();
-         }
-      };
-   }
-
-   @Override
-   public Identifier newIdentifier(String text, String startToken, String endToken) {
-      return new Identifier(text, startToken, endToken) {
-         @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            return drawName(label, Color.BLUE, startX, startY, g, shapeMap);
-         }
-      };
-   }
-
-   @Override
-   public Rules newRules(String value, String startToken, String endToken) {
-      return new Rules(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-
-            double startX = bounds.getX();
-            double startY = bounds.getY();
-
-            double x = startX + bounds.getWidth();
-            double y = startY;
-            for (AntlrGrammarSymbol symbol : symbols) {
-               final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
-
-               y += rectangle.getHeight() + 15;
-
-               double minX = Math.min(startX, rectangle.getX());
-               double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
-               double minY = Math.min(startY, rectangle.getY());
-               double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
-               bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
-            }
-
-            return bounds;
-         }
-      };
-   }
-
-   @Override
-   public RuleSpec newRuleSpec(String value, String startToken, String endToken) {
-      return new RuleSpec(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
-         }
-
-         @Override
-         public Object toGrammar(AntlrGroup antlrGroup) {
-            final AntlrGroup.grammarParserRuleSpecST ruleSpecST = antlrGroup.newgrammarParserRuleSpec().
-                  setName(label);
-
-            for (AntlrGrammarSymbol symbol : symbols)
-               ruleSpecST.addAlternativesValue(symbol.toGrammar(antlrGroup));
-            return ruleSpecST;
-         }
-      };
+      return new LexerAtom(text, startToken, endToken);
    }
 
    @Override
    public Ruleref newRuleref(String text, String startToken, String endToken) {
       return new Ruleref(text, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
-            if (level > 0 && referenceSymbol != null)
-               return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
-            return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
+         public String generateOutput(String delim) {
+            final String s = ruleSpecs.get(text).generateOutput(delim + "\t");
+//            System.out.println(type + " " + s);
+            return s;
+         }
+      };
+   }
+
+   @Override
+   public CharacterRange newCharacterRange(String text, String startToken, String endToken) {
+
+      final String[] split = text.split("[.]{2}");
+      final String first = StringUtil.trimEnds(1, split[0]);
+      final String last = StringUtil.trimEnds(1, split[1]);
+
+      int tmpStart;
+      int tmpEnd;
+      if (first.startsWith("\\u")) {
+         tmpStart = Integer.parseInt(first.substring(2), 16);
+         tmpEnd = Integer.parseInt(last.substring(2), 16);
+         final StringBuilder test = new StringBuilder();
+         for (int i = tmpStart; i <= tmpEnd; i++)
+            test.append(Character.toChars(i)[0]);
+         tokenValues.add("Character Range " + text + " => " + test);
+      } else {
+
+         tmpStart = Character.codePointAt(first.toCharArray(), 0);
+         tmpEnd = Character.codePointAt(last.toCharArray(), 0);
+         final StringBuilder test = new StringBuilder();
+         for (int i = tmpStart; i <= tmpEnd; i++)
+            test.append(Character.toChars(i)[0]);
+         tokenValues.add("Character Range " + text + " => " + test);
+      }
+
+      final int startOfRange = tmpStart;
+      final int endOfRange = tmpEnd;
+      return new CharacterRange(text, startToken, endToken) {
+         @Override
+         public String generateOutput(String delim) {
+            return "" + StringUtil.randomCharacter(startOfRange, endOfRange);
+         }
+      };
+   }
+
+   @Override
+   public NotSet newNotSet(String text, String startToken, String endToken) {
+      return new NotSet(text, startToken, endToken) {
+         @Override
+         public String generateOutput(String delim) {
+            final StringBuilder out = new StringBuilder();
+
+            for (AntlrGrammarNode child : children) {
+               final SetElement setElement = (SetElement) child;
+
+               final char[] chars = setElement.text.toCharArray();
+
+               int length = 1;//random.nextInt(5) + 2;
+               for (int i = 0; i < length; i++) {
+                  boolean excluded = true;
+                  while (excluded) {
+                     final Character candidate = StringUtil.randomCharacter();
+
+                     boolean allowed = true;
+                     for (char aChar : chars) {
+                        if (aChar == candidate) {
+                           allowed = false;
+                           break;
+                        }
+                     }
+
+                     if (allowed) {
+                        excluded = false;
+                        out.append(candidate);
+                     }
+                  }
+               }
+            }
+            //System.out.println(label + " " + out.toString());
+
+            return out.toString();
          }
       };
    }
 
    @Override
    public Terminal newTerminal(String text, String startToken, String endToken) {
+
+      tokenValues.add("Terminal " + text);
+
+      if (text.startsWith("'")) {
+
+         final String t = StringUtil.trimEnds(1, text);
+
+         return new Terminal(text, startToken, endToken) {
+            @Override
+            public String generateOutput(String delim) {
+               return t.equals("\\r") ? "\r" : (t.equals("\\n") ? "\n" : (t.equals("\\t") ? "\t" : t));
+            }
+         };
+      }
+
       return new Terminal(text, startToken, endToken) {
          @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
-            if (level > 0 && referenceSymbol != null)
-               return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
-            return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+         public String generateOutput(String delim) {
+            final AntlrGrammarNode antlrGrammarNode = ruleSpecs.get(text);
+            if (antlrGrammarNode == null) System.out.println(text);
+            return antlrGrammarNode.generateOutput(delim + "\t");
          }
       };
    }
 
-   @Override
-   public LexerAtom newLexerAtom(String value, String startToken, String endToken) {
-      return new LexerAtom(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
-         }
-      };
+   public static class Relation {
+
+      private final String src;
+      private String ebnf = "";
+      private String dst;
+
+      Relation(String src, String dst) {
+         this.src = src;
+         this.dst = dst;
+      }
+
+      @Override
+      public String toString() {
+         return ebnf + " -> " + dst;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+         Relation relation = (Relation) o;
+         return src.equals(relation.src) && ebnf.equals(relation.ebnf) && dst.equals(relation.dst);
+      }
+
+      @Override
+      public int hashCode() {
+         int result = src.hashCode();
+         result = 31 * result + ebnf.hashCode();
+         result = 31 * result + dst.hashCode();
+         return result;
+      }
    }
 
-   @Override
-   public SetElement newSetElement(String value, String startToken, String endToken) {
-      return new SetElement(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-            final Rectangle.Double nameBox = drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
-            return paintChildren(g, nameBox, shapeMap, level);
-         }
-      };
+   public static void main(String[] grammarNodes) throws IOException {
+      final AntlrGrammarModel model = new AntlrGrammarModel();
+      final boolean debug = true;
+
+      //      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Parser.g4")))).grammarSpec());
+//      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/ANTLRv4Lexer.g4")))).grammarSpec());
+//      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "antlr/parser/LexBasic.g4")))).grammarSpec());
+//
+      testCSV(model, debug);
+//      testJSON(model, debug);
    }
 
-   @Override
-   public RuleAltList newRuleAltList(String value, String startToken, String endToken) {
-      return new RuleAltList(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-
-            double startX = bounds.getX();
-            double startY = bounds.getY();
-
-            double lineStart = startX + bounds.getWidth();
-
-            double x = startX + bounds.getWidth();
-            double y = startY;
-
-            final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-            for (AntlrGrammarSymbol symbol : symbols) {
-               final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
-               childRect.add(rectangle);
-               y += rectangle.getHeight() + 15;
-
-               double minX = Math.min(startX, rectangle.getX());
-               double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
-               double minY = Math.min(startY, rectangle.getY());
-               double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
-               bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
-            }
-
-            if (childRect.size() > 1) {
-               g.setColor(Color.decode("#2b8cbe"));
-               g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
-               g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
-               // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
-               final int offset = 10;
-               for (Rectangle2D.Double rectangle : childRect)
-                  g.drawLine((int) (rectangle.getX() + rectangle.getWidth()), (int) rectangle.getY() + offset, (int) (bounds.getX() + bounds.getWidth()), (int) rectangle.getY() + offset);
-            }
-            return bounds;
-         }
-      };
+   public static void testCSV(AntlrGrammarModel model, boolean debug) throws IOException {
+      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
+      model.showDistinct();
+      final String[] generate = generate(model, 1);
+      for (String s : generate) parseCSV(s);
    }
 
-   @Override
-   public LexerAltList newLexerAltList(String value, String startToken, String endToken) {
-      return new LexerAltList(value, startToken, endToken) {
-         @Override
-         public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+   public static void testJSON(AntlrGrammarModel model, boolean debug) throws IOException {
+      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/parser/JSON.g4")))).grammarSpec());
+      model.showDistinct();
+      final String[] generate = generate(model, 1);
+      for (String s : generate) parseJSON(s);
+   }
 
-            double startX = bounds.getX();
-            double startY = bounds.getY();
+   public static void parseJSON(String output) {
+      System.out.println("Output " +output);
+      final JSONNodeListener listener = new JSONNodeListener(true);
+      new ParseTreeWalker().walk(listener, new JSONParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).json());
+   }
 
-            double lineStart = startX + bounds.getWidth();
+   public static void parseCSV(String output) {
+      System.out.println("Output " +output);
+      final CSVListener listener = new CSVNodeListener(true);
+      new ParseTreeWalker().walk(listener, new CSVParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).csvFile());
+   }
 
-            double x = startX + bounds.getWidth();
-            double y = startY;
-
-            final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-            for (AntlrGrammarSymbol symbol : symbols) {
-               final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
-               childRect.add(rectangle);
-               y += rectangle.getHeight() + 15;
-
-               double minX = Math.min(startX, rectangle.getX());
-               double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
-               double minY = Math.min(startY, rectangle.getY());
-               double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
-               bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
-            }
-            if (childRect.size() > 1) {
-               g.setColor(Color.decode("#2b8cbe"));
-               g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
-               g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
-               // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
-               final int offset = 10;
-               for (Rectangle2D.Double rectangle : childRect)
-                  g.drawLine((int) (rectangle.getX() + rectangle.getWidth()), (int) rectangle.getY() + offset, (int) (bounds.getX() + bounds.getWidth()), (int) rectangle.getY() + offset);
-            }
-            return bounds;
-         }
-      };
+   public static String[] generate(AntlrGrammarModel model, int samples) {
+      String[] array = new String[samples];
+      for (int i = 0; i < samples; i++)
+         array[i] = model.getGrammarSpec().generateOutput("");
+      return array;
    }
 }

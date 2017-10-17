@@ -1,6 +1,8 @@
 package com.generator.util;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.text.DecimalFormatSymbols;
 import java.util.*;
@@ -15,6 +17,60 @@ import java.util.stream.Collectors;
  * Time: 19:29:33
  */
 public final class StringUtil {
+
+   private static final Random random = new Random(System.currentTimeMillis());
+
+   public static void main(String[] args) {
+      for (int i = 0; i < 1000; i++) {
+         System.out.println(randomCharacter());
+      }
+   }
+
+   public static Character randomCharacter() {
+      return 'A';
+//      int n = random.nextInt(27) + 65;
+//      return Character.toChars(n)[0];
+   }
+
+   public static Character randomCharacter(int start, int end) {
+      int n = random.nextInt((end - start)) + start;
+      return Character.toChars(n)[0];
+   }
+
+   public static void printCharacterSets(OutputStreamWriter writer) throws IOException {
+//      final OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File("src/test/java/com/rita/characters.txt")), StandardCharsets.UTF_8);
+      for (int i = 0; i <= 65536; i++) {
+         if (Character.isDefined(i)) {
+            writer.append(unicodeEscaped(Character.toChars(i)[0])).append(" : ").append(Integer.toHexString(i)).append(" : ").append(i + "").append(" : ").append(new String(Character.toChars(i)));
+            writer.append("\r\n");
+         }
+      }
+      writer.close();
+   }
+
+   public static char[] getCharsBetween(int start, int end) {
+      char[] result = new char[end - start + 1];
+      for (int i = start; i <= end; i++) {
+         if (Character.isDefined(i)) {
+            result[i - start] = Character.toChars(i)[0];
+         }
+      }
+      return result;
+   }
+
+   public static String unicodeEscaped(char ch) {
+      String returnStr;
+      final String charEsc = "\\u";
+      if (ch < 0x10)
+         returnStr = "000" + Integer.toHexString(ch);
+      else if (ch < 0x100)
+         returnStr = "00" + Integer.toHexString(ch);
+      else if (ch < 0x1000)
+         returnStr = "0" + Integer.toHexString(ch);
+      else
+         returnStr = "" + Integer.toHexString(ch);
+      return charEsc + returnStr;
+   }
 
    public static int previous(String search, int fromIndex, String line) {
 
@@ -218,12 +274,14 @@ public final class StringUtil {
    }
 
    public static String trimEnds(int offset, String text) {
-      return text.substring(offset, text.length()-offset);
+      return text.substring(offset, text.length() - offset);
    }
+
 
    public interface Concatenate<T> {
 
       String concatenate(T item, boolean isFirst);
+
    }
 
    public static <T> String concatenate(Collection<T> items, Concatenate<T> concatenator) {

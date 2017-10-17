@@ -1606,6 +1606,4 @@ public class SSHPlugin extends Plugin {
       public void showMessage(String message) {
       }
    }
-
-
 }

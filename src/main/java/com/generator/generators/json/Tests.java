@@ -31,7 +31,6 @@ public class Tests {
    @Test
    public void testParser() throws IOException {
       final JSONParser parser = new JSONParser(new CommonTokenStream(new JSONLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/example.json"))));
-
       final JSONNodeListener listener = new JSONNodeListener(true);
       new ParseTreeWalker().walk(listener, parser.json());
    }

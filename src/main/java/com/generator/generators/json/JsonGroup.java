@@ -44,27 +44,28 @@ public final class JsonGroup {
 
    public arrayST newarray() {
       return new arrayST(stGroup);
-   } 
+   }
 
    public documentST newdocument() {
       return new documentST(stGroup);
-   } 
+   }
 
    public objectST newobject() {
       return new objectST(stGroup);
-   } 
+   }
 
    public primitiveST newprimitive() {
       return new primitiveST(stGroup);
-   } 
+   }
 
    public primitiveStringST newprimitiveString() {
       return new primitiveStringST(stGroup);
-   } 
+   }
 
    public final class arrayST implements JsonGroupTemplate {
 
-      private final AtomicBoolean elementsIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _elements = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private arrayST(STGroup group) {
@@ -72,19 +73,29 @@ public final class JsonGroup {
    	}
 
       public arrayST addElementsValue(Object value) {
-      	tryToSetListProperty(template, value, elementsIsSet, "elements");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._elements.add(value);
+      	template.add("elements", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getElementsValues() {
+      	return this._elements;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class documentST implements JsonGroupTemplate {
 
-      private final AtomicBoolean contentIsSet = new AtomicBoolean(false);
+      private java.util.Set<Object> _content = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private documentST(STGroup group) {
@@ -92,20 +103,30 @@ public final class JsonGroup {
    	}
 
       public documentST addContentValue(Object value) {
-      	tryToSetListProperty(template, value, contentIsSet, "content");
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._content.add(value);
+      	template.add("content", value);
+
          return this;
-      } 
+      }
+
+      public java.util.Set<Object> getContentValues() {
+      	return this._content;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class objectST implements JsonGroupTemplate {
 
-      private final AtomicBoolean functionsIsSet = new AtomicBoolean(false);
-      private final AtomicBoolean pairsIsSet = new AtomicBoolean(false);
+      private java.util.Set<java.util.Map<String, Object>> _functions = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _pairs = new java.util.LinkedHashSet<>();
+
       private final ST template;
 
       private objectST(STGroup group) {
@@ -113,25 +134,43 @@ public final class JsonGroup {
    	}
 
       public objectST addFunctionsValue(Object name_, Object value_) {
-         functionsIsSet.set(true);
-         template.addAggr("functions.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("value", (value_ == null || value_.toString().length() == 0) ? null : value_);
+      	this._functions.add(map);
+
+         template.addAggr("functions.{name, value}", map.get("name"), map.get("value"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getFunctions() {
+      	return this._functions;
+      }
+
       public objectST addPairsValue(Object name_, Object value_) {
-         pairsIsSet.set(true);
-         template.addAggr("pairs.{name, value}", ( (name_==null || name_.toString().length()==0) ? null : name_), ( (value_==null || value_.toString().length()==0) ? null : value_));
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("value", (value_ == null || value_.toString().length() == 0) ? null : value_);
+      	this._pairs.add(map);
+
+         template.addAggr("pairs.{name, value}", map.get("name"), map.get("value"));
          return this;
-      } 
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getPairs() {
+      	return this._pairs;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class primitiveST implements JsonGroupTemplate {
 
-      private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
+      private Object _value;
+
       private final ST template;
 
       private primitiveST(STGroup group) {
@@ -139,19 +178,31 @@ public final class JsonGroup {
    	}
 
       public primitiveST setValue(Object value) {
-      	tryToSetStringProperty(template, value, valueIsSet, "value");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._value == null) {
+            this._value = value;
+         	template.add("value", value);
+         }
+
+      	return this;
+      }
+
+      public String getValue() {
+      	return (String) this._value;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
+   }
 
    public final class primitiveStringST implements JsonGroupTemplate {
 
-      private final AtomicBoolean valueIsSet = new AtomicBoolean(false);
+      private Object _value;
+
       private final ST template;
 
       private primitiveStringST(STGroup group) {
@@ -159,22 +210,26 @@ public final class JsonGroup {
    	}
 
       public primitiveStringST setValue(Object value) {
-      	tryToSetStringProperty(template, value, valueIsSet, "value");   
-         return this;
-      } 
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._value == null) {
+            this._value = value;
+         	template.add("value", value);
+         }
+
+      	return this;
+      }
+
+      public String getValue() {
+      	return (String) this._value;
+      }
 
       @Override
    	public String toString() {
    		return template.render();
    	}
-   } 
-
-	static void tryToSetStringProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
-		if (alreadySet.get()) return;
-		if (value == null || value.toString().length() == 0) return;
-		alreadySet.set(true);
-		template.add(name, value);
-	}
+   }
 
 	static boolean tryToSetListProperty(ST template, Object value, AtomicBoolean alreadySet, String name) {
 		if (value == null || value.toString().length() == 0) return true;
@@ -284,7 +339,7 @@ public final class JsonGroup {
 	      private String packageToPath(String packageName) {
 	          return (packageName == null ? "" : (packageName.replaceAll("[.]", "/") + java.io.File.separator));
 	      }
-	   } 
+	   }
 
 	public String list(String delimiter, Object... elements) {
 		final StringBuilder list = new StringBuilder();
@@ -303,18 +358,18 @@ public final class JsonGroup {
 		out.close();
    }
 
-	private static final String stg = new StringBuilder()
-		.append("delimiters \"~\", \"~\"\n")
+	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
-		.append("gt() ::= <<> >>\n")
-		.append("array(elements) ::= <<[\n" + 
-	"  ~elements:{it|~it~};separator=\",\\n\"~\n" + 
-	"] >>\n")
-		.append("document(content) ::= <<~content:{it|~it~};separator=\"\\n\"~ >>\n")
-		.append("object(functions,pairs) ::= <<{\n" + 
-	"  ~pairs:{it|\"~it.name~\": ~it.value~};separator=\",\\n\"~~if(pairs)~,~endif~\n" + 
-	"  ~functions:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
-	"} >>\n")
-		.append("primitive(value) ::= <<~value~ >>\n")
-		.append("primitiveString(value) ::= <<\"~value~\" >>\n").toString();
-} 
+		.append("gt() ::= \">\"\n")
+			.append("array(elements) ::= <<[\n" + 
+		"  ~elements:{it|~it~};separator=\",\\n\"~\n" + 
+		"]>>\n")
+			.append("document(content) ::= <<~content:{it|~it~};separator=\"\\n\"~>>\n")
+			.append("object(functions,pairs) ::= <<{\n" + 
+		"  ~pairs:{it|\"~it.name~\": ~it.value~};separator=\",\\n\"~~if(functions)~,~endif~\n" + 
+		"  ~functions:{it|~it.name~: ~it.value~};separator=\",\\n\"~\n" + 
+		"}>>\n")
+			.append("primitive(value) ::= <<~value~>>\n")
+			.append("primitiveString(value) ::= <<\"~value~\">>\n")
+		.toString();
+}

@@ -70,16 +70,20 @@ public final class AntlrGroup {
       return new AntlrDomainST(stGroup);
    }
 
-   public AntlrNodeST newAntlrNode() {
-      return new AntlrNodeST(stGroup);
+   public AntlrSymbolNodeST newAntlrSymbolNode() {
+      return new AntlrSymbolNodeST(stGroup);
    }
 
    public grammarBlockST newgrammarBlock() {
       return new grammarBlockST(stGroup);
    }
 
-   public AntlrDomainGrammarVisitorST newAntlrDomainGrammarVisitor() {
-      return new AntlrDomainGrammarVisitorST(stGroup);
+   public AntlrBnfRendererST newAntlrBnfRenderer() {
+      return new AntlrBnfRendererST(stGroup);
+   }
+
+   public AntlrGrammarNodeST newAntlrGrammarNode() {
+      return new AntlrGrammarNodeST(stGroup);
    }
 
    public final class NeoListenerST implements AntlrGroupTemplate {
@@ -533,8 +537,8 @@ public final class AntlrGroup {
    public final class AntlrDomainST implements AntlrGroupTemplate {
 
       private Object _name;
-      private Object _package;
       private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
+      private Object _package;
 
       private final ST template;
 
@@ -558,6 +562,20 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
+      public AntlrDomainST addNodesValue(Object declaration_, Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._nodes.add(map);
+
+         template.addAggr("nodes.{declaration, name}", map.get("declaration"), map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getNodes() {
+      	return this._nodes;
+      }
+
       public AntlrDomainST setPackage(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
@@ -574,38 +592,24 @@ public final class AntlrGroup {
       	return (String) this._package;
       }
 
-      public AntlrDomainST addNodesValue(Object declaration_, Object name_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	this._nodes.add(map);
-
-         template.addAggr("nodes.{declaration, name}", map.get("declaration"), map.get("name"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getNodes() {
-      	return this._nodes;
-      }
-
       @Override
    	public String toString() {
    		return template.render();
    	}
    }
 
-   public final class AntlrNodeST implements AntlrGroupTemplate {
+   public final class AntlrSymbolNodeST implements AntlrGroupTemplate {
 
       private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
       private Object _name;
 
       private final ST template;
 
-      private AntlrNodeST(STGroup group) {
-   		template = group.getInstanceOf("AntlrNode");
+      private AntlrSymbolNodeST(STGroup group) {
+   		template = group.getInstanceOf("AntlrSymbolNode");
    	}
 
-      public AntlrNodeST addChildrenValue(Object name_) {
+      public AntlrSymbolNodeST addChildrenValue(Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._children.add(map);
@@ -618,7 +622,7 @@ public final class AntlrGroup {
       	return this._children;
       }
 
-      public AntlrNodeST setName(Object value) {
+      public AntlrSymbolNodeST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -687,35 +691,19 @@ public final class AntlrGroup {
    	}
    }
 
-   public final class AntlrDomainGrammarVisitorST implements AntlrGroupTemplate {
+   public final class AntlrBnfRendererST implements AntlrGroupTemplate {
 
-      private Object _package;
       private Object _name;
       private java.util.Set<java.util.Map<String, Object>> _nodes = new java.util.LinkedHashSet<>();
+      private Object _package;
 
       private final ST template;
 
-      private AntlrDomainGrammarVisitorST(STGroup group) {
-   		template = group.getInstanceOf("AntlrDomainGrammarVisitor");
+      private AntlrBnfRendererST(STGroup group) {
+   		template = group.getInstanceOf("AntlrBnfRenderer");
    	}
 
-      public AntlrDomainGrammarVisitorST setPackage(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._package == null) {
-            this._package = value;
-         	template.add("package", value);
-         }
-
-      	return this;
-      }
-
-      public String getPackage() {
-      	return (String) this._package;
-      }
-
-      public AntlrDomainGrammarVisitorST setName(Object value) {
+      public AntlrBnfRendererST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -731,17 +719,80 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public AntlrDomainGrammarVisitorST addNodesValue(Object name_) {
+      public AntlrBnfRendererST addNodesValue(Object declaration_, Object name_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
       	this._nodes.add(map);
 
-         template.addAggr("nodes.{name}", map.get("name"));
+         template.addAggr("nodes.{declaration, name}", map.get("declaration"), map.get("name"));
          return this;
       }
 
       public java.util.Set<java.util.Map<String, Object>> getNodes() {
       	return this._nodes;
+      }
+
+      public AntlrBnfRendererST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class AntlrGrammarNodeST implements AntlrGroupTemplate {
+
+      private java.util.Set<java.util.Map<String, Object>> _children = new java.util.LinkedHashSet<>();
+      private Object _name;
+
+      private final ST template;
+
+      private AntlrGrammarNodeST(STGroup group) {
+   		template = group.getInstanceOf("AntlrGrammarNode");
+   	}
+
+      public AntlrGrammarNodeST addChildrenValue(Object name_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	this._children.add(map);
+
+         template.addAggr("children.{name}", map.get("name"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getChildren() {
+      	return this._children;
+      }
+
+      public AntlrGrammarNodeST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
       }
 
       @Override
@@ -1125,52 +1176,73 @@ public final class AntlrGroup {
 		"~name~\n" + 
 		"	: ~alternatives:{it|~it~};separator=\"\\n\\t|\"~\n" + 
 		"	;>>\n")
-			.append("AntlrDomain(name,package,nodes) ::= <<package ~package~;\n" + 
+			.append("AntlrDomain(name,nodes,package) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"import com.generator.generators.antlr.AntlrGroup;\n" + 
-		"import com.generator.generators.antlr.bnf.AntlrGrammarSymbol;\n" + 
+		"import com.generator.util.NeoUtil;\n" + 
 		"\n" + 
-		"import javax.swing.*;\n" + 
-		"import java.awt.*;\n" + 
-		"import java.awt.event.ActionEvent;\n" + 
-		"import java.beans.PropertyChangeSupport;\n" + 
+		"import java.util.ArrayList;\n" + 
 		"import java.util.Stack;\n" + 
+		"import java.util.UUID;\n" + 
 		"\n" + 
-		"public class ~name~ extends ANTLRv4ParserNodeListener {\n" + 
+		"public class ~name~ { \n" + 
 		"\n" + 
-		"	public final Stack<AntlrGrammarSymbol> symbolStack = new Stack<>();\n" + 
+		"	protected static final java.util.Random random = new java.util.Random(System.currentTimeMillis());\n" + 
+		"	\n" + 
+		"	protected final Stack<AntlrGrammarNode> grammarStack = new Stack<>();\n" + 
 		"\n" + 
-		"	public ~name~() {\n" + 
+		"   public GrammarSpec getGrammarSpec() {\n" + 
+		"		return grammarStack.isEmpty() ? null : (GrammarSpec) grammarStack.peek();\n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public ~name~(boolean debug) {\n" + 
-		"		super(debug);\n" + 
+		"	public void onNode(AntlrGrammarNode grammarNode) { \n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public GrammarSpec getGrammarSpec() {\n" + 
-		"      return symbolStack.isEmpty() ? null : (GrammarSpec) symbolStack.peek();\n" + 
-		"   }\n" + 
+		"	public ANTLRv4ParserDomainVisitor getDomainVisitor() {\n" + 
+		"   	return new ANTLRv4ParserDomainVisitor() {\n" + 
+		"	~nodes:{it| 	\n" + 
+		"		@Override\n" + 
+		"		public void visit~it.name~(org.neo4j.graphdb.Node node) { \n" + 
+		"			final ~it.name~ grammarNode = new~it.name~(NeoUtil.getString(node, \"text\"), NeoUtil.getString(node, \"startToken\"), NeoUtil.getString(node, \"endToken\"));\n" + 
+		"			onNode(grammarNode);\n" + 
+		"	 		if (!grammarStack.isEmpty()) grammarStack.peek().addChild(grammarNode);\n" + 
+		"	 		grammarStack.push(grammarNode);\n" + 
+		"	 		super.visit~it.name~(node);\n" + 
+		"	 		if (grammarStack.size() > 1) grammarStack.pop();\n" + 
+		"		~eom()~ };\n" + 
+		"		separator=\"\\n\"~\n" + 
+		"		};\n" + 
+		"	}\n" + 
 		"\n" + 
-		"~nodes:{it|\n" + 
-		"	@Override\n" + 
-		"	public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
-		"		super.enter~it.name~(arg);\n" + 
-		"		final ~it.name~ symbol = new~it.name~(arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
-		"      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
-		"      symbolStack.push(symbol);\n" + 
-		"	~eom()~\n" + 
+		"	public ANTLRv4ParserNodeListener getParserListener() {\n" + 
+		"		return getParserListener(false);\n" + 
+		"	}\n" + 
 		"\n" + 
-		"	@Override\n" + 
-		"	public void exit~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
-		"		super.exit~it.name~(arg);\n" + 
-		"		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
-		"	~eom()~\n" + 
-		"};separator=\"\\n\"~\n" + 
+		"	public ANTLRv4ParserNodeListener getParserListener(boolean debug) {\n" + 
+		"		return new ANTLRv4ParserNodeListener(debug) {\n" + 
 		"\n" + 
-		"	~nodes:{it|~it.declaration~};separator=\"\\n\"~\n" + 
+		"	~nodes:{it|\n" + 
+		"		@Override\n" + 
+		"		public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"			super.enter~it.name~(arg);\n" + 
+		"			final ~it.name~ grammarNode = new~it.name~(arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
+		"	      onNode(grammarNode);\n" + 
+		"			if (!grammarStack.isEmpty()) grammarStack.peek().addChild(grammarNode);\n" + 
+		"	      grammarStack.push(grammarNode);\n" + 
+		"		~eom()~\n" + 
 		"\n" + 
+		"		@Override\n" + 
+		"		public void exit~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"			super.exit~it.name~(arg);\n" + 
+		"			if (grammarStack.size() > 1) grammarStack.pop();\n" + 
+		"		~eom()~\n" + 
+		"		};separator=\"\\n\"~\n" + 
+		"		};\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	~nodes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 		"}>>\n")
-			.append("AntlrNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~(String text, String startToken, String endToken) {\n" + 
+			.append("AntlrSymbolNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~(String text, String startToken, String endToken) {\n" + 
 		"	return new ~name~(text, startToken, endToken);\n" + 
 		"}\n" + 
 		"\n" + 
@@ -1180,8 +1252,8 @@ public final class AntlrGroup {
 		"		super(\"~name~\", startToken, text, startToken, endToken);\n" + 
 		"	}\n" + 
 		"~children:{it|\n" + 
-		"	public AntlrGrammarSymbol add~it.name;format=\"capitalize\"~(~it.name~ child) { return super.addChild(child); ~eom()~\n" + 
-		"	public AntlrGrammarSymbol set~it.name;format=\"capitalize\"~(~it.name~ child) { return super.setChild(child); ~eom()~\n" + 
+		"	public AntlrGrammarSymbol add~it.name;format=\"capitalize\"~(~it.name~ child) { return (AntlrGrammarSymbol) super.addChild(child); ~eom()~\n" + 
+		"	public AntlrGrammarSymbol set~it.name;format=\"capitalize\"~(~it.name~ child) { return (AntlrGrammarSymbol) super.setChild(child); ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	@Override\n" + 
@@ -1212,33 +1284,86 @@ public final class AntlrGroup {
 		"	}\n" + 
 		"}>>\n")
 			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
-			.append("AntlrDomainGrammarVisitor(package,name,nodes) ::= <<package ~package~;\n" + 
-		"import com.generator.generators.antlr.bnf.AntlrGrammarModel;\n" + 
-		"import com.generator.generators.antlr.bnf.AntlrGrammarSymbol;\n" + 
+			.append("AntlrBnfRenderer(name,nodes,package) ::= <<package ~package~;\n" + 
+		"\n" + 
+		"import com.generator.generators.antlr.AntlrGroup;\n" + 
+		"import com.generator.generators.antlr.parser.ANTLRv4Parser;\n" + 
+		"import com.generator.generators.antlr.parser.ANTLRv4ParserDomainVisitor;\n" + 
+		"import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;\n" + 
 		"import com.generator.util.NeoUtil;\n" + 
-		"import org.neo4j.graphdb.Node;\n" + 
+		"\n" + 
+		"import javax.swing.*;\n" + 
+		"import java.awt.*;\n" + 
+		"import java.awt.event.ActionEvent;\n" + 
+		"import java.beans.PropertyChangeSupport;\n" + 
 		"import java.util.Stack;\n" + 
 		"\n" + 
-		"public class ~name~ extends ANTLRv4ParserDomainVisitor { \n" + 
+		"public class ~name~ { \n" + 
 		"	\n" + 
 		"	protected final Stack<AntlrGrammarSymbol> symbolStack = new Stack<>();\n" + 
 		"\n" + 
-		"	public final AntlrGrammarModel grammarModel;\n" + 
-		"\n" + 
-		"	public ANTLRv4ParserGrammarVisitor(AntlrGrammarModel grammarModel) {\n" + 
-		"		this.grammarModel = grammarModel;\n" + 
+		"   public GrammarSpec getGrammarSpec() {\n" + 
+		"		return symbolStack.isEmpty() ? null : (GrammarSpec) symbolStack.peek();\n" + 
 		"	}\n" + 
 		"\n" + 
-		"~nodes:{it| 	\n" + 
+		"	public ANTLRv4ParserDomainVisitor getDomainVisitor() {\n" + 
+		"   	return new ANTLRv4ParserDomainVisitor() {\n" + 
+		"	~nodes:{it| 	\n" + 
+		"		@Override\n" + 
+		"		public void visit~it.name~(org.neo4j.graphdb.Node node) { \n" + 
+		"			final ~it.name~ symbol = new~it.name~(NeoUtil.getString(node, \"text\"), NeoUtil.getString(node, \"startToken\"), NeoUtil.getString(node, \"endToken\"));\n" + 
+		"	 		if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
+		"	 		symbolStack.push(symbol);\n" + 
+		"	 		super.visit~it.name~(node);\n" + 
+		"	 		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
+		"		~eom()~ };\n" + 
+		"		separator=\"\\n\"~\n" + 
+		"		};\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	public ANTLRv4ParserNodeListener getParserListener() {\n" + 
+		"		return new ANTLRv4ParserNodeListener() {\n" + 
+		"\n" + 
+		"	~nodes:{it|\n" + 
+		"		@Override\n" + 
+		"		public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"			super.enter~it.name~(arg);\n" + 
+		"			final ~it.name~ symbol = new~it.name~(arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
+		"	      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
+		"	      symbolStack.push(symbol);\n" + 
+		"		~eom()~\n" + 
+		"\n" + 
+		"		@Override\n" + 
+		"		public void exit~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
+		"			super.exit~it.name~(arg);\n" + 
+		"			if (symbolStack.size() > 1) symbolStack.pop();\n" + 
+		"		~eom()~\n" + 
+		"		};separator=\"\\n\"~\n" + 
+		"		};\n" + 
+		"	}\n" + 
+		"\n" + 
+		"	~nodes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
+		"}>>\n")
+			.append("AntlrGrammarNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~(String text, String startToken, String endToken) {\n" + 
+		"	return new ~name~(text, startToken, endToken);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public class ~name~ extends AntlrGrammarNode {\n" + 
+		"\n" + 
+		"	public ~name~(String text, String startToken, String endToken) {\n" + 
+		"		super(\"~name~\", startToken, text, startToken, endToken);\n" + 
+		"	}\n" + 
+		"\n" + 
+		"~children:{it|\n" + 
+		"	public AntlrGrammarNode add~it.name;format=\"capitalize\"~(~it.name~ child) { return super.addChild(child); ~eom()~\n" + 
+		"\n" + 
+		"	public AntlrGrammarNode set~it.name;format=\"capitalize\"~(~it.name~ child) { return super.setChild(child); ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
+		"\n" + 
 		"	@Override\n" + 
-		"	public void visit~it.name~(Node node) { \n" + 
-		"		final ANTLRv4ParserDomain.~it.name~ symbol = grammarModel.new~it.name~(NeoUtil.getString(node, \"text\"), NeoUtil.getString(node, \"startToken\"), NeoUtil.getString(node, \"endToken\"));\n" + 
-		" 		if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
-		" 		symbolStack.push(symbol);\n" + 
-		" 		super.visit~it.name~(node);\n" + 
-		" 		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
-		"	~eom()~ };\n" + 
-		"separator=\"\\n\"~\n" + 
+		"	public Object toGrammar(AntlrGroup antlrGroup) {\n" + 
+		"		return super.toGrammar(antlrGroup);\n" + 
+		"	}\n" + 
 		"}>>\n")
 		.toString();
 }

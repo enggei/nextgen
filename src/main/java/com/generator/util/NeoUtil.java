@@ -168,6 +168,9 @@ public abstract class NeoUtil {
             // check if there is an outgoing "name" relation and use this if it exists
             final Node nameNode = other(node, singleOutgoing(node, RelationshipType.withName("name")));
             name = nameNode == null ? "" : getString(nameNode, "name");
+
+         } else {
+            name = name.length()> 20 ? (name.substring(0,20) + "...") : name;
          }
          lbl.append(name);
          lbl.append(name.length() == 0 ? "(" : " (");
