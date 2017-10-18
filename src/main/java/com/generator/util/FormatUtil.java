@@ -17,7 +17,6 @@ public class FormatUtil {
 	public static final long MINUTEms = SECONDms * 60L;
 	public static final long HOURms = MINUTEms * 60L;
 	public static final long DAYms = HOURms * 24L;
-	private static final SimpleDateFormat DATETIMEFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public static String formatTime(long runningTime) {
 
@@ -108,5 +107,13 @@ public class FormatUtil {
 		return formatHTTPDateTime(
 			toZonedDateTime(localDateTime.toEpochSecond(ZoneOffset.UTC) * 1000L)
 		);
+	}
+
+	public static String formatBytes(long bytes, boolean si) {
+		int unit = si ? 1000 : 1024;
+		if (bytes < unit) return bytes + " B";
+		int exp = (int) (Math.log(bytes) / Math.log(unit));
+		String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+		return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
 	}
 }

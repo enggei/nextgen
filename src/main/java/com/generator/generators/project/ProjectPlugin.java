@@ -617,7 +617,7 @@ public class ProjectPlugin extends Plugin {
          final Node directoryNode = other(node.getNode(), singleIncoming(node.getNode(), Relations.FILE));
          final File getDir = getFile(directoryNode);
          final File file = new File(getDir, getString(node.getNode(), AppMotif.Properties.name.name()) + "" + getString(node.getNode(), Properties.extension.name()));
-         final String text = FileUtil.readIntact(file).trim();
+         final String text = ""; // FileUtil.readIntact(file).trim();
 
          final Color uneditedColor = txtEditor.getBackground();
          final Color editedColor = Color.decode("#fc8d59");

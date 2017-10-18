@@ -17,10 +17,340 @@ public class ANTLRv4ParserDomain {
 		return grammarStack.isEmpty() ? null : (GrammarSpec) grammarStack.peek();
 	}
 
+	public static abstract class ANTLRv4Visitor {
+
+		public void visit(AntlrGrammarNode node) {
+			switch(node.type) {
+				case "GrammarSpec": 
+					visitGrammarSpec((GrammarSpec) node); 
+					break;
+				case "GrammarType": 
+					visitGrammarType((GrammarType) node); 
+					break;
+				case "Identifier": 
+					visitIdentifier((Identifier) node); 
+					break;
+				case "PrequelConstruct": 
+					visitPrequelConstruct((PrequelConstruct) node); 
+					break;
+				case "OptionsSpec": 
+					visitOptionsSpec((OptionsSpec) node); 
+					break;
+				case "Option": 
+					visitOption((Option) node); 
+					break;
+				case "OptionValue": 
+					visitOptionValue((OptionValue) node); 
+					break;
+				case "Rules": 
+					visitRules((Rules) node); 
+					break;
+				case "RuleSpec": 
+					visitRuleSpec((RuleSpec) node); 
+					break;
+				case "ParserRuleSpec": 
+					visitParserRuleSpec((ParserRuleSpec) node); 
+					break;
+				case "RuleBlock": 
+					visitRuleBlock((RuleBlock) node); 
+					break;
+				case "RuleAltList": 
+					visitRuleAltList((RuleAltList) node); 
+					break;
+				case "LabeledAlt": 
+					visitLabeledAlt((LabeledAlt) node); 
+					break;
+				case "Alternative": 
+					visitAlternative((Alternative) node); 
+					break;
+				case "Element": 
+					visitElement((Element) node); 
+					break;
+				case "Atom": 
+					visitAtom((Atom) node); 
+					break;
+				case "Terminal": 
+					visitTerminal((Terminal) node); 
+					break;
+				case "EbnfSuffix": 
+					visitEbnfSuffix((EbnfSuffix) node); 
+					break;
+				case "Ruleref": 
+					visitRuleref((Ruleref) node); 
+					break;
+				case "ExceptionGroup": 
+					visitExceptionGroup((ExceptionGroup) node); 
+					break;
+				case "Ebnf": 
+					visitEbnf((Ebnf) node); 
+					break;
+				case "Block": 
+					visitBlock((Block) node); 
+					break;
+				case "AltList": 
+					visitAltList((AltList) node); 
+					break;
+				case "BlockSuffix": 
+					visitBlockSuffix((BlockSuffix) node); 
+					break;
+				case "DelegateGrammars": 
+					visitDelegateGrammars((DelegateGrammars) node); 
+					break;
+				case "DelegateGrammar": 
+					visitDelegateGrammar((DelegateGrammar) node); 
+					break;
+				case "TokensSpec": 
+					visitTokensSpec((TokensSpec) node); 
+					break;
+				case "IdList": 
+					visitIdList((IdList) node); 
+					break;
+				case "ChannelsSpec": 
+					visitChannelsSpec((ChannelsSpec) node); 
+					break;
+				case "LexerRuleSpec": 
+					visitLexerRuleSpec((LexerRuleSpec) node); 
+					break;
+				case "LexerRuleBlock": 
+					visitLexerRuleBlock((LexerRuleBlock) node); 
+					break;
+				case "LexerAltList": 
+					visitLexerAltList((LexerAltList) node); 
+					break;
+				case "LexerAlt": 
+					visitLexerAlt((LexerAlt) node); 
+					break;
+				case "LexerElements": 
+					visitLexerElements((LexerElements) node); 
+					break;
+				case "LexerElement": 
+					visitLexerElement((LexerElement) node); 
+					break;
+				case "LexerAtom": 
+					visitLexerAtom((LexerAtom) node); 
+					break;
+				case "LexerCommands": 
+					visitLexerCommands((LexerCommands) node); 
+					break;
+				case "LexerCommand": 
+					visitLexerCommand((LexerCommand) node); 
+					break;
+				case "LexerCommandName": 
+					visitLexerCommandName((LexerCommandName) node); 
+					break;
+				case "LexerCommandExpr": 
+					visitLexerCommandExpr((LexerCommandExpr) node); 
+					break;
+				case "ActionBlock": 
+					visitActionBlock((ActionBlock) node); 
+					break;
+				case "ModeSpec": 
+					visitModeSpec((ModeSpec) node); 
+					break;
+				case "LexerBlock": 
+					visitLexerBlock((LexerBlock) node); 
+					break;
+				case "NotSet": 
+					visitNotSet((NotSet) node); 
+					break;
+				case "SetElement": 
+					visitSetElement((SetElement) node); 
+					break;
+				case "CharacterRange": 
+					visitCharacterRange((CharacterRange) node); 
+					break;
+			}
+		}
+
+		public void visitGrammarSpec(GrammarSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitGrammarType(GrammarType node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitIdentifier(Identifier node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitPrequelConstruct(PrequelConstruct node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitOptionsSpec(OptionsSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitOption(Option node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitOptionValue(OptionValue node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitRules(Rules node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitRuleSpec(RuleSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitParserRuleSpec(ParserRuleSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitRuleBlock(RuleBlock node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitRuleAltList(RuleAltList node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLabeledAlt(LabeledAlt node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitAlternative(Alternative node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitElement(Element node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitAtom(Atom node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitTerminal(Terminal node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitEbnfSuffix(EbnfSuffix node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitRuleref(Ruleref node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitExceptionGroup(ExceptionGroup node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitEbnf(Ebnf node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitBlock(Block node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitAltList(AltList node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitBlockSuffix(BlockSuffix node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitDelegateGrammars(DelegateGrammars node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitDelegateGrammar(DelegateGrammar node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitTokensSpec(TokensSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitIdList(IdList node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitChannelsSpec(ChannelsSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerRuleSpec(LexerRuleSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerRuleBlock(LexerRuleBlock node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerAltList(LexerAltList node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerAlt(LexerAlt node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerElements(LexerElements node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerElement(LexerElement node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerAtom(LexerAtom node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerCommands(LexerCommands node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerCommand(LexerCommand node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerCommandName(LexerCommandName node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerCommandExpr(LexerCommandExpr node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitActionBlock(ActionBlock node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitModeSpec(ModeSpec node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitLexerBlock(LexerBlock node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitNotSet(NotSet node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitSetElement(SetElement node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+
+		public void visitCharacterRange(CharacterRange node) {
+			for (AntlrGrammarNode child : node.children) visit(child);
+		}
+	}
+
 	public void onNode(AntlrGrammarNode grammarNode) { 
 	}
 
-	public ANTLRv4ParserDomainVisitor getDomainVisitor() {
+	protected ANTLRv4ParserDomainVisitor getANTLRv4ParserDomainVisitor() {
    	return new ANTLRv4ParserDomainVisitor() {
 		
 			@Override
@@ -485,11 +815,7 @@ public class ANTLRv4ParserDomain {
 		};
 	}
 
-	public ANTLRv4ParserNodeListener getParserListener() {
-		return getParserListener(false);
-	}
-
-	public ANTLRv4ParserNodeListener getParserListener(boolean debug) {
+	public ANTLRv4ParserNodeListener getANTLRv4ParserNodeListener(boolean debug) {
 		return new ANTLRv4ParserNodeListener(debug) {
 
 			@Override

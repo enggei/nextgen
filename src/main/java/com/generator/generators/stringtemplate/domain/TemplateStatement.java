@@ -1,7 +1,12 @@
 package com.generator.generators.stringtemplate.domain;
 
-import org.stringtemplate.v4.ST;
+import com.generator.generators.stringtemplate.parser.TemplateFileParser;
+import org.antlr.runtime.Token;
+import org.stringtemplate.v4.STErrorListener;
+import org.stringtemplate.v4.misc.STCompiletimeMessage;
+import org.stringtemplate.v4.misc.STMessage;
 
+import java.io.IOException;
 import java.util.*;
 
 import static com.generator.generators.stringtemplate.domain.TemplateEntities.TEMPLATESTATEMENT;
@@ -42,19 +47,6 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       add("delimiters");
    }});
 
-   public TemplateStatement(Statement statement, TemplateStatementType type, String text, char delimiter) {
-      super(TEMPLATESTATEMENT);
-      validateName(statement.getStatementName());
-      this.name = statement.getStatementName();
-      this.type = type;
-      this.text = text;
-      this.delimiter = delimiter;
-      for (final Property property : statement.getProperties()) {
-         validateName(property.getPropertyName());
-         parameters.put(property.getPropertyName(), new TemplateParameter(property));
-      }
-   }
-
    public TemplateStatement(String name, TemplateStatementType type, List<TemplateParameter> parameters, String text, char delimiter) {
       super(TEMPLATESTATEMENT);
       validateName(name);
@@ -72,16 +64,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       }
    }
 
-   public TemplateStatement(UUID uuid, String name, TemplateStatementType type, String text, char delimiter) {
-      super(uuid, TEMPLATESTATEMENT);
-      validateName(name);
-      this.name = name;
-      this.type = type;
-      this.text = text;
-      this.delimiter = delimiter;
-   }
-
-   public TemplateStatement(UUID uuid, String name, TemplateStatementType type, List<TemplateParameter> parameters, String text, char delimiter) {
+   private TemplateStatement(UUID uuid, String name, TemplateStatementType type, List<TemplateParameter> parameters, String text, char delimiter) {
       super(uuid, TEMPLATESTATEMENT);
       validateName(name);
       this.name = name;
@@ -94,7 +77,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       }
    }
 
-   public TemplateStatement(TemplateStatement statement) {
+   TemplateStatement(TemplateStatement statement) {
       super(TEMPLATESTATEMENT);
       validateName(statement.getName());
       this.name = statement.getName();
@@ -115,7 +98,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       this.name = name;
    }
 
-   public TemplateStatementType getStatementType() {
+   private TemplateStatementType getStatementType() {
       return type;
    }
 
@@ -143,68 +126,13 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       return text.trim();
    }
 
-   public Set<String> getParameterNames() {
+   private Set<String> getParameterNames() {
       return Collections.unmodifiableSet(parameters.keySet());
-   }
-
-   public TemplateParameter getParameter(String name) {
-      return parameters.get(name);
-   }
-
-   public Statement asStatement(List<Property> properties) {
-      return new Statement(UUID.randomUUID(), name, properties);
-   }
-
-   public Statement asStatement() {
-      final List<Property> properties = new ArrayList<>();
-      for (TemplateParameter parameter : parameters.values()) {
-
-         final Property property = parameter.asProperty();
-         switch (parameter.getDomainEntityType()) {
-
-            case STRINGPROPERTY:
-               ((StringProperty) property).setValue("value");
-               break;
-
-            case STATEMENTPROPERTY:
-               break;
-
-            case LISTPROPERTY:
-               break;
-
-            case KEYVALUELISTPROPERTY:
-               ((KeyValueListProperty) property).addPropertySet(parameter.getKvNamesAsPropertySet("value"));
-               break;
-
-            case BOOLEANPROPERTY:
-               ((BooleanProperty) property).setValue(true);
-               break;
-         }
-         properties.add(property);
-      }
-      return new Statement(UUID.randomUUID(), name, properties);
    }
 
    private void validateName(String name) {
       if (TEMPLATESTATEMENT_KEYWORDS.contains(name))
          throw new IllegalArgumentException("'" + name + "' is a reserved word.");
-   }
-
-   public String render(List<Property> properties) {
-      final ST template = new ST(text);
-
-      for (Property property : properties) {
-         if (property instanceof StringProperty) {
-            template.add(property.getPropertyName(), ((StringProperty) property).getValue());
-         } else if (property instanceof BooleanProperty) {
-            final Boolean value = ((BooleanProperty) property).getValue();
-            if (value != null && value)
-               template.add(property.getPropertyName(), value);
-         }
-         // todo: use
-      }
-
-      return template.render();
    }
 
    @Override
@@ -228,7 +156,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       return documentation.toString();
    }
 
-   public StringBuilder formatTemplateMethod() {
+   private StringBuilder formatTemplateMethod() {
       final StringBuilder head = new StringBuilder();
       head.append(getName()).append((TemplateStatementType.METHOD.equals(getStatementType()) || TemplateStatementType.SINGLE.equals(getStatementType())) ? "(" : "");
       boolean first = true;
@@ -241,7 +169,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       return head;
    }
 
-   public String getEndTagFor(TemplateStatementType type) {
+   private String getEndTagFor(TemplateStatementType type) {
       switch (type) {
          case METHOD:
             return "\n>>";
@@ -253,7 +181,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       throw new IllegalArgumentException("unsupported type: " + type);
    }
 
-   public String getStartTagFor(TemplateStatementType type) {
+   private String getStartTagFor(TemplateStatementType type) {
       switch (type) {
          case METHOD:
             return "::= <<";
@@ -272,29 +200,47 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       return new TemplateStatement(this.uuid, this.name, this.type, copiedParameters, this.text, this.delimiter);
    }
 
-   public TemplateParameter getParameter(UUID uuid) {
-      for (TemplateParameter parameter : parameters.values())
-         if (parameter.getUuid().equals(uuid)) return parameter;
-      return null;
-   }
+   public static void main(String[] args) throws IOException {
 
-   public static Set<UUID> getAllMissingInRight(TemplateStatement left, TemplateStatement right) {
-      final Set<UUID> newParameters = new LinkedHashSet<>();
-      for (TemplateParameter committedParameter : left.getParameters()) {
-         boolean found = false;
-         for (TemplateParameter oldParameter : right.getParameters()) {
-            if (committedParameter.equals(oldParameter)) {
-               found = true;
-               break;
+      final TemplateFile templateFile = TemplateFileParser.parseToFile("~", "Test", "package ~package~;\n" +
+            "\n" +
+            "public class ~name~ {\n" +
+            "\n" +
+            "   ~elements:{it|private ~it.type~ ~it.name~ = ~it.init~;};separator=\" \"~\n" +
+            "\n" +
+            "}", new STErrorListener() {
+         @Override
+         public void compileTimeError(STMessage stMessage) {
+            if (stMessage instanceof STCompiletimeMessage) {
+               final Token token = ((STCompiletimeMessage) stMessage).token;
+               System.out.println(token);
             }
          }
-         if (!found) newParameters.add(committedParameter.getUuid());
-      }
-      return newParameters;
-   }
 
-   public TemplateStatement addParameter(TemplateParameter parameter) {
-      this.parameters.put(parameter.getPropertyName(), parameter);
-      return this;
+         @Override
+         public void runTimeError(STMessage stMessage) {
+         }
+
+         @Override
+         public void IOError(STMessage stMessage) {
+         }
+
+         @Override
+         public void internalError(STMessage stMessage) {
+         }
+      });
+
+      final Statement statement = new Statement("Test");
+      statement.add(new StringProperty("package", "PACKAGE"));
+      List<List<Property>> kvProperties = new ArrayList<>();
+      List<Property> kvProperty = new ArrayList<>();
+      kvProperty.add(new StringProperty("type", "TYPE"));
+      kvProperty.add(new StringProperty("name", "NAME"));
+      kvProperty.add(new StringProperty("init", "INIT"));
+      kvProperties.add(kvProperty);
+      statement.add(new KeyValueListProperty("elements", kvProperties));
+
+      final String render = templateFile.render(statement);
+      System.out.println(render);
    }
 }

@@ -61,6 +61,7 @@ public class Tests {
             super.enterEbnfSuffix(arg);
 
             templateContent.append(arg.getText());
+            // ~list:{it|};separator="\n"~
 
 //            if (grammarStack.peek() instanceof BlockSuffix) {
 //               final AntlrGrammarNode blockSuffix = grammarStack.pop();
@@ -196,7 +197,7 @@ public class Tests {
             nodeST.addChildrenValue(child.dst);
          }
 
-         antlrBnfRendererST.addNodesValue(nodeST, grammarSymbol.name);
+         antlrBnfRendererST.addNodesValue(grammarSymbol.name, nodeST);
          antlrDomainST.addNodesValue(antlrGrammarNodeST, grammarSymbol.name);
       }
 

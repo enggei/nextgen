@@ -7,34 +7,52 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 
 /**
  * Created 09.10.17.
  */
-public class AntlrGrammarSymbol extends AntlrGrammarNode {
+public class AntlrGrammarSymbol  {
 
    // rectangle-offset
    private final int offset = 10;
    private final int margin = 5;
+   final AntlrGrammarNode node;
+   protected java.util.List<AntlrGrammarSymbol> children = new ArrayList<>();
 
-   AntlrGrammarSymbol(String type, String label, String value, String startToken, String endToken) {
-      super(type, label, value, startToken, endToken);
+   AntlrGrammarSymbol(AntlrGrammarNode node) {
+      this.node = node;
    }
 
    public String getText() {
-      return text;
+      return node.getText();
    }
 
    public String getStartToken() {
-      return startToken;
+      return node.getStartToken();
    }
 
    public String getEndToken() {
-      return endToken;
+      return node.getEndToken();
    }
 
    public String type() {
-      return type;
+      return node.type();
+   }
+
+   public AntlrGrammarSymbol setChild(AntlrGrammarSymbol grammarNode) {
+      children.clear();
+      children.add(grammarNode);
+//      grammarNode.parent = this;
+      //visit(this, "");
+      return this;
+   }
+
+   public AntlrGrammarSymbol addChild(AntlrGrammarSymbol grammarNode) {
+      children.add(grammarNode);
+//      grammarNode.parent = this;
+      //visit(this, "");
+      return this;
    }
 
    public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
@@ -49,9 +67,7 @@ public class AntlrGrammarSymbol extends AntlrGrammarNode {
       double startY = bounds.getY();
 
       double x = startX + bounds.getWidth();
-      for (AntlrGrammarNode child : children) {
-         final AntlrGrammarSymbol symbol = (AntlrGrammarSymbol)child;
-
+      for (AntlrGrammarSymbol symbol : children) {
          final Rectangle.Double rectangle = symbol.paint(x, startY, g, shapeMap, level);
          x += rectangle.getWidth();
          // calculate bounds of this.shape:
@@ -68,7 +84,7 @@ public class AntlrGrammarSymbol extends AntlrGrammarNode {
 
    private Rectangle2D.Double paintEbnf(double startX, double startY, Rectangle2D.Double children, Graphics2D g) {
 
-      if ("*".equals(ebnf) || "*?".equals(ebnf)) {
+      if ("*".equals(node.ebnf) || "*?".equals(node.ebnf)) {
          g.setColor(Color.decode("#2b8cbe"));
          g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY - margin);
          g.drawLine((int) startX, (int) startY - margin, (int) (startX + children.width), (int) startY - margin);
@@ -81,14 +97,14 @@ public class AntlrGrammarSymbol extends AntlrGrammarNode {
 
          return children;
 
-      } else if ("?".equals(ebnf)) {
+      } else if ("?".equals(node.ebnf)) {
          g.setColor(Color.decode("#2b8cbe"));
          g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY + (margin * 2 + offset * 2));
          g.drawLine((int) startX, (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + (margin * 2 + offset * 2));
          g.drawLine((int) (startX + children.width), (int) startY + (margin * 2 + offset * 2), (int) (startX + children.width), (int) startY + offset);
          return children;
 
-      } else if ("+".equals(ebnf)) {
+      } else if ("+".equals(node.ebnf)) {
          g.setColor(Color.decode("#2b8cbe"));
          g.drawLine((int) startX, (int) startY + offset, (int) startX, (int) startY - margin);
          g.drawLine((int) startX, (int) startY - margin, (int) (startX + children.width), (int) startY - margin);
@@ -122,15 +138,15 @@ public class AntlrGrammarSymbol extends AntlrGrammarNode {
 
    @Override
    public String toString() {
-      return type;
+      return node.type();
    }
 
    public void addActionsTo(JMenu menu, PropertyChangeSupport modelChangeSupport) {
-      menu.add(new AbstractAction("Remove " + (label == null ? type : label)) {
+      menu.add(new AbstractAction("Remove " + (node.label == null ? node.type() : node.label)) {
          @Override
          public void actionPerformed(ActionEvent e) {
-            parent.children.remove(AntlrGrammarSymbol.this);
-            modelChangeSupport.firePropertyChange(label == null ? type : label, "remove", AntlrGrammarSymbol.this);
+            node.parent.children.remove(node);
+            modelChangeSupport.firePropertyChange(node.label == null ? node.type() : node.label, "remove", AntlrGrammarSymbol.this);
          }
       });
    }

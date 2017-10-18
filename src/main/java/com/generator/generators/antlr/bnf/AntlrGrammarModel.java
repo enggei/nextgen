@@ -1,21 +1,21 @@
 package com.generator.generators.antlr.bnf;
 
 import com.generator.ProjectConstants;
-import com.generator.generators.antlr.parser.ANTLRv4Lexer;
-import com.generator.generators.antlr.parser.ANTLRv4Parser;
-import com.generator.generators.antlr.parser.ANTLRv4ParserDomain;
-import com.generator.generators.antlr.parser.AntlrGrammarNode;
+import com.generator.generators.antlr.parser.*;
 import com.generator.generators.csv.parser.CSVListener;
 import com.generator.generators.csv.parser.CSVNodeListener;
 import com.generator.generators.csv.parser.CSVParser;
 import com.generator.generators.json.parser.JSONLexer;
 import com.generator.generators.json.parser.JSONNodeListener;
 import com.generator.generators.json.parser.JSONParser;
+import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.neo4j.graphdb.Node;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,6 +34,21 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    private final Map<String, Set<Relation>> relationMap = new ConcurrentHashMap<>();
 
    private static final Random random = new Random(System.currentTimeMillis());
+
+   public AntlrGrammarModel() {
+      grammarStack.push(newGrammarSpec("", "", ""));
+   }
+
+   public AntlrGrammarModel(Node node) {
+      getANTLRv4ParserDomainVisitor().visit(node);
+   }
+
+   public AntlrGrammarModel(File file) throws IOException {
+      final File[] grammarFiles = FileUtil.list(file.getParent(), ".g4");
+      final ANTLRv4ParserNodeListener parserListener = getANTLRv4ParserNodeListener(false);
+      for (File grammarFile : grammarFiles)
+         new ParseTreeWalker().walk(parserListener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
+   }
 
    public void showDistinct() {
 
@@ -172,9 +187,9 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
 
                   System.out.println(label + " " + c);
 
-                  if(c=='\\') {
+                  if (c == '\\') {
                      return "";
-                  } else if(c=='"')
+                  } else if (c == '"')
                      return "\\\"";
 
                   return "" + c;
@@ -358,27 +373,27 @@ public class AntlrGrammarModel extends ANTLRv4ParserDomain {
    }
 
    public static void testCSV(AntlrGrammarModel model, boolean debug) throws IOException {
-      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
+      new ParseTreeWalker().walk(model.getANTLRv4ParserNodeListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "csv/parser/CSV.g4")))).grammarSpec());
       model.showDistinct();
       final String[] generate = generate(model, 1);
       for (String s : generate) parseCSV(s);
    }
 
    public static void testJSON(AntlrGrammarModel model, boolean debug) throws IOException {
-      new ParseTreeWalker().walk(model.getParserListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/parser/JSON.g4")))).grammarSpec());
+      new ParseTreeWalker().walk(model.getANTLRv4ParserNodeListener(debug), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "json/parser/JSON.g4")))).grammarSpec());
       model.showDistinct();
       final String[] generate = generate(model, 1);
       for (String s : generate) parseJSON(s);
    }
 
    public static void parseJSON(String output) {
-      System.out.println("Output " +output);
+      System.out.println("Output " + output);
       final JSONNodeListener listener = new JSONNodeListener(true);
       new ParseTreeWalker().walk(listener, new JSONParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).json());
    }
 
    public static void parseCSV(String output) {
-      System.out.println("Output " +output);
+      System.out.println("Output " + output);
       final CSVListener listener = new CSVNodeListener(true);
       new ParseTreeWalker().walk(listener, new CSVParser(new CommonTokenStream(new JSONLexer(CharStreams.fromString(output)))).csvFile());
    }

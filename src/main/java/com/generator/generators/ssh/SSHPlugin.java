@@ -7,6 +7,7 @@ import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
+import com.generator.util.JschUtil;
 import com.generator.util.SwingUtil;
 import com.jcraft.jsch.*;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +21,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -284,7 +288,7 @@ public class SSHPlugin extends Plugin {
 
                final Session session = getSession(neoNode.getNode());
                upload(session, file.getAbsolutePath(), target);
-               session.disconnect();
+
             }
          });
 
@@ -298,9 +302,7 @@ public class SSHPlugin extends Plugin {
                final File file = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
                if (file == null) return;
 
-               final Session session = getSession(neoNode.getNode());
-               download(session, file.getAbsolutePath(), target);
-               session.disconnect();
+               download(getSession(neoNode.getNode()), file.getAbsolutePath(), target);
             }
          });
 
@@ -429,9 +431,7 @@ public class SSHPlugin extends Plugin {
                   if (file == null) return;
 
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  final Session session = getSession(hostNode);
-                  upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
-                  session.disconnect();
+                  upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
                }
             });
 
@@ -443,9 +443,7 @@ public class SSHPlugin extends Plugin {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  final Session session = getSession(hostNode);
-                  upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
-                  session.disconnect();
+                  upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
                }
             });
 
@@ -457,27 +455,25 @@ public class SSHPlugin extends Plugin {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                     final Session session = getSession(hostNode);
-                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
-                     session.disconnect();
+                     upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
                   }
                });
             }
             pop.add(fileuploadMenu);
 
-            pop.add(new App.TransactionAction("Upload " + fileSet.size() + " files", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-
-                  final Session session = getSession(hostNode);
-                  for (File file : fileSet)
-                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
-                  session.disconnect();
-
-                  SwingUtil.showMessage(fileSet.size() + " files uploaded", app);
-               }
-            });
+//            pop.add(new App.TransactionAction("Upload " + fileSet.size() + " files", app) {
+//               @Override
+//               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//                  final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
+//
+//                  final Session session = getSession(hostNode);
+//                  for (File file : fileSet)
+//                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+//                  session.disconnect();
+//
+//                  SwingUtil.showMessage(fileSet.size() + " files uploaded", app);
+//               }
+//            });
          }
 
 
@@ -776,7 +772,6 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                            final String filename = txtOutput.getSelectedText().trim();
-
                            runCommand(dataOut, new CommandNode("pwd", "pwd"));
                         }
                      });
@@ -1222,9 +1217,7 @@ public class SSHPlugin extends Plugin {
                   if (file == null) return;
 
                   final Node hostNode = other(node, singleIncoming(node, Relations.PATHS));
-                  final Session session = getSession(hostNode);
-                  upload(session, file.getAbsolutePath(), label);
-                  session.disconnect();
+                  upload(getSession(hostNode), file.getAbsolutePath(), label);
                }
             });
 
@@ -1270,9 +1263,8 @@ public class SSHPlugin extends Plugin {
             });
          }
 
-         CommandNode run(DataOutputStream dataOut) {
+         void run(DataOutputStream dataOut) {
             run(dataOut, false);
-            return this;
          }
 
          CommandNode run(DataOutputStream dataOut, boolean asSudo) {
@@ -1347,31 +1339,14 @@ public class SSHPlugin extends Plugin {
 
    @NotNull
    public static Session getSession(Node hostNode) throws JSchException {
-      final JSch jSch = new JSch();
 
-      final Session session = jSch.getSession(
-            getString(hostNode, Properties.username.name()),
-            getString(hostNode, Properties.ip.name()),
-            hostNode.hasProperty(Properties.port.name()) ? (int) hostNode.getProperty(Properties.port.name()) : 22);
+      final String username = getString(hostNode, Properties.username.name());
+      final String host = getString(hostNode, Properties.ip.name());
+      final int port = hostNode.hasProperty(Properties.port.name()) ? (int) hostNode.getProperty(Properties.port.name()) : 22;
 
-      final String privateKeyPath = getString(hostNode, Properties.privateKeyPath.name());
-      if (privateKeyPath != null) {
-         jSch.addIdentity(privateKeyPath);
-      } else {
-         session.setUserInfo(new ChannelUserInfo(getString(hostNode, Properties.password.name())));
-         session.setPassword(getString(hostNode, Properties.password.name()));
-      }
-
-      java.util.Properties config = new java.util.Properties();
-      config.put("StrictHostKeyChecking", "no");
-      config.put("TCPKeepAlive", "yes");
-
-      session.setServerAliveInterval(120 * 1000);
-      session.setServerAliveCountMax(1000);
-      session.setConfig(config);
-
-      session.connect();
-      return session;
+      final String keyPath = getString(hostNode, Properties.privateKeyPath.name());
+      final String password = getString(hostNode, Properties.password.name());
+      return keyPath == null ? JschUtil.getSessionUsingPassword(username, host, port, password) : JschUtil.getSessionUsingPrivateKey(username, host, port, keyPath);
    }
 
    private void closeSession(NeoNode sessionNode) {
@@ -1412,140 +1387,16 @@ public class SSHPlugin extends Plugin {
       app.model.deleteNodes(Collections.singleton(channelNode));
    }
 
-   public static void upload(Session session, String lfile, String rfile) throws Exception {
+   private static void upload(Session session, String lfile, String rfile) throws Exception {
+      upload(session, lfile, rfile, JschUtil.defaultIOListener(true));
+   }
 
-      final ChannelExec channel = (ChannelExec) session.openChannel("exec");
-      channel.setCommand("scp -t " + rfile);
-
-      final OutputStream out = channel.getOutputStream();
-      final InputStream in = channel.getInputStream();
-
-      channel.connect();
-      if (checkAck(in) != 0) throw new Exception("Connect Ack error");
-
-      final File _lfile = new File(lfile);
-      out.write(("C0644 " + _lfile.length() + " " + (lfile.lastIndexOf('/') > 0 ? lfile.substring(lfile.lastIndexOf('/') + 1) : lfile) + "\n").getBytes("UTF-8"));
-      out.flush();
-      if (checkAck(in) != 0) throw new Exception("Scp Ack error");
-
-      // send a content of lfile
-      final FileInputStream fis = new FileInputStream(lfile);
-      byte[] buf = new byte[1024];
-      while (true) {
-         int len = fis.read(buf, 0, buf.length);
-         if (len <= 0) break;
-         out.write(buf, 0, len); //out.flush();
-      }
-      fis.close();
-
-      // send '\0'
-      buf[0] = 0;
-      out.write(buf, 0, 1);
-      out.flush();
-
-      if (checkAck(in) != 0) throw new Exception("File complete Ack error");
-      out.close();
-
-      channel.disconnect();
+   private static void upload(Session session, String lfile, String rfile, JschUtil.IOListener uploadListener) throws Exception {
+      JschUtil.upload(session, lfile, rfile, uploadListener);
    }
 
    public static void download(Session session, String lfile, String rfile) throws Exception {
-
-      final String prefix = new File(lfile).isDirectory() ? (lfile + File.separator) : null;
-
-      final ChannelExec channel = (ChannelExec) session.openChannel("exec");
-      channel.setCommand("scp -f " + rfile);
-
-      final OutputStream out = channel.getOutputStream();
-      final InputStream in = channel.getInputStream();
-
-      channel.connect();
-      byte[] buf = new byte[1024];
-
-      // send '\0'
-      buf[0] = 0;
-      out.write(buf, 0, 1);
-      out.flush();
-
-      while (true) {
-
-         int c = checkAck(in);
-         if (c != 'C') break;
-
-         // read '0644 '
-         in.read(buf, 0, 5);
-
-         long filesize = 0L;
-         while (true) {
-            if (in.read(buf, 0, 1) < 0) break;
-            if (buf[0] == ' ') break;
-            filesize = filesize * 10L + (long) (buf[0] - '0');
-         }
-
-         String file;
-         for (int i = 0; ; i++) {
-            in.read(buf, i, 1);
-            if (buf[i] == (byte) 0x0a) {
-               file = new String(buf, 0, i);
-               break;
-            }
-         }
-
-         // send '\0'
-         buf[0] = 0;
-         out.write(buf, 0, 1);
-         out.flush();
-
-         // read content of lfile
-         final FileOutputStream fos = new FileOutputStream(prefix == null ? lfile : prefix + file);
-         int foo;
-         while (true) {
-
-            if (buf.length < filesize)
-               foo = buf.length;
-            else
-               foo = (int) filesize;
-
-            foo = in.read(buf, 0, foo);
-            if (foo < 0) break;
-
-            fos.write(buf, 0, foo);
-            filesize -= foo;
-
-            if (filesize == 0L) break;
-         }
-         fos.close();
-
-         if (checkAck(in) != 0) throw new Exception("Error after file transfer");
-
-         // send '\0'
-         buf[0] = 0;
-         out.write(buf, 0, 1);
-         out.flush();
-      }
-
-      channel.disconnect();
-   }
-
-   private static int checkAck(InputStream in) throws IOException {
-
-      int b = in.read();
-
-      if (b == 0) return b;
-      if (b == -1) return b;
-
-      if (b == 1 || b == 2) {
-         final StringBuilder sb = new StringBuilder();
-         int c;
-         do {
-            c = in.read();
-            sb.append((char) c);
-         } while (c != '\n');
-
-         throw new IOException("Ack error " + sb.toString());
-      }
-
-      return b;
+      JschUtil.download(session, lfile, rfile, JschUtil.defaultIOListener(true));
    }
 
    private final class ActiveChannel {
@@ -1566,44 +1417,6 @@ public class SSHPlugin extends Plugin {
             throw new RuntimeException(e);
          }
          return this;
-      }
-   }
-
-   private static final class ChannelUserInfo implements UserInfo {
-
-      private final String password;
-
-      private ChannelUserInfo(String password) {
-         this.password = password;
-      }
-
-      @Override
-      public String getPassphrase() {
-         return null;
-      }
-
-      @Override
-      public String getPassword() {
-         return password;
-      }
-
-      @Override
-      public boolean promptPassphrase(String message) {
-         return false;
-      }
-
-      @Override
-      public boolean promptPassword(String message) {
-         return false;
-      }
-
-      @Override
-      public boolean promptYesNo(String message) {
-         return true;
-      }
-
-      @Override
-      public void showMessage(String message) {
       }
    }
 }

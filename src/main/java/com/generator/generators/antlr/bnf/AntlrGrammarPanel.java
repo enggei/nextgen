@@ -3,12 +3,8 @@ package com.generator.generators.antlr.bnf;
 import com.generator.app.AppMotif;
 import com.generator.generators.antlr.AntlrGroup;
 import com.generator.generators.antlr.parser.*;
-import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Node;
 
@@ -30,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AntlrGrammarPanel extends JPanel {
 
-   private ANTLRv4ParserRenderer model;
+   private AntlrGrammarModel model;
 
    private final Map<String, AntlrGrammarSymbol> ruleSpecs = new ConcurrentHashMap<>();
    private final Map<AntlrGrammarSymbol, Rectangle2D> shapeMap = new ConcurrentHashMap<>();
@@ -83,38 +79,38 @@ public class AntlrGrammarPanel extends JPanel {
 
                for (Map.Entry<AntlrGrammarSymbol, Rectangle2D> entry : shapeMap.entrySet()) {
                   if (!entry.getValue().contains(e.getX(), e.getY())) continue;
-                  final JMenu symbolMenu = new JMenu(entry.getKey().label == null ? entry.getKey().type() : entry.getKey().label);
-                  entry.getKey().addActionsTo(symbolMenu, modelChangeSupport);
-                  pop.add(symbolMenu);
+//                  final JMenu symbolMenu = new JMenu(entry.getKey().label == null ? entry.getKey().type() : entry.getKey().label);
+//                  entry.getKey().addActionsTo(symbolMenu, modelChangeSupport);
+//                  pop.add(symbolMenu);
                }
 
                if (model != null) {
                   if (pop.getComponentCount() != 0) pop.addSeparator();
 
-                  pop.add(new AbstractAction("Add Rule") {
-                     @Override
-                     public void actionPerformed(ActionEvent e) {
-
-                        final String name = SwingUtil.showInputDialog("Name", AntlrGrammarPanel.this);
-                        if (name == null || name.length() == 0) return;
-
-                        final ANTLRv4ParserRenderer.RuleSpec newRuleSpec = model.newRuleSpec(name, "", "");
-
-                        for (AntlrGrammarNode child : model.getGrammarSpec().children) {
-                           AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
-                           if (symbol instanceof ANTLRv4ParserRenderer.Rules) {
-                              ((ANTLRv4ParserRenderer.Rules) symbol).addRuleSpec(newRuleSpec);
-                              requestRepaint();
-                              return;
-                           }
-                        }
-
-                        final ANTLRv4ParserRenderer.Rules rules = model.newRules(name, "", "");
-                        model.getGrammarSpec().addRules(rules);
-                        rules.addRuleSpec(newRuleSpec);
-                        requestRepaint();
-                     }
-                  });
+//                  pop.add(new AbstractAction("Add Rule") {
+//                     @Override
+//                     public void actionPerformed(ActionEvent e) {
+//
+//                        final String name = SwingUtil.showInputDialog("Name", AntlrGrammarPanel.this);
+//                        if (name == null || name.length() == 0) return;
+//
+//                        final ANTLRv4ParserRenderer.RuleSpec newRuleSpec = model.newRuleSpec(name, "", "");
+//
+//                        for (AntlrGrammarNode child : model.getGrammarSpec().children) {
+//                           AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//                           if (symbol instanceof ANTLRv4ParserRenderer.Rules) {
+//                              ((ANTLRv4ParserRenderer.Rules) symbol).addRuleSpec(newRuleSpec);
+//                              requestRepaint();
+//                              return;
+//                           }
+//                        }
+//
+//                        final ANTLRv4ParserRenderer.Rules rules = model.newRules(name, "", "");
+//                        model.getGrammarSpec().addRules(rules);
+//                        rules.addRuleSpec(newRuleSpec);
+//                        requestRepaint();
+//                     }
+//                  });
 
                   pop.add(new AbstractAction("Show Grammar") {
                      @Override
@@ -129,7 +125,7 @@ public class AntlrGrammarPanel extends JPanel {
                pop.add(new AbstractAction("New Model") {
                   @Override
                   public void actionPerformed(ActionEvent e) {
-                     model = new ANTLRv4ParserRenderer();
+                     model = new AntlrGrammarModel();
                      requestRepaint();
                   }
                });
@@ -142,7 +138,7 @@ public class AntlrGrammarPanel extends JPanel {
                      if (file == null || !file.getName().endsWith(".g4")) return;
 
                      try {
-                        setModel(file);
+                        setModel(new AntlrGrammarModel(file));
                      } catch (IOException e1) {
                         SwingUtil.showException(AntlrGrammarPanel.this, e1);
                      }
@@ -155,7 +151,7 @@ public class AntlrGrammarPanel extends JPanel {
       });
    }
 
-   public ANTLRv4ParserRenderer.GrammarSpec getGrammarSpec() {
+   public ANTLRv4ParserDomain.GrammarSpec getGrammarSpec() {
       return model.getGrammarSpec();
    }
 
@@ -167,131 +163,78 @@ public class AntlrGrammarPanel extends JPanel {
          });
    }
 
-   public void setModel( AntlrGrammarModel model) {
-
-   }
-
-   public AntlrGrammarPanel setModel(File file) throws IOException {
-
-      final File[] grammarFiles = FileUtil.list(file.getParent(), ".g4");
-
-      final GrammarTreePanel.GrammarTreeParserNodeListener grammarTreeParserNodeListener = grammarTree.newParserNodeListener(file.getName());
-      final ANTLRv4ParserRenderer grammarModel = newParserRenderer();
-
-      for (File grammarFile : grammarFiles) {
-         new ParseTreeWalker().walk(grammarModel.getParserListener(), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
-         new ParseTreeWalker().walk(grammarTreeParserNodeListener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
-      }
-
-      grammarTree.setModel(grammarTreeParserNodeListener);
-
+   public void setModel(AntlrGrammarModel grammarModel) {
       this.model = grammarModel;
-      requestRepaint();
 
-      return this;
-   }
+      new ANTLRv4ParserRenderer() {
+         @Override
+         public GrammarSpecSymbol newGrammarSpecSymbol(ANTLRv4ParserDomain.GrammarSpec node) {
+            return new GrammarSpecSymbol(node) {
+               @Override
+               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
-   public AntlrGrammarPanel setModel(Node node) {
+                  double startX = bounds.getX();
+                  double startY = bounds.getY();
 
-      ruleSpecs.clear();
+                  double x = startX + bounds.getWidth();
+                  double y = startY;
+                  for (AntlrGrammarSymbol symbol : children) {
+                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
 
-      final GrammarTreePanel.GrammarTreeParserDomainVisitor grammarTreeParserDomainVisitor = grammarTree.newParserDomainVisitor();
-      final ANTLRv4ParserRenderer grammarModel = newParserRenderer();
+                     y += rectangle.getHeight() + 15;
 
-      grammarModel.getDomainVisitor().visit(node);
-      grammarTreeParserDomainVisitor.visit(node);
+                     double minX = Math.min(startX, rectangle.getX());
+                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
+                     double minY = Math.min(startY, rectangle.getY());
+                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
+                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+                  }
 
-      this.model = grammarModel;
-      requestRepaint();
-
-      return this;
-   }
-
-   @NotNull
-   private ANTLRv4ParserRenderer newParserRenderer() {
-      return new ANTLRv4ParserRenderer() {
+                  return bounds;
+               }
+            };
+         }
 
          @Override
-         public EbnfSuffix newEbnfSuffix(String text, String startToken, String endToken) {
-            final EbnfSuffix ebnfSuffix = super.newEbnfSuffix(text, startToken, endToken);
-            if (symbolStack.peek() instanceof BlockSuffix) {
+         public EbnfSuffixSymbol newEbnfSuffixSymbol(ANTLRv4ParserDomain.EbnfSuffix node) {
+            final EbnfSuffixSymbol ebnfSuffix = super.newEbnfSuffixSymbol(node);
+            if (symbolStack.peek() instanceof BlockSuffixSymbol) {
                final AntlrGrammarSymbol blockSuffix = symbolStack.pop();
-               symbolStack.peek().ebnf = ebnfSuffix.getStartToken();
+               symbolStack.peek().node.ebnf = ebnfSuffix.getStartToken();
                symbolStack.push(blockSuffix);
             } else {
-               symbolStack.peek().ebnf = ebnfSuffix.getStartToken();
+               symbolStack.peek().node.ebnf = ebnfSuffix.getStartToken();
             }
             return ebnfSuffix;
          }
 
          @Override
-         public ParserRuleSpec newParserRuleSpec(String text, String startToken, String endToken) {
-            final ParserRuleSpec parserRuleSpec = super.newParserRuleSpec(text, startToken, endToken);
-            ruleSpecs.put(parserRuleSpec.label, parserRuleSpec);
+         public ParserRuleSpecSymbol newParserRuleSpecSymbol(ANTLRv4ParserDomain.ParserRuleSpec node) {
+            final ParserRuleSpecSymbol parserRuleSpec = super.newParserRuleSpecSymbol(node);
+            ruleSpecs.put(parserRuleSpec.node.label, parserRuleSpec);
             return parserRuleSpec;
          }
 
          @Override
-         public LexerRuleSpec newLexerRuleSpec(String text, String startToken, String endToken) {
-            final LexerRuleSpec lexerRuleSpec = super.newLexerRuleSpec(text, startToken, endToken);
-            ruleSpecs.put(lexerRuleSpec.label, lexerRuleSpec);
+         public LexerRuleSpecSymbol newLexerRuleSpecSymbol(ANTLRv4ParserDomain.LexerRuleSpec node) {
+            final LexerRuleSpecSymbol lexerRuleSpec = super.newLexerRuleSpecSymbol(node);
+            ruleSpecs.put(lexerRuleSpec.node.label, lexerRuleSpec);
             return lexerRuleSpec;
          }
 
          @Override
-         public GrammarSpec newGrammarSpec(String value, String startToken, String endToken) {
-            return new GrammarSpec(value, startToken, endToken) {
-               @Override
-               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-
-                  double startX = bounds.getX();
-                  double startY = bounds.getY();
-
-                  double x = startX + bounds.getWidth();
-                  double y = startY;
-                  for (AntlrGrammarNode child : children) {
-                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
-
-                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
-
-                     y += rectangle.getHeight() + 15;
-
-                     double minX = Math.min(startX, rectangle.getX());
-                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
-                     double minY = Math.min(startY, rectangle.getY());
-                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
-                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
-                  }
-
-                  return bounds;
-               }
-
-               @Override
-               public Object toGrammar(AntlrGroup antlrGroup) {
-                  final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar().
-                        setName(label);
-
-                  for (AntlrGrammarNode ruleSpec : children) {
-                     grammarST.addRulesValue(ruleSpec.toGrammar(antlrGroup));
-                  }
-                  return grammarST.toString();
-               }
-            };
-         }
-
-         @Override
-         public Identifier newIdentifier(String text, String startToken, String endToken) {
-            return new Identifier(text, startToken, endToken) {
+         public IdentifierSymbol newIdentifierSymbol(ANTLRv4ParserDomain.Identifier node) {
+            return new IdentifierSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  return drawName(label, Color.BLUE, startX, startY, g, shapeMap);
+                  return drawName(node.label, Color.BLUE, startX, startY, g, shapeMap);
                }
             };
          }
 
          @Override
-         public Rules newRules(String value, String startToken, String endToken) {
-            return new Rules(value, startToken, endToken) {
+         public RulesSymbol newRulesSymbol(ANTLRv4ParserDomain.Rules node) {
+            return new RulesSymbol(node) {
                @Override
                public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
@@ -300,8 +243,7 @@ public class AntlrGrammarPanel extends JPanel {
 
                   double x = startX + bounds.getWidth();
                   double y = startY;
-                  for (AntlrGrammarNode child : children) {
-                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+                  for (AntlrGrammarSymbol symbol : children) {
                      final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
 
                      y += rectangle.getHeight() + 15;
@@ -319,67 +261,56 @@ public class AntlrGrammarPanel extends JPanel {
          }
 
          @Override
-         public RuleSpec newRuleSpec(String value, String startToken, String endToken) {
+         public RuleSpecSymbol newRuleSpecSymbol(ANTLRv4ParserDomain.RuleSpec node) {
 
-            final RuleSpec ruleSpec = new RuleSpec(value, startToken, endToken) {
+            final RuleSpecSymbol ruleSpec = new RuleSpecSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
-               }
-
-               @Override
-               public Object toGrammar(AntlrGroup antlrGroup) {
-                  final AntlrGroup.grammarParserRuleSpecST ruleSpecST = antlrGroup.newgrammarParserRuleSpec().
-                        setName(label);
-
-                  for (AntlrGrammarNode child : children)
-                     ruleSpecST.addAlternativesValue(child.toGrammar(antlrGroup));
-                  return ruleSpecST;
+                  return paintChildren(g, drawName(node.label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
                }
             };
 
             if (ruleSpec.getStartToken().equals("fragment"))
-               ruleSpec.label = ruleSpec.getStartToken() + " " + ruleSpec.text.substring("fragment".length(), ruleSpec.text.indexOf(":"));
+               ruleSpec.node.label = ruleSpec.getStartToken() + " " + ruleSpec.node.text.substring("fragment".length(), ruleSpec.node.text.indexOf(":"));
 
             return ruleSpec;
          }
 
          @Override
-         public Ruleref newRuleref(String text, String startToken, String endToken) {
-            return new Ruleref(text, startToken, endToken) {
+         public RulerefSymbol newRulerefSymbol(ANTLRv4ParserDomain.Ruleref node) {
+            return new RulerefSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
+                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(node.label);
                   if (level > 0 && referenceSymbol != null)
                      return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
-                  return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
+                  return paintChildren(g, drawName(node.label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
                }
             };
          }
 
          @Override
-         public Terminal newTerminal(String text, String startToken, String endToken) {
-            return new Terminal(text, startToken, endToken) {
+         public TerminalSymbol newTerminalSymbol(ANTLRv4ParserDomain.Terminal node) {
+            return new TerminalSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
+                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(node.label);
                   if (level > 0 && referenceSymbol != null)
                      return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
-                  return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+                  return paintChildren(g, drawName(node.label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
                }
             };
          }
 
          @Override
-         public LexerAtom newLexerAtom(String text, String startToken, String endToken) {
-            return new LexerAtom(text, startToken, endToken) {
+         public LexerAtomSymbol newLexerAtomSymbol(ANTLRv4ParserDomain.LexerAtom node) {
+            return new LexerAtomSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
-                  for (AntlrGrammarNode child : children) {
-                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
-                     if (symbol instanceof Terminal)
-                        return drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
+                  for (AntlrGrammarSymbol symbol : children) {
+                     if (symbol instanceof TerminalSymbol)
+                        return drawName(node.label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
 //                     tokenValues.add("Terminal " + label);
                   }
 
@@ -389,39 +320,39 @@ public class AntlrGrammarPanel extends JPanel {
          }
 
          @Override
-         public CharacterRange newCharacterRange(String text, String startToken, String endToken) {
-            return new CharacterRange(text, startToken, endToken) {
+         public CharacterRangeSymbol newCharacterRangeSymbol(ANTLRv4ParserDomain.CharacterRange node) {
+            return new CharacterRangeSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  return paintChildren(g, drawName(text, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+                  return paintChildren(g, drawName(node.text, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
                }
             };
          }
 
          @Override
-         public NotSet newNotSet(String text, String startToken, String endToken) {
-            return new NotSet(text, startToken, endToken) {
+         public NotSetSymbol newNotSetSymbol(ANTLRv4ParserDomain.NotSet node) {
+            return new NotSetSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+                  return paintChildren(g, drawName(node.label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
                }
             };
          }
 
          @Override
-         public SetElement newSetElement(String value, String startToken, String endToken) {
-            return new SetElement(value, startToken, endToken) {
+         public SetElementSymbol newSetElementSymbol(ANTLRv4ParserDomain.SetElement node) {
+            return new SetElementSymbol(node) {
                @Override
                public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
-                  final Rectangle.Double nameBox = drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
+                  final Rectangle.Double nameBox = drawName(node.label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
                   return paintChildren(g, nameBox, shapeMap, level);
                }
             };
          }
 
          @Override
-         public RuleAltList newRuleAltList(String value, String startToken, String endToken) {
-            return new RuleAltList(value, startToken, endToken) {
+         public RuleAltListSymbol newRuleAltListSymbol(ANTLRv4ParserDomain.RuleAltList node) {
+            return new RuleAltListSymbol(node) {
                @Override
                public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
@@ -434,8 +365,7 @@ public class AntlrGrammarPanel extends JPanel {
                   double y = startY;
 
                   final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-                  for (AntlrGrammarNode child : children) {
-                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+                  for (AntlrGrammarSymbol symbol : children) {
                      final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
                      childRect.add(rectangle);
                      y += rectangle.getHeight() + 15;
@@ -462,8 +392,8 @@ public class AntlrGrammarPanel extends JPanel {
          }
 
          @Override
-         public LexerAltList newLexerAltList(String value, String startToken, String endToken) {
-            return new LexerAltList(value, startToken, endToken) {
+         public LexerAltListSymbol newLexerAltListSymbol(ANTLRv4ParserDomain.LexerAltList node) {
+            return new LexerAltListSymbol(node) {
                @Override
                public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
 
@@ -476,8 +406,7 @@ public class AntlrGrammarPanel extends JPanel {
                   double y = startY;
 
                   final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
-                  for (AntlrGrammarNode child : children) {
-                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+                  for (AntlrGrammarSymbol symbol : children) {
                      final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
                      childRect.add(rectangle);
                      y += rectangle.getHeight() + 15;
@@ -501,8 +430,343 @@ public class AntlrGrammarPanel extends JPanel {
                }
             };
          }
-      };
+      }.visit(grammarModel.getGrammarSpec());
+
+      requestRepaint();
    }
+
+//   public AntlrGrammarPanel setModel(File file) throws IOException {
+//
+//      final File[] grammarFiles = FileUtil.list(file.getParent(), ".g4");
+//
+//      final GrammarTreePanel.GrammarTreeParserNodeListener grammarTreeParserNodeListener = grammarTree.newParserNodeListener(file.getName());
+//      final ANTLRv4ParserRenderer grammarModel = newParserRenderer();
+//
+//      for (File grammarFile : grammarFiles) {
+//         new ParseTreeWalker().walk(grammarModel.getParserListener(), new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
+//         new ParseTreeWalker().walk(grammarTreeParserNodeListener, new ANTLRv4Parser(new CommonTokenStream(new ANTLRv4Lexer(CharStreams.fromFileName(grammarFile.getAbsolutePath())))).grammarSpec());
+//      }
+//
+//      grammarTree.setModel(grammarTreeParserNodeListener);
+//
+//      this.model = grammarModel;
+//      requestRepaint();
+//
+//      return this;
+//   }
+//
+//   public AntlrGrammarPanel setModel(Node node) {
+//
+//      ruleSpecs.clear();
+//
+//      final GrammarTreePanel.GrammarTreeParserDomainVisitor grammarTreeParserDomainVisitor = grammarTree.newParserDomainVisitor();
+//      final ANTLRv4ParserRenderer grammarModel = newParserRenderer();
+//
+//      grammarModel.getDomainVisitor().visit(node);
+//      grammarTreeParserDomainVisitor.visit(node);
+//
+//      this.model = grammarModel;
+//      requestRepaint();
+//
+//      return this;
+//   }
+
+//   @NotNull
+//   private ANTLRv4ParserRenderer newParserRenderer() {
+//      return new ANTLRv4ParserRenderer() {
+//
+//         @Override
+//         public EbnfSuffix newEbnfSuffix(String text, String startToken, String endToken) {
+//            final EbnfSuffix ebnfSuffix = super.newEbnfSuffix(text, startToken, endToken);
+//            if (symbolStack.peek() instanceof BlockSuffix) {
+//               final AntlrGrammarSymbol blockSuffix = symbolStack.pop();
+//               symbolStack.peek().ebnf = ebnfSuffix.getStartToken();
+//               symbolStack.push(blockSuffix);
+//            } else {
+//               symbolStack.peek().ebnf = ebnfSuffix.getStartToken();
+//            }
+//            return ebnfSuffix;
+//         }
+//
+//         @Override
+//         public ParserRuleSpec newParserRuleSpec(String text, String startToken, String endToken) {
+//            final ParserRuleSpec parserRuleSpec = super.newParserRuleSpec(text, startToken, endToken);
+//            ruleSpecs.put(parserRuleSpec.label, parserRuleSpec);
+//            return parserRuleSpec;
+//         }
+//
+//         @Override
+//         public LexerRuleSpec newLexerRuleSpec(String text, String startToken, String endToken) {
+//            final LexerRuleSpec lexerRuleSpec = super.newLexerRuleSpec(text, startToken, endToken);
+//            ruleSpecs.put(lexerRuleSpec.label, lexerRuleSpec);
+//            return lexerRuleSpec;
+//         }
+//
+//         @Override
+//         public ANTLRv4ParserDomain.GrammarSpec newGrammarSpec(String value, String startToken, String endToken) {
+//            return new GrammarSpec(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//
+//                  double startX = bounds.getX();
+//                  double startY = bounds.getY();
+//
+//                  double x = startX + bounds.getWidth();
+//                  double y = startY;
+//                  for (AntlrGrammarNode child : children) {
+//                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//
+//                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
+//
+//                     y += rectangle.getHeight() + 15;
+//
+//                     double minX = Math.min(startX, rectangle.getX());
+//                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
+//                     double minY = Math.min(startY, rectangle.getY());
+//                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
+//                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+//                  }
+//
+//                  return bounds;
+//               }
+//
+//               @Override
+//               public Object toGrammar(AntlrGroup antlrGroup) {
+//                  final AntlrGroup.grammarST grammarST = antlrGroup.newgrammar().
+//                        setName(label);
+//
+//                  for (AntlrGrammarNode ruleSpec : children) {
+//                     grammarST.addRulesValue(ruleSpec.toGrammar(antlrGroup));
+//                  }
+//                  return grammarST.toString();
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public Identifier newIdentifier(String text, String startToken, String endToken) {
+//            return new Identifier(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  return drawName(label, Color.BLUE, startX, startY, g, shapeMap);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public Rules newRules(String value, String startToken, String endToken) {
+//            return new Rules(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//
+//                  double startX = bounds.getX();
+//                  double startY = bounds.getY();
+//
+//                  double x = startX + bounds.getWidth();
+//                  double y = startY;
+//                  for (AntlrGrammarNode child : children) {
+//                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
+//
+//                     y += rectangle.getHeight() + 15;
+//
+//                     double minX = Math.min(startX, rectangle.getX());
+//                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
+//                     double minY = Math.min(startY, rectangle.getY());
+//                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
+//                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+//                  }
+//
+//                  return bounds;
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public RuleSpec newRuleSpec(String value, String startToken, String endToken) {
+//
+//            final RuleSpec ruleSpec = new RuleSpec(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
+//               }
+//
+//               @Override
+//               public Object toGrammar(AntlrGroup antlrGroup) {
+//                  final AntlrGroup.grammarParserRuleSpecST ruleSpecST = antlrGroup.newgrammarParserRuleSpec().
+//                        setName(label);
+//
+//                  for (AntlrGrammarNode child : children)
+//                     ruleSpecST.addAlternativesValue(child.toGrammar(antlrGroup));
+//                  return ruleSpecST;
+//               }
+//            };
+//
+//            if (ruleSpec.getStartToken().equals("fragment"))
+//               ruleSpec.label = ruleSpec.getStartToken() + " " + ruleSpec.text.substring("fragment".length(), ruleSpec.text.indexOf(":"));
+//
+//            return ruleSpec;
+//         }
+//
+//         @Override
+//         public Ruleref newRuleref(String text, String startToken, String endToken) {
+//            return new Ruleref(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
+//                  if (level > 0 && referenceSymbol != null)
+//                     return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
+//                  return paintChildren(g, drawName(label, Color.decode("#e34a33"), startX, startY, g, shapeMap), shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public Terminal newTerminal(String text, String startToken, String endToken) {
+//            return new Terminal(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  final AntlrGrammarSymbol referenceSymbol = ruleSpecs.get(label);
+//                  if (level > 0 && referenceSymbol != null)
+//                     return referenceSymbol.paint(startX, startY, g, shapeMap, level - 1);
+//                  return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public LexerAtom newLexerAtom(String text, String startToken, String endToken) {
+//            return new LexerAtom(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//
+//                  for (AntlrGrammarNode child : children) {
+//                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//                     if (symbol instanceof Terminal)
+//                        return drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
+////                     tokenValues.add("Terminal " + label);
+//                  }
+//
+//                  return paintChildren(g, new Rectangle2D.Double(startX, startY, 0, 0), shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public CharacterRange newCharacterRange(String text, String startToken, String endToken) {
+//            return new CharacterRange(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  return paintChildren(g, drawName(text, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public NotSet newNotSet(String text, String startToken, String endToken) {
+//            return new NotSet(text, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  return paintChildren(g, drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap), shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public SetElement newSetElement(String value, String startToken, String endToken) {
+//            return new SetElement(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                  final Rectangle.Double nameBox = drawName(label, Color.decode("#33a02c"), startX, startY, g, shapeMap);
+//                  return paintChildren(g, nameBox, shapeMap, level);
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public RuleAltList newRuleAltList(String value, String startToken, String endToken) {
+//            return new RuleAltList(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//
+//                  double startX = bounds.getX();
+//                  double startY = bounds.getY();
+//
+//                  double lineStart = startX + bounds.getWidth();
+//
+//                  double x = startX + bounds.getWidth();
+//                  double y = startY;
+//
+//                  final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
+//                  for (AntlrGrammarNode child : children) {
+//                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
+//                     childRect.add(rectangle);
+//                     y += rectangle.getHeight() + 15;
+//
+//                     double minX = Math.min(startX, rectangle.getX());
+//                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
+//                     double minY = Math.min(startY, rectangle.getY());
+//                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
+//                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+//                  }
+//
+//                  if (childRect.size() > 1) {
+//                     g.setColor(Color.decode("#2b8cbe"));
+//                     g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
+//                     g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
+//                     // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
+//                     final int offset = 10;
+//                     for (Rectangle2D.Double rectangle : childRect)
+//                        g.drawLine((int) (rectangle.getX() + rectangle.getWidth()), (int) rectangle.getY() + offset, (int) (bounds.getX() + bounds.getWidth()), (int) rectangle.getY() + offset);
+//                  }
+//                  return bounds;
+//               }
+//            };
+//         }
+//
+//         @Override
+//         public LexerAltList newLexerAltList(String value, String startToken, String endToken) {
+//            return new LexerAltList(value, startToken, endToken) {
+//               @Override
+//               public Rectangle.Double paintChildren(Graphics2D g, Rectangle.Double bounds, java.util.Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//
+//                  double startX = bounds.getX();
+//                  double startY = bounds.getY();
+//
+//                  double lineStart = startX + bounds.getWidth();
+//
+//                  double x = startX + bounds.getWidth();
+//                  double y = startY;
+//
+//                  final Set<Rectangle2D.Double> childRect = new LinkedHashSet<>();
+//                  for (AntlrGrammarNode child : children) {
+//                     AntlrGrammarSymbol symbol = (AntlrGrammarSymbol) child;
+//                     final Rectangle.Double rectangle = symbol.paint(x, y, g, shapeMap, level);
+//                     childRect.add(rectangle);
+//                     y += rectangle.getHeight() + 15;
+//
+//                     double minX = Math.min(startX, rectangle.getX());
+//                     double maxX = Math.max(bounds.getX() + bounds.getWidth(), rectangle.getX() + rectangle.getWidth());
+//                     double minY = Math.min(startY, rectangle.getY());
+//                     double maxY = Math.max(bounds.getY() + bounds.getHeight(), rectangle.getY() + rectangle.getHeight());
+//                     bounds = new Rectangle.Double((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+//                  }
+//                  if (childRect.size() > 1) {
+//                     g.setColor(Color.decode("#2b8cbe"));
+//                     g.drawLine((int) lineStart, (int) bounds.getY() + 10, (int) lineStart, (int) (startY + bounds.getHeight() - 15));
+//                     g.drawLine((int) (bounds.getX() + bounds.getWidth()), (int) (startY + bounds.getHeight() - 15), (int) (bounds.getX() + bounds.getWidth()), (int) bounds.getY() + 10);
+//                     // for each symbol- extend the line to (bounds.getX() + bounds.getWidth())
+//                     final int offset = 10;
+//                     for (Rectangle2D.Double rectangle : childRect)
+//                        g.drawLine((int) (rectangle.getX() + rectangle.getWidth()), (int) rectangle.getY() + offset, (int) (bounds.getX() + bounds.getWidth()), (int) rectangle.getY() + offset);
+//                  }
+//                  return bounds;
+//               }
+//            };
+//         }
+//      };
+//   }
 
    private final class BNFPanel extends JPanel {
 
@@ -518,20 +782,37 @@ public class AntlrGrammarPanel extends JPanel {
 
          if (model == null || model.getGrammarSpec() == null) return;
 
-         final ANTLRv4ParserRenderer.GrammarSpec grammarSpec = model.getGrammarSpec();
-         final Rectangle2D.Double shape = grammarSpec.paint(10, 10, (Graphics2D) g, shapeMap, level);
-         if (shape != null) {
-            shapeMap.put(grammarSpec, shape);
+         final ANTLRv4ParserDomain.GrammarSpec grammarSpec = model.getGrammarSpec();
+         ANTLRv4ParserDomain.ANTLRv4Visitor visitor = new ANTLRv4ParserDomain.ANTLRv4Visitor() {
 
-            if (grammarSpecSize != null && ((int) grammarSpecSize.getWidth() == (int) (shape.width + 50)) && ((int) grammarSpecSize.getHeight() == (int) (shape.height + 50)))
-               return;
+//            @Override
+//            public void visitGrammarSpec(ANTLRv4ParserDomain.GrammarSpec node) {
+//               new AntlrGrammarSymbol() {
+//                  @Override
+//                  public Rectangle.Double paint(double startX, double startY, Graphics2D g, Map<AntlrGrammarSymbol, Rectangle2D> shapeMap, int level) {
+//                     return super.paint(startX, startY, g, shapeMap, level);
+//                  }
+//               }
+//
+//
+//            }
+         };
 
-            grammarSpecSize = new Dimension((int) shape.width + 50, (int) shape.height + 50);
-            setSize(grammarSpecSize);
-            setMinimumSize(grammarSpecSize);
-            setMaximumSize(grammarSpecSize);
-            setPreferredSize(grammarSpecSize);
-         }
+//         grammarSpec.visit();
+
+//         final Rectangle2D.Double shape = grammarSpec.paint(10, 10, (Graphics2D) g, shapeMap, level);
+//         if (shape != null) {
+//            shapeMap.put(grammarSpec, shape);
+//
+//            if (grammarSpecSize != null && ((int) grammarSpecSize.getWidth() == (int) (shape.width + 50)) && ((int) grammarSpecSize.getHeight() == (int) (shape.height + 50)))
+//               return;
+//
+//            grammarSpecSize = new Dimension((int) shape.width + 50, (int) shape.height + 50);
+//            setSize(grammarSpecSize);
+//            setMinimumSize(grammarSpecSize);
+//            setMaximumSize(grammarSpecSize);
+//            setPreferredSize(grammarSpecSize);
+//         }
       }
    }
 

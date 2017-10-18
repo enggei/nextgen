@@ -1,6 +1,5 @@
 package com.generator.generators.stringtemplate.domain;
 
-import com.generator.util.FileUtil;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STErrorListener;
 import org.stringtemplate.v4.STGroupFile;
@@ -25,12 +24,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 	private final Map<String, TemplateStatement> statements = new TreeMap<>();
 	private String delimiter = "~";
 
-	public TemplateFile(File file) {
-		super(TEMPLATEFILE);
-		this.file = file;
-	}
-
-	public TemplateFile(UUID uuid, File file, Map<String, TemplateImport> imports, Map<String, TemplateStatement> statements) {
+	private TemplateFile(UUID uuid, File file, Map<String, TemplateImport> imports, Map<String, TemplateStatement> statements) {
 		super(uuid, TEMPLATEFILE);
 		this.file = file;
 		this.imports.putAll(imports);
@@ -80,41 +74,12 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 		return new ArrayList<>(imports.values());
 	}
 
-	public void addImport(TemplateImport templateImport) {
-		this.imports.put(templateImport.getName(), templateImport);
-	}
-
-//   public void removeImport(String name) {
-//      this.imports.remove(name);
-//   }
-
 	public List<TemplateStatement> getStatements() {
 		return new ArrayList<>(statements.values());
 	}
 
 	public TemplateStatement getTemplateStatement(String name) {
 		return statements.get(name);
-	}
-
-	public void addStatement(TemplateStatement statement) {
-		this.statements.remove(statement.getName());
-		this.statements.put(statement.getName(), statement);
-	}
-
-	public void removeStatement(String name) {
-
-		final TemplateStatement remove = this.statements.get(name);
-		if (remove == null) return;
-
-		// don't delete if other statements are referencing the statement:
-		for (TemplateStatement other : statements.values())
-			if (other.getUuid().equals(remove.getUuid())) continue;
-
-		this.statements.remove(name);
-	}
-
-	public void save() {
-		FileUtil.write(toString(), this.file);
 	}
 
 	@Override
@@ -132,20 +97,6 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 		return content.toString();
 	}
 
-	public Set<TemplateStatement> getReferencedTemplates(TemplateStatement statement) {
-		final Set<TemplateStatement> list = new LinkedHashSet<>();
-		for (TemplateStatement other : this.statements.values()) {
-			if (other.equals(statement)) continue;
-		}
-		return list;
-	}
-
-	public TemplateStatement getTemplateStatement(UUID uuid) {
-		for (TemplateStatement statement : statements.values())
-			if (uuid.equals(statement.getUuid())) return statement;
-		return null;
-	}
-
 	public String render(Statement statement) {
 		return new STGenerator<>(this.file).generate(statement);
 	}
@@ -161,33 +112,27 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 		private final STGroupFile groupFile;
 		private final STErrorListener errorListener;
 
-		public STGenerator(STGroupFile groupFile) {
+		STGenerator(STGroupFile groupFile) {
 			this.groupFile = groupFile;
 			this.errorListener = null;
 			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
 		}
 
-		public STGenerator(STGroupFile groupFile, STErrorListener errorListener) {
-			this.groupFile = groupFile;
-			this.groupFile.setListener(this.errorListener = errorListener);
-			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
-		}
-
-		public STGenerator(String groupFile) {
+		STGenerator(String groupFile) {
 			this(getTemplateGroup(groupFile));
 		}
 
-		public STGenerator(File templateFile) {
+		STGenerator(File templateFile) {
 			this(templateFile.getAbsolutePath());
 		}
 
-		public static STGroupFile getTemplateGroup(String template) {
+		static STGroupFile getTemplateGroup(String template) {
 			final STGroupFile groupFile = new STGroupFile(template);
 			groupFile.registerRenderer(String.class, defaultAttributeRenderer);
 			return groupFile;
 		}
 
-		public String generate(T statement) {
+		String generate(T statement) {
 			return render(statement);
 		}
 
@@ -200,7 +145,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 			return createSTFrom(statement, groupFile);
 		}
 
-		public ST createSTFrom(Statement statement, STGroupFile groupFile) {
+		ST createSTFrom(Statement statement, STGroupFile groupFile) {
 			final ST template = groupFile.getInstanceOf(statement.getStatementName());
 			if (template == null) {
 				final IllegalArgumentException cause = new IllegalArgumentException("template '" + statement.getStatementName() + "' is not found in " + groupFile.fileName);
@@ -215,7 +160,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 			return template;
 		}
 
-		public void fill(ST template, List<Property> properties, String propertyName, STGroupFile groupFile) {
+		void fill(ST template, List<Property> properties, String propertyName, STGroupFile groupFile) {
 
 			if (properties == null) return;
 			for (Property property : properties) {
@@ -268,7 +213,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 			private final List<Map<String, String>> values = new LinkedList<>();
 			private int index = 0;
 
-			public KeyedValue(String name) {
+			KeyedValue(String name) {
 				this.name = name;
 			}
 
@@ -282,7 +227,7 @@ public class TemplateFile extends BaseEntity<TemplateEntities> {
 				values.get(index).put(key, value.toString());
 			}
 
-			public void addToTemplate(ST template) {
+			void addToTemplate(ST template) {
 				for (Map<String, String> value : values) {
 					boolean first = true;
 					final StringBuilder keyName = new StringBuilder(name + ".{");

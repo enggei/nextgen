@@ -2,6 +2,7 @@ package com.generator.generators.stringtemplate.domain;
 
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -178,6 +179,4 @@ public class KeyValueListProperty extends Property {
 		out.append("]");
 		return out.toString().trim();
 	}
-
-
 }

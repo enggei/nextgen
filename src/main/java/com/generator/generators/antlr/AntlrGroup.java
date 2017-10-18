@@ -719,13 +719,13 @@ public final class AntlrGroup {
       	return (String) this._name;
       }
 
-      public AntlrBnfRendererST addNodesValue(Object declaration_, Object name_) {
+      public AntlrBnfRendererST addNodesValue(Object name_, Object declaration_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
       	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("declaration", (declaration_ == null || declaration_.toString().length() == 0) ? null : declaration_);
       	this._nodes.add(map);
 
-         template.addAggr("nodes.{declaration, name}", map.get("declaration"), map.get("name"));
+         template.addAggr("nodes.{name, declaration}", map.get("name"), map.get("declaration"));
          return this;
       }
 
@@ -1195,10 +1195,25 @@ public final class AntlrGroup {
 		"		return grammarStack.isEmpty() ? null : (GrammarSpec) grammarStack.peek();\n" + 
 		"	}\n" + 
 		"\n" + 
+		"	public static abstract class ANTLRv4Visitor {\n" + 
+		"\n" + 
+		"		public void visit(AntlrGrammarNode node) {\n" + 
+		"			switch(node.type) {\n" + 
+		"				~nodes:{it|case \"~it.name~\": \n" + 
+		"	visit~it.name~((~it.name~) node); \n" + 
+		"	break;};separator=\"\\n\"~\n" + 
+		"			}\n" + 
+		"		}\n" + 
+		"		\n" + 
+		"		~nodes:{it|public void visit~it.name~(~it.name~ node) {\n" + 
+		"	for (AntlrGrammarNode child : node.children) visit(child);\n" + 
+		"~eom()~};separator=\"\\n\\n\"~\n" + 
+		"	}\n" + 
+		"\n" + 
 		"	public void onNode(AntlrGrammarNode grammarNode) { \n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public ANTLRv4ParserDomainVisitor getDomainVisitor() {\n" + 
+		"	protected ANTLRv4ParserDomainVisitor getANTLRv4ParserDomainVisitor() {\n" + 
 		"   	return new ANTLRv4ParserDomainVisitor() {\n" + 
 		"	~nodes:{it| 	\n" + 
 		"		@Override\n" + 
@@ -1214,11 +1229,7 @@ public final class AntlrGroup {
 		"		};\n" + 
 		"	}\n" + 
 		"\n" + 
-		"	public ANTLRv4ParserNodeListener getParserListener() {\n" + 
-		"		return getParserListener(false);\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	public ANTLRv4ParserNodeListener getParserListener(boolean debug) {\n" + 
+		"	public ANTLRv4ParserNodeListener getANTLRv4ParserNodeListener(boolean debug) {\n" + 
 		"		return new ANTLRv4ParserNodeListener(debug) {\n" + 
 		"\n" + 
 		"	~nodes:{it|\n" + 
@@ -1242,18 +1253,18 @@ public final class AntlrGroup {
 		"\n" + 
 		"	~nodes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 		"}>>\n")
-			.append("AntlrSymbolNode(children,name) ::= <<public ~name~ new~name;format=\"capitalize\"~(String text, String startToken, String endToken) {\n" + 
-		"	return new ~name~(text, startToken, endToken);\n" + 
+			.append("AntlrSymbolNode(children,name) ::= <<public ~name~Symbol new~name;format=\"capitalize\"~Symbol(ANTLRv4ParserDomain.~name~ node) {\n" + 
+		"	return new ~name~Symbol(node);\n" + 
 		"}\n" + 
 		"\n" + 
-		"public class ~name~ extends AntlrGrammarSymbol {\n" + 
+		"public class ~name~Symbol extends AntlrGrammarSymbol {\n" + 
 		"\n" + 
-		"	public ~name~(String text, String startToken, String endToken) {\n" + 
-		"		super(\"~name~\", startToken, text, startToken, endToken);\n" + 
+		"	public ~name~Symbol(ANTLRv4ParserDomain.~name~ node) {\n" + 
+		"		super(node);\n" + 
 		"	}\n" + 
 		"~children:{it|\n" + 
-		"	public AntlrGrammarSymbol add~it.name;format=\"capitalize\"~(~it.name~ child) { return (AntlrGrammarSymbol) super.addChild(child); ~eom()~\n" + 
-		"	public AntlrGrammarSymbol set~it.name;format=\"capitalize\"~(~it.name~ child) { return (AntlrGrammarSymbol) super.setChild(child); ~eom()~\n" + 
+		"//	public AntlrGrammarSymbol add~it.name;format=\"capitalize\"~(~it.name~Symbol child) { return (AntlrGrammarSymbol) super.addChild(child); ~eom()~\n" + 
+		"//	public AntlrGrammarSymbol set~it.name;format=\"capitalize\"~(~it.name~Symbol child) { return (AntlrGrammarSymbol) super.setChild(child); ~eom()~\n" + 
 		"};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	@Override\n" + 
@@ -1263,34 +1274,14 @@ public final class AntlrGroup {
 		"	\n" + 
 		"	@Override\n" + 
 		"	public void addActionsTo(JMenu menu, PropertyChangeSupport modelChangeSupport) {\n" + 
-		"\n" + 
-		"~children:{it|\n" + 
-		"		menu.add(new AbstractAction(\"Add ~it.name~\") {\n" + 
-		"			@Override\n" + 
-		"			public void actionPerformed(ActionEvent e) {\n" + 
-		"				final ~it.name~ child = new~it.name;format=\"capitalize\"~(\"\", \"\", \"\");\n" + 
-		"				add~it.name;format=\"capitalize\"~(child);\n" + 
-		"				modelChangeSupport.firePropertyChange(\"~it.name~\", \"Add\", child);\n" + 
-		"			~eom()~\n" + 
-		"		~eom()~);\n" + 
-		"};separator=\"\\n\"~\n" + 
-		"\n" + 
 		"		super.addActionsTo(menu, modelChangeSupport);\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	@Override\n" + 
-		"	public Object toGrammar(AntlrGroup antlrGroup) {\n" + 
-		"		return super.toGrammar(antlrGroup);\n" + 
 		"	}\n" + 
 		"}>>\n")
 			.append("grammarBlock(ebnfSuffix,elements) ::= <<(~elements:{it|~it~};separator=\" \"~)~ebnfSuffix~>>\n")
 			.append("AntlrBnfRenderer(name,nodes,package) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"import com.generator.generators.antlr.AntlrGroup;\n" + 
-		"import com.generator.generators.antlr.parser.ANTLRv4Parser;\n" + 
-		"import com.generator.generators.antlr.parser.ANTLRv4ParserDomainVisitor;\n" + 
-		"import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;\n" + 
-		"import com.generator.util.NeoUtil;\n" + 
+		"import com.generator.generators.antlr.parser.ANTLRv4ParserDomain;\n" + 
 		"\n" + 
 		"import javax.swing.*;\n" + 
 		"import java.awt.*;\n" + 
@@ -1298,49 +1289,20 @@ public final class AntlrGroup {
 		"import java.beans.PropertyChangeSupport;\n" + 
 		"import java.util.Stack;\n" + 
 		"\n" + 
-		"public class ~name~ { \n" + 
+		"public class ~name~ extends ANTLRv4ParserDomain.ANTLRv4Visitor { \n" + 
 		"	\n" + 
 		"	protected final Stack<AntlrGrammarSymbol> symbolStack = new Stack<>();\n" + 
-		"\n" + 
-		"   public GrammarSpec getGrammarSpec() {\n" + 
-		"		return symbolStack.isEmpty() ? null : (GrammarSpec) symbolStack.peek();\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	public ANTLRv4ParserDomainVisitor getDomainVisitor() {\n" + 
-		"   	return new ANTLRv4ParserDomainVisitor() {\n" + 
-		"	~nodes:{it| 	\n" + 
-		"		@Override\n" + 
-		"		public void visit~it.name~(org.neo4j.graphdb.Node node) { \n" + 
-		"			final ~it.name~ symbol = new~it.name~(NeoUtil.getString(node, \"text\"), NeoUtil.getString(node, \"startToken\"), NeoUtil.getString(node, \"endToken\"));\n" + 
-		"	 		if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
-		"	 		symbolStack.push(symbol);\n" + 
-		"	 		super.visit~it.name~(node);\n" + 
-		"	 		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
-		"		~eom()~ };\n" + 
-		"		separator=\"\\n\"~\n" + 
-		"		};\n" + 
-		"	}\n" + 
-		"\n" + 
-		"	public ANTLRv4ParserNodeListener getParserListener() {\n" + 
-		"		return new ANTLRv4ParserNodeListener() {\n" + 
-		"\n" + 
+		"	\n" + 
 		"	~nodes:{it|\n" + 
-		"		@Override\n" + 
-		"		public void enter~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
-		"			super.enter~it.name~(arg);\n" + 
-		"			final ~it.name~ symbol = new~it.name~(arg.getText(), arg.getStart().getText(), arg.getStop().getText());\n" + 
-		"	      if (!symbolStack.isEmpty()) symbolStack.peek().addChild(symbol);\n" + 
-		"	      symbolStack.push(symbol);\n" + 
-		"		~eom()~\n" + 
-		"\n" + 
-		"		@Override\n" + 
-		"		public void exit~it.name~(ANTLRv4Parser.~it.name~Context arg) {\n" + 
-		"			super.exit~it.name~(arg);\n" + 
-		"			if (symbolStack.size() > 1) symbolStack.pop();\n" + 
-		"		~eom()~\n" + 
-		"		};separator=\"\\n\"~\n" + 
-		"		};\n" + 
-		"	}\n" + 
+		"	@Override\n" + 
+		"	public void visit~it.name~(ANTLRv4ParserDomain.~it.name~ node) {\n" + 
+		"		final ~it.name~Symbol symbol = new~it.name~Symbol(node);\n" + 
+		"		if (symbolStack.isEmpty()) symbolStack.peek().children.add(symbol);\n" + 
+		"		symbolStack.push(symbol);\n" + 
+		"		super.visit~it.name~(node);\n" + 
+		"		if (symbolStack.size() > 1) symbolStack.pop();\n" + 
+		"	~eom()~\n" + 
+		"	};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~nodes:{it|~it.declaration~};separator=\"\\n\\n\"~\n" + 
 		"}>>\n")

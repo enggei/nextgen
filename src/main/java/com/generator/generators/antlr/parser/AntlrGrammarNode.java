@@ -60,13 +60,6 @@ public class AntlrGrammarNode {
       return this;
    }
 
-   protected void visit(AntlrGrammarNode grammarNode, String delim) {
-      System.out.println(delim + grammarNode);
-      for (AntlrGrammarNode child : grammarNode.children) {
-         visit(child, delim + "\t");
-      }
-   }
-
    @Override
    public String toString() {
       return type;

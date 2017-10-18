@@ -3,7 +3,7 @@ package com.generator.generators.antlr;
 import com.generator.app.App;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.antlr.bnf.ANTLRv4ParserRenderer;
+import com.generator.generators.antlr.bnf.AntlrGrammarModel;
 import com.generator.generators.antlr.bnf.AntlrGrammarPanel;
 import com.generator.generators.antlr.parser.*;
 import com.generator.util.SwingUtil;
@@ -72,7 +72,7 @@ public class ANTLRPlugin extends Plugin {
                @Override
                public void verifyAndCommit() throws Exception {
 
-                  final ANTLRv4ParserRenderer.GrammarSpec grammarSpec = grammarPanel.getGrammarSpec();
+                  final ANTLRv4ParserDomain.GrammarSpec grammarSpec = grammarPanel.getGrammarSpec();
                   if(grammarSpec==null) return;
 
                   fireNodesLoaded(visit(grammarSpec));
@@ -96,8 +96,11 @@ public class ANTLRPlugin extends Plugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               final AntlrGrammarPanel grammarPanel = new AntlrGrammarPanel().setModel(neoNode.getNode());
-               SwingUtil.showDialog(grammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
+               final AntlrGrammarModel model = new AntlrGrammarModel(neoNode.getNode());
+               final AntlrGrammarPanel antlrGrammarPanel = new AntlrGrammarPanel();
+               antlrGrammarPanel.setModel(model);
+
+               SwingUtil.showDialog(antlrGrammarPanel, app, "Grammar Panel", new SwingUtil.ConfirmAction() {
                   @Override
                   public void verifyAndCommit() throws Exception {
                      System.out.println("save grammar spec, or print (should already be saved)");
