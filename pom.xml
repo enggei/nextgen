@@ -230,6 +230,14 @@
             <version>1.8.0</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.googlecode.java-diff-utils/diffutils -->
+        <dependency>
+            <groupId>com.googlecode.java-diff-utils</groupId>
+            <artifactId>diffutils</artifactId>
+            <version>1.3.0</version>
+        </dependency>
+
+
 
     </dependencies>
 

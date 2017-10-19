@@ -1,6 +1,9 @@
 package com.generator.generators.easyFlow;
 
-import com.generator.app.*;
+import com.generator.app.App;
+import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
+import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;

@@ -19,6 +19,6 @@ public class Tests {
    @Test
    public void testClojure() throws IOException {
       final ClojureNodeListener listener = new ClojureNodeListener(true);
-      new ParseTreeWalker().walk(listener, new ClojureParser(new CommonTokenStream(new ClojureLexer(CharStreams.fromFileName(ProjectConstants.MAIN_ROOT + "/com/generator/generators/clojure/test.clj")))).file());
+      new ParseTreeWalker().walk(listener, new ClojureParser(new CommonTokenStream(new ClojureLexer(CharStreams.fromFileName(ProjectConstants.GENERATORS_ROOT + "clojure/test.clj")))).file());
    }
 }

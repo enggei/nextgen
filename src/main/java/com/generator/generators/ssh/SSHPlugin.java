@@ -15,10 +15,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
-import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -276,6 +273,24 @@ public class SSHPlugin extends Plugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                connectToHost(neoNode.getNode());
+            }
+         });
+
+         pop.add(new App.TransactionAction("Open Shell", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final Node sessionNode = connectToHost(neoNode.getNode());
+
+               final Session session = sessions.get(uuidOf(sessionNode));
+               final Channel channel = session.openChannel("shell");
+
+               // passing in session-node to retrieve host and host-commands:
+               final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
+
+               final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
+               relate(sessionNode, newNode, Relations.CHANNELS);
+               channels.put(uuidOf(newNode), activeChannel);
+               fireNodesLoaded(newNode);
             }
          });
 
@@ -613,7 +628,6 @@ public class SSHPlugin extends Plugin {
 //               }
 //            }
 //         });
-
 
 
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
@@ -1353,19 +1367,20 @@ public class SSHPlugin extends Plugin {
       }
    }
 
-   private void connectToHost(Node hostNode) {
+   private Node connectToHost(Node hostNode) {
       try {
-
          final Session session = getSession(hostNode);
-
          final Node sessionNode = getGraph().newNode(Entities.Session);
+         sessions.put(uuidOf(sessionNode), session);
          relate(hostNode, sessionNode, Relations.SESSIONS);
          fireNodesLoaded(sessionNode);
-         sessions.put(uuidOf(sessionNode), session);
+
+         return sessionNode;
 
       } catch (Throwable t) {
          SwingUtil.showExceptionNoStack(app, t);
       }
+      return null;
    }
 
    @NotNull
