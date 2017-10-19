@@ -4,7 +4,7 @@ import com.generator.app.*;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;

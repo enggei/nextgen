@@ -1,7 +1,7 @@
 package com.generator.generators.easyFlow;
 
 import com.generator.ProjectConstants;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import org.junit.Test;
 
 /**

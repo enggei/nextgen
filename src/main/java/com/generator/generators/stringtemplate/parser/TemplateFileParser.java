@@ -20,17 +20,11 @@ import java.util.*;
  */
 public class TemplateFileParser {
 
-   public static TemplateFile parseStatement(String delimiters, String content, STErrorListener errorListener) throws IOException {
-      final File tempFile = File.createTempFile("name", ".stg");
-      FileUtil.write("delimiters \"" + delimiters + "\", \"" + delimiters + "\"\n\n" + content, tempFile);
-      return parse(tempFile, errorListener);
-   }
-
    public static TemplateStatement parse(String delimiters, String name, String content, STErrorListener errorListener) throws IOException {
       return parseToFile(delimiters, name, content, errorListener).getTemplateStatement(name);
    }
 
-   public static TemplateFile parseToFile(String delimiters, String name, String content, STErrorListener errorListener) throws IOException {
+   private static TemplateFile parseToFile(String delimiters, String name, String content, STErrorListener errorListener) throws IOException {
       final File tempFile = File.createTempFile("name", ".stg");
       FileUtil.write("delimiters \"" + delimiters + "\", \"" + delimiters + "\"\n\n" + name + "() ::= <<" + content + " >>", tempFile);
       return parse(tempFile, errorListener);
@@ -51,7 +45,7 @@ public class TemplateFileParser {
       final Map<String, TemplateFile> imports = new LinkedHashMap<>();
       final Map<String, TemplateImport> importNames = new LinkedHashMap<>();
       for (STGroup stGroup : group.getImportedGroups()) {
-         imports.put(stGroup.getName(), new TemplateFileParser().parse(new File(file.getParent(), stGroup.getName() + (stGroup.getName().toLowerCase().endsWith(".stg") ? "" : ".stg")), errorListener));
+         imports.put(stGroup.getName(), TemplateFileParser.parse(new File(file.getParent(), stGroup.getName() + (stGroup.getName().toLowerCase().endsWith(".stg") ? "" : ".stg")), errorListener));
          importNames.put(stGroup.getName(), new TemplateImport(stGroup.getName()));
       }
 
@@ -73,7 +67,7 @@ public class TemplateFileParser {
          statements.put(parameterBuilder.getName(), parameterBuilder.processMethodCalls(builderMap, imports).toStatement());
       }
 
-      return new TemplateFile(UUID.randomUUID(), group.delimiterStartChar, file, importNames, statements);
+      return new TemplateFile(file, importNames, statements);
    }
 
    private static void parse(Tree ast, Expression.ParameterBuilder parameterBuilder) {

@@ -5,7 +5,7 @@ import com.generator.generators.antlr.parser.ANTLRv4Lexer;
 import com.generator.generators.antlr.parser.ANTLRv4Parser;
 import com.generator.generators.antlr.parser.ANTLRv4ParserNodeListener;
 import com.generator.generators.stringtemplate.TemplateGroupGroup;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

@@ -1,23 +1,20 @@
-package com.generator.generators.stringtemplate.domain;
+package com.generator.generators.stringtemplate;
 
 import com.generator.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
 
-import static com.generator.generators.stringtemplate.domain.TemplateEntities.GENERATEDFILE;
-
 /**
  * User: geirove
  * Date: 07.05.13
  * todo: refactor this to a general class, on same level as STGenerator
  */
-public class GeneratedFile extends BaseEntity<TemplateEntities> {
+public class GeneratedFile {
 
 	private final File file;
 
 	public GeneratedFile(File file) {
-		super(GENERATEDFILE);
 		this.file = file;
 	}
 

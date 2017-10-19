@@ -1,57 +1,14 @@
 package com.generator.generators.antlr;
 
-import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
-import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
-import com.generator.generators.clojure.parser.ClojureListener;
-import com.generator.generators.clojure.parser.ClojureVisitor;
-import com.generator.generators.cpp.parser.CPP14Listener;
-import com.generator.generators.cpp.parser.CPP14Visitor;
-import com.generator.generators.css.parser.css3Listener;
-import com.generator.generators.css.parser.css3Visitor;
-import com.generator.generators.csv.parser.CSVListener;
-import com.generator.generators.csv.parser.CSVVisitor;
-import com.generator.generators.cypher.parser.CypherListener;
-import com.generator.generators.cypher.parser.CypherVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
-import com.generator.generators.ecmascript.parser.ECMAScriptListener;
-import com.generator.generators.ecmascript.parser.ECMAScriptVisitor;
-import com.generator.generators.go.parser.GolangListener;
-import com.generator.generators.go.parser.GolangVisitor;
-import com.generator.generators.html5.parser.HTMLParserListener;
-import com.generator.generators.html5.parser.HTMLParserVisitor;
 import com.generator.generators.java.BaseClassVisitor;
-import com.generator.generators.java.parser.JavaParserListener;
-import com.generator.generators.java.parser.JavaParserVisitor;
-import com.generator.generators.json.parser.JSONListener;
-import com.generator.generators.json.parser.JSONVisitor;
-import com.generator.generators.lua.parser.LuaListener;
-import com.generator.generators.lua.parser.LuaVisitor;
-import com.generator.generators.mysql.parser.MySqlParserListener;
-import com.generator.generators.mysql.parser.MySqlParserVisitor;
-import com.generator.generators.properties.parser.propertiesListener;
-import com.generator.generators.properties.parser.propertiesVisitor;
-import com.generator.generators.protobuf.parser.ProtobufListener;
-import com.generator.generators.protobuf.parser.ProtobufVisitor;
 //import com.generator.generators.scala.parser.ScalaListener;
 //import com.generator.generators.scala.parser.ScalaVisitor;
-import com.generator.generators.stacktrace.parser.StackTraceListener;
-import com.generator.generators.stacktrace.parser.StackTraceVisitor;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
-import com.generator.generators.stringtemplate.parserg4.STGParserListener;
-import com.generator.generators.stringtemplate.parserg4.STGParserVisitor;
-import com.generator.generators.stringtemplate.parserg4.STParserListener;
-import com.generator.generators.stringtemplate.parserg4.STParserVisitor;
-import com.generator.generators.url.parser.urlListener;
-import com.generator.generators.url.parser.urlVisitor;
-import com.generator.generators.xml.parser.XMLParserListener;
-import com.generator.generators.xml.parser.XMLParserVisitor;
+import com.generator.generators.stringtemplate.GeneratedFile;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-
-import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
-import static com.generator.ProjectConstants.MAIN_ROOT;
 
 /**
  * Created 08.09.17.

@@ -7,7 +7,7 @@ import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;

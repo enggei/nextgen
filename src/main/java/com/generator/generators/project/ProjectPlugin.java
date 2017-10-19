@@ -9,7 +9,7 @@ import com.generator.generators.mobx.MobXAppVisitor;
 import com.generator.generators.mobx.MobXModelVisitor;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
-import com.generator.generators.stringtemplate.domain.GeneratedFile;
+import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;

@@ -226,8 +226,6 @@ public class StringTemplatePlugin extends Plugin {
    private static DomainPlugin.RelationCardinality getCardinalityFor(TemplateEntities domainEntityType) {
       switch (domainEntityType) {
          case STRINGPROPERTY:
-         case BOOLEANPROPERTY:
-         case STATEMENTPROPERTY:
             return DomainPlugin.RelationCardinality.SINGLE;
          case LISTPROPERTY:
          case KEYVALUELISTPROPERTY:
@@ -927,9 +925,7 @@ public class StringTemplatePlugin extends Plugin {
 
    private void newTemplateParameter(TemplateParameter templateParameter, Node templateNode) {
       switch (templateParameter.getDomainEntityType()) {
-         case STATEMENTPROPERTY: // todo split this and use referenceType = ReferenceType.ENTITY;
          case STRINGPROPERTY:
-         case BOOLEANPROPERTY:
             DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), DomainPlugin.RelationCardinality.SINGLE, getGraph().newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), templateParameter.getPropertyName()));
             break;
          case LISTPROPERTY:

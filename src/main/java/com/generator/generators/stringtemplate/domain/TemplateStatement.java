@@ -8,7 +8,7 @@ import static com.generator.generators.stringtemplate.domain.TemplateEntities.TE
  * User: geirove
  * Date: 27.11.12
  */
-public class TemplateStatement extends BaseEntity<TemplateEntities> {
+public class TemplateStatement {
 
    private String name;
    private String text;
@@ -41,7 +41,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
    }});
 
    public TemplateStatement(String name, TemplateStatementType type, List<TemplateParameter> parameters, String text, char delimiter) {
-      super(TEMPLATESTATEMENT);
+//      super(TEMPLATESTATEMENT);
       validateName(name);
       this.name = name;
       this.type = type;
@@ -58,7 +58,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
    }
 
    private TemplateStatement(UUID uuid, String name, TemplateStatementType type, List<TemplateParameter> parameters, String text, char delimiter) {
-      super(uuid, TEMPLATESTATEMENT);
+//      super(uuid, TEMPLATESTATEMENT);
       validateName(name);
       this.name = name;
       this.type = type;
@@ -71,7 +71,7 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
    }
 
    TemplateStatement(TemplateStatement statement) {
-      super(TEMPLATESTATEMENT);
+//      super(TEMPLATESTATEMENT);
       validateName(statement.getName());
       this.name = statement.getName();
       this.type = statement.getStatementType();
@@ -186,10 +186,10 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       throw new IllegalArgumentException("unsupported type: " + type);
    }
 
-   public TemplateStatement copy() {
-      final List<TemplateParameter> copiedParameters = new ArrayList<>(this.parameters.size());
-      for (Map.Entry<String, TemplateParameter> parameterEntry : this.parameters.entrySet())
-         copiedParameters.add(parameterEntry.getValue().copy());
-      return new TemplateStatement(this.uuid, this.name, this.type, copiedParameters, this.text, this.delimiter);
-   }
+//   public TemplateStatement copy() {
+//      final List<TemplateParameter> copiedParameters = new ArrayList<>(this.parameters.size());
+//      for (Map.Entry<String, TemplateParameter> parameterEntry : this.parameters.entrySet())
+//         copiedParameters.add(parameterEntry.getValue().copy());
+//      return new TemplateStatement(this.uuid, this.name, this.type, copiedParameters, this.text, this.delimiter);
+//   }
 }
