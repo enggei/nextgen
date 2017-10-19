@@ -345,10 +345,10 @@ public class ClojurePlugin extends Plugin {
             @Override
             public void handle(String buffer) {
 
-               if (buffer.startsWith("CompilerException")) {
+               if (buffer.contains("CompilerException")) {
                   txtEditor.setBackground(editedColor);
 
-               } else if (buffer.startsWith("ClassCastException")) {
+               } else if (buffer.contains("ClassCastException")) {
                   txtEditor.setBackground(editedColor);
 
                } else {

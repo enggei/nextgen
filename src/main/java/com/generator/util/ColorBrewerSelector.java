@@ -11,10 +11,17 @@ import java.util.List;
  */
 public class ColorBrewerSelector extends JPanel {
 
+   private final JTextField txtColor = new JTextField(30);
    private Color selectedColor;
 
    public ColorBrewerSelector() {
       super(new BorderLayout());
+
+      final JPanel northPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      final JLabel lblColor = new JLabel("Selected color");
+      northPanel.add(lblColor);
+      northPanel.add(txtColor);
+      add(northPanel, BorderLayout.NORTH);
 
       final JTabbedPane tabbedPane = new JTabbedPane();
       tabbedPane.add("Sequential", new PalettePanel(ColorBrewer.getSequentialColorPalettes()));
@@ -44,6 +51,7 @@ public class ColorBrewerSelector extends JPanel {
                   @Override
                   public void actionPerformed(ActionEvent e) {
                      selectedColor = color;
+                     txtColor.setText(String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue()));
                   }
                });
                btnColor[i].setBackground(color);

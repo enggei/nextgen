@@ -9,6 +9,7 @@ import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.JschUtil;
 import com.generator.util.SwingUtil;
+import com.generator.util.TextProcessingPanel;
 import com.jcraft.jsch.*;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Label;
@@ -19,6 +20,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
@@ -827,6 +829,21 @@ public class SSHPlugin extends Plugin {
                      public void actionPerformed(ActionEvent e) {
                         txtOutput.setText("");
                         cache.delete(0, cache.length());
+                     }
+                  });
+
+                  pop.add(new AbstractAction("Process Text") {
+                     @Override
+                     public void actionPerformed(ActionEvent e) {
+                        final TextProcessingPanel processingPanel = new TextProcessingPanel(txtOutput.getText(), Collections.emptySet());
+                        SwingUtil.showDialog(processingPanel, app, "Process Text", new SwingUtil.ConfirmAction() {
+                           @Override
+                           public void verifyAndCommit() throws Exception {
+                              final String outputText = processingPanel.getOutputText();
+                              if (outputText.trim().length() == 0) return;
+                              SwingUtil.toClipboard(outputText.trim());
+                           }
+                        });
                      }
                   });
 

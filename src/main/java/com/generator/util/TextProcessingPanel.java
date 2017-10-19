@@ -1,10 +1,18 @@
 package com.generator.util;
 
+import com.generator.app.AppMotif;
+import difflib.Chunk;
+import difflib.Delta;
+import difflib.DiffUtils;
+import difflib.Patch;
+
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,12 +46,14 @@ public final class TextProcessingPanel extends JPanel {
    private final JRadioButton radRemoveLineBefore = new JRadioButton("remove line before");
    private final JRadioButton radRemoveLineAfter = new JRadioButton("remove line after");
    private final JCheckBox chkTrimEmptyLines = new JCheckBox("Compress lines", true);
-   private final JRadioButton radExtract = new JRadioButton("keep only matches");
-   private final JButton btnSetAsInput = new JButton(" <- ");
+   private final JCheckBox chkShowDifference = new JCheckBox("Show Difference", false);
+   private final JCheckBox chkKeepMatches = new JCheckBox("keep only matches", false);
 
    public TextProcessingPanel(String inputText, Set<String> patterns) {
       super(new BorderLayout());
+      setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
+      final JButton btnSetAsInput = new JButton(" <- ");
       btnSetAsInput.setToolTipText("Set output-text to inputText (for further processing)");
 
       final ButtonGroup group = new ButtonGroup();
@@ -56,7 +66,6 @@ public final class TextProcessingPanel extends JPanel {
       group.add(radRemoveLine);
       group.add(radRemoveLineBefore);
       group.add(radRemoveLineAfter);
-      group.add(radExtract);
 
       txtPattern.addKeyListener(new KeyAdapter() {
 
@@ -175,33 +184,33 @@ public final class TextProcessingPanel extends JPanel {
       radRemoveLine.addActionListener(e -> filter());
       radRemoveLineBefore.addActionListener(e -> filter());
       radRemoveLineAfter.addActionListener(e -> filter());
-      radExtract.addActionListener(e -> filter());
-
-
+      chkKeepMatches.addActionListener(e -> filter());
 
       chkTrimEmptyLines.setToolTipText("Check to compress 2 or more empty lines into 1");
       chkTrimEmptyLines.addActionListener(e -> filter());
+      chkShowDifference.addActionListener(e -> filter());
 
-      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("350dlu:grow,4dlu,100dlu,4dlu,350dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
+      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("350dlu:grow,4dlu,100dlu,4dlu,350dlu:grow", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,50dlu:grow");
       int row = 1;
-      editor.add(new JScrollPane(txtInput), 1, row, 1, 35);
-      editor.addLabel("Pattern", 3, row+=2);
-      editor.add(txtPattern, 3, row+=2);
-      editor.addLabel("Insert", 3, row+=2);
-      editor.add(txtInsert, 3, row+=2);
-      editor.add(radReplace, 3, row+=2);
-      editor.add(radInsertAfter, 3, row+=2);
-      editor.add(radInsertLineAfter, 3, row+=2);
-      editor.add(radInsertBefore, 3, row+=2);
-      editor.add(radInsertLineBefore, 3, row+=2);
-      editor.add(radRemove, 3, row+=2);
-      editor.add(radRemoveLine, 3, row+=2);
-      editor.add(radRemoveLineBefore, 3, row+=2);
-      editor.add(radRemoveLineAfter, 3, row+=2);
-      editor.add(chkTrimEmptyLines, 3, row+=2);
-      editor.add(radExtract, 3, row+=2);
-      editor.add(btnSetAsInput, 3, row+=2);
-      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 35);
+      editor.add(new JScrollPane(txtInput), 1, row, 1, 37);
+      editor.addLabel("Pattern", 3, row += 2);
+      editor.add(txtPattern, 3, row += 2);
+      editor.addLabel("Insert", 3, row += 2);
+      editor.add(txtInsert, 3, row += 2);
+      editor.add(radReplace, 3, row += 2);
+      editor.add(radInsertAfter, 3, row += 2);
+      editor.add(radInsertLineAfter, 3, row += 2);
+      editor.add(radInsertBefore, 3, row += 2);
+      editor.add(radInsertLineBefore, 3, row += 2);
+      editor.add(radRemove, 3, row += 2);
+      editor.add(radRemoveLine, 3, row += 2);
+      editor.add(radRemoveLineBefore, 3, row += 2);
+      editor.add(radRemoveLineAfter, 3, row += 2);
+      editor.add(chkTrimEmptyLines, 3, row += 2);
+      editor.add(chkShowDifference, 3, row += 2);
+      editor.add(chkKeepMatches, 3, row += 2);
+      editor.add(btnSetAsInput, 3, row += 2);
+      editor.add(new JScrollPane(txtOutput), 5, 1, 1, 37);
 
       txtOutput.addMouseListener(new MouseAdapter() {
          @Override
@@ -239,6 +248,35 @@ public final class TextProcessingPanel extends JPanel {
       add(editor.build(), BorderLayout.CENTER);
 
       txtPattern.requestFocusInWindow();
+   }
+
+   private void showDifference() {
+      final String src = txtInput.getText().trim();
+      final String dst = txtOutput.getText().trim();
+
+      final String[] srcLines = src.split("\n");
+      final String[] dstLines = dst.split("\n");
+
+      final Patch<String> patch = DiffUtils.diff(Arrays.asList(srcLines), Arrays.asList(dstLines));
+
+      txtInput.getHighlighter().removeAllHighlights();
+      txtOutput.getHighlighter().removeAllHighlights();
+      for (Delta<String> delta : patch.getDeltas()) {
+         highlightChunk(src, delta.getOriginal(), txtInput, Color.decode("#f16913"));
+         highlightChunk(dst, delta.getRevised(), txtOutput, Color.decode("#f16913"));
+      }
+   }
+
+   private void highlightChunk(String src, Chunk<String> original, JTextArea txtInput, Color highlightColor) {
+      for (String line : original.getLines()) {
+         final int startIndex = src.indexOf(line);
+         final int endIndex = startIndex + line.length();
+         try {
+            txtInput.getHighlighter().addHighlight(startIndex, endIndex, new DefaultHighlighter.DefaultHighlightPainter(highlightColor));
+         } catch (BadLocationException e1) {
+            System.out.println(SwingUtil.printStackTrace(e1));
+         }
+      }
    }
 
    public String getOutputText() {
@@ -318,33 +356,38 @@ public final class TextProcessingPanel extends JPanel {
                for (int i = 0; i < matcher.groupCount(); i++)
                   newLine = newLine.replace("$" + (i + 1), matcher.group(i + 1));
 
-               if (radReplace.isSelected()) {
-                  filteredText.append(inputText.substring(currentIndex, start));
-                  int newStart = filteredText.length();
-                  filteredText.append(newLine);
-                  outputHighlights.put(newStart, filteredText.length());
-                  currentIndex = end;
-               } else if (radInsertAfter.isSelected()) {
-                  filteredText.append(inputText.substring(currentIndex, end));
-                  int newStart = filteredText.length();
-                  filteredText.append(newLine);
-                  outputHighlights.put(newStart, filteredText.length());
-                  currentIndex = end;
-               } else if (radInsertBefore.isSelected()) {
-                  filteredText.append(inputText.substring(currentIndex, start));
-                  int newStart = filteredText.length();
-                  filteredText.append(newLine);
-                  outputHighlights.put(newStart, filteredText.length());
-                  filteredText.append(inputText.substring(start, end));
-                  currentIndex = end;
-               } else if (radInsertLineBefore.isSelected()) {
-                  filteredText.append(inputText.substring(currentIndex, start));
-                  int newStart = filteredText.length();
-                  filteredText.append(newLine);
-                  outputHighlights.put(newStart, filteredText.length());
-                  filteredText.append(lineSeparator);
-                  filteredText.append(inputText.substring(start, end));
-                  currentIndex = end;
+               if (chkKeepMatches.isSelected()) {
+                  filteredText.append(newLine).append(lineSeparator);
+                  currentIndex = inputText.length();
+               } else {
+                  if (radReplace.isSelected()) {
+                     filteredText.append(inputText.substring(currentIndex, start));
+                     int newStart = filteredText.length();
+                     filteredText.append(newLine);
+                     outputHighlights.put(newStart, filteredText.length());
+                     currentIndex = end;
+                  } else if (radInsertAfter.isSelected()) {
+                     filteredText.append(inputText.substring(currentIndex, end));
+                     int newStart = filteredText.length();
+                     filteredText.append(newLine);
+                     outputHighlights.put(newStart, filteredText.length());
+                     currentIndex = end;
+                  } else if (radInsertBefore.isSelected()) {
+                     filteredText.append(inputText.substring(currentIndex, start));
+                     int newStart = filteredText.length();
+                     filteredText.append(newLine);
+                     outputHighlights.put(newStart, filteredText.length());
+                     filteredText.append(inputText.substring(start, end));
+                     currentIndex = end;
+                  } else if (radInsertLineBefore.isSelected()) {
+                     filteredText.append(inputText.substring(currentIndex, start));
+                     int newStart = filteredText.length();
+                     filteredText.append(newLine);
+                     outputHighlights.put(newStart, filteredText.length());
+                     filteredText.append(lineSeparator);
+                     filteredText.append(inputText.substring(start, end));
+                     currentIndex = end;
+                  }
                }
             }
 
@@ -412,10 +455,6 @@ public final class TextProcessingPanel extends JPanel {
                   currentIndex = endOfLine;
                }
 
-            } else if (radExtract.isSelected()) {
-               filteredText.append(inputText.substring(start, end)).append(lineSeparator);
-               currentIndex = inputText.length();
-
             } else if (radInsertLineAfter.isSelected()) {
 
                String newLine = "";
@@ -431,6 +470,10 @@ public final class TextProcessingPanel extends JPanel {
                filteredText.append(newLine);
                outputHighlights.put(newStart, filteredText.length());
                currentIndex = end;
+
+            } else if (chkKeepMatches.isSelected()) {
+               filteredText.append(inputText.substring(start, end)).append(lineSeparator);
+               currentIndex = inputText.length();
             }
          }
 
@@ -455,6 +498,8 @@ public final class TextProcessingPanel extends JPanel {
 
          txtOutput.setText(outputText.toString().trim());
          txtOutput.setCaretPosition(0);
+
+         if (chkShowDifference.isSelected()) showDifference();
 
          for (Map.Entry<Integer, Integer> entry : outputHighlights.entrySet())
             txtOutput.getHighlighter().addHighlight(entry.getKey(), entry.getValue(), new DefaultHighlighter.DefaultHighlightPainter(Color.decode("#99d594")));
