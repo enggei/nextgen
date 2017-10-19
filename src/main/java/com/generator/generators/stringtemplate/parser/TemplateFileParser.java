@@ -20,6 +20,12 @@ import java.util.*;
  */
 public class TemplateFileParser {
 
+   public static TemplateFile parseStatement(String delimiters, String content, STErrorListener errorListener) throws IOException {
+      final File tempFile = File.createTempFile("name", ".stg");
+      FileUtil.write("delimiters \"" + delimiters + "\", \"" + delimiters + "\"\n\n" + content, tempFile);
+      return parse(tempFile, errorListener);
+   }
+
    public static TemplateStatement parse(String delimiters, String name, String content, STErrorListener errorListener) throws IOException {
       return parseToFile(delimiters, name, content, errorListener).getTemplateStatement(name);
    }

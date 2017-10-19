@@ -17,6 +17,8 @@ public class Tests {
 
    public static void main(String[] args) {
 
+      // https://www.rivescript.com/docs/tutorial
+
       // Create a new bot with the default settings.
       final SessionManager sessionManager = new ConcurrentHashMapSessionManager();
 

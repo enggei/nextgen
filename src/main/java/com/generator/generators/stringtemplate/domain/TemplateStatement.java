@@ -1,12 +1,5 @@
 package com.generator.generators.stringtemplate.domain;
 
-import com.generator.generators.stringtemplate.parser.TemplateFileParser;
-import org.antlr.runtime.Token;
-import org.stringtemplate.v4.STErrorListener;
-import org.stringtemplate.v4.misc.STCompiletimeMessage;
-import org.stringtemplate.v4.misc.STMessage;
-
-import java.io.IOException;
 import java.util.*;
 
 import static com.generator.generators.stringtemplate.domain.TemplateEntities.TEMPLATESTATEMENT;
@@ -198,49 +191,5 @@ public class TemplateStatement extends BaseEntity<TemplateEntities> {
       for (Map.Entry<String, TemplateParameter> parameterEntry : this.parameters.entrySet())
          copiedParameters.add(parameterEntry.getValue().copy());
       return new TemplateStatement(this.uuid, this.name, this.type, copiedParameters, this.text, this.delimiter);
-   }
-
-   public static void main(String[] args) throws IOException {
-
-      final TemplateFile templateFile = TemplateFileParser.parseToFile("~", "Test", "package ~package~;\n" +
-            "\n" +
-            "public class ~name~ {\n" +
-            "\n" +
-            "   ~elements:{it|private ~it.type~ ~it.name~ = ~it.init~;};separator=\" \"~\n" +
-            "\n" +
-            "}", new STErrorListener() {
-         @Override
-         public void compileTimeError(STMessage stMessage) {
-            if (stMessage instanceof STCompiletimeMessage) {
-               final Token token = ((STCompiletimeMessage) stMessage).token;
-               System.out.println(token);
-            }
-         }
-
-         @Override
-         public void runTimeError(STMessage stMessage) {
-         }
-
-         @Override
-         public void IOError(STMessage stMessage) {
-         }
-
-         @Override
-         public void internalError(STMessage stMessage) {
-         }
-      });
-
-      final Statement statement = new Statement("Test");
-      statement.add(new StringProperty("package", "PACKAGE"));
-      List<List<Property>> kvProperties = new ArrayList<>();
-      List<Property> kvProperty = new ArrayList<>();
-      kvProperty.add(new StringProperty("type", "TYPE"));
-      kvProperty.add(new StringProperty("name", "NAME"));
-      kvProperty.add(new StringProperty("init", "INIT"));
-      kvProperties.add(kvProperty);
-      statement.add(new KeyValueListProperty("elements", kvProperties));
-
-      final String render = templateFile.render(statement);
-      System.out.println(render);
    }
 }

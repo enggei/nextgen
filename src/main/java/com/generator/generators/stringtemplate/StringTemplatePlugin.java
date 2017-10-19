@@ -203,15 +203,6 @@ public class StringTemplatePlugin extends Plugin {
                renderSTGGroup(neoNode.getNode(), rendererRelationship);
             }
          }));
-
-      } else if (hasLabel(neoNode.getNode(), Entities.STTemplate)) {
-
-         pop.add(new App.TransactionAction("Preview template", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               SwingUtil.showTextResult("Template", get(neoNode.getNode(), Properties.text.name(), ""), app);
-            }
-         });
       }
    }
 
@@ -293,15 +284,12 @@ public class StringTemplatePlugin extends Plugin {
 
             outgoing(node, RelationshipType.withName(parameterName)).forEach(listRelation -> {
                final Node other = other(node, listRelation);
-//               if (hasLabel(dstNode, DomainPlugin.Entities.Property) && hasLabel(other, DomainPlugin.Entities.Value)) {
                if (hasLabel(dstNode, DomainPlugin.Entities.Property)) {
                   renderNode(template, relationNode, parameterName, other);
                } else if (hasLabel(dstNode, DomainPlugin.Entities.Entity) && !hasLabel(other, DomainPlugin.Entities.Value)) {
                   renderNode(template, relationNode, parameterName, other);
                }
             });
-
-//            outgoing(node, RelationshipType.withName(parameterName)).forEach(listRelation -> renderNode(template, relationNode, parameterName, other(node, listRelation)));
          }
       }.visit(templateNode);
 
@@ -486,8 +474,6 @@ public class StringTemplatePlugin extends Plugin {
       outgoing(entityReferenceNode, DomainPlugin.Relations.SRC).forEach(kvRelation -> {
          final Node kvRelationNode = other(entityReferenceNode, kvRelation);
          final String key = getString(kvRelationNode, AppMotif.Properties.name.name());
-//         final Node keyNode = other(kvRelationNode, singleOutgoing(kvRelationNode, Relations.DST));
-//         final String key = getString(keyNode, AppMotif.Properties.name.name());
          if (key != null) existingKeys.add(key);
       });
       return existingKeys;
@@ -609,7 +595,7 @@ public class StringTemplatePlugin extends Plugin {
                         @Override
                         public void verifyAndCommit() throws Exception {
                            final String outputText = processingPanel.getOutputText();
-                           if(outputText.trim().length()==0) return;
+                           if (outputText.trim().length() == 0) return;
                            txtEditor.setText(outputText);
                            SwingUtilities.invokeLater(() -> txtEditor.dispatchEvent(new KeyEvent(txtEditor, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_ENTER, '\n')));
                         }

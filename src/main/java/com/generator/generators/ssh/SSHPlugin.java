@@ -15,7 +15,10 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -584,6 +587,34 @@ public class SSHPlugin extends Plugin {
 
          txtOutput.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtOutput.setEditable(false);
+
+         // todo consider using this for typing directly in txtOutput, at terminal-position ?
+//         final int promptPosition = 50; // todo use end-of-text index
+//
+//         ((AbstractDocument) txtEditor.getDocument()).setDocumentFilter(new DocumentFilter() {
+//            public void insertString(final DocumentFilter.FilterBypass fb, final int offset, final String string, final AttributeSet attr) throws BadLocationException {
+//               System.out.println("insertString " + offset + " " + string);
+//               if (offset >= promptPosition) {
+//                  super.insertString(fb, offset, string, attr);
+//               }
+//            }
+//
+//            public void remove(final FilterBypass fb, final int offset, final int length) throws BadLocationException {
+//               System.out.println("remove " + offset + " " + length);
+//               if (offset >= promptPosition) {
+//                  super.remove(fb, offset, length);
+//               }
+//            }
+//
+//            public void replace(final FilterBypass fb, final int offset, final int length, final String text, final AttributeSet attrs) throws BadLocationException {
+//               System.out.println("replace " + offset + " " + length + " " + text);
+//               if (offset >= promptPosition) {
+//                  super.replace(fb, offset, length, text, attrs);
+//               }
+//            }
+//         });
+
+
 
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
          final DataOutputStream dataOut = new DataOutputStream(channel.getOutputStream());
