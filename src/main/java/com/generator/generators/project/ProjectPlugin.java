@@ -14,6 +14,7 @@ import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
+import com.generator.util.TextProcessingPanel;
 import com.jcraft.jsch.Session;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.*;
@@ -22,11 +23,10 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Set;
 
 import static com.generator.app.DomainMotif.getPropertyValue;
@@ -90,20 +90,34 @@ public class ProjectPlugin extends Plugin {
 
       if (hasLabel(neoNode.getNode(), Entities.Project)) {
 
-         pop.add(new App.TransactionAction("Render All directories", app) {
+         pop.add(new App.TransactionAction("Add Directory", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-               outgoing(neoNode.getNode(), Relations.DIRECTORY).forEach(relationship -> renderDirectory(other(neoNode.getNode(), relationship)));
-               app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+               final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+               if (dir == null) return;
+
+               final Node fileNode = getGraph().newNode(Entities.Directory, Properties.path.name(), dir.getPath());
+               relate(neoNode.getNode(), fileNode, Relations.DIRECTORY);
+               fireNodesLoaded(fileNode);
             }
          });
 
+         if (hasOutgoing(neoNode.getNode(), Relations.DIRECTORY)) {
+            pop.add(new App.TransactionAction("Render All directories", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                  outgoing(neoNode.getNode(), Relations.DIRECTORY).forEach(relationship -> renderDirectory(other(neoNode.getNode(), relationship)));
+                  app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+               }
+            });
+         }
 
       } else if (hasLabel(neoNode.getNode(), Entities.Directory)) {
 
          if (hasPropertyValue(neoNode.getNode(), Properties.path.name())) {
-            pop.add(new App.TransactionAction("Render " + getPropertyValue(neoNode.getNode(), Properties.path.name()), app) {
+            pop.add(new App.TransactionAction("Render " + getString(neoNode.getNode(), Properties.path.name()), app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                   app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -196,7 +210,7 @@ public class ProjectPlugin extends Plugin {
 
                      final File localDirectory = getFile(neoNode.getNode());
 
-                     final Session session = SSHPlugin.getSession(other(selectedNode.getNode(),singleIncoming(selectedNode.getNode(), SSHPlugin.Relations.PATHS)));
+                     final Session session = SSHPlugin.getSession(other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), SSHPlugin.Relations.PATHS)));
 
                      SSHPlugin.download(session, localDirectory.getAbsolutePath(), hostPath + target);
                      session.disconnect();
@@ -574,7 +588,7 @@ public class ProjectPlugin extends Plugin {
 
    public static File getFile(Node node) {
       final Node parentNode = other(node, singleIncoming(node, Relations.CHILD));
-      final String path = getPropertyValue(node, Properties.path.name());
+      final String path = getString(node, Properties.path.name());
       return path == null ? null : (parentNode == null ? new File(path) : new File(getFile(parentNode), path));
    }
 
@@ -582,15 +596,31 @@ public class ProjectPlugin extends Plugin {
       DirectoryEditor(NeoNode node) {
          super(new BorderLayout());
 
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
-         txtEditor.setTabSize(3);
+         final JTextArea txtEditor = SwingUtil.newTextArea();
 
          final StringBuilder out = new StringBuilder();
          final File getDir = getFile(node.getNode());
          if (getDir != null) listDirectory(getDir, out);
          txtEditor.setText(out.toString().trim());
          txtEditor.setCaretPosition(0);
+
+         txtEditor.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               if (SwingUtilities.isRightMouseButton(e))
+                  SwingUtilities.invokeLater(() -> {
+                     final TextProcessingPanel processingPanel = new TextProcessingPanel(txtEditor.getText(), Collections.emptySet());
+                     SwingUtil.showDialog(processingPanel, app, "Process Text", new SwingUtil.ConfirmAction() {
+                        @Override
+                        public void verifyAndCommit() throws Exception {
+                           final String outputText = processingPanel.getOutputText();
+                           if (outputText.trim().length() == 0) return;
+                           SwingUtil.toClipboard(outputText);
+                        }
+                     });
+                  });
+            }
+         });
 
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }

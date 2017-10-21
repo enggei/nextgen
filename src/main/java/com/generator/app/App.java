@@ -10,6 +10,7 @@ import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
 import com.generator.generators.project.ProjectPlugin;
+import com.generator.generators.rivescript.RivescriptPlugin;
 import com.generator.generators.ssh.SSHPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
@@ -236,6 +237,7 @@ public class App extends JFrame {
                   plugins.add(new MavenPlugin(App.this));
                   plugins.add(new ANTLRPlugin(App.this));
                   plugins.add(new SSHPlugin(App.this));
+                  plugins.add(new RivescriptPlugin(App.this));
                   plugins.add(new DomainPlugin(App.this));
                   plugins.add(new ProjectPlugin(App.this));
                   plugins.add(new MathPlugin(App.this));

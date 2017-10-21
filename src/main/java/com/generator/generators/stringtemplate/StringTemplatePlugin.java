@@ -7,6 +7,7 @@ import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.domain.*;
 import com.generator.generators.stringtemplate.parser.TemplateFileParser;
 import com.generator.neo.NeoModel;
+import com.generator.util.RegexpUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import com.generator.util.TextProcessingPanel;
@@ -577,11 +578,7 @@ public class StringTemplatePlugin extends Plugin {
       TemplateEditor(NeoNode templateNode) {
          super(new BorderLayout());
 
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setText(get(templateNode.getNode(), StringTemplatePlugin.Properties.text.name(), ""));
-         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
-         txtEditor.setTabSize(3);
-         txtEditor.setCaretPosition(0);
+         final JTextArea txtEditor = SwingUtil.newTextArea();
 
          txtEditor.addMouseListener(new MouseAdapter() {
             @Override
@@ -601,6 +598,8 @@ public class StringTemplatePlugin extends Plugin {
                   });
             }
          });
+
+         txtEditor.setText(get(templateNode.getNode(), StringTemplatePlugin.Properties.text.name(), ""));
 
          final Border defaultBorder = txtEditor.getBorder();
          final Color uneditedColor = txtEditor.getBackground();
@@ -792,6 +791,9 @@ public class StringTemplatePlugin extends Plugin {
                } else if (ke.getKeyCode() == KeyEvent.VK_DELETE && ke.getModifiers() == KeyEvent.SHIFT_MASK) {
                   deleteCurrentLine();
 
+               } else if (ke.getKeyCode() == KeyEvent.VK_F && ke.getModifiers() == KeyEvent.CTRL_MASK) {
+                  format();
+
                } else {
                   SwingUtilities.invokeLater(() -> txtEditor.setBackground(startText.equals(txtEditor.getText().trim()) ? uneditedColor : editedColor));
                }
@@ -916,6 +918,12 @@ public class StringTemplatePlugin extends Plugin {
                if (endOfLine <= startOfLine) return;
 
                txtEditor.replaceRange("", startOfLine, endOfLine);
+            }
+
+            private void format() {
+               final String replace = RegexpUtil.replace("[ ]{2}", txtEditor.getText(), " ");
+               txtEditor.setText(replace);
+               txtEditor.setCaretPosition(0);
             }
          });
 

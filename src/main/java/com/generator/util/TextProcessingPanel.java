@@ -1,6 +1,5 @@
 package com.generator.util;
 
-import com.generator.app.AppMotif;
 import difflib.Chunk;
 import difflib.Delta;
 import difflib.DiffUtils;
@@ -12,7 +11,6 @@ import javax.swing.text.DefaultHighlighter;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,20 +19,13 @@ import java.util.regex.Pattern;
  */
 public final class TextProcessingPanel extends JPanel {
 
-   private final JTextArea txtInput = newTextArea();
+   private final JTextArea txtInput = SwingUtil.newTextArea();
    private final String lineSeparator = System.getProperty("line.separator");
-
-   private JTextArea newTextArea() {
-      final JTextArea txtEditor = new JTextArea(30, 30);
-      txtEditor.setFont(new Font("Hack", Font.PLAIN, 12));
-      txtEditor.setTabSize(3);
-      return txtEditor;
-   }
 
    private final Stack<String> inputStack = new Stack<>();
    private final JTextField txtPattern = new JTextField("");
    private final JTextField txtInsert = new JTextField("");
-   private final JTextArea txtOutput = newTextArea();
+   private final JTextArea txtOutput = SwingUtil.newTextArea();
 
    private final JRadioButton radReplace = new JRadioButton("replace", true);
    private final JRadioButton radInsertAfter = new JRadioButton("insert after");
@@ -120,6 +111,56 @@ public final class TextProcessingPanel extends JPanel {
 
                SwingUtilities.invokeLater(() -> pop.show(txtPattern, e.getX(), e.getY()));
             }
+         }
+      });
+
+      InputMap im = txtInput.getInputMap();
+      KeyStroke tab = KeyStroke.getKeyStroke("TAB");
+      txtInput.getActionMap().put(im.get(tab), new AbstractAction() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            System.out.println("TAB");
+
+            int startCaret = txtInput.getCaretPosition();
+            int caretPosition = txtInput.getCaretPosition();
+            final int selectionStart = txtInput.getSelectionStart();
+            final int selectionEnd = txtInput.getSelectionEnd();
+
+            final String text = txtInput.getText();
+            String selectedText = txtInput.getSelectedText();
+
+            final StringBuilder replace = new StringBuilder();
+            if (selectedText == null) {
+               replace.append(text.substring(0, selectionStart));
+               replace.append("\t");
+               replace.append(text.substring(selectionStart));
+               caretPosition += txtInput.getTabSize();
+            } else {
+
+               replace.append(text.substring(0, selectionStart));
+
+               final String[] split = selectedText.split("\n");
+               for (int i = 0; i < split.length; i++) {
+                  String s = (i==0?"" :"\n") + "\t" + split[i];
+                  replace.append(s);
+                  caretPosition += txtInput.getTabSize();
+               }
+               replace.append(text.substring(selectionEnd));
+            }
+            txtInput.setText(replace.toString());
+            txtInput.setCaretPosition(startCaret);
+            txtInput.setSelectionStart(startCaret);
+            txtInput.setSelectionEnd(caretPosition);
+         }
+      });
+      KeyStroke shiftTab = KeyStroke.getKeyStroke("shift TAB");
+      im.put(shiftTab, shiftTab);
+      txtInput.getActionMap().put(im.get(shiftTab), new AbstractAction() {
+         @Override
+         public void actionPerformed(ActionEvent e) {
+            System.out.println("SHIFT TAB");
+
+
          }
       });
 

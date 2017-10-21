@@ -1,6 +1,5 @@
 package com.generator.util;
 
-import com.generator.app.App;
 import com.jgoodies.forms.builder.FormBuilder;
 import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -12,22 +11,36 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
-import java.awt.datatransfer.*;
-import java.awt.event.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
-import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
-import static javax.swing.JOptionPane.QUESTION_MESSAGE;
+import static javax.swing.JOptionPane.*;
 
 public class SwingUtil {
+
+   public static JTextArea newTextArea() {
+      final JTextArea txtEditor = new JTextArea(30, 30);
+      txtEditor.setFont(new Font("Hack", Font.PLAIN, 10));
+      txtEditor.setTabSize(3);
+      txtEditor.setCaretPosition(0);
+      return txtEditor;
+   }
 
    public static String fromClipboard() {
       final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

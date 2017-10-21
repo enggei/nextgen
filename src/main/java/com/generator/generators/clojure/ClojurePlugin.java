@@ -27,9 +27,8 @@ import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 16.10.17.
- *
+ * <p>
  * https://kimh.github.io/clojure-by-example
- *
  */
 public class ClojurePlugin extends Plugin {
 
@@ -339,54 +338,33 @@ public class ClojurePlugin extends Plugin {
 
       public void evaluateCommandLine(String newText, NeoNode node) {
 
-         if(replHandle==null) startRepl();
+         if (replHandle == null) startRepl();
 
          evaluate(newText, new EvaluationHandler() {
             @Override
             public void handle(String buffer) {
 
-               if (buffer.contains("CompilerException")) {
-                  txtEditor.setBackground(editedColor);
+               final String[] lines = buffer.split("\n");
+               txtEditor.setBackground(uneditedColor);
 
-               } else if (buffer.contains("ClassCastException")) {
-                  txtEditor.setBackground(editedColor);
+               final StringBuilder output = new StringBuilder();
+               for (String line : lines) {
+                  output.append(line).append("\n");
 
-               } else {
+                  if (line.startsWith("CompilerException")) {
+                     txtEditor.setBackground(editedColor);
 
-                  txtEditor.setBackground(uneditedColor);
-
-                  if (buffer.startsWith("clojure.lang.Symbol")) {
-
-                     SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-                           relate(node.getNode(), getGraph().findOrCreate(Entities.Symbol, AppMotif.Properties.name.name(), newText), Relations.SYMBOL);
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showException(txtEditor, throwable);
-                        }
-                     }));
-
-                  } else if(buffer.startsWith("#'")){
-
-                     // #'user/a
-
-                     // todo add
+                  } else if (buffer.startsWith("ClassCastException")) {
+                     txtEditor.setBackground(editedColor);
 
                   } else {
 
-                     final FormNode newForm = new FormNode(newText);
-                     if (!distinctForms.contains(newForm)) {
-                        distinctForms.add(newForm);
-                        formNodeStack.push(newForm);
-                        ((FormHistorListModel) historyList.getModel()).fireContenChanged();
+                     if (buffer.startsWith("clojure.lang.Symbol")) {
 
                         SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
-                              relate(node.getNode(), getGraph().findOrCreate(Entities.Form, AppMotif.Properties.name.name(), newText), Relations.FORM);
+                              relate(node.getNode(), getGraph().findOrCreate(Entities.Symbol, AppMotif.Properties.name.name(), newText), Relations.SYMBOL);
                            }
 
                            @Override
@@ -394,11 +372,38 @@ public class ClojurePlugin extends Plugin {
                               SwingUtil.showException(txtEditor, throwable);
                            }
                         }));
+
+                     } else if (buffer.startsWith("#'")) {
+
+                        // #'user/a
+
+                        // todo add
+
+                     } else {
+
+                        final FormNode newForm = new FormNode(newText);
+                        if (!distinctForms.contains(newForm)) {
+                           distinctForms.add(newForm);
+                           formNodeStack.push(newForm);
+                           ((FormHistorListModel) historyList.getModel()).fireContenChanged();
+
+                           SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx) throws Throwable {
+                                 relate(node.getNode(), getGraph().findOrCreate(Entities.Form, AppMotif.Properties.name.name(), newText), Relations.FORM);
+                              }
+
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(txtEditor, throwable);
+                              }
+                           }));
+                        }
                      }
                   }
                }
 
-               txtEditor.setText(buffer);
+               txtEditor.setText(output.toString());
                txtEditor.setCaretPosition(0);
             }
          });

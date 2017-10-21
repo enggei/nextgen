@@ -400,7 +400,7 @@ public class DomainPlugin extends Plugin {
                   if (directoryNode != null) {
                      final File directory = ProjectPlugin.getFile(directoryNode);
                      if (directory != null && directory.exists()) {
-                        pop.add(new App.TransactionAction("Render to " + DomainMotif.getPropertyValue(directoryNode, AppMotif.Properties.name.name()), app) {
+                        pop.add(new App.TransactionAction("Render to " + getString(directoryNode, ProjectPlugin.Properties.path.name()), app) {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               final String content = StringTemplatePlugin.renderStatement(node, other(node, singleIncoming(node, Relations.INSTANCE)));

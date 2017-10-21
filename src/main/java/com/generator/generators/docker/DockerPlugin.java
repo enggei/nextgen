@@ -1,5 +1,6 @@
 package com.generator.generators.docker;
 
+import com.generator.ProjectConstants;
 import com.generator.app.*;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
@@ -60,7 +61,7 @@ public class DockerPlugin extends Plugin {
          for (NeoNode selectedNode : selectedNodes) {
             if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
                if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.BUILD)) continue;
-               pop.add(new App.TransactionAction("Add Build-directory " + DomainMotif.getPropertyValue(selectedNode.getNode(), AppMotif.Properties.name.name()), app) {
+               pop.add(new App.TransactionAction("Add Build-directory " + getString(selectedNode.getNode(), ProjectPlugin.Properties.path.name()), app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      relate(neoNode.getNode(), selectedNode.getNode(), Relations.BUILD);
@@ -82,7 +83,7 @@ public class DockerPlugin extends Plugin {
                   final String path = findPath(buildDirectory, renderDirectory);
                   if (path == null) continue;
 
-                  pop.add(new App.TransactionAction("Build in " + DomainMotif.getPropertyValue(buildDirectory, AppMotif.Properties.name.name()), app) {
+                  pop.add(new App.TransactionAction("Build in " + getString(buildDirectory, ProjectPlugin.Properties.path.name()), app) {
                      @Override
                      protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 

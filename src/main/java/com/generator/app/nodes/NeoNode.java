@@ -288,8 +288,8 @@ public class NeoNode extends PNode {
          private void layoutTree(Configuration<NeoNode> configuration, boolean outgoing) {
 
             final Map<Long, NeoNode> nodesAndIds = new LinkedHashMap<>();
-            for (NeoNode selectedNode : nodeCanvas.getAllNodes())
-               nodesAndIds.put(selectedNode.id(), selectedNode);
+            for (NeoNode visibleNode : nodeCanvas.getAllNodes())
+               nodesAndIds.put(visibleNode.id(), visibleNode);
 
             final Map<Long, NeoNode> parentsMap = new LinkedHashMap<>();
             final Map<Long, java.util.List<NeoNode>> childrensMap = new LinkedHashMap<>();

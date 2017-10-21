@@ -222,9 +222,7 @@ public class JavaPlugin extends Plugin {
       ObjectPanel(NeoNode objectNode) {
          super(new BorderLayout());
 
-         final JTextArea txtEditor = new JTextArea(25, 85);
-         txtEditor.setFont(new Font("Hack", Font.PLAIN, 15));
-         txtEditor.setTabSize(3);
+         final JTextArea txtEditor = SwingUtil.newTextArea();
          txtEditor.setEditable(false);
          txtEditor.setText(renderObject(objectNode.getNode()));
          txtEditor.setCaretPosition(0);
