@@ -2,13 +2,16 @@ package com.generator.generators.antlr;
 
 import com.generator.generators.domain.NeoVisitorGroup;
 import com.generator.generators.java.BaseClassVisitor;
-//import com.generator.generators.scala.parser.ScalaListener;
-//import com.generator.generators.scala.parser.ScalaVisitor;
+import com.generator.generators.scala.parser.ScalaListener;
+import com.generator.generators.scala.parser.ScalaVisitor;
 import com.generator.generators.stringtemplate.GeneratedFile;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+
+import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
+import static com.generator.ProjectConstants.MAIN_ROOT;
 
 /**
  * Created 08.09.17.
@@ -31,7 +34,7 @@ public class AntlrGenerator {
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
-//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STParser", STParserVisitor.class, STParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
