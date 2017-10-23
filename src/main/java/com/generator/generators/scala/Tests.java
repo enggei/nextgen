@@ -20,7 +20,8 @@ public class Tests {
 
 	@Test
 	public void testScalaLexer() throws IOException {
-		testLexer(ScalaLexer.class, fileSystem.getPath(workDir + "Test.scala"));
+//		testLexer(ScalaLexer.class, fileSystem.getPath(workDir + "Test.scala"));
+		testLexer(ScalaLexer.class, fileSystem.getPath(workDir + "Source.scala"));
 //		testLexer(ScalaLexer.class, "xx_=");
 //		testLexer(ScalaLexer.class, "package P {  object X { val x = 1; val y = 2 } }");
 //		testLexer(ScalaLexer.class, "x, Object, maxIndex, p2p, empty_?, `yield`, αρετη, _y, dot_product_*, __system, _MAX_LEN_");
@@ -33,6 +34,14 @@ public class Tests {
 		Class nlc = ScalaNodeListener.class;
 		Class lc = ScalaLexer.class;
 		Class pc = ScalaParser.class;
+
+		testParserRule(nlc, lc, pc, parser -> ((ScalaParser)parser).compilationUnit(),
+			fileSystem.getPath(workDir + "Test.scala"),
+			true);
+
+//		testParserRule(nlc, lc, pc, parser -> ((ScalaParser)parser).compilationUnit(),
+//			fileSystem.getPath(workDir + "Source.scala"),
+//			true);
 
 //		testParserRule(nlc, lc, pc, parser -> ((ScalaParser)parser).qualId(),
 //			"xx_=",
@@ -58,8 +67,8 @@ public class Tests {
 //			"x, Object, maxIndex, p2p, empty_?, `yield`, αρετη, _y, dot_product_*, __system, _MAX_LEN_",
 //			true);
 
-		testParserRule(nlc, lc, pc, parser -> ((ScalaParser)parser).compilationUnit(),
-			"object Test { def main(args: Array[String]): Unit = { print(\"Hello world!\"); } }",
-			true);
+//		testParserRule(nlc, lc, pc, parser -> ((ScalaParser)parser).compilationUnit(),
+//			"object Test { def main(args: Array[String]): Unit = { print(\"Hello world!\"); } }",
+//			true);
 	}
 }

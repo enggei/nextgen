@@ -7,10 +7,7 @@ public abstract class ScalaDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Type")) visitType(node);
-		else if(hasLabel(node, "FunctionArgTypes")) visitFunctionArgTypes(node);
-		else if(hasLabel(node, "ExistentialClause")) visitExistentialClause(node);
-		else if(hasLabel(node, "ExistentialDcl")) visitExistentialDcl(node);
+		if(hasLabel(node, "ExistentialDcl")) visitExistentialDcl(node);
 		else if(hasLabel(node, "InfixType")) visitInfixType(node);
 		else if(hasLabel(node, "CompoundType")) visitCompoundType(node);
 		else if(hasLabel(node, "AnnotType")) visitAnnotType(node);
@@ -56,15 +53,18 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "Param")) visitParam(node);
 		else if(hasLabel(node, "ParamType")) visitParamType(node);
 		else if(hasLabel(node, "ClassParamClauses")) visitClassParamClauses(node);
+		else if(hasLabel(node, "ClassParamClause")) visitClassParamClause(node);
+		else if(hasLabel(node, "ClassParams")) visitClassParams(node);
+		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
+		else if(hasLabel(node, "Bindings")) visitBindings(node);
 		else if(hasLabel(node, "QualId")) visitQualId(node);
 		else if(hasLabel(node, "Ids")) visitIds(node);
 		else if(hasLabel(node, "StableId")) visitStableId(node);
 		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
-		else if(hasLabel(node, "ClassParamClause")) visitClassParamClause(node);
-		else if(hasLabel(node, "ClassParams")) visitClassParams(node);
-		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
-		else if(hasLabel(node, "Bindings")) visitBindings(node);
+		else if(hasLabel(node, "Type")) visitType(node);
+		else if(hasLabel(node, "FunctionArgTypes")) visitFunctionArgTypes(node);
+		else if(hasLabel(node, "ExistentialClause")) visitExistentialClause(node);
 		else if(hasLabel(node, "Binding")) visitBinding(node);
 		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "LocalModifier")) visitLocalModifier(node);
@@ -113,24 +113,6 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "PackageObject")) visitPackageObject(node);
 		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
    }
-
-	public void visitType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFunctionArgTypes(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExistentialClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitExistentialDcl(Node node) {
 		if (visited.contains(node)) return;
@@ -408,7 +390,31 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitClassParamClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParams(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParam(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBindings(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -438,25 +444,19 @@ public abstract class ScalaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassParamClause(Node node) {
+	public void visitType(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassParams(Node node) {
+	public void visitFunctionArgTypes(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitClassParam(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBindings(Node node) {
+	public void visitExistentialClause(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

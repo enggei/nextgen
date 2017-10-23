@@ -89,7 +89,7 @@ functionArgTypes
 
 // ExistentialClause ::=  ‘forSome’ ‘{’ ExistentialDcl {semi ExistentialDcl} ‘}’
 existentialClause
-   : 'forSome' '{' existentialDcl (SEMI existentialDcl)* '}'
+   : 'forSome' '{' existentialDcl ((';' | NL+) existentialDcl)* '}'
    ;
 
 // ExistentialDcl    ::=  ‘type’ TypeDcl
@@ -101,7 +101,7 @@ existentialDcl
 
 // InfixType         ::=  CompoundType {id [nl] CompoundType}
 infixType
-   : compoundType (ID '\n'? compoundType)*
+   : compoundType (ID NL? compoundType)*
    ;
 
 // CompoundType      ::=  AnnotType {‘with’ AnnotType} [Refinement]
@@ -142,7 +142,7 @@ types
 
 // Refinement        ::=  [nl] ‘{’ RefineStat {semi RefineStat} ‘}’
 refinement
-   : '\n'? '{' refineStat (SEMI refineStat)* '}'
+   : NL? '{' refineStat ((';' | NL+) refineStat)* '}'
    ;
 
 // RefineStat        ::=  Dcl
@@ -188,11 +188,11 @@ expr
 //                     |  PostfixExpr Ascription
 //                     |  PostfixExpr ‘match’ ‘{’ CaseClauses ‘}’
 expr1
-   : 'if' '(' expr ')' '\n'* expr (SEMI? 'else' expr)?
-   | 'while' '(' expr ')' '\n'* expr
+   : 'if' '(' expr ')' NL* expr ((';' | NL+)? 'else' expr)?
+   | 'while' '(' expr ')' NL* expr
    | 'try' ('{' block '}' | expr) ('catch' '{' caseClauses '}')? ('finally' expr)?
-   | 'do' expr SEMI? 'while' '(' expr ')'
-   | 'for' ('(' enumerators ')' | '{' enumerators '}') '\n'* 'yield'? expr
+   | 'do' expr (';' | NL+)? 'while' '(' expr ')'
+   | 'for' ('(' enumerators ')' | '{' enumerators '}') NL* 'yield'? expr
    | 'throw' expr
    | 'return' expr?
    | (simpleExpr '.')? ID '=' expr
@@ -204,14 +204,14 @@ expr1
 
 // PostfixExpr       ::=  InfixExpr [id [nl]]
 postfixExpr
-   : infixExpr (ID '\n'?)?
+   : infixExpr (ID NL?)?
    ;
 
 // InfixExpr         ::=  PrefixExpr
 //                     |  InfixExpr id [nl] InfixExpr
 infixExpr
    : prefixExpr
-   | infixExpr ID '\n'? infixExpr
+   | infixExpr ID NL? infixExpr
    ;
 
 // PrefixExpr        ::=  [‘-’ | ‘+’ | ‘~’ | ‘!’] SimpleExpr
@@ -267,7 +267,7 @@ exprs
 argumentExprs
    : '(' exprs? ')'
    | '(' (exprs ',')? postfixExpr ':' '_' '*' ')'
-   | '\n'? blockExpr
+   | NL? blockExpr
    ;
 
 // BlockExpr         ::=  ‘{’ CaseClauses ‘}’
@@ -279,7 +279,7 @@ blockExpr
 
 // Block             ::=  BlockStat {semi BlockStat} [ResultExpr]
 block
-   : blockStat (SEMI blockStat)* resultExpr?
+   : blockStat ((';' | NL+) blockStat)* resultExpr?
    ;
 
 // BlockStat         ::=  Import
@@ -304,12 +304,12 @@ resultExpr
 
 // Enumerators       ::=  Generator {semi Generator}
 enumerators
-   : generator (SEMI generator)*
+   : generator ((';' | NL+) generator)*
    ;
 
 // Generator         ::=  Pattern1 ‘<-’ Expr {[semi] Guard | semi Pattern1 ‘=’ Expr}
 generator
-   : pattern1 '<-' expr (SEMI? guard | SEMI pattern1 '=' expr)*
+   : pattern1 '<-' expr ((';' | NL+)? guard | (';' | NL+) pattern1 '=' expr)*
    ;
 
 // CaseClauses       ::=  CaseClause { CaseClause }
@@ -352,7 +352,7 @@ pattern2
 //                     |  SimplePattern { id [nl] SimplePattern }
 pattern3
    : simplePattern
-   | simplePattern (ID '\n'? simplePattern)*
+   | simplePattern (ID NL? simplePattern)*
    ;
 
 // SimplePattern     ::=  ‘_’
@@ -404,12 +404,12 @@ typeParam
 
 // ParamClauses      ::=  {ParamClause} [[nl] ‘(’ ‘implicit’ Params ‘)’]
 paramClauses
-   : paramClause* ('\n'? '(' 'implicit' params ')')?
+   : paramClause* (NL? '(' 'implicit' params ')')?
    ;
 
 // ParamClause       ::=  [nl] ‘(’ [Params] ‘)’
 paramClause
-   : '\n'? '(' params? ')'
+   : NL? '(' params? ')'
    ;
 
 // Params            ::=  Param {‘,’ Param}
@@ -434,12 +434,12 @@ paramType
 // ClassParamClauses ::=  {ClassParamClause}
 //                        [[nl] ‘(’ ‘implicit’ ClassParams ‘)’]
 classParamClauses
-   : classParamClause* ('\n'? '(' 'implicit' classParams ')')?
+   : classParamClause* (NL? '(' 'implicit' classParams ')')?
    ;
 
 // ClassParamClause  ::=  [nl] ‘(’ [ClassParams] ‘)’
 classParamClause
-   : '\n'? '(' classParams? ')'
+   : NL? '(' classParams? ')'
    ;
 
 // ClassParams       ::=  ClassParam {‘,’ ClassParam}
@@ -507,7 +507,7 @@ constrAnnotation
 
 // TemplateBody      ::=  [nl] ‘{’ [SelfType] TemplateStat {semi TemplateStat} ‘}’
 templateBody
-   : '\n'? '{' selfType? templateStat (SEMI templateStat)* '}'
+   : NL? '{' selfType? templateStat ((';' | NL+) templateStat)* '}'
    ;
 
 // TemplateStat      ::=  Import
@@ -517,8 +517,8 @@ templateBody
 //                     |
 templateStat
    : import_
-   | (annotation '\n'?)* modifier* def
-   | (annotation '\n'?)* modifier* dcl
+   | (annotation NL?)* modifier* def
+   | (annotation NL?)* modifier* dcl
    | expr
    |
    ;
@@ -547,7 +547,7 @@ importSelectors
 
 // ImportSelector    ::=  id [‘=>’ id | ‘=>’ ‘_’]
 importSelector
-   : ID ('=>' ID | '=>' '_')
+   : ID ('=>' ID | '=>' '_')?
    ;
 
 // Dcl               ::=  ‘val’ ValDcl
@@ -558,7 +558,7 @@ dcl
    : 'val' valDcl
    | 'var' varDcl
    | 'def' funDcl
-   | 'type' '\n'* typeDcl
+   | 'type' NL* typeDcl
    ;
 
 // ValDcl            ::=  ids ‘:’ Type
@@ -600,7 +600,7 @@ patVarDef
 def
    : patVarDef
    | 'def' funDef
-   | 'type' '\n'* typeDef
+   | 'type' NL* typeDef
    | tmplDef
    ;
 
@@ -622,8 +622,8 @@ varDef
 //                        (‘=’ ConstrExpr | [nl] ConstrBlock)
 funDef
    : funSig (':' type)? '=' expr
-   | funSig '\n'? '{' block '}'
-   | 'this' paramClause paramClauses ('=' constrExpr | '\n'? constrBlock)
+   | funSig NL? '{' block '}'
+   | 'this' paramClause paramClauses ('=' constrExpr | NL? constrBlock)
    ;
 
 // TypeDef           ::=  id [TypeParamClause] ‘=’ Type
@@ -696,12 +696,12 @@ constr
 
 // EarlyDefs         ::= ‘{’ [EarlyDef {semi EarlyDef}] ‘}’ ‘with’
 earlyDefs
-   : '{' (earlyDef (SEMI earlyDef)*)? '}' 'with'
+   : '{' (earlyDef ((';' | NL+) earlyDef)*)? '}' 'with'
    ;
 
 // EarlyDef          ::=  {Annotation [nl]} {Modifier} PatVarDef
 earlyDef
-   : (annotation '\n'?)* modifier* patVarDef
+   : (annotation NL?)* modifier* patVarDef
    ;
 
 // ConstrExpr        ::=  SelfInvocation
@@ -713,7 +713,7 @@ constrExpr
 
 // ConstrBlock       ::=  ‘{’ SelfInvocation {semi BlockStat} ‘}’
 constrBlock
-   : '{' selfInvocation (SEMI blockStat)* '}'
+   : '{' selfInvocation ((';' | NL+) blockStat)* '}'
    ;
 
 // SelfInvocation    ::=  ‘this’ ArgumentExprs {ArgumentExprs}
@@ -723,7 +723,7 @@ selfInvocation
 
 // TopStatSeq        ::=  TopStat {semi TopStat}
 topStatSeq
-   : topStat (SEMI topStat)*
+   : topStat ((';' | NL+) topStat)*
    ;
 
 // TopStat           ::=  {Annotation [nl]} {Modifier} TmplDef
@@ -732,7 +732,7 @@ topStatSeq
 //                     |  PackageObject
 //                     |
 topStat
-   : (annotation '\n'?)* modifier* tmplDef
+   : (annotation NL?)* modifier* tmplDef
    | import_
    | packaging
    | packageObject
@@ -741,7 +741,7 @@ topStat
 
 // Packaging         ::=  ‘package’ QualId [nl] ‘{’ TopStatSeq ‘}’
 packaging
-   : 'package' qualId '\n'? '{' topStatSeq '}'
+   : 'package' qualId NL? '{' topStatSeq '}'
    ;
 
 // PackageObject     ::=  ‘package’ ‘object’ ObjectDef
@@ -751,7 +751,7 @@ packageObject
 
 // CompilationUnit   ::=  {‘package’ QualId semi} TopStatSeq
 compilationUnit
-   : ('package' qualId SEMI)* topStatSeq
+   : ('package' qualId (';' | NL+))* topStatSeq
    ;
 
 
@@ -830,9 +830,9 @@ COMMENT
    : (('/*' .*? '*/') | ('//' ~[\r\n]*)) -> skip
    ;
 
-//NL
-//   : [\u000A]
-//   ;
+NL
+   : '\n'
+   ;
 
 // whiteSpace       ::=  ‘\u0020’ | ‘\u0009’ | ‘\u000D’ | ‘\u000A’
 WS
@@ -840,9 +840,10 @@ WS
    ;
 
 // semi             ::=  ‘;’ |  nl {nl}
-SEMI
-   : ';' | [\u000A]+
-   ;
+//SEMI
+//   : ';' NL*
+//   | NL+
+//   ;
 
 // hexDigit      ::= ‘0’ | … | ‘9’ | ‘A’ | … | ‘F’ | ‘a’ | … | ‘f’
 fragment HEX_DIGIT

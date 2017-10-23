@@ -39,60 +39,6 @@ public class ScalaNeoListener extends ScalaBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inType = new java.util.Stack<>();
-
-	@Override
-	public void enterType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inType.push(true);
-	}
-
-	public void exitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
-		onExit();
-		this.inType.pop();
-	}
-
-	public boolean inType() {
-      return !inType.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFunctionArgTypes = new java.util.Stack<>();
-
-	@Override
-	public void enterFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionArgTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inFunctionArgTypes.push(true);
-	}
-
-	public void exitFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
-		onExit();
-		this.inFunctionArgTypes.pop();
-	}
-
-	public boolean inFunctionArgTypes() {
-      return !inFunctionArgTypes.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inExistentialClause = new java.util.Stack<>();
-
-	@Override
-	public void enterExistentialClause(com.generator.generators.scala.parser.ScalaParser.ExistentialClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExistentialClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inExistentialClause.push(true);
-	}
-
-	public void exitExistentialClause(com.generator.generators.scala.parser.ScalaParser.ExistentialClauseContext arg) {
-		onExit();
-		this.inExistentialClause.pop();
-	}
-
-	public boolean inExistentialClause() {
-      return !inExistentialClause.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExistentialDcl = new java.util.Stack<>();
 
 	@Override
@@ -921,6 +867,60 @@ public class ScalaNeoListener extends ScalaBaseListener {
       return !inClassParamClauses.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inClassParamClause = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassParamClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inClassParamClause.push(true);
+	}
+
+	public void exitClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
+		onExit();
+		this.inClassParamClause.pop();
+	}
+
+	public boolean inClassParamClause() {
+      return !inClassParamClause.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParams = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassParams"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inClassParams.push(true);
+	}
+
+	public void exitClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
+		onExit();
+		this.inClassParams.pop();
+	}
+
+	public boolean inClassParams() {
+      return !inClassParams.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inClassParam = new java.util.Stack<>();
+
+	@Override
+	public void enterClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
+		final Node node = model.findOrCreate(Label.label("ClassParam"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inClassParam.push(true);
+	}
+
+	public void exitClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
+		onExit();
+		this.inClassParam.pop();
+	}
+
+	public boolean inClassParam() {
+      return !inClassParam.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -937,6 +937,24 @@ public class ScalaNeoListener extends ScalaBaseListener {
 
 	public boolean inLiteral() {
       return !inLiteral.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBindings = new java.util.Stack<>();
+
+	@Override
+	public void enterBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Bindings"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inBindings.push(true);
+	}
+
+	public void exitBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
+		onExit();
+		this.inBindings.pop();
+	}
+
+	public boolean inBindings() {
+      return !inBindings.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQualId = new java.util.Stack<>();
@@ -1011,76 +1029,58 @@ public class ScalaNeoListener extends ScalaBaseListener {
       return !inClassQualifier.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassParamClause = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inType = new java.util.Stack<>();
 
 	@Override
-	public void enterClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassParamClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
+		final Node node = model.findOrCreate(Label.label("Type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inClassParamClause.push(true);
+		this.inType.push(true);
 	}
 
-	public void exitClassParamClause(com.generator.generators.scala.parser.ScalaParser.ClassParamClauseContext arg) {
+	public void exitType(com.generator.generators.scala.parser.ScalaParser.TypeContext arg) {
 		onExit();
-		this.inClassParamClause.pop();
+		this.inType.pop();
 	}
 
-	public boolean inClassParamClause() {
-      return !inClassParamClause.isEmpty(); 
+	public boolean inType() {
+      return !inType.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassParams = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inFunctionArgTypes = new java.util.Stack<>();
 
 	@Override
-	public void enterClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassParams"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
+		final Node node = model.findOrCreate(Label.label("FunctionArgTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inClassParams.push(true);
+		this.inFunctionArgTypes.push(true);
 	}
 
-	public void exitClassParams(com.generator.generators.scala.parser.ScalaParser.ClassParamsContext arg) {
+	public void exitFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
 		onExit();
-		this.inClassParams.pop();
+		this.inFunctionArgTypes.pop();
 	}
 
-	public boolean inClassParams() {
-      return !inClassParams.isEmpty(); 
+	public boolean inFunctionArgTypes() {
+      return !inFunctionArgTypes.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inClassParam = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inExistentialClause = new java.util.Stack<>();
 
 	@Override
-	public void enterClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
-		final Node node = model.findOrCreate(Label.label("ClassParam"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public void enterExistentialClause(com.generator.generators.scala.parser.ScalaParser.ExistentialClauseContext arg) {
+		final Node node = model.findOrCreate(Label.label("ExistentialClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
 		onEnter(node);
-		this.inClassParam.push(true);
+		this.inExistentialClause.push(true);
 	}
 
-	public void exitClassParam(com.generator.generators.scala.parser.ScalaParser.ClassParamContext arg) {
+	public void exitExistentialClause(com.generator.generators.scala.parser.ScalaParser.ExistentialClauseContext arg) {
 		onExit();
-		this.inClassParam.pop();
+		this.inExistentialClause.pop();
 	}
 
-	public boolean inClassParam() {
-      return !inClassParam.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBindings = new java.util.Stack<>();
-
-	@Override
-	public void enterBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bindings"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inBindings.push(true);
-	}
-
-	public void exitBindings(com.generator.generators.scala.parser.ScalaParser.BindingsContext arg) {
-		onExit();
-		this.inBindings.pop();
-	}
-
-	public boolean inBindings() {
-      return !inBindings.isEmpty(); 
+	public boolean inExistentialClause() {
+      return !inExistentialClause.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inBinding = new java.util.Stack<>();
