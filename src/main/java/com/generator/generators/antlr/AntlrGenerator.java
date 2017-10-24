@@ -4,8 +4,8 @@ import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
 import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
 import com.generator.generators.java.BaseClassVisitor;
-//import com.generator.generators.scala.parser.ScalaListener;
-//import com.generator.generators.scala.parser.ScalaVisitor;
+import com.generator.generators.sparql.parser.SparqlListener;
+import com.generator.generators.sparql.parser.SparqlVisitor;
 import com.generator.generators.stringtemplate.GeneratedFile;
 
 import java.io.IOException;
@@ -37,6 +37,7 @@ public class AntlrGenerator {
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".sparql.parser", "Sparql", SparqlVisitor.class, SparqlListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STParser", STParserVisitor.class, STParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);

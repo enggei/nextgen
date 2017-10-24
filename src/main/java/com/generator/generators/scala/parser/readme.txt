@@ -1,1 +1,1 @@
-TODO: Fix Scala grammar
+TODO: Fix Scala grammar newline issues

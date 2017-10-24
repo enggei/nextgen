@@ -26,259 +26,926 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 /*
-   Derived from http://www.scala-lang.org/files/archive/spec/2.11/13-syntax-summary.html
+   Derived from https://github.com/scala/scala/blob/2.13.x/spec/13-syntax-summary.md
  */
 
 grammar Scala;
 
-@parser::members {
-
-    /**
-     * Returns {@code true} iff on the current index of the parser's
-     * token stream a token exists on the {@code HIDDEN} channel which
-     * either is a line terminator, or is a multi line comment that
-     * contains a line terminator.
-     *
-     * @return {@code true} iff on the current index of the parser's
-     * token stream a token exists on the {@code HIDDEN} channel which
-     * either is a line terminator, or is a multi line comment that
-     * contains a line terminator.
-     */
-    private boolean lineTerminatorAhead() {
-        // Get the token ahead of the current index.
-        int possibleIndexEosToken = this.getCurrentToken().getTokenIndex() - 1;
-        Token ahead = _input.get(possibleIndexEosToken);
-        if (ahead.getChannel() != Lexer.HIDDEN) {
-            // We're only interested in tokens on the HIDDEN channel.
-            return false;
-        }
-
-        if (ahead.getType() == TERMINATOR) {
-            // There is definitely a line terminator ahead.
-            return true;
-        }
-
-        if (ahead.getType() == WS) {
-            // Get the token ahead of the current whitespaces.
-            possibleIndexEosToken = this.getCurrentToken().getTokenIndex() - 2;
-            ahead = _input.get(possibleIndexEosToken);
-        }
-
-        // Get the token's text and type.
-        String text = ahead.getText();
-        int type = ahead.getType();
-
-        // Check if the token is, or contains a line terminator.
-        return (type == COMMENT && (text.contains("\r") || text.contains("\n"))) ||
-                (type == TERMINATOR);
-    }
-}
-
-@lexer::members {
-
-    // The most recently produced token.
-    private Token lastToken = null;
-
-    /**
-     * Return the next token from the character stream and records this last
-     * token in case it resides on the default channel. This recorded token
-     * is used to determine when the lexer could possibly match a regex
-     * literal.
-     *
-     * @return the next token from the character stream.
-     */
-    @Override
-    public Token nextToken() {
-
-        // Get the next token.
-        Token next = super.nextToken();
-
-        if (next.getChannel() == Token.DEFAULT_CHANNEL) {
-            // Keep track of the last token on the default channel.
-            this.lastToken = next;
-        }
-
-        return next;
-    }
-}
-
-// TEST TEST TEST
-program
-   : statements
+literal
+   : '-'? INTEGER_LITERAL
+   | '-'? FLOATING_POINT_LITERAL
+   | BOOLEAN_LITERAL
+   | CHARACTER_LITERAL
+   | STRING_LITERAL
+   | SYMBOL_LITERAL
+   | 'null'
    ;
 
-statements
-   : (statement eos)*
-   ;
-
-statement
-//   : ('a' 'b' 'c')+
-   : qualId+
-   ;
-
+// QualId            ::=  id {‘.’ id}
 qualId
    : ID ('.' ID)*
    ;
 
-eos
-    : ';'
-    | EOF
-    | {lineTerminatorAhead()}?
-    | {_input.LT(1).getText().equals("}") }?
-    ;
-
-// LEXER
-// ---------------------------------------------------
-
-//UnicodeEscape ::= ‘\’ ‘u’ {‘u’} hexDigit hexDigit hexDigit hexDigit
-UNICODE_ESCAPE
-   : '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+// ids               ::=  id {‘,’ id}
+ids
+   : ID (',' ID)*
    ;
 
-// letter           ::=  upper | lower // and Unicode categories Lo, Lt, Nl
-fragment LETTER
-   : UPPER
-   | LETTER_LOWER_FIRST
+// Path              ::=  StableId
+//                     |  [id ‘.’] ‘this’
+//path
+//   : stableId
+//   | (ID '.')? 'this'
+//   ;
+
+// StableId          ::=  id
+//                     |  Path ‘.’ id
+//                     |  [id ‘.’] ‘super’ [ClassQualifier] ‘.’ id
+stableId
+   : ID
+//   | path '.' ID
+   | (ID | (ID '.')? 'this') '.' ID
+   | (ID '.')? 'super' classQualifier? '.' ID
    ;
 
-fragment LETTER_LOWER_FIRST
-   :
-   | LOWER
-   | UNICODE_CLASS_Lo
-   | UNICODE_CLASS_Lt
-   | UNICODE_CLASS_Nl
+// ClassQualifier    ::=  ‘[’ id ‘]’
+classQualifier
+   : '[' ID ']'
    ;
 
-// digit            ::=  ‘0’ | … | ‘9’
-fragment DIGIT
-   : [0-9]
+// Type              ::=  FunctionArgTypes ‘=>’ Type
+//                     |  InfixType [ExistentialClause]
+type
+   : functionArgTypes '=>' type
+   | infixType existentialClause?
    ;
 
-// paren            ::=  ‘(’ | ‘)’ | ‘[’ | ‘]’ | ‘{’ | ‘}’
-fragment PAREN
-   : [()[\]{}]
+// FunctionArgTypes  ::= InfixType
+//                     | ‘(’ [ ParamType {‘,’ ParamType } ] ‘)’
+functionArgTypes
+   : infixType
+   | '(' (paramType (',' paramType)*)? ')'
    ;
 
-// delim            ::=  ‘`’ | ‘'’ | ‘"’ | ‘.’ | ‘;’ | ‘,’
-fragment DELIM
-   : [`'".;,]
+// ExistentialClause ::=  ‘forSome’ ‘{’ ExistentialDcl {semi ExistentialDcl} ‘}’
+existentialClause
+   : 'forSome' '{' existentialDcl ((';' | NL+) existentialDcl)* '}'
    ;
 
-// op       ::=  opchar {opchar}
-fragment OP
+// ExistentialDcl    ::=  ‘type’ TypeDcl
+//                     |  ‘val’ ValDcl
+existentialDcl
+   : 'type' typeDcl
+   | 'val' valDcl
+   ;
+
+// InfixType         ::=  CompoundType {id [nl] CompoundType}
+infixType
+   : compoundType (ID NL? compoundType)*
+   ;
+
+// CompoundType      ::=  AnnotType {‘with’ AnnotType} [Refinement]
+//                   |  Refinement
+compoundType
+   : annotType ('with' annotType)* refinement?
+   | refinement
+   ;
+
+// AnnotType         ::=  SimpleType {Annotation}
+annotType
+   : simpleType annotation*
+   ;
+
+// SimpleType        ::=  SimpleType TypeArgs
+//                     |  SimpleType ‘#’ id
+//                     |  StableId
+//                     |  Path ‘.’ ‘type’
+//                     |  ‘(’ Types ‘)’
+simpleType
+   : simpleType typeArgs
+   | simpleType '#' ID
+   | stableId
+//   | path '.' 'type'
+   | (stableId | (ID '.')? 'this') '.' 'type'
+   | '(' types ')'
+   ;
+
+// TypeArgs          ::=  ‘[’ Types ‘]’
+typeArgs
+   : '[' types ']'
+   ;
+
+// Types             ::=  Type {‘,’ Type}
+types
+   : type (',' type)*
+   ;
+
+// Refinement        ::=  [nl] ‘{’ RefineStat {semi RefineStat} ‘}’
+refinement
+   : NL? '{' refineStat ((';' | NL+) refineStat)* '}'
+   ;
+
+// RefineStat        ::=  Dcl
+//                     |  ‘type’ TypeDef
+//                     |
+refineStat
+   : dcl
+   | 'type' typeDef
+   |
+   ;
+
+// TypePat           ::=  Type
+typePat
+   : type
+   ;
+
+// Ascription        ::=  ‘:’ InfixType
+//                     |  ‘:’ Annotation {Annotation}
+//                     |  ‘:’ ‘_’ ‘*’
+ascription
+   : ':' infixType
+   | ':' annotation+
+   | ':' '_' '*'
+   ;
+
+// Expr              ::=  (Bindings | [‘implicit’] id | ‘_’) ‘=>’ Expr
+//                     |  Expr1
+expr
+   : (bindings | 'implicit'? ID | '_') '=>' expr
+   | expr1
+   ;
+
+// Expr1             ::=  ‘if’ ‘(’ Expr ‘)’ {nl} Expr [[semi] ‘else’ Expr]
+//                     |  ‘while’ ‘(’ Expr ‘)’ {nl} Expr
+//                     |  ‘try’ (‘{’ Block ‘}’ | Expr) [‘catch’ ‘{’ CaseClauses ‘}’] [‘finally’ Expr]
+//                     |  ‘do’ Expr [semi] ‘while’ ‘(’ Expr ‘)’
+//                     |  ‘for’ (‘(’ Enumerators ‘)’ | ‘{’ Enumerators ‘}’) {nl} [‘yield’] Expr
+//                     |  ‘throw’ Expr
+//                     |  ‘return’ [Expr]
+//                     |  [SimpleExpr ‘.’] id ‘=’ Expr
+//                     |  SimpleExpr1 ArgumentExprs ‘=’ Expr
+//                     |  PostfixExpr
+//                     |  PostfixExpr Ascription
+//                     |  PostfixExpr ‘match’ ‘{’ CaseClauses ‘}’
+expr1
+   : 'if' '(' expr ')' NL* expr ((';' | NL+)? 'else' expr)?
+   | 'while' '(' expr ')' NL* expr
+   | 'try' ('{' block '}' | expr) ('catch' '{' caseClauses '}')? ('finally' expr)?
+   | 'do' expr (';' | NL+)? 'while' '(' expr ')'
+   | 'for' ('(' enumerators ')' | '{' enumerators '}') NL* 'yield'? expr
+   | 'throw' expr
+   | 'return' expr?
+   | (simpleExpr '.')? ID '=' expr
+   | simpleExpr1 argumentExprs '=' expr
+   | postfixExpr
+   | postfixExpr ascription
+   | postfixExpr 'match' '{' caseClauses '}'
+   ;
+
+// PostfixExpr       ::=  InfixExpr [id [nl]]
+postfixExpr
+   : infixExpr (ID NL?)?
+   ;
+
+// InfixExpr         ::=  PrefixExpr
+//                     |  InfixExpr id [nl] InfixExpr
+infixExpr
+   : prefixExpr
+   | infixExpr ID NL? infixExpr
+   ;
+
+// PrefixExpr        ::=  [‘-’ | ‘+’ | ‘~’ | ‘!’] SimpleExpr
+prefixExpr
+   : ('-' | '+' | '~' | '!')? simpleExpr /*('new' (classTemplate | templateBody) | blockExpr | simpleExpr1 '_'?)*/
+   ;
+
+//SimpleExpr        ::=  ‘new’ (ClassTemplate | TemplateBody)
+//                      |  BlockExpr
+//                      |  SimpleExpr1 [‘_’]
+simpleExpr
+//   : 'new' (classTemplate | templateBody)
+//   | blockExpr
+   : simpleExpr2
+   | simpleExpr1 '_'?
+   ;
+
+// SimpleExpr1       ::=  Literal
+//                     |  Path
+//                     |  ‘_’
+//                     |  ‘(’ [Exprs] ‘)’
+//                     |  SimpleExpr ‘.’ id
+//                     |  SimpleExpr TypeArgs
+//                     |  SimpleExpr1 ArgumentExprs
+//                     |  XmlExpr
+// TODO: XmlExpr
+simpleExpr1
+   : literal
+//   | path
+   | (stableId | (ID '.')? 'this')
+   | '_'
+   | '(' exprs? ')'
+//   | simpleExpr '.' ID
+   | simpleExpr2 '.' ID
+//   | simpleExpr '.' typeArgs
+   | simpleExpr2 typeArgs
+   | simpleExpr1 argumentExprs
+   ;
+
+simpleExpr2
+   : 'new' (classTemplate | templateBody)
+   | blockExpr
+   ;
+
+// Exprs             ::=  Expr {‘,’ Expr}
+exprs
+   : expr (',' expr)*
+   ;
+
+// ArgumentExprs     ::=  ‘(’ [Exprs] ‘)’
+//                     |  ‘(’ [Exprs ‘,’] PostfixExpr ‘:’ ‘_’ ‘*’ ‘)’
+//                     |  [nl] BlockExpr
+argumentExprs
+   : '(' exprs? ')'
+   | '(' (exprs ',')? postfixExpr ':' '_' '*' ')'
+   | NL? blockExpr
+   ;
+
+// BlockExpr         ::=  ‘{’ CaseClauses ‘}’
+//                     |  ‘{’ Block ‘}’
+blockExpr
+   : '{' caseClauses '}'
+   | '{' block '}'
+   ;
+
+// Block             ::=  BlockStat {semi BlockStat} [ResultExpr]
+block
+   : blockStat ((';' | NL+) blockStat)* resultExpr?
+   ;
+
+// BlockStat         ::=  Import
+//                     |  {Annotation} [‘implicit’ | ‘lazy’] Def
+//                     |  {Annotation} {LocalModifier} TmplDef
+//                     |  Expr1
+//                     |
+blockStat
+   : import_
+   | annotation* ('implicit' | 'lazy')? def
+   | annotation* localModifier* tmplDef
+   | expr1
+   |
+   ;
+
+// ResultExpr        ::=  Expr1
+//                     |  (Bindings | ([‘implicit’] id | ‘_’) ‘:’ CompoundType) ‘=>’ Block
+resultExpr
+   : expr1
+   | (bindings | ('implicit'? ID | '_') ':' compoundType) '=>' block
+   ;
+
+// Enumerators       ::=  Generator {semi Generator}
+enumerators
+   : generator ((';' | NL+) generator)*
+   ;
+
+// Generator         ::=  Pattern1 ‘<-’ Expr {[semi] Guard | semi Pattern1 ‘=’ Expr}
+generator
+   : pattern1 '<-' expr ((';' | NL+)? guard | (';' | NL+) pattern1 '=' expr)*
+   ;
+
+// CaseClauses       ::=  CaseClause { CaseClause }
+caseClauses
+   : caseClause+
+   ;
+
+// CaseClause        ::=  ‘case’ Pattern [Guard] ‘=>’ Block
+caseClause
+   : 'case' pattern guard? '=>' block
+   ;
+
+// Guard             ::=  ‘if’ PostfixExpr
+guard
+   : 'if' postfixExpr
+   ;
+
+// Pattern           ::=  Pattern1 { ‘|’ Pattern1 }
+pattern
+   : pattern1 ('|' pattern1)*
+   ;
+
+// Pattern1          ::=  varid ‘:’ TypePat
+//                     |  ‘_’ ‘:’ TypePat
+//                     |  Pattern2
+pattern1
+   : VARID ':' typePat
+   | '_' ':' typePat
+   | pattern2
+   ;
+
+// Pattern2          ::=  varid [‘@’ Pattern3]
+//                     |  Pattern3
+pattern2
+   : VARID ('@' pattern3)?
+   | pattern3
+   ;
+
+// Pattern3          ::=  SimplePattern
+//                     |  SimplePattern { id [nl] SimplePattern }
+pattern3
+   : simplePattern
+   | simplePattern (ID NL? simplePattern)*
+   ;
+
+// SimplePattern     ::=  ‘_’
+//                     |  varid
+//                     |  Literal
+//                     |  StableId
+//                     |  StableId ‘(’ [Patterns] ‘)’
+//                     |  StableId ‘(’ [Patterns ‘,’] [varid ‘@’] ‘_’ ‘*’ ‘)’
+//                     |  ‘(’ [Patterns] ‘)’
+//                     |  XmlPattern
+// TODO: XmlPattern
+simplePattern
+   : '_'
+   | VARID
+   | literal
+   | stableId
+   | stableId '(' patterns? ')'
+   | stableId '(' (patterns ',')? (VARID '@')? '_' '*' ')'
+   | '(' patterns? ')'
+   ;
+
+// Patterns          ::=  Pattern [‘,’ Patterns]
+//                     |  ‘_’ ‘*’
+patterns
+   : pattern (',' patterns)?
+   | '_' '*'
+   ;
+
+// TypeParamClause   ::=  ‘[’ VariantTypeParam {‘,’ VariantTypeParam} ‘]’
+typeParamClause
+   : '[' variantTypeParam (',' variantTypeParam)* ']'
+   ;
+
+// FunTypeParamClause::=  ‘[’ TypeParam {‘,’ TypeParam} ‘]’
+funTypeParamClause
+   : '[' typeParam (',' typeParam)* ']'
+   ;
+
+// VariantTypeParam  ::=  {Annotation} [‘+’ | ‘-’] TypeParam
+variantTypeParam
+   : annotation* ('+' | '-')? typeParam
+   ;
+
+// TypeParam         ::=  (id | ‘_’) [TypeParamClause] [‘>:’ Type] [‘<:’ Type]
+//                        {‘<%’ Type} {‘:’ Type}
+typeParam
+   : (ID | '_') typeParamClause? ('>:' type)? ('<:' type)? ('<%' type)* (':' type)*
+   ;
+
+// ParamClauses      ::=  {ParamClause} [[nl] ‘(’ ‘implicit’ Params ‘)’]
+paramClauses
+   : paramClause* (NL? '(' 'implicit' params ')')?
+   ;
+
+// ParamClause       ::=  [nl] ‘(’ [Params] ‘)’
+paramClause
+   : NL? '(' params? ')'
+   ;
+
+// Params            ::=  Param {‘,’ Param}
+params
+   : param (',' param)*
+   ;
+
+// Param             ::=  {Annotation} id [‘:’ ParamType] [‘=’ Expr]
+param
+   : annotation* ID (':' paramType)? ('=' expr)?
+   ;
+
+// ParamType         ::=  Type
+//                     |  ‘=>’ Type
+//                     |  Type ‘*’
+paramType
+   : type
+   | '=>' type
+   | type '*'
+   ;
+
+// ClassParamClauses ::=  {ClassParamClause}
+//                        [[nl] ‘(’ ‘implicit’ ClassParams ‘)’]
+classParamClauses
+   : classParamClause* (NL? '(' 'implicit' classParams ')')?
+   ;
+
+// ClassParamClause  ::=  [nl] ‘(’ [ClassParams] ‘)’
+classParamClause
+   : NL? '(' classParams? ')'
+   ;
+
+// ClassParams       ::=  ClassParam {‘,’ ClassParam}
+classParams
+   : classParam (',' classParam)*
+   ;
+
+// ClassParam        ::=  {Annotation} {Modifier} [(‘val’ | ‘var’)]
+//                        id ‘:’ ParamType [‘=’ Expr]
+classParam
+   : annotation* modifier* ('val' | 'var')? ID ':' paramType ('=' expr)?
+   ;
+
+// Bindings          ::=  ‘(’ Binding {‘,’ Binding} ‘)’
+bindings
+   : '(' binding (',' binding)* ')'
+   ;
+
+// Binding           ::=  (id | ‘_’) [‘:’ Type]
+binding
+   : (ID | '_') (':' type)?
+   ;
+
+// Modifier          ::=  LocalModifier
+//                     |  AccessModifier
+//                     |  ‘override’
+modifier
+   : localModifier
+   | accessModifier
+   | 'override'
+   ;
+
+// LocalModifier     ::=  ‘abstract’
+//                     |  ‘final’
+//                     |  ‘sealed’
+//                     |  ‘implicit’
+//                     |  ‘lazy’
+localModifier
+   : 'abstract'
+   | 'final'
+   | 'sealed'
+   | 'implicit'
+   | 'lazy'
+   ;
+
+// AccessModifier    ::=  (‘private’ | ‘protected’) [AccessQualifier]
+accessModifier
+   : ('private' | 'protected') accessQualifier?
+   ;
+
+// AccessQualifier   ::=  ‘[’ (id | ‘this’) ‘]’
+accessQualifier
+   : '[' (ID | 'this') ']'
+   ;
+
+// Annotation        ::=  ‘@’ SimpleType {ArgumentExprs}
+annotation
+   : '@' simpleType argumentExprs*
+   ;
+
+// ConstrAnnotation  ::=  ‘@’ SimpleType ArgumentExprs
+constrAnnotation
+   : '@' simpleType argumentExprs
+   ;
+
+// TemplateBody      ::=  [nl] ‘{’ [SelfType] TemplateStat {semi TemplateStat} ‘}’
+templateBody
+   : NL? '{' selfType? templateStat ((';' | NL+) templateStat)* '}'
+   ;
+
+// TemplateStat      ::=  Import
+//                     |  {Annotation [nl]} {Modifier} Def
+//                     |  {Annotation [nl]} {Modifier} Dcl
+//                     |  Expr
+//                     |
+templateStat
+   : import_
+   | (annotation NL?)* modifier* def
+   | (annotation NL?)* modifier* dcl
+   | expr
+   |
+   ;
+
+// SelfType          ::=  id [‘:’ Type] ‘=>’
+//                     |  ‘this’ ‘:’ Type ‘=>’
+selfType
+   : ID (':' type)? '=>'
+   | 'this' ':' type '=>'
+   ;
+
+// Import            ::=  ‘import’ ImportExpr {‘,’ ImportExpr}
+import_
+   : 'import' importExpr (',' importExpr)*
+   ;
+
+// ImportExpr        ::=  StableId ‘.’ (id | ‘_’ | ImportSelectors)
+importExpr
+   : stableId '.' (ID | '_' | importSelectors)
+   ;
+
+// ImportSelectors   ::=  ‘{’ {ImportSelector ‘,’} (ImportSelector | ‘_’) ‘}’
+importSelectors
+   : '{' (importSelector ',')* (importSelector | '_') '}'
+   ;
+
+// ImportSelector    ::=  id [‘=>’ id | ‘=>’ ‘_’]
+importSelector
+   : ID ('=>' ID | '=>' '_')?
+   ;
+
+// Dcl               ::=  ‘val’ ValDcl
+//                     |  ‘var’ VarDcl
+//                     |  ‘def’ FunDcl
+//                     |  ‘type’ {nl} TypeDcl
+dcl
+   : 'val' valDcl
+   | 'var' varDcl
+   | 'def' funDcl
+   | 'type' NL* typeDcl
+   ;
+
+// ValDcl            ::=  ids ‘:’ Type
+valDcl
+   : ids ':' type
+   ;
+
+// VarDcl            ::=  ids ‘:’ Type
+varDcl
+   : ids ':' type
+   ;
+
+// FunDcl            ::=  FunSig [‘:’ Type]
+funDcl
+   : funSig (':' type)?
+   ;
+
+// FunSig            ::=  id [FunTypeParamClause] ParamClauses
+funSig
+   : ID funTypeParamClause? paramClauses
+   ;
+
+// TypeDcl           ::=  id [TypeParamClause] [‘>:’ Type] [‘<:’ Type]
+typeDcl
+   : ID typeParamClause? ('>:' type)? ('<::' type)?
+   ;
+
+// PatVarDef         ::=  ‘val’ PatDef
+//                     |  ‘var’ VarDef
+patVarDef
+   : 'val' patDef
+   | 'var' varDef
+   ;
+
+// Def               ::=  PatVarDef
+//                     |  ‘def’ FunDef
+//                     |  ‘type’ {nl} TypeDef
+//                     |  TmplDef
+def
+   : patVarDef
+   | 'def' funDef
+   | 'type' NL* typeDef
+   | tmplDef
+   ;
+
+// PatDef            ::=  Pattern2 {‘,’ Pattern2} [‘:’ Type] ‘=’ Expr
+patDef
+   : pattern2 (',' pattern2)* (':' type)? '=' expr
+   ;
+
+// VarDef            ::=  PatDef
+//                     |  ids ‘:’ Type ‘=’ ‘_’
+varDef
+   : patDef
+   | ids ':' type '=' '_'
+   ;
+
+// FunDef            ::=  FunSig [‘:’ Type] ‘=’ Expr
+//                     |  FunSig [nl] ‘{’ Block ‘}’
+//                     |  ‘this’ ParamClause ParamClauses
+//                        (‘=’ ConstrExpr | [nl] ConstrBlock)
+funDef
+   : funSig (':' type)? '=' expr
+   | funSig NL? '{' block '}'
+   | 'this' paramClause paramClauses ('=' constrExpr | NL? constrBlock)
+   ;
+
+// TypeDef           ::=  id [TypeParamClause] ‘=’ Type
+typeDef
+   : ID typeParamClause? '=' type
+   ;
+
+// TmplDef           ::=  [‘case’] ‘class’ ClassDef
+//                     |  [‘case’] ‘object’ ObjectDef
+//                     |  ‘trait’ TraitDef
+tmplDef
+   : 'case'? 'class' classDef
+   | 'case'? 'object' objectDef
+   | 'trait' traitDef
+   ;
+
+// ClassDef          ::=  id [TypeParamClause] {ConstrAnnotation} [AccessModifier]
+//                        ClassParamClauses ClassTemplateOpt
+classDef
+   : ID typeParamClause? constrAnnotation* accessModifier? classParamClauses classTemplateOpt
+   ;
+
+// TraitDef          ::=  id [TypeParamClause] TraitTemplateOpt
+traitDef
+   : ID typeParamClause? traitTemplateOpt
+   ;
+
+// ObjectDef         ::=  id ClassTemplateOpt
+objectDef
+   : ID classTemplateOpt
+   ;
+
+// ClassTemplateOpt  ::=  ‘extends’ ClassTemplate
+//                     | [[‘extends’] TemplateBody]
+classTemplateOpt
+   : 'extends' classTemplate
+   | ('extends'? templateBody)?
+   ;
+
+// TraitTemplateOpt  ::=  ‘extends’ TraitTemplate | [[‘extends’] TemplateBody]
+traitTemplateOpt
+   : 'extends' traitTemplate
+   | ('extends'? templateBody)?
+   ;
+
+// ClassTemplate     ::=  [EarlyDefs] ClassParents [TemplateBody]
+classTemplate
+   : earlyDefs? classParents templateBody?
+   ;
+
+// TraitTemplate     ::=  [EarlyDefs] TraitParents [TemplateBody]
+traitTemplate
+   : earlyDefs? traitParents templateBody?
+   ;
+
+// ClassParents      ::=  Constr {‘with’ AnnotType}
+classParents
+   : constr ('with' annotType)*
+   ;
+
+// TraitParents      ::=  AnnotType {‘with’ AnnotType}
+traitParents
+   : annotType ('with' annotType)*
+   ;
+
+// Constr            ::=  AnnotType {ArgumentExprs}
+constr
+   : annotType argumentExprs*
+   ;
+
+// EarlyDefs         ::= ‘{’ [EarlyDef {semi EarlyDef}] ‘}’ ‘with’
+earlyDefs
+   : '{' (earlyDef ((';' | NL+) earlyDef)*)? '}' 'with'
+   ;
+
+// EarlyDef          ::=  {Annotation [nl]} {Modifier} PatVarDef
+earlyDef
+   : (annotation NL?)* modifier* patVarDef
+   ;
+
+// ConstrExpr        ::=  SelfInvocation
+//                     |  ConstrBlock
+constrExpr
+   : selfInvocation
+   | constrBlock
+   ;
+
+// ConstrBlock       ::=  ‘{’ SelfInvocation {semi BlockStat} ‘}’
+constrBlock
+   : '{' selfInvocation ((';' | NL+) blockStat)* '}'
+   ;
+
+// SelfInvocation    ::=  ‘this’ ArgumentExprs {ArgumentExprs}
+selfInvocation
+   : 'this' argumentExprs+
+   ;
+
+// TopStatSeq        ::=  TopStat {semi TopStat}
+topStatSeq
+   : topStat ((';' | NL+) topStat)*
+   ;
+
+// TopStat           ::=  {Annotation [nl]} {Modifier} TmplDef
+//                     |  Import
+//                     |  Packaging
+//                     |  PackageObject
+//                     |
+topStat
+   : (annotation NL?)* modifier* tmplDef
+   | import_
+   | packaging
+   | packageObject
+   |
+   ;
+
+// Packaging         ::=  ‘package’ QualId [nl] ‘{’ TopStatSeq ‘}’
+packaging
+   : 'package' qualId NL? '{' topStatSeq '}'
+   ;
+
+// PackageObject     ::=  ‘package’ ‘object’ ObjectDef
+packageObject
+   : 'package' 'object' objectDef
+   ;
+
+// CompilationUnit   ::=  {‘package’ QualId semi} TopStatSeq
+compilationUnit
+   : ('package' qualId (';' | NL+))* topStatSeq
+   ;
+
+
+///
+/// LEXER
+///
+
+// op               ::=  opchar {opchar}
+OP
    : OPCHAR+
    ;
 
+// id               ::=  plainid
+//                  |  ‘`’ { charNoBackQuoteOrNewline | UnicodeEscape | charEscapeSeq } ‘`’
+ID
+   : PLAINID
+   | '`' (CHAR_NO_BACK_QUOTE_OR_NEW_LINE | UNICODE_ESCAPE | CHAR_ESCAPE_SEQ)* '`'
+   ;
+
 // varid            ::=  lower idrest
-fragment VARID
+VARID
    : LOWER IDREST
    ;
 
-/*plainid          ::=  upper idrest
-                 |  varid
-                 |  op
-*/
-fragment PLAINID
-   : UPPER (LETTER_LOWER_FIRST | DIGIT)*
-//   | VARID
-//   | OP
+// plainid          ::=  upper idrest
+//                  |  varid
+//                  |  op
+PLAINID
+   : UPPER IDREST
+   | VARID
+   | OP
    ;
 
-/*id               ::=  plainid
-                 |  ‘`’ { charNoBackQuoteOrNewline | UnicodeEscape | charEscapeSeq } ‘`’
-*/
-ID
-//   : UPPER [a-zA-Z0-9]*
-//   : [A-Z] [a-zA-Z0-9]*
-   : PLAINID
-//   | '`' (UNICODE_ESCAPE | CHAR_ESCAPE_SEQ | ~[`\n]) '`'
+// integerLiteral   ::=  (decimalNumeral | hexNumeral) [‘L’ | ‘l’]
+INTEGER_LITERAL
+   : (DECIMAL_NUMERAL | HEX_NUMERAL) ('L' | 'l')?
    ;
 
-// idrest           ::=  {letter | digit} [‘_’ op]
-fragment IDREST
-   : (LETTER | DIGIT)* /*('_' OP)?*/
+// floatingPointLiteral
+//                  ::=  digit {digit} ‘.’ digit {digit} [exponentPart] [floatType]
+//                  |  ‘.’ digit {digit} [exponentPart] [floatType]
+//                  |  digit {digit} exponentPart [floatType]
+//                  |  digit {digit} [exponentPart] floatType
+FLOATING_POINT_LITERAL
+   : DIGIT+ '.' DIGIT+ EXPONENT_PART? FLOAT_TYPE?
+   | '.' DIGIT+ EXPONENT_PART? FLOAT_TYPE?
+   | DIGIT+ EXPONENT_PART FLOAT_TYPE?
+   | DIGIT+ EXPONENT_PART? FLOAT_TYPE
    ;
 
-// opchar           ::= // printableChar not matched by (whiteSpace | upper | lower |
-//                      // letter | digit | paren | delim | opchar | Unicode_Sm | Unicode_So)
-fragment OPCHAR
-   : ~([ \tA-Za-z0-9`'".;,])
+// booleanLiteral   ::=  ‘true’ | ‘false’
+BOOLEAN_LITERAL
+   : 'true' | 'false'
    ;
 
-fragment CHAR_ESCAPE_SEQ
-   : '\\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | '\'' | '\\')
+// characterLiteral ::=  ‘'’ (charNoQuoteOrNewline | UnicodeEscape | charEscapeSeq) ‘'’
+CHARACTER_LITERAL
+   : '\'' (CHAR_NO_QUOTE_OR_NEW_LINE | UNICODE_ESCAPE | CHAR_ESCAPE_SEQ) '\''
    ;
 
-// upper            ::=  ‘A’ | … | ‘Z’ | ‘$’ | ‘_’  // and Unicode category Lu
-fragment UPPER
-   : [A-Z\u0024\u005F]
-   | UNICODE_CLASS_Lu
+// stringLiteral    ::=  ‘"’ {stringElement} ‘"’
+//                  |  ‘"""’ multiLineChars ‘"""’
+STRING_LITERAL
+   : '"' STRING_ELEMENT* '"'
+   | '"""' MULTILINE_CHARS '"""'
    ;
 
-// lower            ::=  ‘a’ | … | ‘z’ // and Unicode category Ll
-fragment LOWER
-   : [a-z]
-   | UNICODE_CLASS_Ll
+// symbolLiteral    ::=  ‘'’ plainid
+SYMBOL_LITERAL
+   : '\'' PLAINID
    ;
 
-// Unicode category Lu (ref: http://www.fileformat.info/info/unicode/category/Lu/list.htm)
-fragment UNICODE_CLASS_Lu
-   : [\u0041-\u005A]
-   | [\u00C0-\u00D6]
-   | [\u00D8-\u00DE]    // TODO: Add the rest of class Lu
+// comment          ::=  ‘/*’ “any sequence of characters; nested comments are allowed” ‘*/’
+//                  |  ‘//’ “any sequence of characters up to end of line”
+COMMENT
+   : (('/*' .*? '*/') | ('//' ~[\r\n]*)) -> skip
    ;
 
-// Unicode category Ll (ref: http://www.fileformat.info/info/unicode/category/Ll/list.htm)
-fragment UNICODE_CLASS_Ll
-   : [\u0061-\u007A]    // TODO: Add the rest of class Ll
+NL
+   : '\n'
    ;
 
-// Unicode categories Lo (ref: http://www.fileformat.info/info/unicode/category/Lo/list.htm)
-fragment UNICODE_CLASS_Lo
-   :
+// whiteSpace       ::=  ‘\u0020’ | ‘\u0009’ | ‘\u000D’ | ‘\u000A’
+WS
+   :  ([\u0020\u0009]+) -> channel(HIDDEN)
    ;
 
-// Unicode categories Lt (ref: http://www.fileformat.info/info/unicode/category/Lt/list.htm)
-fragment UNICODE_CLASS_Lt
-   : [\u01C5\u01C8\u01CB]   // TODO: Add the rest of class Lt
-   ;
-
-// Unicode categories Nl (ref: http://www.fileformat.info/info/unicode/category/Nl/list.htm)
-fragment UNICODE_CLASS_Nl
-   : [\u16EE-\u16F0]        // TODO: Add the rest of class Nl
-   ;
-
-// Unicode categories Sm (ref: http://www.fileformat.info/info/unicode/category/Sm/list.htm)
-fragment UNICODE_CLASS_Sm
-   : [\u002B\u003C-\u003E]  // TODO: Add the rest of class Sm
-   ;
-
-// Unicode categories So (ref: http://www.fileformat.info/info/unicode/category/So/list.htm)
-fragment UNICODE_CLASS_So
-   : [\u00A6\u00A9\u00AE]  // TODO: Add the rest of class So
-   ;
+// semi             ::=  ‘;’ |  nl {nl}
+//SEMI
+//   : ';' NL*
+//   | NL+
+//   ;
 
 // hexDigit      ::= ‘0’ | … | ‘9’ | ‘A’ | … | ‘F’ | ‘a’ | … | ‘f’
 fragment HEX_DIGIT
    : [0-9a-fA-F]
    ;
 
-//
-// Whitespace and comments
-//
+// UnicodeEscape ::= ‘\’ ‘u’ {‘u’} hexDigit hexDigit hexDigit hexDigit
+fragment UNICODE_ESCAPE
+   : '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+   ;
 
-WS  :  [ \t]+ -> channel(HIDDEN)
-    ;
+// upper            ::=  ‘A’ | … | ‘Z’ | ‘\$’ | ‘_’  // and Unicode category Lu
+fragment UPPER
+   : [A-Z\u005F\u0024\p{Lu}]
+   ;
 
-COMMENT
-    :   '/*' .*? '*/' -> channel(HIDDEN)
-    ;
+// lower            ::=  ‘a’ | … | ‘z’ // and Unicode category Ll
+fragment LOWER
+   : [a-z\p{Ll}]
+   ;
 
-TERMINATOR
-	: [\r\n]+ -> channel(HIDDEN)
-	;
+// letter           ::=  upper | lower // and Unicode categories Lo, Lt, Nl
+fragment LETTER
+   : UPPER
+   | LOWER
+   | [\p{Lo}\p{Lt}\p{Nl}]
+   ;
 
+// opchar           ::= // printableChar not matched by (whiteSpace | upper | lower |
+//                      // letter | digit | paren | delim | opchar | Unicode_Sm | Unicode_So)
+fragment OPCHAR
+//   : ~[\u0000-\u001FA-Z\u005F\u0024\p{Lu}a-z\p{Ll}\p{Lo}\p{Lt}\p{Nl}0-9()[\]{}`'".;,\p{Sm}\p{So}]
+   : [+<=>|~!:#%&*\\\-/?]
+   ;
 
-LINE_COMMENT
-    :   '//' ~[\r\n]* -> skip
-    ;
+fragment CHAR_NO_BACK_QUOTE_OR_NEW_LINE
+   : [\u0020-\u005F\u0061-\u007E]
+   ;
+
+fragment CHAR_NO_DOUBLE_QUOTE
+   : [\u000A\u0020-\u0026\u0028-\u007E]
+   ;
+
+fragment CHAR_ESCAPE_SEQ
+   : '\\' ('b' | 't' | 'n' | 'f' | 'r' | '"' | '\'' | '\\')
+   ;
+
+// digit            ::=  ‘0’ | nonZeroDigit
+fragment DIGIT
+   : [0-9]
+   ;
+
+// nonZeroDigit     ::=  ‘1’ | … | ‘9’
+fragment NON_ZERO_DIGIT
+   : [1-9]
+   ;
+
+// idrest           ::=  {letter | digit} [‘_’ op]
+fragment IDREST
+   : (LETTER | DIGIT)* ('_' OP)?
+   ;
+
+// decimalNumeral   ::=  ‘0’ | nonZeroDigit {digit}
+fragment DECIMAL_NUMERAL
+   : '0'
+   | NON_ZERO_DIGIT DIGIT*
+   ;
+
+// hexNumeral       ::=  ‘0’ (‘x’ | ‘X’) hexDigit {hexDigit}
+fragment HEX_NUMERAL
+   : '0' ('x' | 'X') HEX_DIGIT+
+   ;
+
+// exponentPart     ::=  (‘E’ | ‘e’) [‘+’ | ‘-’] digit {digit}
+fragment EXPONENT_PART
+   : [Ee] [+\-]? DIGIT+
+   ;
+
+// floatType        ::=  ‘F’ | ‘f’ | ‘D’ | ‘d’
+fragment FLOAT_TYPE
+//   : 'F' | 'f' | 'D' | 'd'
+   : [FfDd]
+   ;
+
+fragment CHAR_NO_QUOTE_OR_NEW_LINE
+   : [\u0020-\u0026\u0028-\u007E]
+   ;
+
+// stringElement    ::=  charNoDoubleQuoteOrNewline
+//                  |  UnicodeEscape
+//                  |  charEscapeSeq
+fragment STRING_ELEMENT
+   : CHAR_NO_DOUBLE_QUOTE_OR_NEW_LINE
+   | UNICODE_ESCAPE
+   | CHAR_ESCAPE_SEQ
+   ;
+
+// multiLineChars   ::=  {[‘"’] [‘"’] charNoDoubleQuote} {‘"’}
+fragment MULTILINE_CHARS
+   : ('"'? '"'? CHAR_NO_DOUBLE_QUOTE)* '"'*
+   ;
+
+fragment CHAR_NO_DOUBLE_QUOTE_OR_NEW_LINE
+   : [\u0020\u0021\u0023-\u007E]
+   ;
