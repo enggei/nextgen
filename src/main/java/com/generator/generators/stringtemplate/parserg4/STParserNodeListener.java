@@ -52,7 +52,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STParser.TemplateContext arg) {
-		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Template", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTemplate.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterElements(com.generator.generators.stringtemplate.parserg4.STParser.ElementsContext arg) {
-		onEnter(new Node("Elements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Elements", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElements.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterSingleElement(com.generator.generators.stringtemplate.parserg4.STParser.SingleElementContext arg) {
-		onEnter(new Node("SingleElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SingleElement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSingleElement.push(true);
 	}
 
@@ -103,7 +103,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterCompoundElement(com.generator.generators.stringtemplate.parserg4.STParser.CompoundElementContext arg) {
-		onEnter(new Node("CompoundElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("CompoundElement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inCompoundElement.push(true);
 	}
 
@@ -120,7 +120,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterExprTag(com.generator.generators.stringtemplate.parserg4.STParser.ExprTagContext arg) {
-		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExprTag", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExprTag.push(true);
 	}
 
@@ -137,7 +137,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterRegion(com.generator.generators.stringtemplate.parserg4.STParser.RegionContext arg) {
-		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Region", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRegion.push(true);
 	}
 
@@ -154,7 +154,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterSubtemplate(com.generator.generators.stringtemplate.parserg4.STParser.SubtemplateContext arg) {
-		onEnter(new Node("Subtemplate", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Subtemplate", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSubtemplate.push(true);
 	}
 
@@ -171,7 +171,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterIfstat(com.generator.generators.stringtemplate.parserg4.STParser.IfstatContext arg) {
-		onEnter(new Node("Ifstat", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Ifstat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIfstat.push(true);
 	}
 
@@ -188,7 +188,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterConditional(com.generator.generators.stringtemplate.parserg4.STParser.ConditionalContext arg) {
-		onEnter(new Node("Conditional", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Conditional", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inConditional.push(true);
 	}
 
@@ -205,7 +205,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterAndConditional(com.generator.generators.stringtemplate.parserg4.STParser.AndConditionalContext arg) {
-		onEnter(new Node("AndConditional", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("AndConditional", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAndConditional.push(true);
 	}
 
@@ -222,7 +222,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterNotConditional(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalContext arg) {
-		onEnter(new Node("NotConditional", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("NotConditional", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNotConditional.push(true);
 	}
 
@@ -239,7 +239,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterNotConditionalExpr(com.generator.generators.stringtemplate.parserg4.STParser.NotConditionalExprContext arg) {
-		onEnter(new Node("NotConditionalExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("NotConditionalExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNotConditionalExpr.push(true);
 	}
 
@@ -256,7 +256,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterExprOptions(com.generator.generators.stringtemplate.parserg4.STParser.ExprOptionsContext arg) {
-		onEnter(new Node("ExprOptions", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExprOptions", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExprOptions.push(true);
 	}
 
@@ -273,7 +273,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterMapExpr(com.generator.generators.stringtemplate.parserg4.STParser.MapExprContext arg) {
-		onEnter(new Node("MapExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MapExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMapExpr.push(true);
 	}
 
@@ -290,7 +290,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterMemberExpr(com.generator.generators.stringtemplate.parserg4.STParser.MemberExprContext arg) {
-		onEnter(new Node("MemberExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MemberExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMemberExpr.push(true);
 	}
 
@@ -307,7 +307,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterMapTemplateRef(com.generator.generators.stringtemplate.parserg4.STParser.MapTemplateRefContext arg) {
-		onEnter(new Node("MapTemplateRef", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MapTemplateRef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMapTemplateRef.push(true);
 	}
 
@@ -324,7 +324,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterIncludeExpr(com.generator.generators.stringtemplate.parserg4.STParser.IncludeExprContext arg) {
-		onEnter(new Node("IncludeExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("IncludeExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIncludeExpr.push(true);
 	}
 
@@ -341,7 +341,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterArgExprList(com.generator.generators.stringtemplate.parserg4.STParser.ArgExprListContext arg) {
-		onEnter(new Node("ArgExprList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ArgExprList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArgExprList.push(true);
 	}
 
@@ -358,7 +358,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterNamedArg(com.generator.generators.stringtemplate.parserg4.STParser.NamedArgContext arg) {
-		onEnter(new Node("NamedArg", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("NamedArg", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNamedArg.push(true);
 	}
 
@@ -375,7 +375,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterOption(com.generator.generators.stringtemplate.parserg4.STParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOption.push(true);
 	}
 
@@ -392,7 +392,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.stringtemplate.parserg4.STParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElement.push(true);
 	}
 
@@ -409,7 +409,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterList(com.generator.generators.stringtemplate.parserg4.STParser.ListContext arg) {
-		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inList.push(true);
 	}
 
@@ -426,7 +426,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterExpr(com.generator.generators.stringtemplate.parserg4.STParser.ExprContext arg) {
-		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExpr.push(true);
 	}
 
@@ -443,7 +443,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterPrimary(com.generator.generators.stringtemplate.parserg4.STParser.PrimaryContext arg) {
-		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Primary", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inPrimary.push(true);
 	}
 
@@ -460,7 +460,7 @@ public class STParserNodeListener extends STParserBaseListener {
 
 	@Override
 	public void enterArgs(com.generator.generators.stringtemplate.parserg4.STParser.ArgsContext arg) {
-		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArgs.push(true);
 	}
 

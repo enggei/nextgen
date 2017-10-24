@@ -48,28 +48,11 @@ public class CSVNodeListener extends CSVBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
-
-	@Override
-	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		onEnter(new Node("CsvFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inCsvFile.push(true);
-	}
-
-	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		onExit();
-		this.inCsvFile.pop();
-	}
-
-	public boolean inCsvFile() {
-      return !inCsvFile.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
 
 	@Override
 	public void enterHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		onEnter(new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHdr.push(true);
 	}
 
@@ -86,7 +69,7 @@ public class CSVNodeListener extends CSVBaseListener {
 
 	@Override
 	public void enterRow(com.generator.generators.csv.parser.CSVParser.RowContext arg) {
-		onEnter(new Node("Row", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Row", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRow.push(true);
 	}
 
@@ -103,7 +86,7 @@ public class CSVNodeListener extends CSVBaseListener {
 
 	@Override
 	public void enterField(com.generator.generators.csv.parser.CSVParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inField.push(true);
 	}
 
@@ -114,6 +97,23 @@ public class CSVNodeListener extends CSVBaseListener {
 
 	public boolean inField() {
       return !inField.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
+
+	@Override
+	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		onEnter(new Node("CsvFile", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inCsvFile.push(true);
+	}
+
+	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		onExit();
+		this.inCsvFile.pop();
+	}
+
+	public boolean inCsvFile() {
+      return !inCsvFile.isEmpty(); 
    }
 
 }

@@ -43,7 +43,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNotExpression.push(true);
 	}
@@ -61,7 +61,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRoot(com.generator.generators.mysql.parser.MySqlParser.RootContext arg) {
-		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Root"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRoot.push(true);
 	}
@@ -79,7 +79,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSql_statements(com.generator.generators.mysql.parser.MySqlParser.Sql_statementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Sql_statements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSql_statements.push(true);
 	}
@@ -97,7 +97,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSql_statement(com.generator.generators.mysql.parser.MySqlParser.Sql_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Sql_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSql_statement.push(true);
 	}
@@ -115,7 +115,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterEmpty_statement(com.generator.generators.mysql.parser.MySqlParser.Empty_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Empty_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEmpty_statement.push(true);
 	}
@@ -133,7 +133,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDdl_statement(com.generator.generators.mysql.parser.MySqlParser.Ddl_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Ddl_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Ddl_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDdl_statement.push(true);
 	}
@@ -151,7 +151,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDml_statement(com.generator.generators.mysql.parser.MySqlParser.Dml_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dml_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Dml_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDml_statement.push(true);
 	}
@@ -169,7 +169,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTransaction_statement(com.generator.generators.mysql.parser.MySqlParser.Transaction_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Transaction_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Transaction_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTransaction_statement.push(true);
 	}
@@ -187,7 +187,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplication_statement(com.generator.generators.mysql.parser.MySqlParser.Replication_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Replication_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Replication_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplication_statement.push(true);
 	}
@@ -205,7 +205,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrepared_statement(com.generator.generators.mysql.parser.MySqlParser.Prepared_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prepared_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Prepared_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrepared_statement.push(true);
 	}
@@ -223,7 +223,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCompound_statement(com.generator.generators.mysql.parser.MySqlParser.Compound_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Compound_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Compound_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCompound_statement.push(true);
 	}
@@ -241,7 +241,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAdministration_statement(com.generator.generators.mysql.parser.MySqlParser.Administration_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Administration_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Administration_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAdministration_statement.push(true);
 	}
@@ -259,7 +259,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUtility_statement(com.generator.generators.mysql.parser.MySqlParser.Utility_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Utility_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Utility_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUtility_statement.push(true);
 	}
@@ -277,7 +277,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_database(com.generator.generators.mysql.parser.MySqlParser.Create_databaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_database"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_database"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_database.push(true);
 	}
@@ -295,7 +295,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_event(com.generator.generators.mysql.parser.MySqlParser.Create_eventContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_event.push(true);
 	}
@@ -313,7 +313,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_index(com.generator.generators.mysql.parser.MySqlParser.Create_indexContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_index.push(true);
 	}
@@ -331,7 +331,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_logfile_group(com.generator.generators.mysql.parser.MySqlParser.Create_logfile_groupContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_logfile_group.push(true);
 	}
@@ -349,7 +349,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_procedure(com.generator.generators.mysql.parser.MySqlParser.Create_procedureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_procedure.push(true);
 	}
@@ -367,7 +367,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_function(com.generator.generators.mysql.parser.MySqlParser.Create_functionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_function.push(true);
 	}
@@ -385,7 +385,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_server(com.generator.generators.mysql.parser.MySqlParser.Create_serverContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_server.push(true);
 	}
@@ -403,7 +403,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCopyCreateTable(com.generator.generators.mysql.parser.MySqlParser.CopyCreateTableContext arg) {
-		final Node node = model.findOrCreate(Label.label("CopyCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CopyCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCopyCreateTable.push(true);
 	}
@@ -421,7 +421,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterQueryCreateTable(com.generator.generators.mysql.parser.MySqlParser.QueryCreateTableContext arg) {
-		final Node node = model.findOrCreate(Label.label("QueryCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("QueryCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQueryCreateTable.push(true);
 	}
@@ -439,7 +439,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColCreateTable(com.generator.generators.mysql.parser.MySqlParser.ColCreateTableContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColCreateTable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColCreateTable.push(true);
 	}
@@ -457,7 +457,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_tablespace_innodb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_innodbContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_tablespace_innodb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_tablespace_innodb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_tablespace_innodb.push(true);
 	}
@@ -475,7 +475,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_tablespace_ndb(com.generator.generators.mysql.parser.MySqlParser.Create_tablespace_ndbContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_tablespace_ndb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_tablespace_ndb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_tablespace_ndb.push(true);
 	}
@@ -493,7 +493,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_trigger(com.generator.generators.mysql.parser.MySqlParser.Create_triggerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_trigger"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_trigger.push(true);
 	}
@@ -511,7 +511,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_view(com.generator.generators.mysql.parser.MySqlParser.Create_viewContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_view.push(true);
 	}
@@ -529,7 +529,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_database_option(com.generator.generators.mysql.parser.MySqlParser.Create_database_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_database_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_database_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_database_option.push(true);
 	}
@@ -547,7 +547,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOwner_statement(com.generator.generators.mysql.parser.MySqlParser.Owner_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Owner_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Owner_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOwner_statement.push(true);
 	}
@@ -565,7 +565,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPreciseSchedule(com.generator.generators.mysql.parser.MySqlParser.PreciseScheduleContext arg) {
-		final Node node = model.findOrCreate(Label.label("PreciseSchedule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PreciseSchedule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPreciseSchedule.push(true);
 	}
@@ -583,7 +583,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIntervalSchedule(com.generator.generators.mysql.parser.MySqlParser.IntervalScheduleContext arg) {
-		final Node node = model.findOrCreate(Label.label("IntervalSchedule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IntervalSchedule"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIntervalSchedule.push(true);
 	}
@@ -601,7 +601,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTimestamp_value(com.generator.generators.mysql.parser.MySqlParser.Timestamp_valueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Timestamp_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Timestamp_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTimestamp_value.push(true);
 	}
@@ -619,7 +619,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInterval_expr(com.generator.generators.mysql.parser.MySqlParser.Interval_exprContext arg) {
-		final Node node = model.findOrCreate(Label.label("Interval_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Interval_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterval_expr.push(true);
 	}
@@ -637,7 +637,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInterval_type(com.generator.generators.mysql.parser.MySqlParser.Interval_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Interval_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Interval_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterval_type.push(true);
 	}
@@ -655,7 +655,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndex_type(com.generator.generators.mysql.parser.MySqlParser.Index_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Index_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex_type.push(true);
 	}
@@ -673,7 +673,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndex_option(com.generator.generators.mysql.parser.MySqlParser.Index_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Index_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex_option.push(true);
 	}
@@ -691,7 +691,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterProc_param(com.generator.generators.mysql.parser.MySqlParser.Proc_paramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Proc_param"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Proc_param"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProc_param.push(true);
 	}
@@ -709,7 +709,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFunc_param(com.generator.generators.mysql.parser.MySqlParser.Func_paramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Func_param"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Func_param"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunc_param.push(true);
 	}
@@ -727,7 +727,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRcComment(com.generator.generators.mysql.parser.MySqlParser.RcCommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("RcComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RcComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRcComment.push(true);
 	}
@@ -745,7 +745,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRcSqllang(com.generator.generators.mysql.parser.MySqlParser.RcSqllangContext arg) {
-		final Node node = model.findOrCreate(Label.label("RcSqllang"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RcSqllang"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRcSqllang.push(true);
 	}
@@ -763,7 +763,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRcDeterm(com.generator.generators.mysql.parser.MySqlParser.RcDetermContext arg) {
-		final Node node = model.findOrCreate(Label.label("RcDeterm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RcDeterm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRcDeterm.push(true);
 	}
@@ -781,7 +781,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRcSqldata(com.generator.generators.mysql.parser.MySqlParser.RcSqldataContext arg) {
-		final Node node = model.findOrCreate(Label.label("RcSqldata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RcSqldata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRcSqldata.push(true);
 	}
@@ -799,7 +799,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRcSecurestmt(com.generator.generators.mysql.parser.MySqlParser.RcSecurestmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("RcSecurestmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RcSecurestmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRcSecurestmt.push(true);
 	}
@@ -817,7 +817,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterServer_option(com.generator.generators.mysql.parser.MySqlParser.Server_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Server_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inServer_option.push(true);
 	}
@@ -835,7 +835,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColumn_def_table_constraints(com.generator.generators.mysql.parser.MySqlParser.Column_def_table_constraintsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Column_def_table_constraints"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColumn_def_table_constraints.push(true);
 	}
@@ -853,7 +853,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColumnDefinition(com.generator.generators.mysql.parser.MySqlParser.ColumnDefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColumnDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColumnDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColumnDefinition.push(true);
 	}
@@ -871,7 +871,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConstraintDefinition(com.generator.generators.mysql.parser.MySqlParser.ConstraintDefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstraintDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ConstraintDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstraintDefinition.push(true);
 	}
@@ -889,7 +889,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndexDefinition(com.generator.generators.mysql.parser.MySqlParser.IndexDefinitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("IndexDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IndexDefinition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndexDefinition.push(true);
 	}
@@ -907,7 +907,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColumn_definition(com.generator.generators.mysql.parser.MySqlParser.Column_definitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Column_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Column_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColumn_definition.push(true);
 	}
@@ -925,7 +925,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrNull(com.generator.generators.mysql.parser.MySqlParser.ColConstrNullContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrNull"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrNull"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrNull.push(true);
 	}
@@ -943,7 +943,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrDflt(com.generator.generators.mysql.parser.MySqlParser.ColConstrDfltContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrDflt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrDflt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrDflt.push(true);
 	}
@@ -961,7 +961,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrAuInc(com.generator.generators.mysql.parser.MySqlParser.ColConstrAuIncContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrAuInc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrAuInc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrAuInc.push(true);
 	}
@@ -979,7 +979,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrPK(com.generator.generators.mysql.parser.MySqlParser.ColConstrPKContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrPK.push(true);
 	}
@@ -997,7 +997,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrUK(com.generator.generators.mysql.parser.MySqlParser.ColConstrUKContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrUK.push(true);
 	}
@@ -1015,7 +1015,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrComment(com.generator.generators.mysql.parser.MySqlParser.ColConstrCommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrComment.push(true);
 	}
@@ -1033,7 +1033,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrForm(com.generator.generators.mysql.parser.MySqlParser.ColConstrFormContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrForm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrForm"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrForm.push(true);
 	}
@@ -1051,7 +1051,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrStorage(com.generator.generators.mysql.parser.MySqlParser.ColConstrStorageContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrStorage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrStorage"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrStorage.push(true);
 	}
@@ -1069,7 +1069,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterColConstrRefdef(com.generator.generators.mysql.parser.MySqlParser.ColConstrRefdefContext arg) {
-		final Node node = model.findOrCreate(Label.label("ColConstrRefdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ColConstrRefdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inColConstrRefdef.push(true);
 	}
@@ -1087,7 +1087,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblConstrPK(com.generator.generators.mysql.parser.MySqlParser.TblConstrPKContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblConstrPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblConstrPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblConstrPK.push(true);
 	}
@@ -1105,7 +1105,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblConstrUK(com.generator.generators.mysql.parser.MySqlParser.TblConstrUKContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblConstrUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblConstrUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblConstrUK.push(true);
 	}
@@ -1123,7 +1123,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblConstrFK(com.generator.generators.mysql.parser.MySqlParser.TblConstrFKContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblConstrFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblConstrFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblConstrFK.push(true);
 	}
@@ -1141,7 +1141,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblConstCheck(com.generator.generators.mysql.parser.MySqlParser.TblConstCheckContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblConstCheck"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblConstCheck"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblConstCheck.push(true);
 	}
@@ -1159,7 +1159,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReference_definition(com.generator.generators.mysql.parser.MySqlParser.Reference_definitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reference_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Reference_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReference_definition.push(true);
 	}
@@ -1177,7 +1177,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOn_delete_action(com.generator.generators.mysql.parser.MySqlParser.On_delete_actionContext arg) {
-		final Node node = model.findOrCreate(Label.label("On_delete_action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("On_delete_action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOn_delete_action.push(true);
 	}
@@ -1195,7 +1195,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOn_update_action(com.generator.generators.mysql.parser.MySqlParser.On_update_actionContext arg) {
-		final Node node = model.findOrCreate(Label.label("On_update_action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("On_update_action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOn_update_action.push(true);
 	}
@@ -1213,7 +1213,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReference_action_control_type(com.generator.generators.mysql.parser.MySqlParser.Reference_action_control_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reference_action_control_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Reference_action_control_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReference_action_control_type.push(true);
 	}
@@ -1231,7 +1231,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimpleIndex(com.generator.generators.mysql.parser.MySqlParser.SimpleIndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SimpleIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpleIndex.push(true);
 	}
@@ -1249,7 +1249,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSpecIndex(com.generator.generators.mysql.parser.MySqlParser.SpecIndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("SpecIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SpecIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSpecIndex.push(true);
 	}
@@ -1267,7 +1267,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptEngine(com.generator.generators.mysql.parser.MySqlParser.TblOptEngineContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptEngine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptEngine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptEngine.push(true);
 	}
@@ -1285,7 +1285,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptAuInc(com.generator.generators.mysql.parser.MySqlParser.TblOptAuIncContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptAuInc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptAuInc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptAuInc.push(true);
 	}
@@ -1303,7 +1303,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptAvgRLen(com.generator.generators.mysql.parser.MySqlParser.TblOptAvgRLenContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptAvgRLen"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptAvgRLen"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptAvgRLen.push(true);
 	}
@@ -1321,7 +1321,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptDefCharSet(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCharSetContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptDefCharSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptDefCharSet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptDefCharSet.push(true);
 	}
@@ -1339,7 +1339,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptChkSum(com.generator.generators.mysql.parser.MySqlParser.TblOptChkSumContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptChkSum"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptChkSum"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptChkSum.push(true);
 	}
@@ -1357,7 +1357,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptDefCollate(com.generator.generators.mysql.parser.MySqlParser.TblOptDefCollateContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptDefCollate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptDefCollate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptDefCollate.push(true);
 	}
@@ -1375,7 +1375,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptComment(com.generator.generators.mysql.parser.MySqlParser.TblOptCommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptComment.push(true);
 	}
@@ -1393,7 +1393,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptCompr(com.generator.generators.mysql.parser.MySqlParser.TblOptComprContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptCompr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptCompr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptCompr.push(true);
 	}
@@ -1411,7 +1411,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptConn(com.generator.generators.mysql.parser.MySqlParser.TblOptConnContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptConn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptConn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptConn.push(true);
 	}
@@ -1429,7 +1429,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptDataDir(com.generator.generators.mysql.parser.MySqlParser.TblOptDataDirContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptDataDir"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptDataDir"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptDataDir.push(true);
 	}
@@ -1447,7 +1447,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptDelKW(com.generator.generators.mysql.parser.MySqlParser.TblOptDelKWContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptDelKW"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptDelKW"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptDelKW.push(true);
 	}
@@ -1465,7 +1465,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptEncr(com.generator.generators.mysql.parser.MySqlParser.TblOptEncrContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptEncr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptEncr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptEncr.push(true);
 	}
@@ -1483,7 +1483,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptIndexDir(com.generator.generators.mysql.parser.MySqlParser.TblOptIndexDirContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptIndexDir"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptIndexDir"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptIndexDir.push(true);
 	}
@@ -1501,7 +1501,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptInsMeth(com.generator.generators.mysql.parser.MySqlParser.TblOptInsMethContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptInsMeth"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptInsMeth"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptInsMeth.push(true);
 	}
@@ -1519,7 +1519,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptKeyBlockSz(com.generator.generators.mysql.parser.MySqlParser.TblOptKeyBlockSzContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptKeyBlockSz"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptKeyBlockSz"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptKeyBlockSz.push(true);
 	}
@@ -1537,7 +1537,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptMaxRows(com.generator.generators.mysql.parser.MySqlParser.TblOptMaxRowsContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptMaxRows"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptMaxRows"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptMaxRows.push(true);
 	}
@@ -1555,7 +1555,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptMinRows(com.generator.generators.mysql.parser.MySqlParser.TblOptMinRowsContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptMinRows"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptMinRows"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptMinRows.push(true);
 	}
@@ -1573,7 +1573,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptPackK(com.generator.generators.mysql.parser.MySqlParser.TblOptPackKContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptPackK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptPackK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptPackK.push(true);
 	}
@@ -1591,7 +1591,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptPasswd(com.generator.generators.mysql.parser.MySqlParser.TblOptPasswdContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptPasswd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptPasswd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptPasswd.push(true);
 	}
@@ -1609,7 +1609,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptRowFormat(com.generator.generators.mysql.parser.MySqlParser.TblOptRowFormatContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptRowFormat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptRowFormat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptRowFormat.push(true);
 	}
@@ -1627,7 +1627,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptStatAutoR(com.generator.generators.mysql.parser.MySqlParser.TblOptStatAutoRContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptStatAutoR"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptStatAutoR"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptStatAutoR.push(true);
 	}
@@ -1645,7 +1645,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptStatPersist(com.generator.generators.mysql.parser.MySqlParser.TblOptStatPersistContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptStatPersist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptStatPersist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptStatPersist.push(true);
 	}
@@ -1663,7 +1663,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptStatSamplPg(com.generator.generators.mysql.parser.MySqlParser.TblOptStatSamplPgContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptStatSamplPg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptStatSamplPg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptStatSamplPg.push(true);
 	}
@@ -1681,7 +1681,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptTablespace(com.generator.generators.mysql.parser.MySqlParser.TblOptTablespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptTablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptTablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptTablespace.push(true);
 	}
@@ -1699,7 +1699,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTblOptUnion(com.generator.generators.mysql.parser.MySqlParser.TblOptUnionContext arg) {
-		final Node node = model.findOrCreate(Label.label("TblOptUnion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TblOptUnion"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTblOptUnion.push(true);
 	}
@@ -1717,7 +1717,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPartition_options(com.generator.generators.mysql.parser.MySqlParser.Partition_optionsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Partition_options"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Partition_options"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPartition_options.push(true);
 	}
@@ -1735,7 +1735,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPartition_function_definition(com.generator.generators.mysql.parser.MySqlParser.Partition_function_definitionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Partition_function_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Partition_function_definition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPartition_function_definition.push(true);
 	}
@@ -1753,7 +1753,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLinear_partition_func_def(com.generator.generators.mysql.parser.MySqlParser.Linear_partition_func_defContext arg) {
-		final Node node = model.findOrCreate(Label.label("Linear_partition_func_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Linear_partition_func_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLinear_partition_func_def.push(true);
 	}
@@ -1771,7 +1771,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPartition_def(com.generator.generators.mysql.parser.MySqlParser.Partition_defContext arg) {
-		final Node node = model.findOrCreate(Label.label("Partition_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Partition_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPartition_def.push(true);
 	}
@@ -1789,7 +1789,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSubpartition_def(com.generator.generators.mysql.parser.MySqlParser.Subpartition_defContext arg) {
-		final Node node = model.findOrCreate(Label.label("Subpartition_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Subpartition_def"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSubpartition_def.push(true);
 	}
@@ -1807,7 +1807,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlterDb(com.generator.generators.mysql.parser.MySqlParser.AlterDbContext arg) {
-		final Node node = model.findOrCreate(Label.label("AlterDb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AlterDb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlterDb.push(true);
 	}
@@ -1825,7 +1825,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlterDbUpgradeName(com.generator.generators.mysql.parser.MySqlParser.AlterDbUpgradeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("AlterDbUpgradeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AlterDbUpgradeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlterDbUpgradeName.push(true);
 	}
@@ -1843,7 +1843,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_event(com.generator.generators.mysql.parser.MySqlParser.Alter_eventContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_event.push(true);
 	}
@@ -1861,7 +1861,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_function(com.generator.generators.mysql.parser.MySqlParser.Alter_functionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_function.push(true);
 	}
@@ -1879,7 +1879,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_instance(com.generator.generators.mysql.parser.MySqlParser.Alter_instanceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_instance"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_instance"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_instance.push(true);
 	}
@@ -1897,7 +1897,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_logfile_group(com.generator.generators.mysql.parser.MySqlParser.Alter_logfile_groupContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_logfile_group.push(true);
 	}
@@ -1915,7 +1915,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_procedure(com.generator.generators.mysql.parser.MySqlParser.Alter_procedureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_procedure.push(true);
 	}
@@ -1933,7 +1933,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_server(com.generator.generators.mysql.parser.MySqlParser.Alter_serverContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_server.push(true);
 	}
@@ -1951,7 +1951,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_table(com.generator.generators.mysql.parser.MySqlParser.Alter_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_table.push(true);
 	}
@@ -1969,7 +1969,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_tablespace(com.generator.generators.mysql.parser.MySqlParser.Alter_tablespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_tablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_tablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_tablespace.push(true);
 	}
@@ -1987,7 +1987,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlter_view(com.generator.generators.mysql.parser.MySqlParser.Alter_viewContext arg) {
-		final Node node = model.findOrCreate(Label.label("Alter_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Alter_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlter_view.push(true);
 	}
@@ -2005,7 +2005,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblTableOpt(com.generator.generators.mysql.parser.MySqlParser.AltblTableOptContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblTableOpt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblTableOpt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblTableOpt.push(true);
 	}
@@ -2023,7 +2023,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddCol(com.generator.generators.mysql.parser.MySqlParser.AltblAddColContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddCol.push(true);
 	}
@@ -2041,7 +2041,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddCols(com.generator.generators.mysql.parser.MySqlParser.AltblAddColsContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddCols"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddCols"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddCols.push(true);
 	}
@@ -2059,7 +2059,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddIndex(com.generator.generators.mysql.parser.MySqlParser.AltblAddIndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddIndex.push(true);
 	}
@@ -2077,7 +2077,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddPK(com.generator.generators.mysql.parser.MySqlParser.AltblAddPKContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddPK.push(true);
 	}
@@ -2095,7 +2095,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddUK(com.generator.generators.mysql.parser.MySqlParser.AltblAddUKContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddUK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddUK.push(true);
 	}
@@ -2113,7 +2113,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddSpecIndex(com.generator.generators.mysql.parser.MySqlParser.AltblAddSpecIndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddSpecIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddSpecIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddSpecIndex.push(true);
 	}
@@ -2131,7 +2131,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddFK(com.generator.generators.mysql.parser.MySqlParser.AltblAddFKContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddFK.push(true);
 	}
@@ -2149,7 +2149,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAlg(com.generator.generators.mysql.parser.MySqlParser.AltblAlgContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAlg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAlg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAlg.push(true);
 	}
@@ -2167,7 +2167,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblColDef(com.generator.generators.mysql.parser.MySqlParser.AltblColDefContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblColDef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblColDef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblColDef.push(true);
 	}
@@ -2185,7 +2185,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblColChange(com.generator.generators.mysql.parser.MySqlParser.AltblColChangeContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblColChange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblColChange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblColChange.push(true);
 	}
@@ -2203,7 +2203,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblLock(com.generator.generators.mysql.parser.MySqlParser.AltblLockContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblLock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblLock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblLock.push(true);
 	}
@@ -2221,7 +2221,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblColMod(com.generator.generators.mysql.parser.MySqlParser.AltblColModContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblColMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblColMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblColMod.push(true);
 	}
@@ -2239,7 +2239,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblColDrop(com.generator.generators.mysql.parser.MySqlParser.AltblColDropContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblColDrop"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblColDrop"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblColDrop.push(true);
 	}
@@ -2257,7 +2257,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDropPK(com.generator.generators.mysql.parser.MySqlParser.AltblDropPKContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDropPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDropPK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDropPK.push(true);
 	}
@@ -2275,7 +2275,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDropIndex(com.generator.generators.mysql.parser.MySqlParser.AltblDropIndexContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDropIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDropIndex"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDropIndex.push(true);
 	}
@@ -2293,7 +2293,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDropFK(com.generator.generators.mysql.parser.MySqlParser.AltblDropFKContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDropFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDropFK"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDropFK.push(true);
 	}
@@ -2311,7 +2311,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDisKey(com.generator.generators.mysql.parser.MySqlParser.AltblDisKeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDisKey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDisKey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDisKey.push(true);
 	}
@@ -2329,7 +2329,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblEnKey(com.generator.generators.mysql.parser.MySqlParser.AltblEnKeyContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblEnKey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblEnKey"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblEnKey.push(true);
 	}
@@ -2347,7 +2347,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblRenameTbl(com.generator.generators.mysql.parser.MySqlParser.AltblRenameTblContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblRenameTbl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblRenameTbl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblRenameTbl.push(true);
 	}
@@ -2365,7 +2365,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblResort(com.generator.generators.mysql.parser.MySqlParser.AltblResortContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblResort"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblResort"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblResort.push(true);
 	}
@@ -2383,7 +2383,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblConvert(com.generator.generators.mysql.parser.MySqlParser.AltblConvertContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblConvert"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblConvert"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblConvert.push(true);
 	}
@@ -2401,7 +2401,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDefCharset(com.generator.generators.mysql.parser.MySqlParser.AltblDefCharsetContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDefCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDefCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDefCharset.push(true);
 	}
@@ -2419,7 +2419,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDisTblspace(com.generator.generators.mysql.parser.MySqlParser.AltblDisTblspaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDisTblspace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDisTblspace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDisTblspace.push(true);
 	}
@@ -2437,7 +2437,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblImpTblSpace(com.generator.generators.mysql.parser.MySqlParser.AltblImpTblSpaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblImpTblSpace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblImpTblSpace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblImpTblSpace.push(true);
 	}
@@ -2455,7 +2455,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblForce(com.generator.generators.mysql.parser.MySqlParser.AltblForceContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblForce"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblForce"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblForce.push(true);
 	}
@@ -2473,7 +2473,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblValid(com.generator.generators.mysql.parser.MySqlParser.AltblValidContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblValid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblValid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblValid.push(true);
 	}
@@ -2491,7 +2491,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAddPart(com.generator.generators.mysql.parser.MySqlParser.AltblAddPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAddPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAddPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAddPart.push(true);
 	}
@@ -2509,7 +2509,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDropPart(com.generator.generators.mysql.parser.MySqlParser.AltblDropPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDropPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDropPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDropPart.push(true);
 	}
@@ -2527,7 +2527,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblDiscartPart(com.generator.generators.mysql.parser.MySqlParser.AltblDiscartPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblDiscartPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblDiscartPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblDiscartPart.push(true);
 	}
@@ -2545,7 +2545,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblImportPart(com.generator.generators.mysql.parser.MySqlParser.AltblImportPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblImportPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblImportPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblImportPart.push(true);
 	}
@@ -2563,7 +2563,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblTruncPart(com.generator.generators.mysql.parser.MySqlParser.AltblTruncPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblTruncPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblTruncPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblTruncPart.push(true);
 	}
@@ -2581,7 +2581,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblCoalPart(com.generator.generators.mysql.parser.MySqlParser.AltblCoalPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblCoalPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblCoalPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblCoalPart.push(true);
 	}
@@ -2599,7 +2599,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblReorgPart(com.generator.generators.mysql.parser.MySqlParser.AltblReorgPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblReorgPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblReorgPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblReorgPart.push(true);
 	}
@@ -2617,7 +2617,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblExchPart(com.generator.generators.mysql.parser.MySqlParser.AltblExchPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblExchPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblExchPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblExchPart.push(true);
 	}
@@ -2635,7 +2635,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblAnalPart(com.generator.generators.mysql.parser.MySqlParser.AltblAnalPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblAnalPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblAnalPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblAnalPart.push(true);
 	}
@@ -2653,7 +2653,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblCheckPart(com.generator.generators.mysql.parser.MySqlParser.AltblCheckPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblCheckPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblCheckPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblCheckPart.push(true);
 	}
@@ -2671,7 +2671,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblOptimPart(com.generator.generators.mysql.parser.MySqlParser.AltblOptimPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblOptimPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblOptimPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblOptimPart.push(true);
 	}
@@ -2689,7 +2689,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblRebuildPart(com.generator.generators.mysql.parser.MySqlParser.AltblRebuildPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblRebuildPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblRebuildPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblRebuildPart.push(true);
 	}
@@ -2707,7 +2707,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblRepairPart(com.generator.generators.mysql.parser.MySqlParser.AltblRepairPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblRepairPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblRepairPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblRepairPart.push(true);
 	}
@@ -2725,7 +2725,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblRemovePart(com.generator.generators.mysql.parser.MySqlParser.AltblRemovePartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblRemovePart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblRemovePart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblRemovePart.push(true);
 	}
@@ -2743,7 +2743,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAltblUpgrPart(com.generator.generators.mysql.parser.MySqlParser.AltblUpgrPartContext arg) {
-		final Node node = model.findOrCreate(Label.label("AltblUpgrPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AltblUpgrPart"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAltblUpgrPart.push(true);
 	}
@@ -2761,7 +2761,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_database(com.generator.generators.mysql.parser.MySqlParser.Drop_databaseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_database"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_database"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_database.push(true);
 	}
@@ -2779,7 +2779,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_event(com.generator.generators.mysql.parser.MySqlParser.Drop_eventContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_event"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_event.push(true);
 	}
@@ -2797,7 +2797,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_index(com.generator.generators.mysql.parser.MySqlParser.Drop_indexContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_index"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_index.push(true);
 	}
@@ -2815,7 +2815,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_logfile_group(com.generator.generators.mysql.parser.MySqlParser.Drop_logfile_groupContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_logfile_group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_logfile_group.push(true);
 	}
@@ -2833,7 +2833,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_procedure(com.generator.generators.mysql.parser.MySqlParser.Drop_procedureContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_procedure"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_procedure.push(true);
 	}
@@ -2851,7 +2851,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_function(com.generator.generators.mysql.parser.MySqlParser.Drop_functionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_function.push(true);
 	}
@@ -2869,7 +2869,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_server(com.generator.generators.mysql.parser.MySqlParser.Drop_serverContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_server"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_server.push(true);
 	}
@@ -2887,7 +2887,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_table(com.generator.generators.mysql.parser.MySqlParser.Drop_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_table.push(true);
 	}
@@ -2905,7 +2905,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_tablespace(com.generator.generators.mysql.parser.MySqlParser.Drop_tablespaceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_tablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_tablespace"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_tablespace.push(true);
 	}
@@ -2923,7 +2923,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_trigger(com.generator.generators.mysql.parser.MySqlParser.Drop_triggerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_trigger"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_trigger"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_trigger.push(true);
 	}
@@ -2941,7 +2941,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_view(com.generator.generators.mysql.parser.MySqlParser.Drop_viewContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_view"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_view.push(true);
 	}
@@ -2959,7 +2959,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRename_table(com.generator.generators.mysql.parser.MySqlParser.Rename_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rename_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Rename_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRename_table.push(true);
 	}
@@ -2977,7 +2977,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTruncate_table(com.generator.generators.mysql.parser.MySqlParser.Truncate_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Truncate_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Truncate_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTruncate_table.push(true);
 	}
@@ -2995,7 +2995,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCall_statement(com.generator.generators.mysql.parser.MySqlParser.Call_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Call_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Call_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCall_statement.push(true);
 	}
@@ -3013,7 +3013,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDelete_statement(com.generator.generators.mysql.parser.MySqlParser.Delete_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDelete_statement.push(true);
 	}
@@ -3031,7 +3031,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDo_statement(com.generator.generators.mysql.parser.MySqlParser.Do_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Do_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Do_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDo_statement.push(true);
 	}
@@ -3049,7 +3049,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_statement(com.generator.generators.mysql.parser.MySqlParser.Handler_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_statement.push(true);
 	}
@@ -3067,7 +3067,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInsert_statement(com.generator.generators.mysql.parser.MySqlParser.Insert_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Insert_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Insert_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInsert_statement.push(true);
 	}
@@ -3085,7 +3085,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLoad_data_statement(com.generator.generators.mysql.parser.MySqlParser.Load_data_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Load_data_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Load_data_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLoad_data_statement.push(true);
 	}
@@ -3103,7 +3103,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLoad_xml_statement(com.generator.generators.mysql.parser.MySqlParser.Load_xml_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Load_xml_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Load_xml_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLoad_xml_statement.push(true);
 	}
@@ -3121,7 +3121,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplace_statement(com.generator.generators.mysql.parser.MySqlParser.Replace_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Replace_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Replace_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplace_statement.push(true);
 	}
@@ -3139,7 +3139,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimpleSelect(com.generator.generators.mysql.parser.MySqlParser.SimpleSelectContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SimpleSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpleSelect.push(true);
 	}
@@ -3157,7 +3157,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterParenSelect(com.generator.generators.mysql.parser.MySqlParser.ParenSelectContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParenSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ParenSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParenSelect.push(true);
 	}
@@ -3175,7 +3175,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnionSelect(com.generator.generators.mysql.parser.MySqlParser.UnionSelectContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnionSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UnionSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnionSelect.push(true);
 	}
@@ -3193,7 +3193,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnionParenSelect(com.generator.generators.mysql.parser.MySqlParser.UnionParenSelectContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnionParenSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UnionParenSelect"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnionParenSelect.push(true);
 	}
@@ -3211,7 +3211,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUpdate_statement(com.generator.generators.mysql.parser.MySqlParser.Update_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUpdate_statement.push(true);
 	}
@@ -3229,7 +3229,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInsert_statement_value(com.generator.generators.mysql.parser.MySqlParser.Insert_statement_valueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Insert_statement_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Insert_statement_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInsert_statement_value.push(true);
 	}
@@ -3247,7 +3247,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUpdate_elem(com.generator.generators.mysql.parser.MySqlParser.Update_elemContext arg) {
-		final Node node = model.findOrCreate(Label.label("Update_elem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Update_elem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUpdate_elem.push(true);
 	}
@@ -3265,7 +3265,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCol_or_uservar(com.generator.generators.mysql.parser.MySqlParser.Col_or_uservarContext arg) {
-		final Node node = model.findOrCreate(Label.label("Col_or_uservar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Col_or_uservar"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCol_or_uservar.push(true);
 	}
@@ -3283,7 +3283,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSingle_delete_statement(com.generator.generators.mysql.parser.MySqlParser.Single_delete_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Single_delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Single_delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSingle_delete_statement.push(true);
 	}
@@ -3301,7 +3301,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMultiple_delete_statement(com.generator.generators.mysql.parser.MySqlParser.Multiple_delete_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Multiple_delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Multiple_delete_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMultiple_delete_statement.push(true);
 	}
@@ -3319,7 +3319,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_open_statement(com.generator.generators.mysql.parser.MySqlParser.Handler_open_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_open_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_open_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_open_statement.push(true);
 	}
@@ -3337,7 +3337,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_read_index_statement(com.generator.generators.mysql.parser.MySqlParser.Handler_read_index_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_read_index_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_read_index_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_read_index_statement.push(true);
 	}
@@ -3355,7 +3355,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_read_statement(com.generator.generators.mysql.parser.MySqlParser.Handler_read_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_read_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_read_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_read_statement.push(true);
 	}
@@ -3373,7 +3373,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_close_statement(com.generator.generators.mysql.parser.MySqlParser.Handler_close_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_close_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_close_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_close_statement.push(true);
 	}
@@ -3391,7 +3391,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSingle_update_statement(com.generator.generators.mysql.parser.MySqlParser.Single_update_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Single_update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Single_update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSingle_update_statement.push(true);
 	}
@@ -3409,7 +3409,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMultiple_update_statement(com.generator.generators.mysql.parser.MySqlParser.Multiple_update_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Multiple_update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Multiple_update_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMultiple_update_statement.push(true);
 	}
@@ -3427,7 +3427,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOrder_by_clause(com.generator.generators.mysql.parser.MySqlParser.Order_by_clauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Order_by_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Order_by_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOrder_by_clause.push(true);
 	}
@@ -3445,7 +3445,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOrder_by_expression(com.generator.generators.mysql.parser.MySqlParser.Order_by_expressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Order_by_expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Order_by_expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOrder_by_expression.push(true);
 	}
@@ -3463,7 +3463,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTable_sources(com.generator.generators.mysql.parser.MySqlParser.Table_sourcesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Table_sources"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Table_sources"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTable_sources.push(true);
 	}
@@ -3481,7 +3481,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTable_source(com.generator.generators.mysql.parser.MySqlParser.Table_sourceContext arg) {
-		final Node node = model.findOrCreate(Label.label("Table_source"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Table_source"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTable_source.push(true);
 	}
@@ -3499,7 +3499,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAtomTableItem(com.generator.generators.mysql.parser.MySqlParser.AtomTableItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("AtomTableItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AtomTableItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAtomTableItem.push(true);
 	}
@@ -3517,7 +3517,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSubqueryTableItem(com.generator.generators.mysql.parser.MySqlParser.SubqueryTableItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("SubqueryTableItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SubqueryTableItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSubqueryTableItem.push(true);
 	}
@@ -3535,7 +3535,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTableSourcesItem(com.generator.generators.mysql.parser.MySqlParser.TableSourcesItemContext arg) {
-		final Node node = model.findOrCreate(Label.label("TableSourcesItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TableSourcesItem"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTableSourcesItem.push(true);
 	}
@@ -3553,7 +3553,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndex_hint(com.generator.generators.mysql.parser.MySqlParser.Index_hintContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index_hint"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Index_hint"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex_hint.push(true);
 	}
@@ -3571,7 +3571,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInnerJoin(com.generator.generators.mysql.parser.MySqlParser.InnerJoinContext arg) {
-		final Node node = model.findOrCreate(Label.label("InnerJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("InnerJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInnerJoin.push(true);
 	}
@@ -3589,7 +3589,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStraightJoin(com.generator.generators.mysql.parser.MySqlParser.StraightJoinContext arg) {
-		final Node node = model.findOrCreate(Label.label("StraightJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("StraightJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStraightJoin.push(true);
 	}
@@ -3607,7 +3607,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOuterJoin(com.generator.generators.mysql.parser.MySqlParser.OuterJoinContext arg) {
-		final Node node = model.findOrCreate(Label.label("OuterJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("OuterJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOuterJoin.push(true);
 	}
@@ -3625,7 +3625,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterNaturalJoin(com.generator.generators.mysql.parser.MySqlParser.NaturalJoinContext arg) {
-		final Node node = model.findOrCreate(Label.label("NaturalJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NaturalJoin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNaturalJoin.push(true);
 	}
@@ -3643,7 +3643,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSubquery(com.generator.generators.mysql.parser.MySqlParser.SubqueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Subquery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Subquery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSubquery.push(true);
 	}
@@ -3661,7 +3661,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterQuery_expression(com.generator.generators.mysql.parser.MySqlParser.Query_expressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query_expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Query_expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuery_expression.push(true);
 	}
@@ -3679,7 +3679,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterQuery_expression_nointo(com.generator.generators.mysql.parser.MySqlParser.Query_expression_nointoContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query_expression_nointo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Query_expression_nointo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuery_expression_nointo.push(true);
 	}
@@ -3697,7 +3697,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterQuery_specification(com.generator.generators.mysql.parser.MySqlParser.Query_specificationContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query_specification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Query_specification"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuery_specification.push(true);
 	}
@@ -3715,7 +3715,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterQuery_specification_nointo(com.generator.generators.mysql.parser.MySqlParser.Query_specification_nointoContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query_specification_nointo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Query_specification_nointo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inQuery_specification_nointo.push(true);
 	}
@@ -3733,7 +3733,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnion_parenth(com.generator.generators.mysql.parser.MySqlParser.Union_parenthContext arg) {
-		final Node node = model.findOrCreate(Label.label("Union_parenth"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Union_parenth"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnion_parenth.push(true);
 	}
@@ -3751,7 +3751,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnion_statement(com.generator.generators.mysql.parser.MySqlParser.Union_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Union_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Union_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnion_statement.push(true);
 	}
@@ -3769,7 +3769,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSelect_spec(com.generator.generators.mysql.parser.MySqlParser.Select_specContext arg) {
-		final Node node = model.findOrCreate(Label.label("Select_spec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Select_spec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelect_spec.push(true);
 	}
@@ -3787,7 +3787,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSelect_list(com.generator.generators.mysql.parser.MySqlParser.Select_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Select_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Select_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelect_list.push(true);
 	}
@@ -3805,7 +3805,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSellistelAllCol(com.generator.generators.mysql.parser.MySqlParser.SellistelAllColContext arg) {
-		final Node node = model.findOrCreate(Label.label("SellistelAllCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SellistelAllCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSellistelAllCol.push(true);
 	}
@@ -3823,7 +3823,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSellistelCol(com.generator.generators.mysql.parser.MySqlParser.SellistelColContext arg) {
-		final Node node = model.findOrCreate(Label.label("SellistelCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SellistelCol"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSellistelCol.push(true);
 	}
@@ -3841,7 +3841,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSellistelFunc(com.generator.generators.mysql.parser.MySqlParser.SellistelFuncContext arg) {
-		final Node node = model.findOrCreate(Label.label("SellistelFunc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SellistelFunc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSellistelFunc.push(true);
 	}
@@ -3859,7 +3859,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSellistelExpr(com.generator.generators.mysql.parser.MySqlParser.SellistelExprContext arg) {
-		final Node node = model.findOrCreate(Label.label("SellistelExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SellistelExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSellistelExpr.push(true);
 	}
@@ -3877,7 +3877,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSelectIntoVars(com.generator.generators.mysql.parser.MySqlParser.SelectIntoVarsContext arg) {
-		final Node node = model.findOrCreate(Label.label("SelectIntoVars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SelectIntoVars"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelectIntoVars.push(true);
 	}
@@ -3895,7 +3895,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSelectIntoDump(com.generator.generators.mysql.parser.MySqlParser.SelectIntoDumpContext arg) {
-		final Node node = model.findOrCreate(Label.label("SelectIntoDump"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SelectIntoDump"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelectIntoDump.push(true);
 	}
@@ -3913,7 +3913,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSelectIntoOutfile(com.generator.generators.mysql.parser.MySqlParser.SelectIntoOutfileContext arg) {
-		final Node node = model.findOrCreate(Label.label("SelectIntoOutfile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SelectIntoOutfile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSelectIntoOutfile.push(true);
 	}
@@ -3931,7 +3931,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFrom_clause(com.generator.generators.mysql.parser.MySqlParser.From_clauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("From_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFrom_clause.push(true);
 	}
@@ -3949,7 +3949,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterGroup_by_item(com.generator.generators.mysql.parser.MySqlParser.Group_by_itemContext arg) {
-		final Node node = model.findOrCreate(Label.label("Group_by_item"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Group_by_item"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGroup_by_item.push(true);
 	}
@@ -3967,7 +3967,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLimit_clause(com.generator.generators.mysql.parser.MySqlParser.Limit_clauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Limit_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Limit_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLimit_clause.push(true);
 	}
@@ -3985,7 +3985,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStart_transaction(com.generator.generators.mysql.parser.MySqlParser.Start_transactionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Start_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Start_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStart_transaction.push(true);
 	}
@@ -4003,7 +4003,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBegin_work(com.generator.generators.mysql.parser.MySqlParser.Begin_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Begin_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Begin_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBegin_work.push(true);
 	}
@@ -4021,7 +4021,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCommit_work(com.generator.generators.mysql.parser.MySqlParser.Commit_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Commit_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Commit_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCommit_work.push(true);
 	}
@@ -4039,7 +4039,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRollback_work(com.generator.generators.mysql.parser.MySqlParser.Rollback_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rollback_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Rollback_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRollback_work.push(true);
 	}
@@ -4057,7 +4057,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSavepoint_statement(com.generator.generators.mysql.parser.MySqlParser.Savepoint_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Savepoint_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Savepoint_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSavepoint_statement.push(true);
 	}
@@ -4075,7 +4075,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRollback_statement(com.generator.generators.mysql.parser.MySqlParser.Rollback_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rollback_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Rollback_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRollback_statement.push(true);
 	}
@@ -4093,7 +4093,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRelease_statement(com.generator.generators.mysql.parser.MySqlParser.Release_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Release_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Release_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelease_statement.push(true);
 	}
@@ -4111,7 +4111,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLock_tables(com.generator.generators.mysql.parser.MySqlParser.Lock_tablesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lock_tables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Lock_tables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLock_tables.push(true);
 	}
@@ -4129,7 +4129,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnlock_tables(com.generator.generators.mysql.parser.MySqlParser.Unlock_tablesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unlock_tables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Unlock_tables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnlock_tables.push(true);
 	}
@@ -4147,7 +4147,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSet_autocommit_statement(com.generator.generators.mysql.parser.MySqlParser.Set_autocommit_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set_autocommit_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Set_autocommit_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet_autocommit_statement.push(true);
 	}
@@ -4165,7 +4165,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSet_transaction_statement(com.generator.generators.mysql.parser.MySqlParser.Set_transaction_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set_transaction_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Set_transaction_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet_transaction_statement.push(true);
 	}
@@ -4183,7 +4183,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTransact_option(com.generator.generators.mysql.parser.MySqlParser.Transact_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Transact_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Transact_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTransact_option.push(true);
 	}
@@ -4201,7 +4201,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLock_table_element(com.generator.generators.mysql.parser.MySqlParser.Lock_table_elementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Lock_table_element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Lock_table_element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLock_table_element.push(true);
 	}
@@ -4219,7 +4219,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTrans_characteristic(com.generator.generators.mysql.parser.MySqlParser.Trans_characteristicContext arg) {
-		final Node node = model.findOrCreate(Label.label("Trans_characteristic"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Trans_characteristic"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTrans_characteristic.push(true);
 	}
@@ -4237,7 +4237,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTransaction_level(com.generator.generators.mysql.parser.MySqlParser.Transaction_levelContext arg) {
-		final Node node = model.findOrCreate(Label.label("Transaction_level"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Transaction_level"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTransaction_level.push(true);
 	}
@@ -4255,7 +4255,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterChange_master(com.generator.generators.mysql.parser.MySqlParser.Change_masterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Change_master"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Change_master"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChange_master.push(true);
 	}
@@ -4273,7 +4273,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterChange_repl_filter(com.generator.generators.mysql.parser.MySqlParser.Change_repl_filterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Change_repl_filter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Change_repl_filter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChange_repl_filter.push(true);
 	}
@@ -4291,7 +4291,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPurge_binary_logs(com.generator.generators.mysql.parser.MySqlParser.Purge_binary_logsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Purge_binary_logs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Purge_binary_logs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPurge_binary_logs.push(true);
 	}
@@ -4309,7 +4309,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReset_master(com.generator.generators.mysql.parser.MySqlParser.Reset_masterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reset_master"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Reset_master"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReset_master.push(true);
 	}
@@ -4327,7 +4327,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReset_slave(com.generator.generators.mysql.parser.MySqlParser.Reset_slaveContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reset_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Reset_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReset_slave.push(true);
 	}
@@ -4345,7 +4345,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStart_slave(com.generator.generators.mysql.parser.MySqlParser.Start_slaveContext arg) {
-		final Node node = model.findOrCreate(Label.label("Start_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Start_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStart_slave.push(true);
 	}
@@ -4363,7 +4363,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStop_slave(com.generator.generators.mysql.parser.MySqlParser.Stop_slaveContext arg) {
-		final Node node = model.findOrCreate(Label.label("Stop_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Stop_slave"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStop_slave.push(true);
 	}
@@ -4381,7 +4381,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStart_group_repl(com.generator.generators.mysql.parser.MySqlParser.Start_group_replContext arg) {
-		final Node node = model.findOrCreate(Label.label("Start_group_repl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Start_group_repl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStart_group_repl.push(true);
 	}
@@ -4399,7 +4399,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStop_group_repl(com.generator.generators.mysql.parser.MySqlParser.Stop_group_replContext arg) {
-		final Node node = model.findOrCreate(Label.label("Stop_group_repl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Stop_group_repl"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStop_group_repl.push(true);
 	}
@@ -4417,7 +4417,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMasterOptString(com.generator.generators.mysql.parser.MySqlParser.MasterOptStringContext arg) {
-		final Node node = model.findOrCreate(Label.label("MasterOptString"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MasterOptString"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMasterOptString.push(true);
 	}
@@ -4435,7 +4435,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMasterOptDecimal(com.generator.generators.mysql.parser.MySqlParser.MasterOptDecimalContext arg) {
-		final Node node = model.findOrCreate(Label.label("MasterOptDecimal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MasterOptDecimal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMasterOptDecimal.push(true);
 	}
@@ -4453,7 +4453,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMasterOptBool(com.generator.generators.mysql.parser.MySqlParser.MasterOptBoolContext arg) {
-		final Node node = model.findOrCreate(Label.label("MasterOptBool"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MasterOptBool"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMasterOptBool.push(true);
 	}
@@ -4471,7 +4471,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMasterOptReal(com.generator.generators.mysql.parser.MySqlParser.MasterOptRealContext arg) {
-		final Node node = model.findOrCreate(Label.label("MasterOptReal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MasterOptReal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMasterOptReal.push(true);
 	}
@@ -4489,7 +4489,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMasterOptIdList(com.generator.generators.mysql.parser.MySqlParser.MasterOptIdListContext arg) {
-		final Node node = model.findOrCreate(Label.label("MasterOptIdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MasterOptIdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMasterOptIdList.push(true);
 	}
@@ -4507,7 +4507,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterString_master_option(com.generator.generators.mysql.parser.MySqlParser.String_master_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("String_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("String_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inString_master_option.push(true);
 	}
@@ -4525,7 +4525,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDecimal_master_option(com.generator.generators.mysql.parser.MySqlParser.Decimal_master_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decimal_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Decimal_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDecimal_master_option.push(true);
 	}
@@ -4543,7 +4543,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBool_master_option(com.generator.generators.mysql.parser.MySqlParser.Bool_master_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bool_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Bool_master_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBool_master_option.push(true);
 	}
@@ -4561,7 +4561,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterChannel_option(com.generator.generators.mysql.parser.MySqlParser.Channel_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Channel_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Channel_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChannel_option.push(true);
 	}
@@ -4579,7 +4579,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplfilterDbList(com.generator.generators.mysql.parser.MySqlParser.ReplfilterDbListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReplfilterDbList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReplfilterDbList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplfilterDbList.push(true);
 	}
@@ -4597,7 +4597,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplfilterTableList(com.generator.generators.mysql.parser.MySqlParser.ReplfilterTableListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReplfilterTableList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReplfilterTableList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplfilterTableList.push(true);
 	}
@@ -4615,7 +4615,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplfilterStableList(com.generator.generators.mysql.parser.MySqlParser.ReplfilterStableListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReplfilterStableList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReplfilterStableList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplfilterStableList.push(true);
 	}
@@ -4633,7 +4633,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReplfilterTablepairList(com.generator.generators.mysql.parser.MySqlParser.ReplfilterTablepairListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReplfilterTablepairList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReplfilterTablepairList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReplfilterTablepairList.push(true);
 	}
@@ -4651,7 +4651,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterThread_type(com.generator.generators.mysql.parser.MySqlParser.Thread_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Thread_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Thread_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inThread_type.push(true);
 	}
@@ -4669,7 +4669,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUntilGtidSset(com.generator.generators.mysql.parser.MySqlParser.UntilGtidSsetContext arg) {
-		final Node node = model.findOrCreate(Label.label("UntilGtidSset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UntilGtidSset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUntilGtidSset.push(true);
 	}
@@ -4687,7 +4687,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUntilMasterLog(com.generator.generators.mysql.parser.MySqlParser.UntilMasterLogContext arg) {
-		final Node node = model.findOrCreate(Label.label("UntilMasterLog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UntilMasterLog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUntilMasterLog.push(true);
 	}
@@ -4705,7 +4705,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUntilRelayLog(com.generator.generators.mysql.parser.MySqlParser.UntilRelayLogContext arg) {
-		final Node node = model.findOrCreate(Label.label("UntilRelayLog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UntilRelayLog"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUntilRelayLog.push(true);
 	}
@@ -4723,7 +4723,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUntilSqlGaps(com.generator.generators.mysql.parser.MySqlParser.UntilSqlGapsContext arg) {
-		final Node node = model.findOrCreate(Label.label("UntilSqlGaps"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UntilSqlGaps"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUntilSqlGaps.push(true);
 	}
@@ -4741,7 +4741,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterStart_slave_connection_option(com.generator.generators.mysql.parser.MySqlParser.Start_slave_connection_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Start_slave_connection_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Start_slave_connection_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStart_slave_connection_option.push(true);
 	}
@@ -4759,7 +4759,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterGtid_set(com.generator.generators.mysql.parser.MySqlParser.Gtid_setContext arg) {
-		final Node node = model.findOrCreate(Label.label("Gtid_set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Gtid_set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGtid_set.push(true);
 	}
@@ -4777,7 +4777,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_start_transaction(com.generator.generators.mysql.parser.MySqlParser.Xa_start_transactionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_start_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_start_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_start_transaction.push(true);
 	}
@@ -4795,7 +4795,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_end_transaction(com.generator.generators.mysql.parser.MySqlParser.Xa_end_transactionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_end_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_end_transaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_end_transaction.push(true);
 	}
@@ -4813,7 +4813,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_prepare(com.generator.generators.mysql.parser.MySqlParser.Xa_prepareContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_prepare"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_prepare"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_prepare.push(true);
 	}
@@ -4831,7 +4831,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_commit_work(com.generator.generators.mysql.parser.MySqlParser.Xa_commit_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_commit_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_commit_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_commit_work.push(true);
 	}
@@ -4849,7 +4849,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_rollback_work(com.generator.generators.mysql.parser.MySqlParser.Xa_rollback_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_rollback_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_rollback_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_rollback_work.push(true);
 	}
@@ -4867,7 +4867,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXa_recover_work(com.generator.generators.mysql.parser.MySqlParser.Xa_recover_workContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xa_recover_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xa_recover_work"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXa_recover_work.push(true);
 	}
@@ -4885,7 +4885,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrepare_statement(com.generator.generators.mysql.parser.MySqlParser.Prepare_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Prepare_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Prepare_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrepare_statement.push(true);
 	}
@@ -4903,7 +4903,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterExecute_statement(com.generator.generators.mysql.parser.MySqlParser.Execute_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Execute_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Execute_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExecute_statement.push(true);
 	}
@@ -4921,7 +4921,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDeallocate_prepare(com.generator.generators.mysql.parser.MySqlParser.Deallocate_prepareContext arg) {
-		final Node node = model.findOrCreate(Label.label("Deallocate_prepare"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Deallocate_prepare"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeallocate_prepare.push(true);
 	}
@@ -4939,7 +4939,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRoutine_body(com.generator.generators.mysql.parser.MySqlParser.Routine_bodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Routine_body"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Routine_body"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRoutine_body.push(true);
 	}
@@ -4957,7 +4957,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBlock_statement(com.generator.generators.mysql.parser.MySqlParser.Block_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Block_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlock_statement.push(true);
 	}
@@ -4975,7 +4975,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCase_statement(com.generator.generators.mysql.parser.MySqlParser.Case_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Case_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Case_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCase_statement.push(true);
 	}
@@ -4993,7 +4993,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIf_statement(com.generator.generators.mysql.parser.MySqlParser.If_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("If_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("If_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIf_statement.push(true);
 	}
@@ -5011,7 +5011,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIterate_statement(com.generator.generators.mysql.parser.MySqlParser.Iterate_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Iterate_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Iterate_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIterate_statement.push(true);
 	}
@@ -5029,7 +5029,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLeave_statement(com.generator.generators.mysql.parser.MySqlParser.Leave_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Leave_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Leave_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLeave_statement.push(true);
 	}
@@ -5047,7 +5047,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLoop_statement(com.generator.generators.mysql.parser.MySqlParser.Loop_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Loop_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Loop_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLoop_statement.push(true);
 	}
@@ -5065,7 +5065,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRepeat_statement(com.generator.generators.mysql.parser.MySqlParser.Repeat_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Repeat_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Repeat_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRepeat_statement.push(true);
 	}
@@ -5083,7 +5083,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReturn_statement(com.generator.generators.mysql.parser.MySqlParser.Return_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Return_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Return_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturn_statement.push(true);
 	}
@@ -5101,7 +5101,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterWhile_statement(com.generator.generators.mysql.parser.MySqlParser.While_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("While_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("While_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWhile_statement.push(true);
 	}
@@ -5119,7 +5119,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCursor_statement(com.generator.generators.mysql.parser.MySqlParser.Cursor_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cursor_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Cursor_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCursor_statement.push(true);
 	}
@@ -5137,7 +5137,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDeclare_variable(com.generator.generators.mysql.parser.MySqlParser.Declare_variableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declare_variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Declare_variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclare_variable.push(true);
 	}
@@ -5155,7 +5155,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDeclare_condition(com.generator.generators.mysql.parser.MySqlParser.Declare_conditionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declare_condition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Declare_condition"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclare_condition.push(true);
 	}
@@ -5173,7 +5173,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDeclare_cursor(com.generator.generators.mysql.parser.MySqlParser.Declare_cursorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declare_cursor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Declare_cursor"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclare_cursor.push(true);
 	}
@@ -5191,7 +5191,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDeclare_handler(com.generator.generators.mysql.parser.MySqlParser.Declare_handlerContext arg) {
-		final Node node = model.findOrCreate(Label.label("Declare_handler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Declare_handler"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeclare_handler.push(true);
 	}
@@ -5209,7 +5209,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHandler_condition_value(com.generator.generators.mysql.parser.MySqlParser.Handler_condition_valueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Handler_condition_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Handler_condition_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHandler_condition_value.push(true);
 	}
@@ -5227,7 +5227,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterProcedure_sql_statement(com.generator.generators.mysql.parser.MySqlParser.Procedure_sql_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Procedure_sql_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Procedure_sql_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProcedure_sql_statement.push(true);
 	}
@@ -5245,7 +5245,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlterUserMysql56(com.generator.generators.mysql.parser.MySqlParser.AlterUserMysql56Context arg) {
-		final Node node = model.findOrCreate(Label.label("AlterUserMysql56"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AlterUserMysql56"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlterUserMysql56.push(true);
 	}
@@ -5263,7 +5263,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAlterUserMysql57(com.generator.generators.mysql.parser.MySqlParser.AlterUserMysql57Context arg) {
-		final Node node = model.findOrCreate(Label.label("AlterUserMysql57"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AlterUserMysql57"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAlterUserMysql57.push(true);
 	}
@@ -5281,7 +5281,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreateUserMysql56(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql56Context arg) {
-		final Node node = model.findOrCreate(Label.label("CreateUserMysql56"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CreateUserMysql56"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreateUserMysql56.push(true);
 	}
@@ -5299,7 +5299,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreateUserMysql57(com.generator.generators.mysql.parser.MySqlParser.CreateUserMysql57Context arg) {
-		final Node node = model.findOrCreate(Label.label("CreateUserMysql57"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CreateUserMysql57"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreateUserMysql57.push(true);
 	}
@@ -5317,7 +5317,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDrop_user(com.generator.generators.mysql.parser.MySqlParser.Drop_userContext arg) {
-		final Node node = model.findOrCreate(Label.label("Drop_user"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Drop_user"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDrop_user.push(true);
 	}
@@ -5335,7 +5335,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterGrant_statement(com.generator.generators.mysql.parser.MySqlParser.Grant_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Grant_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Grant_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGrant_statement.push(true);
 	}
@@ -5353,7 +5353,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterGrant_proxy(com.generator.generators.mysql.parser.MySqlParser.Grant_proxyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Grant_proxy"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Grant_proxy"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGrant_proxy.push(true);
 	}
@@ -5371,7 +5371,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRename_user(com.generator.generators.mysql.parser.MySqlParser.Rename_userContext arg) {
-		final Node node = model.findOrCreate(Label.label("Rename_user"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Rename_user"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRename_user.push(true);
 	}
@@ -5389,7 +5389,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDetailRevoke(com.generator.generators.mysql.parser.MySqlParser.DetailRevokeContext arg) {
-		final Node node = model.findOrCreate(Label.label("DetailRevoke"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DetailRevoke"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDetailRevoke.push(true);
 	}
@@ -5407,7 +5407,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShortRevoke(com.generator.generators.mysql.parser.MySqlParser.ShortRevokeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShortRevoke"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShortRevoke"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShortRevoke.push(true);
 	}
@@ -5425,7 +5425,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRevoke_proxy(com.generator.generators.mysql.parser.MySqlParser.Revoke_proxyContext arg) {
-		final Node node = model.findOrCreate(Label.label("Revoke_proxy"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Revoke_proxy"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRevoke_proxy.push(true);
 	}
@@ -5443,7 +5443,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSet_password_statement(com.generator.generators.mysql.parser.MySqlParser.Set_password_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set_password_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Set_password_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet_password_statement.push(true);
 	}
@@ -5461,7 +5461,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUser_password_option(com.generator.generators.mysql.parser.MySqlParser.User_password_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("User_password_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("User_password_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser_password_option.push(true);
 	}
@@ -5479,7 +5479,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAuthByPassword(com.generator.generators.mysql.parser.MySqlParser.AuthByPasswordContext arg) {
-		final Node node = model.findOrCreate(Label.label("AuthByPassword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AuthByPassword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAuthByPassword.push(true);
 	}
@@ -5497,7 +5497,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAuthByString(com.generator.generators.mysql.parser.MySqlParser.AuthByStringContext arg) {
-		final Node node = model.findOrCreate(Label.label("AuthByString"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AuthByString"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAuthByString.push(true);
 	}
@@ -5515,7 +5515,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAuthByHash(com.generator.generators.mysql.parser.MySqlParser.AuthByHashContext arg) {
-		final Node node = model.findOrCreate(Label.label("AuthByHash"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AuthByHash"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAuthByHash.push(true);
 	}
@@ -5533,7 +5533,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTls_option(com.generator.generators.mysql.parser.MySqlParser.Tls_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tls_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Tls_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTls_option.push(true);
 	}
@@ -5551,7 +5551,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUser_resource_option(com.generator.generators.mysql.parser.MySqlParser.User_resource_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("User_resource_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("User_resource_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser_resource_option.push(true);
 	}
@@ -5569,7 +5569,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUser_lock_option(com.generator.generators.mysql.parser.MySqlParser.User_lock_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("User_lock_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("User_lock_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser_lock_option.push(true);
 	}
@@ -5587,7 +5587,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrivelege_clause(com.generator.generators.mysql.parser.MySqlParser.Privelege_clauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Privelege_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Privelege_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrivelege_clause.push(true);
 	}
@@ -5605,7 +5605,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrivilege(com.generator.generators.mysql.parser.MySqlParser.PrivilegeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Privilege"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Privilege"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrivilege.push(true);
 	}
@@ -5623,7 +5623,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrivilege_level(com.generator.generators.mysql.parser.MySqlParser.Privilege_levelContext arg) {
-		final Node node = model.findOrCreate(Label.label("Privilege_level"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Privilege_level"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrivilege_level.push(true);
 	}
@@ -5641,7 +5641,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSet_password_option(com.generator.generators.mysql.parser.MySqlParser.Set_password_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Set_password_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Set_password_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSet_password_option.push(true);
 	}
@@ -5659,7 +5659,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAnalyze_table(com.generator.generators.mysql.parser.MySqlParser.Analyze_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Analyze_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Analyze_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAnalyze_table.push(true);
 	}
@@ -5677,7 +5677,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCheck_table(com.generator.generators.mysql.parser.MySqlParser.Check_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Check_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Check_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCheck_table.push(true);
 	}
@@ -5695,7 +5695,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterChecksum_table(com.generator.generators.mysql.parser.MySqlParser.Checksum_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Checksum_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Checksum_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inChecksum_table.push(true);
 	}
@@ -5713,7 +5713,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterOptimize_table(com.generator.generators.mysql.parser.MySqlParser.Optimize_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Optimize_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Optimize_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inOptimize_table.push(true);
 	}
@@ -5731,7 +5731,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRepair_table(com.generator.generators.mysql.parser.MySqlParser.Repair_tableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Repair_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Repair_table"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRepair_table.push(true);
 	}
@@ -5749,7 +5749,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCheck_table_option(com.generator.generators.mysql.parser.MySqlParser.Check_table_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Check_table_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Check_table_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCheck_table_option.push(true);
 	}
@@ -5767,7 +5767,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCreate_udfunction(com.generator.generators.mysql.parser.MySqlParser.Create_udfunctionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Create_udfunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Create_udfunction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCreate_udfunction.push(true);
 	}
@@ -5785,7 +5785,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInstall_plugin(com.generator.generators.mysql.parser.MySqlParser.Install_pluginContext arg) {
-		final Node node = model.findOrCreate(Label.label("Install_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Install_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInstall_plugin.push(true);
 	}
@@ -5803,7 +5803,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUninstall_plugin(com.generator.generators.mysql.parser.MySqlParser.Uninstall_pluginContext arg) {
-		final Node node = model.findOrCreate(Label.label("Uninstall_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Uninstall_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUninstall_plugin.push(true);
 	}
@@ -5821,7 +5821,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetVariableAssignment(com.generator.generators.mysql.parser.MySqlParser.SetVariableAssignmentContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetVariableAssignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetVariableAssignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetVariableAssignment.push(true);
 	}
@@ -5839,7 +5839,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetCharset(com.generator.generators.mysql.parser.MySqlParser.SetCharsetContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetCharset.push(true);
 	}
@@ -5857,7 +5857,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetNames(com.generator.generators.mysql.parser.MySqlParser.SetNamesContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetNames"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetNames"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetNames.push(true);
 	}
@@ -5875,7 +5875,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetPasswordStatement(com.generator.generators.mysql.parser.MySqlParser.SetPasswordStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetPasswordStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetPasswordStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetPasswordStatement.push(true);
 	}
@@ -5893,7 +5893,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetTransaction(com.generator.generators.mysql.parser.MySqlParser.SetTransactionContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetTransaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetTransaction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetTransaction.push(true);
 	}
@@ -5911,7 +5911,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSetAutocommit(com.generator.generators.mysql.parser.MySqlParser.SetAutocommitContext arg) {
-		final Node node = model.findOrCreate(Label.label("SetAutocommit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SetAutocommit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetAutocommit.push(true);
 	}
@@ -5929,7 +5929,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowMasterlogs(com.generator.generators.mysql.parser.MySqlParser.ShowMasterlogsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowMasterlogs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowMasterlogs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowMasterlogs.push(true);
 	}
@@ -5947,7 +5947,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowLogevents(com.generator.generators.mysql.parser.MySqlParser.ShowLogeventsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowLogevents"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowLogevents"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowLogevents.push(true);
 	}
@@ -5965,7 +5965,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowObjWithFilter(com.generator.generators.mysql.parser.MySqlParser.ShowObjWithFilterContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowObjWithFilter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowObjWithFilter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowObjWithFilter.push(true);
 	}
@@ -5983,7 +5983,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowColumns(com.generator.generators.mysql.parser.MySqlParser.ShowColumnsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowColumns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowColumns"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowColumns.push(true);
 	}
@@ -6001,7 +6001,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowCreateDb(com.generator.generators.mysql.parser.MySqlParser.ShowCreateDbContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowCreateDb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowCreateDb"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowCreateDb.push(true);
 	}
@@ -6019,7 +6019,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowCreateFullidobj(com.generator.generators.mysql.parser.MySqlParser.ShowCreateFullidobjContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowCreateFullidobj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowCreateFullidobj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowCreateFullidobj.push(true);
 	}
@@ -6037,7 +6037,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowCreateUser(com.generator.generators.mysql.parser.MySqlParser.ShowCreateUserContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowCreateUser"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowCreateUser"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowCreateUser.push(true);
 	}
@@ -6055,7 +6055,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowEngine(com.generator.generators.mysql.parser.MySqlParser.ShowEngineContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowEngine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowEngine"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowEngine.push(true);
 	}
@@ -6073,7 +6073,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowGlobalinfo(com.generator.generators.mysql.parser.MySqlParser.ShowGlobalinfoContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowGlobalinfo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowGlobalinfo"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowGlobalinfo.push(true);
 	}
@@ -6091,7 +6091,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowErrWarn(com.generator.generators.mysql.parser.MySqlParser.ShowErrWarnContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowErrWarn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowErrWarn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowErrWarn.push(true);
 	}
@@ -6109,7 +6109,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowCountErrWarn(com.generator.generators.mysql.parser.MySqlParser.ShowCountErrWarnContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowCountErrWarn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowCountErrWarn"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowCountErrWarn.push(true);
 	}
@@ -6127,7 +6127,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowFromschemaFilter(com.generator.generators.mysql.parser.MySqlParser.ShowFromschemaFilterContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowFromschemaFilter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowFromschemaFilter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowFromschemaFilter.push(true);
 	}
@@ -6145,7 +6145,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowRoutinecode(com.generator.generators.mysql.parser.MySqlParser.ShowRoutinecodeContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowRoutinecode"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowRoutinecode"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowRoutinecode.push(true);
 	}
@@ -6163,7 +6163,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowGrants(com.generator.generators.mysql.parser.MySqlParser.ShowGrantsContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowGrants"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowGrants"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowGrants.push(true);
 	}
@@ -6181,7 +6181,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowIndexes(com.generator.generators.mysql.parser.MySqlParser.ShowIndexesContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowIndexes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowIndexes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowIndexes.push(true);
 	}
@@ -6199,7 +6199,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowOpentables(com.generator.generators.mysql.parser.MySqlParser.ShowOpentablesContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowOpentables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowOpentables"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowOpentables.push(true);
 	}
@@ -6217,7 +6217,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowProfile(com.generator.generators.mysql.parser.MySqlParser.ShowProfileContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowProfile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowProfile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowProfile.push(true);
 	}
@@ -6235,7 +6235,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShowSlavestatus(com.generator.generators.mysql.parser.MySqlParser.ShowSlavestatusContext arg) {
-		final Node node = model.findOrCreate(Label.label("ShowSlavestatus"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ShowSlavestatus"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShowSlavestatus.push(true);
 	}
@@ -6253,7 +6253,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterVariable_clause(com.generator.generators.mysql.parser.MySqlParser.Variable_clauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Variable_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Variable_clause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariable_clause.push(true);
 	}
@@ -6271,7 +6271,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShow_filter(com.generator.generators.mysql.parser.MySqlParser.Show_filterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Show_filter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Show_filter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShow_filter.push(true);
 	}
@@ -6289,7 +6289,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShow_profile_type(com.generator.generators.mysql.parser.MySqlParser.Show_profile_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Show_profile_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Show_profile_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShow_profile_type.push(true);
 	}
@@ -6307,7 +6307,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBinlog_statement(com.generator.generators.mysql.parser.MySqlParser.Binlog_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Binlog_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Binlog_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBinlog_statement.push(true);
 	}
@@ -6325,7 +6325,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCache_index_statement(com.generator.generators.mysql.parser.MySqlParser.Cache_index_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Cache_index_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Cache_index_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCache_index_statement.push(true);
 	}
@@ -6343,7 +6343,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFlush_statement(com.generator.generators.mysql.parser.MySqlParser.Flush_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Flush_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Flush_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFlush_statement.push(true);
 	}
@@ -6361,7 +6361,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterKill_statement(com.generator.generators.mysql.parser.MySqlParser.Kill_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Kill_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Kill_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKill_statement.push(true);
 	}
@@ -6379,7 +6379,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLoad_index_into_cache(com.generator.generators.mysql.parser.MySqlParser.Load_index_into_cacheContext arg) {
-		final Node node = model.findOrCreate(Label.label("Load_index_into_cache"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Load_index_into_cache"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLoad_index_into_cache.push(true);
 	}
@@ -6397,7 +6397,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterReset_statement(com.generator.generators.mysql.parser.MySqlParser.Reset_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Reset_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Reset_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReset_statement.push(true);
 	}
@@ -6415,7 +6415,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterShutdown_statement(com.generator.generators.mysql.parser.MySqlParser.Shutdown_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Shutdown_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Shutdown_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inShutdown_statement.push(true);
 	}
@@ -6433,7 +6433,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTbl_index_list(com.generator.generators.mysql.parser.MySqlParser.Tbl_index_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Tbl_index_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Tbl_index_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTbl_index_list.push(true);
 	}
@@ -6451,7 +6451,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFlush_option(com.generator.generators.mysql.parser.MySqlParser.Flush_optionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Flush_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Flush_option"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFlush_option.push(true);
 	}
@@ -6469,7 +6469,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLoad_tbl_index_list(com.generator.generators.mysql.parser.MySqlParser.Load_tbl_index_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Load_tbl_index_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Load_tbl_index_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLoad_tbl_index_list.push(true);
 	}
@@ -6487,7 +6487,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimple_describe_statement(com.generator.generators.mysql.parser.MySqlParser.Simple_describe_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simple_describe_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Simple_describe_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimple_describe_statement.push(true);
 	}
@@ -6505,7 +6505,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFull_describe_statement(com.generator.generators.mysql.parser.MySqlParser.Full_describe_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Full_describe_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Full_describe_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFull_describe_statement.push(true);
 	}
@@ -6523,7 +6523,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHelp_statement(com.generator.generators.mysql.parser.MySqlParser.Help_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Help_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Help_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHelp_statement.push(true);
 	}
@@ -6541,7 +6541,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUse_statement(com.generator.generators.mysql.parser.MySqlParser.Use_statementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Use_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Use_statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUse_statement.push(true);
 	}
@@ -6559,7 +6559,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDescstmtDescObj(com.generator.generators.mysql.parser.MySqlParser.DescstmtDescObjContext arg) {
-		final Node node = model.findOrCreate(Label.label("DescstmtDescObj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DescstmtDescObj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDescstmtDescObj.push(true);
 	}
@@ -6577,7 +6577,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConnectionDescObj(com.generator.generators.mysql.parser.MySqlParser.ConnectionDescObjContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConnectionDescObj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ConnectionDescObj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConnectionDescObj.push(true);
 	}
@@ -6595,7 +6595,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTable_name(com.generator.generators.mysql.parser.MySqlParser.Table_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Table_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Table_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTable_name.push(true);
 	}
@@ -6613,7 +6613,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFull_id(com.generator.generators.mysql.parser.MySqlParser.Full_idContext arg) {
-		final Node node = model.findOrCreate(Label.label("Full_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Full_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFull_id.push(true);
 	}
@@ -6631,7 +6631,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFull_column_name(com.generator.generators.mysql.parser.MySqlParser.Full_column_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Full_column_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Full_column_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFull_column_name.push(true);
 	}
@@ -6649,7 +6649,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndex_col_name(com.generator.generators.mysql.parser.MySqlParser.Index_col_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index_col_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Index_col_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex_col_name.push(true);
 	}
@@ -6667,7 +6667,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUser_name(com.generator.generators.mysql.parser.MySqlParser.User_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("User_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("User_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser_name.push(true);
 	}
@@ -6685,7 +6685,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMysql_variable(com.generator.generators.mysql.parser.MySqlParser.Mysql_variableContext arg) {
-		final Node node = model.findOrCreate(Label.label("Mysql_variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Mysql_variable"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMysql_variable.push(true);
 	}
@@ -6703,7 +6703,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCharset_name(com.generator.generators.mysql.parser.MySqlParser.Charset_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Charset_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Charset_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharset_name.push(true);
 	}
@@ -6721,7 +6721,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCollation_name(com.generator.generators.mysql.parser.MySqlParser.Collation_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Collation_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Collation_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCollation_name.push(true);
 	}
@@ -6739,7 +6739,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterEngine_name(com.generator.generators.mysql.parser.MySqlParser.Engine_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Engine_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Engine_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEngine_name.push(true);
 	}
@@ -6757,7 +6757,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUuid_set(com.generator.generators.mysql.parser.MySqlParser.Uuid_setContext arg) {
-		final Node node = model.findOrCreate(Label.label("Uuid_set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Uuid_set"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUuid_set.push(true);
 	}
@@ -6775,7 +6775,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXid(com.generator.generators.mysql.parser.MySqlParser.XidContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xid"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXid.push(true);
 	}
@@ -6793,7 +6793,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterXid_string_id(com.generator.generators.mysql.parser.MySqlParser.Xid_string_idContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xid_string_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xid_string_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXid_string_id.push(true);
 	}
@@ -6811,7 +6811,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAuth_plugin(com.generator.generators.mysql.parser.MySqlParser.Auth_pluginContext arg) {
-		final Node node = model.findOrCreate(Label.label("Auth_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Auth_plugin"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAuth_plugin.push(true);
 	}
@@ -6829,7 +6829,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterId_(com.generator.generators.mysql.parser.MySqlParser.Id_Context arg) {
-		final Node node = model.findOrCreate(Label.label("Id_"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Id_"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inId_.push(true);
 	}
@@ -6847,7 +6847,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimple_id(com.generator.generators.mysql.parser.MySqlParser.Simple_idContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simple_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Simple_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimple_id.push(true);
 	}
@@ -6865,7 +6865,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDot_ext_id(com.generator.generators.mysql.parser.MySqlParser.Dot_ext_idContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dot_ext_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Dot_ext_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDot_ext_id.push(true);
 	}
@@ -6883,7 +6883,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDecimal_literal(com.generator.generators.mysql.parser.MySqlParser.Decimal_literalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Decimal_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Decimal_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDecimal_literal.push(true);
 	}
@@ -6901,7 +6901,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFilesize_literal(com.generator.generators.mysql.parser.MySqlParser.Filesize_literalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Filesize_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Filesize_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFilesize_literal.push(true);
 	}
@@ -6919,7 +6919,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterString_literal(com.generator.generators.mysql.parser.MySqlParser.String_literalContext arg) {
-		final Node node = model.findOrCreate(Label.label("String_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("String_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inString_literal.push(true);
 	}
@@ -6937,7 +6937,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBoolean_literal(com.generator.generators.mysql.parser.MySqlParser.Boolean_literalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Boolean_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Boolean_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBoolean_literal.push(true);
 	}
@@ -6955,7 +6955,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterHexadecimal_literal(com.generator.generators.mysql.parser.MySqlParser.Hexadecimal_literalContext arg) {
-		final Node node = model.findOrCreate(Label.label("Hexadecimal_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Hexadecimal_literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHexadecimal_literal.push(true);
 	}
@@ -6973,7 +6973,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterNull_notnull(com.generator.generators.mysql.parser.MySqlParser.Null_notnullContext arg) {
-		final Node node = model.findOrCreate(Label.label("Null_notnull"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Null_notnull"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNull_notnull.push(true);
 	}
@@ -6991,7 +6991,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConstant(com.generator.generators.mysql.parser.MySqlParser.ConstantContext arg) {
-		final Node node = model.findOrCreate(Label.label("Constant"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Constant"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstant.push(true);
 	}
@@ -7009,7 +7009,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCharDatatype(com.generator.generators.mysql.parser.MySqlParser.CharDatatypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("CharDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CharDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharDatatype.push(true);
 	}
@@ -7027,7 +7027,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDimensionDatatype(com.generator.generators.mysql.parser.MySqlParser.DimensionDatatypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("DimensionDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DimensionDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDimensionDatatype.push(true);
 	}
@@ -7045,7 +7045,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimpleDatatype(com.generator.generators.mysql.parser.MySqlParser.SimpleDatatypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SimpleDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpleDatatype.push(true);
 	}
@@ -7063,7 +7063,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCollectCharDatatype(com.generator.generators.mysql.parser.MySqlParser.CollectCharDatatypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("CollectCharDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CollectCharDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCollectCharDatatype.push(true);
 	}
@@ -7081,7 +7081,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSpatialDatatype(com.generator.generators.mysql.parser.MySqlParser.SpatialDatatypeContext arg) {
-		final Node node = model.findOrCreate(Label.label("SpatialDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SpatialDatatype"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSpatialDatatype.push(true);
 	}
@@ -7099,7 +7099,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterData_type_to_convert(com.generator.generators.mysql.parser.MySqlParser.Data_type_to_convertContext arg) {
-		final Node node = model.findOrCreate(Label.label("Data_type_to_convert"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Data_type_to_convert"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inData_type_to_convert.push(true);
 	}
@@ -7117,7 +7117,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSpatial_data_type(com.generator.generators.mysql.parser.MySqlParser.Spatial_data_typeContext arg) {
-		final Node node = model.findOrCreate(Label.label("Spatial_data_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Spatial_data_type"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSpatial_data_type.push(true);
 	}
@@ -7135,7 +7135,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLength_one_dimension(com.generator.generators.mysql.parser.MySqlParser.Length_one_dimensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Length_one_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Length_one_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLength_one_dimension.push(true);
 	}
@@ -7153,7 +7153,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLength_two_dimension(com.generator.generators.mysql.parser.MySqlParser.Length_two_dimensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Length_two_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Length_two_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLength_two_dimension.push(true);
 	}
@@ -7171,7 +7171,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLength_two_optional_dimension(com.generator.generators.mysql.parser.MySqlParser.Length_two_optional_dimensionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Length_two_optional_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Length_two_optional_dimension"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLength_two_optional_dimension.push(true);
 	}
@@ -7189,7 +7189,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterId_list(com.generator.generators.mysql.parser.MySqlParser.Id_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Id_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Id_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inId_list.push(true);
 	}
@@ -7207,7 +7207,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTable_list(com.generator.generators.mysql.parser.MySqlParser.Table_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Table_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Table_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTable_list.push(true);
 	}
@@ -7225,7 +7225,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTable_pair_list(com.generator.generators.mysql.parser.MySqlParser.Table_pair_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Table_pair_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Table_pair_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTable_pair_list.push(true);
 	}
@@ -7243,7 +7243,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIndex_colname_list(com.generator.generators.mysql.parser.MySqlParser.Index_colname_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Index_colname_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Index_colname_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIndex_colname_list.push(true);
 	}
@@ -7261,7 +7261,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterExpression_list(com.generator.generators.mysql.parser.MySqlParser.Expression_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Expression_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Expression_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpression_list.push(true);
 	}
@@ -7279,7 +7279,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConstant_list(com.generator.generators.mysql.parser.MySqlParser.Constant_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Constant_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Constant_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstant_list.push(true);
 	}
@@ -7297,7 +7297,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimple_string_list(com.generator.generators.mysql.parser.MySqlParser.Simple_string_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("Simple_string_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Simple_string_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimple_string_list.push(true);
 	}
@@ -7315,7 +7315,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUser_var_list(com.generator.generators.mysql.parser.MySqlParser.User_var_listContext arg) {
-		final Node node = model.findOrCreate(Label.label("User_var_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("User_var_list"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUser_var_list.push(true);
 	}
@@ -7333,7 +7333,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDefault_value(com.generator.generators.mysql.parser.MySqlParser.Default_valueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Default_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Default_value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDefault_value.push(true);
 	}
@@ -7351,7 +7351,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIf_exists(com.generator.generators.mysql.parser.MySqlParser.If_existsContext arg) {
-		final Node node = model.findOrCreate(Label.label("If_exists"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("If_exists"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIf_exists.push(true);
 	}
@@ -7369,7 +7369,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIf_not_exists(com.generator.generators.mysql.parser.MySqlParser.If_not_existsContext arg) {
-		final Node node = model.findOrCreate(Label.label("If_not_exists"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("If_not_exists"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIf_not_exists.push(true);
 	}
@@ -7387,7 +7387,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSpecificFunctionCall(com.generator.generators.mysql.parser.MySqlParser.SpecificFunctionCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("SpecificFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SpecificFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSpecificFunctionCall.push(true);
 	}
@@ -7405,7 +7405,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAggregateFunctionCall(com.generator.generators.mysql.parser.MySqlParser.AggregateFunctionCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("AggregateFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AggregateFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAggregateFunctionCall.push(true);
 	}
@@ -7423,7 +7423,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterScalarFunctionCall(com.generator.generators.mysql.parser.MySqlParser.ScalarFunctionCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("ScalarFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ScalarFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inScalarFunctionCall.push(true);
 	}
@@ -7441,7 +7441,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUdfFunctionCall(com.generator.generators.mysql.parser.MySqlParser.UdfFunctionCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("UdfFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UdfFunctionCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUdfFunctionCall.push(true);
 	}
@@ -7459,7 +7459,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSimpleSpecificFCall(com.generator.generators.mysql.parser.MySqlParser.SimpleSpecificFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("SimpleSpecificFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SimpleSpecificFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSimpleSpecificFCall.push(true);
 	}
@@ -7477,7 +7477,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConvertDataTypeFCall(com.generator.generators.mysql.parser.MySqlParser.ConvertDataTypeFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConvertDataTypeFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ConvertDataTypeFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConvertDataTypeFCall.push(true);
 	}
@@ -7495,7 +7495,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterValuesFCall(com.generator.generators.mysql.parser.MySqlParser.ValuesFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("ValuesFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ValuesFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inValuesFCall.push(true);
 	}
@@ -7513,7 +7513,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCaseFCall(com.generator.generators.mysql.parser.MySqlParser.CaseFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CaseFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseFCall.push(true);
 	}
@@ -7531,7 +7531,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCharFCall(com.generator.generators.mysql.parser.MySqlParser.CharFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("CharFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CharFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharFCall.push(true);
 	}
@@ -7549,7 +7549,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPositionFCall(com.generator.generators.mysql.parser.MySqlParser.PositionFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("PositionFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PositionFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPositionFCall.push(true);
 	}
@@ -7567,7 +7567,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSubstrFCall(com.generator.generators.mysql.parser.MySqlParser.SubstrFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("SubstrFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SubstrFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSubstrFCall.push(true);
 	}
@@ -7585,7 +7585,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTrimFCall(com.generator.generators.mysql.parser.MySqlParser.TrimFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("TrimFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TrimFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTrimFCall.push(true);
 	}
@@ -7603,7 +7603,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterWeightFCall(com.generator.generators.mysql.parser.MySqlParser.WeightFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("WeightFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("WeightFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWeightFCall.push(true);
 	}
@@ -7621,7 +7621,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterExtractFCall(com.generator.generators.mysql.parser.MySqlParser.ExtractFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExtractFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ExtractFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExtractFCall.push(true);
 	}
@@ -7639,7 +7639,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterGetFormatFCall(com.generator.generators.mysql.parser.MySqlParser.GetFormatFCallContext arg) {
-		final Node node = model.findOrCreate(Label.label("GetFormatFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("GetFormatFCall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGetFormatFCall.push(true);
 	}
@@ -7657,7 +7657,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLevelWeightFList(com.generator.generators.mysql.parser.MySqlParser.LevelWeightFListContext arg) {
-		final Node node = model.findOrCreate(Label.label("LevelWeightFList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LevelWeightFList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLevelWeightFList.push(true);
 	}
@@ -7675,7 +7675,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLevelWeightFRange(com.generator.generators.mysql.parser.MySqlParser.LevelWeightFRangeContext arg) {
-		final Node node = model.findOrCreate(Label.label("LevelWeightFRange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LevelWeightFRange"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLevelWeightFRange.push(true);
 	}
@@ -7693,7 +7693,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterAggregate_windowed_function(com.generator.generators.mysql.parser.MySqlParser.Aggregate_windowed_functionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Aggregate_windowed_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Aggregate_windowed_function"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAggregate_windowed_function.push(true);
 	}
@@ -7711,7 +7711,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterScalar_function_name(com.generator.generators.mysql.parser.MySqlParser.Scalar_function_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Scalar_function_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Scalar_function_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inScalar_function_name.push(true);
 	}
@@ -7729,7 +7729,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFunction_args(com.generator.generators.mysql.parser.MySqlParser.Function_argsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function_args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Function_args"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunction_args.push(true);
 	}
@@ -7747,7 +7747,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFunction_arg(com.generator.generators.mysql.parser.MySqlParser.Function_argContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function_arg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Function_arg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunction_arg.push(true);
 	}
@@ -7765,7 +7765,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIsExpression(com.generator.generators.mysql.parser.MySqlParser.IsExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("IsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIsExpression.push(true);
 	}
@@ -7783,7 +7783,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLogicalExpression(com.generator.generators.mysql.parser.MySqlParser.LogicalExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("LogicalExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LogicalExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLogicalExpression.push(true);
 	}
@@ -7801,7 +7801,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPredicateExpression(com.generator.generators.mysql.parser.MySqlParser.PredicateExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PredicateExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PredicateExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPredicateExpression.push(true);
 	}
@@ -7819,7 +7819,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSoundsLikePredicate(com.generator.generators.mysql.parser.MySqlParser.SoundsLikePredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("SoundsLikePredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SoundsLikePredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSoundsLikePredicate.push(true);
 	}
@@ -7837,7 +7837,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterExpressionAtomPredicate(com.generator.generators.mysql.parser.MySqlParser.ExpressionAtomPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionAtomPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ExpressionAtomPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionAtomPredicate.push(true);
 	}
@@ -7855,7 +7855,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInPredicate(com.generator.generators.mysql.parser.MySqlParser.InPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("InPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("InPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInPredicate.push(true);
 	}
@@ -7873,7 +7873,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterSubqueryComparasionPredicate(com.generator.generators.mysql.parser.MySqlParser.SubqueryComparasionPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("SubqueryComparasionPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SubqueryComparasionPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSubqueryComparasionPredicate.push(true);
 	}
@@ -7891,7 +7891,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBetweenPredicate(com.generator.generators.mysql.parser.MySqlParser.BetweenPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("BetweenPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BetweenPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBetweenPredicate.push(true);
 	}
@@ -7909,7 +7909,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBinaryComparasionPredicate(com.generator.generators.mysql.parser.MySqlParser.BinaryComparasionPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("BinaryComparasionPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BinaryComparasionPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBinaryComparasionPredicate.push(true);
 	}
@@ -7927,7 +7927,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIsNullPredicate(com.generator.generators.mysql.parser.MySqlParser.IsNullPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("IsNullPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IsNullPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIsNullPredicate.push(true);
 	}
@@ -7945,7 +7945,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLikePredicate(com.generator.generators.mysql.parser.MySqlParser.LikePredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("LikePredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LikePredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLikePredicate.push(true);
 	}
@@ -7963,7 +7963,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterRegexpPredicate(com.generator.generators.mysql.parser.MySqlParser.RegexpPredicateContext arg) {
-		final Node node = model.findOrCreate(Label.label("RegexpPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RegexpPredicate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRegexpPredicate.push(true);
 	}
@@ -7981,7 +7981,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnaryExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.UnaryExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnaryExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UnaryExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnaryExpressionAtom.push(true);
 	}
@@ -7999,7 +7999,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterExistsExpessionAtom(com.generator.generators.mysql.parser.MySqlParser.ExistsExpessionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExistsExpessionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ExistsExpessionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExistsExpessionAtom.push(true);
 	}
@@ -8017,7 +8017,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterConstantExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.ConstantExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("ConstantExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ConstantExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inConstantExpressionAtom.push(true);
 	}
@@ -8035,7 +8035,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFunctionCallExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.FunctionCallExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionCallExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FunctionCallExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionCallExpressionAtom.push(true);
 	}
@@ -8053,7 +8053,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMysqlVariableExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.MysqlVariableExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("MysqlVariableExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MysqlVariableExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMysqlVariableExpressionAtom.push(true);
 	}
@@ -8071,7 +8071,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBinaryExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.BinaryExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("BinaryExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BinaryExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBinaryExpressionAtom.push(true);
 	}
@@ -8089,7 +8089,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFullColumnNameExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.FullColumnNameExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("FullColumnNameExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FullColumnNameExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFullColumnNameExpressionAtom.push(true);
 	}
@@ -8107,7 +8107,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterDefaultExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.DefaultExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("DefaultExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DefaultExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDefaultExpressionAtom.push(true);
 	}
@@ -8125,7 +8125,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBitExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.BitExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitExpressionAtom.push(true);
 	}
@@ -8143,7 +8143,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterNestedExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.NestedExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("NestedExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NestedExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNestedExpressionAtom.push(true);
 	}
@@ -8161,7 +8161,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMathExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.MathExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("MathExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MathExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMathExpressionAtom.push(true);
 	}
@@ -8179,7 +8179,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterIntervalExpressionAtom(com.generator.generators.mysql.parser.MySqlParser.IntervalExpressionAtomContext arg) {
-		final Node node = model.findOrCreate(Label.label("IntervalExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IntervalExpressionAtom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIntervalExpressionAtom.push(true);
 	}
@@ -8197,7 +8197,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterUnary_operator(com.generator.generators.mysql.parser.MySqlParser.Unary_operatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Unary_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Unary_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnary_operator.push(true);
 	}
@@ -8215,7 +8215,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterComparison_operator(com.generator.generators.mysql.parser.MySqlParser.Comparison_operatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Comparison_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Comparison_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inComparison_operator.push(true);
 	}
@@ -8233,7 +8233,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterLogical_operator(com.generator.generators.mysql.parser.MySqlParser.Logical_operatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Logical_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Logical_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLogical_operator.push(true);
 	}
@@ -8251,7 +8251,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterBit_operator(com.generator.generators.mysql.parser.MySqlParser.Bit_operatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Bit_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Bit_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBit_operator.push(true);
 	}
@@ -8269,7 +8269,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterMath_operator(com.generator.generators.mysql.parser.MySqlParser.Math_operatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("Math_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Math_operator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMath_operator.push(true);
 	}
@@ -8287,7 +8287,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterCharset_name_base(com.generator.generators.mysql.parser.MySqlParser.Charset_name_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Charset_name_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Charset_name_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCharset_name_base.push(true);
 	}
@@ -8305,7 +8305,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterTransaction_level_base(com.generator.generators.mysql.parser.MySqlParser.Transaction_level_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Transaction_level_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Transaction_level_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTransaction_level_base.push(true);
 	}
@@ -8323,7 +8323,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterPrivileges_base(com.generator.generators.mysql.parser.MySqlParser.Privileges_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Privileges_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Privileges_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPrivileges_base.push(true);
 	}
@@ -8341,7 +8341,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterInterval_type_base(com.generator.generators.mysql.parser.MySqlParser.Interval_type_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Interval_type_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Interval_type_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInterval_type_base.push(true);
 	}
@@ -8359,7 +8359,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterData_type_base(com.generator.generators.mysql.parser.MySqlParser.Data_type_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Data_type_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Data_type_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inData_type_base.push(true);
 	}
@@ -8377,7 +8377,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterKeywords_can_be_id(com.generator.generators.mysql.parser.MySqlParser.Keywords_can_be_idContext arg) {
-		final Node node = model.findOrCreate(Label.label("Keywords_can_be_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Keywords_can_be_id"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeywords_can_be_id.push(true);
 	}
@@ -8395,7 +8395,7 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	@Override
 	public void enterFunction_name_base(com.generator.generators.mysql.parser.MySqlParser.Function_name_baseContext arg) {
-		final Node node = model.findOrCreate(Label.label("Function_name_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Function_name_base"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunction_name_base.push(true);
 	}

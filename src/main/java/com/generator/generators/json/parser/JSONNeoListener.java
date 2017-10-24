@@ -43,7 +43,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Value"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inValue.push(true);
 	}
@@ -61,7 +61,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Json"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inJson.push(true);
 	}
@@ -79,7 +79,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Obj"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inObj.push(true);
 	}
@@ -97,7 +97,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Pair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPair.push(true);
 	}
@@ -115,7 +115,7 @@ public class JSONNeoListener extends JSONBaseListener {
 
 	@Override
 	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		final Node node = model.findOrCreate(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Array"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArray.push(true);
 	}

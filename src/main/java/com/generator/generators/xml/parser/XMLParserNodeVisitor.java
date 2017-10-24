@@ -49,6 +49,15 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
    }
 
 	@Override
+	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
+		final Node node = new Node("Chardata", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		final Node node = new Node("Document", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -78,15 +87,6 @@ public class XMLParserNodeVisitor extends XMLParserBaseVisitor<XMLParserNodeVisi
 	@Override
 	public Node visitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		final Node node = new Node("Reference", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		final Node node = new Node("Chardata", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

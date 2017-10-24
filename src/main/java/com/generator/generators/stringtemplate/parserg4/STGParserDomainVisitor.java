@@ -7,8 +7,7 @@ public abstract class STGParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Imports")) visitImports(node);
-		else if(hasLabel(node, "Template")) visitTemplate(node);
+		if(hasLabel(node, "Template")) visitTemplate(node);
 		else if(hasLabel(node, "DictPairs")) visitDictPairs(node);
 		else if(hasLabel(node, "KeyValuePair")) visitKeyValuePair(node);
 		else if(hasLabel(node, "DefaultValuePair")) visitDefaultValuePair(node);
@@ -18,13 +17,8 @@ public abstract class STGParserDomainVisitor {
 		else if(hasLabel(node, "FormalArgs")) visitFormalArgs(node);
 		else if(hasLabel(node, "FormalArg")) visitFormalArg(node);
 		else if(hasLabel(node, "Dict")) visitDict(node);
+		else if(hasLabel(node, "Imports")) visitImports(node);
    }
-
-	public void visitImports(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitTemplate(Node node) {
 		if (visited.contains(node)) return;
@@ -81,6 +75,12 @@ public abstract class STGParserDomainVisitor {
 	}
 
 	public void visitDict(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImports(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

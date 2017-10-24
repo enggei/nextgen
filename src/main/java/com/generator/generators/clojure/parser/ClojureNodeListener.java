@@ -48,28 +48,11 @@ public class ClojureNodeListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
-
-	@Override
-	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		onEnter(new Node("Dispatch", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inDispatch.push(true);
-	}
-
-	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
-		onExit();
-		this.inDispatch.pop();
-	}
-
-	public boolean inDispatch() {
-      return !inDispatch.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
 
 	@Override
 	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFile.push(true);
 	}
 
@@ -86,7 +69,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		onEnter(new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inForm.push(true);
 	}
 
@@ -103,7 +86,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onEnter(new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inForms.push(true);
 	}
 
@@ -120,7 +103,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inList.push(true);
 	}
 
@@ -137,7 +120,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		onEnter(new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVector.push(true);
 	}
 
@@ -154,7 +137,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		onEnter(new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMap.push(true);
 	}
 
@@ -171,7 +154,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		onEnter(new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSet.push(true);
 	}
 
@@ -188,7 +171,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		onEnter(new Node("Reader_macro", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Reader_macro", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inReader_macro.push(true);
 	}
 
@@ -205,7 +188,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		onEnter(new Node("Quote", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Quote", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inQuote.push(true);
 	}
 
@@ -222,7 +205,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
-		onEnter(new Node("Backtick", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Backtick", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBacktick.push(true);
 	}
 
@@ -239,7 +222,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
-		onEnter(new Node("Unquote", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Unquote", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inUnquote.push(true);
 	}
 
@@ -256,7 +239,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
-		onEnter(new Node("Unquote_splicing", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Unquote_splicing", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inUnquote_splicing.push(true);
 	}
 
@@ -273,7 +256,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
-		onEnter(new Node("Tag", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Tag", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTag.push(true);
 	}
 
@@ -290,7 +273,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
-		onEnter(new Node("Deref", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Deref", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDeref.push(true);
 	}
 
@@ -307,7 +290,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterGensym(com.generator.generators.clojure.parser.ClojureParser.GensymContext arg) {
-		onEnter(new Node("Gensym", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Gensym", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inGensym.push(true);
 	}
 
@@ -324,7 +307,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterLambda(com.generator.generators.clojure.parser.ClojureParser.LambdaContext arg) {
-		onEnter(new Node("Lambda", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Lambda", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLambda.push(true);
 	}
 
@@ -341,7 +324,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMeta_data(com.generator.generators.clojure.parser.ClojureParser.Meta_dataContext arg) {
-		onEnter(new Node("Meta_data", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Meta_data", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMeta_data.push(true);
 	}
 
@@ -358,7 +341,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterVar_quote(com.generator.generators.clojure.parser.ClojureParser.Var_quoteContext arg) {
-		onEnter(new Node("Var_quote", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Var_quote", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVar_quote.push(true);
 	}
 
@@ -375,7 +358,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterHost_expr(com.generator.generators.clojure.parser.ClojureParser.Host_exprContext arg) {
-		onEnter(new Node("Host_expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Host_expr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHost_expr.push(true);
 	}
 
@@ -392,7 +375,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterDiscard(com.generator.generators.clojure.parser.ClojureParser.DiscardContext arg) {
-		onEnter(new Node("Discard", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Discard", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDiscard.push(true);
 	}
 
@@ -405,11 +388,28 @@ public class ClojureNodeListener extends ClojureBaseListener {
       return !inDiscard.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inDispatch = new java.util.Stack<>();
+
+	@Override
+	public void enterDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		onEnter(new Node("Dispatch", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inDispatch.push(true);
+	}
+
+	public void exitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
+		onExit();
+		this.inDispatch.pop();
+	}
+
+	public boolean inDispatch() {
+      return !inDispatch.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inRegex = new java.util.Stack<>();
 
 	@Override
 	public void enterRegex(com.generator.generators.clojure.parser.ClojureParser.RegexContext arg) {
-		onEnter(new Node("Regex", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Regex", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRegex.push(true);
 	}
 
@@ -426,7 +426,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.clojure.parser.ClojureParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLiteral.push(true);
 	}
 
@@ -443,7 +443,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterString(com.generator.generators.clojure.parser.ClojureParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inString.push(true);
 	}
 
@@ -460,7 +460,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterHex(com.generator.generators.clojure.parser.ClojureParser.HexContext arg) {
-		onEnter(new Node("Hex", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Hex", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHex.push(true);
 	}
 
@@ -477,7 +477,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBin(com.generator.generators.clojure.parser.ClojureParser.BinContext arg) {
-		onEnter(new Node("Bin", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Bin", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBin.push(true);
 	}
 
@@ -494,7 +494,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterBign(com.generator.generators.clojure.parser.ClojureParser.BignContext arg) {
-		onEnter(new Node("Bign", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Bign", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBign.push(true);
 	}
 
@@ -511,7 +511,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNumber(com.generator.generators.clojure.parser.ClojureParser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNumber.push(true);
 	}
 
@@ -528,7 +528,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterCharacter(com.generator.generators.clojure.parser.ClojureParser.CharacterContext arg) {
-		onEnter(new Node("Character", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Character", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inCharacter.push(true);
 	}
 
@@ -545,7 +545,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNamed_char(com.generator.generators.clojure.parser.ClojureParser.Named_charContext arg) {
-		onEnter(new Node("Named_char", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Named_char", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNamed_char.push(true);
 	}
 
@@ -562,7 +562,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterAny_char(com.generator.generators.clojure.parser.ClojureParser.Any_charContext arg) {
-		onEnter(new Node("Any_char", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Any_char", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAny_char.push(true);
 	}
 
@@ -579,7 +579,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterU_hex_quad(com.generator.generators.clojure.parser.ClojureParser.U_hex_quadContext arg) {
-		onEnter(new Node("U_hex_quad", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("U_hex_quad", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inU_hex_quad.push(true);
 	}
 
@@ -596,7 +596,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNil(com.generator.generators.clojure.parser.ClojureParser.NilContext arg) {
-		onEnter(new Node("Nil", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Nil", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNil.push(true);
 	}
 
@@ -613,7 +613,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterKeyword(com.generator.generators.clojure.parser.ClojureParser.KeywordContext arg) {
-		onEnter(new Node("Keyword", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Keyword", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inKeyword.push(true);
 	}
 
@@ -630,7 +630,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSimple_keyword(com.generator.generators.clojure.parser.ClojureParser.Simple_keywordContext arg) {
-		onEnter(new Node("Simple_keyword", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Simple_keyword", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSimple_keyword.push(true);
 	}
 
@@ -647,7 +647,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterMacro_keyword(com.generator.generators.clojure.parser.ClojureParser.Macro_keywordContext arg) {
-		onEnter(new Node("Macro_keyword", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Macro_keyword", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMacro_keyword.push(true);
 	}
 
@@ -664,7 +664,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSymbol(com.generator.generators.clojure.parser.ClojureParser.SymbolContext arg) {
-		onEnter(new Node("Symbol", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Symbol", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSymbol.push(true);
 	}
 
@@ -681,7 +681,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterSimple_sym(com.generator.generators.clojure.parser.ClojureParser.Simple_symContext arg) {
-		onEnter(new Node("Simple_sym", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Simple_sym", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSimple_sym.push(true);
 	}
 
@@ -698,7 +698,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterNs_symbol(com.generator.generators.clojure.parser.ClojureParser.Ns_symbolContext arg) {
-		onEnter(new Node("Ns_symbol", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Ns_symbol", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNs_symbol.push(true);
 	}
 
@@ -715,7 +715,7 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	@Override
 	public void enterParam_name(com.generator.generators.clojure.parser.ClojureParser.Param_nameContext arg) {
-		onEnter(new Node("Param_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Param_name", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inParam_name.push(true);
 	}
 

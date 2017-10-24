@@ -52,7 +52,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.go.parser.GolangParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElement.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.go.parser.GolangParser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBlock.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLiteral.push(true);
 	}
 
@@ -103,7 +103,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpression(com.generator.generators.go.parser.GolangParser.ExpressionContext arg) {
-		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExpression.push(true);
 	}
 
@@ -120,7 +120,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.go.parser.GolangParser.StatementContext arg) {
-		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Statement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inStatement.push(true);
 	}
 
@@ -137,7 +137,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterDeclaration(com.generator.generators.go.parser.GolangParser.DeclarationContext arg) {
-		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Declaration", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDeclaration.push(true);
 	}
 
@@ -154,7 +154,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSelector(com.generator.generators.go.parser.GolangParser.SelectorContext arg) {
-		onEnter(new Node("Selector", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Selector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSelector.push(true);
 	}
 
@@ -171,7 +171,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunction(com.generator.generators.go.parser.GolangParser.FunctionContext arg) {
-		onEnter(new Node("Function", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Function", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunction.push(true);
 	}
 
@@ -188,7 +188,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterElementList(com.generator.generators.go.parser.GolangParser.ElementListContext arg) {
-		onEnter(new Node("ElementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ElementList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElementList.push(true);
 	}
 
@@ -205,7 +205,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterArguments(com.generator.generators.go.parser.GolangParser.ArgumentsContext arg) {
-		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Arguments", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArguments.push(true);
 	}
 
@@ -222,7 +222,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterEos(com.generator.generators.go.parser.GolangParser.EosContext arg) {
-		onEnter(new Node("Eos", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Eos", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inEos.push(true);
 	}
 
@@ -235,11 +235,28 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inEos.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		onEnter(new Node("PackageClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPackageClause.push(true);
+	}
+
+	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
+		onExit();
+		this.inPackageClause.pop();
+	}
+
+	public boolean inPackageClause() {
+      return !inPackageClause.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inStatementList = new java.util.Stack<>();
 
 	@Override
 	public void enterStatementList(com.generator.generators.go.parser.GolangParser.StatementListContext arg) {
-		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("StatementList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inStatementList.push(true);
 	}
 
@@ -256,7 +273,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSourceFile(com.generator.generators.go.parser.GolangParser.SourceFileContext arg) {
-		onEnter(new Node("SourceFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SourceFile", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSourceFile.push(true);
 	}
 
@@ -269,28 +286,11 @@ public class GolangNodeListener extends GolangBaseListener {
       return !inSourceFile.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inPackageClause = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		onEnter(new Node("PackageClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inPackageClause.push(true);
-	}
-
-	public void exitPackageClause(com.generator.generators.go.parser.GolangParser.PackageClauseContext arg) {
-		onExit();
-		this.inPackageClause.pop();
-	}
-
-	public boolean inPackageClause() {
-      return !inPackageClause.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inImportDecl = new java.util.Stack<>();
 
 	@Override
 	public void enterImportDecl(com.generator.generators.go.parser.GolangParser.ImportDeclContext arg) {
-		onEnter(new Node("ImportDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ImportDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inImportDecl.push(true);
 	}
 
@@ -307,7 +307,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterImportSpec(com.generator.generators.go.parser.GolangParser.ImportSpecContext arg) {
-		onEnter(new Node("ImportSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ImportSpec", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inImportSpec.push(true);
 	}
 
@@ -324,7 +324,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterImportPath(com.generator.generators.go.parser.GolangParser.ImportPathContext arg) {
-		onEnter(new Node("ImportPath", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ImportPath", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inImportPath.push(true);
 	}
 
@@ -341,7 +341,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTopLevelDecl(com.generator.generators.go.parser.GolangParser.TopLevelDeclContext arg) {
-		onEnter(new Node("TopLevelDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TopLevelDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTopLevelDecl.push(true);
 	}
 
@@ -358,7 +358,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterConstDecl(com.generator.generators.go.parser.GolangParser.ConstDeclContext arg) {
-		onEnter(new Node("ConstDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ConstDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inConstDecl.push(true);
 	}
 
@@ -375,7 +375,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterConstSpec(com.generator.generators.go.parser.GolangParser.ConstSpecContext arg) {
-		onEnter(new Node("ConstSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ConstSpec", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inConstSpec.push(true);
 	}
 
@@ -392,7 +392,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterIdentifierList(com.generator.generators.go.parser.GolangParser.IdentifierListContext arg) {
-		onEnter(new Node("IdentifierList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("IdentifierList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIdentifierList.push(true);
 	}
 
@@ -409,7 +409,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpressionList(com.generator.generators.go.parser.GolangParser.ExpressionListContext arg) {
-		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExpressionList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExpressionList.push(true);
 	}
 
@@ -426,7 +426,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeDecl(com.generator.generators.go.parser.GolangParser.TypeDeclContext arg) {
-		onEnter(new Node("TypeDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeDecl.push(true);
 	}
 
@@ -443,7 +443,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSpec(com.generator.generators.go.parser.GolangParser.TypeSpecContext arg) {
-		onEnter(new Node("TypeSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeSpec", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeSpec.push(true);
 	}
 
@@ -460,7 +460,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionDecl(com.generator.generators.go.parser.GolangParser.FunctionDeclContext arg) {
-		onEnter(new Node("FunctionDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("FunctionDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunctionDecl.push(true);
 	}
 
@@ -477,7 +477,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodDecl(com.generator.generators.go.parser.GolangParser.MethodDeclContext arg) {
-		onEnter(new Node("MethodDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MethodDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMethodDecl.push(true);
 	}
 
@@ -494,7 +494,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterReceiver(com.generator.generators.go.parser.GolangParser.ReceiverContext arg) {
-		onEnter(new Node("Receiver", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Receiver", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inReceiver.push(true);
 	}
 
@@ -511,7 +511,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterVarDecl(com.generator.generators.go.parser.GolangParser.VarDeclContext arg) {
-		onEnter(new Node("VarDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("VarDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVarDecl.push(true);
 	}
 
@@ -528,7 +528,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterVarSpec(com.generator.generators.go.parser.GolangParser.VarSpecContext arg) {
-		onEnter(new Node("VarSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("VarSpec", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVarSpec.push(true);
 	}
 
@@ -545,7 +545,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSimpleStmt(com.generator.generators.go.parser.GolangParser.SimpleStmtContext arg) {
-		onEnter(new Node("SimpleStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SimpleStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSimpleStmt.push(true);
 	}
 
@@ -562,7 +562,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExpressionStmt(com.generator.generators.go.parser.GolangParser.ExpressionStmtContext arg) {
-		onEnter(new Node("ExpressionStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExpressionStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExpressionStmt.push(true);
 	}
 
@@ -579,7 +579,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSendStmt(com.generator.generators.go.parser.GolangParser.SendStmtContext arg) {
-		onEnter(new Node("SendStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SendStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSendStmt.push(true);
 	}
 
@@ -596,7 +596,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterIncDecStmt(com.generator.generators.go.parser.GolangParser.IncDecStmtContext arg) {
-		onEnter(new Node("IncDecStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("IncDecStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIncDecStmt.push(true);
 	}
 
@@ -613,7 +613,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterAssignment(com.generator.generators.go.parser.GolangParser.AssignmentContext arg) {
-		onEnter(new Node("Assignment", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Assignment", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAssignment.push(true);
 	}
 
@@ -630,7 +630,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterAssign_op(com.generator.generators.go.parser.GolangParser.Assign_opContext arg) {
-		onEnter(new Node("Assign_op", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Assign_op", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAssign_op.push(true);
 	}
 
@@ -647,7 +647,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterShortVarDecl(com.generator.generators.go.parser.GolangParser.ShortVarDeclContext arg) {
-		onEnter(new Node("ShortVarDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ShortVarDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inShortVarDecl.push(true);
 	}
 
@@ -664,7 +664,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterEmptyStmt(com.generator.generators.go.parser.GolangParser.EmptyStmtContext arg) {
-		onEnter(new Node("EmptyStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("EmptyStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inEmptyStmt.push(true);
 	}
 
@@ -681,7 +681,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterLabeledStmt(com.generator.generators.go.parser.GolangParser.LabeledStmtContext arg) {
-		onEnter(new Node("LabeledStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("LabeledStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLabeledStmt.push(true);
 	}
 
@@ -698,7 +698,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterReturnStmt(com.generator.generators.go.parser.GolangParser.ReturnStmtContext arg) {
-		onEnter(new Node("ReturnStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ReturnStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inReturnStmt.push(true);
 	}
 
@@ -715,7 +715,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterBreakStmt(com.generator.generators.go.parser.GolangParser.BreakStmtContext arg) {
-		onEnter(new Node("BreakStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("BreakStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBreakStmt.push(true);
 	}
 
@@ -732,7 +732,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterContinueStmt(com.generator.generators.go.parser.GolangParser.ContinueStmtContext arg) {
-		onEnter(new Node("ContinueStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ContinueStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inContinueStmt.push(true);
 	}
 
@@ -749,7 +749,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterGotoStmt(com.generator.generators.go.parser.GolangParser.GotoStmtContext arg) {
-		onEnter(new Node("GotoStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("GotoStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inGotoStmt.push(true);
 	}
 
@@ -766,7 +766,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFallthroughStmt(com.generator.generators.go.parser.GolangParser.FallthroughStmtContext arg) {
-		onEnter(new Node("FallthroughStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("FallthroughStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFallthroughStmt.push(true);
 	}
 
@@ -783,7 +783,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterDeferStmt(com.generator.generators.go.parser.GolangParser.DeferStmtContext arg) {
-		onEnter(new Node("DeferStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("DeferStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDeferStmt.push(true);
 	}
 
@@ -800,7 +800,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterIfStmt(com.generator.generators.go.parser.GolangParser.IfStmtContext arg) {
-		onEnter(new Node("IfStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("IfStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIfStmt.push(true);
 	}
 
@@ -817,7 +817,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSwitchStmt(com.generator.generators.go.parser.GolangParser.SwitchStmtContext arg) {
-		onEnter(new Node("SwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSwitchStmt.push(true);
 	}
 
@@ -834,7 +834,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprSwitchStmt(com.generator.generators.go.parser.GolangParser.ExprSwitchStmtContext arg) {
-		onEnter(new Node("ExprSwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExprSwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExprSwitchStmt.push(true);
 	}
 
@@ -851,7 +851,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprCaseClause(com.generator.generators.go.parser.GolangParser.ExprCaseClauseContext arg) {
-		onEnter(new Node("ExprCaseClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExprCaseClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExprCaseClause.push(true);
 	}
 
@@ -868,7 +868,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterExprSwitchCase(com.generator.generators.go.parser.GolangParser.ExprSwitchCaseContext arg) {
-		onEnter(new Node("ExprSwitchCase", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ExprSwitchCase", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExprSwitchCase.push(true);
 	}
 
@@ -885,7 +885,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchStmt(com.generator.generators.go.parser.GolangParser.TypeSwitchStmtContext arg) {
-		onEnter(new Node("TypeSwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeSwitchStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeSwitchStmt.push(true);
 	}
 
@@ -902,7 +902,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchGuard(com.generator.generators.go.parser.GolangParser.TypeSwitchGuardContext arg) {
-		onEnter(new Node("TypeSwitchGuard", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeSwitchGuard", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeSwitchGuard.push(true);
 	}
 
@@ -919,7 +919,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeCaseClause(com.generator.generators.go.parser.GolangParser.TypeCaseClauseContext arg) {
-		onEnter(new Node("TypeCaseClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeCaseClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeCaseClause.push(true);
 	}
 
@@ -936,7 +936,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeSwitchCase(com.generator.generators.go.parser.GolangParser.TypeSwitchCaseContext arg) {
-		onEnter(new Node("TypeSwitchCase", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeSwitchCase", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeSwitchCase.push(true);
 	}
 
@@ -953,7 +953,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeList(com.generator.generators.go.parser.GolangParser.TypeListContext arg) {
-		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeList.push(true);
 	}
 
@@ -970,7 +970,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSelectStmt(com.generator.generators.go.parser.GolangParser.SelectStmtContext arg) {
-		onEnter(new Node("SelectStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SelectStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSelectStmt.push(true);
 	}
 
@@ -987,7 +987,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterCommClause(com.generator.generators.go.parser.GolangParser.CommClauseContext arg) {
-		onEnter(new Node("CommClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("CommClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inCommClause.push(true);
 	}
 
@@ -1004,7 +1004,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterCommCase(com.generator.generators.go.parser.GolangParser.CommCaseContext arg) {
-		onEnter(new Node("CommCase", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("CommCase", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inCommCase.push(true);
 	}
 
@@ -1021,7 +1021,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterRecvStmt(com.generator.generators.go.parser.GolangParser.RecvStmtContext arg) {
-		onEnter(new Node("RecvStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("RecvStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRecvStmt.push(true);
 	}
 
@@ -1038,7 +1038,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterForStmt(com.generator.generators.go.parser.GolangParser.ForStmtContext arg) {
-		onEnter(new Node("ForStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ForStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inForStmt.push(true);
 	}
 
@@ -1055,7 +1055,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterForClause(com.generator.generators.go.parser.GolangParser.ForClauseContext arg) {
-		onEnter(new Node("ForClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ForClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inForClause.push(true);
 	}
 
@@ -1072,7 +1072,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterRangeClause(com.generator.generators.go.parser.GolangParser.RangeClauseContext arg) {
-		onEnter(new Node("RangeClause", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("RangeClause", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRangeClause.push(true);
 	}
 
@@ -1089,7 +1089,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterGoStmt(com.generator.generators.go.parser.GolangParser.GoStmtContext arg) {
-		onEnter(new Node("GoStmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("GoStmt", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inGoStmt.push(true);
 	}
 
@@ -1106,7 +1106,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterType(com.generator.generators.go.parser.GolangParser.TypeContext arg) {
-		onEnter(new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Type", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inType.push(true);
 	}
 
@@ -1123,7 +1123,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeName(com.generator.generators.go.parser.GolangParser.TypeNameContext arg) {
-		onEnter(new Node("TypeName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeName", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeName.push(true);
 	}
 
@@ -1140,7 +1140,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeLit(com.generator.generators.go.parser.GolangParser.TypeLitContext arg) {
-		onEnter(new Node("TypeLit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeLit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeLit.push(true);
 	}
 
@@ -1157,7 +1157,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterArrayType(com.generator.generators.go.parser.GolangParser.ArrayTypeContext arg) {
-		onEnter(new Node("ArrayType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ArrayType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArrayType.push(true);
 	}
 
@@ -1174,7 +1174,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterArrayLength(com.generator.generators.go.parser.GolangParser.ArrayLengthContext arg) {
-		onEnter(new Node("ArrayLength", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ArrayLength", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArrayLength.push(true);
 	}
 
@@ -1191,7 +1191,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterElementType(com.generator.generators.go.parser.GolangParser.ElementTypeContext arg) {
-		onEnter(new Node("ElementType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ElementType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElementType.push(true);
 	}
 
@@ -1208,7 +1208,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterPointerType(com.generator.generators.go.parser.GolangParser.PointerTypeContext arg) {
-		onEnter(new Node("PointerType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("PointerType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inPointerType.push(true);
 	}
 
@@ -1225,7 +1225,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterInterfaceType(com.generator.generators.go.parser.GolangParser.InterfaceTypeContext arg) {
-		onEnter(new Node("InterfaceType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("InterfaceType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inInterfaceType.push(true);
 	}
 
@@ -1242,7 +1242,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSliceType(com.generator.generators.go.parser.GolangParser.SliceTypeContext arg) {
-		onEnter(new Node("SliceType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("SliceType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSliceType.push(true);
 	}
 
@@ -1259,7 +1259,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterMapType(com.generator.generators.go.parser.GolangParser.MapTypeContext arg) {
-		onEnter(new Node("MapType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MapType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMapType.push(true);
 	}
 
@@ -1276,7 +1276,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterChannelType(com.generator.generators.go.parser.GolangParser.ChannelTypeContext arg) {
-		onEnter(new Node("ChannelType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ChannelType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inChannelType.push(true);
 	}
 
@@ -1293,7 +1293,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodSpec(com.generator.generators.go.parser.GolangParser.MethodSpecContext arg) {
-		onEnter(new Node("MethodSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MethodSpec", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMethodSpec.push(true);
 	}
 
@@ -1310,7 +1310,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionType(com.generator.generators.go.parser.GolangParser.FunctionTypeContext arg) {
-		onEnter(new Node("FunctionType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("FunctionType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunctionType.push(true);
 	}
 
@@ -1327,7 +1327,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSignature(com.generator.generators.go.parser.GolangParser.SignatureContext arg) {
-		onEnter(new Node("Signature", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Signature", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSignature.push(true);
 	}
 
@@ -1344,7 +1344,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterResult(com.generator.generators.go.parser.GolangParser.ResultContext arg) {
-		onEnter(new Node("Result", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Result", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inResult.push(true);
 	}
 
@@ -1361,7 +1361,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameters(com.generator.generators.go.parser.GolangParser.ParametersContext arg) {
-		onEnter(new Node("Parameters", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Parameters", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inParameters.push(true);
 	}
 
@@ -1378,7 +1378,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameterList(com.generator.generators.go.parser.GolangParser.ParameterListContext arg) {
-		onEnter(new Node("ParameterList", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ParameterList", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inParameterList.push(true);
 	}
 
@@ -1395,7 +1395,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterParameterDecl(com.generator.generators.go.parser.GolangParser.ParameterDeclContext arg) {
-		onEnter(new Node("ParameterDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ParameterDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inParameterDecl.push(true);
 	}
 
@@ -1412,7 +1412,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterOperand(com.generator.generators.go.parser.GolangParser.OperandContext arg) {
-		onEnter(new Node("Operand", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Operand", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperand.push(true);
 	}
 
@@ -1429,7 +1429,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterBasicLit(com.generator.generators.go.parser.GolangParser.BasicLitContext arg) {
-		onEnter(new Node("BasicLit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("BasicLit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBasicLit.push(true);
 	}
 
@@ -1446,7 +1446,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterOperandName(com.generator.generators.go.parser.GolangParser.OperandNameContext arg) {
-		onEnter(new Node("OperandName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperandName", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperandName.push(true);
 	}
 
@@ -1463,7 +1463,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterQualifiedIdent(com.generator.generators.go.parser.GolangParser.QualifiedIdentContext arg) {
-		onEnter(new Node("QualifiedIdent", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("QualifiedIdent", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inQualifiedIdent.push(true);
 	}
 
@@ -1480,7 +1480,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterCompositeLit(com.generator.generators.go.parser.GolangParser.CompositeLitContext arg) {
-		onEnter(new Node("CompositeLit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("CompositeLit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inCompositeLit.push(true);
 	}
 
@@ -1497,7 +1497,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteralType(com.generator.generators.go.parser.GolangParser.LiteralTypeContext arg) {
-		onEnter(new Node("LiteralType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("LiteralType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLiteralType.push(true);
 	}
 
@@ -1514,7 +1514,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterLiteralValue(com.generator.generators.go.parser.GolangParser.LiteralValueContext arg) {
-		onEnter(new Node("LiteralValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("LiteralValue", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLiteralValue.push(true);
 	}
 
@@ -1531,7 +1531,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterKeyedElement(com.generator.generators.go.parser.GolangParser.KeyedElementContext arg) {
-		onEnter(new Node("KeyedElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("KeyedElement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inKeyedElement.push(true);
 	}
 
@@ -1548,7 +1548,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterKey(com.generator.generators.go.parser.GolangParser.KeyContext arg) {
-		onEnter(new Node("Key", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Key", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inKey.push(true);
 	}
 
@@ -1565,7 +1565,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterStructType(com.generator.generators.go.parser.GolangParser.StructTypeContext arg) {
-		onEnter(new Node("StructType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("StructType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inStructType.push(true);
 	}
 
@@ -1582,7 +1582,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFieldDecl(com.generator.generators.go.parser.GolangParser.FieldDeclContext arg) {
-		onEnter(new Node("FieldDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("FieldDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFieldDecl.push(true);
 	}
 
@@ -1599,7 +1599,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterAnonymousField(com.generator.generators.go.parser.GolangParser.AnonymousFieldContext arg) {
-		onEnter(new Node("AnonymousField", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("AnonymousField", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAnonymousField.push(true);
 	}
 
@@ -1616,7 +1616,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterFunctionLit(com.generator.generators.go.parser.GolangParser.FunctionLitContext arg) {
-		onEnter(new Node("FunctionLit", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("FunctionLit", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunctionLit.push(true);
 	}
 
@@ -1633,7 +1633,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterPrimaryExpr(com.generator.generators.go.parser.GolangParser.PrimaryExprContext arg) {
-		onEnter(new Node("PrimaryExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("PrimaryExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inPrimaryExpr.push(true);
 	}
 
@@ -1650,7 +1650,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterIndex(com.generator.generators.go.parser.GolangParser.IndexContext arg) {
-		onEnter(new Node("Index", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Index", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inIndex.push(true);
 	}
 
@@ -1667,7 +1667,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterSlice(com.generator.generators.go.parser.GolangParser.SliceContext arg) {
-		onEnter(new Node("Slice", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Slice", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inSlice.push(true);
 	}
 
@@ -1684,7 +1684,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterTypeAssertion(com.generator.generators.go.parser.GolangParser.TypeAssertionContext arg) {
-		onEnter(new Node("TypeAssertion", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("TypeAssertion", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTypeAssertion.push(true);
 	}
 
@@ -1701,7 +1701,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterMethodExpr(com.generator.generators.go.parser.GolangParser.MethodExprContext arg) {
-		onEnter(new Node("MethodExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("MethodExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMethodExpr.push(true);
 	}
 
@@ -1718,7 +1718,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterReceiverType(com.generator.generators.go.parser.GolangParser.ReceiverTypeContext arg) {
-		onEnter(new Node("ReceiverType", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("ReceiverType", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inReceiverType.push(true);
 	}
 
@@ -1735,7 +1735,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterUnaryExpr(com.generator.generators.go.parser.GolangParser.UnaryExprContext arg) {
-		onEnter(new Node("UnaryExpr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("UnaryExpr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inUnaryExpr.push(true);
 	}
 
@@ -1752,7 +1752,7 @@ public class GolangNodeListener extends GolangBaseListener {
 
 	@Override
 	public void enterConversion(com.generator.generators.go.parser.GolangParser.ConversionContext arg) {
-		onEnter(new Node("Conversion", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Conversion", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inConversion.push(true);
 	}
 

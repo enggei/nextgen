@@ -977,7 +977,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", arg.getStop().getText());\n" + 
+		"		final Node node = model.findOrCreate(Label.label(\"~it.name~\"), \"text\", arg.getText(), \"startToken\", arg.getStart().getText(), \"endToken\", (arg.getStop() == null ? \"\" : arg.getStop().getText()));\n" + 
 		"		onEnter(node);\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
@@ -1158,7 +1158,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? \"\" : (arg.getStop().getText() == null ? \"\" : arg.getStop().getText())));\n" + 
+		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? \"\" : arg.getStop().getText()));\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
 		"\n" + 

@@ -43,7 +43,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.BlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBlock.push(true);
 	}
@@ -61,7 +61,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteral.push(true);
 	}
@@ -79,7 +79,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterKeyword(com.generator.generators.ecmascript.parser.ECMAScriptParser.KeywordContext arg) {
-		final Node node = model.findOrCreate(Label.label("Keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Keyword"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeyword.push(true);
 	}
@@ -97,7 +97,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStatement.push(true);
 	}
@@ -115,7 +115,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNotExpression.push(true);
 	}
@@ -133,7 +133,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterParenthesizedExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ParenthesizedExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ParenthesizedExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inParenthesizedExpression.push(true);
 	}
@@ -151,7 +151,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReservedWordContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReservedWord.push(true);
 	}
@@ -169,7 +169,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterDoStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DoStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DoStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDoStatement.push(true);
 	}
@@ -187,7 +187,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("WhileStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("WhileStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWhileStatement.push(true);
 	}
@@ -205,7 +205,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterForStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ForStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ForStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForStatement.push(true);
 	}
@@ -223,7 +223,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterForVarStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ForVarStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForVarStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ForVarStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForVarStatement.push(true);
 	}
@@ -241,7 +241,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterForInStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ForInStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForInStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ForInStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForInStatement.push(true);
 	}
@@ -259,7 +259,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterForVarInStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ForVarInStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ForVarInStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ForVarInStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inForVarInStatement.push(true);
 	}
@@ -277,7 +277,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterContinueStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ContinueStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ContinueStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ContinueStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inContinueStatement.push(true);
 	}
@@ -295,7 +295,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBreakStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.BreakStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("BreakStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BreakStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBreakStatement.push(true);
 	}
@@ -313,7 +313,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterReturnStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ReturnStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ReturnStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ReturnStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inReturnStatement.push(true);
 	}
@@ -331,7 +331,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterWithStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WithStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("WithStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("WithStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inWithStatement.push(true);
 	}
@@ -349,7 +349,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterSwitchStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SwitchStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("SwitchStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SwitchStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSwitchStatement.push(true);
 	}
@@ -367,7 +367,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterCaseBlock(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseBlockContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CaseBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseBlock.push(true);
 	}
@@ -385,7 +385,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterCaseClauses(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseClausesContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseClauses"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CaseClauses"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseClauses.push(true);
 	}
@@ -403,7 +403,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterCaseClause(com.generator.generators.ecmascript.parser.ECMAScriptParser.CaseClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("CaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CaseClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCaseClause.push(true);
 	}
@@ -421,7 +421,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterDefaultClause(com.generator.generators.ecmascript.parser.ECMAScriptParser.DefaultClauseContext arg) {
-		final Node node = model.findOrCreate(Label.label("DefaultClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DefaultClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDefaultClause.push(true);
 	}
@@ -439,7 +439,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterLabelledStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.LabelledStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("LabelledStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LabelledStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLabelledStatement.push(true);
 	}
@@ -457,7 +457,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterThrowStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThrowStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ThrowStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ThrowStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inThrowStatement.push(true);
 	}
@@ -475,7 +475,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterTryStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.TryStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("TryStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TryStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTryStatement.push(true);
 	}
@@ -493,7 +493,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterCatchProduction(com.generator.generators.ecmascript.parser.ECMAScriptParser.CatchProductionContext arg) {
-		final Node node = model.findOrCreate(Label.label("CatchProduction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("CatchProduction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inCatchProduction.push(true);
 	}
@@ -511,7 +511,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFinallyProduction(com.generator.generators.ecmascript.parser.ECMAScriptParser.FinallyProductionContext arg) {
-		final Node node = model.findOrCreate(Label.label("FinallyProduction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FinallyProduction"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFinallyProduction.push(true);
 	}
@@ -529,7 +529,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterDebuggerStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.DebuggerStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("DebuggerStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DebuggerStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDebuggerStatement.push(true);
 	}
@@ -547,7 +547,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFunctionDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.FunctionDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FunctionDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionDeclaration.push(true);
 	}
@@ -565,7 +565,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFormalParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.FormalParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FormalParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalParameterList.push(true);
 	}
@@ -583,7 +583,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFunctionBody(com.generator.generators.ecmascript.parser.ECMAScriptParser.FunctionBodyContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FunctionBody"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionBody.push(true);
 	}
@@ -601,7 +601,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterArrayLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArrayLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ArrayLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayLiteral.push(true);
 	}
@@ -619,7 +619,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterElementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.ElementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ElementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ElementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElementList.push(true);
 	}
@@ -637,7 +637,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterElision(com.generator.generators.ecmascript.parser.ECMAScriptParser.ElisionContext arg) {
-		final Node node = model.findOrCreate(Label.label("Elision"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Elision"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inElision.push(true);
 	}
@@ -655,7 +655,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterObjectLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.ObjectLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("ObjectLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ObjectLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inObjectLiteral.push(true);
 	}
@@ -673,7 +673,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertyNameAndValueList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyNameAndValueListContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyNameAndValueList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertyNameAndValueList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyNameAndValueList.push(true);
 	}
@@ -691,7 +691,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertyExpressionAssignment(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyExpressionAssignmentContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyExpressionAssignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertyExpressionAssignment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyExpressionAssignment.push(true);
 	}
@@ -709,7 +709,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertyGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyGetterContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyGetter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertyGetter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyGetter.push(true);
 	}
@@ -727,7 +727,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertySetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetterContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertySetter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertySetter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertySetter.push(true);
 	}
@@ -745,7 +745,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertyName(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertyNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertyName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertyName.push(true);
 	}
@@ -763,7 +763,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPropertySetParameterList(com.generator.generators.ecmascript.parser.ECMAScriptParser.PropertySetParameterListContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertySetParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PropertySetParameterList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPropertySetParameterList.push(true);
 	}
@@ -781,7 +781,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterArguments(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Arguments"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArguments.push(true);
 	}
@@ -799,7 +799,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterArgumentList(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentListContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArgumentList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ArgumentList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArgumentList.push(true);
 	}
@@ -817,7 +817,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterExpressionSequence(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionSequenceContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionSequence"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ExpressionSequence"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionSequence.push(true);
 	}
@@ -835,7 +835,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterTernaryExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.TernaryExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("TernaryExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TernaryExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTernaryExpression.push(true);
 	}
@@ -853,7 +853,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterLogicalAndExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.LogicalAndExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("LogicalAndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LogicalAndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLogicalAndExpression.push(true);
 	}
@@ -871,7 +871,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPreIncrementExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PreIncrementExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PreIncrementExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PreIncrementExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPreIncrementExpression.push(true);
 	}
@@ -889,7 +889,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterObjectLiteralExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ObjectLiteralExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ObjectLiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ObjectLiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inObjectLiteralExpression.push(true);
 	}
@@ -907,7 +907,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterInExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("InExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("InExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInExpression.push(true);
 	}
@@ -925,7 +925,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterLogicalOrExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.LogicalOrExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("LogicalOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LogicalOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLogicalOrExpression.push(true);
 	}
@@ -943,7 +943,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPreDecreaseExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PreDecreaseExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PreDecreaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PreDecreaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPreDecreaseExpression.push(true);
 	}
@@ -961,7 +961,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterArgumentsExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArgumentsExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArgumentsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ArgumentsExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArgumentsExpression.push(true);
 	}
@@ -979,7 +979,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterThisExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ThisExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ThisExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ThisExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inThisExpression.push(true);
 	}
@@ -997,7 +997,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFunctionExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.FunctionExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("FunctionExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FunctionExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFunctionExpression.push(true);
 	}
@@ -1015,7 +1015,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterUnaryMinusExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.UnaryMinusExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnaryMinusExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UnaryMinusExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnaryMinusExpression.push(true);
 	}
@@ -1033,7 +1033,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterAssignmentExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AssignmentExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAssignmentExpression.push(true);
 	}
@@ -1051,7 +1051,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPostDecreaseExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PostDecreaseExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PostDecreaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PostDecreaseExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPostDecreaseExpression.push(true);
 	}
@@ -1069,7 +1069,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterTypeofExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.TypeofExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("TypeofExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("TypeofExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTypeofExpression.push(true);
 	}
@@ -1087,7 +1087,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterInstanceofExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.InstanceofExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("InstanceofExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("InstanceofExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInstanceofExpression.push(true);
 	}
@@ -1105,7 +1105,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterUnaryPlusExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.UnaryPlusExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("UnaryPlusExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("UnaryPlusExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inUnaryPlusExpression.push(true);
 	}
@@ -1123,7 +1123,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterDeleteExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.DeleteExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("DeleteExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DeleteExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDeleteExpression.push(true);
 	}
@@ -1141,7 +1141,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterEqualityExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.EqualityExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("EqualityExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("EqualityExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEqualityExpression.push(true);
 	}
@@ -1159,7 +1159,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBitXOrExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitXOrExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitXOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitXOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitXOrExpression.push(true);
 	}
@@ -1177,7 +1177,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterMultiplicativeExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.MultiplicativeExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MultiplicativeExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MultiplicativeExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMultiplicativeExpression.push(true);
 	}
@@ -1195,7 +1195,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBitShiftExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitShiftExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitShiftExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitShiftExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitShiftExpression.push(true);
 	}
@@ -1213,7 +1213,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterAdditiveExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AdditiveExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AdditiveExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AdditiveExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAdditiveExpression.push(true);
 	}
@@ -1231,7 +1231,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterRelationalExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.RelationalExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("RelationalExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("RelationalExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inRelationalExpression.push(true);
 	}
@@ -1249,7 +1249,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterPostIncrementExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.PostIncrementExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("PostIncrementExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("PostIncrementExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inPostIncrementExpression.push(true);
 	}
@@ -1267,7 +1267,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBitNotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitNotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitNotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitNotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitNotExpression.push(true);
 	}
@@ -1285,7 +1285,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterNewExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.NewExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NewExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NewExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNewExpression.push(true);
 	}
@@ -1303,7 +1303,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterLiteralExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.LiteralExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("LiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("LiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inLiteralExpression.push(true);
 	}
@@ -1321,7 +1321,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterArrayLiteralExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.ArrayLiteralExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("ArrayLiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ArrayLiteralExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inArrayLiteralExpression.push(true);
 	}
@@ -1339,7 +1339,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterMemberDotExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.MemberDotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MemberDotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MemberDotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberDotExpression.push(true);
 	}
@@ -1357,7 +1357,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterMemberIndexExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.MemberIndexExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("MemberIndexExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("MemberIndexExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inMemberIndexExpression.push(true);
 	}
@@ -1375,7 +1375,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterIdentifierExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.IdentifierExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdentifierExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IdentifierExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIdentifierExpression.push(true);
 	}
@@ -1393,7 +1393,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBitAndExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitAndExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitAndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitAndExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitAndExpression.push(true);
 	}
@@ -1411,7 +1411,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterBitOrExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.BitOrExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("BitOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("BitOrExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inBitOrExpression.push(true);
 	}
@@ -1429,7 +1429,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterAssignmentOperatorExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AssignmentOperatorExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAssignmentOperatorExpression.push(true);
 	}
@@ -1447,7 +1447,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterVoidExpression(com.generator.generators.ecmascript.parser.ECMAScriptParser.VoidExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("VoidExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("VoidExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVoidExpression.push(true);
 	}
@@ -1465,7 +1465,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterAssignmentOperator(com.generator.generators.ecmascript.parser.ECMAScriptParser.AssignmentOperatorContext arg) {
-		final Node node = model.findOrCreate(Label.label("AssignmentOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("AssignmentOperator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inAssignmentOperator.push(true);
 	}
@@ -1483,7 +1483,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterNumericLiteral(com.generator.generators.ecmascript.parser.ECMAScriptParser.NumericLiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("NumericLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("NumericLiteral"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inNumericLiteral.push(true);
 	}
@@ -1501,7 +1501,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterIdentifierName(com.generator.generators.ecmascript.parser.ECMAScriptParser.IdentifierNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("IdentifierName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IdentifierName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIdentifierName.push(true);
 	}
@@ -1519,7 +1519,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterFutureReservedWord(com.generator.generators.ecmascript.parser.ECMAScriptParser.FutureReservedWordContext arg) {
-		final Node node = model.findOrCreate(Label.label("FutureReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FutureReservedWord"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFutureReservedWord.push(true);
 	}
@@ -1537,7 +1537,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterGetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.GetterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Getter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGetter.push(true);
 	}
@@ -1555,7 +1555,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterSetter(com.generator.generators.ecmascript.parser.ECMAScriptParser.SetterContext arg) {
-		final Node node = model.findOrCreate(Label.label("Setter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Setter"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSetter.push(true);
 	}
@@ -1573,7 +1573,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterEos(com.generator.generators.ecmascript.parser.ECMAScriptParser.EosContext arg) {
-		final Node node = model.findOrCreate(Label.label("Eos"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Eos"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEos.push(true);
 	}
@@ -1591,7 +1591,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterEof(com.generator.generators.ecmascript.parser.ECMAScriptParser.EofContext arg) {
-		final Node node = model.findOrCreate(Label.label("Eof"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Eof"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEof.push(true);
 	}
@@ -1609,7 +1609,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterProgram(com.generator.generators.ecmascript.parser.ECMAScriptParser.ProgramContext arg) {
-		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Program"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inProgram.push(true);
 	}
@@ -1627,7 +1627,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterSourceElements(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SourceElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSourceElements.push(true);
 	}
@@ -1645,7 +1645,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterSourceElement(com.generator.generators.ecmascript.parser.ECMAScriptParser.SourceElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("SourceElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("SourceElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inSourceElement.push(true);
 	}
@@ -1663,7 +1663,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterStatementList(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementListContext arg) {
-		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("StatementList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStatementList.push(true);
 	}
@@ -1681,7 +1681,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterVariableStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("VariableStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableStatement.push(true);
 	}
@@ -1699,7 +1699,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterVariableDeclarationList(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationListContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclarationList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("VariableDeclarationList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableDeclarationList.push(true);
 	}
@@ -1717,7 +1717,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterVariableDeclaration(com.generator.generators.ecmascript.parser.ECMAScriptParser.VariableDeclarationContext arg) {
-		final Node node = model.findOrCreate(Label.label("VariableDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("VariableDeclaration"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inVariableDeclaration.push(true);
 	}
@@ -1735,7 +1735,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterInitialiser(com.generator.generators.ecmascript.parser.ECMAScriptParser.InitialiserContext arg) {
-		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Initialiser"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inInitialiser.push(true);
 	}
@@ -1753,7 +1753,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterEmptyStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.EmptyStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("EmptyStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("EmptyStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inEmptyStatement.push(true);
 	}
@@ -1771,7 +1771,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterExpressionStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.ExpressionStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("ExpressionStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("ExpressionStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inExpressionStatement.push(true);
 	}
@@ -1789,7 +1789,7 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	@Override
 	public void enterIfStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.IfStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("IfStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inIfStatement.push(true);
 	}

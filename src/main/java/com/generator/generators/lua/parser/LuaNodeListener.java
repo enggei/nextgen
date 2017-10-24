@@ -52,7 +52,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterBlock(com.generator.generators.lua.parser.LuaParser.BlockContext arg) {
-		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Block", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inBlock.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterString(com.generator.generators.lua.parser.LuaParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inString.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterNumber(com.generator.generators.lua.parser.LuaParser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNumber.push(true);
 	}
 
@@ -99,28 +99,11 @@ public class LuaNodeListener extends LuaBaseListener {
       return !inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
-
-	@Override
-	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onEnter(new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
-		this.inVar.push(true);
-	}
-
-	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
-		onExit();
-		this.inVar.pop();
-	}
-
-	public boolean inVar() {
-      return !inVar.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
 
 	@Override
 	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inField.push(true);
 	}
 
@@ -133,11 +116,28 @@ public class LuaNodeListener extends LuaBaseListener {
       return !inField.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
+
+	@Override
+	public void enterVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onEnter(new Node("Var", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVar.push(true);
+	}
+
+	public void exitVar(com.generator.generators.lua.parser.LuaParser.VarContext arg) {
+		onExit();
+		this.inVar.pop();
+	}
+
+	public boolean inVar() {
+      return !inVar.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();
 
 	@Override
 	public void enterChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		onEnter(new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inChunk.push(true);
 	}
 
@@ -154,7 +154,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		onEnter(new Node("Stat", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Stat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inStat.push(true);
 	}
 
@@ -171,7 +171,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
-		onEnter(new Node("Retstat", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Retstat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inRetstat.push(true);
 	}
 
@@ -188,7 +188,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterLabel(com.generator.generators.lua.parser.LuaParser.LabelContext arg) {
-		onEnter(new Node("Label", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Label", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inLabel.push(true);
 	}
 
@@ -205,7 +205,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFuncname(com.generator.generators.lua.parser.LuaParser.FuncnameContext arg) {
-		onEnter(new Node("Funcname", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Funcname", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFuncname.push(true);
 	}
 
@@ -222,7 +222,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarlist(com.generator.generators.lua.parser.LuaParser.VarlistContext arg) {
-		onEnter(new Node("Varlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Varlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVarlist.push(true);
 	}
 
@@ -239,7 +239,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterNamelist(com.generator.generators.lua.parser.LuaParser.NamelistContext arg) {
-		onEnter(new Node("Namelist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Namelist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNamelist.push(true);
 	}
 
@@ -256,7 +256,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterExplist(com.generator.generators.lua.parser.LuaParser.ExplistContext arg) {
-		onEnter(new Node("Explist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Explist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExplist.push(true);
 	}
 
@@ -273,7 +273,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterExp(com.generator.generators.lua.parser.LuaParser.ExpContext arg) {
-		onEnter(new Node("Exp", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Exp", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inExp.push(true);
 	}
 
@@ -290,7 +290,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
-		onEnter(new Node("Prefixexp", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Prefixexp", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inPrefixexp.push(true);
 	}
 
@@ -307,7 +307,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		onEnter(new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunctioncall.push(true);
 	}
 
@@ -324,7 +324,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarOrExp(com.generator.generators.lua.parser.LuaParser.VarOrExpContext arg) {
-		onEnter(new Node("VarOrExp", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("VarOrExp", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVarOrExp.push(true);
 	}
 
@@ -341,7 +341,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterVarSuffix(com.generator.generators.lua.parser.LuaParser.VarSuffixContext arg) {
-		onEnter(new Node("VarSuffix", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("VarSuffix", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inVarSuffix.push(true);
 	}
 
@@ -358,7 +358,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterNameAndArgs(com.generator.generators.lua.parser.LuaParser.NameAndArgsContext arg) {
-		onEnter(new Node("NameAndArgs", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("NameAndArgs", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inNameAndArgs.push(true);
 	}
 
@@ -375,7 +375,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterArgs(com.generator.generators.lua.parser.LuaParser.ArgsContext arg) {
-		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Args", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArgs.push(true);
 	}
 
@@ -392,7 +392,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFunctiondef(com.generator.generators.lua.parser.LuaParser.FunctiondefContext arg) {
-		onEnter(new Node("Functiondef", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Functiondef", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFunctiondef.push(true);
 	}
 
@@ -409,7 +409,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFuncbody(com.generator.generators.lua.parser.LuaParser.FuncbodyContext arg) {
-		onEnter(new Node("Funcbody", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Funcbody", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFuncbody.push(true);
 	}
 
@@ -426,7 +426,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterParlist(com.generator.generators.lua.parser.LuaParser.ParlistContext arg) {
-		onEnter(new Node("Parlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Parlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inParlist.push(true);
 	}
 
@@ -443,7 +443,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterTableconstructor(com.generator.generators.lua.parser.LuaParser.TableconstructorContext arg) {
-		onEnter(new Node("Tableconstructor", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Tableconstructor", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inTableconstructor.push(true);
 	}
 
@@ -460,7 +460,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFieldlist(com.generator.generators.lua.parser.LuaParser.FieldlistContext arg) {
-		onEnter(new Node("Fieldlist", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Fieldlist", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFieldlist.push(true);
 	}
 
@@ -477,7 +477,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterFieldsep(com.generator.generators.lua.parser.LuaParser.FieldsepContext arg) {
-		onEnter(new Node("Fieldsep", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Fieldsep", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inFieldsep.push(true);
 	}
 
@@ -494,7 +494,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorOr(com.generator.generators.lua.parser.LuaParser.OperatorOrContext arg) {
-		onEnter(new Node("OperatorOr", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorOr", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorOr.push(true);
 	}
 
@@ -511,7 +511,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorAnd(com.generator.generators.lua.parser.LuaParser.OperatorAndContext arg) {
-		onEnter(new Node("OperatorAnd", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorAnd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorAnd.push(true);
 	}
 
@@ -528,7 +528,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorComparison(com.generator.generators.lua.parser.LuaParser.OperatorComparisonContext arg) {
-		onEnter(new Node("OperatorComparison", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorComparison", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorComparison.push(true);
 	}
 
@@ -545,7 +545,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorStrcat(com.generator.generators.lua.parser.LuaParser.OperatorStrcatContext arg) {
-		onEnter(new Node("OperatorStrcat", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorStrcat", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorStrcat.push(true);
 	}
 
@@ -562,7 +562,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
-		onEnter(new Node("OperatorAddSub", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorAddSub", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorAddSub.push(true);
 	}
 
@@ -579,7 +579,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
-		onEnter(new Node("OperatorMulDivMod", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorMulDivMod", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorMulDivMod.push(true);
 	}
 
@@ -596,7 +596,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
-		onEnter(new Node("OperatorBitwise", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorBitwise", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorBitwise.push(true);
 	}
 
@@ -613,7 +613,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorUnary(com.generator.generators.lua.parser.LuaParser.OperatorUnaryContext arg) {
-		onEnter(new Node("OperatorUnary", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorUnary", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorUnary.push(true);
 	}
 
@@ -630,7 +630,7 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	@Override
 	public void enterOperatorPower(com.generator.generators.lua.parser.LuaParser.OperatorPowerContext arg) {
-		onEnter(new Node("OperatorPower", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("OperatorPower", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inOperatorPower.push(true);
 	}
 

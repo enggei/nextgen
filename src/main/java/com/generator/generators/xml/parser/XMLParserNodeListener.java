@@ -52,7 +52,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
-		onEnter(new Node("Document", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Document", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDocument.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterProlog(com.generator.generators.xml.parser.XMLParser.PrologContext arg) {
-		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Prolog", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inProlog.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterContent(com.generator.generators.xml.parser.XMLParser.ContentContext arg) {
-		onEnter(new Node("Content", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Content", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inContent.push(true);
 	}
 
@@ -103,7 +103,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
-		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Reference", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inReference.push(true);
 	}
 
@@ -120,7 +120,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Chardata", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inChardata.push(true);
 	}
 
@@ -137,7 +137,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
-		onEnter(new Node("Misc", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Misc", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inMisc.push(true);
 	}
 
@@ -154,7 +154,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Element", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inElement.push(true);
 	}
 
@@ -171,7 +171,7 @@ public class XMLParserNodeListener extends XMLParserBaseListener {
 
 	@Override
 	public void enterAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Attribute", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inAttribute.push(true);
 	}
 

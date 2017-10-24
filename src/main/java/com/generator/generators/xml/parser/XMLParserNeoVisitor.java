@@ -28,6 +28,16 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
+		System.out.println("Chardata");
+		final Node node = model.newNode(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitDocument(com.generator.generators.xml.parser.XMLParser.DocumentContext arg) {
 		System.out.println("Document");
 		final Node node = model.newNode(Label.label("Document"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -61,16 +71,6 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	public Node visitReference(com.generator.generators.xml.parser.XMLParser.ReferenceContext arg) {
 		System.out.println("Reference");
 		final Node node = model.newNode(Label.label("Reference"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		System.out.println("Chardata");
-		final Node node = model.newNode(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

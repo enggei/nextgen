@@ -20,10 +20,10 @@ public class Tests {
 	private static final FileSystem fileSystem = FileSystems.getDefault();
 	private static final String workDir = ProjectConstants.MAIN_ROOT + "/com/generator/generators/sparql/";
 	private static final List<String> testFiles = Arrays.asList(
-//		"Test1.sparql",
-//		"Test2.sparql"
-		"Test3.sparql"
-//		"Test4.sparql"
+		"Test1.sparql",
+		"Test2.sparql",
+		"Test3.sparql",
+		"Test4.sparql"
 	);
 
 	@Test

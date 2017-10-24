@@ -49,6 +49,24 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
    }
 
 	@Override
+	public Node visitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
+		final Node node = new Node("Frag", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		final Node node = new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
 		final Node node = new Node("Url", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -141,24 +159,6 @@ public class urlNodeVisitor extends urlBaseVisitor<urlNodeVisitor.Node> {
 	@Override
 	public Node visitPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
 		final Node node = new Node("Password", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		final Node node = new Node("Frag", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		final Node node = new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

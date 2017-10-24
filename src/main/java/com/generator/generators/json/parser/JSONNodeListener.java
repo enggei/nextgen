@@ -52,7 +52,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterValue(com.generator.generators.json.parser.JSONParser.ValueContext arg) {
-		onEnter(new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Value", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inValue.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterJson(com.generator.generators.json.parser.JSONParser.JsonContext arg) {
-		onEnter(new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Json", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inJson.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterObj(com.generator.generators.json.parser.JSONParser.ObjContext arg) {
-		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Obj", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inObj.push(true);
 	}
 
@@ -103,7 +103,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterPair(com.generator.generators.json.parser.JSONParser.PairContext arg) {
-		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Pair", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inPair.push(true);
 	}
 
@@ -120,7 +120,7 @@ public class JSONNodeListener extends JSONBaseListener {
 
 	@Override
 	public void enterArray(com.generator.generators.json.parser.JSONParser.ArrayContext arg) {
-		onEnter(new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Array", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inArray.push(true);
 	}
 

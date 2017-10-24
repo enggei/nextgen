@@ -43,7 +43,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlDocument"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlDocument.push(true);
 	}
@@ -61,7 +61,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlElements"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlElements.push(true);
 	}
@@ -79,7 +79,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlElement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlElement.push(true);
 	}
@@ -97,7 +97,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlContent"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlContent.push(true);
 	}
@@ -115,7 +115,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlAttribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlAttribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlAttribute.push(true);
 	}
@@ -133,7 +133,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlAttributeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlAttributeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlAttributeName.push(true);
 	}
@@ -151,7 +151,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlAttributeValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlAttributeValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlAttributeValue.push(true);
 	}
@@ -169,7 +169,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlTagName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlTagName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlTagName.push(true);
 	}
@@ -187,7 +187,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlChardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlChardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlChardata.push(true);
 	}
@@ -205,7 +205,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlMisc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlMisc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlMisc.push(true);
 	}
@@ -223,7 +223,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
-		final Node node = model.findOrCreate(Label.label("HtmlComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("HtmlComment"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inHtmlComment.push(true);
 	}
@@ -241,7 +241,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
-		final Node node = model.findOrCreate(Label.label("XhtmlCDATA"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("XhtmlCDATA"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXhtmlCDATA.push(true);
 	}
@@ -259,7 +259,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dtd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Dtd"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDtd.push(true);
 	}
@@ -277,7 +277,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
-		final Node node = model.findOrCreate(Label.label("Xml"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Xml"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inXml.push(true);
 	}
@@ -295,7 +295,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
-		final Node node = model.findOrCreate(Label.label("Scriptlet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Scriptlet"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inScriptlet.push(true);
 	}
@@ -313,7 +313,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
-		final Node node = model.findOrCreate(Label.label("Script"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Script"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inScript.push(true);
 	}
@@ -331,7 +331,7 @@ public class HTMLParserNeoListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
-		final Node node = model.findOrCreate(Label.label("Style"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Style"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inStyle.push(true);
 	}

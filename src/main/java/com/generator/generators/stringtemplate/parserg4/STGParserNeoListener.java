@@ -39,29 +39,11 @@ public class STGParserNeoListener extends STGParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
-
-	@Override
-	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inImports.push(true);
-	}
-
-	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
-		onExit();
-		this.inImports.pop();
-	}
-
-	public boolean inImports() {
-      return !inImports.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inTemplate = new java.util.Stack<>();
 
 	@Override
 	public void enterTemplate(com.generator.generators.stringtemplate.parserg4.STGParser.TemplateContext arg) {
-		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Template"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inTemplate.push(true);
 	}
@@ -79,7 +61,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDictPairs(com.generator.generators.stringtemplate.parserg4.STGParser.DictPairsContext arg) {
-		final Node node = model.findOrCreate(Label.label("DictPairs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DictPairs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDictPairs.push(true);
 	}
@@ -97,7 +79,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterKeyValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValuePairContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("KeyValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeyValuePair.push(true);
 	}
@@ -115,7 +97,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDefaultValuePair(com.generator.generators.stringtemplate.parserg4.STGParser.DefaultValuePairContext arg) {
-		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("DefaultValuePair"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDefaultValuePair.push(true);
 	}
@@ -133,7 +115,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterKeyValue(com.generator.generators.stringtemplate.parserg4.STGParser.KeyValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("KeyValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inKeyValue.push(true);
 	}
@@ -151,7 +133,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterGroup(com.generator.generators.stringtemplate.parserg4.STGParser.GroupContext arg) {
-		final Node node = model.findOrCreate(Label.label("Group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Group"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inGroup.push(true);
 	}
@@ -169,7 +151,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDelimiters(com.generator.generators.stringtemplate.parserg4.STGParser.DelimitersContext arg) {
-		final Node node = model.findOrCreate(Label.label("Delimiters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Delimiters"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDelimiters.push(true);
 	}
@@ -187,7 +169,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterFormalArgs(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgsContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalArgs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FormalArgs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalArgs.push(true);
 	}
@@ -205,7 +187,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterFormalArg(com.generator.generators.stringtemplate.parserg4.STGParser.FormalArgContext arg) {
-		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("FormalArg"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inFormalArg.push(true);
 	}
@@ -223,7 +205,7 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	@Override
 	public void enterDict(com.generator.generators.stringtemplate.parserg4.STGParser.DictContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dict"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		final Node node = model.findOrCreate(Label.label("Dict"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
 		this.inDict.push(true);
 	}
@@ -235,6 +217,24 @@ public class STGParserNeoListener extends STGParserBaseListener {
 
 	public boolean inDict() {
       return !inDict.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImports = new java.util.Stack<>();
+
+	@Override
+	public void enterImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		final Node node = model.findOrCreate(Label.label("Imports"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImports.push(true);
+	}
+
+	public void exitImports(com.generator.generators.stringtemplate.parserg4.STGParser.ImportsContext arg) {
+		onExit();
+		this.inImports.pop();
+	}
+
+	public boolean inImports() {
+      return !inImports.isEmpty(); 
    }
 
 }

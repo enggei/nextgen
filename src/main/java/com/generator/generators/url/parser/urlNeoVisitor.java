@@ -28,6 +28,26 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
+		System.out.println("Frag");
+		final Node node = model.newNode(Label.label("Frag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		System.out.println("Search");
+		final Node node = model.newNode(Label.label("Search"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitUrl(com.generator.generators.url.parser.urlParser.UrlContext arg) {
 		System.out.println("Url");
 		final Node node = model.newNode(Label.label("Url"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -131,26 +151,6 @@ public class urlNeoVisitor extends urlBaseVisitor<Node> {
 	public Node visitPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
 		System.out.println("Password");
 		final Node node = model.newNode(Label.label("Password"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		System.out.println("Frag");
-		final Node node = model.newNode(Label.label("Frag"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		System.out.println("Search");
-		final Node node = model.newNode(Label.label("Search"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

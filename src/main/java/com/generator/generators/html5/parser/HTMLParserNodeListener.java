@@ -52,7 +52,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlDocument(com.generator.generators.html5.parser.HTMLParser.HtmlDocumentContext arg) {
-		onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlDocument", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlDocument.push(true);
 	}
 
@@ -69,7 +69,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElements(com.generator.generators.html5.parser.HTMLParser.HtmlElementsContext arg) {
-		onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlElements", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlElements.push(true);
 	}
 
@@ -86,7 +86,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlElement(com.generator.generators.html5.parser.HTMLParser.HtmlElementContext arg) {
-		onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlElement", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlElement.push(true);
 	}
 
@@ -103,7 +103,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlContent(com.generator.generators.html5.parser.HTMLParser.HtmlContentContext arg) {
-		onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlContent", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlContent.push(true);
 	}
 
@@ -120,7 +120,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttribute(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeContext arg) {
-		onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlAttribute", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlAttribute.push(true);
 	}
 
@@ -137,7 +137,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeName(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeNameContext arg) {
-		onEnter(new Node("HtmlAttributeName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlAttributeName", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlAttributeName.push(true);
 	}
 
@@ -154,7 +154,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlAttributeValue(com.generator.generators.html5.parser.HTMLParser.HtmlAttributeValueContext arg) {
-		onEnter(new Node("HtmlAttributeValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlAttributeValue", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlAttributeValue.push(true);
 	}
 
@@ -171,7 +171,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlTagName(com.generator.generators.html5.parser.HTMLParser.HtmlTagNameContext arg) {
-		onEnter(new Node("HtmlTagName", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlTagName", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlTagName.push(true);
 	}
 
@@ -188,7 +188,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlChardata(com.generator.generators.html5.parser.HTMLParser.HtmlChardataContext arg) {
-		onEnter(new Node("HtmlChardata", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlChardata", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlChardata.push(true);
 	}
 
@@ -205,7 +205,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlMisc(com.generator.generators.html5.parser.HTMLParser.HtmlMiscContext arg) {
-		onEnter(new Node("HtmlMisc", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlMisc", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlMisc.push(true);
 	}
 
@@ -222,7 +222,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterHtmlComment(com.generator.generators.html5.parser.HTMLParser.HtmlCommentContext arg) {
-		onEnter(new Node("HtmlComment", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("HtmlComment", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inHtmlComment.push(true);
 	}
 
@@ -239,7 +239,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXhtmlCDATA(com.generator.generators.html5.parser.HTMLParser.XhtmlCDATAContext arg) {
-		onEnter(new Node("XhtmlCDATA", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("XhtmlCDATA", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inXhtmlCDATA.push(true);
 	}
 
@@ -256,7 +256,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterDtd(com.generator.generators.html5.parser.HTMLParser.DtdContext arg) {
-		onEnter(new Node("Dtd", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Dtd", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inDtd.push(true);
 	}
 
@@ -273,7 +273,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterXml(com.generator.generators.html5.parser.HTMLParser.XmlContext arg) {
-		onEnter(new Node("Xml", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Xml", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inXml.push(true);
 	}
 
@@ -290,7 +290,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScriptlet(com.generator.generators.html5.parser.HTMLParser.ScriptletContext arg) {
-		onEnter(new Node("Scriptlet", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Scriptlet", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inScriptlet.push(true);
 	}
 
@@ -307,7 +307,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterScript(com.generator.generators.html5.parser.HTMLParser.ScriptContext arg) {
-		onEnter(new Node("Script", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Script", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inScript.push(true);
 	}
 
@@ -324,7 +324,7 @@ public class HTMLParserNodeListener extends HTMLParserBaseListener {
 
 	@Override
 	public void enterStyle(com.generator.generators.html5.parser.HTMLParser.StyleContext arg) {
-		onEnter(new Node("Style", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));
+		onEnter(new Node("Style", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
 		this.inStyle.push(true);
 	}
 

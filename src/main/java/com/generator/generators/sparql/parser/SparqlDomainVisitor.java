@@ -7,7 +7,13 @@ public abstract class SparqlDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "LimitOffsetClauses")) visitLimitOffsetClauses(node);
+		if(hasLabel(node, "DefaultGraphClause")) visitDefaultGraphClause(node);
+		else if(hasLabel(node, "NamedGraphClause")) visitNamedGraphClause(node);
+		else if(hasLabel(node, "SourceSelector")) visitSourceSelector(node);
+		else if(hasLabel(node, "WhereClause")) visitWhereClause(node);
+		else if(hasLabel(node, "SolutionModifier")) visitSolutionModifier(node);
+		else if(hasLabel(node, "LimitOffsetClauses")) visitLimitOffsetClauses(node);
+		else if(hasLabel(node, "OrderClause")) visitOrderClause(node);
 		else if(hasLabel(node, "OrderCondition")) visitOrderCondition(node);
 		else if(hasLabel(node, "LimitClause")) visitLimitClause(node);
 		else if(hasLabel(node, "OffsetClause")) visitOffsetClause(node);
@@ -35,16 +41,11 @@ public abstract class SparqlDomainVisitor {
 		else if(hasLabel(node, "GraphNode")) visitGraphNode(node);
 		else if(hasLabel(node, "VarOrTerm")) visitVarOrTerm(node);
 		else if(hasLabel(node, "VarOrIRIref")) visitVarOrIRIref(node);
-		else if(hasLabel(node, "Var")) visitVar(node);
 		else if(hasLabel(node, "GraphTerm")) visitGraphTerm(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "ConditionalOrExpression")) visitConditionalOrExpression(node);
 		else if(hasLabel(node, "ConditionalAndExpression")) visitConditionalAndExpression(node);
 		else if(hasLabel(node, "ValueLogical")) visitValueLogical(node);
-		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
 		else if(hasLabel(node, "NumericExpression")) visitNumericExpression(node);
-		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
-		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
 		else if(hasLabel(node, "UnaryExpression")) visitUnaryExpression(node);
 		else if(hasLabel(node, "PrimaryExpression")) visitPrimaryExpression(node);
 		else if(hasLabel(node, "BrackettedExpression")) visitBrackettedExpression(node);
@@ -52,33 +53,68 @@ public abstract class SparqlDomainVisitor {
 		else if(hasLabel(node, "RegexExpression")) visitRegexExpression(node);
 		else if(hasLabel(node, "IriRefOrFunction")) visitIriRefOrFunction(node);
 		else if(hasLabel(node, "RdfLiteral")) visitRdfLiteral(node);
-		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
 		else if(hasLabel(node, "NumericLiteralUnsigned")) visitNumericLiteralUnsigned(node);
 		else if(hasLabel(node, "NumericLiteralPositive")) visitNumericLiteralPositive(node);
 		else if(hasLabel(node, "NumericLiteralNegative")) visitNumericLiteralNegative(node);
-		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
-		else if(hasLabel(node, "String")) visitString(node);
 		else if(hasLabel(node, "IriRef")) visitIriRef(node);
 		else if(hasLabel(node, "PrefixedName")) visitPrefixedName(node);
 		else if(hasLabel(node, "BlankNode")) visitBlankNode(node);
-		else if(hasLabel(node, "Query")) visitQuery(node);
-		else if(hasLabel(node, "ConstructQuery")) visitConstructQuery(node);
 		else if(hasLabel(node, "Prologue")) visitPrologue(node);
 		else if(hasLabel(node, "BaseDecl")) visitBaseDecl(node);
-		else if(hasLabel(node, "AskQuery")) visitAskQuery(node);
 		else if(hasLabel(node, "PrefixDecl")) visitPrefixDecl(node);
 		else if(hasLabel(node, "SelectQuery")) visitSelectQuery(node);
+		else if(hasLabel(node, "ConstructQuery")) visitConstructQuery(node);
 		else if(hasLabel(node, "DescribeQuery")) visitDescribeQuery(node);
-		else if(hasLabel(node, "SolutionModifier")) visitSolutionModifier(node);
-		else if(hasLabel(node, "OrderClause")) visitOrderClause(node);
+		else if(hasLabel(node, "AskQuery")) visitAskQuery(node);
 		else if(hasLabel(node, "DatasetClause")) visitDatasetClause(node);
-		else if(hasLabel(node, "DefaultGraphClause")) visitDefaultGraphClause(node);
-		else if(hasLabel(node, "NamedGraphClause")) visitNamedGraphClause(node);
-		else if(hasLabel(node, "SourceSelector")) visitSourceSelector(node);
-		else if(hasLabel(node, "WhereClause")) visitWhereClause(node);
+		else if(hasLabel(node, "String")) visitString(node);
+		else if(hasLabel(node, "Expression")) visitExpression(node);
+		else if(hasLabel(node, "Var")) visitVar(node);
+		else if(hasLabel(node, "Query")) visitQuery(node);
+		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
+		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
+		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
+		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
+		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
    }
 
+	public void visitDefaultGraphClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNamedGraphClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSourceSelector(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitWhereClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSolutionModifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitLimitOffsetClauses(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitOrderClause(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -246,19 +282,7 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitVar(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitGraphTerm(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -282,25 +306,7 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitRelationalExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitNumericExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAdditiveExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMultiplicativeExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -348,12 +354,6 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitNumericLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitNumericLiteralUnsigned(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -367,18 +367,6 @@ public abstract class SparqlDomainVisitor {
 	}
 
 	public void visitNumericLiteralNegative(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBooleanLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitString(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -402,18 +390,6 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstructQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitPrologue(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -421,12 +397,6 @@ public abstract class SparqlDomainVisitor {
 	}
 
 	public void visitBaseDecl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAskQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -444,19 +414,19 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
+	public void visitConstructQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
 	public void visitDescribeQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitSolutionModifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOrderClause(Node node) {
+	public void visitAskQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -468,25 +438,55 @@ public abstract class SparqlDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitDefaultGraphClause(Node node) {
+	public void visitString(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitNamedGraphClause(Node node) {
+	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitSourceSelector(Node node) {
+	public void visitVar(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitWhereClause(Node node) {
+	public void visitQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBooleanLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMultiplicativeExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAdditiveExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRelationalExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNumericLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
