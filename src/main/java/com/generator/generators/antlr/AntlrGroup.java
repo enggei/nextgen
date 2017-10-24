@@ -1158,7 +1158,7 @@ public final class AntlrGroup {
 		"\n" + 
 		"	@Override\n" + 
 		"	public void enter~it.name~(~it.param~ arg) {\n" + 
-		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop().getText()));\n" + 
+		"		onEnter(new Node(\"~it.name~\", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? \"\" : (arg.getStop().getText() == null ? \"\" : arg.getStop().getText())));\n" + 
 		"		this.in~it.name~.push(true);\n" + 
 		"	~eom()~\n" + 
 		"\n" + 

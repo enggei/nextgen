@@ -1,5 +1,7 @@
 package com.generator.generators.antlr;
 
+import com.generator.generators.antlr.parser.ANTLRv4ParserListener;
+import com.generator.generators.antlr.parser.ANTLRv4ParserVisitor;
 import com.generator.generators.domain.NeoVisitorGroup;
 import com.generator.generators.java.BaseClassVisitor;
 //import com.generator.generators.scala.parser.ScalaListener;
@@ -10,13 +12,16 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import static com.generator.ProjectConstants.GENERATORS_PACKAGE;
+import static com.generator.ProjectConstants.MAIN_ROOT;
+
 /**
  * Created 08.09.17.
  */
 public class AntlrGenerator {
 
    public static void main(String[] args) {
-//      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".antlr.parser", "ANTLRv4Parser", ANTLRv4ParserVisitor.class, ANTLRv4ParserListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".clojure.parser", "Clojure", ClojureVisitor.class, ClojureListener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".cpp.parser", "CPP14", CPP14Visitor.class, CPP14Listener.class);
 //      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".css.parser", "css3", css3Visitor.class, css3Listener.class);

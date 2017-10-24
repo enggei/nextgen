@@ -53,6 +53,13 @@ public class RivescriptPlugin extends Plugin {
 
    public RivescriptPlugin(App app) {
       super(app, "Rivescript");
+
+      final Node generatorBot = getGraph().findOrCreate(Entities.Bot, AppMotif.Properties.name.name(), "GeneratorBot");
+      final Node generatorScript = getGraph().findOrCreate(Entities.Script, AppMotif.Properties.name.name(), "GeneratorScript");
+
+//      getGraph().newNode(Label.label(""));
+
+
    }
 
    @Override
@@ -190,7 +197,7 @@ public class RivescriptPlugin extends Plugin {
 
       void chat(String message) {
          currentConversation.append("\n").append(message);
-         String reply = bot.reply("user", "Hello bot!");
+         String reply = bot.reply("user", message);
          currentConversation.append("\n").append(reply);
          botListener.firePropertyChange(uuid.toString(), message, reply);
       }

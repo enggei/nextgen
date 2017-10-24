@@ -1,5 +1,8 @@
 // A generic set of chatting responses. This set mimicks the classic Eliza bot.
 
++ create node *
+- <call>newNode <star></call>
+
 + *
 - I'm not sure I understand you fully.
 - Please go on.

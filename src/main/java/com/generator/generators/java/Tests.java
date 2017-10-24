@@ -9,6 +9,7 @@ import com.generator.util.ClasspathUtil;
 import com.generator.util.CompilerUtil;
 import com.generator.util.FileUtil;
 import com.generator.util.Reflect;
+import com.ud.equipment.devices.device.automation.driver.dolby.DolbyPlayerAutomationDriver;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -18,6 +19,7 @@ import org.reflections.Reflections;
 import javax.tools.DiagnosticCollector;
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -26,6 +28,45 @@ import java.util.*;
 import static org.reflections.ReflectionUtils.*;
 
 public class Tests {
+
+   @Test
+   public void testAnnotations() {
+
+      Class<DolbyPlayerAutomationDriver> clazz = DolbyPlayerAutomationDriver.class;
+      Method[] methods = clazz.getDeclaredMethods();
+      Field[] fields = clazz.getDeclaredFields();
+      for (Method method : methods) {
+         Annotation[] annotation = method.getDeclaredAnnotations();
+
+         for (Annotation annotation1 : annotation) {
+            System.out.println("method annotation " + annotation1.toString());
+         }
+
+      }
+      for (Field field : fields) {
+         //This will get @AuthorInfo annotation on book
+         Annotation[] annotation = field.getDeclaredAnnotations();
+         //This will get @Data annotation on Book class
+         Annotation[] annotationsOnFieldClass = field.getClass().getDeclaredAnnotations();
+
+         for (Annotation onFieldClass : annotationsOnFieldClass) {
+            System.out.println("Field " + onFieldClass.toString());
+         }
+
+      }
+      final Annotation[] declaredAnnotations = clazz.getDeclaredAnnotations();
+      for (Annotation declaredAnnotation : declaredAnnotations) {
+         System.out.println("declaredAnnotation = " + declaredAnnotation);
+         final Class<? extends Annotation> annotationType = declaredAnnotation.annotationType();
+         final Field[] fields1 = annotationType.getFields();
+         System.out.println(annotationType.getName());
+         for (Field field : fields1) {
+            System.out.println(field.getName() + " ");
+         }
+
+      }
+
+   }
 
    @Test
    public void testParser() {

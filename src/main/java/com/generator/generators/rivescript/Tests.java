@@ -3,12 +3,15 @@ package com.generator.generators.rivescript;
 import com.rivescript.ConcatMode;
 import com.rivescript.Config;
 import com.rivescript.RiveScript;
+import com.rivescript.macro.Subroutine;
 import com.rivescript.session.ConcurrentHashMapSessionManager;
 import com.rivescript.session.SessionManager;
+import com.rivescript.util.StringUtils;
 import org.junit.Test;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created 13.10.17.
@@ -36,9 +39,15 @@ public class Tests {
             .errorMessages(errors)           // Map of custom error messages
             .build());
 
+      bot.setSubroutine("newNode", new Subroutine() {
+         @Override
+         public String call(RiveScript rs, String[] strings) {
+            return "creating a " + strings[0] + " node: getGraph().newNode(Label.label(\"" + strings[0] + "\"); with UUID " + UUID.randomUUID();
+         }
+      });
+
       // Load a directory full of RiveScript documents (.rive files)
       bot.loadDirectory("src/main/java/com/generator/generators/rivescript/replies");
-
       // Load an individual file.
 //      bot.loadFile("src/main/java/com/generator/generators/rivescript/replies/eliza.rive");
 
@@ -46,7 +55,7 @@ public class Tests {
       bot.sortReplies();
 
       // Get a reply.
-      String reply = bot.reply("user", "Hello bot!");
+      String reply = bot.reply("user", "create node Entity");
       System.out.println(reply);
    }
 

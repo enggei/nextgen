@@ -7,7 +7,8 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
+		if(hasLabel(node, "OptionValue")) visitOptionValue(node);
+		else if(hasLabel(node, "DelegateGrammars")) visitDelegateGrammars(node);
 		else if(hasLabel(node, "DelegateGrammar")) visitDelegateGrammar(node);
 		else if(hasLabel(node, "TokensSpec")) visitTokensSpec(node);
 		else if(hasLabel(node, "ChannelsSpec")) visitChannelsSpec(node);
@@ -35,12 +36,12 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "LabeledAlt")) visitLabeledAlt(node);
 		else if(hasLabel(node, "LexerRuleSpec")) visitLexerRuleSpec(node);
 		else if(hasLabel(node, "LexerRuleBlock")) visitLexerRuleBlock(node);
-		else if(hasLabel(node, "LexerAltList")) visitLexerAltList(node);
 		else if(hasLabel(node, "GrammarSpec")) visitGrammarSpec(node);
 		else if(hasLabel(node, "GrammarType")) visitGrammarType(node);
 		else if(hasLabel(node, "PrequelConstruct")) visitPrequelConstruct(node);
 		else if(hasLabel(node, "OptionsSpec")) visitOptionsSpec(node);
 		else if(hasLabel(node, "Option")) visitOption(node);
+		else if(hasLabel(node, "LexerAltList")) visitLexerAltList(node);
 		else if(hasLabel(node, "LexerAlt")) visitLexerAlt(node);
 		else if(hasLabel(node, "LexerElements")) visitLexerElements(node);
 		else if(hasLabel(node, "LexerElement")) visitLexerElement(node);
@@ -69,8 +70,13 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		else if(hasLabel(node, "ElementOptions")) visitElementOptions(node);
 		else if(hasLabel(node, "ElementOption")) visitElementOption(node);
 		else if(hasLabel(node, "Identifier")) visitIdentifier(node);
-		else if(hasLabel(node, "OptionValue")) visitOptionValue(node);
    }
+
+	public void visitOptionValue(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitDelegateGrammars(Node node) {
 		if (visited.contains(node)) return;
@@ -240,12 +246,6 @@ public abstract class ANTLRv4ParserDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitLexerAltList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitGrammarSpec(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -271,6 +271,12 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	}
 
 	public void visitOption(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLexerAltList(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -439,12 +445,6 @@ public abstract class ANTLRv4ParserDomainVisitor {
 	}
 
 	public void visitIdentifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOptionValue(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

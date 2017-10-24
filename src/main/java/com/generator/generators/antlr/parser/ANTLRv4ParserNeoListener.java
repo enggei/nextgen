@@ -39,6 +39,24 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
+
+	@Override
+	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inOptionValue.push(true);
+	}
+
+	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
+		onExit();
+		this.inOptionValue.pop();
+	}
+
+	public boolean inOptionValue() {
+      return !inOptionValue.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inDelegateGrammars = new java.util.Stack<>();
 
 	@Override
@@ -543,24 +561,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
       return !inLexerRuleBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
-
-	@Override
-	public void enterLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
-		final Node node = model.findOrCreate(Label.label("LexerAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inLexerAltList.push(true);
-	}
-
-	public void exitLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
-		onExit();
-		this.inLexerAltList.pop();
-	}
-
-	public boolean inLexerAltList() {
-      return !inLexerAltList.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inGrammarSpec = new java.util.Stack<>();
 
 	@Override
@@ -649,6 +649,24 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inOption() {
       return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLexerAltList = new java.util.Stack<>();
+
+	@Override
+	public void enterLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
+		final Node node = model.findOrCreate(Label.label("LexerAltList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+		onEnter(node);
+		this.inLexerAltList.push(true);
+	}
+
+	public void exitLexerAltList(com.generator.generators.antlr.parser.ANTLRv4Parser.LexerAltListContext arg) {
+		onExit();
+		this.inLexerAltList.pop();
+	}
+
+	public boolean inLexerAltList() {
+      return !inLexerAltList.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inLexerAlt = new java.util.Stack<>();
@@ -1153,24 +1171,6 @@ public class ANTLRv4ParserNeoListener extends ANTLRv4ParserBaseListener {
 
 	public boolean inIdentifier() {
       return !inIdentifier.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOptionValue = new java.util.Stack<>();
-
-	@Override
-	public void enterOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		final Node node = model.findOrCreate(Label.label("OptionValue"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-		onEnter(node);
-		this.inOptionValue.push(true);
-	}
-
-	public void exitOptionValue(com.generator.generators.antlr.parser.ANTLRv4Parser.OptionValueContext arg) {
-		onExit();
-		this.inOptionValue.pop();
-	}
-
-	public boolean inOptionValue() {
-      return !inOptionValue.isEmpty(); 
    }
 
 }
