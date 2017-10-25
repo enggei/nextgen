@@ -195,6 +195,7 @@ public class Tests {
 
    @Test
    public void testReflections() {
+
       Reflections reflections = new Reflections("com.generator");
 
       Set<Class<? extends DomainPlugin>> subTypes = reflections.getSubTypesOf(DomainPlugin.class);

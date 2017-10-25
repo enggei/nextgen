@@ -14,13 +14,18 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Label;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.generator.util.NeoUtil.relate;
+import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 23.08.17.
@@ -166,6 +171,34 @@ public class MySQLPlugin extends Plugin {
 
    @Override
    public JComponent getEditorFor(NeoNode neoNode) {
+
+      if(hasLabel(neoNode.getNode(),Entities.Table)) {
+         return new TableEditor(neoNode);
+      }
       return null;
+   }
+
+   private final class TableEditor extends JPanel {
+      TableEditor(NeoNode neoNode) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = new JTextArea();
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+
+         final StringBuilder out = new StringBuilder(getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+
+         outgoing(neoNode.getNode(), Relations.COLUMN).forEach(new Consumer<Relationship>() {
+            @Override
+            public void accept(Relationship relationship) {
+               final Node columnNode = other(neoNode.getNode(), relationship);
+               out.append("\n\t").append(getString(columnNode, AppMotif.Properties.name.name())).append(" ").append(getString(columnNode, Properties.columnType.name()));
+            }
+         });
+         txtEditor.setText(out.toString());
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
    }
 }
