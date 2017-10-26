@@ -18,6 +18,14 @@ import static com.generator.util.NeoUtil.*;
  */
 public class DomainMotif {
 
+   public static String getName(NeoNode neoNode) {
+      return getString(neoNode.getNode(), AppMotif.Properties.name.name());
+   }
+
+   public static String getName(Node node) {
+      return getString(node, AppMotif.Properties.name.name());
+   }
+
    public static void newEntityProperty(NeoModel graph, Node srcEntity, String name) {
       newEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.findOrCreate(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
    }
@@ -90,22 +98,6 @@ public class DomainMotif {
       if (valueRelation == null) return defaultValue;
       return getString(other(node, valueRelation), AppMotif.Properties.name.name(), defaultValue);
    }
-
-//   protected Set<Node> findNodes(NeoModel graph, Label label) {
-//      final Set<Node> nodes = new LinkedHashSet<>();
-//      graph.findNodes(label).forEachRemaining(nodes::add);
-//      return nodes;
-//   }
-//
-//   protected Set<Node> findNodes(NeoModel graph, Label label, String property, String value) {
-//      final Set<Node> nodes = new LinkedHashSet<>();
-//      graph.findNodes(label, property, value).forEachRemaining(nodes::add);
-//      return nodes;
-//   }
-//
-//   protected Node findNode(NeoModel graph, Label label, String property, String value) {
-//      return graph.findNode(label, property, value);
-//   }
 
    protected Node findOrCreate(NeoModel graph, Label label, String name, Object... properties) {
       return graph.findOrCreate(label, name, properties);

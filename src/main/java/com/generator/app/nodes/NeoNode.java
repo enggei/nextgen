@@ -754,7 +754,7 @@ public class NeoNode extends PNode {
    public static String getNodeText(AppMotif.NodePaintStrategy nodePaintStrategy, Node node) {
       switch (nodePaintStrategy) {
          case showNameAndLabels:
-            return getNameAndLabelsFrom(node) + " (" + node.getId() + ")";
+            return getNameAndLabelsFrom(node);
          case showName:
             return getString(node, AppMotif.Properties.name.name(), "()");
          case showLabels:
