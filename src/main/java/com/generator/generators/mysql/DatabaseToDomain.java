@@ -41,7 +41,7 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
       super.enterId_(arg);
 
       if (inTable_name() && !inConstraintDefinition()) {
-         currentTableName = StringUtil.capitalize(StringUtil.trimEnds(1, arg.getText()));
+         currentTableName = StringUtil.trimEnds(1, arg.getText());
          nodeStack.push(model.newNode(MySQLPlugin.Entities.Table, AppMotif.Properties.name.name(), currentTableName));
          tableMap.put(currentTableName, new TableReference(nodeStack.peek()));
 
@@ -150,7 +150,7 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
          for (Node child : node.children) {
             if ("Table_name".equals(child.name)) {
                final Node tableId = child.children.iterator().next();
-               referenceTable = StringUtil.capitalize(StringUtil.trimEnds(1, tableId.value));
+               referenceTable = StringUtil.trimEnds(1, tableId.value);
             } else if ("Index_colname_list".equals(child.name)) {
                final Node colNames = child.children.iterator().next();
                for (Node colName : colNames.children) {

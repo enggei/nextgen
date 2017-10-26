@@ -28,11 +28,20 @@ public class MySQLSession {
       return database;
    }
 
-   private void executeQuery(Statement statement, String query, ResultSetHandler handler) throws Exception {
+   public void executeQuery(Statement statement, String query, ResultSetHandler handler) throws Exception {
       final ResultSet resultSet = statement.executeQuery(query);
       while (resultSet.next())
          handler.handle(resultSet);
       resultSet.close();
+   }
+
+   public void executeQuery(String query, ResultSetHandler handler) throws Exception {
+      final Statement statement = connection.createStatement();
+      final ResultSet resultSet = statement.executeQuery(query);
+      while (resultSet.next())
+         handler.handle(resultSet);
+      resultSet.close();
+      statement.close();
    }
 
    public void close() throws SQLException {
@@ -75,6 +84,8 @@ public class MySQLSession {
       }
       return output.toString().trim();
    }
+
+
 
    public interface ResultSetHandler {
 
