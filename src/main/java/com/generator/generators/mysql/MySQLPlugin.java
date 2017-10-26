@@ -26,13 +26,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -138,112 +135,6 @@ public class MySQLPlugin extends Plugin {
          }
 
          pop.add(new App.TransactionAction("Select Columns", app) {
-            class SelectQueryColumnPanel extends JPanel {
-
-               private final JTable tblColumns;
-
-               public SelectQueryColumnPanel(Map<String, Map<String, Boolean>> tableColumns) {
-                  super(new BorderLayout());
-
-                  tblColumns = new JTable(new ColumnTableModel(tableColumns));
-                  add(new JScrollPane(tblColumns), BorderLayout.CENTER);
-               }
-
-               public List<String> getSelectedColumns() {
-                  final List<String> selected = new ArrayList<>();
-                  final ColumnTableModel model = (ColumnTableModel) tblColumns.getModel();
-                  for (ColumnEntry columnEntry : model.content) {
-                     if (columnEntry.selected) selected.add(columnEntry.table + "." + columnEntry.name);
-                  }
-                  return selected;
-               }
-
-               class ColumnEntry {
-
-                  private String table;
-                  private String name;
-                  private Boolean selected;
-
-                  public ColumnEntry(String table, String name, Boolean selected) {
-                     this.table = table;
-                     this.name = name;
-                     this.selected = selected;
-                  }
-               }
-
-               class ColumnTableModel extends AbstractTableModel {
-
-                  final List<ColumnEntry> content = new java.util.ArrayList<>();
-
-                  public ColumnTableModel(Map<String, Map<String, Boolean>> tableColumns) {
-                     for (Map.Entry<String, Map<String, Boolean>> entries : tableColumns.entrySet()) {
-                        for (Map.Entry<String, Boolean> column : entries.getValue().entrySet()) {
-                           content.add(new ColumnEntry(entries.getKey(), column.getKey(), column.getValue()));
-                        }
-                     }
-                  }
-
-                  @Override
-                  public int getRowCount() {
-                     return content.size();
-                  }
-
-                  @Override
-                  public int getColumnCount() {
-                     return 3;
-                  }
-
-                  @Override
-                  public Object getValueAt(int rowIndex, int columnIndex) {
-                     switch (columnIndex) {
-                        case 0:
-                           return content.get(rowIndex).table;
-                        case 1:
-                           return content.get(rowIndex).name;
-                        case 2:
-                           return content.get(rowIndex).selected;
-                     }
-                     return null;
-                  }
-
-                  @Override
-                  public String getColumnName(int column) {
-                     switch (column) {
-                        case 0:
-                           return "Table";
-                        case 1:
-                           return "Column";
-                        case 2:
-                           return "Selected";
-                     }
-                     return "";
-                  }
-
-                  @Override
-                  public Class<?> getColumnClass(int columnIndex) {
-                     switch (columnIndex) {
-                        case 0:
-                           return String.class;
-                        case 1:
-                           return String.class;
-                        case 2:
-                           return Boolean.class;
-                     }
-                     return Object.class;
-                  }
-
-                  @Override
-                  public boolean isCellEditable(int rowIndex, int columnIndex) {
-                     return columnIndex == 2;
-                  }
-
-                  @Override
-                  public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-                     content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
-                     fireTableCellUpdated(rowIndex, columnIndex);
-                  }
-               }
-            }
 
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -282,7 +173,7 @@ public class MySQLPlugin extends Plugin {
                            final List<String> selectedColumns = editor.getSelectedColumns();
 
                            // delete existing relations
-                           outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(relationship -> relationship.delete());
+                           outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(Relationship::delete);
 
                            // add new ones
                            for (String selectedColumn : selectedColumns) {
@@ -438,12 +329,9 @@ public class MySQLPlugin extends Plugin {
 
          final StringBuilder out = new StringBuilder(getString(neoNode.getNode(), AppMotif.Properties.name.name()));
 
-         outgoing(neoNode.getNode(), Relations.COLUMN).forEach(new Consumer<Relationship>() {
-            @Override
-            public void accept(Relationship relationship) {
-               final Node columnNode = other(neoNode.getNode(), relationship);
-               out.append("\n\t").append(getString(columnNode, AppMotif.Properties.name.name())).append(" ").append(getString(columnNode, Properties.columnType.name()));
-            }
+         outgoing(neoNode.getNode(), Relations.COLUMN).forEach(columnRelation -> {
+            final Node columnNode = other(neoNode.getNode(), columnRelation);
+            out.append("\n\t").append(getString(columnNode, AppMotif.Properties.name.name())).append(" ").append(getString(columnNode, Properties.columnType.name()));
          });
          txtEditor.setText(out.toString());
 
@@ -472,64 +360,18 @@ public class MySQLPlugin extends Plugin {
          txtResult.setTabSize(1);
          txtResult.setEditable(true);
 
+         final JButton btnExecute = new JButton(new AbstractAction("Run") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               executeQuery(txtEditor, dbNode, txtResult);
+            }
+         });
+
          txtEditor.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
-
                if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-
-                  // todo execute query on database:
-                  if (session == null) {
-
-                     final char[] password = SwingUtil.showPasswordDialog(txtEditor);
-                     if (password == null || password.length == 0) return;
-
-                     getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-                           try {
-                              session = new MySQLSession(getString(dbNode, Properties.host.name()), DomainMotif.getName(dbNode), getString(dbNode, Properties.username.name()), new String(password));
-                           } catch (Throwable t) {
-                              SwingUtil.showException(app, t);
-                              return;
-                           }
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showException(txtEditor, throwable);
-                        }
-                     });
-                  }
-
-                  if (session != null) {
-
-                     try {
-
-                        final StringBuilder result = new StringBuilder();
-
-                        final AtomicBoolean first = new AtomicBoolean(true);
-                        session.executeQuery(txtEditor.getText().trim(), resultSet -> {
-
-                           final ResultSetMetaData metaData = resultSet.getMetaData();
-                           if (first.get()) {
-                              for (int i = 1; i <= metaData.getColumnCount(); i++)
-                                 result.append(metaData.getColumnLabel(i)).append(" ");
-                              first.set(false);
-                           }
-
-                           result.append("\n");
-                           for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                              result.append(resultSet.getObject(i)).append(" ");
-                           }
-                        });
-
-                        txtResult.setText(result.toString());
-                        txtResult.setCaretPosition(0);
-                     } catch (Exception e) {
-                        SwingUtil.showException(txtEditor, e);
-                     }
-                  }
+                  executeQuery(txtEditor, dbNode, txtResult);
                }
             }
          });
@@ -554,13 +396,175 @@ public class MySQLPlugin extends Plugin {
             firstColumn.set(false);
          });
 
-         final StringBuilder sql = new StringBuilder();
-         sql.append(columns);
-         sql.append(" ").append(from);
-         txtEditor.setText(sql.toString());
+         String sql = String.valueOf(columns) + " " + from;
+         txtEditor.setText(sql);
 
-         add(txtEditor, BorderLayout.NORTH);
+         final JPanel northPanel = new JPanel(new BorderLayout());
+         northPanel.add(txtEditor, BorderLayout.CENTER);
+         northPanel.add(btnExecute, BorderLayout.EAST);
+         add(northPanel, BorderLayout.NORTH);
          add(new JScrollPane(txtResult), BorderLayout.CENTER);
+      }
+
+      public void executeQuery(JTextArea txtEditor, Node dbNode, JTextArea txtResult) {
+         if (session == null) {
+
+            final char[] password = SwingUtil.showPasswordDialog(txtEditor);
+            if (password == null || password.length == 0) return;
+
+            getGraph().doInTransaction(new NeoModel.Committer() {
+               @Override
+               public void doAction(Transaction tx) throws Throwable {
+                  try {
+                     session = new MySQLSession(getString(dbNode, Properties.host.name()), DomainMotif.getName(dbNode), getString(dbNode, Properties.username.name()), new String(password));
+                  } catch (Throwable t) {
+                     SwingUtil.showException(app, t);
+                  }
+               }
+
+               @Override
+               public void exception(Throwable throwable) {
+                  SwingUtil.showException(txtEditor, throwable);
+               }
+            });
+         }
+
+         if (session != null) {
+
+            try {
+
+               final StringBuilder result = new StringBuilder();
+
+               final AtomicBoolean first = new AtomicBoolean(true);
+               session.executeQuery(txtEditor.getText().trim(), resultSet -> {
+
+                  final ResultSetMetaData metaData = resultSet.getMetaData();
+                  if (first.get()) {
+                     for (int i = 1; i <= metaData.getColumnCount(); i++)
+                        result.append(metaData.getColumnLabel(i)).append(" ");
+                     first.set(false);
+                  }
+
+                  result.append("\n");
+                  for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                     result.append(resultSet.getObject(i)).append(" ");
+                  }
+               });
+
+               txtResult.setText(result.toString());
+               txtResult.setCaretPosition(0);
+            } catch (Exception e) {
+               SwingUtil.showException(txtEditor, e);
+            }
+         }
+      }
+   }
+
+
+   class SelectQueryColumnPanel extends JPanel {
+
+      private final JTable tblColumns;
+
+      SelectQueryColumnPanel(Map<String, Map<String, Boolean>> tableColumns) {
+         super(new BorderLayout());
+
+         tblColumns = new JTable(new ColumnTableModel(tableColumns));
+         add(new JScrollPane(tblColumns), BorderLayout.CENTER);
+      }
+
+      List<String> getSelectedColumns() {
+         final List<String> selected = new ArrayList<>();
+         final ColumnTableModel model = (ColumnTableModel) tblColumns.getModel();
+         for (ColumnEntry columnEntry : model.content) {
+            if (columnEntry.selected) selected.add(columnEntry.table + "." + columnEntry.name);
+         }
+         return selected;
+      }
+
+      class ColumnEntry {
+
+         private String table;
+         private String name;
+         private Boolean selected;
+
+         ColumnEntry(String table, String name, Boolean selected) {
+            this.table = table;
+            this.name = name;
+            this.selected = selected;
+         }
+      }
+
+      class ColumnTableModel extends AbstractTableModel {
+
+         final List<ColumnEntry> content = new java.util.ArrayList<>();
+
+         ColumnTableModel(Map<String, Map<String, Boolean>> tableColumns) {
+            for (Map.Entry<String, Map<String, Boolean>> entries : tableColumns.entrySet()) {
+               for (Map.Entry<String, Boolean> column : entries.getValue().entrySet()) {
+                  content.add(new ColumnEntry(entries.getKey(), column.getKey(), column.getValue()));
+               }
+            }
+         }
+
+         @Override
+         public int getRowCount() {
+            return content.size();
+         }
+
+         @Override
+         public int getColumnCount() {
+            return 3;
+         }
+
+         @Override
+         public Object getValueAt(int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+               case 0:
+                  return content.get(rowIndex).table;
+               case 1:
+                  return content.get(rowIndex).name;
+               case 2:
+                  return content.get(rowIndex).selected;
+            }
+            return null;
+         }
+
+         @Override
+         public String getColumnName(int column) {
+            switch (column) {
+               case 0:
+                  return "Table";
+               case 1:
+                  return "Column";
+               case 2:
+                  return "Selected";
+            }
+            return "";
+         }
+
+         @Override
+         public Class<?> getColumnClass(int columnIndex) {
+            switch (columnIndex) {
+               case 0:
+                  return String.class;
+               case 1:
+                  return String.class;
+               case 2:
+                  return Boolean.class;
+            }
+            return Object.class;
+         }
+
+         @Override
+         public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == 2;
+         }
+
+         @Override
+         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
+            fireTableCellUpdated(rowIndex, columnIndex);
+         }
       }
    }
 }
