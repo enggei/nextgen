@@ -4,6 +4,7 @@ import com.generator.ProjectConstants;
 import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
+import com.generator.generators.mysql.parser.MySqlParserNodeVisitor;
 import com.generator.util.FileUtil;
 import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
@@ -14,6 +15,8 @@ import org.junit.Test;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.Stack;
 
 /**
@@ -144,7 +147,11 @@ public class Tests {
    @Test
    public void testMySqlParser() throws Exception {
       final MySQLSession session = new MySQLSession("127.0.0.1", "tr", "root", "root");
-      for (String table : session.getTables())
-         new ParseTreeWalker().walk(new MySqlParserNodeListener(true), new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+
+      for (String table : session.getTables()) {
+         final MySqlParserNodeListener listener = new MySqlParserNodeListener(true) {
+         };
+         new ParseTreeWalker().walk(listener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
+      }
    }
 }

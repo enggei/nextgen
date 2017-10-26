@@ -62,4 +62,9 @@ public class MySqlToQueriesGenerator extends MySqlParserNodeListener {
 
       tableColumns.clear();
    }
+
+   @Override
+   public void exitTblConstrFK(MySqlParser.TblConstrFKContext arg) {
+      super.exitTblConstrFK(arg);
+   }
 }

@@ -33,15 +33,15 @@ import static com.generator.util.NeoUtil.*;
 public class MySQLPlugin extends Plugin {
 
    public enum Entities implements Label {
-      Database, Table, Column
+      Database, Table, Column, FOREIGN_KEY
    }
 
    public enum Relations implements RelationshipType {
-      TABLE, COLUMN
+      TABLE, COLUMN, FK_SRC, FK_DST
    }
 
    public enum Properties {
-      columnType
+      columnType, onDelete
    }
 
    public MySQLPlugin(App app) {
@@ -68,6 +68,25 @@ public class MySQLPlugin extends Plugin {
 
                   }
                });
+            }
+         });
+
+      } else if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Table)) {
+
+         pop.add(new App.TransactionAction("Show queries", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+
+
+            }
+         });
+
+         pop.add(new App.TransactionAction("Make Spring accessor", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
             }
          });
       }
@@ -147,11 +166,12 @@ public class MySQLPlugin extends Plugin {
 
                         final Node databaseNode = getGraph().findOrCreate(Entities.Database, AppMotif.Properties.name.name(), db.getDatabase());
 
+                        final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
                         for (String table : db.getTables()) {
-                           final DatabaseToDomain neoListener = new DatabaseToDomain(true, getGraph());
                            new ParseTreeWalker().walk(neoListener, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(table)))).root());
                            relate(databaseNode, neoListener.done(), Relations.TABLE);
                         }
+                        neoListener.assignForeignKeys();
 
                         fireNodesLoaded(databaseNode);
 
@@ -172,7 +192,7 @@ public class MySQLPlugin extends Plugin {
    @Override
    public JComponent getEditorFor(NeoNode neoNode) {
 
-      if(hasLabel(neoNode.getNode(),Entities.Table)) {
+      if (hasLabel(neoNode.getNode(), Entities.Table)) {
          return new TableEditor(neoNode);
       }
       return null;
