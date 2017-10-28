@@ -4,7 +4,10 @@ import com.generator.app.*;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.domain.*;
+import com.generator.generators.stringtemplate.domain.TemplateEntities;
+import com.generator.generators.stringtemplate.domain.TemplateFile;
+import com.generator.generators.stringtemplate.domain.TemplateParameter;
+import com.generator.generators.stringtemplate.domain.TemplateStatement;
 import com.generator.generators.stringtemplate.parser.TemplateFileParser;
 import com.generator.neo.NeoModel;
 import com.generator.util.RegexpUtil;
@@ -150,7 +153,36 @@ public class StringTemplatePlugin extends Plugin {
    @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
-      if (hasLabel(neoNode.getNode(), Entities.STGroup)) {
+      if (hasLabel(neoNode.getNode(), Entities.STTemplate)) {
+
+         final Set<Node> statementNodes = new LinkedHashSet<>();
+         outgoing(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(relationship -> statementNodes.add(other(neoNode.getNode(), relationship)));
+
+            pop.add(new App.TransactionAction("Edit", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final JPanel editor = new JPanel(new BorderLayout());
+
+                  final JTabbedPane tabbedPane = new JTabbedPane();
+                  int i = 1;
+                  for (Node statementNode : statementNodes)
+                     tabbedPane.add(i + "", new TemplateRenderPanel(statementNode, neoNode.getNode()));
+
+                  final TemplateEditor templateEditor = new TemplateEditor(neoNode, templateNode -> {
+                     for (int j = 0; j < tabbedPane.getComponentCount(); j++) {
+                        ((TemplateRenderPanel) tabbedPane.getComponent(j)).render();
+                     }
+                  });
+
+                  final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, templateEditor, tabbedPane);
+                  editor.add(split, BorderLayout.CENTER);
+
+                  SwingUtil.showDialog(editor, app, "Edit Template");
+               }
+            });
+
+      } else if (hasLabel(neoNode.getNode(), Entities.STGroup)) {
          pop.add(new App.TransactionAction("Add template", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -211,7 +243,18 @@ public class StringTemplatePlugin extends Plugin {
    public JComponent getEditorFor(NeoNode neoNode) {
 
       if (neoNode.getNode().hasLabel(Entities.STTemplate)) {
-         return new TemplateEditor(neoNode);
+         return new TemplateEditor(neoNode, templateNode -> {
+            // re-render all statements of this template
+            outgoing(templateNode, DomainPlugin.Relations.INSTANCE).forEach(relationship -> {
+               final Node instanceNode = other(templateNode, relationship);
+               incoming(instanceNode, ProjectPlugin.Relations.RENDERER).forEach(rendererRelation -> {
+                  final Node dirNode = other(instanceNode, rendererRelation);
+                  final String content = renderStatement(instanceNode, templateNode);
+                  ProjectPlugin.renderToFile(rendererRelation, instanceNode, content, dirNode, app);
+               });
+            });
+
+         });
 
       } else {
          // try to render any STTemplate, by looking for STTEmplate-instance
@@ -574,8 +617,13 @@ public class StringTemplatePlugin extends Plugin {
       }
    }
 
+   interface TemplateEditorListener {
+
+      void onTemplateSaved(Node templateNode);
+   }
+
    private final class TemplateEditor extends JPanel {
-      TemplateEditor(NeoNode templateNode) {
+      TemplateEditor(NeoNode templateNode, TemplateEditorListener templateEditorListener) {
          super(new BorderLayout());
 
          final JTextArea txtEditor = SwingUtil.newTextArea();
@@ -755,15 +803,7 @@ public class StringTemplatePlugin extends Plugin {
                         startText = get(templateNode.getNode(), StringTemplatePlugin.Properties.text.name(), "");
                         txtEditor.setBackground(uneditedColor);
 
-                        // re-render all statements of this template
-                        outgoing(templateNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(relationship -> {
-                           final Node instanceNode = other(templateNode.getNode(), relationship);
-                           incoming(instanceNode, ProjectPlugin.Relations.RENDERER).forEach(rendererRelation -> {
-                              final Node dirNode = other(instanceNode, rendererRelation);
-                              final String content = renderStatement(instanceNode, templateNode.getNode());
-                              ProjectPlugin.renderToFile(rendererRelation, instanceNode, content, dirNode, app);
-                           });
-                        });
+                        templateEditorListener.onTemplateSaved(templateNode.getNode());
                      }
 
                      @Override
@@ -950,44 +990,57 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    private final class TemplateRenderPanel extends JPanel {
-      TemplateRenderPanel(NeoNode statementNode, Node templateNode) {
+
+      private final JTextArea txtEditor = new JTextArea(25, 85);
+      private final Node statementNode;
+      private final Node templateNode;
+
+      TemplateRenderPanel(Node statementNode, Node templateNode) {
          super(new BorderLayout());
 
-         final JTextArea txtEditor = new JTextArea(25, 85);
+         this.statementNode = statementNode;
+         this.templateNode = templateNode;
+
          txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
          txtEditor.setEditable(false);
-         txtEditor.setText(renderStatement(statementNode.getNode(), templateNode));
-         txtEditor.setCaretPosition(0);
+         render();
 
          txtEditor.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                if (SwingUtilities.isLeftMouseButton(e)) {
-                  onLeftClick(txtEditor, statementNode, templateNode);
+                  onLeftClick(txtEditor);
                } else if (SwingUtilities.isRightMouseButton(e)) {
                   onRightClick(txtEditor);
                }
             }
          });
 
-         addNodeChangedListener(statementNode, new AppEvents.TransactionalPropertyChangeListener<Object, Object>(getClass(), TemplateRenderPanel.this, app) {
-            @Override
-            protected void propertyChange(Object oldValue, Object newValue) {
-               txtEditor.setText(renderStatement(statementNode.getNode(), templateNode));
-               txtEditor.setCaretPosition(0);
-            }
-         });
-
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
 
-      private void onLeftClick(JTextArea txtEditor, NeoNode statementNode, Node templateNode) {
+      TemplateRenderPanel(NeoNode statementNode, Node templateNode) {
+         this(statementNode.getNode(), templateNode);
+
+         addNodeChangedListener(statementNode, new AppEvents.TransactionalPropertyChangeListener<Object, Object>(getClass(), TemplateRenderPanel.this, app) {
+            @Override
+            protected void propertyChange(Object oldValue, Object newValue) {
+               render();
+            }
+         });
+      }
+
+      private void render() {
+         txtEditor.setText(renderStatement(statementNode, templateNode));
+         txtEditor.setCaretPosition(0);
+      }
+
+      private void onLeftClick(JTextArea txtEditor) {
          SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
             @Override
             public void doAction(Transaction tx) throws Throwable {
-               txtEditor.setText(renderStatement(statementNode.getNode(), templateNode));
-               txtEditor.setCaretPosition(0);
+               render();
             }
 
             @Override
@@ -1002,6 +1055,7 @@ public class StringTemplatePlugin extends Plugin {
       }
 
       private void onRightClick(JTextArea txtEditor) {
+
          SwingUtil.toClipboard(txtEditor.getText());
       }
    }

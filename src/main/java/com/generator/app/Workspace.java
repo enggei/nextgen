@@ -112,6 +112,7 @@ public final class Workspace extends JPanel {
                   SwingUtilities.invokeLater(() -> showContextMenu(event));
                } else if (event.isLeftMouseButton()) {
                   clearSelection();
+
                }
             }
 
@@ -130,12 +131,16 @@ public final class Workspace extends JPanel {
                      if (pluginsMenu.getMenuComponents().length > 0) pop.add(pluginsMenu);
 
                      final JMenu selectAllMenu = getSelectAllMenu();
-                     if (selectAllMenu.getMenuComponents().length>0) pop.add(selectAllMenu);
+                     if (selectAllMenu.getMenuComponents().length > 0) pop.add(selectAllMenu);
 
                      addSelectedRelationsActions(pop);
                      addSelectedNodesActions(pop);
                      addLayoutMenu(pop);
                      pop.add(setCanvasBackgroundAction());
+
+
+                     pop.add(centerNodesAction());
+
                   }
 
                   @Override
@@ -498,6 +503,26 @@ public final class Workspace extends JPanel {
                      SwingUtilities.invokeLater(() -> NodeCanvas.this.setBackground(color));
                   }
                });
+            }
+         };
+      }
+
+      @NotNull
+      private App.TransactionAction centerNodesAction() {
+         return new App.TransactionAction("Center Nodes", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final Rectangle2D bounds2D = nodeCanvas.getCamera().getViewBounds().getBounds2D();
+
+               double startX = bounds2D.getX();
+               double startY = bounds2D.getY();
+
+               final Random random = new Random(System.currentTimeMillis());
+               for (NeoNode neoNode : getAllNodes()) {
+                  double nodeX = random.nextInt((int) bounds2D.getWidth()) + startX;
+                  double nodeY = random.nextInt((int) bounds2D.getHeight()) + startY;
+                  neoNode.setOffset(new Point2D.Double(nodeX, nodeY));
+               }
             }
          };
       }

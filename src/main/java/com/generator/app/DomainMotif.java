@@ -103,10 +103,6 @@ public class DomainMotif {
       return graph.findOrCreate(label, name, properties);
    }
 
-   protected void doInTransaction(NeoModel graph, NeoModel.Committer committer) {
-      graph.doInTransaction(committer);
-   }
-
    protected Node getProperty(NeoNode neoNode, String propertyName) {
       return other(neoNode.getNode(), singleOutgoing(neoNode.getNode(), RelationshipType.withName(propertyName)));
    }

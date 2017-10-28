@@ -1,13 +1,14 @@
 package com.generator.generators.domain;
 
+import com.generator.ProjectConstants;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
-import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
@@ -36,7 +37,7 @@ public class DomainPlugin extends Plugin {
    }
 
    public enum Properties {
-      relationCardinality, visitorClass
+      relationCardinality, visitorClass, packageName
    }
 
    public enum Relations implements RelationshipType {
@@ -110,6 +111,70 @@ public class DomainPlugin extends Plugin {
                final Node newNode = getGraph().newNode(Entities.Entity, AppMotif.Properties.name.name(), name);
                node.createRelationshipTo(newNode, Relations.ENTITY);
                fireNodesLoaded(newNode);
+            }
+         });
+
+         pop.add(new App.TransactionAction("Create Plugin", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+               String packageName;
+               if (has(neoNode.getNode(), Properties.packageName.name()))
+                  packageName = get(neoNode.getNode(), Properties.packageName.name());
+               else {
+                  packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null || packageName.length() == 0) return;
+                  neoNode.getNode().setProperty(Properties.packageName.name(), packageName);
+               }
+
+               final String className = DomainMotif.getName(neoNode.getNode()) + "DomainPlugin";
+
+               final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
+               final DomainPluginGroup.DomainPluginST domainPluginST = domainPluginGroup.newDomainPlugin().
+                     setPackage(packageName).
+                     setName(className).
+                     setTitle(DomainMotif.getName(neoNode.getNode()));
+
+               final Set<String> domainEntities = new LinkedHashSet<>();
+               final Set<String> domainRelations = new LinkedHashSet<>();
+               final Set<String> domainProperties = new LinkedHashSet<>();
+               new DomainVisitor<Object>(true) {
+                  @Override
+                  public void visitEntity(Node node) {
+                     domainEntities.add(DomainMotif.getName(node));
+                     super.visitEntity(node);
+                  }
+
+                  @Override
+                  public void visitRelation(Node node) {
+
+                     // relation can be either to a Property or Entity
+                     final AtomicBoolean isProperty = new AtomicBoolean(false);
+                     outgoing(node,Relations.DST).forEach(dstRelation -> {
+                        final Node dstNode = other(node, dstRelation);
+                        if(hasLabel(dstNode, Entities.Property))
+                           isProperty.set(true);
+                     });
+
+                     // if Entity (not Property), add relation
+                     if(!isProperty.get())
+                        domainRelations.add(DomainMotif.getName(node));
+                     super.visitRelation(node);
+                  }
+
+                  @Override
+                  public void visitProperty(Node node) {
+                     domainProperties.add(DomainMotif.getName(node));
+                     super.visitProperty(node);
+                  }
+               }.visitDomain(neoNode.getNode());
+
+               for (String name : domainEntities) domainPluginST.addEntitiesValue(name);
+               for (String name : domainRelations) domainPluginST.addRelationsValue(name);
+               for (String name : domainProperties) domainPluginST.addPropertiesValue(name);
+
+               GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, packageName, className).write(domainPluginST);
             }
          });
 
@@ -388,7 +453,11 @@ public class DomainPlugin extends Plugin {
          });
       }
 
-      incoming(node, DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
+      showEntityActions(pop, neoNode, selectedNodes, node);
+   }
+
+   public void showEntityActions(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes, Node node) {
+      incoming(node, Relations.INSTANCE).forEach(instanceRelation -> {
 
          final Node instanceNode = other(node, instanceRelation);
 

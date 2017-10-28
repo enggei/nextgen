@@ -3,22 +3,25 @@ package com.generator.generators.mysql;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNeoVisitor;
-import com.generator.generators.spring.SpringDAOGroup;
+import com.generator.generators.spring.SpringGroup;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
+import com.generator.util.MySQLUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.*;
+import org.jetbrains.annotations.NotNull;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -27,36 +30,195 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 23.08.17.
  */
-public class MySQLPlugin extends Plugin {
+public class MySQLPlugin extends MySQLDomainPlugin {
 
-   public enum Entities implements Label {
-      Database, Table, Column, FOREIGN_KEY, Query
-   }
-
-   public enum Relations implements RelationshipType {
-      TABLE, COLUMN, FK_SRC, FK_DST, QUERY, QUERY_TABLE, QUERY_COLUMN
-   }
-
-   public enum Properties {
-      host, username, columnType, onDelete
-   }
+   private final SpringGroup springGroup = new SpringGroup();
+   private final Map<Node, MySQLSession> sessions = new LinkedHashMap<>();
 
    public MySQLPlugin(App app) {
-      super(app, "MySQL");
+      super(app);
+
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+         for (MySQLSession mySQLSession : sessions.values()) {
+            try {
+               mySQLSession.close();
+            } catch (SQLException e) {
+               System.out.println("Could not close mysql-session: " + e.getMessage());
+            }
+         }
+      }));
    }
 
    @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+   protected void handleDatabase(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+
+      pop.add(new App.TransactionAction("New Query", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String name = SwingUtil.showInputDialog("Name", app);
+            if (name == null || name.length() == 0) return;
+
+            final Node newNode = newQuery(getGraph(), name);
+            relate(neoNode.getNode(), newNode, Relations.QUERY);
+            fireNodesLoaded(newNode);
+         }
+      });
+
+      final Set<Node> queryNodes = new LinkedHashSet<>();
+      outgoing(neoNode.getNode(), Relations.QUERY).forEach(relationship -> queryNodes.add(other(neoNode.getNode(), relationship)));
+      if (!queryNodes.isEmpty()) {
+         pop.add(new App.TransactionAction("Create DAO for queries", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final SpringGroup.DAOST daost = springGroup.newDAO().
+                     setPackage("com.ud.tr.dao").
+                     setName("TestDAO").
+                     setDatabase(DomainMotif.getName(neoNode.getNode())).
+                     setHost(getString(neoNode.getNode(), Properties.host.name())).
+                     setUsername(getString(neoNode.getNode(), Properties.username.name())).
+                     setPort(3306);
+
+               for (Node queryNode : queryNodes) {
+                  daost.addQueriesValue(createDao(queryNode));
+               }
+
+               GeneratedFile.newJavaFile("/home/goe/udc/trailer-report/src/main/java", "com.ud.tr.dao", "TestDAO").write(daost);
+            }
+         });
+      }
+   }
+
+   @Override
+   protected void handleQuery(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+
+      pop.add(new App.TransactionAction("Create DaoAccessor", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final SpringGroup.queryMethodST queryMethodST = createDao(neoNode.getNode());
+            System.out.println(queryMethodST);
+         }
+      });
+
+      for (NeoNode selectedNode : selectedNodes) {
+         if (hasLabel(selectedNode.getNode(), Entities.Table)) {
+            final String tableName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+            pop.add(new App.TransactionAction("Add " + tableName, app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  relate(neoNode.getNode(), selectedNode.getNode(), Relations.QUERY_TABLE);
+               }
+            });
+         }
+      }
+
+      pop.add(new App.TransactionAction("Edit", app) {
+
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final List<QueryColumn> queryColumns = new ArrayList<>();
+            final Map<String, QueryColumn> columnNodes = new LinkedHashMap<>();
+
+            outgoing(neoNode.getNode(), Relations.QUERY_TABLE).forEach(tableRelation -> {
+               final Node tableNode = other(neoNode.getNode(), tableRelation);
+               outgoing(tableNode, Relations.COLUMN).forEach(columnRelation -> {
+                  final QueryColumn queryColumn = new QueryColumn(tableNode, other(tableNode, columnRelation));
+                  queryColumns.add(queryColumn);
+                  columnNodes.put(DomainMotif.getName(tableNode) + "." + DomainMotif.getName(queryColumn.columnNode), queryColumn);
+               });
+            });
+
+            outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(relationship -> {
+               final Node columnNode = other(neoNode.getNode(), relationship);
+               final QueryColumn queryColumn = columnNodes.get(DomainMotif.getName(other(columnNode, singleIncoming(columnNode, Relations.COLUMN))) + "." + DomainMotif.getName(columnNode));
+               queryColumn.selected = get(relationship, Properties.inSelect.name());
+               queryColumn.where = get(relationship, Properties.inWhere.name());
+               queryColumn.whereOperator = get(relationship, Properties.whereOperator.name(), "");
+            });
+
+            final SelectQueryColumnPanel editor = new SelectQueryColumnPanel(queryColumns);
+
+            SwingUtil.showDialog(editor, app, "Columns", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx) throws Throwable {
+
+                        final List<QueryColumn> selectedColumns = editor.getSelectedColumns();
+
+                        // select-columns
+                        outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(Relationship::delete);
+                        for (QueryColumn selectedColumn : selectedColumns) {
+                           relate(neoNode.getNode(), selectedColumn.columnNode, Relations.QUERY_COLUMN, Properties.inSelect.name(), selectedColumn.selected, Properties.inWhere.name(), selectedColumn.where, Properties.whereOperator.name(), selectedColumn.whereOperator == null ? "" : selectedColumn.whereOperator);
+                        }
+                     }
+
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showException(app, throwable);
+                     }
+                  });
+               }
+            });
+         }
+      });
+   }
+
+   private SpringGroup.queryMethodST createDao(Node queryNode) {
+      final String name = DomainMotif.getName(queryNode);
+
+      final SpringGroup.queryMethodST queryMethodST = springGroup.newqueryMethod().
+            setEntity(name + "Result").
+            setName("get" + name).
+            setSql(getSql(queryNode));
+
+      for (Node column : getSelectColumns(queryNode)) {
+         final String columnName = DomainMotif.getName(column);
+         final String columnType = getString(column, Properties.columnType.name(), "");
+         queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
+      }
+
+      for (Relationship queryColumn : getWhereColumns(queryNode)) {
+         final Node column = queryColumn.getEndNode();
+         final String columnName = DomainMotif.getName(column);
+         final String columnType = getString(column, Properties.columnType.name(), "");
+         queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
+      }
+      return queryMethodST;
+   }
+
+   @Override
+   protected void handleTable(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+
+      pop.add(new App.TransactionAction("Show queries", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+         }
+      });
+
+      pop.add(new App.TransactionAction("Make Spring accessor", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+         }
+      });
    }
 
    @Override
@@ -74,139 +236,8 @@ public class MySQLPlugin extends Plugin {
             }
          });
 
-      } else if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Database)) {
-
-         pop.add(new App.TransactionAction("Create Dao", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final String daoName = StringUtil.capitalize(getString(neoNode.getNode(), AppMotif.Properties.name.name())) + "DAO";
-               final String daoImplName = daoName + "Impl";
-
-               final SpringDAOGroup springDAOGroup = new SpringDAOGroup();
-               final SpringDAOGroup.DaoImplST daoImplST = springDAOGroup.newDaoImpl();
-               final SpringDAOGroup.DaoST daoST = springDAOGroup.newDao();
-
-               final String packageName = "com.ud.tr.dao";
-
-               daoST.setPackage(packageName).setName(daoName);
-               daoImplST.
-                     setPackage(packageName).
-                     setName(daoImplName).
-                     setImplement(daoName);
-
-               outgoing(neoNode.getNode(), Relations.TABLE).forEach(relationship -> {
-                  final Node tableNode = other(neoNode.getNode(), relationship);
-                  System.out.println(getString(tableNode, AppMotif.Properties.name.name()));
-               });
-
-               GeneratedFile.newJavaFile("/home/goe/udc/trailer-report/src/main/java", packageName, daoImplName).write(daoImplST);
-               GeneratedFile.newJavaFile("/home/goe/udc/trailer-report/src/main/java", packageName, daoName).write(daoST);
-            }
-         });
-
-
-         pop.add(new App.TransactionAction("New Query", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Name", app);
-               if (name == null || name.length() == 0) return;
-
-               final Node newNode = getGraph().newNode(Entities.Query, AppMotif.Properties.name.name(), name);
-               relate(neoNode.getNode(), newNode, Relations.QUERY);
-               fireNodesLoaded(newNode);
-            }
-         });
-
-
-      } else if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Query)) {
-
-
-         for (NeoNode selectedNode : selectedNodes) {
-            if (hasLabel(selectedNode.getNode(), Entities.Table)) {
-               final String tableName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
-               pop.add(new App.TransactionAction("Add " + tableName, app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     relate(neoNode.getNode(), selectedNode.getNode(), Relations.QUERY_TABLE);
-                  }
-               });
-            }
-         }
-
-         pop.add(new App.TransactionAction("Select Columns", app) {
-
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final Map<String, Map<String, Boolean>> tableColumns = new HashMap<>();
-               final Map<String, Node> columnNodes = new LinkedHashMap<>();
-
-               outgoing(neoNode.getNode(), Relations.QUERY_TABLE).forEach(tableRelation -> {
-                  final Node tableNode = other(neoNode.getNode(), tableRelation);
-
-                  tableColumns.put(DomainMotif.getName(tableNode), new HashMap<>());
-                  outgoing(tableNode, Relations.COLUMN).forEach(columnRelation -> {
-                     final Node columnNode = other(tableNode, columnRelation);
-                     tableColumns.get(DomainMotif.getName(tableNode)).put(DomainMotif.getName(columnNode), Boolean.FALSE);
-                     columnNodes.put(DomainMotif.getName(tableNode) + "." + DomainMotif.getName(columnNode), columnNode);
-
-                  });
-               });
-
-               outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(relationship -> {
-                  final Node columnNode = other(neoNode.getNode(), relationship);
-                  final Node tableNode = other(columnNode, singleIncoming(columnNode, Relations.COLUMN));
-                  tableColumns.get(DomainMotif.getName(tableNode)).put(DomainMotif.getName(columnNode), Boolean.TRUE);
-               });
-
-               final SelectQueryColumnPanel editor = new SelectQueryColumnPanel(tableColumns);
-
-               SwingUtil.showDialog(editor, app, "Columns", new SwingUtil.ConfirmAction() {
-                  @Override
-                  public void verifyAndCommit() throws Exception {
-
-                     getGraph().doInTransaction(new NeoModel.Committer() {
-                        @Override
-                        public void doAction(Transaction tx) throws Throwable {
-
-                           final List<String> selectedColumns = editor.getSelectedColumns();
-
-                           // delete existing relations
-                           outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(Relationship::delete);
-
-                           // add new ones
-                           for (String selectedColumn : selectedColumns) {
-                              relate(neoNode.getNode(), columnNodes.get(selectedColumn), Relations.QUERY_COLUMN);
-                           }
-                        }
-
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showException(app, throwable);
-                        }
-                     });
-                  }
-               });
-            }
-         });
-
-      } else if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Table)) {
-
-         pop.add(new App.TransactionAction("Show queries", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-
-            }
-         });
-
-         pop.add(new App.TransactionAction("Make Spring accessor", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-            }
-         });
+      } else {
+         super.handleNodeRightClick(pop, neoNode, selectedNodes);
       }
    }
 
@@ -308,14 +339,13 @@ public class MySQLPlugin extends Plugin {
    }
 
    @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
+   protected JComponent newTableEditor(NeoNode neoNode) {
+      return new TableEditor(neoNode);
+   }
 
-      if (hasLabel(neoNode.getNode(), Entities.Table)) {
-         return new TableEditor(neoNode);
-      } else if (hasLabel(neoNode.getNode(), Entities.Query)) {
-         return new QueryEditor(neoNode);
-      }
-      return null;
+   @Override
+   protected JComponent newQueryEditor(NeoNode neoNode) {
+      return new QueryEditor(neoNode);
    }
 
    private final class TableEditor extends JPanel {
@@ -341,73 +371,52 @@ public class MySQLPlugin extends Plugin {
 
    private final class QueryEditor extends JPanel {
 
-      private MySQLSession session;
-
       QueryEditor(NeoNode neoNode) {
          super(new BorderLayout());
 
          final Node dbNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.QUERY));
+         final Set<Relationship> whereColumns = getWhereColumns(neoNode.getNode());
+         final JTable tblParams = new JTable(new ParamsTableModel(whereColumns));
 
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
-         txtEditor.setTabSize(3);
-         txtEditor.setEditable(true);
-         txtEditor.setWrapStyleWord(true);
-         txtEditor.setLineWrap(true);
+         final JTextArea txtQuery = SwingUtil.newTextArea();
+         txtQuery.setEditable(true);
+         txtQuery.setWrapStyleWord(true);
+         txtQuery.setLineWrap(true);
+         txtQuery.setMaximumSize(new Dimension(100, 80));
 
-         final JTextArea txtResult = new JTextArea();
-         txtResult.setFont(com.generator.app.AppMotif.getDefaultFont());
-         txtResult.setTabSize(1);
+         final JTextArea txtResult = SwingUtil.newTextArea();
          txtResult.setEditable(true);
 
          final JButton btnExecute = new JButton(new AbstractAction("Run") {
             @Override
             public void actionPerformed(ActionEvent e) {
-               executeQuery(txtEditor, dbNode, txtResult);
+               executeQuery(txtQuery, dbNode, ((ParamsTableModel) tblParams.getModel()), txtResult);
             }
          });
 
-         txtEditor.addKeyListener(new KeyAdapter() {
+         txtQuery.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
                if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  executeQuery(txtEditor, dbNode, txtResult);
+                  executeQuery(txtQuery, dbNode, ((ParamsTableModel) tblParams.getModel()), txtResult);
                }
             }
          });
 
-         final StringBuilder columns = new StringBuilder("select ");
-         final StringBuilder from = new StringBuilder("from ");
-         final Set<String> tables = new LinkedHashSet<>();
+         txtQuery.setText(getSql(neoNode.getNode()));
 
-         final AtomicBoolean firstColumn = new AtomicBoolean(true);
-         final AtomicBoolean firstTable = new AtomicBoolean(true);
-         outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
-            final Node columnNode = other(neoNode.getNode(), queryColumnRelation);
-            final Node tableNode = other(columnNode, singleIncoming(columnNode, Relations.COLUMN));
+         final SwingUtil.FormPanel queryPanel = new SwingUtil.FormPanel("10dlu:grow, 4dlu, 30dlu", "pref, 4dlu, 15dlu:grow, 4dlu, 15dlu:grow");
+         queryPanel.add(new JScrollPane(txtQuery), 1, 1, 1, 3);
+         queryPanel.add(btnExecute, 3, 1, 1, 1);
+         queryPanel.add(new JScrollPane(tblParams), 1, 5, 1, 1);
 
-            if (!tables.contains(DomainMotif.getName(tableNode))) {
-               tables.add(DomainMotif.getName(tableNode));
-               from.append(firstTable.get() ? "" : ", ").append(DomainMotif.getName(tableNode)).append(" ").append(StringUtil.lowFirst(DomainMotif.getName(tableNode)));
-               firstTable.set(false);
-            }
-
-            columns.append(firstColumn.get() ? "" : ", ").append(StringUtil.lowFirst(DomainMotif.getName(tableNode))).append(".").append(DomainMotif.getName(columnNode));
-            firstColumn.set(false);
-         });
-
-         String sql = String.valueOf(columns) + " " + from;
-         txtEditor.setText(sql);
-
-         final JPanel northPanel = new JPanel(new BorderLayout());
-         northPanel.add(txtEditor, BorderLayout.CENTER);
-         northPanel.add(btnExecute, BorderLayout.EAST);
-         add(northPanel, BorderLayout.NORTH);
+         add(queryPanel.build(), BorderLayout.NORTH);
          add(new JScrollPane(txtResult), BorderLayout.CENTER);
       }
 
-      public void executeQuery(JTextArea txtEditor, Node dbNode, JTextArea txtResult) {
-         if (session == null) {
+      void executeQuery(JTextArea txtEditor, Node dbNode, ParamsTableModel tableModel, JTextArea txtResult) {
+
+         if (!sessions.containsKey(dbNode)) {
 
             final char[] password = SwingUtil.showPasswordDialog(txtEditor);
             if (password == null || password.length == 0) return;
@@ -416,7 +425,7 @@ public class MySQLPlugin extends Plugin {
                @Override
                public void doAction(Transaction tx) throws Throwable {
                   try {
-                     session = new MySQLSession(getString(dbNode, Properties.host.name()), DomainMotif.getName(dbNode), getString(dbNode, Properties.username.name()), new String(password));
+                     sessions.put(dbNode, new MySQLSession(getString(dbNode, Properties.host.name()), DomainMotif.getName(dbNode), getString(dbNode, Properties.username.name()), new String(password)));
                   } catch (Throwable t) {
                      SwingUtil.showException(app, t);
                   }
@@ -429,8 +438,8 @@ public class MySQLPlugin extends Plugin {
             });
          }
 
+         final MySQLSession session = sessions.get(dbNode);
          if (session != null) {
-
             try {
 
                final StringBuilder result = new StringBuilder();
@@ -449,7 +458,7 @@ public class MySQLPlugin extends Plugin {
                   for (int i = 1; i <= metaData.getColumnCount(); i++) {
                      result.append(resultSet.getObject(i)).append(" ");
                   }
-               });
+               }, tableModel.asParams());
 
                txtResult.setText(result.toString());
                txtResult.setCaretPosition(0);
@@ -458,51 +467,14 @@ public class MySQLPlugin extends Plugin {
             }
          }
       }
-   }
 
+      private class ParamsTableModel extends AbstractTableModel {
 
-   class SelectQueryColumnPanel extends JPanel {
+         private final List<WhereParam> content = new ArrayList<>();
 
-      private final JTable tblColumns;
-
-      SelectQueryColumnPanel(Map<String, Map<String, Boolean>> tableColumns) {
-         super(new BorderLayout());
-
-         tblColumns = new JTable(new ColumnTableModel(tableColumns));
-         add(new JScrollPane(tblColumns), BorderLayout.CENTER);
-      }
-
-      List<String> getSelectedColumns() {
-         final List<String> selected = new ArrayList<>();
-         final ColumnTableModel model = (ColumnTableModel) tblColumns.getModel();
-         for (ColumnEntry columnEntry : model.content) {
-            if (columnEntry.selected) selected.add(columnEntry.table + "." + columnEntry.name);
-         }
-         return selected;
-      }
-
-      class ColumnEntry {
-
-         private String table;
-         private String name;
-         private Boolean selected;
-
-         ColumnEntry(String table, String name, Boolean selected) {
-            this.table = table;
-            this.name = name;
-            this.selected = selected;
-         }
-      }
-
-      class ColumnTableModel extends AbstractTableModel {
-
-         final List<ColumnEntry> content = new java.util.ArrayList<>();
-
-         ColumnTableModel(Map<String, Map<String, Boolean>> tableColumns) {
-            for (Map.Entry<String, Map<String, Boolean>> entries : tableColumns.entrySet()) {
-               for (Map.Entry<String, Boolean> column : entries.getValue().entrySet()) {
-                  content.add(new ColumnEntry(entries.getKey(), column.getKey(), column.getValue()));
-               }
+         ParamsTableModel(Set<Relationship> whereColumns) {
+            for (Relationship whereColumn : whereColumns) {
+               content.add(new WhereParam(whereColumn));
             }
          }
 
@@ -513,18 +485,226 @@ public class MySQLPlugin extends Plugin {
 
          @Override
          public int getColumnCount() {
-            return 3;
+            return 2;
+         }
+
+         @Override
+         public Object getValueAt(int rowIndex, int columnIndex) {
+
+            switch (columnIndex) {
+               case 0:
+                  return content.get(rowIndex).name;
+               case 1:
+                  return content.get(rowIndex).value;
+            }
+
+            return null;
+         }
+
+         @Override
+         public String getColumnName(int column) {
+            switch (column) {
+               case 0:
+                  return "Name";
+               case 1:
+                  return "Value";
+            }
+            return "";
+         }
+
+         @Override
+         public Class<?> getColumnClass(int columnIndex) {
+            return String.class;
+         }
+
+         @Override
+         public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == 1;
+         }
+
+         @Override
+         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+            final WhereParam whereParam = content.get(rowIndex);
+            whereParam.value = aValue;
+
+            getGraph().doInTransaction(new NeoModel.Committer() {
+               @Override
+               public void doAction(Transaction tx) throws Throwable {
+
+                  if ((aValue == null || aValue.toString().length() == 0)) {
+                     if (whereParam.column.hasProperty(Properties.lastParam.name()))
+                        whereParam.column.removeProperty(Properties.lastParam.name());
+                  } else
+                     whereParam.column.setProperty(Properties.lastParam.name(), aValue);
+               }
+
+               @Override
+               public void exception(Throwable throwable) {
+                  System.err.println("Could not save lastParam=" + aValue + " to param");
+               }
+            });
+         }
+
+         Object[] asParams() {
+            final Object[] params = new Object[content.size()];
+            for (int i = 0; i < content.size(); i++) {
+               WhereParam whereParam = content.get(i);
+               params[i] = whereParam.value == null || whereParam.value.toString().length() == 0 ? null : whereParam.value;
+            }
+            return params;
+         }
+
+         private class WhereParam {
+
+            private final Relationship column;
+            private String name;
+            private Object value;
+
+            WhereParam(Relationship whereColumn) {
+               this.column = whereColumn;
+               this.name = DomainMotif.getName(whereColumn.getEndNode());
+               this.value = getString(whereColumn, Properties.lastParam.name(), "");
+            }
+         }
+      }
+   }
+
+   @NotNull
+   private static String getSql(Node queryNode) {
+
+      final MysqlGroup mysqlGroup = new MysqlGroup();
+      final MysqlGroup.selectST selectST = mysqlGroup.newselect();
+
+      final Set<Node> tables = new LinkedHashSet<>();
+      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
+         final Node columnNode = other(queryNode, queryColumnRelation);
+         final Node tableNode = other(columnNode, singleIncoming(columnNode, Relations.COLUMN));
+
+         if (!tables.contains(tableNode)) {
+            tables.add(tableNode);
+            selectST.addTablesValue(DomainMotif.getName(tableNode) + " " + StringUtil.lowFirst(DomainMotif.getName(tableNode)));
+         }
+
+         if (get(queryColumnRelation, Properties.inSelect.name())) {
+            selectST.addColumnsValue(StringUtil.lowFirst(DomainMotif.getName(tableNode)) + "." + DomainMotif.getName(columnNode));
+         }
+
+         if (get(queryColumnRelation, Properties.inWhere.name())) {
+            final String operator = getString(queryColumnRelation, Properties.whereOperator.name());
+            selectST.addWhereValue("?", operator, StringUtil.lowFirst(DomainMotif.getName(tableNode)) + "." + DomainMotif.getName(columnNode));
+         }
+      });
+
+      // todo auto-join tables through fk-columns
+      if (tables.size() > 1) {
+         final Map<Node, Node> fkColumns = new LinkedHashMap<>();
+         for (Node table : tables) {
+            outgoing(table, Relations.COLUMN).forEach(new Consumer<Relationship>() {
+               @Override
+               public void accept(Relationship relationship) {
+                  final Node columnNode = other(table, relationship);
+
+                  outgoing(columnNode, Relations.FK_SRC).forEach(new Consumer<Relationship>() {
+                     @Override
+                     public void accept(Relationship relationship) {
+                        fkColumns.put(columnNode, other(columnNode, relationship));
+                     }
+                  });
+               }
+            });
+         }
+
+//         where.append(firstWhereColumn.get() ? "" : " AND ").append(StringUtil.lowFirst(DomainMotif.getName(tableNode))).append(".").append(DomainMotif.getName(columnNode)).append(operator).append("?");
+      }
+
+      return selectST.toString();
+   }
+
+   @NotNull
+   private static Set<Node> getSelectColumns(Node queryNode) {
+      final Set<Node> columns = new LinkedHashSet<>();
+      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
+         if (!(Boolean) get(queryColumnRelation, Properties.inSelect.name())) return;
+         columns.add(other(queryNode, queryColumnRelation));
+      });
+      return columns;
+   }
+
+   @NotNull
+   private static Set<Relationship> getWhereColumns(Node queryNode) {
+      final Set<Relationship> columns = new LinkedHashSet<>();
+      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
+         if (!(Boolean) (get(queryColumnRelation, Properties.inWhere.name()))) return;
+         columns.add(queryColumnRelation);
+      });
+      return columns;
+   }
+
+   class SelectQueryColumnPanel extends JPanel {
+
+      private final JTable tblColumns;
+
+      SelectQueryColumnPanel(List<QueryColumn> queryColumns) {
+         super(new BorderLayout());
+
+         tblColumns = new JTable(new ColumnTableModel(queryColumns));
+         tblColumns.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(createOperatorComboBox()));
+         add(new JScrollPane(tblColumns), BorderLayout.NORTH);
+      }
+
+      private JComboBox createOperatorComboBox() {
+         final JComboBox<String> chk = new JComboBox<>();
+         chk.addItem(null);
+         chk.addItem("=");
+         chk.addItem(">=");
+         chk.addItem("<=");
+         chk.addItem("<");
+         chk.addItem(">");
+         chk.addItem(" like ");
+         chk.addItem(" in ");
+         return chk;
+      }
+
+      List<QueryColumn> getSelectedColumns() {
+         final List<QueryColumn> selected = new ArrayList<>();
+         final ColumnTableModel model = (ColumnTableModel) tblColumns.getModel();
+         for (QueryColumn columnEntry : model.content)
+            if (columnEntry.selected || columnEntry.where) selected.add(columnEntry);
+         return selected;
+      }
+
+      class ColumnTableModel extends AbstractTableModel {
+
+         final List<QueryColumn> content = new java.util.ArrayList<>();
+
+         ColumnTableModel(List<QueryColumn> queryColumns) {
+            this.content.addAll(queryColumns);
+         }
+
+         @Override
+         public int getRowCount() {
+            return content.size();
+         }
+
+         @Override
+         public int getColumnCount() {
+            return 5;
          }
 
          @Override
          public Object getValueAt(int rowIndex, int columnIndex) {
             switch (columnIndex) {
                case 0:
-                  return content.get(rowIndex).table;
+                  return content.get(rowIndex).tableName;
                case 1:
-                  return content.get(rowIndex).name;
+                  return content.get(rowIndex).columnName;
                case 2:
                   return content.get(rowIndex).selected;
+               case 3:
+                  return content.get(rowIndex).where;
+               case 4:
+                  return content.get(rowIndex).whereOperator;
             }
             return null;
          }
@@ -537,7 +717,11 @@ public class MySQLPlugin extends Plugin {
                case 1:
                   return "Column";
                case 2:
-                  return "Selected";
+                  return "Select";
+               case 3:
+                  return "Where";
+               case 4:
+                  return "Where";
             }
             return "";
          }
@@ -551,20 +735,55 @@ public class MySQLPlugin extends Plugin {
                   return String.class;
                case 2:
                   return Boolean.class;
+               case 3:
+                  return Boolean.class;
+               case 4:
+                  return String.class;
             }
             return Object.class;
          }
 
          @Override
          public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2;
+            return columnIndex == 2 || columnIndex == 3 || columnIndex == 4;
          }
 
          @Override
          public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
-            fireTableCellUpdated(rowIndex, columnIndex);
+
+            switch (columnIndex) {
+               case 2:
+                  content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
+                  fireTableCellUpdated(rowIndex, columnIndex);
+                  break;
+               case 3:
+                  content.get(rowIndex).where = Boolean.valueOf(aValue.toString());
+                  fireTableCellUpdated(rowIndex, columnIndex);
+                  break;
+               case 4:
+                  content.get(rowIndex).whereOperator = aValue == null ? "" : aValue.toString();
+                  fireTableCellUpdated(rowIndex, columnIndex);
+                  break;
+            }
          }
+      }
+   }
+
+   private class QueryColumn {
+
+      private final Node tableNode;
+      private final Node columnNode;
+      private final String columnName;
+      private final String tableName;
+      private boolean selected = false;
+      private boolean where = false;
+      private String whereOperator = null;
+
+      QueryColumn(Node tableNode, Node columnNode) {
+         this.tableNode = tableNode;
+         this.columnNode = columnNode;
+         this.tableName = DomainMotif.getName(tableNode);
+         this.columnName = DomainMotif.getName(columnNode);
       }
    }
 }

@@ -98,8 +98,8 @@ public final class MysqlGroup {
       return new alterTableUpdateForeignKeyConstraintST(stGroup);
    }
 
-   public joinST newjoin() {
-      return new joinST(stGroup);
+   public selectST newselect() {
+      return new selectST(stGroup);
    }
 
    public createTableST newcreateTable() {
@@ -154,8 +154,8 @@ public final class MysqlGroup {
       return new alterTableAddIndexST(stGroup);
    }
 
-   public selectST newselect() {
-      return new selectST(stGroup);
+   public singleSelectST newsingleSelect() {
+      return new singleSelectST(stGroup);
    }
 
    public final class tableFooterST implements MysqlGroupTemplate {
@@ -1435,20 +1435,21 @@ public final class MysqlGroup {
    	}
    }
 
-   public final class joinST implements MysqlGroupTemplate {
+   public final class selectST implements MysqlGroupTemplate {
 
       private java.util.Set<Object> _tables = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _joins = new java.util.LinkedHashSet<>();
       private java.util.Set<Object> _order = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _where = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
-      private joinST(STGroup group) {
-   		template = group.getInstanceOf("join");
+      private selectST(STGroup group) {
+   		template = group.getInstanceOf("select");
    	}
 
-      public joinST addTablesValue(Object value) {
+      public selectST addTablesValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -1462,7 +1463,7 @@ public final class MysqlGroup {
       	return this._tables;
       }
 
-      public joinST addColumnsValue(Object value) {
+      public selectST addColumnsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -1476,13 +1477,15 @@ public final class MysqlGroup {
       	return this._columns;
       }
 
-      public joinST addJoinsValue(Object fk_, Object source_) {
+      public selectST addJoinsValue(Object dstCol_, Object join_, Object srcCol_, Object table_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("fk", (fk_==null || fk_.toString().length()==0) ? null : fk_);
-      	map.put("source", (source_==null || source_.toString().length()==0) ? null : source_);
+      	map.put("dstCol", (dstCol_ == null || dstCol_.toString().length() == 0) ? null : dstCol_);
+      	map.put("join", (join_ == null || join_.toString().length() == 0) ? null : join_);
+      	map.put("srcCol", (srcCol_ == null || srcCol_.toString().length() == 0) ? null : srcCol_);
+      	map.put("table", (table_ == null || table_.toString().length() == 0) ? null : table_);
       	this._joins.add(map);
 
-         template.addAggr("joins.{fk, source}", map.get("fk"), map.get("source"));
+         template.addAggr("joins.{dstCol, join, srcCol, table}", map.get("dstCol"), map.get("join"), map.get("srcCol"), map.get("table"));
          return this;
       }
 
@@ -1490,7 +1493,7 @@ public final class MysqlGroup {
       	return this._joins;
       }
 
-      public joinST addOrderValue(Object value) {
+      public selectST addOrderValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -1502,6 +1505,21 @@ public final class MysqlGroup {
 
       public java.util.Set<Object> getOrderValues() {
       	return this._order;
+      }
+
+      public selectST addWhereValue(Object dst_, Object operator_, Object src_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("dst", (dst_ == null || dst_.toString().length() == 0) ? null : dst_);
+      	map.put("operator", (operator_ == null || operator_.toString().length() == 0) ? null : operator_);
+      	map.put("src", (src_ == null || src_.toString().length() == 0) ? null : src_);
+      	this._where.add(map);
+
+         template.addAggr("where.{dst, operator, src}", map.get("dst"), map.get("operator"), map.get("src"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getWhere() {
+      	return this._where;
       }
 
       @Override
@@ -1728,8 +1746,8 @@ public final class MysqlGroup {
 
       public preparedStatementST addParamsValue(Object name_, Object type_) {
       	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_==null || name_.toString().length()==0) ? null : name_);
-      	map.put("type", (type_==null || type_.toString().length()==0) ? null : type_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
       	this._params.add(map);
 
          template.addAggr("params.{name, type}", map.get("name"), map.get("type"));
@@ -2261,7 +2279,7 @@ public final class MysqlGroup {
    	}
    }
 
-   public final class selectST implements MysqlGroupTemplate {
+   public final class singleSelectST implements MysqlGroupTemplate {
 
       private Object _table;
       private java.util.Set<Object> _columns = new java.util.LinkedHashSet<>();
@@ -2269,11 +2287,11 @@ public final class MysqlGroup {
 
       private final ST template;
 
-      private selectST(STGroup group) {
-   		template = group.getInstanceOf("select");
+      private singleSelectST(STGroup group) {
+   		template = group.getInstanceOf("singleSelect");
    	}
 
-      public selectST setTable(Object value) {
+      public singleSelectST setTable(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -2289,7 +2307,7 @@ public final class MysqlGroup {
       	return (String) this._table;
       }
 
-      public selectST addColumnsValue(Object value) {
+      public singleSelectST addColumnsValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -2303,7 +2321,7 @@ public final class MysqlGroup {
       	return this._columns;
       }
 
-      public selectST addOrderValue(Object value) {
+      public singleSelectST addOrderValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
@@ -2469,11 +2487,7 @@ public final class MysqlGroup {
 			.append("alterTableDropUniqueKey(name,table) ::= <<ALTER TABLE `~table~` DROP INDEX `~name~`;>>\n")
 			.append("alterTableModifyColumn(autoIncrement,column,comment,defaultValue,nullable,onUpdate,table,type) ::= <<ALTER TABLE `~table~` MODIFY COLUMN `~column~` ~type~~if(nullable)~~else~ NOT NULL~endif~~if(autoIncrement)~ auto_increment~endif~~if(defaultValue)~ default ~defaultValue~~endif~~if(onUpdate)~ on update ~onUpdate~~endif~~if(comment)~ COMMENT '~comment~'~endif~;>>\n")
 			.append("alterTableUpdateForeignKeyConstraint(refTable,column,name,onDelete,onUpdate,refColumn,table) ::= <<ALTER TABLE `~table~` DROP FOREIGN KEY `~name~`, ADD CONSTRAINT `~name~` FOREIGN KEY (`~column~`) REFERENCES `~refTable~` (`~refColumn~`) ON DELETE ~if(onDelete)~~onDelete~~else~RESTRICT~endif~ ON UPDATE ~if(onUpdate)~~onUpdate~~else~RESTRICT~endif~;>>\n")
-			.append("join(tables,columns,joins,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~\n" + 
-		"FROM ~tables:{it|~it~};separator=\", \"~~if(joins)~\n" + 
-		"\n" + 
-		"WHERE ~joins:{it|~it.source~=~it.fk~};separator=\" AND \"~~endif~~if(order)~\n" + 
-		"ORDER BY ~order:{it|~it~};separator=\",\"~~endif~;>>\n")
+			.append("select(tables,columns,joins,order,where) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~ FROM ~tables:{it|~it~};separator=\", \"~~if(joins)~ ~joins:{it|~it.join~ ~it.table~ on ~it.srcCol~ = ~it.dstCol~}~~endif~~if(where)~ WHERE ~where:{it|~it.src~~it.operator~~it.dst~};separator=\" AND \"~~endif~~if(order)~ ORDER BY ~order:{it|~it~};separator=\",\"~~endif~>>\n")
 			.append("createTable(columns,footer,keys,name) ::= <<CREATE TABLE `~name~` (~if(columns)~\n" + 
 		"~columns:{it| ~it~};separator=\",\\n\"~~if(keys)~,~endif~~endif~~if(keys)~\n" + 
 		"~keys:{it|~it~};separator=\",\\n\"~~endif~)~if(footer)~\n" + 
@@ -2505,6 +2519,6 @@ public final class MysqlGroup {
 			.append("recreateDatabase(name,script) ::= <<drop database if exists ~name~;\n" + 
 		"~createDatabase(name=name,script=script)~>>\n")
 			.append("alterTableAddIndex(name,table,columns,indexType) ::= <<ALTER TABLE `~table~` ADD INDEX `~name~` ~if(indexType)~USING ~indexType~ ~endif~(~columns:{it|`~it~`}; separator=\", \"~);>>\n")
-			.append("select(table,columns,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~ FROM ~table~~if(order)~ ORDER BY ~order:{it|~it~};separator=\",\"~~endif~;>>\n")
+			.append("singleSelect(table,columns,order) ::= <<SELECT ~columns:{it|~it~};separator=\", \"~ FROM ~table~~if(order)~ ORDER BY ~order:{it|~it~};separator=\",\"~~endif~;>>\n")
 		.toString();
 }

@@ -1,6 +1,8 @@
 package com.generator.generators.project;
 
-import com.generator.app.*;
+import com.generator.app.App;
+import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
@@ -8,16 +10,18 @@ import com.generator.generators.easyFlow.EasyFlowPlugin;
 import com.generator.generators.mobx.MobXAppVisitor;
 import com.generator.generators.mobx.MobXModelVisitor;
 import com.generator.generators.ssh.SSHPlugin;
-import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
+import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import com.generator.util.TextProcessingPanel;
 import com.jcraft.jsch.Session;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
@@ -36,31 +40,14 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 06.08.17.
  */
-public class ProjectPlugin extends Plugin {
-
-   public enum Entities implements Label {
-      Project, Directory, File
-   }
-
-   public enum Relations implements RelationshipType {
-      RENDERER, DIRECTORY, CHILD, FILE
-   }
-
-   public enum Properties {
-      path, fileType, file, filename, dir, extension, className
-   }
+public class ProjectPlugin extends ProjectDomainPlugin {
 
    private enum Filetype {
       java, plain, namedFile, groupFile
    }
 
    public ProjectPlugin(App app) {
-      super(app, "Project");
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+      super(app);
    }
 
    @Override
@@ -86,425 +73,423 @@ public class ProjectPlugin extends Plugin {
    }
 
    @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+   protected void handleProject(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Add Directory", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-      if (hasLabel(neoNode.getNode(), Entities.Project)) {
+            final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+            if (dir == null) return;
 
-         pop.add(new App.TransactionAction("Add Directory", app) {
+            final Node fileNode = getGraph().newNode(Entities.Directory, Properties.path.name(), dir.getPath());
+            relate(neoNode.getNode(), fileNode, Relations.DIRECTORY);
+            fireNodesLoaded(fileNode);
+         }
+      });
+
+      if (hasOutgoing(neoNode.getNode(), Relations.DIRECTORY)) {
+         pop.add(new App.TransactionAction("Render All directories", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
-               if (dir == null) return;
-
-               final Node fileNode = getGraph().newNode(Entities.Directory, Properties.path.name(), dir.getPath());
-               relate(neoNode.getNode(), fileNode, Relations.DIRECTORY);
-               fireNodesLoaded(fileNode);
-            }
-         });
-
-         if (hasOutgoing(neoNode.getNode(), Relations.DIRECTORY)) {
-            pop.add(new App.TransactionAction("Render All directories", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                  outgoing(neoNode.getNode(), Relations.DIRECTORY).forEach(relationship -> renderDirectory(other(neoNode.getNode(), relationship)));
-                  app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-               }
-            });
-         }
-
-      } else if (hasLabel(neoNode.getNode(), Entities.Directory)) {
-
-         if (hasPropertyValue(neoNode.getNode(), Properties.path.name())) {
-            pop.add(new App.TransactionAction("Render " + getString(neoNode.getNode(), Properties.path.name()), app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                  renderDirectory(neoNode.getNode());
-                  app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-               }
-            });
-         }
-
-         final File dir = getFile(neoNode.getNode());
-         if (dir != null && dir.exists()) {
-            pop.add(new App.TransactionAction("Add File", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                  final JTextField txtName = new JTextField();
-                  final JTextField txtExtension = new JTextField();
-
-                  SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu, 100dlu", "pref, 4dlu, pref");
-                  editor.addLabel("Name", 1, 1);
-                  editor.add(txtName, 3, 1);
-                  editor.addLabel("Extension", 1, 3);
-                  editor.add(txtExtension, 3, 3);
-                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-                  SwingUtil.showDialog(editor, app, "New File", new SwingUtil.ConfirmAction() {
-                     @Override
-                     public void verifyAndCommit() throws Exception {
-
-                        final String name = txtName.getText();
-                        final String extension = (txtExtension.getText().startsWith(".") ? txtExtension.getText() : ("." + txtExtension.getText()));
-                        if (name.length() == 0 || extension.length() == 0) return;
-
-                        final File newFile = FileUtil.tryToCreateFileIfNotExists(new File(dir, name + extension));
-
-                        if (newFile.exists()) {
-                           getGraph().doInTransaction(new NeoModel.Committer() {
-                              @Override
-                              public void doAction(Transaction tx) throws Throwable {
-                                 final Node fileNode = getGraph().newNode(Entities.File, AppMotif.Properties.name.name(), name, Properties.extension.name(), extension);
-                                 relate(neoNode.getNode(), fileNode, Relations.FILE);
-                                 fireNodesLoaded(fileNode);
-                              }
-
-                              @Override
-                              public void exception(Throwable throwable) {
-                                 SwingUtil.showException(app, throwable);
-                              }
-                           });
-                        }
-                     }
-                  });
-               }
-            });
-         }
-
-         for (NeoNode selectedNode : selectedNodes) {
-
-            if (NeoUtil.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
-
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
-                  return;
-
-               pop.add(new App.TransactionAction("Add renderer for STGroup " + getNameOrLabelFrom(selectedNode.getNode()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String packageName = SwingUtil.showInputDialog("Package", app);
-                     if (packageName == null) return;
-
-                     final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
-
-                     final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
-                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
-                     rendererRelationship.setProperty("package", packageName);
-                     rendererRelationship.setProperty(Properties.className.name(), className + "Group");
-                  }
-               });
-            }
-
-            if (NeoUtil.hasLabel(selectedNode.getNode(), SSHPlugin.Entities.Path)) {
-
-               pop.add(new App.TransactionAction("Download file from host", app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String hostPath = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
-                     final String target = SwingUtil.showInputDialog("File relative to " + hostPath, app);
-                     if (target == null || target.length() == 0) return;
-
-                     final File localDirectory = getFile(neoNode.getNode());
-
-                     final Session session = SSHPlugin.getSession(other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), SSHPlugin.Relations.PATHS)));
-
-                     SSHPlugin.download(session, localDirectory.getAbsolutePath(), hostPath + target);
-                     session.disconnect();
-                  }
-               });
-            }
-
-            if (NeoUtil.hasLabel(selectedNode.getNode(), EasyFlowPlugin.Entities.Flow)) {
-
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
-                  return;
-
-               pop.add(new App.TransactionAction("Add renderer for FSM", app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String packageName = SwingUtil.showInputDialog("Package", app);
-                     if (packageName == null) return;
-
-                     final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
-
-                     final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
-                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
-                     rendererRelationship.setProperty("package", packageName);
-                     rendererRelationship.setProperty(Properties.className.name(), className);
-                  }
-               });
-            }
-
-            if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Domain)) {
-
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
-                  return;
-
-               pop.add(new App.TransactionAction("Add renderer for visitor " + getNameOrLabelFrom(selectedNode.getNode()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String packageName = SwingUtil.showInputDialog("Package", app);
-                     if (packageName == null) return;
-
-                     final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
-
-                     final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
-                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
-                     rendererRelationship.setProperty("package", packageName);
-                     rendererRelationship.setProperty(Properties.className.name(), className + "Group");
-                  }
-               });
-            }
-
-            if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Entity)) {
-
-               // todo: using Entity.Renderer, try to make a pattern which puts Renderers in apropriate domains (instead of Project-hasLabel(..))
-
-               pop.add(new App.TransactionAction("Add MobX-Model renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String packageName = SwingUtil.showInputDialog("Package", app);
-                     if (packageName == null) return;
-//
-                     final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
-
-                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model", DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
-                     relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
-
-                     final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
-                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
-                     rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
-                     rendererRelationship.setProperty(Properties.file.name(), className);
-                     rendererRelationship.setProperty(Properties.extension.name(), "js");
-
-                     fireNodesLoaded(visitorNode);
-                  }
-               });
-
-               pop.add(new App.TransactionAction("Add MobX-App renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final String packageName = SwingUtil.showInputDialog("Package", app);
-                     if (packageName == null) return;
-//
-                     final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
-
-                     final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX App", DomainPlugin.Properties.visitorClass.name(), MobXAppVisitor.class.getCanonicalName());
-                     relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
-
-                     final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
-                     rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
-                     rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
-                     rendererRelationship.setProperty(Properties.file.name(), className);
-                     rendererRelationship.setProperty(Properties.extension.name(), "js");
-
-                     fireNodesLoaded(visitorNode);
-                  }
-               });
-            }
-
-            final Relationship selectedNodeInstanceRelation = singleIncoming(selectedNode.getNode(), DomainPlugin.Relations.INSTANCE);
-            if (selectedNodeInstanceRelation == null) continue;
-
-            final Node entityNode = other(selectedNode.getNode(), selectedNodeInstanceRelation);
-
-            if (hasLabel(entityNode, StringTemplatePlugin.Entities.STTemplate)) {
-
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
-                  return;
-
-               pop.add(new App.TransactionAction("Add renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                     final Object[] properties = asArray(entityNode);
-
-                     final JRadioButton radJavaFile = new JRadioButton("Java file");
-                     final JComboBox<Object> cboPackageProperty = new JComboBox<>(properties);
-                     SwingUtil.selectByLevensthein(cboPackageProperty, properties, "package");
-                     final JComboBox<Object> cboClassnameProperty = new JComboBox<>(properties);
-                     SwingUtil.selectByLevensthein(cboClassnameProperty, properties, "name");
-
-                     final JRadioButton radPlainFile = new JRadioButton("Plain file");
-                     final JTextField txtPlainFileDir = new JTextField();
-                     final JTextField txtPlainFileExtension = new JTextField();
-                     final JTextField txtFilename = new JTextField();
-
-                     final JRadioButton radNamedFile = new JRadioButton("Plain file");
-                     final JComboBox<Object> cboFilenameProperty = new JComboBox<>(properties);
-                     final JTextField txtNamedFileDir = new JTextField();
-                     final JTextField txtExtension = new JTextField();
-
-                     final ButtonGroup group = new ButtonGroup();
-                     group.add(radJavaFile);
-                     group.add(radPlainFile);
-                     group.add(radNamedFile);
-
-                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
-                     editor.add(radJavaFile, 1, 1);
-                     editor.addLabel("Package", 3, 1);
-                     editor.add(cboPackageProperty, 5, 1);
-                     editor.addLabel(Properties.className.name(), 3, 3);
-                     editor.add(cboClassnameProperty, 5, 3);
-                     editor.add(radPlainFile, 1, 5);
-                     editor.addLabel(Properties.filename.name(), 3, 5);
-                     editor.add(txtFilename, 5, 5);
-                     editor.addLabel(Properties.extension.name(), 3, 7);
-                     editor.add(txtPlainFileExtension, 5, 7);
-                     editor.addLabel("Path", 3, 9);
-                     editor.add(txtPlainFileDir, 5, 9);
-                     editor.add(radNamedFile, 1, 11);
-                     editor.addLabel(Properties.filename.name(), 3, 11);
-                     editor.add(cboFilenameProperty, 5, 11);
-                     editor.addLabel("Path", 3, 13);
-                     editor.add(txtNamedFileDir, 5, 13);
-                     editor.addLabel("Filetype", 3, 15);
-                     editor.add(txtExtension, 5, 15);
-
-                     editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-                     SwingUtil.showDialog(editor, app, "Renderer", new SwingUtil.ConfirmAction() {
-                        @Override
-                        public void verifyAndCommit() throws Exception {
-
-                           getGraph().doInTransaction(new NeoModel.Committer() {
-                              @Override
-                              public void doAction(Transaction tx1) throws Throwable {
-                                 final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
-
-                                 if (radJavaFile.isSelected()) {
-                                    if (cboPackageProperty.getSelectedItem().toString().equals(cboClassnameProperty.getSelectedItem().toString()))
-                                       throw new IllegalStateException("package and classname are using same parameter.");
-                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
-                                    rendererRelationship.setProperty("package", cboPackageProperty.getSelectedItem().toString());
-                                    rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
-
-                                 } else if (radPlainFile.isSelected()) {
-//                              if (txtPlainFileExtension.getText().trim().length() == 0)
-//                                 throw new IllegalStateException("file must have an extension");
-                                    if (txtFilename.getText().trim().length() == 0)
-                                       throw new IllegalStateException("file must be set");
-//                                 if (txtPlainFileDir.getText().trim().length() == 0)
-//                                    throw new IllegalStateException("file must have a path");
-                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
-                                    rendererRelationship.setProperty(Properties.dir.name(), txtPlainFileDir.getText().trim());
-                                    rendererRelationship.setProperty(Properties.file.name(), txtFilename.getText().trim());
-                                    rendererRelationship.setProperty(Properties.extension.name(), txtPlainFileExtension.getText().trim());
-
-                                 } else if (radNamedFile.isSelected()) {
-                                    if (txtExtension.getText().trim().length() == 0)
-                                       throw new IllegalStateException("file must have an extension");
-                                    if (txtNamedFileDir.getText().trim().length() == 0)
-                                       throw new IllegalStateException("file must have a path");
-                                    rendererRelationship.setProperty(Properties.fileType.name(), Filetype.namedFile.name());
-                                    rendererRelationship.setProperty(Properties.filename.name(), cboFilenameProperty.getSelectedItem().toString());
-                                    rendererRelationship.setProperty(Properties.dir.name(), txtNamedFileDir.getText().trim());
-                                    rendererRelationship.setProperty(Properties.extension.name(), txtExtension.getText().trim());
-                                 }
-                              }
-
-                              @Override
-                              public void exception(Throwable throwable) {
-                                 SwingUtil.showException(editor, throwable);
-                              }
-                           });
-                        }
-                     });
-                  }
-
-                  private Object[] asArray(Node templateNode) {
-                     final java.util.List<Object> array = new ArrayList<>();
-                     new DomainPlugin.EntityRelationVisitor() {
-                        @Override
-                        public void onSingle(Node relationNode, Node dstNode) {
-                           if (!hasLabel(dstNode, DomainPlugin.Entities.Property)) return;
-                           array.add(getString(dstNode, AppMotif.Properties.name.name()));
-                        }
-
-                        @Override
-                        public void onList(Node relationNode, Node dstNode) {
-
-                        }
-                     }.visit(templateNode);
-
-                     return array.toArray();
-                  }
-               });
-            }
-         }
-
-
-         pop.add(new JSeparator());
-
-         final File getDir = getFile(neoNode.getNode());
-         if (getDir != null && getDir.exists()) {
-            pop.add(new App.TransactionAction("List directory", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  final StringBuilder out = new StringBuilder();
-                  new ProcessExecutor().directory(getDir).command("ls", "-ltr")
-                        .redirectOutput(new LogOutputStream() {
-                           @Override
-                           protected void processLine(String line) {
-                              out.append(line).append("\n");
-                           }
-                        }).execute();
-                  SwingUtil.showTextResult("List", out.toString().trim(), app);
-               }
-            });
-         }
-
-      } else if (hasLabel(neoNode.getNode(), Entities.File)) {
-
-         pop.add(new App.TransactionAction("Change name", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String oldFilename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
-               final String newFilename = SwingUtil.showInputDialog("Filename", app, oldFilename);
-               if (newFilename == null || newFilename.length() == 0) return;
-
-               final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
-               final File getDir = getFile(directoryNode);
-
-               final String extension = getString(neoNode.getNode(), Properties.extension.name());
-               final File file = new File(getDir, oldFilename + extension);
-
-               if (file.renameTo(new File(getDir, newFilename + extension))) {
-                  neoNode.getNode().setProperty(AppMotif.Properties.name.name(), newFilename);
-                  fireNodeChanged(neoNode.getNode());
-               }
-            }
-         });
-
-         pop.add(new App.TransactionAction("Change type", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String oldExtension = getString(neoNode.getNode(), Properties.extension.name());
-               final String newExtension = SwingUtil.showInputDialog("Type", app, oldExtension);
-               if (newExtension == null || newExtension.length() == 0) return;
-
-               final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
-               final File getDir = getFile(directoryNode);
-
-               final String filename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
-               final File file = new File(getDir, filename + oldExtension);
-
-               if (file.renameTo(new File(getDir, filename + newExtension))) {
-                  neoNode.getNode().setProperty(Properties.extension.name(), newExtension);
-                  fireNodeChanged(neoNode.getNode());
-               }
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+               outgoing(neoNode.getNode(), Relations.DIRECTORY).forEach(relationship -> renderDirectory(other(neoNode.getNode(), relationship)));
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
          });
       }
+   }
+
+   @Override
+   protected void handleDirectory(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      if (hasPropertyValue(neoNode.getNode(), Properties.path.name())) {
+         pop.add(new App.TransactionAction("Render " + getString(neoNode.getNode(), Properties.path.name()), app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+               renderDirectory(neoNode.getNode());
+               app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+         });
+      }
+
+      final File dir = getFile(neoNode.getNode());
+      if (dir != null && dir.exists()) {
+         pop.add(new App.TransactionAction("Add File", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final JTextField txtName = new JTextField();
+               final JTextField txtExtension = new JTextField();
+
+               SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu, 100dlu", "pref, 4dlu, pref");
+               editor.addLabel("Name", 1, 1);
+               editor.add(txtName, 3, 1);
+               editor.addLabel("Extension", 1, 3);
+               editor.add(txtExtension, 3, 3);
+               editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+               SwingUtil.showDialog(editor, app, "New File", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+
+                     final String name = txtName.getText();
+                     final String extension = (txtExtension.getText().startsWith(".") ? txtExtension.getText() : ("." + txtExtension.getText()));
+                     if (name.length() == 0 || extension.length() == 0) return;
+
+                     final File newFile = FileUtil.tryToCreateFileIfNotExists(new File(dir, name + extension));
+
+                     if (newFile.exists()) {
+                        getGraph().doInTransaction(new NeoModel.Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+                              final Node fileNode = getGraph().newNode(Entities.File, AppMotif.Properties.name.name(), name, Properties.extension.name(), extension);
+                              relate(neoNode.getNode(), fileNode, Relations.FILE);
+                              fireNodesLoaded(fileNode);
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showException(app, throwable);
+                           }
+                        });
+                     }
+                  }
+               });
+            }
+         });
+      }
+
+      for (NeoNode selectedNode : selectedNodes) {
+
+         if (NeoUtil.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
+
+            if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+               return;
+
+            pop.add(new App.TransactionAction("Add renderer for STGroup " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null) return;
+
+                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+
+                  final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
+                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.className.name(), className + "Group");
+               }
+            });
+         }
+
+         if (NeoUtil.hasLabel(selectedNode.getNode(), SSHPlugin.Entities.Path)) {
+
+            pop.add(new App.TransactionAction("Download file from host", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String hostPath = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+                  final String target = SwingUtil.showInputDialog("File relative to " + hostPath, app);
+                  if (target == null || target.length() == 0) return;
+
+                  final File localDirectory = getFile(neoNode.getNode());
+
+                  final Session session = SSHPlugin.getSession(other(selectedNode.getNode(), singleIncoming(selectedNode.getNode(), SSHPlugin.Relations.PATHS)));
+
+                  SSHPlugin.download(session, localDirectory.getAbsolutePath(), hostPath + target);
+                  session.disconnect();
+               }
+            });
+         }
+
+         if (NeoUtil.hasLabel(selectedNode.getNode(), EasyFlowPlugin.Entities.Flow)) {
+
+            if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+               return;
+
+            pop.add(new App.TransactionAction("Add renderer for FSM", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null) return;
+
+                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+
+                  final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
+                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.className.name(), className);
+               }
+            });
+         }
+
+         if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Domain)) {
+
+            if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+               return;
+
+            pop.add(new App.TransactionAction("Add renderer for visitor " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null) return;
+
+                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+
+                  final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
+                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.className.name(), className + "Group");
+               }
+            });
+         }
+
+         if (hasLabel(selectedNode.getNode(), DomainPlugin.Entities.Entity)) {
+
+            // todo: using Entity.Renderer, try to make a pattern which puts Renderers in apropriate domains (instead of Project-hasLabel(..))
+
+            pop.add(new App.TransactionAction("Add MobX-Model renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null) return;
+//
+                  final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+
+                  final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX Model", DomainPlugin.Properties.visitorClass.name(), MobXModelVisitor.class.getCanonicalName());
+                  relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
+
+                  final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
+                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                  rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
+                  rendererRelationship.setProperty(Properties.file.name(), className);
+                  rendererRelationship.setProperty(Properties.extension.name(), "js");
+
+                  fireNodesLoaded(visitorNode);
+               }
+            });
+
+            pop.add(new App.TransactionAction("Add MobX-App renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final String packageName = SwingUtil.showInputDialog("Package", app);
+                  if (packageName == null) return;
+//
+                  final String className = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+
+                  final Node visitorNode = getGraph().newNode(DomainPlugin.Entities.Visitor, AppMotif.Properties.name.name(), "MobX App", DomainPlugin.Properties.visitorClass.name(), MobXAppVisitor.class.getCanonicalName());
+                  relate(visitorNode, selectedNode.getNode(), DomainPlugin.Relations.VISITOR);
+
+                  final Relationship rendererRelationship = visitorNode.createRelationshipTo(neoNode.getNode(), Relations.RENDERER);
+                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                  rendererRelationship.setProperty(Properties.dir.name(), GeneratedFile.packageToPath(packageName));
+                  rendererRelationship.setProperty(Properties.file.name(), className);
+                  rendererRelationship.setProperty(Properties.extension.name(), "js");
+
+                  fireNodesLoaded(visitorNode);
+               }
+            });
+         }
+
+         final Relationship selectedNodeInstanceRelation = singleIncoming(selectedNode.getNode(), DomainPlugin.Relations.INSTANCE);
+         if (selectedNodeInstanceRelation == null) continue;
+
+         final Node entityNode = other(selectedNode.getNode(), selectedNodeInstanceRelation);
+
+         if (hasLabel(entityNode, StringTemplatePlugin.Entities.STTemplate)) {
+
+            if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+               return;
+
+            pop.add(new App.TransactionAction("Add renderer for " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Object[] properties = asArray(entityNode);
+
+                  final JRadioButton radJavaFile = new JRadioButton("Java file");
+                  final JComboBox<Object> cboPackageProperty = new JComboBox<>(properties);
+                  SwingUtil.selectByLevensthein(cboPackageProperty, properties, "package");
+                  final JComboBox<Object> cboClassnameProperty = new JComboBox<>(properties);
+                  SwingUtil.selectByLevensthein(cboClassnameProperty, properties, "name");
+
+                  final JRadioButton radPlainFile = new JRadioButton("Plain file");
+                  final JTextField txtPlainFileDir = new JTextField();
+                  final JTextField txtPlainFileExtension = new JTextField();
+                  final JTextField txtFilename = new JTextField();
+
+                  final JRadioButton radNamedFile = new JRadioButton("Plain file");
+                  final JComboBox<Object> cboFilenameProperty = new JComboBox<>(properties);
+                  final JTextField txtNamedFileDir = new JTextField();
+                  final JTextField txtExtension = new JTextField();
+
+                  final ButtonGroup group = new ButtonGroup();
+                  group.add(radJavaFile);
+                  group.add(radPlainFile);
+                  group.add(radNamedFile);
+
+                  final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu,4dlu,100dlu", "pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref,4dlu,pref");
+                  editor.add(radJavaFile, 1, 1);
+                  editor.addLabel("Package", 3, 1);
+                  editor.add(cboPackageProperty, 5, 1);
+                  editor.addLabel(Properties.className.name(), 3, 3);
+                  editor.add(cboClassnameProperty, 5, 3);
+                  editor.add(radPlainFile, 1, 5);
+                  editor.addLabel(Properties.filename.name(), 3, 5);
+                  editor.add(txtFilename, 5, 5);
+                  editor.addLabel(Properties.extension.name(), 3, 7);
+                  editor.add(txtPlainFileExtension, 5, 7);
+                  editor.addLabel("Path", 3, 9);
+                  editor.add(txtPlainFileDir, 5, 9);
+                  editor.add(radNamedFile, 1, 11);
+                  editor.addLabel(Properties.filename.name(), 3, 11);
+                  editor.add(cboFilenameProperty, 5, 11);
+                  editor.addLabel("Path", 3, 13);
+                  editor.add(txtNamedFileDir, 5, 13);
+                  editor.addLabel("Filetype", 3, 15);
+                  editor.add(txtExtension, 5, 15);
+
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+                  SwingUtil.showDialog(editor, app, "Renderer", new SwingUtil.ConfirmAction() {
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        getGraph().doInTransaction(new NeoModel.Committer() {
+                           @Override
+                           public void doAction(Transaction tx1) throws Throwable {
+                              final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
+
+                              if (radJavaFile.isSelected()) {
+                                 if (cboPackageProperty.getSelectedItem().toString().equals(cboClassnameProperty.getSelectedItem().toString()))
+                                    throw new IllegalStateException("package and classname are using same parameter.");
+                                 rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
+                                 rendererRelationship.setProperty("package", cboPackageProperty.getSelectedItem().toString());
+                                 rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
+
+                              } else if (radPlainFile.isSelected()) {
+//                              if (txtPlainFileExtension.getText().trim().length() == 0)
+//                                 throw new IllegalStateException("file must have an extension");
+                                 if (txtFilename.getText().trim().length() == 0)
+                                    throw new IllegalStateException("file must be set");
+//                                 if (txtPlainFileDir.getText().trim().length() == 0)
+//                                    throw new IllegalStateException("file must have a path");
+                                 rendererRelationship.setProperty(Properties.fileType.name(), Filetype.plain.name());
+                                 rendererRelationship.setProperty(Properties.dir.name(), txtPlainFileDir.getText().trim());
+                                 rendererRelationship.setProperty(Properties.file.name(), txtFilename.getText().trim());
+                                 rendererRelationship.setProperty(Properties.extension.name(), txtPlainFileExtension.getText().trim());
+
+                              } else if (radNamedFile.isSelected()) {
+                                 if (txtExtension.getText().trim().length() == 0)
+                                    throw new IllegalStateException("file must have an extension");
+                                 if (txtNamedFileDir.getText().trim().length() == 0)
+                                    throw new IllegalStateException("file must have a path");
+                                 rendererRelationship.setProperty(Properties.fileType.name(), Filetype.namedFile.name());
+                                 rendererRelationship.setProperty(Properties.filename.name(), cboFilenameProperty.getSelectedItem().toString());
+                                 rendererRelationship.setProperty(Properties.dir.name(), txtNamedFileDir.getText().trim());
+                                 rendererRelationship.setProperty(Properties.extension.name(), txtExtension.getText().trim());
+                              }
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showException(editor, throwable);
+                           }
+                        });
+                     }
+                  });
+               }
+
+               private Object[] asArray(Node templateNode) {
+                  final java.util.List<Object> array = new ArrayList<>();
+                  new DomainPlugin.EntityRelationVisitor() {
+                     @Override
+                     public void onSingle(Node relationNode, Node dstNode) {
+                        if (!hasLabel(dstNode, DomainPlugin.Entities.Property)) return;
+                        array.add(getString(dstNode, AppMotif.Properties.name.name()));
+                     }
+
+                     @Override
+                     public void onList(Node relationNode, Node dstNode) {
+
+                     }
+                  }.visit(templateNode);
+
+                  return array.toArray();
+               }
+            });
+         }
+      }
+
+
+      pop.add(new JSeparator());
+
+      final File getDir = getFile(neoNode.getNode());
+      if (getDir != null && getDir.exists()) {
+         pop.add(new App.TransactionAction("List directory", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final StringBuilder out = new StringBuilder();
+               new ProcessExecutor().directory(getDir).command("ls", "-ltr")
+                     .redirectOutput(new LogOutputStream() {
+                        @Override
+                        protected void processLine(String line) {
+                           out.append(line).append("\n");
+                        }
+                     }).execute();
+               SwingUtil.showTextResult("List", out.toString().trim(), app);
+            }
+         });
+      }
+   }
+
+   @Override
+   protected void handleFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Change name", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String oldFilename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
+            final String newFilename = SwingUtil.showInputDialog("Filename", app, oldFilename);
+            if (newFilename == null || newFilename.length() == 0) return;
+
+            final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
+            final File getDir = getFile(directoryNode);
+
+            final String extension = getString(neoNode.getNode(), Properties.extension.name());
+            final File file = new File(getDir, oldFilename + extension);
+
+            if (file.renameTo(new File(getDir, newFilename + extension))) {
+               neoNode.getNode().setProperty(AppMotif.Properties.name.name(), newFilename);
+               fireNodeChanged(neoNode.getNode());
+            }
+         }
+      });
+
+      pop.add(new App.TransactionAction("Change type", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String oldExtension = getString(neoNode.getNode(), Properties.extension.name());
+            final String newExtension = SwingUtil.showInputDialog("Type", app, oldExtension);
+            if (newExtension == null || newExtension.length() == 0) return;
+
+            final Node directoryNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.FILE));
+            final File getDir = getFile(directoryNode);
+
+            final String filename = getString(neoNode.getNode(), AppMotif.Properties.name.name());
+            final File file = new File(getDir, filename + oldExtension);
+
+            if (file.renameTo(new File(getDir, filename + newExtension))) {
+               neoNode.getNode().setProperty(Properties.extension.name(), newExtension);
+               fireNodeChanged(neoNode.getNode());
+            }
+         }
+      });
    }
 
    private void renderDirectory(Node node) {
@@ -542,12 +527,13 @@ public class ProjectPlugin extends Plugin {
    }
 
    @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      if (hasLabel(neoNode.getNode(), Entities.Directory))
-         return new DirectoryEditor(neoNode);
-      if (hasLabel(neoNode.getNode(), Entities.File))
-         return new PlainFileEditor(neoNode);
-      return null;
+   protected JComponent newDirectoryEditor(NeoNode neoNode) {
+      return new DirectoryEditor(neoNode);
+   }
+
+   @Override
+   protected JComponent newFileEditor(NeoNode neoNode) {
+      return new PlainFileEditor(neoNode);
    }
 
    public static void renderToFile(Relationship rendererRelationship, Node statementNode, String content, Node dirNode, App app) {

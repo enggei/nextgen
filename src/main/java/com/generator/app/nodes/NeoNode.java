@@ -543,10 +543,10 @@ public class NeoNode extends PNode {
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                   final String newProperty = SwingUtil.showInputDialog("[Property] [value]", nodeCanvas);
-                  if (newProperty == null || newProperty.split("[ ]").length != 2) return;
+                  if (newProperty == null || newProperty.length() == 0) return;
 
-                  final String property = newProperty.split("[ ]")[0];
-                  final String value = newProperty.split("[ ]")[1];
+                  final String property = newProperty.substring(0, newProperty.indexOf(" "));
+                  final String value = newProperty.substring(newProperty.indexOf(" ") + 1);
                   getNode().setProperty(property, value);
                   workspace.app.events.firePropertyChange(NODE_CHANGED + getNode().getId(), property, value);
                }

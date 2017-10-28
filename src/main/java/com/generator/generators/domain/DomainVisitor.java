@@ -22,13 +22,8 @@ public abstract class DomainVisitor<T> {
    protected final StringBuilder delim = new StringBuilder("");
    protected final boolean debug;
 
-   protected final Node visitorNode;
-   protected final App app;
-
-   public DomainVisitor(boolean debug, Node visitorNode, App app) {
+   public DomainVisitor(boolean debug) {
       this.debug = debug;
-      this.visitorNode = visitorNode;
-      this.app = app;
    }
 
    public T getResult() {
@@ -60,7 +55,8 @@ public abstract class DomainVisitor<T> {
    public void visitRelation(Node node) {
       delim.append("\t");
       if (debug) System.out.println(delim.toString() + getNameAndLabelsFrom(node));
-      visitOutgoing(node, DomainPlugin.Relations.DST);
+      visitOutgoing(node, DomainPlugin.Relations.SRC);   // properties for relation
+      visitOutgoing(node, DomainPlugin.Relations.DST);   // targets for relation
       delim.deleteCharAt(delim.length() - 1);
    }
 

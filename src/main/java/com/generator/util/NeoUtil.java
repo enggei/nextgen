@@ -193,13 +193,19 @@ public abstract class NeoUtil {
       return node.hasProperty(name) ? node.getProperty(name) : defaultValue;
    }
 
-   public static void relate(Node source, Node target, RelationshipType relationshipType) {
-      // if already related, do nothing
-      for (Relationship relationship : outgoing(source, relationshipType))
-         if (target.equals(other(source, relationship)))
-            return;
+   public static void relate(Node source, Node target, RelationshipType relationshipType, Object ... properties) {
 
-      source.createRelationshipTo(target, relationshipType);
+      // if already related, merge properties:
+      for (Relationship relationship : outgoing(source, relationshipType))
+         if (target.equals(other(source, relationship))) {
+            for (int i = 0; i < properties.length; i+=2)
+               relationship.setProperty(properties[i].toString(), properties[i+1]);
+            return;
+         }
+
+      final Relationship relationship = source.createRelationshipTo(target, relationshipType);
+      for (int i = 0; i < properties.length; i+=2)
+         relationship.setProperty(properties[i].toString(), properties[i+1]);
    }
 
    private static boolean hasUUID(Node node) {
