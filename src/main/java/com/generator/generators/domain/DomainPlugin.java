@@ -41,11 +41,6 @@ public class DomainPlugin extends DomainDomainPlugin {
    }
 
    @Override
-   protected Label[] getLabels() {
-      return Entities.values();
-   }
-
-   @Override
    protected void addActionsTo(JMenu menu) {
 
       addShowMenu(menu, Entities.Domain);
