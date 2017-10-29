@@ -10,8 +10,8 @@ public abstract class LuaDomainVisitor {
 		if(hasLabel(node, "Block")) visitBlock(node);
 		else if(hasLabel(node, "String")) visitString(node);
 		else if(hasLabel(node, "Number")) visitNumber(node);
-		else if(hasLabel(node, "Field")) visitField(node);
 		else if(hasLabel(node, "Var")) visitVar(node);
+		else if(hasLabel(node, "Field")) visitField(node);
 		else if(hasLabel(node, "Chunk")) visitChunk(node);
 		else if(hasLabel(node, "Stat")) visitStat(node);
 		else if(hasLabel(node, "Retstat")) visitRetstat(node);
@@ -62,13 +62,13 @@ public abstract class LuaDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitField(Node node) {
+	public void visitVar(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitVar(Node node) {
+	public void visitField(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

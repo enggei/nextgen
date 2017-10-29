@@ -48,106 +48,21 @@ public class urlNodeListener extends urlBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inUser = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
 
 	@Override
-	public void enterUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
-		onEnter(new Node("User", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inUser.push(true);
+	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inString.push(true);
 	}
 
-	public void exitUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
+	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
 		onExit();
-		this.inUser.pop();
+		this.inString.pop();
 	}
 
-	public boolean inUser() {
-      return !inUser.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inLogin = new java.util.Stack<>();
-
-	@Override
-	public void enterLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		onEnter(new Node("Login", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLogin.push(true);
-	}
-
-	public void exitLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
-		onExit();
-		this.inLogin.pop();
-	}
-
-	public boolean inLogin() {
-      return !inLogin.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPassword = new java.util.Stack<>();
-
-	@Override
-	public void enterPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
-		onEnter(new Node("Password", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPassword.push(true);
-	}
-
-	public void exitPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
-		onExit();
-		this.inPassword.pop();
-	}
-
-	public boolean inPassword() {
-      return !inPassword.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFrag = new java.util.Stack<>();
-
-	@Override
-	public void enterFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		onEnter(new Node("Frag", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFrag.push(true);
-	}
-
-	public void exitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
-		onExit();
-		this.inFrag.pop();
-	}
-
-	public boolean inFrag() {
-      return !inFrag.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSearch = new java.util.Stack<>();
-
-	@Override
-	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		onEnter(new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSearch.push(true);
-	}
-
-	public void exitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
-		onExit();
-		this.inSearch.pop();
-	}
-
-	public boolean inSearch() {
-      return !inSearch.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inSearchparameter = new java.util.Stack<>();
-
-	@Override
-	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		onEnter(new Node("Searchparameter", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inSearchparameter.push(true);
-	}
-
-	public void exitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
-		onExit();
-		this.inSearchparameter.pop();
-	}
-
-	public boolean inSearchparameter() {
-      return !inSearchparameter.isEmpty(); 
+	public boolean inString() {
+      return !inString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
@@ -286,21 +201,106 @@ public class urlNodeListener extends urlBaseListener {
       return !inPath.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inUser = new java.util.Stack<>();
 
 	@Override
-	public void enterString(com.generator.generators.url.parser.urlParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inString.push(true);
+	public void enterUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
+		onEnter(new Node("User", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inUser.push(true);
 	}
 
-	public void exitString(com.generator.generators.url.parser.urlParser.StringContext arg) {
+	public void exitUser(com.generator.generators.url.parser.urlParser.UserContext arg) {
 		onExit();
-		this.inString.pop();
+		this.inUser.pop();
 	}
 
-	public boolean inString() {
-      return !inString.isEmpty(); 
+	public boolean inUser() {
+      return !inUser.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLogin = new java.util.Stack<>();
+
+	@Override
+	public void enterLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
+		onEnter(new Node("Login", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLogin.push(true);
+	}
+
+	public void exitLogin(com.generator.generators.url.parser.urlParser.LoginContext arg) {
+		onExit();
+		this.inLogin.pop();
+	}
+
+	public boolean inLogin() {
+      return !inLogin.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPassword = new java.util.Stack<>();
+
+	@Override
+	public void enterPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
+		onEnter(new Node("Password", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPassword.push(true);
+	}
+
+	public void exitPassword(com.generator.generators.url.parser.urlParser.PasswordContext arg) {
+		onExit();
+		this.inPassword.pop();
+	}
+
+	public boolean inPassword() {
+      return !inPassword.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFrag = new java.util.Stack<>();
+
+	@Override
+	public void enterFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
+		onEnter(new Node("Frag", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFrag.push(true);
+	}
+
+	public void exitFrag(com.generator.generators.url.parser.urlParser.FragContext arg) {
+		onExit();
+		this.inFrag.pop();
+	}
+
+	public boolean inFrag() {
+      return !inFrag.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSearch = new java.util.Stack<>();
+
+	@Override
+	public void enterSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		onEnter(new Node("Search", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSearch.push(true);
+	}
+
+	public void exitSearch(com.generator.generators.url.parser.urlParser.SearchContext arg) {
+		onExit();
+		this.inSearch.pop();
+	}
+
+	public boolean inSearch() {
+      return !inSearch.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inSearchparameter = new java.util.Stack<>();
+
+	@Override
+	public void enterSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
+		onEnter(new Node("Searchparameter", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inSearchparameter.push(true);
+	}
+
+	public void exitSearchparameter(com.generator.generators.url.parser.urlParser.SearchparameterContext arg) {
+		onExit();
+		this.inSearchparameter.pop();
+	}
+
+	public boolean inSearchparameter() {
+      return !inSearchparameter.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();

@@ -3,15 +3,15 @@ package com.generator.generators.easyFlow;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-//import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,35 +24,21 @@ import java.util.TreeSet;
 
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasProperty;
-//import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
-//import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
-import static com.generator.generators.easyFlow.EasyFlowPlugin.Entities.*;
-import static com.generator.generators.easyFlow.EasyFlowPlugin.Relations.*;
+import static com.generator.generators.easyFlow.EasyFlowDomainPlugin.Relations.*;
 import static com.generator.generators.project.ProjectPlugin.getFile;
+import static com.generator.generators.project.ProjectPlugin.incomingRENDERER;
 import static com.generator.util.NeoUtil.*;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**
  * Created 03.08.17.
  */
-public class EasyFlowPlugin extends Plugin {
-
-   public enum Entities implements Label {
-      Flow, State, ContextProperty, Event
-   }
-
-   public enum Relations implements RelationshipType {
-      CONTEXT_PROPERTY, FINISH, TO, FROM, ON
-   }
-
-   public enum Properties {
-      extending, modifier, comment, type, value
-   }
+public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
 //   private final Node flowNode;
 
    public EasyFlowPlugin(App app) {
-      super(app, "EasyFlow");
+      super(app);
 
 //      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
 //      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
@@ -80,11 +66,6 @@ public class EasyFlowPlugin extends Plugin {
    }
 
    @Override
-   protected Label[] getLabels() {
-      return Entities.values();
-   }
-
-   @Override
    protected void addActionsTo(JMenu menu) {
 
       addShowMenu(menu, Entities.Flow);
@@ -96,7 +77,7 @@ public class EasyFlowPlugin extends Plugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = getGraph().newNode(Entities.Flow);
+            final Node newNode = newFlow(name);
 //            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
@@ -118,8 +99,8 @@ public class EasyFlowPlugin extends Plugin {
 
       final Node node = neoNode.getNode();
 
-      if (hasLabel(node, Entities.Flow)) {
-         incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render FSM", app) {
+      if (isFlow(node)) {
+         incomingRENDERER(neoNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render FSM", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                renderEasyFlow(rendererRelationship, node);
@@ -169,10 +150,10 @@ public class EasyFlowPlugin extends Plugin {
                setIsInit("true").
                setIsFinish("false");
 
-         if (!hasOutgoing(node, FROM))
+         if (!hasOutgoing(node, Relations.FROM))
             throw new IllegalStateException("Flownode has no initial state");
 
-         final Node initStateNode = NeoUtil.otherOutgoing(node, FROM);
+         final Node initStateNode = NeoUtil.otherOutgoing(node, Relations.FROM);
          final String initStateName = StringUtil.toUpper(getPropertyValue(initStateNode, AppMotif.Properties.name.name()));
          expand(initStateNode, transitST.setState(initStateName), group, events, states, stateComments);
 

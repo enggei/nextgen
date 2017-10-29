@@ -7,15 +7,27 @@ public abstract class XMLParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Document")) visitDocument(node);
+		if(hasLabel(node, "Element")) visitElement(node);
+		else if(hasLabel(node, "Attribute")) visitAttribute(node);
+		else if(hasLabel(node, "Document")) visitDocument(node);
 		else if(hasLabel(node, "Prolog")) visitProlog(node);
 		else if(hasLabel(node, "Content")) visitContent(node);
 		else if(hasLabel(node, "Reference")) visitReference(node);
 		else if(hasLabel(node, "Chardata")) visitChardata(node);
 		else if(hasLabel(node, "Misc")) visitMisc(node);
-		else if(hasLabel(node, "Element")) visitElement(node);
-		else if(hasLabel(node, "Attribute")) visitAttribute(node);
    }
+
+	public void visitElement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAttribute(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitDocument(Node node) {
 		if (visited.contains(node)) return;
@@ -48,18 +60,6 @@ public abstract class XMLParserDomainVisitor {
 	}
 
 	public void visitMisc(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitElement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAttribute(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
