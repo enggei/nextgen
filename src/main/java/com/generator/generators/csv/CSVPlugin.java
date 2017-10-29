@@ -3,6 +3,7 @@ package com.generator.generators.csv;
 import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
+import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
@@ -12,6 +13,7 @@ import org.neo4j.graphdb.Transaction;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -122,6 +124,24 @@ public class CSVPlugin extends CSVDomainPlugin {
                });
             }
          });
+
+         pop.add(new App.TransactionAction("As CSV file", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+               final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+               if (dir == null || !dir.exists()) return;
+
+               String filename = SwingUtil.showInputDialog("Filename", app);
+               if (filename == null || filename.length() == 0) return;
+
+               filename = filename.toLowerCase().endsWith(".csv") ? filename : (filename + ".csv");
+
+               final File file = FileUtil.tryToCreateFileIfNotExists(new File(dir, filename));
+
+               FileUtil.write(toCSV(neoNode.getNode()), file);
+            }
+         });
       }
    }
 
@@ -138,39 +158,44 @@ public class CSVPlugin extends CSVDomainPlugin {
          txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtEditor.setTabSize(3);
          txtEditor.setEditable(false);
-
-         final StringBuilder out = new StringBuilder();
-
-         final Relationship headerRelation = singleOutgoing(neoNode.getNode(), Relations.HEADER);
-         if (headerRelation != null) {
-
-            final Node headerNode = other(neoNode.getNode(), headerRelation);
-
-            final AtomicBoolean first = new AtomicBoolean(true);
-            final java.util.List<Node> columns = new java.util.ArrayList<>();
-            outgoingCOLUMN(headerNode, (relationship, columnNode) -> {
-               out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnNode));
-               first.set(false);
-               columns.add(columnNode);
-            });
-
-            outgoingROW(neoNode.getNode(), (relationship, rowNode) -> {
-
-               out.append("\n");
-
-               final Map<Node, Node> columnValueMap = new LinkedHashMap<>();
-               outgoingVALUE(rowNode, (relationship1, valueNode) -> columnValueMap.put(other(valueNode, NeoUtil.singleOutgoing(valueNode, Relations.COLUMN)), valueNode));
-
-               first.set(true);
-               for (Node column : columns) {
-                  out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnValueMap.get(column)));
-                  first.set(false);
-               }
-            });
-         }
-         txtEditor.setText(out.toString());
+         txtEditor.setText(toCSV(neoNode.getNode()));
 
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
       }
+   }
+
+   public static String toCSV(Node csvNode) {
+
+      final StringBuilder out = new StringBuilder();
+
+      final Relationship headerRelation = singleOutgoing(csvNode, Relations.HEADER);
+      if (headerRelation != null) {
+
+         final Node headerNode = other(csvNode, headerRelation);
+
+         final AtomicBoolean first = new AtomicBoolean(true);
+         final java.util.List<Node> columns = new ArrayList<>();
+         outgoingCOLUMN(headerNode, (relationship, columnNode) -> {
+            out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnNode));
+            first.set(false);
+            columns.add(columnNode);
+         });
+
+         outgoingROW(csvNode, (relationship, rowNode) -> {
+
+            out.append("\n");
+
+            final Map<Node, Node> columnValueMap = new LinkedHashMap<>();
+            outgoingVALUE(rowNode, (relationship1, valueNode) -> columnValueMap.put(other(valueNode, NeoUtil.singleOutgoing(valueNode, Relations.COLUMN)), valueNode));
+
+            first.set(true);
+            for (Node column : columns) {
+               out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnValueMap.get(column)));
+               first.set(false);
+            }
+         });
+      }
+
+      return out.toString();
    }
 }
