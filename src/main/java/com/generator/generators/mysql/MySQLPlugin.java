@@ -2,7 +2,6 @@ package com.generator.generators.mysql;
 
 import com.generator.app.App;
 import com.generator.app.AppMotif;
-import com.generator.app.DomainMotif;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.mysql.parser.MySqlLexer;
 import com.generator.generators.mysql.parser.MySqlParser;
@@ -11,7 +10,6 @@ import com.generator.generators.spring.SpringGroup;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.neo.NeoModel;
 import com.generator.util.MySQLUtil;
-import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
@@ -20,7 +18,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -34,7 +31,6 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -70,14 +66,15 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = newQuery(getGraph(), name);
-            relate(neoNode.getNode(), newNode, Relations.QUERY);
+            final Node newNode = newQuery(name);
+            relateQUERY(neoNode.getNode(), newNode);
             fireNodesLoaded(newNode);
          }
       });
 
       final Set<Node> queryNodes = new LinkedHashSet<>();
-      outgoing(neoNode.getNode(), Relations.QUERY).forEach(relationship -> queryNodes.add(other(neoNode.getNode(), relationship)));
+      outgoingQUERY(neoNode.getNode(), (relationship, queryNode) -> queryNodes.add(queryNode));
+
       if (!queryNodes.isEmpty()) {
          pop.add(new App.TransactionAction("Create DAO for queries", app) {
             @Override
@@ -86,9 +83,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                final SpringGroup.DAOST daost = springGroup.newDAO().
                      setPackage("com.ud.tr.dao").
                      setName("TestDAO").
-                     setDatabase(DomainMotif.getName(neoNode.getNode())).
-                     setHost(getString(neoNode.getNode(), Properties.host.name())).
-                     setUsername(getString(neoNode.getNode(), Properties.username.name())).
+                     setDatabase(getName(neoNode)).
+                     setHost(getHost(neoNode.getNode())).
+                     setUsername(getUsername(neoNode.getNode())).
                      setPort(3306);
 
                for (Node queryNode : queryNodes) {
@@ -113,12 +110,12 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       });
 
       for (NeoNode selectedNode : selectedNodes) {
-         if (hasLabel(selectedNode.getNode(), Entities.Table)) {
-            final String tableName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+         if (isTable(selectedNode.getNode())) {
+            final String tableName = getName(selectedNode.getNode());
             pop.add(new App.TransactionAction("Add " + tableName, app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  relate(neoNode.getNode(), selectedNode.getNode(), Relations.QUERY_TABLE);
+                  relateQUERY_TABLE(neoNode.getNode(), selectedNode.getNode());
                }
             });
          }
@@ -129,27 +126,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-            final List<QueryColumn> queryColumns = new ArrayList<>();
-            final Map<String, QueryColumn> columnNodes = new LinkedHashMap<>();
-
-            outgoing(neoNode.getNode(), Relations.QUERY_TABLE).forEach(tableRelation -> {
-               final Node tableNode = other(neoNode.getNode(), tableRelation);
-               outgoing(tableNode, Relations.COLUMN).forEach(columnRelation -> {
-                  final QueryColumn queryColumn = new QueryColumn(tableNode, other(tableNode, columnRelation));
-                  queryColumns.add(queryColumn);
-                  columnNodes.put(DomainMotif.getName(tableNode) + "." + DomainMotif.getName(queryColumn.columnNode), queryColumn);
-               });
-            });
-
-            outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(relationship -> {
-               final Node columnNode = other(neoNode.getNode(), relationship);
-               final QueryColumn queryColumn = columnNodes.get(DomainMotif.getName(other(columnNode, singleIncoming(columnNode, Relations.COLUMN))) + "." + DomainMotif.getName(columnNode));
-               queryColumn.selected = get(relationship, Properties.inSelect.name());
-               queryColumn.where = get(relationship, Properties.inWhere.name());
-               queryColumn.whereOperator = get(relationship, Properties.whereOperator.name(), "");
-            });
-
-            final SelectQueryColumnPanel editor = new SelectQueryColumnPanel(queryColumns);
+            final SelectQueryColumnPanel editor = new SelectQueryColumnPanel(neoNode.getNode());
 
             SwingUtil.showDialog(editor, app, "Columns", new SwingUtil.ConfirmAction() {
                @Override
@@ -162,9 +139,12 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                         final List<QueryColumn> selectedColumns = editor.getSelectedColumns();
 
                         // select-columns
-                        outgoing(neoNode.getNode(), Relations.QUERY_COLUMN).forEach(Relationship::delete);
+                        outgoingQUERY_COLUMN(neoNode.getNode(), (relationship, other) -> relationship.delete());
                         for (QueryColumn selectedColumn : selectedColumns) {
-                           relate(neoNode.getNode(), selectedColumn.columnNode, Relations.QUERY_COLUMN, Properties.inSelect.name(), selectedColumn.selected, Properties.inWhere.name(), selectedColumn.where, Properties.whereOperator.name(), selectedColumn.whereOperator == null ? "" : selectedColumn.whereOperator);
+                           final Relationship relationship = relateQUERY_COLUMN(neoNode.getNode(), selectedColumn.columnNode);
+                           setInSelect(relationship, selectedColumn.selected);
+                           setInWhere(relationship, selectedColumn.where);
+                           setWhereOperator(relationship, selectedColumn.whereOperator == null ? "" : selectedColumn.whereOperator);
                         }
                      }
 
@@ -180,7 +160,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    }
 
    private SpringGroup.queryMethodST createDao(Node queryNode) {
-      final String name = DomainMotif.getName(queryNode);
+      final String name = getName(queryNode);
 
       final SpringGroup.queryMethodST queryMethodST = springGroup.newqueryMethod().
             setEntity(name + "Result").
@@ -188,15 +168,15 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             setSql(getSql(queryNode));
 
       for (Node column : getSelectColumns(queryNode)) {
-         final String columnName = DomainMotif.getName(column);
-         final String columnType = getString(column, Properties.columnType.name(), "");
+         final String columnName = getName(column);
+         final String columnType = getColumnType(column, "");
          queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
 
       for (Relationship queryColumn : getWhereColumns(queryNode)) {
          final Node column = queryColumn.getEndNode();
-         final String columnName = DomainMotif.getName(column);
-         final String columnType = getString(column, Properties.columnType.name(), "");
+         final String columnName = getName(column);
+         final String columnType = getColumnType(column, "");
          queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
       return queryMethodST;
@@ -209,7 +189,6 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-
          }
       });
 
@@ -219,26 +198,6 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
          }
       });
-   }
-
-   @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-
-      if (NeoUtil.hasLabel(neoNode.getNode(), "ColCreateTable")) {
-         pop.add(new App.TransactionAction("As Pojo", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               NeoUtil.outgoing(neoNode.getNode(), RelationshipType.withName("child")).forEach(relationship -> {
-                  final Node other = NeoUtil.other(neoNode.getNode(), relationship);
-
-               });
-            }
-         });
-
-      } else {
-         super.handleNodeRightClick(pop, neoNode, selectedNodes);
-      }
    }
 
    @Override
@@ -357,12 +316,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          txtEditor.setTabSize(3);
          txtEditor.setEditable(false);
 
-         final StringBuilder out = new StringBuilder(getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+         final StringBuilder out = new StringBuilder(MySQLDomainPlugin.getName(neoNode.getNode()));
 
-         outgoing(neoNode.getNode(), Relations.COLUMN).forEach(columnRelation -> {
-            final Node columnNode = other(neoNode.getNode(), columnRelation);
-            out.append("\n\t").append(getString(columnNode, AppMotif.Properties.name.name())).append(" ").append(getString(columnNode, Properties.columnType.name()));
-         });
+         outgoingCOLUMN(neoNode.getNode(), (relationship, columnNode) -> out.append("\n\t").append(MySQLPlugin.getName(columnNode)).append(" ").append(getColumnType(columnNode, "")));
          txtEditor.setText(out.toString());
 
          add(new JScrollPane(txtEditor), BorderLayout.CENTER);
@@ -425,7 +381,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                @Override
                public void doAction(Transaction tx) throws Throwable {
                   try {
-                     sessions.put(dbNode, new MySQLSession(getString(dbNode, Properties.host.name()), DomainMotif.getName(dbNode), getString(dbNode, Properties.username.name()), new String(password)));
+                     sessions.put(dbNode, new MySQLSession(getHost(dbNode), MySQLDomainPlugin.getName(dbNode), getUsername(dbNode), new String(password)));
                   } catch (Throwable t) {
                      SwingUtil.showException(app, t);
                   }
@@ -531,12 +487,10 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             getGraph().doInTransaction(new NeoModel.Committer() {
                @Override
                public void doAction(Transaction tx) throws Throwable {
-
                   if ((aValue == null || aValue.toString().length() == 0)) {
-                     if (whereParam.column.hasProperty(Properties.lastParam.name()))
-                        whereParam.column.removeProperty(Properties.lastParam.name());
+                     removeLastParam(whereParam.column);
                   } else
-                     whereParam.column.setProperty(Properties.lastParam.name(), aValue);
+                     setLastParam(whereParam.column, aValue);
                }
 
                @Override
@@ -563,8 +517,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
             WhereParam(Relationship whereColumn) {
                this.column = whereColumn;
-               this.name = DomainMotif.getName(whereColumn.getEndNode());
-               this.value = getString(whereColumn, Properties.lastParam.name(), "");
+               this.name = MySQLDomainPlugin.getName(whereColumn.getEndNode());
+               this.value = getLastParam(whereColumn, "");
             }
          }
       }
@@ -577,22 +531,20 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       final MysqlGroup.selectST selectST = mysqlGroup.newselect();
 
       final Set<Node> tables = new LinkedHashSet<>();
-      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
-         final Node columnNode = other(queryNode, queryColumnRelation);
+      outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, columnNode) -> {
          final Node tableNode = other(columnNode, singleIncoming(columnNode, Relations.COLUMN));
 
          if (!tables.contains(tableNode)) {
             tables.add(tableNode);
-            selectST.addTablesValue(DomainMotif.getName(tableNode) + " " + StringUtil.lowFirst(DomainMotif.getName(tableNode)));
+            selectST.addTablesValue(getName(tableNode) + " " + StringUtil.lowFirst(getName(tableNode)));
          }
 
-         if (get(queryColumnRelation, Properties.inSelect.name())) {
-            selectST.addColumnsValue(StringUtil.lowFirst(DomainMotif.getName(tableNode)) + "." + DomainMotif.getName(columnNode));
+         if (getInSelect(queryColumnRelation)) {
+            selectST.addColumnsValue(StringUtil.lowFirst(getName(tableNode)) + "." + getName(columnNode));
          }
 
-         if (get(queryColumnRelation, Properties.inWhere.name())) {
-            final String operator = getString(queryColumnRelation, Properties.whereOperator.name());
-            selectST.addWhereValue("?", operator, StringUtil.lowFirst(DomainMotif.getName(tableNode)) + "." + DomainMotif.getName(columnNode));
+         if (getInWhere(queryColumnRelation)) {
+            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), StringUtil.lowFirst(getName(tableNode)) + "." + getName(columnNode));
          }
       });
 
@@ -600,22 +552,10 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       if (tables.size() > 1) {
          final Map<Node, Node> fkColumns = new LinkedHashMap<>();
          for (Node table : tables) {
-            outgoing(table, Relations.COLUMN).forEach(new Consumer<Relationship>() {
-               @Override
-               public void accept(Relationship relationship) {
-                  final Node columnNode = other(table, relationship);
-
-                  outgoing(columnNode, Relations.FK_SRC).forEach(new Consumer<Relationship>() {
-                     @Override
-                     public void accept(Relationship relationship) {
-                        fkColumns.put(columnNode, other(columnNode, relationship));
-                     }
-                  });
-               }
-            });
+            outgoingCOLUMN(table, (relationship, columnNode) -> outgoingFK_SRC(columnNode, (fkRelation, fkColumn) -> fkColumns.put(columnNode, fkColumn)));
          }
 
-//         where.append(firstWhereColumn.get() ? "" : " AND ").append(StringUtil.lowFirst(DomainMotif.getName(tableNode))).append(".").append(DomainMotif.getName(columnNode)).append(operator).append("?");
+//         where.append(firstWhereColumn.get() ? "" : " AND ").append(StringUtil.lowFirst(getName(tableNode))).append(".").append(getName(columnNode)).append(operator).append("?");
       }
 
       return selectST.toString();
@@ -624,9 +564,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    @NotNull
    private static Set<Node> getSelectColumns(Node queryNode) {
       final Set<Node> columns = new LinkedHashSet<>();
-      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
-         if (!(Boolean) get(queryColumnRelation, Properties.inSelect.name())) return;
-         columns.add(other(queryNode, queryColumnRelation));
+      outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
+         if (getInSelect(queryColumnRelation)) columns.add(other(queryNode, queryColumnRelation));
       });
       return columns;
    }
@@ -634,9 +573,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    @NotNull
    private static Set<Relationship> getWhereColumns(Node queryNode) {
       final Set<Relationship> columns = new LinkedHashSet<>();
-      outgoing(queryNode, Relations.QUERY_COLUMN).forEach(queryColumnRelation -> {
-         if (!(Boolean) (get(queryColumnRelation, Properties.inWhere.name()))) return;
-         columns.add(queryColumnRelation);
+      outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
+         if (getInWhere(queryColumnRelation)) columns.add(queryColumnRelation);
       });
       return columns;
    }
@@ -645,12 +583,35 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       private final JTable tblColumns;
 
-      SelectQueryColumnPanel(List<QueryColumn> queryColumns) {
+      SelectQueryColumnPanel(Node queryNode) {
          super(new BorderLayout());
+
+         final List<QueryColumn> queryColumns = new ArrayList<>();
+         final Map<String, QueryColumn> columnNodes = new LinkedHashMap<>();
+
+         outgoingQUERY_TABLE(queryNode, (relationship, tableNode) -> outgoingCOLUMN(tableNode, (columnRelation, columnNode) -> {
+            final QueryColumn queryColumn = new QueryColumn(tableNode, columnNode);
+            queryColumns.add(queryColumn);
+            columnNodes.put(MySQLDomainPlugin.getName(tableNode) + "." + MySQLDomainPlugin.getName(queryColumn.columnNode), queryColumn);
+         }));
+
+         outgoingQUERY_COLUMN(queryNode, (relationship, columnNode) -> {
+            final QueryColumn queryColumn = columnNodes.get(MySQLDomainPlugin.getName(other(columnNode, singleIncoming(columnNode, Relations.COLUMN))) + "." + MySQLDomainPlugin.getName(columnNode));
+            queryColumn.selected = getInSelect(relationship);
+            queryColumn.where = getInWhere(relationship);
+            queryColumn.whereOperator = getWhereOperator(relationship, "");
+         });
 
          tblColumns = new JTable(new ColumnTableModel(queryColumns));
          tblColumns.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(createOperatorComboBox()));
          add(new JScrollPane(tblColumns), BorderLayout.NORTH);
+
+         outgoingQUERY_TABLE(queryNode, new RelationConsumer() {
+            @Override
+            public void accept(Relationship relationship, Node other) {
+
+            }
+         });
       }
 
       private JComboBox createOperatorComboBox() {
@@ -782,8 +743,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       QueryColumn(Node tableNode, Node columnNode) {
          this.tableNode = tableNode;
          this.columnNode = columnNode;
-         this.tableName = DomainMotif.getName(tableNode);
-         this.columnName = DomainMotif.getName(columnNode);
+         this.tableName = getName(tableNode);
+         this.columnName = getName(columnNode);
       }
    }
 }

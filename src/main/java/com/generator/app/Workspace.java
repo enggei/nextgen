@@ -519,6 +519,13 @@ public final class Workspace extends JPanel {
 
                final Random random = new Random(System.currentTimeMillis());
                for (NeoNode neoNode : getAllNodes()) {
+
+                  final Point2D offset = neoNode.getOffset();
+                  if (offset.getX() >= startX && offset.getX() <= (bounds2D.getWidth() + startX))
+                     if (offset.getY() >= startY && offset.getY() <= (bounds2D.getWidth() + startY))
+                        continue;
+
+
                   double nodeX = random.nextInt((int) bounds2D.getWidth()) + startX;
                   double nodeY = random.nextInt((int) bounds2D.getHeight()) + startY;
                   neoNode.setOffset(new Point2D.Double(nodeX, nodeY));
@@ -595,6 +602,57 @@ public final class Workspace extends JPanel {
                         relations.add(selectedRelation.getRelationship());
                      app.model.deleteRelations(relations);
                   }
+               }
+            });
+
+            pop.add(new App.TransactionAction("Change Property name for selected relations", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Set<String> existing = new LinkedHashSet<>();
+                  for (NeoRelationship selectedRelation : selectedRelations) {
+                     for (String property : selectedRelation.getRelationship().getPropertyKeys())
+                        existing.add(property);
+                  }
+
+                  final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+                  final JTextField txtNewProperty = new JTextField();
+
+                  final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                  editor.addLabel("Old Property", 1, 1);
+                  editor.add(cboExisting, 3, 1);
+                  editor.addLabel("New Property", 1, 3);
+                  editor.add(txtNewProperty, 3, 3);
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                  SwingUtil.showDialog(editor, app, "New Property", new SwingUtil.ConfirmAction() {
+
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        final String newPropertyName = txtNewProperty.getText().trim();
+                        final String existingPropertyName = (String) cboExisting.getSelectedItem();
+
+                        app.model.graph().doInTransaction(new Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+
+                              for (NeoRelationship selectedRelation : selectedRelations) {
+                                 final Relationship relationship = selectedRelation.getRelationship();
+                                 if(relationship.hasProperty(existingPropertyName)) {
+                                    relationship.setProperty(newPropertyName, relationship.getProperty(existingPropertyName));
+                                    relationship.removeProperty(existingPropertyName);
+                                 }
+                              }
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showExceptionNoStack(app, throwable);
+                           }
+                        });
+                     }
+                  });
                }
             });
          }

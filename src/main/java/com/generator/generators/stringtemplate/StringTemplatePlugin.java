@@ -409,7 +409,7 @@ public class StringTemplatePlugin extends Plugin {
    }
 
    public static void renderSTGGroup(Node node, Relationship rendererRelationship) {
-      final String packageName = getString(rendererRelationship, "package");
+      final String packageName = getString(rendererRelationship, "packageName");
       final String groupName = StringUtil.capitalize(getString(node, AppMotif.Properties.name.name())) + "Group";
       final File targetDir = getFile(other(node, rendererRelationship));
 

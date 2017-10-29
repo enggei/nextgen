@@ -62,7 +62,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             final String name = SwingUtil.showInputDialog("Project name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = getGraph().newNode(Entities.Project);
+            final Node newNode = newProject(name);
 
             // set name-property = name
             relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
@@ -81,8 +81,8 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
             if (dir == null) return;
 
-            final Node fileNode = getGraph().newNode(Entities.Directory, Properties.path.name(), dir.getPath());
-            relate(neoNode.getNode(), fileNode, Relations.DIRECTORY);
+            final Node fileNode = setPath(newDirectory(), dir.getPath());
+            relateDIRECTORY(neoNode.getNode(), fileNode);
             fireNodesLoaded(fileNode);
          }
       });
@@ -92,7 +92,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                app.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-               outgoing(neoNode.getNode(), Relations.DIRECTORY).forEach(relationship -> renderDirectory(other(neoNode.getNode(), relationship)));
+               outgoingDIRECTORY(neoNode.getNode(), (relationship, other) -> renderDirectory(other));
                app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
          });
@@ -142,8 +142,8 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                         getGraph().doInTransaction(new NeoModel.Committer() {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
-                              final Node fileNode = getGraph().newNode(Entities.File, AppMotif.Properties.name.name(), name, Properties.extension.name(), extension);
-                              relate(neoNode.getNode(), fileNode, Relations.FILE);
+                              final Node fileNode = setExtension(newFile(name), extension);
+                              relateFILE(neoNode.getNode(), fileNode);
                               fireNodesLoaded(fileNode);
                            }
 

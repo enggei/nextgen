@@ -19,12 +19,15 @@ import static com.generator.util.NeoUtil.*;
 public class DomainMotif {
 
    public static String getName(NeoNode neoNode) {
-      return getString(neoNode.getNode(), AppMotif.Properties.name.name());
+      return getName(neoNode.getNode());
    }
 
    public static String getName(Node node) {
-      return getString(node, AppMotif.Properties.name.name());
+      return getString(node, AppMotif.Properties.name.name(), "");
    }
+
+   public static void setName(Node node, String name) { node.setProperty(AppMotif.Properties.name.name(), name); }
+   public static void setName(NeoNode neoNode, String name) { setName(neoNode.getNode(), name); }
 
    public static void newEntityProperty(NeoModel graph, Node srcEntity, String name) {
       newEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.findOrCreate(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
@@ -114,4 +117,6 @@ public class DomainMotif {
    public static boolean hasProperty(Node node, String propertyName) {
       return hasOutgoing(node, RelationshipType.withName(propertyName));
    }
+
+
 }

@@ -48,8 +48,8 @@ public final class DomainPluginGroup {
 
    public final class DomainPluginST implements DomainPluginGroupTemplate {
 
+      private Object _packageName;
       private Object _name;
-      private Object _package;
       private java.util.Set<java.util.Map<String, Object>> _entities = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _properties = new java.util.LinkedHashSet<>();
       private java.util.Set<java.util.Map<String, Object>> _relations = new java.util.LinkedHashSet<>();
@@ -60,6 +60,22 @@ public final class DomainPluginGroup {
       private DomainPluginST(STGroup group) {
    		template = group.getInstanceOf("DomainPlugin");
    	}
+
+      public DomainPluginST setPackageName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._packageName == null) {
+            this._packageName = value;
+         	template.add("packageName", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackageName() {
+      	return (String) this._packageName;
+      }
 
       public DomainPluginST setName(Object value) {
       	if (value == null || value.toString().length() == 0)
@@ -75,22 +91,6 @@ public final class DomainPluginGroup {
 
       public String getName() {
       	return (String) this._name;
-      }
-
-      public DomainPluginST setPackage(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._package == null) {
-            this._package = value;
-         	template.add("package", value);
-         }
-
-      	return this;
-      }
-
-      public String getPackage() {
-      	return (String) this._package;
       }
 
       public DomainPluginST addEntitiesValue(Object name_) {
@@ -284,12 +284,13 @@ public final class DomainPluginGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
-			.append("DomainPlugin(name,package,entities,properties,relations,title) ::= <<package ~package~;\n" + 
+			.append("DomainPlugin(packageName,name,entities,properties,relations,title) ::= <<package ~packageName~;\n" + 
 		"\n" + 
 		"import com.generator.app.App;\n" + 
 		"import com.generator.app.AppMotif;\n" + 
 		"import com.generator.app.Plugin;\n" + 
 		"import com.generator.app.nodes.NeoNode;\n" + 
+		"import com.generator.app.DomainMotif;\n" + 
 		"import com.generator.neo.NeoModel;\n" + 
 		"import org.neo4j.graphdb.*;\n" + 
 		"\n" + 
@@ -326,12 +327,12 @@ public final class DomainPluginGroup {
 		"\n" + 
 		"   @Override\n" + 
 		"   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {\n" + 
-		"		~entities:{it|if(hasLabel(neoNode.getNode(), Entities.~it.name~)) handle~it.name~(pop, neoNode, selectedNodes);};separator=\"\\n\"~\n" + 
+		"		~entities:{it|if (is~it.name~(neoNode.getNode())) handle~it.name~(pop, neoNode, selectedNodes);};separator=\"\\n\"~\n" + 
 		"   }\n" + 
 		"\n" + 
 		"   @Override\n" + 
 		"   public JComponent getEditorFor(NeoNode neoNode) {\n" + 
-		"		~entities:{it|if(hasLabel(neoNode.getNode(), Entities.~it.name~)) return new~it.name~Editor(neoNode);};separator=\"\\n\"~\n" + 
+		"		~entities:{it|if (is~it.name~(neoNode.getNode())) return new~it.name~Editor(neoNode);};separator=\"\\n\"~\n" + 
 		"      return null;\n" + 
 		"   }\n" + 
 		"\n" + 
@@ -339,10 +340,39 @@ public final class DomainPluginGroup {
 		"\n" + 
 		"	~entities:{it|protected JComponent new~it.name~Editor(NeoNode neoNode) { return null; ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	~entities:{it|protected Node new~it.name~(String name) { return new~it.name~(getGraph(), name); ~eom()~ };separator=\"\\n\"~\n" + 
+		"	~entities:{it|protected Node new~it.name~(String name) { return new~it.name~(getGraph(), name); ~eom()~\n" + 
+		"protected Node new~it.name~() { return new~it.name~(getGraph()); ~eom()~ };separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	~entities:{it|public static Node new~it.name~(NeoModel graph, String name) { return graph.newNode(Entities.~it.name~, AppMotif.Properties.name.name(), name); ~eom()~ };separator=\"\\n\"~\n" + 
+		"	~entities:{it|public static boolean is~it.name~(Node node) { return hasLabel(node, Entities.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
+		"	~entities:{it|public static Node new~it.name~(NeoModel graph, String name) { return graph.newNode(Entities.~it.name~, AppMotif.Properties.name.name(), name); ~eom()~\n" + 
+		"public static Node new~it.name~(NeoModel graph) { return graph.newNode(Entities.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~relations:{it|public static void outgoing~it.name~(Node src, RelationConsumer consumer) { outgoing(src, Relations.~it.name~).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); ~eom()~\n" + 
+		"public static void incoming~it.name~(Node src, RelationConsumer consumer) { incoming(src, Relations.~it.name~).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); ~eom()~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~relations:{it|public static Relationship relate~it.name~(Node src, Node dst) { return relate(src, dst, Relations.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	public static String getName(Node node) { return DomainMotif.getName(node); }\n" + 
+		"	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }\n" + 
+		"	public static void setName(Node node, String name) { DomainMotif.setName(node, name); }\n" + 
+		"	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }\n" + 
+		"	\n" + 
+		"	~properties:{it|public static <T> T get~it.name;format=\"capitalize\"~(PropertyContainer container) { return get(container, Properties.~it.name~.name()); ~eom()~\n" + 
+		"public static <T> T get~it.name;format=\"capitalize\"~(PropertyContainer container, T defaultValue) { return has(container, Properties.~it.name~.name()) ? get(container, Properties.~it.name~.name()) : defaultValue; ~eom()~\n" + 
+		"public static boolean has~it.name;format=\"capitalize\"~(PropertyContainer container) { return has(container, Properties.~it.name~.name()); ~eom()~\n" + 
+		"public static <T extends PropertyContainer> T set~it.name;format=\"capitalize\"~(T container, Object value) {\n" + 
+		"	if (value == null)\n" + 
+		"   	container.removeProperty(Properties.~it.name~.name());\n" + 
+		"   else\n" + 
+		"   	container.setProperty(Properties.~it.name~.name(), value);\n" + 
+		"   return container;\n" + 
+		"~eom()~\n" + 
+		"public static <T extends PropertyContainer> T remove~it.name;format=\"capitalize\"~(T container) {\n" + 
+		"	if (has(container, Properties.~it.name~.name())) container.removeProperty(Properties.~it.name~.name());\n" + 
+		"      return container;\n" + 
+		"~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"}>>\n")
 		.toString();
 }

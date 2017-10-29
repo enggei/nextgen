@@ -5,7 +5,7 @@ import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.domain.DomainPlugin;
+//import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.NeoUtil;
@@ -24,8 +24,8 @@ import java.util.TreeSet;
 
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasProperty;
-import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
-import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
+//import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
+//import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Entities.*;
 import static com.generator.generators.easyFlow.EasyFlowPlugin.Relations.*;
 import static com.generator.generators.project.ProjectPlugin.getFile;
@@ -49,34 +49,34 @@ public class EasyFlowPlugin extends Plugin {
       extending, modifier, comment, type, value
    }
 
-   private final Node flowNode;
+//   private final Node flowNode;
 
    public EasyFlowPlugin(App app) {
       super(app, "EasyFlow");
 
-      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
-      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
-      DomainMotif.newEntityProperty(getGraph(), flowNode, AppMotif.Properties.name.name());
-      DomainMotif.newEntityProperty(getGraph(), flowNode, Properties.extending.name());
-      relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
-
-      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
-      DomainMotif.newEntityProperty(getGraph(), stateNode, AppMotif.Properties.name.name());
-
-      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, AppMotif.Properties.name.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.modifier.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.comment.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.type.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.value.name());
-
-      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
-      DomainMotif.newEntityProperty(getGraph(), eventNode, AppMotif.Properties.name.name());
-
-      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
-      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, contextPropertyNode);
-      DomainMotif.newEntityRelation(getGraph(), stateNode, Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, eventNode);
-      DomainMotif.newEntityRelation(getGraph(), eventNode, Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
+//      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
+//      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
+//      DomainMotif.newEntityProperty(getGraph(), flowNode, AppMotif.Properties.name.name());
+//      DomainMotif.newEntityProperty(getGraph(), flowNode, Properties.extending.name());
+//      relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
+//
+//      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
+//      DomainMotif.newEntityProperty(getGraph(), stateNode, AppMotif.Properties.name.name());
+//
+//      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, AppMotif.Properties.name.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.modifier.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.comment.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.type.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.value.name());
+//
+//      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
+//      DomainMotif.newEntityProperty(getGraph(), eventNode, AppMotif.Properties.name.name());
+//
+//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
+//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, contextPropertyNode);
+//      DomainMotif.newEntityRelation(getGraph(), stateNode, Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, eventNode);
+//      DomainMotif.newEntityRelation(getGraph(), eventNode, Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
    }
 
    @Override
@@ -97,7 +97,7 @@ public class EasyFlowPlugin extends Plugin {
             if (name == null || name.length() == 0) return;
 
             final Node newNode = getGraph().newNode(Entities.Flow);
-            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
+//            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
             relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
@@ -105,12 +105,12 @@ public class EasyFlowPlugin extends Plugin {
          }
       });
 
-      menu.add(new App.TransactionAction("Show domain", app) {
-         @Override
-         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(flowNode);
-         }
-      });
+//      menu.add(new App.TransactionAction("Show domain", app) {
+//         @Override
+//         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//            fireNodesLoaded(flowNode);
+//         }
+//      });
    }
 
    @Override
@@ -135,7 +135,7 @@ public class EasyFlowPlugin extends Plugin {
 
    public static void renderEasyFlow(Relationship rendererRelationship, Node node) {
 
-      final String packageName = getString(rendererRelationship, "package");
+      final String packageName = getString(rendererRelationship, "packageName");
       final String name = getPropertyValue(node, AppMotif.Properties.name.name());
       final File targetDir = getFile(other(node, rendererRelationship));
 

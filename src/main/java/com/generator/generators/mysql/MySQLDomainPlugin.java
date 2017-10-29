@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
+import com.generator.app.DomainMotif;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 
@@ -40,20 +41,20 @@ abstract class MySQLDomainPlugin extends Plugin {
 
    @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-		if(hasLabel(neoNode.getNode(), Entities.Database)) handleDatabase(pop, neoNode, selectedNodes);
-		if(hasLabel(neoNode.getNode(), Entities.Table)) handleTable(pop, neoNode, selectedNodes);
-		if(hasLabel(neoNode.getNode(), Entities.Column)) handleColumn(pop, neoNode, selectedNodes);
-		if(hasLabel(neoNode.getNode(), Entities.ForeignKey)) handleForeignKey(pop, neoNode, selectedNodes);
-		if(hasLabel(neoNode.getNode(), Entities.Query)) handleQuery(pop, neoNode, selectedNodes);
+		if (isDatabase(neoNode.getNode())) handleDatabase(pop, neoNode, selectedNodes);
+		if (isTable(neoNode.getNode())) handleTable(pop, neoNode, selectedNodes);
+		if (isColumn(neoNode.getNode())) handleColumn(pop, neoNode, selectedNodes);
+		if (isForeignKey(neoNode.getNode())) handleForeignKey(pop, neoNode, selectedNodes);
+		if (isQuery(neoNode.getNode())) handleQuery(pop, neoNode, selectedNodes);
    }
 
    @Override
    public JComponent getEditorFor(NeoNode neoNode) {
-		if(hasLabel(neoNode.getNode(), Entities.Database)) return newDatabaseEditor(neoNode);
-		if(hasLabel(neoNode.getNode(), Entities.Table)) return newTableEditor(neoNode);
-		if(hasLabel(neoNode.getNode(), Entities.Column)) return newColumnEditor(neoNode);
-		if(hasLabel(neoNode.getNode(), Entities.ForeignKey)) return newForeignKeyEditor(neoNode);
-		if(hasLabel(neoNode.getNode(), Entities.Query)) return newQueryEditor(neoNode);
+		if (isDatabase(neoNode.getNode())) return newDatabaseEditor(neoNode);
+		if (isTable(neoNode.getNode())) return newTableEditor(neoNode);
+		if (isColumn(neoNode.getNode())) return newColumnEditor(neoNode);
+		if (isForeignKey(neoNode.getNode())) return newForeignKeyEditor(neoNode);
+		if (isQuery(neoNode.getNode())) return newQueryEditor(neoNode);
       return null;
    }
 
@@ -69,16 +70,180 @@ abstract class MySQLDomainPlugin extends Plugin {
 	protected JComponent newForeignKeyEditor(NeoNode neoNode) { return null; }
 	protected JComponent newQueryEditor(NeoNode neoNode) { return null; }
 
-	protected Node newDatabase(String name) { return newDatabase(getGraph(), name); } 
-	protected Node newTable(String name) { return newTable(getGraph(), name); } 
-	protected Node newColumn(String name) { return newColumn(getGraph(), name); } 
-	protected Node newForeignKey(String name) { return newForeignKey(getGraph(), name); } 
-	protected Node newQuery(String name) { return newQuery(getGraph(), name); } 
+	protected Node newDatabase(String name) { return newDatabase(getGraph(), name); }
+	protected Node newDatabase() { return newDatabase(getGraph()); } 
+	protected Node newTable(String name) { return newTable(getGraph(), name); }
+	protected Node newTable() { return newTable(getGraph()); } 
+	protected Node newColumn(String name) { return newColumn(getGraph(), name); }
+	protected Node newColumn() { return newColumn(getGraph()); } 
+	protected Node newForeignKey(String name) { return newForeignKey(getGraph(), name); }
+	protected Node newForeignKey() { return newForeignKey(getGraph()); } 
+	protected Node newQuery(String name) { return newQuery(getGraph(), name); }
+	protected Node newQuery() { return newQuery(getGraph()); } 
 
-	public static Node newDatabase(NeoModel graph, String name) { return graph.newNode(Entities.Database, AppMotif.Properties.name.name(), name); } 
-	public static Node newTable(NeoModel graph, String name) { return graph.newNode(Entities.Table, AppMotif.Properties.name.name(), name); } 
-	public static Node newColumn(NeoModel graph, String name) { return graph.newNode(Entities.Column, AppMotif.Properties.name.name(), name); } 
-	public static Node newForeignKey(NeoModel graph, String name) { return graph.newNode(Entities.ForeignKey, AppMotif.Properties.name.name(), name); } 
-	public static Node newQuery(NeoModel graph, String name) { return graph.newNode(Entities.Query, AppMotif.Properties.name.name(), name); } 
+	public static boolean isDatabase(Node node) { return hasLabel(node, Entities.Database); }
+	public static boolean isTable(Node node) { return hasLabel(node, Entities.Table); }
+	public static boolean isColumn(Node node) { return hasLabel(node, Entities.Column); }
+	public static boolean isForeignKey(Node node) { return hasLabel(node, Entities.ForeignKey); }
+	public static boolean isQuery(Node node) { return hasLabel(node, Entities.Query); }
+
+	public static Node newDatabase(NeoModel graph, String name) { return graph.newNode(Entities.Database, AppMotif.Properties.name.name(), name); }
+	public static Node newDatabase(NeoModel graph) { return graph.newNode(Entities.Database); }
+	public static Node newTable(NeoModel graph, String name) { return graph.newNode(Entities.Table, AppMotif.Properties.name.name(), name); }
+	public static Node newTable(NeoModel graph) { return graph.newNode(Entities.Table); }
+	public static Node newColumn(NeoModel graph, String name) { return graph.newNode(Entities.Column, AppMotif.Properties.name.name(), name); }
+	public static Node newColumn(NeoModel graph) { return graph.newNode(Entities.Column); }
+	public static Node newForeignKey(NeoModel graph, String name) { return graph.newNode(Entities.ForeignKey, AppMotif.Properties.name.name(), name); }
+	public static Node newForeignKey(NeoModel graph) { return graph.newNode(Entities.ForeignKey); }
+	public static Node newQuery(NeoModel graph, String name) { return graph.newNode(Entities.Query, AppMotif.Properties.name.name(), name); }
+	public static Node newQuery(NeoModel graph) { return graph.newNode(Entities.Query); }
+
+	public static void outgoingTABLE(Node src, RelationConsumer consumer) { outgoing(src, Relations.TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingTABLE(Node src, RelationConsumer consumer) { incoming(src, Relations.TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingCOLUMN(Node src, RelationConsumer consumer) { outgoing(src, Relations.COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingCOLUMN(Node src, RelationConsumer consumer) { incoming(src, Relations.COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingFK_SRC(Node src, RelationConsumer consumer) { outgoing(src, Relations.FK_SRC).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingFK_SRC(Node src, RelationConsumer consumer) { incoming(src, Relations.FK_SRC).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingFK_DST(Node src, RelationConsumer consumer) { outgoing(src, Relations.FK_DST).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingFK_DST(Node src, RelationConsumer consumer) { incoming(src, Relations.FK_DST).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingQUERY(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingQUERY(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingQUERY_TABLE(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY_TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingQUERY_TABLE(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY_TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void outgoingQUERY_COLUMN(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY_COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static void incomingQUERY_COLUMN(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY_COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+
+	public static Relationship relateTABLE(Node src, Node dst) { return relate(src, dst, Relations.TABLE); }
+	public static Relationship relateCOLUMN(Node src, Node dst) { return relate(src, dst, Relations.COLUMN); }
+	public static Relationship relateFK_SRC(Node src, Node dst) { return relate(src, dst, Relations.FK_SRC); }
+	public static Relationship relateFK_DST(Node src, Node dst) { return relate(src, dst, Relations.FK_DST); }
+	public static Relationship relateQUERY(Node src, Node dst) { return relate(src, dst, Relations.QUERY); }
+	public static Relationship relateQUERY_TABLE(Node src, Node dst) { return relate(src, dst, Relations.QUERY_TABLE); }
+	public static Relationship relateQUERY_COLUMN(Node src, Node dst) { return relate(src, dst, Relations.QUERY_COLUMN); }
+
+	public static String getName(Node node) { return DomainMotif.getName(node); }
+	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
+	public static void setName(Node node, String name) { DomainMotif.setName(node, name); }
+	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
+
+	public static <T> T getUsername(PropertyContainer container) { return get(container, Properties.username.name()); }
+	public static <T> T getUsername(PropertyContainer container, T defaultValue) { return has(container, Properties.username.name()) ? get(container, Properties.username.name()) : defaultValue; }
+	public static boolean hasUsername(PropertyContainer container) { return has(container, Properties.username.name()); }
+	public static <T extends PropertyContainer> T setUsername(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.username.name());
+	   else
+	   	container.setProperty(Properties.username.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeUsername(T container) {
+		if (has(container, Properties.username.name())) container.removeProperty(Properties.username.name());
+	      return container;
+	}
+
+	public static <T> T getColumnType(PropertyContainer container) { return get(container, Properties.columnType.name()); }
+	public static <T> T getColumnType(PropertyContainer container, T defaultValue) { return has(container, Properties.columnType.name()) ? get(container, Properties.columnType.name()) : defaultValue; }
+	public static boolean hasColumnType(PropertyContainer container) { return has(container, Properties.columnType.name()); }
+	public static <T extends PropertyContainer> T setColumnType(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.columnType.name());
+	   else
+	   	container.setProperty(Properties.columnType.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeColumnType(T container) {
+		if (has(container, Properties.columnType.name())) container.removeProperty(Properties.columnType.name());
+	      return container;
+	}
+
+	public static <T> T getOnDelete(PropertyContainer container) { return get(container, Properties.onDelete.name()); }
+	public static <T> T getOnDelete(PropertyContainer container, T defaultValue) { return has(container, Properties.onDelete.name()) ? get(container, Properties.onDelete.name()) : defaultValue; }
+	public static boolean hasOnDelete(PropertyContainer container) { return has(container, Properties.onDelete.name()); }
+	public static <T extends PropertyContainer> T setOnDelete(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.onDelete.name());
+	   else
+	   	container.setProperty(Properties.onDelete.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeOnDelete(T container) {
+		if (has(container, Properties.onDelete.name())) container.removeProperty(Properties.onDelete.name());
+	      return container;
+	}
+
+	public static <T> T getWhereOperator(PropertyContainer container) { return get(container, Properties.whereOperator.name()); }
+	public static <T> T getWhereOperator(PropertyContainer container, T defaultValue) { return has(container, Properties.whereOperator.name()) ? get(container, Properties.whereOperator.name()) : defaultValue; }
+	public static boolean hasWhereOperator(PropertyContainer container) { return has(container, Properties.whereOperator.name()); }
+	public static <T extends PropertyContainer> T setWhereOperator(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.whereOperator.name());
+	   else
+	   	container.setProperty(Properties.whereOperator.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeWhereOperator(T container) {
+		if (has(container, Properties.whereOperator.name())) container.removeProperty(Properties.whereOperator.name());
+	      return container;
+	}
+
+	public static <T> T getInSelect(PropertyContainer container) { return get(container, Properties.inSelect.name()); }
+	public static <T> T getInSelect(PropertyContainer container, T defaultValue) { return has(container, Properties.inSelect.name()) ? get(container, Properties.inSelect.name()) : defaultValue; }
+	public static boolean hasInSelect(PropertyContainer container) { return has(container, Properties.inSelect.name()); }
+	public static <T extends PropertyContainer> T setInSelect(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.inSelect.name());
+	   else
+	   	container.setProperty(Properties.inSelect.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeInSelect(T container) {
+		if (has(container, Properties.inSelect.name())) container.removeProperty(Properties.inSelect.name());
+	      return container;
+	}
+
+	public static <T> T getInWhere(PropertyContainer container) { return get(container, Properties.inWhere.name()); }
+	public static <T> T getInWhere(PropertyContainer container, T defaultValue) { return has(container, Properties.inWhere.name()) ? get(container, Properties.inWhere.name()) : defaultValue; }
+	public static boolean hasInWhere(PropertyContainer container) { return has(container, Properties.inWhere.name()); }
+	public static <T extends PropertyContainer> T setInWhere(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.inWhere.name());
+	   else
+	   	container.setProperty(Properties.inWhere.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeInWhere(T container) {
+		if (has(container, Properties.inWhere.name())) container.removeProperty(Properties.inWhere.name());
+	      return container;
+	}
+
+	public static <T> T getLastParam(PropertyContainer container) { return get(container, Properties.lastParam.name()); }
+	public static <T> T getLastParam(PropertyContainer container, T defaultValue) { return has(container, Properties.lastParam.name()) ? get(container, Properties.lastParam.name()) : defaultValue; }
+	public static boolean hasLastParam(PropertyContainer container) { return has(container, Properties.lastParam.name()); }
+	public static <T extends PropertyContainer> T setLastParam(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.lastParam.name());
+	   else
+	   	container.setProperty(Properties.lastParam.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeLastParam(T container) {
+		if (has(container, Properties.lastParam.name())) container.removeProperty(Properties.lastParam.name());
+	      return container;
+	}
+
+	public static <T> T getHost(PropertyContainer container) { return get(container, Properties.host.name()); }
+	public static <T> T getHost(PropertyContainer container, T defaultValue) { return has(container, Properties.host.name()) ? get(container, Properties.host.name()) : defaultValue; }
+	public static boolean hasHost(PropertyContainer container) { return has(container, Properties.host.name()); }
+	public static <T extends PropertyContainer> T setHost(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.host.name());
+	   else
+	   	container.setProperty(Properties.host.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeHost(T container) {
+		if (has(container, Properties.host.name())) container.removeProperty(Properties.host.name());
+	      return container;
+	}
 
 }
