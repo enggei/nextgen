@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.jetbrains.annotations.NotNull;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.PropertyContainer;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
@@ -26,6 +27,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
@@ -165,7 +167,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       final SpringGroup.queryMethodST queryMethodST = springGroup.newqueryMethod().
             setEntity(name + "Result").
             setName("get" + name).
-            setSql(getSql(queryNode));
+            setSql(queryNodeToSQL(queryNode));
 
       for (Node column : getSelectColumns(queryNode)) {
          final String columnName = getName(column);
@@ -173,10 +175,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
 
-      for (Relationship queryColumn : getWhereColumns(queryNode)) {
-         final Node column = queryColumn.getEndNode();
-         final String columnName = getName(column);
-         final String columnType = getColumnType(column, "");
+      for (WhereParam queryColumn : getWhereColumns(queryNode)) {
+         final String columnName = getName(queryColumn.propertyContainer);
+         final String columnType = getColumnType(queryColumn.propertyContainer, "");
          queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
       return queryMethodST;
@@ -308,20 +309,44 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    }
 
    private final class TableEditor extends JPanel {
-      TableEditor(NeoNode neoNode) {
+
+      TableEditor(NeoNode tableNode) {
          super(new BorderLayout());
 
-         final JTextArea txtEditor = new JTextArea();
-         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
-         txtEditor.setTabSize(3);
-         txtEditor.setEditable(false);
+         final Node dbNode = other(tableNode.getNode(), singleIncoming(tableNode.getNode(), Relations.QUERY));
+         final Set<WhereParam> whereColumns = getWhereColumnsForTable(tableNode.getNode());
+         final JTable tblParams = new JTable(new ParamsTableModel(whereColumns));
+         final JTable tblResult = new JTable(new ResultSetTableModel());
 
-         final StringBuilder out = new StringBuilder(MySQLDomainPlugin.getName(neoNode.getNode()));
+         final JTextArea txtQuery = SwingUtil.newTextArea();
+         txtQuery.setEditable(true);
+         txtQuery.setWrapStyleWord(true);
+         txtQuery.setLineWrap(true);
 
-         outgoingCOLUMN(neoNode.getNode(), (relationship, columnNode) -> out.append("\n\t").append(MySQLPlugin.getName(columnNode)).append(" ").append(getColumnType(columnNode, "")));
-         txtEditor.setText(out.toString());
+         final JButton btnExecute = new JButton(new AbstractAction("Run") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
+            }
+         });
 
-         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+         txtQuery.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent ke) {
+               if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
+                  runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
+               }
+            }
+         });
+
+         txtQuery.setText(tableNodeToSQL(tableNode.getNode()));
+
+         final SwingUtil.FormPanel queryPanel = new SwingUtil.FormPanel("10dlu:grow, 4dlu, 30dlu", "pref, 4dlu, 30dlu, 4dlu, 60dlu, 4dlu, 75dlu:grow");
+         queryPanel.add(new JScrollPane(txtQuery), 1, 1, 1, 3);
+         queryPanel.add(btnExecute, 3, 1, 1, 1);
+         queryPanel.add(new JScrollPane(tblParams), 1, 5, 3, 1);
+         queryPanel.add(new JScrollPane(tblResult), 1, 7, 3, 1);
+         add(queryPanel.build(), BorderLayout.CENTER);
       }
    }
 
@@ -331,22 +356,19 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          super(new BorderLayout());
 
          final Node dbNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.QUERY));
-         final Set<Relationship> whereColumns = getWhereColumns(neoNode.getNode());
+         final Set<WhereParam> whereColumns = getWhereColumns(neoNode.getNode());
          final JTable tblParams = new JTable(new ParamsTableModel(whereColumns));
+         final JTable tblResult = new JTable(new ResultSetTableModel());
 
          final JTextArea txtQuery = SwingUtil.newTextArea();
          txtQuery.setEditable(true);
          txtQuery.setWrapStyleWord(true);
          txtQuery.setLineWrap(true);
-         txtQuery.setMaximumSize(new Dimension(100, 80));
-
-         final JTextArea txtResult = SwingUtil.newTextArea();
-         txtResult.setEditable(true);
 
          final JButton btnExecute = new JButton(new AbstractAction("Run") {
             @Override
             public void actionPerformed(ActionEvent e) {
-               executeQuery(txtQuery, dbNode, ((ParamsTableModel) tblParams.getModel()), txtResult);
+               runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
             }
          });
 
@@ -354,178 +376,235 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             @Override
             public void keyPressed(KeyEvent ke) {
                if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  executeQuery(txtQuery, dbNode, ((ParamsTableModel) tblParams.getModel()), txtResult);
+                  runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
                }
             }
          });
 
-         txtQuery.setText(getSql(neoNode.getNode()));
+         txtQuery.setText(queryNodeToSQL(neoNode.getNode()));
 
-         final SwingUtil.FormPanel queryPanel = new SwingUtil.FormPanel("10dlu:grow, 4dlu, 30dlu", "pref, 4dlu, 15dlu:grow, 4dlu, 15dlu:grow");
+         final SwingUtil.FormPanel queryPanel = new SwingUtil.FormPanel("10dlu:grow, 4dlu, 30dlu", "pref, 4dlu, 30dlu, 4dlu, 60dlu, 4dlu, 75dlu:grow");
          queryPanel.add(new JScrollPane(txtQuery), 1, 1, 1, 3);
          queryPanel.add(btnExecute, 3, 1, 1, 1);
-         queryPanel.add(new JScrollPane(tblParams), 1, 5, 1, 1);
+         queryPanel.add(new JScrollPane(tblParams), 1, 5, 3, 1);
+         queryPanel.add(new JScrollPane(tblResult), 1, 7, 3, 1);
+         add(queryPanel.build(), BorderLayout.CENTER);
+      }
+   }
 
-         add(queryPanel.build(), BorderLayout.NORTH);
-         add(new JScrollPane(txtResult), BorderLayout.CENTER);
+   private void runQuery(Node dbNode, String query, Object[] params, JTable tblResult) {
+
+      final MySQLSession mySQLSession = getSession(dbNode, tblResult);
+      if (mySQLSession == null) return;
+
+      final AtomicBoolean first = new AtomicBoolean(true);
+      final ResultSetTableModel resultSetTableModel = new ResultSetTableModel();
+      try {
+
+         mySQLSession.executeQuery(query, resultSet -> {
+            final ResultSetMetaData metaData = resultSet.getMetaData();
+
+            if (first.get()) {
+               resultSetTableModel.setColumns(metaData);
+               first.set(false);
+            }
+
+            resultSetTableModel.addRow(resultSet);
+
+         }, params);
+
+      } catch (Exception e1) {
+         SwingUtil.showException(tblResult, e1);
       }
 
-      void executeQuery(JTextArea txtEditor, Node dbNode, ParamsTableModel tableModel, JTextArea txtResult) {
+      SwingUtilities.invokeLater(() -> {
+         tblResult.setModel(resultSetTableModel);
+      });
+   }
 
-         if (!sessions.containsKey(dbNode)) {
+   private class ParamsTableModel extends AbstractTableModel {
 
-            final char[] password = SwingUtil.showPasswordDialog(txtEditor);
-            if (password == null || password.length == 0) return;
+      private final List<WhereParam> content = new ArrayList<>();
 
-            getGraph().doInTransaction(new NeoModel.Committer() {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  try {
-                     sessions.put(dbNode, new MySQLSession(getHost(dbNode), MySQLDomainPlugin.getName(dbNode), getUsername(dbNode), new String(password)));
-                  } catch (Throwable t) {
-                     SwingUtil.showException(app, t);
-                  }
-               }
+      ParamsTableModel(Set<WhereParam> whereColumns) {
+         content.addAll(whereColumns);
+      }
 
-               @Override
-               public void exception(Throwable throwable) {
-                  SwingUtil.showException(txtEditor, throwable);
-               }
-            });
+      @Override
+      public int getRowCount() {
+         return content.size();
+      }
+
+      @Override
+      public int getColumnCount() {
+         return 2;
+      }
+
+      @Override
+      public Object getValueAt(int rowIndex, int columnIndex) {
+
+         switch (columnIndex) {
+            case 0:
+               return content.get(rowIndex).name;
+            case 1:
+               return content.get(rowIndex).value;
          }
 
-         final MySQLSession session = sessions.get(dbNode);
-         if (session != null) {
-            try {
+         return null;
+      }
 
-               final StringBuilder result = new StringBuilder();
+      @Override
+      public String getColumnName(int column) {
+         switch (column) {
+            case 0:
+               return "Name";
+            case 1:
+               return "Value";
+         }
+         return "";
+      }
 
-               final AtomicBoolean first = new AtomicBoolean(true);
-               session.executeQuery(txtEditor.getText().trim(), resultSet -> {
+      @Override
+      public Class<?> getColumnClass(int columnIndex) {
+         return String.class;
+      }
 
-                  final ResultSetMetaData metaData = resultSet.getMetaData();
-                  if (first.get()) {
-                     for (int i = 1; i <= metaData.getColumnCount(); i++)
-                        result.append(metaData.getColumnLabel(i)).append(" ");
-                     first.set(false);
-                  }
+      @Override
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+         return columnIndex == 1;
+      }
 
-                  result.append("\n");
-                  for (int i = 1; i <= metaData.getColumnCount(); i++) {
-                     result.append(resultSet.getObject(i)).append(" ");
-                  }
-               }, tableModel.asParams());
+      @Override
+      public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 
-               txtResult.setText(result.toString());
-               txtResult.setCaretPosition(0);
-            } catch (Exception e) {
-               SwingUtil.showException(txtEditor, e);
+         final WhereParam whereParam = content.get(rowIndex);
+         whereParam.value = aValue;
+
+         getGraph().doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               if ((aValue == null || aValue.toString().length() == 0)) {
+                  removeLastParam(whereParam.propertyContainer);
+               } else
+                  setLastParam(whereParam.propertyContainer, aValue);
             }
+
+            @Override
+            public void exception(Throwable throwable) {
+               System.err.println("Could not save lastParam=" + aValue + " to param");
+            }
+         });
+      }
+
+      Object[] asParams() {
+         final Object[] params = new Object[content.size()];
+         for (int i = 0; i < content.size(); i++) {
+            WhereParam whereParam = content.get(i);
+            params[i] = whereParam.value == null || whereParam.value.toString().length() == 0 ? null : whereParam.value;
+         }
+         return params;
+      }
+   }
+
+   private static class WhereParam {
+
+      private final PropertyContainer propertyContainer;
+      private String name;
+      private Object value;
+
+      WhereParam(Node whereColumn) {
+         this.propertyContainer = whereColumn;
+         this.name = MySQLDomainPlugin.getName(whereColumn);
+         this.value = getLastParam(whereColumn, "");
+      }
+
+      WhereParam(Relationship whereColumn) {
+         this.propertyContainer = whereColumn;
+         this.name = MySQLDomainPlugin.getName(whereColumn.getEndNode());
+         this.value = getLastParam(whereColumn, "");
+      }
+   }
+
+   private class ResultSetTableModel extends AbstractTableModel {
+
+      private final List<TableRow> content = new ArrayList<>();
+      private String[] columns = new String[0];
+
+      @Override
+      public int getRowCount() {
+         return content.size();
+      }
+
+      @Override
+      public int getColumnCount() {
+         return columns.length;
+      }
+
+      @Override
+      public Object getValueAt(int rowIndex, int columnIndex) {
+         return this.content.get(rowIndex).get(columnIndex);
+      }
+
+      @Override
+      public String getColumnName(int column) {
+         return columns[column];
+      }
+
+      void setColumns(ResultSetMetaData metaData) throws SQLException {
+         this.columns = new String[metaData.getColumnCount()];
+         for (int i = 1; i <= metaData.getColumnCount(); i++) {
+            this.columns[i-1] = metaData.getColumnLabel(i);
          }
       }
 
-      private class ParamsTableModel extends AbstractTableModel {
+      void addRow(ResultSet resultSet) throws SQLException {
+         this.content.add(new TableRow(resultSet, this.columns));
+      }
 
-         private final List<WhereParam> content = new ArrayList<>();
+      private final class TableRow {
 
-         ParamsTableModel(Set<Relationship> whereColumns) {
-            for (Relationship whereColumn : whereColumns) {
-               content.add(new WhereParam(whereColumn));
-            }
+         private final Map<Integer,Object> values = new LinkedHashMap<>();
+
+         TableRow(ResultSet resultSet, String[] columns) throws SQLException {
+            for (int i = 0; i < columns.length; i++)
+               values.put(i, resultSet.getObject(i+1));
          }
 
-         @Override
-         public int getRowCount() {
-            return content.size();
-         }
-
-         @Override
-         public int getColumnCount() {
-            return 2;
-         }
-
-         @Override
-         public Object getValueAt(int rowIndex, int columnIndex) {
-
-            switch (columnIndex) {
-               case 0:
-                  return content.get(rowIndex).name;
-               case 1:
-                  return content.get(rowIndex).value;
-            }
-
-            return null;
-         }
-
-         @Override
-         public String getColumnName(int column) {
-            switch (column) {
-               case 0:
-                  return "Name";
-               case 1:
-                  return "Value";
-            }
-            return "";
-         }
-
-         @Override
-         public Class<?> getColumnClass(int columnIndex) {
-            return String.class;
-         }
-
-         @Override
-         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 1;
-         }
-
-         @Override
-         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
-            final WhereParam whereParam = content.get(rowIndex);
-            whereParam.value = aValue;
-
-            getGraph().doInTransaction(new NeoModel.Committer() {
-               @Override
-               public void doAction(Transaction tx) throws Throwable {
-                  if ((aValue == null || aValue.toString().length() == 0)) {
-                     removeLastParam(whereParam.column);
-                  } else
-                     setLastParam(whereParam.column, aValue);
-               }
-
-               @Override
-               public void exception(Throwable throwable) {
-                  System.err.println("Could not save lastParam=" + aValue + " to param");
-               }
-            });
-         }
-
-         Object[] asParams() {
-            final Object[] params = new Object[content.size()];
-            for (int i = 0; i < content.size(); i++) {
-               WhereParam whereParam = content.get(i);
-               params[i] = whereParam.value == null || whereParam.value.toString().length() == 0 ? null : whereParam.value;
-            }
-            return params;
-         }
-
-         private class WhereParam {
-
-            private final Relationship column;
-            private String name;
-            private Object value;
-
-            WhereParam(Relationship whereColumn) {
-               this.column = whereColumn;
-               this.name = MySQLDomainPlugin.getName(whereColumn.getEndNode());
-               this.value = getLastParam(whereColumn, "");
-            }
+         public Object get(int columnIndex) {
+            return values.get(columnIndex);
          }
       }
    }
 
+   private MySQLSession getSession(Node dbNode, JComponent parent) {
+
+      if (!sessions.containsKey(dbNode)) {
+
+         final char[] password = SwingUtil.showPasswordDialog(parent);
+         if (password == null || password.length == 0) return null;
+
+         getGraph().doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               try {
+                  sessions.put(dbNode, getSession(dbNode, password));
+               } catch (Throwable t) {
+                  SwingUtil.showException(app, t);
+               }
+            }
+
+            @Override
+            public void exception(Throwable throwable) {
+               SwingUtil.showException(parent, throwable);
+            }
+         });
+      }
+
+      return sessions.get(dbNode);
+   }
+
    @NotNull
-   private static String getSql(Node queryNode) {
+   public static String queryNodeToSQL(Node queryNode) {
 
       final MysqlGroup mysqlGroup = new MysqlGroup();
       final MysqlGroup.selectST selectST = mysqlGroup.newselect();
@@ -540,25 +619,56 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          }
 
          if (getInSelect(queryColumnRelation)) {
-            selectST.addColumnsValue(StringUtil.lowFirst(getName(tableNode)) + "." + getName(columnNode));
+            selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
          }
 
          if (getInWhere(queryColumnRelation)) {
-            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), StringUtil.lowFirst(getName(tableNode)) + "." + getName(columnNode));
+            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
          }
       });
 
       // todo auto-join tables through fk-columns
       if (tables.size() > 1) {
-         final Map<Node, Node> fkColumns = new LinkedHashMap<>();
+         final Map<String, String> fkColumns = new LinkedHashMap<>();
          for (Node table : tables) {
-            outgoingCOLUMN(table, (relationship, columnNode) -> outgoingFK_SRC(columnNode, (fkRelation, fkColumn) -> fkColumns.put(columnNode, fkColumn)));
+            outgoingCOLUMN(table, (relationship, columnNode) -> outgoingFK_SRC(columnNode, (fkRelation, fkColumn) -> {
+               final String srcName = getQualifiedColumnName(columnNode, table);
+               final String dstName = getQualifiedColumnName(fkColumn, other(fkColumn, singleIncoming(fkColumn, Relations.COLUMN)));
+               fkColumns.put(srcName, dstName);
+            }));
          }
 
-//         where.append(firstWhereColumn.get() ? "" : " AND ").append(StringUtil.lowFirst(getName(tableNode))).append(".").append(getName(columnNode)).append(operator).append("?");
+         for (Map.Entry<String, String> fkEntry : fkColumns.entrySet()) {
+            selectST.addWhereValue(fkEntry.getValue(), "=", fkEntry.getKey());
+         }
       }
 
       return selectST.toString();
+   }
+
+   @NotNull
+   public static String tableNodeToSQL(Node tableNode) {
+
+      final MysqlGroup mysqlGroup = new MysqlGroup();
+      final MysqlGroup.selectST selectST = mysqlGroup.newselect();
+
+      selectST.addTablesValue(getName(tableNode) + " " + StringUtil.lowFirst(getName(tableNode)));
+
+      outgoingCOLUMN(tableNode, (queryColumnRelation, columnNode) -> {
+
+         selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
+
+         if (getInWhere(queryColumnRelation)) {
+            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
+         }
+      });
+
+      return selectST.toString();
+   }
+
+   @NotNull
+   public static String getQualifiedColumnName(Node columnNode, Node tableNode) {
+      return StringUtil.lowFirst(getName(tableNode)) + "." + getName(columnNode);
    }
 
    @NotNull
@@ -571,11 +681,18 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    }
 
    @NotNull
-   private static Set<Relationship> getWhereColumns(Node queryNode) {
-      final Set<Relationship> columns = new LinkedHashSet<>();
+   private static Set<WhereParam> getWhereColumns(Node queryNode) {
+      final Set<WhereParam> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getInWhere(queryColumnRelation)) columns.add(queryColumnRelation);
+         if (getInWhere(queryColumnRelation)) columns.add(new WhereParam(queryColumnRelation));
       });
+      return columns;
+   }
+
+   @NotNull
+   private static Set<WhereParam> getWhereColumnsForTable(Node tableNode) {
+      final Set<WhereParam> columns = new LinkedHashSet<>();
+      outgoingCOLUMN(tableNode, (columnRelation, columnNode) -> columns.add(new WhereParam(columnNode)));
       return columns;
    }
 
@@ -732,7 +849,6 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
    private class QueryColumn {
 
-      private final Node tableNode;
       private final Node columnNode;
       private final String columnName;
       private final String tableName;
@@ -741,10 +857,14 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       private String whereOperator = null;
 
       QueryColumn(Node tableNode, Node columnNode) {
-         this.tableNode = tableNode;
          this.columnNode = columnNode;
          this.tableName = getName(tableNode);
          this.columnName = getName(columnNode);
       }
+   }
+
+
+   public static MySQLSession getSession(Node dbNode, char[] password) throws Exception {
+      return new MySQLSession(getHost(dbNode), MySQLDomainPlugin.getName(dbNode), getUsername(dbNode), new String(password));
    }
 }

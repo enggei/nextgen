@@ -3,10 +3,7 @@ package com.generator.app;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.*;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -22,11 +19,11 @@ public class DomainMotif {
       return getName(neoNode.getNode());
    }
 
-   public static String getName(Node node) {
+   public static String getName(PropertyContainer node) {
       return getString(node, AppMotif.Properties.name.name(), "");
    }
 
-   public static void setName(Node node, String name) { node.setProperty(AppMotif.Properties.name.name(), name); }
+   public static void setName(PropertyContainer node, String name) { node.setProperty(AppMotif.Properties.name.name(), name); }
    public static void setName(NeoNode neoNode, String name) { setName(neoNode.getNode(), name); }
 
    public static void newEntityProperty(NeoModel graph, Node srcEntity, String name) {

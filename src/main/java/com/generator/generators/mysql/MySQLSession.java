@@ -25,10 +25,6 @@ public class MySQLSession {
       Class.forName("com.mysql.jdbc.Driver");
       this.database = database;
       connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password));
-
-
-
-
    }
 
    public String getDatabase() {
@@ -102,8 +98,6 @@ public class MySQLSession {
       }
       return output.toString().trim();
    }
-
-
 
    public interface ResultSetHandler {
 
