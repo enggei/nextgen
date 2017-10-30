@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+  stardog:
+    build: stardog
+    environment:
+     - STARDOG_JAVA_ARGS= -Xmx1g -XX:MaxDirectMemorySize=1g
