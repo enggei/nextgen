@@ -1,6 +1,5 @@
 package com.generator.generators.domain;
 
-import com.generator.app.App;
 import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -14,7 +13,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 20.09.17.
  */
-public abstract class DomainVisitor<T> {
+public abstract class DomainVisitor<T> implements Visitor<T> {
 
    private final Set<Relationship> visitedRelations = new LinkedHashSet<>();
 

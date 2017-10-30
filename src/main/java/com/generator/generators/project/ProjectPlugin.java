@@ -29,6 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
@@ -493,10 +494,10 @@ public class ProjectPlugin extends ProjectDomainPlugin {
    }
 
    private void renderDirectory(Node node) {
-      outgoing(node, Relations.RENDERER).forEach(rendererRelationship -> {
-         final Node nodeToRender = other(node, rendererRelationship);
+
+      outgoingRENDERER(node, (rendererRelationship, nodeToRender) -> {
          if (hasLabel(nodeToRender, StringTemplatePlugin.Entities.STGroup)) {
-            StringTemplatePlugin.renderSTGGroup(nodeToRender, rendererRelationship);
+            new StringTemplatePlugin.STGGroupRenderer(rendererRelationship).visit(nodeToRender);
          } else if (hasLabel(nodeToRender, DomainPlugin.Entities.Domain)) {
             DomainPlugin.renderDomainVisitor(rendererRelationship, nodeToRender);
          } else if (hasLabel(nodeToRender, EasyFlowPlugin.Entities.Flow)) {
@@ -505,7 +506,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
             final Node templateNode = other(nodeToRender, singleIncoming(nodeToRender, DomainPlugin.Relations.INSTANCE));
             if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate))
-               renderToFile(rendererRelationship, nodeToRender, StringTemplatePlugin.renderStatement(nodeToRender, templateNode), node, app);
+               renderToFile(rendererRelationship, nodeToRender, StringTemplatePlugin.renderStatement(nodeToRender, templateNode), node);
 
             // visitors:
             incoming(nodeToRender, DomainPlugin.Relations.VISITOR).forEach(visitorRelation -> {
@@ -536,39 +537,38 @@ public class ProjectPlugin extends ProjectDomainPlugin {
       return new PlainFileEditor(neoNode);
    }
 
-   public static void renderToFile(Relationship rendererRelationship, Node statementNode, String content, Node dirNode, App app) {
-      try {
-         final File targetDir = FileUtil.tryToCreateDirIfNotExists(getFile(dirNode));
-         switch (Filetype.valueOf(getString(rendererRelationship, Properties.fileType.name()))) {
+   public static void renderToFile(Relationship rendererRelationship, Node statementNode, String content, Node dirNode) {
+      final File targetDir = FileUtil.tryToCreateDirIfNotExists(getFile(dirNode));
+      switch (Filetype.valueOf(getString(rendererRelationship, Properties.fileType.name()))) {
 
-            case java: {
-               final String packageName = getPropertyValue(statementNode, getString(rendererRelationship, "package"));
-               final String className = getPropertyValue(statementNode, getString(rendererRelationship, Properties.className.name()));
+         case java: {
+            final String packageName = getPropertyValue(statementNode, getString(rendererRelationship, "package"));
+            final String className = getPropertyValue(statementNode, getString(rendererRelationship, Properties.className.name()));
+            try {
                GeneratedFile.newJavaFile(targetDir.getPath(), packageName, className).write(content);
-               break;
+            } catch (IOException e) {
+               System.out.println("Could not generate java file for " + packageName + " " + className);
             }
-
-            case plain: {
-               final String dir = getString(rendererRelationship, Properties.dir.name());
-               final String filename = getString(rendererRelationship, Properties.file.name());
-               final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
-               FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
-               break;
-            }
-
-            case namedFile: {
-               final String filename = getPropertyValue(statementNode, getString(rendererRelationship, Properties.filename.name()));
-               final String dir = getString(rendererRelationship, Properties.dir.name());
-               final String extension = getString(rendererRelationship, Properties.extension.name());
-               final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
-               FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
-               break;
-            }
+            break;
          }
 
-      } catch (Throwable t) {
-         app.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+         case plain: {
+            final String dir = getString(rendererRelationship, Properties.dir.name());
+            final String filename = getString(rendererRelationship, Properties.file.name());
+            final String extension = getString(rendererRelationship, Properties.extension.name());
+            final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
+            FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
+            break;
+         }
+
+         case namedFile: {
+            final String filename = getPropertyValue(statementNode, getString(rendererRelationship, Properties.filename.name()));
+            final String dir = getString(rendererRelationship, Properties.dir.name());
+            final String extension = getString(rendererRelationship, Properties.extension.name());
+            final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));
+            FileUtil.write(content, dir == null || dir.length() == 0 ? new File(targetDir, fullFilename) : new File(new File(targetDir, dir), fullFilename));
+            break;
+         }
       }
    }
 

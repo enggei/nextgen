@@ -27,7 +27,7 @@ abstract class CSVDomainPlugin extends Plugin {
    }
 
    public enum Properties {
-      header, row, value, column
+      header, row, stringValue, value, column
    }
 
    CSVDomainPlugin(App app) {
@@ -162,6 +162,21 @@ abstract class CSVDomainPlugin extends Plugin {
 	}
 	public static <T extends PropertyContainer> T removeRow(T container) {
 		if (has(container, Properties.row.name())) container.removeProperty(Properties.row.name());
+	      return container;
+	}
+
+	public static <T> T getStringValue(PropertyContainer container) { return get(container, Properties.stringValue.name()); }
+	public static <T> T getStringValue(PropertyContainer container, T defaultValue) { return has(container, Properties.stringValue.name()) ? get(container, Properties.stringValue.name()) : defaultValue; }
+	public static boolean hasStringValue(PropertyContainer container) { return has(container, Properties.stringValue.name()); }
+	public static <T extends PropertyContainer> T setStringValue(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.stringValue.name());
+	   else
+	   	container.setProperty(Properties.stringValue.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeStringValue(T container) {
+		if (has(container, Properties.stringValue.name())) container.removeProperty(Properties.stringValue.name());
 	      return container;
 	}
 

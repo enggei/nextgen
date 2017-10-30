@@ -586,6 +586,67 @@ public final class Workspace extends JPanel {
                }
             });
 
+            pop.add(new App.TransactionAction("Change Relation type for " + selectedRelations.size() + " relations", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Set<String> existing = new LinkedHashSet<>();
+                  for (NeoRelationship selectedRelation : selectedRelations)
+                     existing.add(selectedRelation.getRelationship().getType().name());
+
+                  final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+                  final JTextField txtNewRelationshipType = new JTextField();
+
+                  final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                  editor.addLabel("Old Type", 1, 1);
+                  editor.add(cboExisting, 3, 1);
+                  editor.addLabel("New Type", 1, 3);
+                  editor.add(txtNewRelationshipType, 3, 3);
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                  SwingUtil.showDialog(editor, app, "New Relationship type", new SwingUtil.ConfirmAction() {
+
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        final String newRelationTypeName = txtNewRelationshipType.getText().trim().toUpperCase();
+                        final String existingRelationTypeName = (String) cboExisting.getSelectedItem();
+
+                        app.model.graph().doInTransaction(new Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+
+                              final RelationshipType newRelationshipType = RelationshipType.withName(newRelationTypeName);
+
+                              final Set<Relationship> deleteRelations = new LinkedHashSet<>();
+                              for (NeoRelationship selectedRelation : selectedRelations) {
+                                 final Relationship oldRelation = selectedRelation.getRelationship();
+                                 if(existingRelationTypeName.equals(oldRelation.getType().name())) {
+
+                                    final Node src = oldRelation.getStartNode();
+                                    final Node dst = oldRelation.getEndNode();
+
+                                    final Relationship newRelation = src.createRelationshipTo(dst, newRelationshipType);
+                                    for (String key : oldRelation.getPropertyKeys()) newRelation.setProperty(key, oldRelation.getProperty(key));
+                                    deleteRelations.add(oldRelation);
+                                 }
+                              }
+
+                              for (Relationship deleteRelation : deleteRelations) {
+                                 deleteRelation.delete();
+                              }
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showExceptionNoStack(app, throwable);
+                           }
+                        });
+                     }
+                  });
+               }
+            });
+
             pop.add(new App.TransactionAction("Close selected relations", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {

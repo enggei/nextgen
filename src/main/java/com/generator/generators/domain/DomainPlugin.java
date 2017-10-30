@@ -430,7 +430,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                            @Override
                            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                               final String content = StringTemplatePlugin.renderStatement(templateNeoNode.getNode(), other(templateNeoNode.getNode(), singleIncoming(templateNeoNode.getNode(), Relations.INSTANCE)));
-                              renderToFile(rendererRelationship, templateNeoNode.getNode(), content, other(templateNeoNode.getNode(), rendererRelationship), app);
+                              renderToFile(rendererRelationship, templateNeoNode.getNode(), content, other(templateNeoNode.getNode(), rendererRelationship));
                            }
                         });
                      }

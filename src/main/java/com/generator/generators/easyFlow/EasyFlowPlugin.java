@@ -4,6 +4,7 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.Visitor;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
@@ -25,6 +26,7 @@ import java.util.TreeSet;
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasProperty;
 import static com.generator.generators.easyFlow.EasyFlowDomainPlugin.Relations.*;
+import static com.generator.generators.project.ProjectPlugin.getPackageName;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.generators.project.ProjectPlugin.incomingRENDERER;
 import static com.generator.util.NeoUtil.*;
@@ -116,11 +118,13 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
    public static void renderEasyFlow(Relationship rendererRelationship, Node node) {
 
-      final String packageName = getString(rendererRelationship, "packageName");
-      final String name = getPropertyValue(node, AppMotif.Properties.name.name());
+      final String packageName = getPackageName(rendererRelationship);
+      final String name = getName(node);
       final File targetDir = getFile(other(node, rendererRelationship));
 
-      final String javaClass = new JavaGenerator(new EasyFlowGroup()).visitFlow(node, packageName);
+      final JavaGenerator javaGenerator = new JavaGenerator(packageName);
+      javaGenerator.visit(node);
+      final String javaClass = javaGenerator.getResult();
 
       try {
          GeneratedFile.newJavaFile(targetDir.getPath(), packageName, name).write(javaClass);
@@ -129,17 +133,25 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
       }
    }
 
-   private static final class JavaGenerator {
+   private static final class JavaGenerator implements Visitor<String> {
 
-      private final EasyFlowGroup group;
+      private final EasyFlowGroup group = new EasyFlowGroup();
+      private final String packageName;
 
       private EasyFlowGroup.easyFlowST fsm;
+      private String result;
 
-      JavaGenerator(EasyFlowGroup group) {
-         this.group = group;
+      JavaGenerator(String packageName) {
+         this.packageName = packageName;
       }
 
-      String visitFlow(Node node, String packageName) {
+      @Override
+      public String getResult() {
+         return result;
+      }
+
+      @Override
+      public void visit(Node node) {
          final String name = getPropertyValue(node, AppMotif.Properties.name.name());
 
          final Set<String> events = new TreeSet<>();
@@ -202,7 +214,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
                         setState(state));
          }
 
-         return fsm.toString();
+         result = fsm.toString();
       }
 
       private Object formatPropertyValue(Object value) {

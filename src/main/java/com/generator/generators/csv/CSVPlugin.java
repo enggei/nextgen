@@ -6,6 +6,7 @@ import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
+import org.antlr.v4.gui.TreeViewer;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
@@ -142,7 +143,40 @@ public class CSVPlugin extends CSVDomainPlugin {
                FileUtil.write(toCSV(neoNode.getNode()), file);
             }
          });
+
+         pop.add(new App.TransactionAction("Add Renderer", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+
+               final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
+               if (dir == null || !dir.exists()) return;
+
+               String filename = SwingUtil.showInputDialog("Filename", app);
+               if (filename == null || filename.length() == 0) return;
+
+               filename = filename.toLowerCase().endsWith(".csv") ? filename : (filename + ".csv");
+
+               final File file = FileUtil.tryToCreateFileIfNotExists(new File(dir, filename));
+
+               FileUtil.write(toCSV(neoNode.getNode()), file);
+            }
+         });
       }
+   }
+
+   @Override
+   protected void handleColumn(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      pop.add(new App.TransactionAction("Set StringValue", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+
+
+
+         }
+      });
    }
 
    @Override
