@@ -1,0 +1,14 @@
+version: "2"
+
+services:
+  stardog:
+    image: ${DOCKER_REGISTRY}/stardog:${TAG}
+    restart: always
+    environment:
+     - STARDOG_JAVA_ARGS=-Xms3g -Xmx3g -XX:MaxDirectMemorySize=8g
+#     - STARDOG_FLAGS=--upgrade
+    ports:
+      - "127.0.0.1:5820:5820"
+    volumes:
+      - /opt/docker/stardog:/home/stardog/data
+      - $PWD/stardog/production-license:/production-license
