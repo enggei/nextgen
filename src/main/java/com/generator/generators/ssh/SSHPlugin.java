@@ -3,7 +3,6 @@ package com.generator.generators.ssh;
 import com.generator.app.App;
 import com.generator.app.AppEvents;
 import com.generator.app.AppMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
@@ -12,15 +11,15 @@ import com.generator.util.SwingUtil;
 import com.generator.util.TextProcessingPanel;
 import com.jcraft.jsch.*;
 import org.jetbrains.annotations.NotNull;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.DataInputStream;
@@ -36,7 +35,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 03.08.17.
  */
-public class SSHPlugin extends Plugin {
+public class SSHPlugin extends SSHDomainPlugin {
 
    public static void cleanupPreviousSessions(NeoModel graph) {
       graph.findNodes(Entities.Host).forEachRemaining(hostNode -> outgoing(hostNode, Relations.SESSIONS).forEach(sessionRelation -> {
@@ -54,23 +53,11 @@ public class SSHPlugin extends Plugin {
       }));
    }
 
-   public enum Entities implements Label {
-      Host, Session, Channel, Command, CommandRoot, CommandCategory, Path
-   }
-
-   public enum Relations implements RelationshipType {
-      SESSIONS, CHANNELS, COMMANDS, CATEGORIES, PATHS
-   }
-
-   private enum Properties {
-      ip, username, password, port, privateKeyPath, cmdCommand, cmdCategory
-   }
-
    private final Map<UUID, Session> sessions = new LinkedHashMap<>();
    private final Map<UUID, ActiveChannel> channels = new LinkedHashMap<>();
 
    public SSHPlugin(App app) {
-      super(app, "SSH");
+      super(app);
 
       // add command-root-node
       final Node commandRoot = getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
@@ -150,11 +137,6 @@ public class SSHPlugin extends Plugin {
          System.out.println("disconnecting ssh session " + sessionEntry.getKey());
          sessionEntry.getValue().disconnect();
       }
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
    }
 
    @Override
@@ -269,7 +251,7 @@ public class SSHPlugin extends Plugin {
    @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
-      if (hasLabel(neoNode.getNode(), Entities.Host)) {
+      if (isHost(neoNode.getNode())) {
 
          pop.add(new App.TransactionAction("Connect", app) {
             @Override
@@ -290,7 +272,7 @@ public class SSHPlugin extends Plugin {
                final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
 
                final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
-               relate(sessionNode, newNode, Relations.CHANNELS);
+               relateCHANNELS(sessionNode, newNode);
                channels.put(uuidOf(newNode), activeChannel);
                fireNodesLoaded(newNode);
             }
@@ -372,8 +354,8 @@ public class SSHPlugin extends Plugin {
                final String path = SwingUtil.showInputDialog("Path", app);
                if (path == null || path.length() == 0) return;
 
-               final Node pathNode = getGraph().newNode(Entities.Path, AppMotif.Properties.name.name(), path);
-               relate(neoNode.getNode(), pathNode, Relations.PATHS);
+               final Node pathNode = newPath(path);
+               relatePATHS(neoNode.getNode(), pathNode);
                fireNodesLoaded(pathNode);
             }
          });
@@ -382,12 +364,12 @@ public class SSHPlugin extends Plugin {
             pop.add(new App.TransactionAction("Close all sessions", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  outgoing(neoNode.getNode(), Relations.SESSIONS).forEach(sessionRelation -> closeSession(other(neoNode.getNode(), sessionRelation)));
+                  outgoingSESSIONS(neoNode.getNode(), (relationship, sessionNode) -> closeSession(sessionNode));
                }
             });
          }
 
-      } else if (hasLabel(neoNode.getNode(), Entities.Session)) {
+      } else if (isSession(neoNode.getNode())) {
 
          if (sessions.containsKey(uuidOf(neoNode.getNode()))) {
 
@@ -402,7 +384,7 @@ public class SSHPlugin extends Plugin {
                   final ActiveChannel activeChannel = new ActiveChannel(channel, neoNode).connect();
 
                   final Node newNode = getGraph().newNode(Entities.Channel, Properties.ip.name(), "shell");
-                  relate(neoNode.getNode(), newNode, Relations.CHANNELS);
+                  relateCHANNELS(neoNode.getNode(), newNode);
                   channels.put(uuidOf(newNode), activeChannel);
                   fireNodesLoaded(newNode);
                }
@@ -416,7 +398,7 @@ public class SSHPlugin extends Plugin {
             });
          }
 
-      } else if (hasLabel(neoNode.getNode(), Entities.Channel)) {
+      } else if (isChannel(neoNode.getNode())) {
 
          if (channels.containsKey(uuidOf(neoNode.getNode()))) {
             pop.add(new App.TransactionAction("Close Channel", app) {
@@ -427,7 +409,7 @@ public class SSHPlugin extends Plugin {
             });
          }
 
-      } else if (hasLabel(neoNode.getNode(), Entities.Path)) {
+      } else if (isPath(neoNode.getNode())) {
 
          final Set<File> fileSet = new LinkedHashSet<>();
          for (NeoNode selectedNode : selectedNodes) {
@@ -451,7 +433,7 @@ public class SSHPlugin extends Plugin {
                   if (file == null) return;
 
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                  upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
                }
             });
 
@@ -463,7 +445,7 @@ public class SSHPlugin extends Plugin {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                  upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
                }
             });
 
@@ -475,7 +457,7 @@ public class SSHPlugin extends Plugin {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                     upload(getSession(hostNode), file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+                     upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
                   }
                });
             }
@@ -488,7 +470,7 @@ public class SSHPlugin extends Plugin {
 //
 //                  final Session session = getSession(hostNode);
 //                  for (File file : fileSet)
-//                     upload(session, file.getAbsolutePath(), getString(neoNode.getNode(), AppMotif.Properties.name.name()));
+//                     upload(session, file.getAbsolutePath(), getName(neoNode));
 //                  session.disconnect();
 //
 //                  SwingUtil.showMessage(fileSet.size() + " files uploaded", app);
@@ -497,7 +479,7 @@ public class SSHPlugin extends Plugin {
          }
 
 
-      } else if (hasLabel(neoNode.getNode(), Entities.CommandRoot)) {
+      } else if (isCommandRoot(neoNode.getNode())) {
 
          pop.add(new App.TransactionAction("Add Category", app) {
             @Override
@@ -520,7 +502,7 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void doAction(Transaction tx) throws Throwable {
                            final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
-                           relate(neoNode.getNode(), newNode, Relations.CATEGORIES);
+                           relateCATEGORIES(neoNode.getNode(), newNode);
                            fireNodesLoaded(newNode);
                         }
 
@@ -533,7 +515,8 @@ public class SSHPlugin extends Plugin {
                });
             }
          });
-      } else if (hasLabel(neoNode.getNode(), Entities.CommandCategory)) {
+
+      } else if (isCommandCategory(neoNode.getNode())) {
 
          pop.add(new AbstractAction("Add Command") {
             @Override
@@ -560,7 +543,7 @@ public class SSHPlugin extends Plugin {
                         @Override
                         public void doAction(Transaction tx) throws Throwable {
                            final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                           relate(neoNode.getNode(), newNode, Relations.COMMANDS);
+                           relateCOMMANDS(neoNode.getNode(), newNode);
                            fireNodesLoaded(newNode);
                         }
 
@@ -604,33 +587,6 @@ public class SSHPlugin extends Plugin {
 
          txtOutput.setFont(com.generator.app.AppMotif.getDefaultFont());
          txtOutput.setEditable(false);
-
-         // todo consider using this for typing directly in txtOutput, at terminal-position ?
-//         final int promptPosition = 50; // todo use end-of-text index
-//
-//         ((AbstractDocument) txtEditor.getDocument()).setDocumentFilter(new DocumentFilter() {
-//            public void insertString(final DocumentFilter.FilterBypass fb, final int offset, final String string, final AttributeSet attr) throws BadLocationException {
-//               System.out.println("insertString " + offset + " " + string);
-//               if (offset >= promptPosition) {
-//                  super.insertString(fb, offset, string, attr);
-//               }
-//            }
-//
-//            public void remove(final FilterBypass fb, final int offset, final int length) throws BadLocationException {
-//               System.out.println("remove " + offset + " " + length);
-//               if (offset >= promptPosition) {
-//                  super.remove(fb, offset, length);
-//               }
-//            }
-//
-//            public void replace(final FilterBypass fb, final int offset, final int length, final String text, final AttributeSet attrs) throws BadLocationException {
-//               System.out.println("replace " + offset + " " + length + " " + text);
-//               if (offset >= promptPosition) {
-//                  super.replace(fb, offset, length, text, attrs);
-//               }
-//            }
-//         });
-
 
          final DataInputStream dataIn = new DataInputStream(channel.getInputStream());
          final DataOutputStream dataOut = new DataOutputStream(channel.getOutputStream());
@@ -700,8 +656,7 @@ public class SSHPlugin extends Plugin {
 
                                           final CommandNode commandNode = new CommandNode(txtName.getText(), txtCommand.getText());
                                           final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                                          relate(categoryNode.node, newNode, Relations.COMMANDS);
-
+                                          relateCOMMANDS(categoryNode.node, newNode);
                                           SwingUtilities.invokeLater(() -> categoryNode.addChildNode(commandNode, categoryNode, commandTree));
                                        }
 
@@ -879,11 +834,6 @@ public class SSHPlugin extends Plugin {
                      final int read = dataIn.read(bytes);
                      cache.append(new String(bytes, 0, read, "UTF-8"));
 
-//                     // todo test this, perhaps put in as cache-parameter
-//                     if (cache.length() > (20000)) {
-//                        cache.delete(0, 20000);
-//                     }
-
                      final String s = cache.toString();
                      SwingUtilities.invokeLater(() -> {
                         txtOutput.setText(s);
@@ -1048,10 +998,10 @@ public class SSHPlugin extends Plugin {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
 
-                                 final Node newNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
-                                 relate(getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name()), newNode, Relations.CATEGORIES);
-
-                                 SwingUtilities.invokeLater(() -> addChildNode(new CommandCategoryNode(name, newNode), thisLabel, commandTree));
+                                 final Node commandCategoryNode = getGraph().findOrCreate(Entities.CommandCategory, AppMotif.Properties.name.name(), txtName.getText());
+                                 final Node commandRootNode = getGraph().findOrCreate(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
+                                 relateCATEGORIES(commandRootNode, commandCategoryNode);
+                                 SwingUtilities.invokeLater(() -> addChildNode(new CommandCategoryNode(name, commandCategoryNode), thisLabel, commandTree));
                               }
 
                               @Override
@@ -1070,25 +1020,21 @@ public class SSHPlugin extends Plugin {
          // commands for host:
          final Node hostNode = other(sessionNode.getNode(), singleIncoming(sessionNode.getNode(), Relations.SESSIONS));
          final CommandCategoryNode hostCommands = new CommandCategoryNode("Host", hostNode);
-         outgoing(hostNode, Relations.COMMANDS).forEach(commandRelation -> {
-            final Node commandNode = other(hostNode, commandRelation);
-            hostCommands.add(new CommandNode(getString(commandNode, AppMotif.Properties.name.name()), getString(commandNode, Properties.cmdCommand.name())));
+         outgoingCOMMANDS(hostNode, new RelationConsumer() {
+            @Override
+            public void accept(Relationship commandRelation, Node commandNode) {
+               hostCommands.add(new CommandNode(SSHPlugin.getName(commandNode), getCmdCommand(commandNode)));
+            }
          });
          commands.add(hostCommands);
 
          // all general-commands:
          final Node commandRootNode = getGraph().findNode(Entities.CommandRoot, AppMotif.Properties.name.name(), Entities.CommandRoot.name());
-         outgoing(commandRootNode, Relations.CATEGORIES).forEach(categoryRelation -> {
-
-            final Node categoryNode = other(commandRootNode, categoryRelation);
+         outgoingCATEGORIES(commandRootNode, (categoryRelation, categoryNode) -> {
             final String categoryName = getString(categoryNode, AppMotif.Properties.name.name());
             final CommandCategoryNode labelNode = new CommandCategoryNode(categoryName, categoryNode);
             commands.add(labelNode);
-
-            outgoing(categoryNode, Relations.COMMANDS).forEach(commandRelation -> {
-               final Node commandNode = other(categoryNode, commandRelation);
-               labelNode.add(new CommandNode(getString(commandNode, AppMotif.Properties.name.name()), getString(commandNode, Properties.cmdCommand.name())));
-            });
+            outgoingCOMMANDS(categoryNode, (commandRelation, commandNode) -> labelNode.add(new CommandNode(SSHPlugin.getName(commandNode), getCmdCommand(commandNode))));
          });
 
          // paths for host:
@@ -1178,9 +1124,8 @@ public class SSHPlugin extends Plugin {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
 
-                              final Node newNode = getGraph().findOrCreate(Entities.Path, AppMotif.Properties.name.name(), txtName.getText());
-                              relate(node, newNode, Relations.PATHS);
-
+                              final Node newNode = newPath(txtName.getText());
+                              relatePATHS(node, newNode);
                               final PathNode pathNode = new PathNode(newNode);
                               SwingUtilities.invokeLater(() -> addChildNode(pathNode, PathsNode.this, commandTree));
                            }
@@ -1232,8 +1177,7 @@ public class SSHPlugin extends Plugin {
 
                               final CommandNode commandNode = new CommandNode(txtName.getText(), txtCommand.getText());
                               final Node newNode = getGraph().findOrCreate(Entities.Command, AppMotif.Properties.name.name(), txtName.getText(), Properties.cmdCommand.name(), txtCommand.getText());
-                              relate(node, newNode, Relations.COMMANDS);
-
+                              relateCOMMANDS(node, newNode);
                               SwingUtilities.invokeLater(() -> addChildNode(commandNode, CommandCategoryNode.this, commandTree));
                            }
 
@@ -1387,9 +1331,9 @@ public class SSHPlugin extends Plugin {
    private Node connectToHost(Node hostNode) {
       try {
          final Session session = getSession(hostNode);
-         final Node sessionNode = getGraph().newNode(Entities.Session);
+         final Node sessionNode = newSession();
          sessions.put(uuidOf(sessionNode), session);
-         relate(hostNode, sessionNode, Relations.SESSIONS);
+         relateSESSIONS(hostNode, sessionNode);
          fireNodesLoaded(sessionNode);
 
          return sessionNode;
@@ -1403,12 +1347,12 @@ public class SSHPlugin extends Plugin {
    @NotNull
    public static Session getSession(Node hostNode) throws JSchException {
 
-      final String username = getString(hostNode, Properties.username.name());
-      final String host = getString(hostNode, Properties.ip.name());
-      final int port = hostNode.hasProperty(Properties.port.name()) ? (int) hostNode.getProperty(Properties.port.name()) : 22;
+      final String username = getUsername(hostNode);
+      final String host = getIp(hostNode);
+      final int port = getPort(hostNode, 22);
 
-      final String keyPath = getString(hostNode, Properties.privateKeyPath.name());
-      final String password = getString(hostNode, Properties.password.name());
+      final String keyPath = getPrivateKeyPath(hostNode);
+      final String password = getPassword(hostNode);
       return keyPath == null ? JschUtil.getSessionUsingPassword(username, host, port, password) : JschUtil.getSessionUsingPrivateKey(username, host, port, keyPath);
    }
 
@@ -1419,14 +1363,14 @@ public class SSHPlugin extends Plugin {
 
    private void closeSession(Node sessionNode) {
 
-      outgoing(sessionNode, Relations.CHANNELS).forEach(channelRelation -> closeChannel(other(sessionNode, channelRelation)));
+      outgoingCHANNELS(sessionNode, (relationship, other) -> closeChannel(other));
 
       if (sessions.containsKey(uuidOf(sessionNode))) {
          final Session session = sessions.remove(uuidOf(sessionNode));
          if (session.isConnected()) session.disconnect();
       }
 
-      incoming(sessionNode, Relations.SESSIONS).forEach(Relationship::delete);
+      incomingSESSIONS(sessionNode, (relationship, other) -> relationship.delete());
 
       final NeoNode neoNode = app.workspace.layerNodes.get(sessionNode.getId());
       if (neoNode != null) fireNodeClosed(neoNode);
@@ -1442,7 +1386,7 @@ public class SSHPlugin extends Plugin {
          channel.editor.active.set(false);
       }
 
-      incoming(channelNode, Relations.CHANNELS).forEach(Relationship::delete);
+      incomingCHANNELS(channelNode, (relationship, other) -> relationship.delete());
 
       final NeoNode neoNode = app.workspace.layerNodes.get(channelNode.getId());
       if (neoNode != null) fireNodeClosed(neoNode);

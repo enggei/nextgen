@@ -99,23 +99,6 @@ public class LuaNodeListener extends LuaBaseListener {
       return !inNumber.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
-
-	@Override
-	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inField.push(true);
-	}
-
-	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
-		onExit();
-		this.inField.pop();
-	}
-
-	public boolean inField() {
-      return !inField.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
 
 	@Override
@@ -131,6 +114,23 @@ public class LuaNodeListener extends LuaBaseListener {
 
 	public boolean inVar() {
       return !inVar.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inField = new java.util.Stack<>();
+
+	@Override
+	public void enterField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		onEnter(new Node("Field", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inField.push(true);
+	}
+
+	public void exitField(com.generator.generators.lua.parser.LuaParser.FieldContext arg) {
+		onExit();
+		this.inField.pop();
+	}
+
+	public boolean inField() {
+      return !inField.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inChunk = new java.util.Stack<>();

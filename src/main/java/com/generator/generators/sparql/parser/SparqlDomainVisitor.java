@@ -7,7 +7,24 @@ public abstract class SparqlDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "DefaultGraphClause")) visitDefaultGraphClause(node);
+		if(hasLabel(node, "String")) visitString(node);
+		else if(hasLabel(node, "Expression")) visitExpression(node);
+		else if(hasLabel(node, "Var")) visitVar(node);
+		else if(hasLabel(node, "Query")) visitQuery(node);
+		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
+		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
+		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
+		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
+		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
+		else if(hasLabel(node, "Prologue")) visitPrologue(node);
+		else if(hasLabel(node, "BaseDecl")) visitBaseDecl(node);
+		else if(hasLabel(node, "PrefixDecl")) visitPrefixDecl(node);
+		else if(hasLabel(node, "SelectQuery")) visitSelectQuery(node);
+		else if(hasLabel(node, "ConstructQuery")) visitConstructQuery(node);
+		else if(hasLabel(node, "DescribeQuery")) visitDescribeQuery(node);
+		else if(hasLabel(node, "AskQuery")) visitAskQuery(node);
+		else if(hasLabel(node, "DatasetClause")) visitDatasetClause(node);
+		else if(hasLabel(node, "DefaultGraphClause")) visitDefaultGraphClause(node);
 		else if(hasLabel(node, "NamedGraphClause")) visitNamedGraphClause(node);
 		else if(hasLabel(node, "SourceSelector")) visitSourceSelector(node);
 		else if(hasLabel(node, "WhereClause")) visitWhereClause(node);
@@ -59,24 +76,109 @@ public abstract class SparqlDomainVisitor {
 		else if(hasLabel(node, "IriRef")) visitIriRef(node);
 		else if(hasLabel(node, "PrefixedName")) visitPrefixedName(node);
 		else if(hasLabel(node, "BlankNode")) visitBlankNode(node);
-		else if(hasLabel(node, "Prologue")) visitPrologue(node);
-		else if(hasLabel(node, "BaseDecl")) visitBaseDecl(node);
-		else if(hasLabel(node, "PrefixDecl")) visitPrefixDecl(node);
-		else if(hasLabel(node, "SelectQuery")) visitSelectQuery(node);
-		else if(hasLabel(node, "ConstructQuery")) visitConstructQuery(node);
-		else if(hasLabel(node, "DescribeQuery")) visitDescribeQuery(node);
-		else if(hasLabel(node, "AskQuery")) visitAskQuery(node);
-		else if(hasLabel(node, "DatasetClause")) visitDatasetClause(node);
-		else if(hasLabel(node, "String")) visitString(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
-		else if(hasLabel(node, "Var")) visitVar(node);
-		else if(hasLabel(node, "Query")) visitQuery(node);
-		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
-		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
-		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
-		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
-		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
    }
+
+	public void visitString(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitVar(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBooleanLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMultiplicativeExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAdditiveExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRelationalExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNumericLiteral(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrologue(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBaseDecl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPrefixDecl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSelectQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitConstructQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDescribeQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAskQuery(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDatasetClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitDefaultGraphClause(Node node) {
 		if (visited.contains(node)) return;
@@ -385,108 +487,6 @@ public abstract class SparqlDomainVisitor {
 	}
 
 	public void visitBlankNode(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrologue(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBaseDecl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPrefixDecl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSelectQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstructQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDescribeQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAskQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDatasetClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitString(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVar(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQuery(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBooleanLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMultiplicativeExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAdditiveExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRelationalExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNumericLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

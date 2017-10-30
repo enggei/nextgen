@@ -57,6 +57,24 @@ public class propertiesNeoListener extends propertiesBaseListener {
       return !inDecl.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPropertiesFile.push(true);
+	}
+
+	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onExit();
+		this.inPropertiesFile.pop();
+	}
+
+	public boolean inPropertiesFile() {
+      return !inPropertiesFile.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
 
 	@Override
@@ -73,24 +91,6 @@ public class propertiesNeoListener extends propertiesBaseListener {
 
 	public boolean inComment() {
       return !inComment.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
-
-	@Override
-	public void enterRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inRow.push(true);
-	}
-
-	public void exitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
-		onExit();
-		this.inRow.pop();
-	}
-
-	public boolean inRow() {
-      return !inRow.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();
@@ -111,22 +111,22 @@ public class propertiesNeoListener extends propertiesBaseListener {
       return !inValue.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+	protected java.util.Stack<Boolean> inRow = new java.util.Stack<>();
 
 	@Override
-	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("PropertiesFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+	public void enterRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
+		final Node node = model.findOrCreate(Label.label("Row"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
 		onEnter(node);
-		this.inPropertiesFile.push(true);
+		this.inRow.push(true);
 	}
 
-	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+	public void exitRow(com.generator.generators.properties.parser.propertiesParser.RowContext arg) {
 		onExit();
-		this.inPropertiesFile.pop();
+		this.inRow.pop();
 	}
 
-	public boolean inPropertiesFile() {
-      return !inPropertiesFile.isEmpty(); 
+	public boolean inRow() {
+      return !inRow.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inKey = new java.util.Stack<>();

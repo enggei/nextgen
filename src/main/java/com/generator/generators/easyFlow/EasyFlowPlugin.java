@@ -3,15 +3,16 @@ package com.generator.generators.easyFlow;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.DomainMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.generators.domain.DomainPlugin;
-import com.generator.generators.project.ProjectPlugin;
+import com.generator.generators.domain.Visitor;
 import com.generator.generators.stringtemplate.GeneratedFile;
 import com.generator.util.NeoUtil;
 import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -24,64 +25,46 @@ import java.util.TreeSet;
 
 import static com.generator.app.DomainMotif.getPropertyValue;
 import static com.generator.app.DomainMotif.hasProperty;
-import static com.generator.generators.domain.DomainPlugin.Entities.Domain;
-import static com.generator.generators.domain.DomainPlugin.Entities.Entity;
-import static com.generator.generators.easyFlow.EasyFlowPlugin.Entities.*;
-import static com.generator.generators.easyFlow.EasyFlowPlugin.Relations.*;
+import static com.generator.generators.easyFlow.EasyFlowDomainPlugin.Relations.*;
+import static com.generator.generators.project.ProjectPlugin.getPackageName;
 import static com.generator.generators.project.ProjectPlugin.getFile;
+import static com.generator.generators.project.ProjectPlugin.incomingRENDERER;
 import static com.generator.util.NeoUtil.*;
 import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**
  * Created 03.08.17.
  */
-public class EasyFlowPlugin extends Plugin {
+public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
-   public enum Entities implements Label {
-      Flow, State, ContextProperty, Event
-   }
-
-   public enum Relations implements RelationshipType {
-      CONTEXT_PROPERTY, FINISH, TO, FROM, ON
-   }
-
-   public enum Properties {
-      extending, modifier, comment, type, value
-   }
-
-   private final Node flowNode;
+//   private final Node flowNode;
 
    public EasyFlowPlugin(App app) {
-      super(app, "EasyFlow");
+      super(app);
 
-      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
-      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
-      DomainMotif.newEntityProperty(getGraph(), flowNode, AppMotif.Properties.name.name());
-      DomainMotif.newEntityProperty(getGraph(), flowNode, Properties.extending.name());
-      relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
-
-      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
-      DomainMotif.newEntityProperty(getGraph(), stateNode, AppMotif.Properties.name.name());
-
-      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, AppMotif.Properties.name.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.modifier.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.comment.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.type.name());
-      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.value.name());
-
-      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
-      DomainMotif.newEntityProperty(getGraph(), eventNode, AppMotif.Properties.name.name());
-
-      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
-      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, contextPropertyNode);
-      DomainMotif.newEntityRelation(getGraph(), stateNode, Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, eventNode);
-      DomainMotif.newEntityRelation(getGraph(), eventNode, Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+//      final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "EasyFlow");
+//      flowNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Flow.name());
+//      DomainMotif.newEntityProperty(getGraph(), flowNode, AppMotif.Properties.name.name());
+//      DomainMotif.newEntityProperty(getGraph(), flowNode, Properties.extending.name());
+//      relate(domainNode, flowNode, DomainPlugin.Relations.ENTITY);
+//
+//      final Node stateNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), State.name());
+//      DomainMotif.newEntityProperty(getGraph(), stateNode, AppMotif.Properties.name.name());
+//
+//      final Node contextPropertyNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), ContextProperty.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, AppMotif.Properties.name.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.modifier.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.comment.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.type.name());
+//      DomainMotif.newEntityProperty(getGraph(), contextPropertyNode, Properties.value.name());
+//
+//      final Node eventNode = getGraph().findOrCreate(Entity, AppMotif.Properties.name.name(), Event.name());
+//      DomainMotif.newEntityProperty(getGraph(), eventNode, AppMotif.Properties.name.name());
+//
+//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.FROM.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
+//      DomainMotif.newEntityRelation(getGraph(), flowNode, Relations.CONTEXT_PROPERTY.name(), DomainPlugin.RelationCardinality.LIST, contextPropertyNode);
+//      DomainMotif.newEntityRelation(getGraph(), stateNode, Relations.ON.name(), DomainPlugin.RelationCardinality.LIST, eventNode);
+//      DomainMotif.newEntityRelation(getGraph(), eventNode, Relations.TO.name(), DomainPlugin.RelationCardinality.SINGLE, stateNode);
    }
 
    @Override
@@ -96,8 +79,8 @@ public class EasyFlowPlugin extends Plugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = getGraph().newNode(Entities.Flow);
-            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
+            final Node newNode = newFlow(name);
+//            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
             relate(newNode, DomainMotif.newValueNode(getGraph(), name), RelationshipType.withName(AppMotif.Properties.name.name()));
@@ -105,12 +88,12 @@ public class EasyFlowPlugin extends Plugin {
          }
       });
 
-      menu.add(new App.TransactionAction("Show domain", app) {
-         @Override
-         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            fireNodesLoaded(flowNode);
-         }
-      });
+//      menu.add(new App.TransactionAction("Show domain", app) {
+//         @Override
+//         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+//            fireNodesLoaded(flowNode);
+//         }
+//      });
    }
 
    @Override
@@ -118,8 +101,8 @@ public class EasyFlowPlugin extends Plugin {
 
       final Node node = neoNode.getNode();
 
-      if (hasLabel(node, Entities.Flow)) {
-         incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelationship -> pop.add(new App.TransactionAction("Render FSM", app) {
+      if (isFlow(node)) {
+         incomingRENDERER(neoNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render FSM", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                renderEasyFlow(rendererRelationship, node);
@@ -135,11 +118,13 @@ public class EasyFlowPlugin extends Plugin {
 
    public static void renderEasyFlow(Relationship rendererRelationship, Node node) {
 
-      final String packageName = getString(rendererRelationship, "package");
-      final String name = getPropertyValue(node, AppMotif.Properties.name.name());
+      final String packageName = getPackageName(rendererRelationship);
+      final String name = getName(node);
       final File targetDir = getFile(other(node, rendererRelationship));
 
-      final String javaClass = new JavaGenerator(new EasyFlowGroup()).visitFlow(node, packageName);
+      final JavaGenerator javaGenerator = new JavaGenerator(packageName);
+      javaGenerator.visit(node);
+      final String javaClass = javaGenerator.getResult();
 
       try {
          GeneratedFile.newJavaFile(targetDir.getPath(), packageName, name).write(javaClass);
@@ -148,17 +133,25 @@ public class EasyFlowPlugin extends Plugin {
       }
    }
 
-   private static final class JavaGenerator {
+   private static final class JavaGenerator implements Visitor<String> {
 
-      private final EasyFlowGroup group;
+      private final EasyFlowGroup group = new EasyFlowGroup();
+      private final String packageName;
 
       private EasyFlowGroup.easyFlowST fsm;
+      private String result;
 
-      JavaGenerator(EasyFlowGroup group) {
-         this.group = group;
+      JavaGenerator(String packageName) {
+         this.packageName = packageName;
       }
 
-      String visitFlow(Node node, String packageName) {
+      @Override
+      public String getResult() {
+         return result;
+      }
+
+      @Override
+      public void visit(Node node) {
          final String name = getPropertyValue(node, AppMotif.Properties.name.name());
 
          final Set<String> events = new TreeSet<>();
@@ -169,10 +162,10 @@ public class EasyFlowPlugin extends Plugin {
                setIsInit("true").
                setIsFinish("false");
 
-         if (!hasOutgoing(node, FROM))
+         if (!hasOutgoing(node, Relations.FROM))
             throw new IllegalStateException("Flownode has no initial state");
 
-         final Node initStateNode = NeoUtil.otherOutgoing(node, FROM);
+         final Node initStateNode = NeoUtil.otherOutgoing(node, Relations.FROM);
          final String initStateName = StringUtil.toUpper(getPropertyValue(initStateNode, AppMotif.Properties.name.name()));
          expand(initStateNode, transitST.setState(initStateName), group, events, states, stateComments);
 
@@ -221,7 +214,7 @@ public class EasyFlowPlugin extends Plugin {
                         setState(state));
          }
 
-         return fsm.toString();
+         result = fsm.toString();
       }
 
       private Object formatPropertyValue(Object value) {

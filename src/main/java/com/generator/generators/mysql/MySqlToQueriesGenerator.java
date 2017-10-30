@@ -48,7 +48,7 @@ public class MySqlToQueriesGenerator extends MySqlParserNodeListener {
             if (cols.isEmpty()) return;
 
             final MysqlGroup.selectST selectST = mysqlGroup.newselect().
-                  setTable(tableName);
+                  addTablesValue(tableName);
             for (String col : cols)
                selectST.addColumnsValue(col);
             selectSTStack.push(selectST);
@@ -56,7 +56,7 @@ public class MySqlToQueriesGenerator extends MySqlParserNodeListener {
       }
 
       final MysqlGroup.selectST selectST = mysqlGroup.newselect().
-            setTable(tableName).
+            addTablesValue(tableName).
             addColumnsValue("*");
       selectSTStack.push(selectST);
 

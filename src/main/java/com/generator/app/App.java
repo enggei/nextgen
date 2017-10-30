@@ -2,6 +2,7 @@ package com.generator.app;
 
 import com.generator.generators.antlr.ANTLRPlugin;
 import com.generator.generators.clojure.ClojurePlugin;
+import com.generator.generators.csv.CSVPlugin;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
@@ -242,6 +243,7 @@ public class App extends JFrame {
                   plugins.add(new ProjectPlugin(App.this));
                   plugins.add(new MathPlugin(App.this));
                   plugins.add(new ClojurePlugin(App.this));
+                  plugins.add(new CSVPlugin(App.this));
                }
             }
          });
