@@ -8,14 +8,20 @@ public abstract class propertiesDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Decl")) visitDecl(node);
-		else if(hasLabel(node, "Comment")) visitComment(node);
-		else if(hasLabel(node, "Row")) visitRow(node);
-		else if(hasLabel(node, "Value")) visitValue(node);
 		else if(hasLabel(node, "PropertiesFile")) visitPropertiesFile(node);
+		else if(hasLabel(node, "Comment")) visitComment(node);
+		else if(hasLabel(node, "Value")) visitValue(node);
+		else if(hasLabel(node, "Row")) visitRow(node);
 		else if(hasLabel(node, "Key")) visitKey(node);
    }
 
 	public void visitDecl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPropertiesFile(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -27,19 +33,13 @@ public abstract class propertiesDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitRow(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitValue(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitPropertiesFile(Node node) {
+	public void visitRow(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

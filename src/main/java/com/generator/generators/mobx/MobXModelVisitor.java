@@ -17,8 +17,8 @@ public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
    private final MobXGroup mobXGroup = new MobXGroup();
    private final Stack<MobXGroup.ModelST> modelStack = new Stack<>();
 
-   public MobXModelVisitor(Node visitorNode, App app) {
-      super(true, visitorNode, app);
+   public MobXModelVisitor() {
+      super(true);
    }
 
    @Override
@@ -37,7 +37,7 @@ public class MobXModelVisitor extends DomainVisitor<MobXGroup.ModelST> {
       modelStack.push(modelST);
       super.visitEntity(node);
 
-      NeoUtil.outgoing(visitorNode, ProjectPlugin.Relations.RENDERER).forEach(relationship -> ProjectPlugin.renderToFile(relationship, null, modelST.toString(), NeoUtil.other(visitorNode, relationship), app));
+//      NeoUtil.outgoing(visitorNode, ProjectPlugin.Relations.RENDERER).forEach(relationship -> ProjectPlugin.renderToFile(relationship, null, modelST.toString(), NeoUtil.other(visitorNode, relationship), app));
    }
 
    @Override

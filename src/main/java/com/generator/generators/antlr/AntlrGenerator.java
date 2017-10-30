@@ -32,6 +32,8 @@ import com.generator.generators.properties.parser.propertiesListener;
 import com.generator.generators.properties.parser.propertiesVisitor;
 import com.generator.generators.protobuf.parser.ProtobufListener;
 import com.generator.generators.protobuf.parser.ProtobufVisitor;
+import com.generator.generators.python.parser.Python3Listener;
+import com.generator.generators.python.parser.Python3Visitor;
 import com.generator.generators.scala.parser.ScalaListener;
 import com.generator.generators.scala.parser.ScalaVisitor;
 import com.generator.generators.sparql.parser.SparqlListener;
@@ -76,6 +78,7 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".mysql.parser", "MySqlParser", MySqlParserVisitor.class, MySqlParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".properties.parser", "properties", propertiesVisitor.class, propertiesListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".protobuf.parser", "Protobuf", ProtobufVisitor.class, ProtobufListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".python.parser", "Python3", Python3Visitor.class, Python3Listener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".scala.parser", "Scala", ScalaVisitor.class, ScalaListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".sparql.parser", "Sparql", SparqlVisitor.class, SparqlListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);

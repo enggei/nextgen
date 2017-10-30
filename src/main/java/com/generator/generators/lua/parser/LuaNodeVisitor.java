@@ -94,8 +94,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
-		final Node node = new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
+		final Node node = new Node("Stat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -103,8 +103,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		final Node node = new Node("Stat", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitChunk(com.generator.generators.lua.parser.LuaParser.ChunkContext arg) {
+		final Node node = new Node("Chunk", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -121,8 +121,8 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
+		final Node node = new Node("OperatorBitwise", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -186,6 +186,15 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
 		final Node node = new Node("Prefixexp", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		final Node node = new Node("Functioncall", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -330,15 +339,6 @@ public class LuaNodeVisitor extends LuaBaseVisitor<LuaNodeVisitor.Node> {
 	@Override
 	public Node visitOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
 		final Node node = new Node("OperatorMulDivMod", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
-		final Node node = new Node("OperatorBitwise", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

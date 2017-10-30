@@ -39,6 +39,24 @@ public class CSVNeoListener extends CSVBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
+
+	@Override
+	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCsvFile.push(true);
+	}
+
+	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		onExit();
+		this.inCsvFile.pop();
+	}
+
+	public boolean inCsvFile() {
+      return !inCsvFile.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inHdr = new java.util.Stack<>();
 
 	@Override
@@ -91,24 +109,6 @@ public class CSVNeoListener extends CSVBaseListener {
 
 	public boolean inField() {
       return !inField.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCsvFile = new java.util.Stack<>();
-
-	@Override
-	public void enterCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		final Node node = model.findOrCreate(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCsvFile.push(true);
-	}
-
-	public void exitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		onExit();
-		this.inCsvFile.pop();
-	}
-
-	public boolean inCsvFile() {
-      return !inCsvFile.isEmpty(); 
    }
 
 }

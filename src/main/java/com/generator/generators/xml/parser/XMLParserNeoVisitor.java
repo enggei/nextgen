@@ -28,9 +28,19 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
-		System.out.println("Chardata");
-		final Node node = model.newNode(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
+		System.out.println("Element");
+		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
+		System.out.println("Attribute");
+		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -78,29 +88,19 @@ public class XMLParserNeoVisitor extends XMLParserBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitChardata(com.generator.generators.xml.parser.XMLParser.ChardataContext arg) {
+		System.out.println("Chardata");
+		final Node node = model.newNode(Label.label("Chardata"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitMisc(com.generator.generators.xml.parser.XMLParser.MiscContext arg) {
 		System.out.println("Misc");
 		final Node node = model.newNode(Label.label("Misc"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElement(com.generator.generators.xml.parser.XMLParser.ElementContext arg) {
-		System.out.println("Element");
-		final Node node = model.newNode(Label.label("Element"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAttribute(com.generator.generators.xml.parser.XMLParser.AttributeContext arg) {
-		System.out.println("Attribute");
-		final Node node = model.newNode(Label.label("Attribute"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

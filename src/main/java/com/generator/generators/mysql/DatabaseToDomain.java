@@ -12,7 +12,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.generator.util.NeoUtil.getString;
 import static com.generator.util.NeoUtil.relate;
 
 /**
@@ -87,7 +86,7 @@ public class DatabaseToDomain extends MySqlParserNodeListener {
    void assignForeignKeys() {
       for (ForeignKeyVisitor foreignKeyVisitor : foreignKeyVisitorSet) {
          final TableReference tableReference = tableMap.get(foreignKeyVisitor.tableName);
-         final org.neo4j.graphdb.Node fkNode = model.newNode(MySQLPlugin.Entities.FOREIGN_KEY, AppMotif.Properties.name.name(), foreignKeyVisitor.id, MySQLPlugin.Properties.onDelete.name(), foreignKeyVisitor.onDeleteAction);
+         final org.neo4j.graphdb.Node fkNode = model.newNode(MySQLPlugin.Entities.ForeignKey, AppMotif.Properties.name.name(), foreignKeyVisitor.id, MySQLPlugin.Properties.onDelete.name(), foreignKeyVisitor.onDeleteAction);
          for (String colName : foreignKeyVisitor.indexColNames) {
             final org.neo4j.graphdb.Node columnNode = tableReference.columnNodes.get(colName);
             relate(columnNode, fkNode, MySQLPlugin.Relations.FK_SRC);

@@ -112,6 +112,7 @@ public final class Workspace extends JPanel {
                   SwingUtilities.invokeLater(() -> showContextMenu(event));
                } else if (event.isLeftMouseButton()) {
                   clearSelection();
+
                }
             }
 
@@ -130,12 +131,16 @@ public final class Workspace extends JPanel {
                      if (pluginsMenu.getMenuComponents().length > 0) pop.add(pluginsMenu);
 
                      final JMenu selectAllMenu = getSelectAllMenu();
-                     if (selectAllMenu.getMenuComponents().length>0) pop.add(selectAllMenu);
+                     if (selectAllMenu.getMenuComponents().length > 0) pop.add(selectAllMenu);
 
                      addSelectedRelationsActions(pop);
                      addSelectedNodesActions(pop);
                      addLayoutMenu(pop);
                      pop.add(setCanvasBackgroundAction());
+
+
+                     pop.add(centerNodesAction());
+
                   }
 
                   @Override
@@ -502,6 +507,33 @@ public final class Workspace extends JPanel {
          };
       }
 
+      @NotNull
+      private App.TransactionAction centerNodesAction() {
+         return new App.TransactionAction("Center Nodes", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               final Rectangle2D bounds2D = nodeCanvas.getCamera().getViewBounds().getBounds2D();
+
+               double startX = bounds2D.getX();
+               double startY = bounds2D.getY();
+
+               final Random random = new Random(System.currentTimeMillis());
+               for (NeoNode neoNode : getAllNodes()) {
+
+                  final Point2D offset = neoNode.getOffset();
+                  if (offset.getX() >= startX && offset.getX() <= (bounds2D.getWidth() + startX))
+                     if (offset.getY() >= startY && offset.getY() <= (bounds2D.getWidth() + startY))
+                        continue;
+
+
+                  double nodeX = random.nextInt((int) bounds2D.getWidth()) + startX;
+                  double nodeY = random.nextInt((int) bounds2D.getHeight()) + startY;
+                  neoNode.setOffset(new Point2D.Double(nodeX, nodeY));
+               }
+            }
+         };
+      }
+
       private void addLayoutMenu(JPopupMenu pop) {
          if (nodeLayer.getAllNodes().size() > 0) {
             final JMenu saveLayout = new JMenu("Save Layout");
@@ -554,6 +586,67 @@ public final class Workspace extends JPanel {
                }
             });
 
+            pop.add(new App.TransactionAction("Change Relation type for " + selectedRelations.size() + " relations", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Set<String> existing = new LinkedHashSet<>();
+                  for (NeoRelationship selectedRelation : selectedRelations)
+                     existing.add(selectedRelation.getRelationship().getType().name());
+
+                  final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+                  final JTextField txtNewRelationshipType = new JTextField();
+
+                  final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                  editor.addLabel("Old Type", 1, 1);
+                  editor.add(cboExisting, 3, 1);
+                  editor.addLabel("New Type", 1, 3);
+                  editor.add(txtNewRelationshipType, 3, 3);
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                  SwingUtil.showDialog(editor, app, "New Relationship type", new SwingUtil.ConfirmAction() {
+
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        final String newRelationTypeName = txtNewRelationshipType.getText().trim().toUpperCase();
+                        final String existingRelationTypeName = (String) cboExisting.getSelectedItem();
+
+                        app.model.graph().doInTransaction(new Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+
+                              final RelationshipType newRelationshipType = RelationshipType.withName(newRelationTypeName);
+
+                              final Set<Relationship> deleteRelations = new LinkedHashSet<>();
+                              for (NeoRelationship selectedRelation : selectedRelations) {
+                                 final Relationship oldRelation = selectedRelation.getRelationship();
+                                 if(existingRelationTypeName.equals(oldRelation.getType().name())) {
+
+                                    final Node src = oldRelation.getStartNode();
+                                    final Node dst = oldRelation.getEndNode();
+
+                                    final Relationship newRelation = src.createRelationshipTo(dst, newRelationshipType);
+                                    for (String key : oldRelation.getPropertyKeys()) newRelation.setProperty(key, oldRelation.getProperty(key));
+                                    deleteRelations.add(oldRelation);
+                                 }
+                              }
+
+                              for (Relationship deleteRelation : deleteRelations) {
+                                 deleteRelation.delete();
+                              }
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showExceptionNoStack(app, throwable);
+                           }
+                        });
+                     }
+                  });
+               }
+            });
+
             pop.add(new App.TransactionAction("Close selected relations", app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -570,6 +663,57 @@ public final class Workspace extends JPanel {
                         relations.add(selectedRelation.getRelationship());
                      app.model.deleteRelations(relations);
                   }
+               }
+            });
+
+            pop.add(new App.TransactionAction("Change Property name for selected relations", app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Set<String> existing = new LinkedHashSet<>();
+                  for (NeoRelationship selectedRelation : selectedRelations) {
+                     for (String property : selectedRelation.getRelationship().getPropertyKeys())
+                        existing.add(property);
+                  }
+
+                  final JComboBox<String> cboExisting = new JComboBox<>(existing.toArray(new String[existing.size()]));
+                  final JTextField txtNewProperty = new JTextField();
+
+                  final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref,4dlu,pref");
+                  editor.addLabel("Old Property", 1, 1);
+                  editor.add(cboExisting, 3, 1);
+                  editor.addLabel("New Property", 1, 3);
+                  editor.add(txtNewProperty, 3, 3);
+                  editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+                  SwingUtil.showDialog(editor, app, "New Property", new SwingUtil.ConfirmAction() {
+
+                     @Override
+                     public void verifyAndCommit() throws Exception {
+
+                        final String newPropertyName = txtNewProperty.getText().trim();
+                        final String existingPropertyName = (String) cboExisting.getSelectedItem();
+
+                        app.model.graph().doInTransaction(new Committer() {
+                           @Override
+                           public void doAction(Transaction tx) throws Throwable {
+
+                              for (NeoRelationship selectedRelation : selectedRelations) {
+                                 final Relationship relationship = selectedRelation.getRelationship();
+                                 if(relationship.hasProperty(existingPropertyName)) {
+                                    relationship.setProperty(newPropertyName, relationship.getProperty(existingPropertyName));
+                                    relationship.removeProperty(existingPropertyName);
+                                 }
+                              }
+                           }
+
+                           @Override
+                           public void exception(Throwable throwable) {
+                              SwingUtil.showExceptionNoStack(app, throwable);
+                           }
+                        });
+                     }
+                  });
                }
             });
          }

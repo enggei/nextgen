@@ -122,7 +122,7 @@ public class JavaPlugin extends Plugin {
 
                   // todo this should come from traversers of the graph
                   final String name = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
-                  final String packageName = DomainMotif.getPropertyValue(neoNode.getNode(), "package", "");
+                  final String packageName = DomainMotif.getPropertyValue(neoNode.getNode(), "packageName", "");
 
                   final String content = StringTemplatePlugin.renderStatement(neoNode.getNode(), instanceNode);
 

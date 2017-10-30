@@ -58,114 +58,6 @@ public class ClojureNodeVisitor extends ClojureBaseVisitor<ClojureNodeVisitor.No
 	}
 
 	@Override
-	public Node visitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		final Node node = new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		final Node node = new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
-		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
-		final Node node = new Node("Reader_macro", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
-		final Node node = new Node("Quote", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
-		final Node node = new Node("Backtick", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
-		final Node node = new Node("Unquote", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		final Node node = new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		final Node node = new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		final Node node = new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
-		final Node node = new Node("Unquote_splicing", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
-		final Node node = new Node("Tag", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitDeref(com.generator.generators.clojure.parser.ClojureParser.DerefContext arg) {
 		final Node node = new Node("Deref", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -229,6 +121,123 @@ public class ClojureNodeVisitor extends ClojureBaseVisitor<ClojureNodeVisitor.No
 	}
 
 	@Override
+	public Node visitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		final Node node = new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		final Node node = new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		final Node node = new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		final Node node = new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		final Node node = new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSet(com.generator.generators.clojure.parser.ClojureParser.SetContext arg) {
+		final Node node = new Node("Set", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitString(com.generator.generators.clojure.parser.ClojureParser.StringContext arg) {
+		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReader_macro(com.generator.generators.clojure.parser.ClojureParser.Reader_macroContext arg) {
+		final Node node = new Node("Reader_macro", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQuote(com.generator.generators.clojure.parser.ClojureParser.QuoteContext arg) {
+		final Node node = new Node("Quote", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBacktick(com.generator.generators.clojure.parser.ClojureParser.BacktickContext arg) {
+		final Node node = new Node("Backtick", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUnquote(com.generator.generators.clojure.parser.ClojureParser.UnquoteContext arg) {
+		final Node node = new Node("Unquote", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitUnquote_splicing(com.generator.generators.clojure.parser.ClojureParser.Unquote_splicingContext arg) {
+		final Node node = new Node("Unquote_splicing", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTag(com.generator.generators.clojure.parser.ClojureParser.TagContext arg) {
+		final Node node = new Node("Tag", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitDispatch(com.generator.generators.clojure.parser.ClojureParser.DispatchContext arg) {
 		final Node node = new Node("Dispatch", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -249,15 +258,6 @@ public class ClojureNodeVisitor extends ClojureBaseVisitor<ClojureNodeVisitor.No
 	@Override
 	public Node visitLiteral(com.generator.generators.clojure.parser.ClojureParser.LiteralContext arg) {
 		final Node node = new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitString(com.generator.generators.clojure.parser.ClojureParser.StringContext arg) {
-		final Node node = new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

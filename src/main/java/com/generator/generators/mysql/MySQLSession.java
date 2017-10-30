@@ -1,5 +1,8 @@
 package com.generator.generators.mysql;
 
+import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
+
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Set;
 import java.util.TreeSet;
@@ -22,6 +25,10 @@ public class MySQLSession {
       Class.forName("com.mysql.jdbc.Driver");
       this.database = database;
       connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password));
+
+
+
+
    }
 
    public String getDatabase() {
@@ -38,6 +45,17 @@ public class MySQLSession {
    public void executeQuery(String query, ResultSetHandler handler) throws Exception {
       final Statement statement = connection.createStatement();
       final ResultSet resultSet = statement.executeQuery(query);
+      while (resultSet.next())
+         handler.handle(resultSet);
+      resultSet.close();
+      statement.close();
+   }
+
+   public void executeQuery(String query, ResultSetHandler handler, Object... params) throws Exception {
+      final PreparedStatement statement = connection.prepareStatement(query);
+      for (int i = 0; i < params.length; i++)
+         statement.setObject(i+1, params[i]);
+      final ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
          handler.handle(resultSet);
       resultSet.close();

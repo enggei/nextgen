@@ -1,6 +1,5 @@
 package com.generator.generators.domain;
 
-import com.generator.app.App;
 import com.generator.util.NeoUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -14,7 +13,7 @@ import static com.generator.util.NeoUtil.*;
 /**
  * Created 20.09.17.
  */
-public abstract class DomainVisitor<T> {
+public abstract class DomainVisitor<T> implements Visitor<T> {
 
    private final Set<Relationship> visitedRelations = new LinkedHashSet<>();
 
@@ -22,13 +21,8 @@ public abstract class DomainVisitor<T> {
    protected final StringBuilder delim = new StringBuilder("");
    protected final boolean debug;
 
-   protected final Node visitorNode;
-   protected final App app;
-
-   public DomainVisitor(boolean debug, Node visitorNode, App app) {
+   public DomainVisitor(boolean debug) {
       this.debug = debug;
-      this.visitorNode = visitorNode;
-      this.app = app;
    }
 
    public T getResult() {
@@ -60,7 +54,8 @@ public abstract class DomainVisitor<T> {
    public void visitRelation(Node node) {
       delim.append("\t");
       if (debug) System.out.println(delim.toString() + getNameAndLabelsFrom(node));
-      visitOutgoing(node, DomainPlugin.Relations.DST);
+      visitOutgoing(node, DomainPlugin.Relations.SRC);   // properties for relation
+      visitOutgoing(node, DomainPlugin.Relations.DST);   // targets for relation
       delim.deleteCharAt(delim.length() - 1);
    }
 

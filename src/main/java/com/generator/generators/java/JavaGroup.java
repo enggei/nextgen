@@ -46,12 +46,12 @@ public final class JavaGroup {
       return new BeanST(stGroup);
    }
 
-   public PojoST newPojo() {
-      return new PojoST(stGroup);
-   }
-
    public methodST newmethod() {
       return new methodST(stGroup);
+   }
+
+   public PojoST newPojo() {
+      return new PojoST(stGroup);
    }
 
    public EnumST newEnum() {
@@ -177,6 +177,117 @@ public final class JavaGroup {
 
       public String getScope() {
       	return (String) this._scope;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class methodST implements JavaGroupTemplate {
+
+      private java.util.Set<Object> _annotations = new java.util.LinkedHashSet<>();
+      private Object _name;
+      private java.util.Set<java.util.Map<String, Object>> _parameters = new java.util.LinkedHashSet<>();
+      private Object _returnValue;
+      private Object _scope;
+      private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private methodST(STGroup group) {
+   		template = group.getInstanceOf("method");
+   	}
+
+      public methodST addAnnotationsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._annotations.add(value);
+      	template.add("annotations", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getAnnotationsValues() {
+      	return this._annotations;
+      }
+
+      public methodST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public methodST addParametersValue(Object name_, Object type_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	this._parameters.add(map);
+
+         template.addAggr("parameters.{name, type}", map.get("name"), map.get("type"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getParameters() {
+      	return this._parameters;
+      }
+
+      public methodST setReturnValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._returnValue == null) {
+            this._returnValue = value;
+         	template.add("returnValue", value);
+         }
+
+      	return this;
+      }
+
+      public String getReturnValue() {
+      	return (String) this._returnValue;
+      }
+
+      public methodST setScope(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._scope == null) {
+            this._scope = value;
+         	template.add("scope", value);
+         }
+
+      	return this;
+      }
+
+      public String getScope() {
+      	return (String) this._scope;
+      }
+
+      public methodST addStatementsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._statements.add(value);
+      	template.add("statements", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getStatementsValues() {
+      	return this._statements;
       }
 
       @Override
@@ -335,117 +446,6 @@ public final class JavaGroup {
 
       public java.util.Set<java.util.Map<String, Object>> getProperties() {
       	return this._properties;
-      }
-
-      @Override
-   	public String toString() {
-   		return template.render();
-   	}
-   }
-
-   public final class methodST implements JavaGroupTemplate {
-
-      private java.util.Set<Object> _annotations = new java.util.LinkedHashSet<>();
-      private Object _name;
-      private java.util.Set<java.util.Map<String, Object>> _parameters = new java.util.LinkedHashSet<>();
-      private Object _returnValue;
-      private Object _scope;
-      private java.util.Set<Object> _statements = new java.util.LinkedHashSet<>();
-
-      private final ST template;
-
-      private methodST(STGroup group) {
-   		template = group.getInstanceOf("method");
-   	}
-
-      public methodST addAnnotationsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._annotations.add(value);
-      	template.add("annotations", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getAnnotationsValues() {
-      	return this._annotations;
-      }
-
-      public methodST setName(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._name == null) {
-            this._name = value;
-         	template.add("name", value);
-         }
-
-      	return this;
-      }
-
-      public String getName() {
-      	return (String) this._name;
-      }
-
-      public methodST addParametersValue(Object name_, Object type_) {
-      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
-      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
-      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
-      	this._parameters.add(map);
-
-         template.addAggr("parameters.{name, type}", map.get("name"), map.get("type"));
-         return this;
-      }
-
-      public java.util.Set<java.util.Map<String, Object>> getParameters() {
-      	return this._parameters;
-      }
-
-      public methodST setReturnValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._returnValue == null) {
-            this._returnValue = value;
-         	template.add("returnValue", value);
-         }
-
-      	return this;
-      }
-
-      public String getReturnValue() {
-      	return (String) this._returnValue;
-      }
-
-      public methodST setScope(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	if (this._scope == null) {
-            this._scope = value;
-         	template.add("scope", value);
-         }
-
-      	return this;
-      }
-
-      public String getScope() {
-      	return (String) this._scope;
-      }
-
-      public methodST addStatementsValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._statements.add(value);
-      	template.add("statements", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getStatementsValues() {
-      	return this._statements;
       }
 
       @Override
@@ -702,6 +702,10 @@ public final class JavaGroup {
 		"   }\n" + 
 		"~endif~\n" + 
 		"}>>\n")
+			.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
+		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
+		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
+		"}>>\n")
 			.append("Pojo(classProperties,eqha,extends,implement,lexical,methods,name,package,properties) ::= <<package ~package~;\n" + 
 		"\n" + 
 		"public class ~name~~if(extends)~ extends ~extends~~endif~~if(implement)~ implements ~implement:{it|~it~};separator=\", \"~~endif~ {\n" + 
@@ -760,10 +764,6 @@ public final class JavaGroup {
 		"   }\n" + 
 		"~endif~\n" + 
 		"\n" + 
-		"}>>\n")
-			.append("method(annotations,name,parameters,returnValue,scope,statements) ::= <<~annotations:{it|@~it~};separator=\"\\n\"~\n" + 
-		"~if(scope)~~scope~ ~else~~endif~~if(returnValue)~~returnValue~ ~else~void ~endif~~name~(~parameters:{it|~it.type~ ~it.name~};separator=\",\"~) {\n" + 
-		"	~statements:{it|~it~};separator=\"\\n\"~\n" + 
 		"}>>\n")
 			.append("Enum(name,package,values) ::= <<package ~package~;\n" + 
 		"\n" + 
