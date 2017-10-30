@@ -18,6 +18,7 @@
         <chronicle.version>4.5.19</chronicle.version>
         <neo4j.version>3.2.2</neo4j.version>
         <neo4j.driver.version>1.4.4</neo4j.driver.version>
+        <stardog.version>5.0.4</stardog.version>
         <antlr.version>4.7</antlr.version>
         <javaparser.version>2.5.1</javaparser.version>
         <easyflow.version>1.3</easyflow.version>
@@ -55,6 +56,7 @@
             <version>${junit.version}</version>
         </dependency>
 
+        <!-- GRAPH DATABASES -->
         <!--NEO4J-->
         <dependency>
             <groupId>org.neo4j</groupId>
@@ -75,6 +77,19 @@
             <groupId>org.neo4j.driver</groupId>
             <artifactId>neo4j-java-driver</artifactId>
             <version>${neo4j.driver.version}</version>
+        </dependency>
+
+        <!--STARDOG-->
+        <dependency>
+            <groupId>com.complexible.stardog</groupId>
+            <artifactId>client-http</artifactId>
+            <version>${stardog.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.complexible.stardog.sesame</groupId>
+            <artifactId>stardog-sesame-core</artifactId>
+            <version>${stardog.version}</version>
         </dependency>
 
         <!-- PARSERS -->
@@ -250,6 +265,10 @@
             <id>mavenCentral</id>
             <name>mavenCentral</name>
             <url>http://repo1.maven.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>stardog-public</id>
+            <url>http://maven.stardog.com</url>
         </repository>
     </repositories>
 

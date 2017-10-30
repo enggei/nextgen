@@ -9,7 +9,7 @@ import com.generator.util.ClasspathUtil;
 import com.generator.util.CompilerUtil;
 import com.generator.util.FileUtil;
 import com.generator.util.Reflect;
-import com.ud.equipment.devices.device.automation.driver.dolby.DolbyPlayerAutomationDriver;
+//import com.ud.equipment.devices.device.automation.driver.dolby.DolbyPlayerAutomationDriver;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -32,6 +32,7 @@ public class Tests {
    @Test
    public void testAnnotations() {
 
+/*
       Class<DolbyPlayerAutomationDriver> clazz = DolbyPlayerAutomationDriver.class;
       Method[] methods = clazz.getDeclaredMethods();
       Field[] fields = clazz.getDeclaredFields();
@@ -65,6 +66,7 @@ public class Tests {
          }
 
       }
+*/
 
    }
 
