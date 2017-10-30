@@ -121,9 +121,9 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static Relationship relateQUERY_TABLE(Node src, Node dst) { return relate(src, dst, Relations.QUERY_TABLE); }
 	public static Relationship relateQUERY_COLUMN(Node src, Node dst) { return relate(src, dst, Relations.QUERY_COLUMN); }
 
-	public static String getName(Node node) { return DomainMotif.getName(node); }
+	public static String getName(PropertyContainer node) { return DomainMotif.getName(node); }
 	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
-	public static void setName(Node node, String name) { DomainMotif.setName(node, name); }
+	public static void setName(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
 	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
 
 	public static <T> T getUsername(PropertyContainer container) { return get(container, Properties.username.name()); }

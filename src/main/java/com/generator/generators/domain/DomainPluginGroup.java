@@ -353,9 +353,9 @@ public final class DomainPluginGroup {
 		"\n" + 
 		"	~relations:{it|public static Relationship relate~it.name~(Node src, Node dst) { return relate(src, dst, Relations.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	public static String getName(Node node) { return DomainMotif.getName(node); }\n" + 
+		"	public static String getName(PropertyContainer node) { return DomainMotif.getName(node); }\n" + 
 		"	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }\n" + 
-		"	public static void setName(Node node, String name) { DomainMotif.setName(node, name); }\n" + 
+		"	public static void setName(PropertyContainer node, String name) { DomainMotif.setName(node, name); }\n" + 
 		"	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }\n" + 
 		"	\n" + 
 		"	~properties:{it|public static <T> T get~it.name;format=\"capitalize\"~(PropertyContainer container) { return get(container, Properties.~it.name~.name()); ~eom()~\n" + 
