@@ -37,7 +37,7 @@ public class DockerPlugin extends DockerDomainPlugin {
       addShowMenu(menu, Entities.DockerFile);
       addShowMenu(menu, Entities.DockerComposeFile);
 
-		menu.add(new TransactionAction("New Docker", app) {
+		menu.add(new TransactionAction("New DockerFile", app) {
 			@Override
 			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -62,8 +62,9 @@ public class DockerPlugin extends DockerDomainPlugin {
 
 	@Override
 	protected void handleDockerFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-		for (NeoNode selectedNode : selectedNodes) {
-			if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
+		selectedNodes.stream()
+			.filter(selectedNode -> hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory))
+			.forEach(selectedNode -> {
 				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
 				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
 					@Override
@@ -71,8 +72,7 @@ public class DockerPlugin extends DockerDomainPlugin {
 						relateBUILD(neoNode.getNode(), selectedNode.getNode());
 					}
 				});
-			}
-		}
+			});
 
 		if (hasOutgoing(neoNode.getNode(), Relations.BUILD)) {
 
@@ -96,8 +96,9 @@ public class DockerPlugin extends DockerDomainPlugin {
 
 	@Override
 	protected void handleDockerComposeFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-		for (NeoNode selectedNode : selectedNodes) {
-			if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
+   	selectedNodes.stream()
+			.filter(selectedNode -> hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory))
+			.forEach(selectedNode -> {
 				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
 				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
 					@Override
@@ -105,8 +106,7 @@ public class DockerPlugin extends DockerDomainPlugin {
 						relateCOMPOSE(neoNode.getNode(), selectedNode.getNode());
 					}
 				});
-			}
-		}
+			});
 
 		if (hasOutgoing(neoNode.getNode(), Relations.COMPOSE)) {
 
@@ -151,10 +151,16 @@ public class DockerPlugin extends DockerDomainPlugin {
 				};
 
 				if (chkSudo.isSelected()) {
+
+					String[] sudoCommand = new String[command.length + 2];
+					sudoCommand[0] = "sudo";
+					sudoCommand[1] = "-S";
+					System.arraycopy(command, 0, sudoCommand, 2, command.length);
+
 					final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
 					new ProcessExecutor().
 							directory(directory).
-							command(command).
+							command(sudoCommand).
 							redirectError(logOutputStream).
 							redirectOutput(logOutputStream).
 							redirectInput(stream).
