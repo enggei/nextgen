@@ -23,21 +23,21 @@ import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.generator.util.NeoUtil.*;
 
 /**
  * Created 23.08.17.
+ * https://dev.mysql.com/doc/refman/5.7/en/functions.html
  */
 public class MySQLPlugin extends MySQLDomainPlugin {
 
@@ -145,8 +145,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                         for (QueryColumn selectedColumn : selectedColumns) {
                            final Relationship relationship = relateQUERY_COLUMN(neoNode.getNode(), selectedColumn.columnNode);
                            setInSelect(relationship, selectedColumn.selected);
-                           setInWhere(relationship, selectedColumn.where);
-                           setWhereOperator(relationship, selectedColumn.whereOperator == null ? "" : selectedColumn.whereOperator);
+                           setWhereOperator(relationship, selectedColumn.whereOperator == null || selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
                         }
                      }
 
@@ -175,7 +174,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
 
-      for (WhereParam queryColumn : getWhereColumns(queryNode)) {
+      for (WhereParam queryColumn : getWhereColumnsForQuery(queryNode)) {
          final String columnName = getName(queryColumn.propertyContainer);
          final String columnType = getColumnType(queryColumn.propertyContainer, "");
          queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
@@ -313,20 +312,23 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       TableEditor(NeoNode tableNode) {
          super(new BorderLayout());
 
-         final Node dbNode = other(tableNode.getNode(), singleIncoming(tableNode.getNode(), Relations.QUERY));
-         final Set<WhereParam> whereColumns = getWhereColumnsForTable(tableNode.getNode());
-         final JTable tblParams = new JTable(new ParamsTableModel(whereColumns));
+         final Node dbNode = other(tableNode.getNode(), singleIncoming(tableNode.getNode(), Relations.TABLE));
+         final ColumnTableModel columnTableModel = new ColumnTableModel(getQueryColumnsForTable(tableNode.getNode()));
+         final JTable tblParams = new JTable(columnTableModel);
+         tblParams.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(createOperatorComboBox()));
+         tblParams.getColumnModel().getColumn(4).setCellEditor(new ValueCellEditor(dbNode, tableNode.getNode()));
+
          final JTable tblResult = new JTable(new ResultSetTableModel());
 
          final JTextArea txtQuery = SwingUtil.newTextArea();
-         txtQuery.setEditable(true);
+         txtQuery.setEditable(false);
          txtQuery.setWrapStyleWord(true);
          txtQuery.setLineWrap(true);
 
          final JButton btnExecute = new JButton(new AbstractAction("Run") {
             @Override
             public void actionPerformed(ActionEvent e) {
-               runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
+               runQuery(dbNode, txtQuery.getText(), columnTableModel.asParams(), tblResult);
             }
          });
 
@@ -334,12 +336,32 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             @Override
             public void keyPressed(KeyEvent ke) {
                if (ke.getKeyCode() == KeyEvent.VK_ENTER && ke.getModifiers() == KeyEvent.CTRL_MASK) {
-                  runQuery(dbNode, txtQuery.getText(), ((ParamsTableModel) tblParams.getModel()).asParams(), tblResult);
+                  runQuery(dbNode, txtQuery.getText(), columnTableModel.asParams(), tblResult);
                }
             }
          });
 
-         txtQuery.setText(tableNodeToSQL(tableNode.getNode()));
+         txtQuery.setText(tableNodeToSQL(tableNode.getNode()) + " limit 50");
+
+         columnTableModel.addTableModelListener(e -> getGraph().doInTransaction(new NeoModel.Committer() {
+            @Override
+            public void doAction(Transaction tx) throws Throwable {
+               for (QueryColumn selectedColumn : columnTableModel.content) {
+                  setInSelect(selectedColumn.columnNode, selectedColumn.selected);
+                  setWhereOperator(selectedColumn.columnNode, selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
+                  setValue(selectedColumn.columnNode, (selectedColumn.value == null || selectedColumn.value.toString().length() == 0) ? null : selectedColumn.value);
+               }
+               txtQuery.setText(tableNodeToSQL(tableNode.getNode()));
+            }
+
+            @Override
+            public void exception(Throwable throwable) {
+               System.out.println("Could not update columns");
+            }
+         }));
+
+         if (sessions.containsKey(dbNode))
+            runQuery(dbNode, txtQuery.getText(), columnTableModel.asParams(), tblResult);
 
          final SwingUtil.FormPanel queryPanel = new SwingUtil.FormPanel("10dlu:grow, 4dlu, 30dlu", "pref, 4dlu, 30dlu, 4dlu, 60dlu, 4dlu, 75dlu:grow");
          queryPanel.add(new JScrollPane(txtQuery), 1, 1, 1, 3);
@@ -347,6 +369,87 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          queryPanel.add(new JScrollPane(tblParams), 1, 5, 3, 1);
          queryPanel.add(new JScrollPane(tblResult), 1, 7, 3, 1);
          add(queryPanel.build(), BorderLayout.CENTER);
+      }
+
+      private class ValueCellEditor extends DefaultCellEditor implements TableCellEditor {
+
+         private final Node dbNode;
+         private final String tableName;
+         private JButton editorComponent;
+         private Object newValue = null;
+
+         ValueCellEditor(Node dbNode, Node tableNode) {
+            super(new JTextField());
+
+            this.dbNode = dbNode;
+            this.tableName = MySQLPlugin.getName(tableNode);
+
+            setClickCountToStart(1);
+
+            editorComponent = new JButton();
+            editorComponent.setBackground(Color.white);
+            editorComponent.setBorderPainted(false);
+            editorComponent.setContentAreaFilled(false);
+            editorComponent.setFocusable(false);
+         }
+
+         @Override
+         public Object getCellEditorValue() {
+            return newValue;
+         }
+
+         @Override
+         public Component getTableCellEditorComponent(JTable table, final Object value, boolean isSelected, int row, int column) {
+
+            SwingUtilities.invokeLater(() -> {
+
+               final JTextField txtValue = new JTextField(value==null ? "" : value.toString());
+
+               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu, 4dlu, 100dlu, 4dlu, pref", "pref");
+
+               final JButton btnSelect = new JButton(new App.TransactionAction("Select", app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final MySQLSession mySQLSession = getSession(dbNode, editor);
+                     if (mySQLSession == null) return;
+
+                     final ColumnTableModel columnTableModel = (ColumnTableModel) table.getModel();
+                     final String columnName = columnTableModel.content.get(row).columnName;
+
+                     final Set<Object> values = new LinkedHashSet<>();
+                     try {
+
+                        mySQLSession.executeQuery("select distinct(" + columnName + ") from " + tableName + " order by 1", resultSet -> values.add(resultSet.getObject(1)));
+
+                     } catch (Exception e1) {
+                        SwingUtil.showException(editor, e1);
+                     }
+
+                     final Object selectedValue = SwingUtil.showSelectDialog(editor, values, value);
+                     if(selectedValue==null) return;
+                     txtValue.setText(selectedValue.toString());
+                  }
+               });
+
+               editor.addLabel("Value", 1, 1);
+               editor.add(txtValue, 3, 1);
+               editor.add(btnSelect, 5, 1);
+
+               SwingUtil.showDialog(editor, editorComponent, "Set Value", new SwingUtil.ConfirmAction() {
+                  @Override
+                  public void verifyAndCommit() throws Exception {
+
+                     newValue = txtValue.getText();
+                     fireEditingStopped();
+                  }
+               });
+            });
+
+            newValue = value;
+            editorComponent.setText(value == null ? "" : value.toString());
+            return editorComponent;
+         }
       }
    }
 
@@ -356,7 +459,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          super(new BorderLayout());
 
          final Node dbNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.QUERY));
-         final Set<WhereParam> whereColumns = getWhereColumns(neoNode.getNode());
+         final Set<WhereParam> whereColumns = getWhereColumnsForQuery(neoNode.getNode());
          final JTable tblParams = new JTable(new ParamsTableModel(whereColumns));
          final JTable tblResult = new JTable(new ResultSetTableModel());
 
@@ -397,29 +500,31 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       final MySQLSession mySQLSession = getSession(dbNode, tblResult);
       if (mySQLSession == null) return;
 
-      final AtomicBoolean first = new AtomicBoolean(true);
+      // todo make a textField or add to queryNodeToSQL as limit...
+      final int max = 250;
+
+      final AtomicInteger count = new AtomicInteger(0);
       final ResultSetTableModel resultSetTableModel = new ResultSetTableModel();
       try {
 
          mySQLSession.executeQuery(query, resultSet -> {
+
+            if (count.get() > max) return;
+
             final ResultSetMetaData metaData = resultSet.getMetaData();
 
-            if (first.get()) {
+            if (count.get() == 0) {
                resultSetTableModel.setColumns(metaData);
-               first.set(false);
             }
-
             resultSetTableModel.addRow(resultSet);
-
+            count.incrementAndGet();
          }, params);
 
       } catch (Exception e1) {
          SwingUtil.showException(tblResult, e1);
       }
 
-      SwingUtilities.invokeLater(() -> {
-         tblResult.setModel(resultSetTableModel);
-      });
+      SwingUtilities.invokeLater(() -> tblResult.setModel(resultSetTableModel));
    }
 
    private class ParamsTableModel extends AbstractTableModel {
@@ -512,12 +617,6 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       private String name;
       private Object value;
 
-      WhereParam(Node whereColumn) {
-         this.propertyContainer = whereColumn;
-         this.name = MySQLDomainPlugin.getName(whereColumn);
-         this.value = getLastParam(whereColumn, "");
-      }
-
       WhereParam(Relationship whereColumn) {
          this.propertyContainer = whereColumn;
          this.name = MySQLDomainPlugin.getName(whereColumn.getEndNode());
@@ -553,7 +652,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       void setColumns(ResultSetMetaData metaData) throws SQLException {
          this.columns = new String[metaData.getColumnCount()];
          for (int i = 1; i <= metaData.getColumnCount(); i++) {
-            this.columns[i-1] = metaData.getColumnLabel(i);
+            this.columns[i - 1] = metaData.getColumnLabel(i);
          }
       }
 
@@ -563,11 +662,11 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       private final class TableRow {
 
-         private final Map<Integer,Object> values = new LinkedHashMap<>();
+         private final Map<Integer, Object> values = new LinkedHashMap<>();
 
          TableRow(ResultSet resultSet, String[] columns) throws SQLException {
             for (int i = 0; i < columns.length; i++)
-               values.put(i, resultSet.getObject(i+1));
+               values.put(i, resultSet.getObject(i + 1));
          }
 
          public Object get(int columnIndex) {
@@ -622,9 +721,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
          }
 
-         if (getInWhere(queryColumnRelation)) {
+         final String whereOperator = getWhereOperator(queryColumnRelation, "");
+         if (whereOperator.length() > 0)
             selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
-         }
       });
 
       // todo auto-join tables through fk-columns
@@ -656,11 +755,12 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       outgoingCOLUMN(tableNode, (queryColumnRelation, columnNode) -> {
 
-         selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
+         if (getInSelect(columnNode, true))
+            selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
 
-         if (getInWhere(queryColumnRelation)) {
-            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
-         }
+         final String whereOperator = getWhereOperator(columnNode, "");
+         if (whereOperator.length() > 0)
+            selectST.addWhereValue("?", whereOperator, getQualifiedColumnName(columnNode, tableNode));
       });
 
       return selectST.toString();
@@ -675,24 +775,24 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    private static Set<Node> getSelectColumns(Node queryNode) {
       final Set<Node> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getInSelect(queryColumnRelation)) columns.add(other(queryNode, queryColumnRelation));
+         if (getInSelect(queryColumnRelation)) columns.add(other);
       });
       return columns;
    }
 
    @NotNull
-   private static Set<WhereParam> getWhereColumns(Node queryNode) {
+   private static Set<WhereParam> getWhereColumnsForQuery(Node queryNode) {
       final Set<WhereParam> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getInWhere(queryColumnRelation)) columns.add(new WhereParam(queryColumnRelation));
+         if (getWhereOperator(queryColumnRelation, "").length() > 0) columns.add(new WhereParam(queryColumnRelation));
       });
       return columns;
    }
 
    @NotNull
-   private static Set<WhereParam> getWhereColumnsForTable(Node tableNode) {
-      final Set<WhereParam> columns = new LinkedHashSet<>();
-      outgoingCOLUMN(tableNode, (columnRelation, columnNode) -> columns.add(new WhereParam(columnNode)));
+   private static List<QueryColumn> getQueryColumnsForTable(Node tableNode) {
+      final List<QueryColumn> columns = new ArrayList<>();
+      outgoingCOLUMN(tableNode, (columnRelation, columnNode) -> columns.add(new QueryColumn(tableNode, columnNode)));
       return columns;
    }
 
@@ -715,12 +815,11 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          outgoingQUERY_COLUMN(queryNode, (relationship, columnNode) -> {
             final QueryColumn queryColumn = columnNodes.get(MySQLDomainPlugin.getName(other(columnNode, singleIncoming(columnNode, Relations.COLUMN))) + "." + MySQLDomainPlugin.getName(columnNode));
             queryColumn.selected = getInSelect(relationship);
-            queryColumn.where = getInWhere(relationship);
             queryColumn.whereOperator = getWhereOperator(relationship, "");
          });
 
          tblColumns = new JTable(new ColumnTableModel(queryColumns));
-         tblColumns.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(createOperatorComboBox()));
+         tblColumns.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(createOperatorComboBox()));
          add(new JScrollPane(tblColumns), BorderLayout.NORTH);
 
          outgoingQUERY_TABLE(queryNode, new RelationConsumer() {
@@ -731,138 +830,160 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          });
       }
 
-      private JComboBox createOperatorComboBox() {
-         final JComboBox<String> chk = new JComboBox<>();
-         chk.addItem(null);
-         chk.addItem("=");
-         chk.addItem(">=");
-         chk.addItem("<=");
-         chk.addItem("<");
-         chk.addItem(">");
-         chk.addItem(" like ");
-         chk.addItem(" in ");
-         return chk;
-      }
-
       List<QueryColumn> getSelectedColumns() {
-         final List<QueryColumn> selected = new ArrayList<>();
          final ColumnTableModel model = (ColumnTableModel) tblColumns.getModel();
-         for (QueryColumn columnEntry : model.content)
-            if (columnEntry.selected || columnEntry.where) selected.add(columnEntry);
-         return selected;
-      }
-
-      class ColumnTableModel extends AbstractTableModel {
-
-         final List<QueryColumn> content = new java.util.ArrayList<>();
-
-         ColumnTableModel(List<QueryColumn> queryColumns) {
-            this.content.addAll(queryColumns);
-         }
-
-         @Override
-         public int getRowCount() {
-            return content.size();
-         }
-
-         @Override
-         public int getColumnCount() {
-            return 5;
-         }
-
-         @Override
-         public Object getValueAt(int rowIndex, int columnIndex) {
-            switch (columnIndex) {
-               case 0:
-                  return content.get(rowIndex).tableName;
-               case 1:
-                  return content.get(rowIndex).columnName;
-               case 2:
-                  return content.get(rowIndex).selected;
-               case 3:
-                  return content.get(rowIndex).where;
-               case 4:
-                  return content.get(rowIndex).whereOperator;
-            }
-            return null;
-         }
-
-         @Override
-         public String getColumnName(int column) {
-            switch (column) {
-               case 0:
-                  return "Table";
-               case 1:
-                  return "Column";
-               case 2:
-                  return "Select";
-               case 3:
-                  return "Where";
-               case 4:
-                  return "Where";
-            }
-            return "";
-         }
-
-         @Override
-         public Class<?> getColumnClass(int columnIndex) {
-            switch (columnIndex) {
-               case 0:
-                  return String.class;
-               case 1:
-                  return String.class;
-               case 2:
-                  return Boolean.class;
-               case 3:
-                  return Boolean.class;
-               case 4:
-                  return String.class;
-            }
-            return Object.class;
-         }
-
-         @Override
-         public boolean isCellEditable(int rowIndex, int columnIndex) {
-            return columnIndex == 2 || columnIndex == 3 || columnIndex == 4;
-         }
-
-         @Override
-         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-
-            switch (columnIndex) {
-               case 2:
-                  content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
-                  fireTableCellUpdated(rowIndex, columnIndex);
-                  break;
-               case 3:
-                  content.get(rowIndex).where = Boolean.valueOf(aValue.toString());
-                  fireTableCellUpdated(rowIndex, columnIndex);
-                  break;
-               case 4:
-                  content.get(rowIndex).whereOperator = aValue == null ? "" : aValue.toString();
-                  fireTableCellUpdated(rowIndex, columnIndex);
-                  break;
-            }
-         }
+         return model.getSelectedColumns();
       }
    }
 
-   private class QueryColumn {
+   private JComboBox createOperatorComboBox() {
+      final JComboBox<String> chk = new JComboBox<>();
+      chk.addItem(null);
+      chk.addItem("=");
+      chk.addItem(">=");
+      chk.addItem("<=");
+      chk.addItem("<");
+      chk.addItem(">");
+      chk.addItem(" like ");
+      chk.addItem(" in ");
+      chk.addItem(" != ");
+      return chk;
+   }
+
+   class ColumnTableModel extends AbstractTableModel {
+
+      final List<QueryColumn> content = new java.util.ArrayList<>();
+
+      ColumnTableModel(List<QueryColumn> queryColumns) {
+         this.content.addAll(queryColumns);
+      }
+
+      @Override
+      public int getRowCount() {
+         return content.size();
+      }
+
+      @Override
+      public int getColumnCount() {
+         return 5;
+      }
+
+      @Override
+      public Object getValueAt(int rowIndex, int columnIndex) {
+         switch (columnIndex) {
+            case 0:
+               return content.get(rowIndex).tableName;
+            case 1:
+               return content.get(rowIndex).columnName;
+            case 2:
+               return content.get(rowIndex).selected;
+            case 3:
+               return content.get(rowIndex).whereOperator;
+            case 4:
+               return content.get(rowIndex).value;
+         }
+         return null;
+      }
+
+      @Override
+      public String getColumnName(int column) {
+         switch (column) {
+            case 0:
+               return "Table";
+            case 1:
+               return "Column";
+            case 2:
+               return "Select";
+            case 3:
+               return "Where";
+            case 4:
+               return "Value";
+         }
+         return "";
+      }
+
+      @Override
+      public Class<?> getColumnClass(int columnIndex) {
+         switch (columnIndex) {
+            case 0:
+               return String.class;
+            case 1:
+               return String.class;
+            case 2:
+               return Boolean.class;
+            case 3:
+               return String.class;
+            case 4:
+               return Object.class;
+         }
+         return Object.class;
+      }
+
+      @Override
+      public boolean isCellEditable(int rowIndex, int columnIndex) {
+         return columnIndex == 2 || columnIndex == 3 || columnIndex == 4;
+      }
+
+      @Override
+      public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+
+         switch (columnIndex) {
+            case 2:
+               content.get(rowIndex).selected = Boolean.valueOf(aValue.toString());
+               fireTableCellUpdated(rowIndex, columnIndex);
+               break;
+            case 3:
+               content.get(rowIndex).whereOperator = aValue == null ? "" : aValue.toString();
+               fireTableCellUpdated(rowIndex, columnIndex);
+               break;
+            case 4:
+               content.get(rowIndex).value = aValue == null ? "" : aValue.toString();
+               fireTableCellUpdated(rowIndex, columnIndex);
+               break;
+         }
+      }
+
+      public List<QueryColumn> getSelectedColumns() {
+         final List<QueryColumn> selected = new ArrayList<>();
+         for (QueryColumn columnEntry : content)
+            if (columnEntry.selected) selected.add(columnEntry);
+         return selected;
+      }
+
+      public Object[] asParams() {
+
+         final List<QueryColumn> whereColumns = new ArrayList<>();
+         for (QueryColumn columnEntry : content)
+            if (columnEntry.whereOperator.length() > 0) whereColumns.add(columnEntry);
+
+         final Object[] params = new Object[whereColumns.size()];
+         for (int i = 0; i < whereColumns.size(); i++) {
+            QueryColumn whereParam = whereColumns.get(i);
+            params[i] = whereParam.value == null || whereParam.value.toString().length() == 0 ? null : whereParam.value;
+         }
+         return params;
+      }
+   }
+
+   private static class QueryColumn {
 
       private final Node columnNode;
       private final String columnName;
       private final String tableName;
       private boolean selected = false;
-      private boolean where = false;
-      private String whereOperator = null;
+      private String whereOperator = "";
+      private Object value = null;
 
       QueryColumn(Node tableNode, Node columnNode) {
          this.columnNode = columnNode;
-         this.tableName = getName(tableNode);
-         this.columnName = getName(columnNode);
+         this.tableName = MySQLPlugin.getName(tableNode);
+         this.columnName = MySQLPlugin.getName(columnNode);
+
+         selected = getInSelect(columnNode, true);
+         whereOperator = getWhereOperator(columnNode, "");
+         value = getValue(columnNode);
       }
    }
-
 
    public static MySQLSession getSession(Node dbNode, char[] password) throws Exception {
       return new MySQLSession(getHost(dbNode), MySQLDomainPlugin.getName(dbNode), getUsername(dbNode), new String(password));

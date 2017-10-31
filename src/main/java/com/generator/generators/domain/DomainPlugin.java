@@ -77,9 +77,14 @@ public class DomainPlugin extends DomainDomainPlugin {
                if (name == null || name.length() == 0) return;
 
                final AtomicBoolean exists = new AtomicBoolean(false);
-               outgoingENTITY(neoNode.getNode(), (relationship, entityNode) -> {
-                  if (name.equals(getName(entityNode))) exists.set(true);
-               });
+               new DomainVisitor<Void>(true) {
+                  @Override
+                  public void visitEntity(Node node) {
+                     if (name.equals(getName(node))) exists.set(true);
+                     super.visitEntity(node);
+                  }
+               }.visit(neoNode.getNode());
+
                if (exists.get()) {
                   SwingUtil.showMessage(name + " already exists for domain", app);
                   return;

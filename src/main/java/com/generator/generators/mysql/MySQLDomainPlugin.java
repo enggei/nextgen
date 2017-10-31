@@ -27,7 +27,7 @@ abstract class MySQLDomainPlugin extends Plugin {
    }
 
    public enum Properties {
-      username, columnType, onDelete, whereOperator, inSelect, inWhere, lastParam, host
+      username, value, columnType, onDelete, whereOperator, inSelect, lastParam, host
    }
 
    MySQLDomainPlugin(App app) {
@@ -141,6 +141,21 @@ abstract class MySQLDomainPlugin extends Plugin {
 	      return container;
 	}
 
+	public static <T> T getValue(PropertyContainer container) { return get(container, Properties.value.name()); }
+	public static <T> T getValue(PropertyContainer container, T defaultValue) { return has(container, Properties.value.name()) ? get(container, Properties.value.name()) : defaultValue; }
+	public static boolean hasValue(PropertyContainer container) { return has(container, Properties.value.name()); }
+	public static <T extends PropertyContainer> T setValue(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.value.name());
+	   else
+	   	container.setProperty(Properties.value.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeValue(T container) {
+		if (has(container, Properties.value.name())) container.removeProperty(Properties.value.name());
+	      return container;
+	}
+
 	public static <T> T getColumnType(PropertyContainer container) { return get(container, Properties.columnType.name()); }
 	public static <T> T getColumnType(PropertyContainer container, T defaultValue) { return has(container, Properties.columnType.name()) ? get(container, Properties.columnType.name()) : defaultValue; }
 	public static boolean hasColumnType(PropertyContainer container) { return has(container, Properties.columnType.name()); }
@@ -198,21 +213,6 @@ abstract class MySQLDomainPlugin extends Plugin {
 	}
 	public static <T extends PropertyContainer> T removeInSelect(T container) {
 		if (has(container, Properties.inSelect.name())) container.removeProperty(Properties.inSelect.name());
-	      return container;
-	}
-
-	public static <T> T getInWhere(PropertyContainer container) { return get(container, Properties.inWhere.name()); }
-	public static <T> T getInWhere(PropertyContainer container, T defaultValue) { return has(container, Properties.inWhere.name()) ? get(container, Properties.inWhere.name()) : defaultValue; }
-	public static boolean hasInWhere(PropertyContainer container) { return has(container, Properties.inWhere.name()); }
-	public static <T extends PropertyContainer> T setInWhere(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.inWhere.name());
-	   else
-	   	container.setProperty(Properties.inWhere.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeInWhere(T container) {
-		if (has(container, Properties.inWhere.name())) container.removeProperty(Properties.inWhere.name());
 	      return container;
 	}
 
