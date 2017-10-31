@@ -1,12 +1,11 @@
 package com.generator.generators.docker;
 
-import com.generator.ProjectConstants;
-import com.generator.app.*;
+import com.generator.app.App;
+import com.generator.app.App.TransactionAction;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.util.SwingUtil;
-import org.neo4j.graphdb.*;
-import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Transaction;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
@@ -15,156 +14,165 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
-import static com.generator.util.NeoUtil.*;
-import static com.generator.util.NeoUtil.relate;
+import static com.generator.util.NeoUtil.hasLabel;
+import static com.generator.util.NeoUtil.hasOutgoing;
 
 /**
  * Created 16.09.17.
  */
-public class DockerPlugin extends Plugin {
-
-   public enum Entities implements Label {
-      Dockerfile
-   }
-
-   public enum Relations implements RelationshipType {
-      BUILD
-   }
-
-   public enum Properties {
-   }
+public class DockerPlugin extends DockerDomainPlugin {
 
    public DockerPlugin(App app) {
-      super(app, "Docker");
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+      super(app);
    }
 
    @Override
    protected void addActionsTo(JMenu menu) {
-      addShowMenu(menu, Entities.Dockerfile);
+      addShowMenu(menu, Entities.DockerFile);
+      addShowMenu(menu, Entities.DockerComposeFile);
+
+		menu.add(new TransactionAction("New Docker", app) {
+			@Override
+			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+				final String name = SwingUtil.showInputDialog("Name", app);
+				if (name == null || name.length() == 0) return;
+
+				fireNodesLoaded(newDockerFile(name));
+			}
+		});
+
+		menu.add(new TransactionAction("New DockerComposeFile", app) {
+			@Override
+			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+				final String name = SwingUtil.showInputDialog("Name", app);
+				if (name == null || name.length() == 0) return;
+
+				fireNodesLoaded(newDockerComposeFile(name));
+			}
+		});
    }
 
-   @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+	@Override
+	protected void handleDockerFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+		for (NeoNode selectedNode : selectedNodes) {
+			if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
+				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
+					@Override
+					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+						relateBUILD(neoNode.getNode(), selectedNode.getNode());
+					}
+				});
+			}
+		}
 
-      if (hasLabel(neoNode.getNode(), Entities.Dockerfile)) {
+		if (hasOutgoing(neoNode.getNode(), Relations.BUILD)) {
 
-         for (NeoNode selectedNode : selectedNodes) {
-            if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
-               if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.BUILD)) continue;
-               pop.add(new App.TransactionAction("Add Build-directory " + getString(selectedNode.getNode(), ProjectPlugin.Properties.path.name()), app) {
-                  @Override
-                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                     relate(neoNode.getNode(), selectedNode.getNode(), Relations.BUILD);
-                  }
-               });
-            }
-         }
+			neoNode.getNode().getRelationships(Relations.BUILD).forEach(compose -> {
 
-         outgoing(neoNode.getNode(), Relations.BUILD).forEach(relationship -> {
-            final Node buildDirectory = other(neoNode.getNode(), relationship);
-            final File directory = ProjectPlugin.getFile(buildDirectory);
-            if (directory != null && directory.exists()) {
+				final File path = new File((String)ProjectPlugin.getPath(compose.getOtherNode(neoNode.getNode())));
 
-               // get path from build-directory to Renderer-directory
-               final Set<Node> renderDirectories = new LinkedHashSet<>();
-               incoming(neoNode.getNode(), ProjectPlugin.Relations.RENDERER).forEach(rendererRelation -> renderDirectories.add(other(neoNode.getNode(), rendererRelation)));
+				pop.add(new App.TransactionAction("Build " + path.toString(), app) {
+					@Override
+					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               for (Node renderDirectory : renderDirectories) {
-                  final String path = findPath(buildDirectory, renderDirectory);
-                  if (path == null) continue;
+						if (!path.exists()) return;
 
-                  pop.add(new App.TransactionAction("Build in " + getString(buildDirectory, ProjectPlugin.Properties.path.name()), app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+						editorAction("Build", path, app,
+							"docker", "build", "-f", "Dockerfile", ".");
+					}
+				});
+			});
+		}
+	}
 
-                        // make editor for parameters
-                        final JCheckBox chkSudo = new JCheckBox("Use Sudo");
-                        final JPasswordField txtPassword = new JPasswordField();
+	@Override
+	protected void handleDockerComposeFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+		for (NeoNode selectedNode : selectedNodes) {
+			if (hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory)) {
+				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
+					@Override
+					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+						relateCOMPOSE(neoNode.getNode(), selectedNode.getNode());
+					}
+				});
+			}
+		}
 
-                        final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,100dlu", "pref,4dlu,pref");
-                        editor.add(chkSudo, 1, 1);
-                        editor.add(txtPassword, 3, 1);
-                        editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+		if (hasOutgoing(neoNode.getNode(), Relations.COMPOSE)) {
 
-                        SwingUtil.showDialog(editor, app, "Build", new SwingUtil.ConfirmAction() {
-                           @Override
-                           public void verifyAndCommit() throws Exception {
-                              final StringBuilder result = new StringBuilder();
-                              final LogOutputStream logOutputStream = new LogOutputStream() {
-                                 @Override
-                                 protected void processLine(String line) {
-                                    result.append(line).append("\n");
-                                    System.out.println(line);
-                                 }
-                              };
+			neoNode.getNode().getRelationships(Relations.COMPOSE).forEach(compose -> {
 
-                              if (chkSudo.isSelected()) {
-                                 final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
-                                 new ProcessExecutor().
-                                       directory(directory).
-                                       command("sudo", "-S", "docker", "build", "-f", path + File.separatorChar + "Dockerfile", ".").
-                                       redirectError(logOutputStream).
-                                       redirectOutput(logOutputStream).
-                                       redirectInput(stream).
-                                       execute();
+				final File path = new File((String)ProjectPlugin.getPath(compose.getOtherNode(neoNode.getNode())));
 
-                                 SwingUtil.showTextResult("Result", result.toString().trim(), editor);
+				pop.add(new App.TransactionAction("Compose " + path.toString(), app) {
+					@Override
+					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                              } else {
-                                 new ProcessExecutor().
-                                       directory(directory).
-                                       command("docker", "build", "-f", "Dockerfile", ".").
-                                       redirectError(logOutputStream).
-                                       redirectOutput(logOutputStream).
-                                       execute();
+						if (!path.exists()) return;
 
+						editorAction("Compose", path, app,
+							"docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose.override.yml", "build");
+					}
+				});
+			});
+		}
+	}
 
-                                 SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
-                              }
-                           }
-                        });
-                     }
-                  });
-               }
-            }
-         });
-      }
-   }
+   private static void editorAction(final String title, File directory, App app, final String... command) throws IOException, InterruptedException, TimeoutException {
+      // make editor for parameters
+      final JCheckBox chkSudo = new JCheckBox("Use Sudo");
+      final JPasswordField txtPassword = new JPasswordField();
 
-   @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      return null;
-   }
+      final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,100dlu", "pref,4dlu,pref");
+      editor.add(chkSudo, 1, 1);
+      editor.add(txtPassword, 3, 1);
+      editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
-   private static String findPath(Node targetNode, Node renderDirectory) {
-      if (targetNode.getId() == renderDirectory.getId()) {
-         final File rootDir = ProjectPlugin.getFile(targetNode);
-         final File childDir = ProjectPlugin.getFile(renderDirectory);
-         return childDir.getPath().substring(rootDir.getPath().length() + 1);
-      } else {
-         final Iterable<Relationship> childRelations = incoming(renderDirectory, ProjectPlugin.Relations.CHILD);
-         for (Relationship childRelation : childRelations) {
-            final Node other = other(renderDirectory, childRelation);
-            if (targetNode.getId() == other.getId()) {
-               final File rootDir = ProjectPlugin.getFile(targetNode);
-               final File childDir = ProjectPlugin.getFile(renderDirectory);
-               return childDir.getPath().substring(rootDir.getPath().length() + 1);
-            } else {
-               final String path = findPath(targetNode, other);
-               if (path != null) return path;
-            }
-         }
-      }
-      return null;
+      SwingUtil.showDialog(editor, app, title, new SwingUtil.ConfirmAction() {
+			@Override
+			public void verifyAndCommit() throws Exception {
+				final StringBuilder result = new StringBuilder();
+				final LogOutputStream logOutputStream = new LogOutputStream() {
+					@Override
+					protected void processLine(String line) {
+						result.append(line).append("\n");
+						System.out.println(line);
+					}
+				};
+
+				if (chkSudo.isSelected()) {
+					final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
+					new ProcessExecutor().
+							directory(directory).
+							command(command).
+							redirectError(logOutputStream).
+							redirectOutput(logOutputStream).
+							redirectInput(stream).
+							execute();
+
+					SwingUtil.showTextResult("Result", result.toString().trim(), editor);
+
+				} else {
+					new ProcessExecutor().
+							directory(directory).
+							command(command).
+							redirectError(logOutputStream).
+							redirectOutput(logOutputStream).
+							execute();
+
+					SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
+				}
+			}
+		});
    }
 }
