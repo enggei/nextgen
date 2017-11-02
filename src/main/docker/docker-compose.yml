@@ -1,4 +1,4 @@
-version: "2"
+version: "3"
 
 services:
   stardog:
@@ -10,5 +10,87 @@ services:
     ports:
       - "127.0.0.1:5820:5820"
     volumes:
-      - /opt/docker/stardog:/home/stardog/data
+      - ${DOCKER_BASE_DIR}/stardog:/home/stardog/data
       - $PWD/stardog/production-license:/production-license
+    networks:
+      - platform
+
+  elasticsearch:
+    image: ${DOCKER_REGISTRY}/elasticsearch:${TAG}
+    restart: always
+    environment:
+#     - cluster.name=docker-cluster
+#     - bootstrap.memory_lock=true
+     - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ports:
+      - "127.0.0.1:9300:9300"
+      - "127.0.0.1:9200:9200"
+    volumes:
+      - ${DOCKER_BASE_DIR}/elasticsearch:/usr/share/elasticsearch/data
+    networks:
+      - efk
+      - platform
+
+  elasticsearchlogs:
+    image: ${DOCKER_REGISTRY}/elasticsearch-logs:${TAG}
+    restart: always
+    ports:
+     - "127.0.0.1:9201:9200"
+     - "127.0.0.1:9301:9300"
+    volumes:
+     - ${DOCKER_BASE_DIR}/elasticsearch-logs:/usr/share/elasticsearch/data
+    networks:
+      - efk
+      - platform
+      - frontend
+
+  kibana:
+    image: ${DOCKER_REGISTRY}/kibana:${TAG}
+#    restart: always
+    ports:
+      - "127.0.0.1:5601:5601"
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+    depends_on:
+      - elasticsearchlogs
+    networks:
+      - efk
+      - platform
+
+  fluentd:
+    image: ${DOCKER_REGISTRY}/fluentd:${TAG}
+    restart: always
+#    links:
+#      - elasticsearchlogs
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    depends_on:
+      - elasticsearchlogs
+    volumes:
+      - ./fluentd/conf:/fluentd/etc
+    networks:
+      - efk
+      - platform
+      - frontend
+
+  web:
+    image: nginx
+    restart: always
+    ports:
+      - "80:80"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: nginx.access
+    depends_on:
+      - fluentd
+    networks:
+      - platform
+      - frontend
+
+networks:
+  efk:
+  platform:
+  frontend:
