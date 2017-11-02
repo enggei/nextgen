@@ -20,7 +20,7 @@ fi
 echo "### DOCKER-COMPOSE START"
 
 #declare -a containers=("stardog" "elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web")
-declare -a containers=("elasticsearch" "elasticsearchlogs" "kibana" "fluentd" "web")
+declare -a containers=("elasticsearchlogs" "kibana" "fluentd" "web")
 
 for container in "${containers[@]}"; do
     echo "### BUILDING $container"
