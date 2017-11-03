@@ -50,4 +50,29 @@ public class MySQLUtil {
 
       return "Object";
    }
+
+   /**
+    * turns everything but `[name]` to upper case (antlr is case sensitive)
+    *
+    * @param string the sql to process
+    * @return sql in upper-case
+    */
+   public static String preprocessSQL(String string) {
+      if (string == null || string.trim().length() == 0) return "";
+      System.out.println("init " + string.trim());
+
+      string = string.replaceAll("\'", "`");
+      System.out.println("pre  " + string.trim());
+
+      boolean name = false;
+      final StringBuilder output = new StringBuilder();
+      final char[] chars = string.toCharArray();
+      for (char aChar : chars) {
+         char c = name ? aChar : Character.toUpperCase(aChar);
+         if (c == '`') name = !name;
+         output.append(c);
+      }
+      System.out.println("post " + output.toString().trim());
+      return output.toString().trim();
+   }
 }

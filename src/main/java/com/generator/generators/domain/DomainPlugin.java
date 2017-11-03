@@ -142,7 +142,11 @@ public class DomainPlugin extends DomainDomainPlugin {
 
                   @Override
                   public void visitProperty(Node node) {
-                     domainProperties.add(getName(node));
+                     final String name = getName(node);
+                     // name is supported by default, so ignore it
+                     if(!name.equals("name")) {
+                        domainProperties.add(name);
+                     }
                      super.visitProperty(node);
                   }
                }.visitDomain(neoNode.getNode());

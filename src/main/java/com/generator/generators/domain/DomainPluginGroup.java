@@ -349,15 +349,23 @@ public final class DomainPluginGroup {
 		"public static Node new~it.name~(NeoModel graph) { return graph.newNode(Entities.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~relations:{it|public static void outgoing~it.name~(Node src, RelationConsumer consumer) { outgoing(src, Relations.~it.name~).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); ~eom()~\n" + 
-		"public static void incoming~it.name~(Node src, RelationConsumer consumer) { incoming(src, Relations.~it.name~).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); ~eom()~};separator=\"\\n\"~\n" + 
+		"public static Node singleOutgoing~it.name~(Node src) { return other(src, singleOutgoing(src, Relations.~it.name~)); ~eom()~\n" + 
+		"public static void incoming~it.name~(Node src, RelationConsumer consumer) { incoming(src, Relations.~it.name~).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); ~eom()~\n" + 
+		"public static Node singleIncoming~it.name~(Node src) { return other(src, singleIncoming(src, Relations.~it.name~)); ~eom()~\n" + 
+		"};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~relations:{it|public static Relationship relate~it.name~(Node src, Node dst) { return relate(src, dst, Relations.~it.name~); ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
-		"	public static String getName(PropertyContainer node) { return DomainMotif.getName(node); }\n" + 
-		"	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }\n" + 
-		"	public static void setName(PropertyContainer node, String name) { DomainMotif.setName(node, name); }\n" + 
-		"	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }\n" + 
-		"	\n" + 
+		"	// get name as property of a node (node.name)\n" + 
+		"	public static String getNameProperty(PropertyContainer node) { return DomainMotif.getName(node); }\n" + 
+		"	public static String getNameProperty(NeoNode neoNode) { return DomainMotif.getName(neoNode); }\n" + 
+		"	public static void setNameProperty(PropertyContainer node, String name) { DomainMotif.setName(node, name); }\n" + 
+		"	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }\n" + 
+		"\n" + 
+		"	// get name for Domain-Property (entityNode -> name -> valueNode.name)	\n" + 
+		"	public static String getEntityName(Node classNode) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name()); }\n" + 
+		"	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name(), defaultValue); }\n" + 
+		"\n" + 
 		"	~properties:{it|public static <T> T get~it.name;format=\"capitalize\"~(PropertyContainer container) { return get(container, Properties.~it.name~.name()); ~eom()~\n" + 
 		"public static <T> T get~it.name;format=\"capitalize\"~(PropertyContainer container, T defaultValue) { return has(container, Properties.~it.name~.name()) ? get(container, Properties.~it.name~.name()) : defaultValue; ~eom()~\n" + 
 		"public static boolean has~it.name;format=\"capitalize\"~(PropertyContainer container) { return has(container, Properties.~it.name~.name()); ~eom()~\n" + 

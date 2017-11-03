@@ -7,6 +7,8 @@ import java.sql.*;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static com.generator.util.MySQLUtil.preprocessSQL;
+
 /**
  * Created 23.08.17.
  */
@@ -18,13 +20,13 @@ public class MySQLSession {
    MySQLSession(String host, String database, String username, String password) throws ClassNotFoundException, SQLException {
       Class.forName("com.mysql.jdbc.Driver");
       this.database = database;
-      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + password);
+      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + password + "&autoReconnect=true");
    }
 
    MySQLSession(String host, String database, String username, char[] password) throws ClassNotFoundException, SQLException {
       Class.forName("com.mysql.jdbc.Driver");
       this.database = database;
-      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password));
+      connection = DriverManager.getConnection("jdbc:mysql://" + host + ":3306/" + database + "?useSSL=false&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=UTC&user=" + username + "&password=" + new String(password) + "&autoReconnect=true");
    }
 
    public String getDatabase() {
@@ -50,7 +52,7 @@ public class MySQLSession {
    public void executeQuery(String query, ResultSetHandler handler, Object... params) throws Exception {
       final PreparedStatement statement = connection.prepareStatement(query);
       for (int i = 0; i < params.length; i++)
-         statement.setObject(i+1, params[i]);
+         statement.setObject(i + 1, params[i]);
       final ResultSet resultSet = statement.executeQuery();
       while (resultSet.next())
          handler.handle(resultSet);
@@ -77,26 +79,6 @@ public class MySQLSession {
       });
       statement.close();
       return tables;
-   }
-
-   /**
-    * turns everything but `[name]` to upper case (antlr is case sensitive)
-    *
-    * @param string the sql to process
-    * @return sql in upper-case
-    */
-   static String preprocessSQL(String string) {
-      if (string == null || string.trim().length() == 0) return "";
-
-      boolean name = false;
-      final StringBuilder output = new StringBuilder();
-      final char[] chars = string.toCharArray();
-      for (char aChar : chars) {
-         char c = name ? aChar : Character.toUpperCase(aChar);
-         if (c == '`') name = !name;
-         output.append(c);
-      }
-      return output.toString().trim();
    }
 
    public interface ResultSetHandler {

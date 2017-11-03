@@ -42,6 +42,22 @@ public final class JavaGroup {
 
 	}
 
+   public ClassST newClass() {
+      return new ClassST(stGroup);
+   }
+
+   public toStringMethodST newtoStringMethod() {
+      return new toStringMethodST(stGroup);
+   }
+
+   public accessorST newaccessor() {
+      return new accessorST(stGroup);
+   }
+
+   public CollectionAccessorST newCollectionAccessor() {
+      return new CollectionAccessorST(stGroup);
+   }
+
    public BeanST newBean() {
       return new BeanST(stGroup);
    }
@@ -56,6 +72,247 @@ public final class JavaGroup {
 
    public EnumST newEnum() {
       return new EnumST(stGroup);
+   }
+
+   public final class ClassST implements JavaGroupTemplate {
+
+      private Object _name;
+      private Object _package;
+      private java.util.Set<Object> _methods = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _innerClasses = new java.util.LinkedHashSet<>();
+      private java.util.Set<java.util.Map<String, Object>> _fields = new java.util.LinkedHashSet<>();
+      private Object _scope;
+
+      private final ST template;
+
+      private ClassST(STGroup group) {
+   		template = group.getInstanceOf("Class");
+   	}
+
+      public ClassST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public ClassST setPackage(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._package == null) {
+            this._package = value;
+         	template.add("package", value);
+         }
+
+      	return this;
+      }
+
+      public String getPackage() {
+      	return (String) this._package;
+      }
+
+      public ClassST addMethodsValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._methods.add(value);
+      	template.add("methods", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getMethodsValues() {
+      	return this._methods;
+      }
+
+      public ClassST addInnerClassesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._innerClasses.add(value);
+      	template.add("innerClasses", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getInnerClassesValues() {
+      	return this._innerClasses;
+      }
+
+      public ClassST addFieldsValue(Object init_, Object name_, Object type_, Object scope_) {
+      	final java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+      	map.put("init", (init_ == null || init_.toString().length() == 0) ? null : init_);
+      	map.put("name", (name_ == null || name_.toString().length() == 0) ? null : name_);
+      	map.put("type", (type_ == null || type_.toString().length() == 0) ? null : type_);
+      	map.put("scope", (scope_ == null || scope_.toString().length() == 0) ? null : scope_);
+      	this._fields.add(map);
+
+         template.addAggr("fields.{init, name, type, scope}", map.get("init"), map.get("name"), map.get("type"), map.get("scope"));
+         return this;
+      }
+
+      public java.util.Set<java.util.Map<String, Object>> getFields() {
+      	return this._fields;
+      }
+
+      public ClassST setScope(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._scope == null) {
+            this._scope = value;
+         	template.add("scope", value);
+         }
+
+      	return this;
+      }
+
+      public String getScope() {
+      	return (String) this._scope;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class toStringMethodST implements JavaGroupTemplate {
+
+      private java.util.Set<Object> _values = new java.util.LinkedHashSet<>();
+
+      private final ST template;
+
+      private toStringMethodST(STGroup group) {
+   		template = group.getInstanceOf("toStringMethod");
+   	}
+
+      public toStringMethodST addValuesValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._values.add(value);
+      	template.add("values", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getValuesValues() {
+      	return this._values;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class accessorST implements JavaGroupTemplate {
+
+      private Object _name;
+
+      private final ST template;
+
+      private accessorST(STGroup group) {
+   		template = group.getInstanceOf("accessor");
+   	}
+
+      public accessorST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
+   }
+
+   public final class CollectionAccessorST implements JavaGroupTemplate {
+
+      private Object _name;
+      private Object _type;
+      private Object _elementType;
+
+      private final ST template;
+
+      private CollectionAccessorST(STGroup group) {
+   		template = group.getInstanceOf("CollectionAccessor");
+   	}
+
+      public CollectionAccessorST setName(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._name == null) {
+            this._name = value;
+         	template.add("name", value);
+         }
+
+      	return this;
+      }
+
+      public String getName() {
+      	return (String) this._name;
+      }
+
+      public CollectionAccessorST setType(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._type == null) {
+            this._type = value;
+         	template.add("type", value);
+         }
+
+      	return this;
+      }
+
+      public String getType() {
+      	return (String) this._type;
+      }
+
+      public CollectionAccessorST setElementType(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	if (this._elementType == null) {
+            this._elementType = value;
+         	template.add("elementType", value);
+         }
+
+      	return this;
+      }
+
+      public String getElementType() {
+      	return (String) this._elementType;
+      }
+
+      @Override
+   	public String toString() {
+   		return template.render();
+   	}
    }
 
    public final class BeanST implements JavaGroupTemplate {
@@ -648,6 +905,36 @@ public final class JavaGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
+			.append("Class(name,package,methods,innerClasses,fields,scope) ::= <<~if(package)~package ~package~;\n" + 
+		"\n" + 
+		"~endif~\n" + 
+		"~if(scope)~~scope~ ~endif~class ~name~ {\n" + 
+		"\n" + 
+		"	~fields:{it|~if(it.scope)~~it.scope~ ~endif~~it.type~ ~it.name~~if(it.init)~ = ~it.init~~endif~;};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"	~methods:{it|~it~};separator=\"\\n\\n\"~\n" + 
+		"\n" + 
+		"	~innerClasses:{it|~it~};separator=\"\\n\"~\n" + 
+		"\n" + 
+		"}>>\n")
+			.append("toStringMethod(values) ::= <<@Override\n" + 
+		"public String toString() {\n" + 
+		"	return ~values:{it|\"~it~=\" + ~it~};separator=\"+ \\n\"~\n" + 
+		"}>>\n")
+			.append("accessor(name) ::= <<void set~name;format=\"capitalize\"~(String ~name~) {\n" + 
+		"	this.~name~ = ~name~;\n" + 
+		"}\n" + 
+		"\n" + 
+		"void get~name;format=\"capitalize\"~() {\n" + 
+		"	return this.~name~;\n" + 
+		"}>>\n")
+			.append("CollectionAccessor(name,type,elementType) ::= <<public void add(~elementType~ value) {\n" + 
+		"	this.~name~.add(value);\n" + 
+		"}\n" + 
+		"\n" + 
+		"public ~type~ get~name;format=\"capitalize\"~() {\n" + 
+		"	return this.~name~;\n" + 
+		"}>>\n")
 			.append("Bean(eqha,lexical,name,package,properties,methods,scope) ::= <<~if(package)~package ~package~;\n" + 
 		"~endif~\n" + 
 		"~if(scope)~~scope~~else~public~endif~ class ~name~ {\n" + 

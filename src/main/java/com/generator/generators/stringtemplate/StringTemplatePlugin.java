@@ -640,7 +640,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
          });
 
-         txtEditor.setText(get(templateNode.getNode(), StringTemplatePlugin.Properties.text.name(), ""));
+         txtEditor.setText(getText(templateNode.getNode(),""));
 
          final Border defaultBorder = txtEditor.getBorder();
          final Color uneditedColor = txtEditor.getBackground();
@@ -652,7 +652,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          final DefaultHighlighter.DefaultHighlightPainter paramsHighlighter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 127, 0));
          txtEditor.addKeyListener(new KeyAdapter() {
 
-            String startText = getText(templateNode.getNode());
+            String startText = getText(templateNode.getNode(), "");
 
             public void keyPressed(KeyEvent ke) {
 

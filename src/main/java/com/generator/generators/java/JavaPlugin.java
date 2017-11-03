@@ -1,21 +1,23 @@
 package com.generator.generators.java;
 
+import com.generator.app.App;
+import com.generator.app.AppEvents;
+import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
 import com.generator.app.nodes.NeoNode;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNeoVisitor;
-import com.generator.util.NeoUtil;
-import com.generator.app.*;
-import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
 import com.generator.util.CompilerUtil;
+import com.generator.util.NeoUtil;
 import com.generator.util.Reflect;
 import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -31,35 +33,18 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.generator.util.NeoUtil.*;
-import static com.generator.util.NeoUtil.getNameAndLabelsFrom;
-import static com.generator.util.NeoUtil.relate;
 
 /**
  * Created 12.09.17.
  */
-public class JavaPlugin extends Plugin {
+public class JavaPlugin extends JavaDomainDomainPlugin {
 
-   public enum Entities implements Label {
-      Object
-   }
-
-   public enum Relations implements RelationshipType {
-      OBJECT
-   }
-
-   public enum Properties {
-
-   }
+   private static final JavaGroup javaGroup = new JavaGroup();
 
    private final Map<String, Object> instanceMap = new LinkedHashMap<>();
 
    public JavaPlugin(App app) {
-      super(app, "Java");
-   }
-
-   @Override
-   protected Label[] getLabels() {
-      return Entities.values();
+      super(app);
    }
 
    @Override
@@ -116,12 +101,12 @@ public class JavaPlugin extends Plugin {
 
          if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
 
-            pop.add(new App.TransactionAction("TEST - new instance of " + DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name()), app) {
+            pop.add(new App.TransactionAction("TEST - new instance of " + getNameProperty(neoNode.getNode()), app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
                   // todo this should come from traversers of the graph
-                  final String name = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+                  final String name = getNameProperty(neoNode.getNode());
                   final String packageName = DomainMotif.getPropertyValue(neoNode.getNode(), "packageName", "");
 
                   final String content = StringTemplatePlugin.renderStatement(neoNode.getNode(), instanceNode);
@@ -135,7 +120,7 @@ public class JavaPlugin extends Plugin {
                   }
 
                   // create Object-node for this instance, and use uuid for key in instance-map
-                  final Node node = getGraph().newNode(Entities.Object, AppMotif.Properties.name.name(), name);
+                  final Node node = newObject(name);
                   instanceMap.put(getString(node, TAG_UUID), instance);
                   relate(neoNode.getNode(), node, Relations.OBJECT);
 
@@ -211,10 +196,13 @@ public class JavaPlugin extends Plugin {
    }
 
    @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      if (neoNode.getNode().hasLabel(Entities.Object))
-         return new ObjectPanel(neoNode);
-      return null;
+   protected JComponent newClassEditor(NeoNode neoNode) {
+      return new ClassPanel(neoNode);
+   }
+
+   @Override
+   protected JComponent newObjectEditor(NeoNode neoNode) {
+      return new ObjectPanel(neoNode);
    }
 
    private final class ObjectPanel extends JPanel {
@@ -289,5 +277,74 @@ public class JavaPlugin extends Plugin {
 
          return text.toString();
       }
+   }
+
+   private class ClassPanel extends JPanel {
+      ClassPanel(NeoNode neoNode) {
+         super(new BorderLayout());
+
+         final JTextArea txtEditor = new JTextArea();
+         txtEditor.setFont(com.generator.app.AppMotif.getDefaultFont());
+         txtEditor.setTabSize(3);
+         txtEditor.setEditable(false);
+         txtEditor.setText(toSource(neoNode.getNode()));
+
+         add(new JScrollPane(txtEditor), BorderLayout.CENTER);
+      }
+   }
+
+   public static String toSource(Node classNode) {
+
+      final Node packageNode = other(classNode, singleIncoming(classNode, Relations.CLASS));
+
+      final JavaGroup.ClassST classST = javaGroup.newClass().
+            setPackage(getEntityName(packageNode)).
+            setName(getEntityName(classNode));
+
+      outgoingFIELD(classNode, (fieldRelation, fieldNode) -> {
+
+         final Node typeNode = singleOutgoingTYPE(fieldNode);
+         final Node instantiationNode = singleOutgoingINSTANTIATION(fieldNode);
+
+         classST.addFieldsValue(getEntityName(instantiationNode), getEntityName(fieldNode), getEntityName(typeNode), DomainMotif.getPropertyValue(fieldNode, Properties.scope.name()));
+      });
+
+      outgoingMETHOD(classNode, (methodRelation, methodNode) -> {
+
+         if (isMethod(methodNode)) {
+
+            final JavaGroup.methodST methodST = javaGroup.newmethod().
+                  setName(getEntityName(methodNode)).
+                  setScope(DomainMotif.getPropertyValue(methodNode, Properties.scope.name()));
+
+            outgoingPARAMETER(methodNode, (parameterRelation, parameterNode) -> {
+
+               final Node typeNode = singleOutgoingTYPE(parameterNode);
+
+               methodST.addParametersValue(getEntityName(parameterNode), getEntityName(typeNode));
+            });
+
+            createStatementBlock(singleOutgoingBLOCK(methodNode), methodST);
+
+            classST.addMethodsValue(methodST);
+
+         } else {
+            final Node templateNode = other(methodNode,singleIncoming(methodNode, DomainPlugin.Relations.INSTANCE));
+            if(templateNode!=null) classST.addMethodsValue(StringTemplatePlugin.renderStatement(methodNode, templateNode));
+         }
+      });
+
+      return classST.toString();
+   }
+
+   @Override
+   public String toString() {
+      return super.toString();
+   }
+
+   private static void createStatementBlock(Node statementNode, JavaGroup.methodST methodST) {
+      if (statementNode == null) return;
+      methodST.addStatementsValue(getEntityName(statementNode));
+      createStatementBlock(singleOutgoingNEXT(statementNode), methodST);
    }
 }

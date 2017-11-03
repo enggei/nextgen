@@ -99,19 +99,40 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static Node newQuery(NeoModel graph) { return graph.newNode(Entities.Query); }
 
 	public static void outgoingTABLE(Node src, RelationConsumer consumer) { outgoing(src, Relations.TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingTABLE(Node src) { return other(src, singleOutgoing(src, Relations.TABLE)); }
 	public static void incomingTABLE(Node src, RelationConsumer consumer) { incoming(src, Relations.TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingTABLE(Node src) { return other(src, singleIncoming(src, Relations.TABLE)); }
+
 	public static void outgoingCOLUMN(Node src, RelationConsumer consumer) { outgoing(src, Relations.COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingCOLUMN(Node src) { return other(src, singleOutgoing(src, Relations.COLUMN)); }
 	public static void incomingCOLUMN(Node src, RelationConsumer consumer) { incoming(src, Relations.COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingCOLUMN(Node src) { return other(src, singleIncoming(src, Relations.COLUMN)); }
+
 	public static void outgoingFK_SRC(Node src, RelationConsumer consumer) { outgoing(src, Relations.FK_SRC).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingFK_SRC(Node src) { return other(src, singleOutgoing(src, Relations.FK_SRC)); }
 	public static void incomingFK_SRC(Node src, RelationConsumer consumer) { incoming(src, Relations.FK_SRC).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingFK_SRC(Node src) { return other(src, singleIncoming(src, Relations.FK_SRC)); }
+
 	public static void outgoingFK_DST(Node src, RelationConsumer consumer) { outgoing(src, Relations.FK_DST).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingFK_DST(Node src) { return other(src, singleOutgoing(src, Relations.FK_DST)); }
 	public static void incomingFK_DST(Node src, RelationConsumer consumer) { incoming(src, Relations.FK_DST).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingFK_DST(Node src) { return other(src, singleIncoming(src, Relations.FK_DST)); }
+
 	public static void outgoingQUERY(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingQUERY(Node src) { return other(src, singleOutgoing(src, Relations.QUERY)); }
 	public static void incomingQUERY(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingQUERY(Node src) { return other(src, singleIncoming(src, Relations.QUERY)); }
+
 	public static void outgoingQUERY_TABLE(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY_TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingQUERY_TABLE(Node src) { return other(src, singleOutgoing(src, Relations.QUERY_TABLE)); }
 	public static void incomingQUERY_TABLE(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY_TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingQUERY_TABLE(Node src) { return other(src, singleIncoming(src, Relations.QUERY_TABLE)); }
+
 	public static void outgoingQUERY_COLUMN(Node src, RelationConsumer consumer) { outgoing(src, Relations.QUERY_COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingQUERY_COLUMN(Node src) { return other(src, singleOutgoing(src, Relations.QUERY_COLUMN)); }
 	public static void incomingQUERY_COLUMN(Node src, RelationConsumer consumer) { incoming(src, Relations.QUERY_COLUMN).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingQUERY_COLUMN(Node src) { return other(src, singleIncoming(src, Relations.QUERY_COLUMN)); }
+
 
 	public static Relationship relateTABLE(Node src, Node dst) { return relate(src, dst, Relations.TABLE); }
 	public static Relationship relateCOLUMN(Node src, Node dst) { return relate(src, dst, Relations.COLUMN); }
@@ -121,10 +142,15 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static Relationship relateQUERY_TABLE(Node src, Node dst) { return relate(src, dst, Relations.QUERY_TABLE); }
 	public static Relationship relateQUERY_COLUMN(Node src, Node dst) { return relate(src, dst, Relations.QUERY_COLUMN); }
 
-	public static String getName(PropertyContainer node) { return DomainMotif.getName(node); }
-	public static String getName(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
-	public static void setName(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
-	public static void setName(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
+	// get name as property of a node (node.name)
+	public static String getNameProperty(PropertyContainer node) { return DomainMotif.getName(node); }
+	public static String getNameProperty(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
+	public static void setNameProperty(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
+	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
+
+	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
+	public static String getEntityName(Node classNode) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name()); }
+	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name(), defaultValue); }
 
 	public static <T> T getUsername(PropertyContainer container) { return get(container, Properties.username.name()); }
 	public static <T> T getUsername(PropertyContainer container, T defaultValue) { return has(container, Properties.username.name()) ? get(container, Properties.username.name()) : defaultValue; }

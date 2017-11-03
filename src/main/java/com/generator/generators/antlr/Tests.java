@@ -350,7 +350,7 @@ public class Tests {
    public void testParser() throws IOException {
 
       final String[] grammarFiles = new String[]{
-            "properties/parser/properties.g4"
+            "mysql/parser/MySqlLexer.g4"
       };
 
       for (String fileName : grammarFiles) {

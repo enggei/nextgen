@@ -6,6 +6,7 @@ import com.generator.generators.mysql.parser.MySqlParser;
 import com.generator.generators.mysql.parser.MySqlParserNodeListener;
 import com.generator.generators.mysql.parser.MySqlParserNodeVisitor;
 import com.generator.util.FileUtil;
+import com.generator.util.MySQLUtil;
 import com.generator.util.StringUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -23,6 +24,19 @@ import java.util.Stack;
  * Created 24.03.17.
  */
 public class Tests {
+
+   @Test
+   public void testParseSQLQuery() {
+
+      String sql = MySQLUtil.preprocessSQL("select * FROM 'filmweb_admissions' whERE 'screenId'=1 AND 'cinemaCompId'=15;");
+      new ParseTreeWalker().walk(new MySqlParserNodeListener(true) { }, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(sql)))).root());
+
+      sql = MySQLUtil.preprocessSQL("select * FROM 'filmweb_admissions', 'screens' whERE 'screenId'=1 AND 'cinemaCompId'=15;");
+      new ParseTreeWalker().walk(new MySqlParserNodeListener(true) { }, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(sql)))).root());
+
+      sql = MySQLUtil.preprocessSQL("select * FROM 'filmweb_admissions' adm, 'screens' scr whERE 'screenId'=1 AND 'cinemaCompId'=15 and adm.id=scr.id;");
+      new ParseTreeWalker().walk(new MySqlParserNodeListener(true) { }, new MySqlParser(new CommonTokenStream(new MySqlLexer(CharStreams.fromString(sql)))).root());
+   }
 
    @Test
    public void testMysqlWithForeignKeys() throws Exception {
