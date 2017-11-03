@@ -26,6 +26,20 @@ public final class StringUtil {
       }
    }
 
+   public interface CharacterHandler {
+
+      void handle(char character);
+   }
+
+   public static void iterateAlphabet(boolean capital, CharacterHandler handler) {
+      int start = (capital ? 41 : 97);
+      int end = (capital ? 90 : 122);
+      for (int i = start; i <= end; i++) {
+         handler.handle(Character.toChars(i)[0]);
+      }
+   }
+
+
    public static Character randomCharacter() {
       return 'A';
 //      int n = random.nextInt(27) + 65;
