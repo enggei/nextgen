@@ -81,7 +81,7 @@ public class DockerPlugin extends DockerDomainPlugin {
 
                if (!path.exists()) return;
 
-               editorAction("Build", path, app,
+               showEditor("Build", path, app,
                      "docker", "build", "-f", "Dockerfile", ".");
             }
          });
@@ -112,14 +112,14 @@ public class DockerPlugin extends DockerDomainPlugin {
 
                if (!path.exists()) return;
 
-               editorAction("Compose", path, app,
+               showEditor("Compose", path, app,
                      "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose.override.yml", "build");
             }
          });
       });
    }
 
-   private static void editorAction(final String title, File directory, App app, final String... command) throws IOException, InterruptedException, TimeoutException {
+   private static void showEditor(final String title, File directory, App app, final String... command) throws IOException, InterruptedException, TimeoutException {
       // make editor for parameters
       final JCheckBox chkSudo = new JCheckBox("Use Sudo");
       final JPasswordField txtPassword = new JPasswordField();
