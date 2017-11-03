@@ -5,6 +5,7 @@ import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.SwingUtil;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -18,6 +19,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.*;
 import java.util.List;
@@ -44,6 +46,69 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             if (name == null || name.length() == 0) return;
 
             fireNodesLoaded(newWorkbook(name));
+         }
+      });
+
+      menu.add(new App.TransactionAction("Import Excel", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final File file = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+            if (file == null || !file.exists() || !file.getName().toLowerCase().endsWith(".xlsx")) return;
+
+            try {
+               final FileInputStream excelFile = new FileInputStream(file);
+               final Workbook workbook = new XSSFWorkbook(excelFile);
+               final Node workbookNode = newWorkbook(file.getName());
+
+               for (Sheet sheet : workbook) {
+                  final Node sheetNode = newSheet(sheet.getSheetName());
+                  relateSHEET(workbookNode, sheetNode);
+
+                  for (Row currentRow : sheet) {
+                     final Node rowNode = newRow(Integer.toString(currentRow.getRowNum()));
+                     relateROW(sheetNode, rowNode);
+
+                     final Map<Integer, Node> columnMap = new TreeMap<>();
+                     for (Cell currentCell : currentRow) {
+                        final int columnIndex = currentCell.getColumnIndex();
+                        if (!columnMap.containsKey(columnIndex)) {
+                           columnMap.put(columnIndex, newColumn(Integer.toString(columnIndex)));
+                           relateCOL(sheetNode, columnMap.get(columnIndex));
+                        }
+
+                        final Node cellNode = newCell();
+                        relateCELL(rowNode, cellNode);
+                        relateCELL(columnMap.get(columnIndex), cellNode);
+
+                        switch (currentCell.getCellTypeEnum()) {
+                           case _NONE:
+                              break;
+                           case NUMERIC:
+                              setValue(cellNode, currentCell.getNumericCellValue() + "");
+                              break;
+                           case STRING:
+                              setValue(cellNode, currentCell.getStringCellValue());
+                              break;
+                           case FORMULA:
+                              break;
+                           case BLANK:
+                              setValue(cellNode, "");
+                              break;
+                           case BOOLEAN:
+                              setValue(cellNode, currentCell.getBooleanCellValue() + "");
+                              break;
+                           case ERROR:
+                              break;
+                        }
+                     }
+                  }
+               }
+
+               fireNodesLoaded(workbookNode);
+            } catch (Throwable t) {
+               SwingUtil.showException(app, t);
+            }
          }
       });
    }
@@ -110,7 +175,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             outgoingROW(sheetNode.getNode(), (relationship, rowNode) -> existingRows.add(getNameProperty(rowNode)));
 
             final List<Integer> availableRows = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 50; i++) {
                if (existingRows.contains(Integer.toString(i))) continue;
                availableRows.add(i);
             }
@@ -118,8 +183,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             final Integer newRow = SwingUtil.showSelectDialog(app, availableRows);
             if (newRow == null) return;
 
-            final Node rowNode = newRow();
-            setNameProperty(rowNode, newRow.toString());
+            final Node rowNode = newRow(newRow.toString());
             relateROW(sheetNode.getNode(), rowNode);
             fireNodesLoaded(rowNode);
          }
@@ -133,7 +197,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             outgoingCOL(sheetNode.getNode(), (relationship, colNode) -> existingColumns.add(getNameProperty(colNode)));
 
             final List<Integer> availableColumns = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 50; i++) {
                if (existingColumns.contains(Integer.toString(i))) continue;
                availableColumns.add(i);
             }
@@ -245,8 +309,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
 
                outgoingCELL(other, (relationship1, cellNode) -> incomingCELL(cellNode, (relationship11, other1) -> {
                   if (isColumn(other1)) {
-                     final Integer colName = Integer.valueOf(getNameProperty(other1));
-                     rowCells.get(rowName).put(colName, cellNode);
+                     rowCells.get(rowName).put(Integer.valueOf(getNameProperty(other1)), cellNode);
                   }
                }));
             });
@@ -298,7 +361,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
 
             private Row(int name) {
                this.name = name;
-               for (int i = 0; i < 20; i++)
+               for (int i = 0; i < 50; i++)
                   cells.add(new Cell(i, null));
             }
 
@@ -306,7 +369,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                this.name = name;
                this.node = rowNode;
 
-               for (int i = 0; i < 20; i++) {
+               for (int i = 0; i < 50; i++) {
                   if (cellNodes != null && cellNodes.containsKey(i)) {
                      cells.add(new Cell(i, cellNodes.get(i)));
                   } else {
@@ -317,8 +380,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
 
             public Node getNode() {
                if (node == null) {
-                  node = newRow();
-                  setNameProperty(node, Integer.toString(name));
+                  node = newRow(Integer.toString(name));
                   relateROW(sheetNode, node);
                }
                return node;
@@ -379,8 +441,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                });
 
                if (found.isEmpty()) {
-                  final Node colNode = newColumn();
-                  setNameProperty(colNode, Integer.toString(name));
+                  final Node colNode = newColumn(Integer.toString(name));
                   relateCOL(sheetNode, colNode);
                   found.add(colNode);
                }
