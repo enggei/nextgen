@@ -282,6 +282,27 @@ public class NeoNode extends PNode {
                   }
 
                   break;
+
+               case KeyEvent.VK_DELETE:
+
+                  if (!event.isControlDown()) {
+
+                     SwingUtilities.invokeLater(() -> workspace.app.model.graph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx) throws Throwable {
+                           if (SwingUtil.showConfirmDialog(workspace.app, "Delete " + getNameAndLabelsFrom(node) + " ?")) {
+                              workspace.app.model.deleteNodes(Collections.singleton(node));
+                           }
+                        }
+
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showException(nodeCanvas, throwable);
+                        }
+                     }));
+                  }
+
+                  break;
             }
          }
 
