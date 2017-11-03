@@ -20,9 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
-import static com.generator.util.NeoUtil.hasLabel;
-import static com.generator.util.NeoUtil.hasOutgoing;
-
 /**
  * Created 16.09.17.
  */
@@ -37,96 +34,90 @@ public class DockerPlugin extends DockerDomainPlugin {
       addShowMenu(menu, Entities.DockerFile);
       addShowMenu(menu, Entities.DockerComposeFile);
 
-		menu.add(new TransactionAction("New DockerFile", app) {
-			@Override
-			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+      menu.add(new TransactionAction("New DockerFile", app) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-				final String name = SwingUtil.showInputDialog("Name", app);
-				if (name == null || name.length() == 0) return;
+            final String name = SwingUtil.showInputDialog("Name", app);
+            if (name == null || name.length() == 0) return;
 
-				fireNodesLoaded(newDockerFile(name));
-			}
-		});
+            fireNodesLoaded(newDockerFile(name));
+         }
+      });
 
-		menu.add(new TransactionAction("New DockerComposeFile", app) {
-			@Override
-			public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+      menu.add(new TransactionAction("New DockerComposeFile", app) {
+         @Override
+         public void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-				final String name = SwingUtil.showInputDialog("Name", app);
-				if (name == null || name.length() == 0) return;
+            final String name = SwingUtil.showInputDialog("Name", app);
+            if (name == null || name.length() == 0) return;
 
-				fireNodesLoaded(newDockerComposeFile(name));
-			}
-		});
+            fireNodesLoaded(newDockerComposeFile(name));
+         }
+      });
    }
 
-	@Override
-	protected void handleDockerFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-		selectedNodes.stream()
-			.filter(selectedNode -> hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory))
-			.forEach(selectedNode -> {
-				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
-				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
-					@Override
-					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-						relateBUILD(neoNode.getNode(), selectedNode.getNode());
-					}
-				});
-			});
+   @Override
+   protected void handleDockerFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      selectedNodes.stream()
+            .filter(selectedNode -> isDirectory(selectedNode.getNode()))
+            .forEach(selectedNode -> {
+               final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+               pop.add(new App.TransactionAction("Add " + directoryPath, app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     relateBUILD(neoNode.getNode(), selectedNode.getNode());
+                  }
+               });
+            });
 
-		if (hasOutgoing(neoNode.getNode(), Relations.BUILD)) {
+      outgoingBUILD(neoNode.getNode(), (relationship, other) -> {
 
-			neoNode.getNode().getRelationships(Relations.BUILD).forEach(compose -> {
+         final File path = new File((String) ProjectPlugin.getPath(other));
 
-				final File path = new File((String)ProjectPlugin.getPath(compose.getOtherNode(neoNode.getNode())));
+         pop.add(new TransactionAction("Build " + path.toString(), app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-				pop.add(new App.TransactionAction("Build " + path.toString(), app) {
-					@Override
-					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               if (!path.exists()) return;
 
-						if (!path.exists()) return;
+               editorAction("Build", path, app,
+                     "docker", "build", "-f", "Dockerfile", ".");
+            }
+         });
+      });
+   }
 
-						editorAction("Build", path, app,
-							"docker", "build", "-f", "Dockerfile", ".");
-					}
-				});
-			});
-		}
-	}
+   @Override
+   protected void handleDockerComposeFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+      selectedNodes.stream()
+            .filter(selectedNode -> isDirectory(selectedNode.getNode()))
+            .forEach(selectedNode -> {
+               final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+               pop.add(new App.TransactionAction("Add " + directoryPath, app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                     relateCOMPOSE(neoNode.getNode(), selectedNode.getNode());
+                  }
+               });
+            });
 
-	@Override
-	protected void handleDockerComposeFile(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-   	selectedNodes.stream()
-			.filter(selectedNode -> hasLabel(selectedNode.getNode(), ProjectPlugin.Entities.Directory))
-			.forEach(selectedNode -> {
-				final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
-				pop.add(new App.TransactionAction("Add " + directoryPath, app) {
-					@Override
-					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-						relateCOMPOSE(neoNode.getNode(), selectedNode.getNode());
-					}
-				});
-			});
+      outgoingCOMPOSE(neoNode.getNode(), (relationship, other) -> {
 
-		if (hasOutgoing(neoNode.getNode(), Relations.COMPOSE)) {
+         final File path = new File((String) ProjectPlugin.getPath(other));
 
-			neoNode.getNode().getRelationships(Relations.COMPOSE).forEach(compose -> {
+         pop.add(new TransactionAction("Compose " + path.toString(), app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-				final File path = new File((String)ProjectPlugin.getPath(compose.getOtherNode(neoNode.getNode())));
+               if (!path.exists()) return;
 
-				pop.add(new App.TransactionAction("Compose " + path.toString(), app) {
-					@Override
-					protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-						if (!path.exists()) return;
-
-						editorAction("Compose", path, app,
-							"docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose.override.yml", "build");
-					}
-				});
-			});
-		}
-	}
+               editorAction("Compose", path, app,
+                     "docker-compose", "-f", "docker-compose.yml", "-f", "docker-compose.override.yml", "build");
+            }
+         });
+      });
+   }
 
    private static void editorAction(final String title, File directory, App app, final String... command) throws IOException, InterruptedException, TimeoutException {
       // make editor for parameters
@@ -139,46 +130,46 @@ public class DockerPlugin extends DockerDomainPlugin {
       editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
       SwingUtil.showDialog(editor, app, title, new SwingUtil.ConfirmAction() {
-			@Override
-			public void verifyAndCommit() throws Exception {
-				final StringBuilder result = new StringBuilder();
-				final LogOutputStream logOutputStream = new LogOutputStream() {
-					@Override
-					protected void processLine(String line) {
-						result.append(line).append("\n");
-						System.out.println(line);
-					}
-				};
+         @Override
+         public void verifyAndCommit() throws Exception {
+            final StringBuilder result = new StringBuilder();
+            final LogOutputStream logOutputStream = new LogOutputStream() {
+               @Override
+               protected void processLine(String line) {
+                  result.append(line).append("\n");
+                  System.out.println(line);
+               }
+            };
 
-				if (chkSudo.isSelected()) {
+            if (chkSudo.isSelected()) {
 
-					String[] sudoCommand = new String[command.length + 2];
-					sudoCommand[0] = "sudo";
-					sudoCommand[1] = "-S";
-					System.arraycopy(command, 0, sudoCommand, 2, command.length);
+               String[] sudoCommand = new String[command.length + 2];
+               sudoCommand[0] = "sudo";
+               sudoCommand[1] = "-S";
+               System.arraycopy(command, 0, sudoCommand, 2, command.length);
 
-					final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
-					new ProcessExecutor().
-							directory(directory).
-							command(sudoCommand).
-							redirectError(logOutputStream).
-							redirectOutput(logOutputStream).
-							redirectInput(stream).
-							execute();
+               final InputStream stream = new ByteArrayInputStream((new String(txtPassword.getPassword()) + "\n").getBytes(StandardCharsets.UTF_8.name()));
+               new ProcessExecutor().
+                     directory(directory).
+                     command(sudoCommand).
+                     redirectError(logOutputStream).
+                     redirectOutput(logOutputStream).
+                     redirectInput(stream).
+                     execute();
 
-					SwingUtil.showTextResult("Result", result.toString().trim(), editor);
+               SwingUtil.showTextResult("Result", result.toString().trim(), editor);
 
-				} else {
-					new ProcessExecutor().
-							directory(directory).
-							command(command).
-							redirectError(logOutputStream).
-							redirectOutput(logOutputStream).
-							execute();
+            } else {
+               new ProcessExecutor().
+                     directory(directory).
+                     command(command).
+                     redirectError(logOutputStream).
+                     redirectOutput(logOutputStream).
+                     execute();
 
-					SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
-				}
-			}
-		});
+               SwingUtil.showTextResult("Result", result.toString().trim(), editor, new Dimension(400, 200), true);
+            }
+         }
+      });
    }
 }
