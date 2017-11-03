@@ -114,6 +114,8 @@ public class DomainPlugin extends DomainDomainPlugin {
                      setName(className).
                      setTitle(getName(neoNode.getNode()));
 
+               // todo: group Entities.properties and Relations.properties, and use these to create default-add/set actions (like StringTemplatePlugin)
+
                final Set<String> domainEntities = new LinkedHashSet<>();
                final Set<String> domainRelations = new LinkedHashSet<>();
                final Set<String> domainProperties = new LinkedHashSet<>();
@@ -147,6 +149,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                      if(!name.equals("name")) {
                         domainProperties.add(name);
                      }
+
                      super.visitProperty(node);
                   }
                }.visitDomain(neoNode.getNode());

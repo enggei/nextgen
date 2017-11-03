@@ -336,9 +336,9 @@ public final class DomainPluginGroup {
 		"      return null;\n" + 
 		"   }\n" + 
 		"\n" + 
-		"	~entities:{it|protected void handle~it.name~(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { ~eom()~};separator=\"\\n\"~	\n" + 
+		"	~entities:{it|protected void handle~it.name~(JPopupMenu pop, NeoNode ~it.name;format=\"lowFirst\"~Node, Set<NeoNode> selectedNodes) { ~eom()~};separator=\"\\n\"~	\n" + 
 		"\n" + 
-		"	~entities:{it|protected JComponent new~it.name~Editor(NeoNode neoNode) { return null; ~eom()~};separator=\"\\n\"~\n" + 
+		"	~entities:{it|protected JComponent new~it.name~Editor(NeoNode ~it.name;format=\"lowFirst\"~Node) { return null; ~eom()~};separator=\"\\n\"~\n" + 
 		"\n" + 
 		"	~entities:{it|protected Node new~it.name~(String name) { return new~it.name~(getGraph(), name); ~eom()~\n" + 
 		"protected Node new~it.name~() { return new~it.name~(getGraph()); ~eom()~ };separator=\"\\n\"~\n" + 

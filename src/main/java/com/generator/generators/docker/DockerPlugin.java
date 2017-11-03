@@ -75,11 +75,11 @@ public class DockerPlugin extends DockerDomainPlugin {
 
          final File path = new File((String) ProjectPlugin.getPath(other));
 
+         if (!path.exists()) return;
+
          pop.add(new TransactionAction("Build " + path.toString(), app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               if (!path.exists()) return;
 
                showEditor("Build", path, app,
                      "docker", "build", "-f", "Dockerfile", ".");

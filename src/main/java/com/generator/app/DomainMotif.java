@@ -26,10 +26,6 @@ public class DomainMotif {
    public static void setName(PropertyContainer node, String name) { node.setProperty(AppMotif.Properties.name.name(), name); }
    public static void setName(NeoNode neoNode, String name) { setName(neoNode.getNode(), name); }
 
-   public static void newEntityProperty(NeoModel graph, Node srcEntity, String name) {
-      newEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.findOrCreate(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
-   }
-
    public static Node newValueNode(NeoModel graph, String value) {
       return graph.findOrCreate(DomainPlugin.Entities.Value, AppMotif.Properties.name.name(), value);
    }

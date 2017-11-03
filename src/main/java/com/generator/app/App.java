@@ -6,7 +6,9 @@ import com.generator.generators.csv.CSVPlugin;
 import com.generator.generators.docker.DockerPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.excel.ExcelPlugin;
 import com.generator.generators.java.JavaPlugin;
+import com.generator.generators.json.JsonPlugin;
 import com.generator.generators.math.MathPlugin;
 import com.generator.generators.maven.MavenPlugin;
 import com.generator.generators.mysql.MySQLPlugin;
@@ -244,6 +246,8 @@ public class App extends JFrame {
                   plugins.add(new MathPlugin(App.this));
                   plugins.add(new ClojurePlugin(App.this));
                   plugins.add(new CSVPlugin(App.this));
+                  plugins.add(new JsonPlugin(App.this));
+                  plugins.add(new ExcelPlugin(App.this));
                }
             }
          });

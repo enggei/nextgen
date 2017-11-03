@@ -7,6 +7,7 @@ import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.generators.easyFlow.EasyFlowPlugin;
+import com.generator.generators.excel.ExcelPlugin;
 import com.generator.generators.mobx.MobXAppVisitor;
 import com.generator.generators.mobx.MobXModelVisitor;
 import com.generator.generators.ssh.SSHPlugin;
@@ -162,7 +163,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
       for (NeoNode selectedNode : selectedNodes) {
 
-         if (NeoUtil.hasLabel(selectedNode.getNode(), StringTemplatePlugin.Entities.STGroup)) {
+         if(StringTemplatePlugin.isSTGroup(selectedNode.getNode())) {
 
             if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                return;
@@ -182,9 +183,20 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                   rendererRelationship.setProperty(Properties.className.name(), className + "Group");
                }
             });
-         }
 
-         if (NeoUtil.hasLabel(selectedNode.getNode(), SSHPlugin.Entities.Path)) {
+         } else if(ExcelPlugin.isWorkbook(selectedNode.getNode())) {
+
+            if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
+               return;
+
+            pop.add(new App.TransactionAction("Add Workbook " + getNameOrLabelFrom(selectedNode.getNode()), app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+                  relateRENDERER(selectedNode.getNode(), neoNode.getNode());
+               }
+            });
+
+         } else if(SSHPlugin.isPath(selectedNode.getNode())) {
 
             pop.add(new App.TransactionAction("Download file from host", app) {
                @Override
