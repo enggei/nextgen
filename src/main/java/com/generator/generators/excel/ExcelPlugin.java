@@ -3,12 +3,14 @@ package com.generator.generators.excel;
 import com.generator.app.App;
 import com.generator.app.nodes.NeoNode;
 import com.generator.generators.project.ProjectPlugin;
+import com.generator.util.NeoUtil;
 import com.generator.util.SwingUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -69,14 +71,19 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             final XSSFWorkbook workbook = new XSSFWorkbook();
 
             outgoingSHEET(neoNode.getNode(), (relationship, sheetNode) -> {
-
                final XSSFSheet sheet = workbook.createSheet(getNameProperty(sheetNode));
                outgoingROW(sheetNode, (rowRelation, rowNode) -> {
                   final XSSFRow row = sheet.createRow(Integer.valueOf(getNameProperty(rowNode)));
-                  outgoingCELL(rowNode, (cellRelation, cellNode) -> {
+                  outgoingCELL(rowNode, (cellRowRelation, cellNode) -> {
+
                      if ("".equals(ExcelPlugin.getValue(cellNode))) return;
-                     final XSSFCell cell = row.createCell(Integer.valueOf(getNameProperty(singleIncomingCOL(cellNode))));
-                     cell.setCellValue((String) ExcelPlugin.getValue(cellNode));
+
+                     incomingCELL(cellNode, (cellColumnRelation, other) -> {
+                        if(isColumn(other)) {
+                           final XSSFCell cell = row.createCell(Integer.valueOf(getNameProperty(other)));
+                           cell.setCellValue((String) ExcelPlugin.getValue(cellNode));
+                        }
+                     });
                   });
                });
             });
@@ -173,8 +180,10 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             forEach(columnNode -> pop.add(new App.TransactionAction("Set column to " + getNameProperty(columnNode.getNode()), app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  incomingCOL(cellNode.getNode(), (relationship, other) -> relationship.delete());
-                  relateCOL(columnNode.getNode(), cellNode.getNode());
+                  incomingCELL(cellNode.getNode(), (relationship, other) -> {
+                     if (isColumn(other)) relationship.delete();
+                  });
+                  relateCELL(columnNode.getNode(), cellNode.getNode());
                }
             }));
 
@@ -183,8 +192,10 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             forEach(rowNode -> pop.add(new App.TransactionAction("Set row to " + getNameProperty(rowNode.getNode()), app) {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  incomingROW(cellNode.getNode(), (relationship, other) -> relationship.delete());
-                  relateROW(rowNode.getNode(), cellNode.getNode());
+                  incomingCELL(cellNode.getNode(), (relationship, other) -> {
+                     if (isRow(other)) relationship.delete();
+                  });
+                  relateCELL(rowNode.getNode(), cellNode.getNode());
                }
             }));
 
