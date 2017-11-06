@@ -220,7 +220,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                }
 
                final Node newPropertyNode = newProperty(name);
-               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+               fireNodesLoaded(newPropertyNode, DomainMotif.newDomainEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
             }
          });
 
@@ -257,7 +257,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                               throw new IllegalStateException("Entity must have a name");
 
                            final Node newEntityNode = newEntity(txtEntityName.getText().trim());
-                           fireNodesLoaded(newEntityNode, DomainMotif.newEntityRelation(getGraph(), neoNode.getNode(), name, relationCardinality, newEntityNode));
+                           fireNodesLoaded(newEntityNode, DomainMotif.newDomainEntityRelation(getGraph(), neoNode.getNode(), name, relationCardinality, newEntityNode));
                         }
 
                         @Override
@@ -300,7 +300,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                                     if (name.length() == 0)
                                        throw new IllegalStateException("Relation Name is required");
 
-                                    fireNodesLoaded(DomainMotif.newEntityRelation(getGraph(), selectedNode.getNode(), name, relationCardinality, neoNode.getNode()));
+                                    fireNodesLoaded(DomainMotif.newDomainEntityRelation(getGraph(), selectedNode.getNode(), name, relationCardinality, neoNode.getNode()));
                                  }
 
                                  @Override
@@ -356,7 +356,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                }
 
                final Node newPropertyNode = newProperty(name);
-               fireNodesLoaded(newPropertyNode, DomainMotif.newEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+               fireNodesLoaded(newPropertyNode, DomainMotif.newDomainEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
             }
          });
 
@@ -623,7 +623,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                                     });
 
                                     // try to find existing node with same value, and if exists, use this and add link to it
-                                    final Node existingNode = getGraph().findNode(Entities.Value, AppMotif.Properties.name.name(), value);
+                                    final Node existingNode = getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
                                     final Node newDstNode = existingNode == null ? DomainMotif.newValueNode(getGraph(), value) : existingNode;
                                     relate(templateNeoNode.getNode(), newDstNode, RelationshipType.withName(fieldEntry.getKey()));
                                     fireNodesLoaded(newDstNode);
@@ -730,7 +730,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                      }
 
                      // try to find existing node with same value, and if exists, use this and add link to it
-                     final Node existingValueNode = getGraph().findNode(Entities.Value, AppMotif.Properties.name.name(), value);
+                     final Node existingValueNode = getGraph().newNode(Entities.Value, AppMotif.Properties.name.name(), value);
                      final Node newPropertyNode = existingValueNode == null ? DomainMotif.newValueNode(getGraph(), value) : existingValueNode;
                      relate(newEntityNode, newPropertyNode, RelationshipType.withName(fieldEntry.getKey()));
                   }

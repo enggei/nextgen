@@ -51,6 +51,8 @@ public class Tests {
       addRow(csvGroup, csv, "Tisvilde Bio", "Tisvilde Bio", 1);
       addRow(csvGroup, csv, "Slangerup Bio", "Slangerup bio", 1);
 
+      System.out.println(csv.toString());
+      System.out.println();
       final CSVParser parser = new CSVParser(new CommonTokenStream(new CSVLexer(CharStreams.fromString(csv.toString()))));
       final CSVNodeListener listener = new CSVNodeListener(true) {
 

@@ -17,7 +17,6 @@ import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -107,7 +106,7 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
 
                   // todo this should come from traversers of the graph
                   final String name = getNameProperty(neoNode.getNode());
-                  final String packageName = DomainMotif.getPropertyValue(neoNode.getNode(), "packageName", "");
+                  final String packageName = DomainMotif.getEntityProperty(neoNode.getNode(), "packageName", "");
 
                   final String content = StringTemplatePlugin.renderStatement(neoNode.getNode(), instanceNode);
 
@@ -306,7 +305,7 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
          final Node typeNode = singleOutgoingTYPE(fieldNode);
          final Node instantiationNode = singleOutgoingINSTANTIATION(fieldNode);
 
-         classST.addFieldsValue(getEntityName(instantiationNode), getEntityName(fieldNode), getEntityName(typeNode), DomainMotif.getPropertyValue(fieldNode, Properties.scope.name()));
+         classST.addFieldsValue(getEntityName(instantiationNode), getEntityName(fieldNode), getEntityName(typeNode), DomainMotif.getEntityProperty(fieldNode, Properties.scope.name()));
       });
 
       outgoingMETHOD(classNode, (methodRelation, methodNode) -> {
@@ -315,7 +314,7 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
 
             final JavaGroup.methodST methodST = javaGroup.newmethod().
                   setName(getEntityName(methodNode)).
-                  setScope(DomainMotif.getPropertyValue(methodNode, Properties.scope.name()));
+                  setScope(DomainMotif.getEntityProperty(methodNode, Properties.scope.name()));
 
             outgoingPARAMETER(methodNode, (parameterRelation, parameterNode) -> {
 

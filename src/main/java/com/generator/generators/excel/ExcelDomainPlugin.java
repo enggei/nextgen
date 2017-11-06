@@ -27,7 +27,7 @@ abstract class ExcelDomainPlugin extends Plugin {
    }
 
    public enum Properties {
-      value, cellType
+      cellType, value
    }
 
    ExcelDomainPlugin(App app) {
@@ -137,23 +137,8 @@ abstract class ExcelDomainPlugin extends Plugin {
 	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
 
 	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
-	public static String getEntityName(Node classNode) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name()); }
-	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name(), defaultValue); }
-
-	public static <T> T getValue(PropertyContainer container) { return get(container, Properties.value.name()); }
-	public static <T> T getValue(PropertyContainer container, T defaultValue) { return has(container, Properties.value.name()) ? get(container, Properties.value.name()) : defaultValue; }
-	public static boolean hasValue(PropertyContainer container) { return has(container, Properties.value.name()); }
-	public static <T extends PropertyContainer> T setValue(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.value.name());
-	   else
-	   	container.setProperty(Properties.value.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeValue(T container) {
-		if (has(container, Properties.value.name())) container.removeProperty(Properties.value.name());
-	      return container;
-	}
+	public static String getEntityName(Node classNode) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name()); }
+	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name(), defaultValue); }
 
 	public static <T> T getCellType(PropertyContainer container) { return get(container, Properties.cellType.name()); }
 	public static <T> T getCellType(PropertyContainer container, T defaultValue) { return has(container, Properties.cellType.name()) ? get(container, Properties.cellType.name()) : defaultValue; }
@@ -167,6 +152,21 @@ abstract class ExcelDomainPlugin extends Plugin {
 	}
 	public static <T extends PropertyContainer> T removeCellType(T container) {
 		if (has(container, Properties.cellType.name())) container.removeProperty(Properties.cellType.name());
+	      return container;
+	}
+
+	public static <T> T getValue(PropertyContainer container) { return get(container, Properties.value.name()); }
+	public static <T> T getValue(PropertyContainer container, T defaultValue) { return has(container, Properties.value.name()) ? get(container, Properties.value.name()) : defaultValue; }
+	public static boolean hasValue(PropertyContainer container) { return has(container, Properties.value.name()); }
+	public static <T extends PropertyContainer> T setValue(T container, Object value) {
+		if (value == null)
+	   	container.removeProperty(Properties.value.name());
+	   else
+	   	container.setProperty(Properties.value.name(), value);
+	   return container;
+	}
+	public static <T extends PropertyContainer> T removeValue(T container) {
+		if (has(container, Properties.value.name())) container.removeProperty(Properties.value.name());
 	      return container;
 	}
 

@@ -149,8 +149,8 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
 
 	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
-	public static String getEntityName(Node classNode) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name()); }
-	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getPropertyValue(classNode, AppMotif.Properties.name.name(), defaultValue); }
+	public static String getEntityName(Node classNode) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name()); }
+	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name(), defaultValue); }
 
 	public static <T> T getUsername(PropertyContainer container) { return get(container, Properties.username.name()); }
 	public static <T> T getUsername(PropertyContainer container, T defaultValue) { return has(container, Properties.username.name()) ? get(container, Properties.username.name()) : defaultValue; }

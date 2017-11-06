@@ -23,8 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.generator.app.DomainMotif.getPropertyValue;
-import static com.generator.app.DomainMotif.hasProperty;
 import static com.generator.generators.easyFlow.EasyFlowDomainPlugin.Relations.*;
 import static com.generator.generators.project.ProjectPlugin.getPackageName;
 import static com.generator.generators.project.ProjectPlugin.getFile;
@@ -152,7 +150,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
       @Override
       public void visit(Node node) {
-         final String name = getPropertyValue(node, AppMotif.Properties.name.name());
+         final String name = DomainMotif.getEntityProperty(node, AppMotif.Properties.name.name());
 
          final Set<String> events = new TreeSet<>();
          final Set<String> states = new TreeSet<>();
@@ -166,7 +164,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
             throw new IllegalStateException("Flownode has no initial state");
 
          final Node initStateNode = NeoUtil.otherOutgoing(node, Relations.FROM);
-         final String initStateName = StringUtil.toUpper(getPropertyValue(initStateNode, AppMotif.Properties.name.name()));
+         final String initStateName = StringUtil.toUpper(DomainMotif.getEntityProperty(initStateNode, AppMotif.Properties.name.name()));
          expand(initStateNode, transitST.setState(initStateName), group, events, states, stateComments);
 
          final EasyFlowGroup.eventsST eventsST = group.newevents();
@@ -183,11 +181,11 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
          for (Relationship propertyRelation : NeoUtil.outgoing(node, CONTEXT_PROPERTY)) {
             final Node contextPropertyNode = other(node, propertyRelation);
-            final Object propertyValue = getPropertyValue(contextPropertyNode, Properties.value.name());
-            final String comment = getPropertyValue(contextPropertyNode, Properties.comment.name());
-            final String modifier = getPropertyValue(contextPropertyNode, Properties.modifier.name());
-            final String contextName = getPropertyValue(contextPropertyNode, AppMotif.Properties.name.name());
-            final String type = getPropertyValue(contextPropertyNode, Properties.type.name());
+            final Object propertyValue = DomainMotif.getEntityProperty(contextPropertyNode, Properties.value.name());
+            final String comment = DomainMotif.getEntityProperty(contextPropertyNode, Properties.comment.name());
+            final String modifier = DomainMotif.getEntityProperty(contextPropertyNode, Properties.modifier.name());
+            final String contextName = DomainMotif.getEntityProperty(contextPropertyNode, AppMotif.Properties.name.name());
+            final String type = DomainMotif.getEntityProperty(contextPropertyNode, Properties.type.name());
             contextST.addPropertiesValue(comment, modifier, contextName, type, propertyValue == null ? null : formatPropertyValue(propertyValue));
          }
 
@@ -201,7 +199,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
          group.getSTGroup().getInstanceOf("easyFLow");
 
-         final String extendsName = getPropertyValue(node, Properties.extending.name());
+         final String extendsName = DomainMotif.getEntityProperty(node, Properties.extending.name());
          if (extendsName != null) fsm.setExtends(extendsName);
 
          for (String state : states) {
@@ -225,12 +223,12 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
       private void expand(Node state, final EasyFlowGroup.transitST parent, EasyFlowGroup group, Set<String> events, Set<String> states, Map<String, String> stateComments) {
 
-         final String stateName = StringUtil.toUpper(getPropertyValue(state, AppMotif.Properties.name.name()));
+         final String stateName = StringUtil.toUpper(DomainMotif.getEntityProperty(state, AppMotif.Properties.name.name()));
          if (states.contains(stateName)) return;
          states.add(stateName);
 
-         if (hasProperty(state, Properties.comment.name()))
-            stateComments.put(stateName, getPropertyValue(state, Properties.comment.name()));
+         if (DomainMotif.hasEntityProperty(state, Properties.comment.name()))
+            stateComments.put(stateName, DomainMotif.getEntityProperty(state, Properties.comment.name()));
 
          if (!state.hasRelationship(OUTGOING, ON)) {
             parent.setIsFinish("true");
@@ -240,10 +238,10 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
          for (Relationship relationship : outgoing(state, ON)) {
             final Node eventNode = other(state, relationship);
 
-            if (!hasProperty(eventNode, AppMotif.Properties.name.name()))
+            if (!DomainMotif.hasEntityProperty(eventNode, AppMotif.Properties.name.name()))
                throw new IllegalStateException("state '" + stateName + "' has an event with no name. Please name the event.");
 
-            final String eventName = getPropertyValue(eventNode, AppMotif.Properties.name.name());
+            final String eventName = DomainMotif.getEntityProperty(eventNode, AppMotif.Properties.name.name());
             events.add(eventName);
 
             // this should fix the TO/FINISH in easy-flow (i.e its automatic, user do not have to worry about it)
@@ -257,7 +255,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
                final Node newState = other(eventNode, toStateRelationship);
                final EasyFlowGroup.transitST transit = group.newtransit().
                      setEvent(eventName).
-                     setState(StringUtil.toUpper(getPropertyValue(newState, AppMotif.Properties.name.name())));
+                     setState(StringUtil.toUpper(DomainMotif.getEntityProperty(newState, AppMotif.Properties.name.name())));
                expand(newState, transit, group, events, states, stateComments);
                parent.addTransitsValue(transit);
 

@@ -29,7 +29,7 @@
 grammar CSV;
 
 csvFile: hdr row+ ;
-hdr : row ;
+hdr : row;
 
 row : field (',' field)* '\r'? '\n' ;
 

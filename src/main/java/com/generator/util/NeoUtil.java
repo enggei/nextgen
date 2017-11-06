@@ -69,11 +69,11 @@ public abstract class NeoUtil {
    }
 
    public static Iterable<Relationship> incoming(Node node, RelationshipType type) {
-      return sort(node.getRelationships(INCOMING, type));
+      return node==null ? Collections.emptySet() : sort(node.getRelationships(INCOMING, type));
    }
 
    public static Iterable<Relationship> incoming(Node node) {
-      return sort(node.getRelationships(INCOMING));
+      return node==null ? Collections.emptySet() : sort(node.getRelationships(INCOMING));
    }
 
    public static Relationship singleIncoming(Node node, RelationshipType type) {
@@ -113,8 +113,8 @@ public abstract class NeoUtil {
       return get(other(node, relationship), otherProperty);
    }
 
-   public static String get(PropertyContainer nodePropertyNode, String property, String defaultValue) {
-      return has(nodePropertyNode, property) ? nodePropertyNode.getProperty(property).toString() : defaultValue;
+   public static <T> T get(PropertyContainer nodePropertyNode, String property, T defaultValue) {
+      return has(nodePropertyNode, property) ? (T) nodePropertyNode.getProperty(property) : defaultValue;
    }
 
    public static boolean has(PropertyContainer node, String property) {

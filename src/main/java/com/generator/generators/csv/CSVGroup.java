@@ -42,55 +42,40 @@ public final class CSVGroup {
 
 	}
 
-   public CSVST newCSV() {
-      return new CSVST(stGroup);
+   public rowST newrow() {
+      return new rowST(stGroup);
    }
 
    public stringValueST newstringValue() {
       return new stringValueST(stGroup);
    }
 
-   public rowST newrow() {
-      return new rowST(stGroup);
+   public CSVST newCSV() {
+      return new CSVST(stGroup);
    }
 
-   public final class CSVST implements CSVGroupTemplate {
+   public final class rowST implements CSVGroupTemplate {
 
-      private java.util.Set<Object> _header = new java.util.LinkedHashSet<>();
-      private java.util.Set<Object> _row = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _column = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
-      private CSVST(STGroup group) {
-   		template = group.getInstanceOf("CSV");
+      private rowST(STGroup group) {
+   		template = group.getInstanceOf("row");
    	}
 
-      public CSVST addHeaderValue(Object value) {
+      public rowST addColumnValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
-      	this._header.add(value);
-      	template.add("header", value);
+      	this._column.add(value);
+      	template.add("column", value);
 
          return this;
       }
 
-      public java.util.Set<Object> getHeaderValues() {
-      	return this._header;
-      }
-
-      public CSVST addRowValue(Object value) {
-      	if (value == null || value.toString().length() == 0)
-         	return this;
-
-      	this._row.add(value);
-      	template.add("row", value);
-
-         return this;
-      }
-
-      public java.util.Set<Object> getRowValues() {
-      	return this._row;
+      public java.util.Set<Object> getColumnValues() {
+      	return this._column;
       }
 
       @Override
@@ -131,28 +116,43 @@ public final class CSVGroup {
    	}
    }
 
-   public final class rowST implements CSVGroupTemplate {
+   public final class CSVST implements CSVGroupTemplate {
 
-      private java.util.Set<Object> _column = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _header = new java.util.LinkedHashSet<>();
+      private java.util.Set<Object> _row = new java.util.LinkedHashSet<>();
 
       private final ST template;
 
-      private rowST(STGroup group) {
-   		template = group.getInstanceOf("row");
+      private CSVST(STGroup group) {
+   		template = group.getInstanceOf("CSV");
    	}
 
-      public rowST addColumnValue(Object value) {
+      public CSVST addHeaderValue(Object value) {
       	if (value == null || value.toString().length() == 0)
          	return this;
 
-      	this._column.add(value);
-      	template.add("column", value);
+      	this._header.add(value);
+      	template.add("header", value);
 
          return this;
       }
 
-      public java.util.Set<Object> getColumnValues() {
-      	return this._column;
+      public java.util.Set<Object> getHeaderValues() {
+      	return this._header;
+      }
+
+      public CSVST addRowValue(Object value) {
+      	if (value == null || value.toString().length() == 0)
+         	return this;
+
+      	this._row.add(value);
+      	template.add("row", value);
+
+         return this;
+      }
+
+      public java.util.Set<Object> getRowValues() {
+      	return this._row;
       }
 
       @Override
@@ -291,9 +291,9 @@ public final class CSVGroup {
 	private static final String stg = new StringBuilder("delimiters \"~\", \"~\"\n")
 		.append("eom() ::= <<}>>\n")
 		.append("gt() ::= \">\"\n")
+			.append("row(column) ::= <<~column:{it|~it~};separator=\",\"~>>\n")
+			.append("stringValue(value) ::= <<\"~value~\">>\n")
 			.append("CSV(header,row) ::= <<~header:{it|\"~it~\"};separator=\",\"~\n" + 
 		"~row:{it|~it~};separator=\"\\n\"~>>\n")
-			.append("stringValue(value) ::= <<\"~value~\">>\n")
-			.append("row(column) ::= <<~column:{it|~it~};separator=\",\"~>>\n")
 		.toString();
 }

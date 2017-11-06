@@ -629,7 +629,7 @@ public class App extends JFrame {
                   return;
                }
 
-               final Relationship relationshipTo = source.createRelationshipTo(dst, RelationshipType.withName(relationshipType));
+               final Relationship relationshipTo = relate(source, dst, RelationshipType.withName(relationshipType));
                for (Map.Entry<String, Object> entry : properties.entrySet())
                   relationshipTo.setProperty(entry.getKey(), entry.getValue());
             }

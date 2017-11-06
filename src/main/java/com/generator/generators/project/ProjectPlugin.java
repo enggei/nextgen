@@ -35,8 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.generator.app.DomainMotif.getPropertyValue;
-import static com.generator.app.DomainMotif.hasPropertyValue;
+import static com.generator.app.DomainMotif.getEntityProperty;
 import static com.generator.util.NeoUtil.*;
 
 /**
@@ -103,7 +102,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
    @Override
    protected void handleDirectory(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-      if (hasPropertyValue(neoNode.getNode(), Properties.path.name())) {
+      if (DomainMotif.hasEntityProperty(neoNode.getNode(), Properties.path.name())) {
          pop.add(new App.TransactionAction("Render " + getString(neoNode.getNode(), Properties.path.name()), app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -175,7 +174,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                   final String packageName = SwingUtil.showInputDialog("Package", app);
                   if (packageName == null) return;
 
-                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+                  final String className = getEntityProperty(neoNode.getNode(), AppMotif.Properties.name.name());
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
@@ -228,7 +227,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                   final String packageName = SwingUtil.showInputDialog("Package", app);
                   if (packageName == null) return;
 
-                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+                  final String className = getEntityProperty(neoNode.getNode(), AppMotif.Properties.name.name());
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
@@ -250,7 +249,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                   final String packageName = SwingUtil.showInputDialog("Package", app);
                   if (packageName == null) return;
 
-                  final String className = DomainMotif.getPropertyValue(neoNode.getNode(), AppMotif.Properties.name.name());
+                  final String className = getEntityProperty(neoNode.getNode(), AppMotif.Properties.name.name());
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
@@ -554,8 +553,8 @@ public class ProjectPlugin extends ProjectDomainPlugin {
       switch (Filetype.valueOf(getString(rendererRelationship, Properties.fileType.name()))) {
 
          case java: {
-            final String packageName = getPropertyValue(statementNode, getString(rendererRelationship, "package"));
-            final String className = getPropertyValue(statementNode, getString(rendererRelationship, Properties.className.name()));
+            final String packageName = getEntityProperty(statementNode, getString(rendererRelationship, "package"));
+            final String className = getEntityProperty(statementNode, getString(rendererRelationship, Properties.className.name()));
             try {
                GeneratedFile.newJavaFile(targetDir.getPath(), packageName, className).write(content);
             } catch (IOException e) {
@@ -574,7 +573,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
          }
 
          case namedFile: {
-            final String filename = getPropertyValue(statementNode, getString(rendererRelationship, Properties.filename.name()));
+            final String filename = getEntityProperty(statementNode, getString(rendererRelationship, Properties.filename.name()));
             final String dir = getString(rendererRelationship, Properties.dir.name());
             final String extension = getString(rendererRelationship, Properties.extension.name());
             final String fullFilename = filename + (extension == null || extension.length() == 0 ? "" : (extension.startsWith("[.]") ? extension : ("." + extension)));

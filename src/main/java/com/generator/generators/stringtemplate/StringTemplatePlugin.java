@@ -759,7 +759,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                                        }
 
                                        for (String newKey : newKeys) {
-                                          DomainMotif.newEntityRelation(getGraph(), entityNode, newKey, RelationCardinality.SINGLE, newProperty(getGraph(), newKey));
+                                          DomainMotif.newDomainEntityRelation(getGraph(), entityNode, newKey, RelationCardinality.SINGLE, newProperty(getGraph(), newKey));
                                        }
                                     }
 
@@ -963,17 +963,17 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
    private void newTemplateParameter(TemplateParameter templateParameter, Node templateNode) {
       switch (templateParameter.getDomainEntityType()) {
          case STRINGPROPERTY:
-            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
+            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
             break;
          case LISTPROPERTY:
-            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
+            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
             break;
          case KEYVALUELISTPROPERTY:
             final Node newParameterNode = DomainPlugin.newEntity(getGraph(), templateParameter.getPropertyName());
             templateParameter.getKvNames().forEach(key -> {
-               DomainMotif.newEntityRelation(getGraph(), newParameterNode, key, RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), key));
+               DomainMotif.newDomainEntityRelation(getGraph(), newParameterNode, key, RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), key));
             });
-            DomainMotif.newEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, newParameterNode);
+            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, newParameterNode);
             break;
       }
    }
