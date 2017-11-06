@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.app.AppEvents.*;
 import static com.generator.util.NeoUtil.*;
@@ -471,6 +472,29 @@ final class InformationPanel extends JPanel {
          super("Relationships");
 
       }
+
+//      @Override
+//      void addRightClickActions(JPopupMenu pop, TreePath selectionPath, JTree source) {
+//         pop.add(new App.TransactionAction("Show duplicate relationships", app) {
+//            @Override
+//            protected void actionPerformed(ActionEvent e, Transaction tx) {
+//
+//               app.model.graph().getAllLabelsInUse().forEach(label -> app.model.graph().getAll(label.name()).forEach(node -> {
+//                  final Set<String> relations = new TreeSet<>();
+//                  outgoing(node, RelationshipType.withName("name")).forEach(relationship -> {
+//                     final String key = relationship.getType().name();
+//                     if(relations.contains(key)) {
+//                        System.out.println(relationship.toString());
+//                        relationship.delete();
+////                        System.out.println("\t"+getNameAndLabelsFrom(node) + " -> " + relationship.getType().name() + " -> " + getNameAndLabelsFrom(other(node,relationship)));
+//                        return;
+//                     }
+//                     relations.add(key);
+//                  });
+//               }));
+//            }
+//         });
+//      }
    }
 
    private class RelationshipTypeNode extends InformationNode {

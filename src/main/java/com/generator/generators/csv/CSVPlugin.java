@@ -5,6 +5,7 @@ import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
 import com.generator.util.FileUtil;
 import com.generator.util.NeoUtil;
+import com.generator.util.StringUtil;
 import com.generator.util.SwingUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -54,28 +55,26 @@ public class CSVPlugin extends CSVDomainPlugin {
             final String hdr = SwingUtil.showInputDialog("[column] [column] ...", app);
             if (hdr == null || hdr.length() == 0) return;
 
+            // delete old HEADER, if any
+            outgoingHEADER(neoNode.getNode(), (relationship, other) -> relationship.delete());
+
             final Node headerNode = newHeader();
             relateHEADER(neoNode.getNode(), headerNode);
 
-            for (String col : hdr.split("[ ]")) {
-               final Node column = newColumn(col);
-               relateCOLUMN(headerNode, column);
-            }
-
+            for (String col : hdr.split("[ ]"))
+               relateCOLUMNS(headerNode, newHeaderColumn(col));
             fireNodesLoaded(headerNode);
          }
       });
 
-
-      final Relationship headerRelation = singleOutgoing(neoNode.getNode(), Relations.HEADER);
-      if (headerRelation != null) {
+      final Node headerNode = singleOutgoingHEADER(neoNode.getNode());
+      if (headerNode != null) {
          pop.add(new App.TransactionAction("Add Row", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               final Node headerNonde = other(neoNode.getNode(), headerRelation);
                final Map<String, Node> columnMap = new TreeMap<>();
-               outgoingCOLUMN(headerNonde, (relationship, columnNode) -> columnMap.put(getName(columnNode), columnNode));
+               outgoingCOLUMNS(headerNode, (relationship, columnNode) -> columnMap.put(getNameProperty(columnNode), columnNode));
 
                final Map<String, JTextField> fields = new TreeMap<>();
                final StringBuilder rows = new StringBuilder();
@@ -106,9 +105,10 @@ public class CSVPlugin extends CSVDomainPlugin {
                            final Node newRow = newRow();
 
                            for (Map.Entry<String, JTextField> fieldEntry : fields.entrySet()) {
-                              final Node valueNode = newValue(fieldEntry.getValue().getText().trim());
+                              final String value = fieldEntry.getValue().getText().trim();
+                              final Node valueNode = newValue(value, !StringUtil.isStringNumeric(value));
                               relateVALUE(newRow, valueNode);
-                              relateCOLUMN(valueNode, columnMap.get(fieldEntry.getKey()));
+                              relateHEADER(valueNode, columnMap.get(fieldEntry.getKey()));
                            }
 
                            relateROW(neoNode.getNode(), newRow);
@@ -147,8 +147,6 @@ public class CSVPlugin extends CSVDomainPlugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-
-
                final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
                if (dir == null || !dir.exists()) return;
 
@@ -163,19 +161,6 @@ public class CSVPlugin extends CSVDomainPlugin {
             }
          });
       }
-   }
-
-   @Override
-   protected void handleColumn(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-      pop.add(new App.TransactionAction("Set StringValue", app) {
-         @Override
-         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-
-
-
-         }
-      });
    }
 
    @Override
@@ -201,15 +186,13 @@ public class CSVPlugin extends CSVDomainPlugin {
 
       final StringBuilder out = new StringBuilder();
 
-      final Relationship headerRelation = singleOutgoing(csvNode, Relations.HEADER);
-      if (headerRelation != null) {
-
-         final Node headerNode = other(csvNode, headerRelation);
+      final Node headerNode = singleOutgoingHEADER(csvNode);
+      if (headerNode != null) {
 
          final AtomicBoolean first = new AtomicBoolean(true);
          final java.util.List<Node> columns = new ArrayList<>();
-         outgoingCOLUMN(headerNode, (relationship, columnNode) -> {
-            out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnNode));
+         outgoingCOLUMNS(headerNode, (relationship, columnNode) -> {
+            out.append(first.get() ? "" : ",").append(getNameProperty(columnNode).toString());
             first.set(false);
             columns.add(columnNode);
          });
@@ -219,11 +202,12 @@ public class CSVPlugin extends CSVDomainPlugin {
             out.append("\n");
 
             final Map<Node, Node> columnValueMap = new LinkedHashMap<>();
-            outgoingVALUE(rowNode, (relationship1, valueNode) -> columnValueMap.put(other(valueNode, NeoUtil.singleOutgoing(valueNode, Relations.COLUMN)), valueNode));
+            outgoingVALUE(rowNode, (relationship1, valueNode) -> columnValueMap.put(singleOutgoingHEADER(valueNode), valueNode));
 
             first.set(true);
             for (Node column : columns) {
-               out.append(first.get() ? "" : ",").append(CSVPlugin.getName(columnValueMap.get(column)));
+               final Node valueNode = columnValueMap.get(column);
+               out.append(first.get() ? "" : ",").append( valueNode==null ? "" : getNameProperty(valueNode,""));
                first.set(false);
             }
          });

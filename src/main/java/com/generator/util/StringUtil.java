@@ -604,6 +604,8 @@ public final class StringUtil {
    }
 
    public static boolean isStringNumeric(String str) {
+      if (str == null || str.length() == 0) return false;
+
       DecimalFormatSymbols currentLocaleSymbols = DecimalFormatSymbols.getInstance();
       char localeMinusSign = currentLocaleSymbols.getMinusSign();
       if (!Character.isDigit(str.charAt(0)) && str.charAt(0) != localeMinusSign) return false;

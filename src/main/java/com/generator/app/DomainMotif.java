@@ -25,7 +25,7 @@ public class DomainMotif {
    }
 
    public static String getName(PropertyContainer node) {
-      return getString(node, AppMotif.Properties.name.name(), "");
+      return getEntityProperty(node, AppMotif.Properties.name.name());
    }
 
    public static void setName(PropertyContainer node, String name) {
@@ -55,8 +55,24 @@ public class DomainMotif {
       return foundEntity.iterator().next();
    }
 
-   public static void newDomainEntityProperty(NeoModel graph, Node srcEntity, String name) {
-      newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.findOrCreate(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
+   public static void newDomainEntityProperty(NeoModel graph, Node domainNode, Node srcEntity, String name) {
+
+      final Set<Node> foundProperty = new LinkedHashSet<>();
+      new DomainVisitor<Void>(false) {
+
+         @Override
+         public void visitProperty(Node node) {
+            super.visitProperty(node);
+            if(name.equals(getEntityProperty(node, AppMotif.Properties.name.name())))
+               foundProperty.add(node);
+         }
+      }.visitDomain(domainNode);
+
+      if(foundProperty.isEmpty()) {
+         newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, graph.newNode(DomainPlugin.Entities.Property, AppMotif.Properties.name.name(), name));
+      } else {
+         newDomainEntityRelation(graph, srcEntity, name, DomainPlugin.RelationCardinality.SINGLE, foundProperty.iterator().next());
+      }
    }
 
    public static Node newDomainEntityRelation(NeoModel graph, Node srcEntity, String name, DomainPlugin.RelationCardinality relationCardinality, Node... dstEntities) {

@@ -10,7 +10,6 @@ import static org.neo4j.graphdb.Direction.OUTGOING;
 
 /**
  * goe on 4/23/15.
- * todo: refactor to NeoUtil
  */
 public abstract class NeoUtil {
 
@@ -107,10 +106,6 @@ public abstract class NeoUtil {
 
    public static String getString(PropertyContainer node, String property, String defaultValue) {
       return has(node, property) ? String.valueOf(node.getProperty(property)) : defaultValue;
-   }
-
-   public static <T> T getOtherProperty(Node node, Relationship relationship, String otherProperty) {
-      return get(other(node, relationship), otherProperty);
    }
 
    public static <T> T get(PropertyContainer nodePropertyNode, String property, T defaultValue) {

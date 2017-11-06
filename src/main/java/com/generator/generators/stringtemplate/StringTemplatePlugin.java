@@ -105,7 +105,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                      final Node stNode = newSTTemplate(templateStatement.getName());
                      setText(stNode, templateStatement.getText());
-                     stNode.addLabel(DomainPlugin.Entities.Entity);
+                     //stNode.addLabel(DomainPlugin.Entities.Entity);
                      stGroupNode.createRelationshipTo(stNode, Relations.TEMPLATE);
 
                      for (TemplateParameter templateParameter : templateStatement.getParameters())
@@ -189,7 +189,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
 
             final Node newNode = newSTTemplate(name);
-            newNode.addLabel(DomainPlugin.Entities.Entity); // todo check if this is necessary
+            //newNode.addLabel(DomainPlugin.Entities.Entity); // todo check if this is necessary
             neoNode.getNode().createRelationshipTo(newNode, Relations.TEMPLATE);
             fireNodesLoaded(newNode);
          }
@@ -332,7 +332,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
          final Node entityReferenceNode = other(node, singleIncoming(node, DomainPlugin.Relations.INSTANCE));
 
-         switch (RelationCardinality.valueOf(getRelationCardinality(relationNode))) {
+         switch (RelationCardinality.valueOf(getRelationCardinalityProperty(relationNode))) {
 
             case SINGLE:
                if (isSTTemplate(entityReferenceNode))
@@ -405,7 +405,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
       @Override
       public void visit(Node node) {
-         final String packageName = getPackageName(rendererRelationship);
+         final String packageName = getPackageNameProperty(rendererRelationship);
          final String groupName = StringUtil.capitalize(getName(node)) + "Group";
          final File targetDir = getFile(other(node, rendererRelationship));
 
@@ -716,7 +716,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                               // if existing parameter has same name and cardinality
                               if (templateParameter.getPropertyName().equals(StringTemplatePlugin.getName(existingParameter))) {
-                                 if (cardinality.equals(RelationCardinality.valueOf(getRelationCardinality(existingParameter)))) {
+                                 if (cardinality.equals(RelationCardinality.valueOf(getRelationCardinalityProperty(existingParameter)))) {
 
                                     if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY)) {
 
