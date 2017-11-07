@@ -105,7 +105,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                   for (TemplateStatement templateStatement : templateFile.getStatements()) {
 
                      final Node stNode = newSTTemplate(templateStatement.getText(), templateStatement.getName());
-                     stGroupNode.createRelationshipTo(stNode, Relations.TEMPLATE);
+                     relateTEMPLATE(stGroupNode, stNode);
 
                      for (TemplateParameter templateParameter : templateStatement.getParameters())
                         newTemplateParameter(templateParameter, stNode);
@@ -188,8 +188,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
 
             final Node newNode = newSTTemplate("",name);
-            //newNode.addLabel(DomainPlugin.Entities.Entity); // todo check if this is necessary
-            neoNode.getNode().createRelationshipTo(newNode, Relations.TEMPLATE);
+            relateTEMPLATE(neoNode.getNode(), newNode);
             fireNodesLoaded(newNode);
          }
       });
@@ -198,7 +197,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          if (isSTTemplate(selectedNode.getNode())) {
             if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.TEMPLATE)) continue;
 
-            final String templateName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
+            final String templateName = getNameProperty(selectedNode.getNode());
             final AtomicBoolean exists = new AtomicBoolean(false);
             outgoingTEMPLATE(neoNode.getNode(), (relationship, other) -> {
                if (templateName.equals(getNameProperty(other))) exists.set(true);
@@ -289,12 +288,12 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          }
       });
 
-      final ST template = new ST(group, getString(templateNode, Properties.text.name()));
+      final ST template = new ST(group, getTextProperty(templateNode));
 
       new EntityRelationVisitor() {
          @Override
          public void onSingle(Node relationNode, Node dstNode) {
-            final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
+            final String parameterName = getNameProperty(relationNode);
             final Node other = other(node, singleOutgoing(node, RelationshipType.withName(parameterName)));
             if (isProperty(dstNode) && isValue(other(node, singleOutgoing(node, RelationshipType.withName(parameterName))))) {
                renderNode(template, relationNode, parameterName, other(node, singleOutgoing(node, RelationshipType.withName(parameterName))));
@@ -305,7 +304,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
          @Override
          public void onList(Node relationNode, Node dstNode) {
-            final String parameterName = getString(relationNode, AppMotif.Properties.name.name());
+            final String parameterName = getNameProperty(relationNode);
 
             outgoing(node, RelationshipType.withName(parameterName)).forEach(listRelation -> {
                final Node other = other(node, listRelation);
@@ -326,7 +325,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
       if (node == null) return;
 
       if (isValue(node)) {
-         template.add(parameterName, getString(node, AppMotif.Properties.name.name()));
+         template.add(parameterName, getNameProperty(node));
       } else {
 
          final Node entityReferenceNode = other(node, singleIncoming(node, DomainPlugin.Relations.INSTANCE));
@@ -413,7 +412,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
          final TemplateGroupGroup.GroupClassDeclarationST groupClassDeclaration = group.newGroupClassDeclaration().
                setName(groupName).
-               setDomain(getString(node, AppMotif.Properties.name.name())).
+               setDomain(getNameProperty(node)).
                setPackageName(packageName);
 
          outgoingTEMPLATE(node, (groupStatementRelation, templateNode) -> {
@@ -475,7 +474,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                            @Override
                            public void onList(Node relationNode, Node dstNode) {
-                              System.out.println("should not be here. ignoring " + getString(relationNode, AppMotif.Properties.name.name()));
+                              System.out.println("should not be here. ignoring " + getNameProperty(relationNode));
                            }
                         }.visit(dstNode);
 
@@ -645,7 +644,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          final Color uneditedColor = txtEditor.getBackground();
          final Color editedColor = Color.decode("#fc8d59");
 
-         final String statementName = getString(templateNode.getNode(), AppMotif.Properties.name.name());
+         final String statementName = getNameProperty(templateNode.getNode());
          final String delimiter = "~";
 
          final DefaultHighlighter.DefaultHighlightPainter paramsHighlighter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 127, 0));

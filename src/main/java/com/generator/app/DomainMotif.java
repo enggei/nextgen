@@ -1,6 +1,5 @@
 package com.generator.app;
 
-import com.generator.app.nodes.NeoNode;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.neo.NeoModel;
@@ -22,7 +21,7 @@ public class DomainMotif {
    public static Node newDomainEntity(NeoModel graph, Label label, Node domainNode) {
 
       final Set<Node> foundEntity = new LinkedHashSet<>();
-      new DomainVisitor<Void>(true) {
+      new DomainVisitor<Void>(false) {
          @Override
          public void visitEntity(Node node) {
             if (label.name().equals(get(node, AppMotif.Properties.name.name())))
