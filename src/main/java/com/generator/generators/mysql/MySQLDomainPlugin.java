@@ -4,34 +4,64 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.app.DomainMotif;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
+import static com.generator.app.DomainMotif.*;
+import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
  * Auto-generated from domain MySQLDomainPlugin
  */
-abstract class MySQLDomainPlugin extends Plugin {
+public abstract class MySQLDomainPlugin extends Plugin {
 
 	public enum Entities implements Label {
       Database, Table, Column, ForeignKey, Query
    }
 
    public enum Relations implements RelationshipType {
-      TABLE, COLUMN, FK_SRC, FK_DST, QUERY, QUERY_TABLE, QUERY_COLUMN
+      DATABASE, TABLE, COLUMN, FK_SRC, FK_DST, QUERY, QUERY_TABLE, QUERY_COLUMN
    }
 
    public enum Properties {
-      username, value, columnType, onDelete, whereOperator, inSelect, lastParam, host
+      username, value, columnType, name, onDelete, whereOperator, inSelect, lastParam, host
    }
+
+	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
    MySQLDomainPlugin(App app) {
       super(app, "MySQL");
+
+		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "MySQL");
+		entitiesNodeMap.put(Entities.Database, newDomainEntity(getGraph(), Entities.Database, domainNode));
+		entitiesNodeMap.put(Entities.Table, newDomainEntity(getGraph(), Entities.Table, domainNode));
+		entitiesNodeMap.put(Entities.Column, newDomainEntity(getGraph(), Entities.Column, domainNode));
+		entitiesNodeMap.put(Entities.ForeignKey, newDomainEntity(getGraph(), Entities.ForeignKey, domainNode));
+		entitiesNodeMap.put(Entities.Query, newDomainEntity(getGraph(), Entities.Query, domainNode));
+
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Database), Properties.username.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Database), Properties.host.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Column), Properties.value.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Column), Properties.columnType.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Column), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.ForeignKey), Properties.onDelete.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Query), Properties.name.name());
+
+		relate(domainNode, entitiesNodeMap.get(Entities.Database), DomainPlugin.Relations.ENTITY);
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.TABLE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Database), Relations.QUERY.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Query));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Table), Relations.COLUMN.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Column));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Column), Relations.FK_SRC.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.ForeignKey));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.ForeignKey), Relations.FK_DST.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_TABLE.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Table));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Query), Relations.QUERY_COLUMN.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Column));
    }
 
    @Override
@@ -58,28 +88,17 @@ abstract class MySQLDomainPlugin extends Plugin {
       return null;
    }
 
-	protected void handleDatabase(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleTable(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleColumn(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleForeignKey(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleQuery(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }	
+	protected void handleDatabase(JPopupMenu pop, NeoNode databaseNode, Set<NeoNode> selectedNodes) { }
+	protected void handleTable(JPopupMenu pop, NeoNode tableNode, Set<NeoNode> selectedNodes) { }
+	protected void handleColumn(JPopupMenu pop, NeoNode columnNode, Set<NeoNode> selectedNodes) { }
+	protected void handleForeignKey(JPopupMenu pop, NeoNode foreignKeyNode, Set<NeoNode> selectedNodes) { }
+	protected void handleQuery(JPopupMenu pop, NeoNode queryNode, Set<NeoNode> selectedNodes) { }	
 
-	protected JComponent newDatabaseEditor(NeoNode neoNode) { return null; }
-	protected JComponent newTableEditor(NeoNode neoNode) { return null; }
-	protected JComponent newColumnEditor(NeoNode neoNode) { return null; }
-	protected JComponent newForeignKeyEditor(NeoNode neoNode) { return null; }
-	protected JComponent newQueryEditor(NeoNode neoNode) { return null; }
-
-	protected Node newDatabase(String name) { return newDatabase(getGraph(), name); }
-	protected Node newDatabase() { return newDatabase(getGraph()); } 
-	protected Node newTable(String name) { return newTable(getGraph(), name); }
-	protected Node newTable() { return newTable(getGraph()); } 
-	protected Node newColumn(String name) { return newColumn(getGraph(), name); }
-	protected Node newColumn() { return newColumn(getGraph()); } 
-	protected Node newForeignKey(String name) { return newForeignKey(getGraph(), name); }
-	protected Node newForeignKey() { return newForeignKey(getGraph()); } 
-	protected Node newQuery(String name) { return newQuery(getGraph(), name); }
-	protected Node newQuery() { return newQuery(getGraph()); } 
+	protected JComponent newDatabaseEditor(NeoNode databaseNode) { return null; }
+	protected JComponent newTableEditor(NeoNode tableNode) { return null; }
+	protected JComponent newColumnEditor(NeoNode columnNode) { return null; }
+	protected JComponent newForeignKeyEditor(NeoNode foreignKeyNode) { return null; }
+	protected JComponent newQueryEditor(NeoNode queryNode) { return null; }
 
 	public static boolean isDatabase(Node node) { return hasLabel(node, Entities.Database); }
 	public static boolean isTable(Node node) { return hasLabel(node, Entities.Table); }
@@ -87,16 +106,53 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static boolean isForeignKey(Node node) { return hasLabel(node, Entities.ForeignKey); }
 	public static boolean isQuery(Node node) { return hasLabel(node, Entities.Query); }
 
-	public static Node newDatabase(NeoModel graph, String name) { return graph.newNode(Entities.Database, AppMotif.Properties.name.name(), name); }
-	public static Node newDatabase(NeoModel graph) { return graph.newNode(Entities.Database); }
-	public static Node newTable(NeoModel graph, String name) { return graph.newNode(Entities.Table, AppMotif.Properties.name.name(), name); }
-	public static Node newTable(NeoModel graph) { return graph.newNode(Entities.Table); }
-	public static Node newColumn(NeoModel graph, String name) { return graph.newNode(Entities.Column, AppMotif.Properties.name.name(), name); }
-	public static Node newColumn(NeoModel graph) { return graph.newNode(Entities.Column); }
-	public static Node newForeignKey(NeoModel graph, String name) { return graph.newNode(Entities.ForeignKey, AppMotif.Properties.name.name(), name); }
-	public static Node newForeignKey(NeoModel graph) { return graph.newNode(Entities.ForeignKey); }
-	public static Node newQuery(NeoModel graph, String name) { return graph.newNode(Entities.Query, AppMotif.Properties.name.name(), name); }
-	public static Node newQuery(NeoModel graph) { return graph.newNode(Entities.Query); }
+	protected Node newDatabase() { return newDatabase(getGraph()); } 
+	public static Node newDatabase(NeoModel graph) { return newInstanceNode(graph, Entities.Database.name(), entitiesNodeMap.get(Entities.Database)); } 
+	protected Node newDatabase(Object username, Object host) { return newDatabase(getGraph(), username, host); } 
+	public static Node newDatabase(NeoModel graph, Object username, Object host) {  	
+		final Node newNode = newDatabase(graph); 	
+		if (username != null) relate(newNode, newValueNode(graph, username), RelationshipType.withName(Properties.username.name()));
+		if (host != null) relate(newNode, newValueNode(graph, host), RelationshipType.withName(Properties.host.name())); 	
+		return newNode; 
+	}
+
+	protected Node newTable() { return newTable(getGraph()); } 
+	public static Node newTable(NeoModel graph) { return newInstanceNode(graph, Entities.Table.name(), entitiesNodeMap.get(Entities.Table)); }
+
+	protected Node newColumn() { return newColumn(getGraph()); } 
+	public static Node newColumn(NeoModel graph) { return newInstanceNode(graph, Entities.Column.name(), entitiesNodeMap.get(Entities.Column)); } 
+	protected Node newColumn(Object value, Object columnType, Object name) { return newColumn(getGraph(), value, columnType, name); } 
+	public static Node newColumn(NeoModel graph, Object value, Object columnType, Object name) {  	
+		final Node newNode = newColumn(graph); 	
+		if (value != null) relate(newNode, newValueNode(graph, value), RelationshipType.withName(Properties.value.name()));
+		if (columnType != null) relate(newNode, newValueNode(graph, columnType), RelationshipType.withName(Properties.columnType.name()));
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newForeignKey() { return newForeignKey(getGraph()); } 
+	public static Node newForeignKey(NeoModel graph) { return newInstanceNode(graph, Entities.ForeignKey.name(), entitiesNodeMap.get(Entities.ForeignKey)); } 
+	protected Node newForeignKey(Object onDelete) { return newForeignKey(getGraph(), onDelete); } 
+	public static Node newForeignKey(NeoModel graph, Object onDelete) {  	
+		final Node newNode = newForeignKey(graph); 	
+		if (onDelete != null) relate(newNode, newValueNode(graph, onDelete), RelationshipType.withName(Properties.onDelete.name())); 	
+		return newNode; 
+	}
+
+	protected Node newQuery() { return newQuery(getGraph()); } 
+	public static Node newQuery(NeoModel graph) { return newInstanceNode(graph, Entities.Query.name(), entitiesNodeMap.get(Entities.Query)); } 
+	protected Node newQuery(Object name) { return newQuery(getGraph(), name); } 
+	public static Node newQuery(NeoModel graph, Object name) {  	
+		final Node newNode = newQuery(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+
+	public static void outgoingDATABASE(Node src, RelationConsumer consumer) { outgoing(src, Relations.DATABASE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingDATABASE(Node src) { return other(src, singleOutgoing(src, Relations.DATABASE)); }
+	public static void incomingDATABASE(Node src, RelationConsumer consumer) { incoming(src, Relations.DATABASE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingDATABASE(Node src) { return other(src, singleIncoming(src, Relations.DATABASE)); }
 
 	public static void outgoingTABLE(Node src, RelationConsumer consumer) { outgoing(src, Relations.TABLE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingTABLE(Node src) { return other(src, singleOutgoing(src, Relations.TABLE)); }
@@ -134,6 +190,7 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static Node singleIncomingQUERY_COLUMN(Node src) { return other(src, singleIncoming(src, Relations.QUERY_COLUMN)); }
 
 
+	public static Relationship relateDATABASE(Node src, Node dst) { return relate(src, dst, Relations.DATABASE); }
 	public static Relationship relateTABLE(Node src, Node dst) { return relate(src, dst, Relations.TABLE); }
 	public static Relationship relateCOLUMN(Node src, Node dst) { return relate(src, dst, Relations.COLUMN); }
 	public static Relationship relateFK_SRC(Node src, Node dst) { return relate(src, dst, Relations.FK_SRC); }
@@ -142,134 +199,76 @@ abstract class MySQLDomainPlugin extends Plugin {
 	public static Relationship relateQUERY_TABLE(Node src, Node dst) { return relate(src, dst, Relations.QUERY_TABLE); }
 	public static Relationship relateQUERY_COLUMN(Node src, Node dst) { return relate(src, dst, Relations.QUERY_COLUMN); }
 
-	// get name as property of a node (node.name)
-	public static String getNameProperty(PropertyContainer node) { return DomainMotif.getName(node); }
-	public static String getNameProperty(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
-	public static void setNameProperty(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
-	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
+	// username
+	public static <T> T getUsernameProperty(PropertyContainer container) { return getEntityProperty(container, Properties.username.name()); }
+	public static <T> T getUsernameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.username.name(), defaultValue); }
+	public static boolean hasUsernameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.username.name()); }
+	public static <T extends PropertyContainer> T setUsernameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.username.name(), value); return container; }
+	protected <T extends PropertyContainer> T setUsernameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.username.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeUsernameProperty(T container) { removeEntityProperty(container, Properties.username.name()); return container; }
 
-	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
-	public static String getEntityName(Node classNode) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name()); }
-	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name(), defaultValue); }
+	// value
+	public static <T> T getValueProperty(PropertyContainer container) { return getEntityProperty(container, Properties.value.name()); }
+	public static <T> T getValueProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.value.name(), defaultValue); }
+	public static boolean hasValueProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.value.name()); }
+	public static <T extends PropertyContainer> T setValueProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.value.name(), value); return container; }
+	protected <T extends PropertyContainer> T setValueProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.value.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeValueProperty(T container) { removeEntityProperty(container, Properties.value.name()); return container; }
 
-	public static <T> T getUsername(PropertyContainer container) { return get(container, Properties.username.name()); }
-	public static <T> T getUsername(PropertyContainer container, T defaultValue) { return has(container, Properties.username.name()) ? get(container, Properties.username.name()) : defaultValue; }
-	public static boolean hasUsername(PropertyContainer container) { return has(container, Properties.username.name()); }
-	public static <T extends PropertyContainer> T setUsername(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.username.name());
-	   else
-	   	container.setProperty(Properties.username.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeUsername(T container) {
-		if (has(container, Properties.username.name())) container.removeProperty(Properties.username.name());
-	      return container;
-	}
+	// columnType
+	public static <T> T getColumnTypeProperty(PropertyContainer container) { return getEntityProperty(container, Properties.columnType.name()); }
+	public static <T> T getColumnTypeProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.columnType.name(), defaultValue); }
+	public static boolean hasColumnTypeProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.columnType.name()); }
+	public static <T extends PropertyContainer> T setColumnTypeProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.columnType.name(), value); return container; }
+	protected <T extends PropertyContainer> T setColumnTypeProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.columnType.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeColumnTypeProperty(T container) { removeEntityProperty(container, Properties.columnType.name()); return container; }
 
-	public static <T> T getValue(PropertyContainer container) { return get(container, Properties.value.name()); }
-	public static <T> T getValue(PropertyContainer container, T defaultValue) { return has(container, Properties.value.name()) ? get(container, Properties.value.name()) : defaultValue; }
-	public static boolean hasValue(PropertyContainer container) { return has(container, Properties.value.name()); }
-	public static <T extends PropertyContainer> T setValue(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.value.name());
-	   else
-	   	container.setProperty(Properties.value.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeValue(T container) {
-		if (has(container, Properties.value.name())) container.removeProperty(Properties.value.name());
-	      return container;
-	}
+	// name
+	public static <T> T getNameProperty(PropertyContainer container) { return getEntityProperty(container, Properties.name.name()); }
+	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.name.name(), defaultValue); }
+	public static boolean hasNameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.name.name()); }
+	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.name.name(), value); return container; }
+	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.name.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeNameProperty(T container) { removeEntityProperty(container, Properties.name.name()); return container; }
 
-	public static <T> T getColumnType(PropertyContainer container) { return get(container, Properties.columnType.name()); }
-	public static <T> T getColumnType(PropertyContainer container, T defaultValue) { return has(container, Properties.columnType.name()) ? get(container, Properties.columnType.name()) : defaultValue; }
-	public static boolean hasColumnType(PropertyContainer container) { return has(container, Properties.columnType.name()); }
-	public static <T extends PropertyContainer> T setColumnType(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.columnType.name());
-	   else
-	   	container.setProperty(Properties.columnType.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeColumnType(T container) {
-		if (has(container, Properties.columnType.name())) container.removeProperty(Properties.columnType.name());
-	      return container;
-	}
+	// onDelete
+	public static <T> T getOnDeleteProperty(PropertyContainer container) { return getEntityProperty(container, Properties.onDelete.name()); }
+	public static <T> T getOnDeleteProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.onDelete.name(), defaultValue); }
+	public static boolean hasOnDeleteProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.onDelete.name()); }
+	public static <T extends PropertyContainer> T setOnDeleteProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.onDelete.name(), value); return container; }
+	protected <T extends PropertyContainer> T setOnDeleteProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.onDelete.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeOnDeleteProperty(T container) { removeEntityProperty(container, Properties.onDelete.name()); return container; }
 
-	public static <T> T getOnDelete(PropertyContainer container) { return get(container, Properties.onDelete.name()); }
-	public static <T> T getOnDelete(PropertyContainer container, T defaultValue) { return has(container, Properties.onDelete.name()) ? get(container, Properties.onDelete.name()) : defaultValue; }
-	public static boolean hasOnDelete(PropertyContainer container) { return has(container, Properties.onDelete.name()); }
-	public static <T extends PropertyContainer> T setOnDelete(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.onDelete.name());
-	   else
-	   	container.setProperty(Properties.onDelete.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeOnDelete(T container) {
-		if (has(container, Properties.onDelete.name())) container.removeProperty(Properties.onDelete.name());
-	      return container;
-	}
+	// whereOperator
+	public static <T> T getWhereOperatorProperty(PropertyContainer container) { return getEntityProperty(container, Properties.whereOperator.name()); }
+	public static <T> T getWhereOperatorProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.whereOperator.name(), defaultValue); }
+	public static boolean hasWhereOperatorProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.whereOperator.name()); }
+	public static <T extends PropertyContainer> T setWhereOperatorProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.whereOperator.name(), value); return container; }
+	protected <T extends PropertyContainer> T setWhereOperatorProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.whereOperator.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeWhereOperatorProperty(T container) { removeEntityProperty(container, Properties.whereOperator.name()); return container; }
 
-	public static <T> T getWhereOperator(PropertyContainer container) { return get(container, Properties.whereOperator.name()); }
-	public static <T> T getWhereOperator(PropertyContainer container, T defaultValue) { return has(container, Properties.whereOperator.name()) ? get(container, Properties.whereOperator.name()) : defaultValue; }
-	public static boolean hasWhereOperator(PropertyContainer container) { return has(container, Properties.whereOperator.name()); }
-	public static <T extends PropertyContainer> T setWhereOperator(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.whereOperator.name());
-	   else
-	   	container.setProperty(Properties.whereOperator.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeWhereOperator(T container) {
-		if (has(container, Properties.whereOperator.name())) container.removeProperty(Properties.whereOperator.name());
-	      return container;
-	}
+	// inSelect
+	public static <T> T getInSelectProperty(PropertyContainer container) { return getEntityProperty(container, Properties.inSelect.name()); }
+	public static <T> T getInSelectProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.inSelect.name(), defaultValue); }
+	public static boolean hasInSelectProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.inSelect.name()); }
+	public static <T extends PropertyContainer> T setInSelectProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.inSelect.name(), value); return container; }
+	protected <T extends PropertyContainer> T setInSelectProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.inSelect.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeInSelectProperty(T container) { removeEntityProperty(container, Properties.inSelect.name()); return container; }
 
-	public static <T> T getInSelect(PropertyContainer container) { return get(container, Properties.inSelect.name()); }
-	public static <T> T getInSelect(PropertyContainer container, T defaultValue) { return has(container, Properties.inSelect.name()) ? get(container, Properties.inSelect.name()) : defaultValue; }
-	public static boolean hasInSelect(PropertyContainer container) { return has(container, Properties.inSelect.name()); }
-	public static <T extends PropertyContainer> T setInSelect(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.inSelect.name());
-	   else
-	   	container.setProperty(Properties.inSelect.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeInSelect(T container) {
-		if (has(container, Properties.inSelect.name())) container.removeProperty(Properties.inSelect.name());
-	      return container;
-	}
+	// lastParam
+	public static <T> T getLastParamProperty(PropertyContainer container) { return getEntityProperty(container, Properties.lastParam.name()); }
+	public static <T> T getLastParamProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.lastParam.name(), defaultValue); }
+	public static boolean hasLastParamProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.lastParam.name()); }
+	public static <T extends PropertyContainer> T setLastParamProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.lastParam.name(), value); return container; }
+	protected <T extends PropertyContainer> T setLastParamProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.lastParam.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeLastParamProperty(T container) { removeEntityProperty(container, Properties.lastParam.name()); return container; }
 
-	public static <T> T getLastParam(PropertyContainer container) { return get(container, Properties.lastParam.name()); }
-	public static <T> T getLastParam(PropertyContainer container, T defaultValue) { return has(container, Properties.lastParam.name()) ? get(container, Properties.lastParam.name()) : defaultValue; }
-	public static boolean hasLastParam(PropertyContainer container) { return has(container, Properties.lastParam.name()); }
-	public static <T extends PropertyContainer> T setLastParam(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.lastParam.name());
-	   else
-	   	container.setProperty(Properties.lastParam.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeLastParam(T container) {
-		if (has(container, Properties.lastParam.name())) container.removeProperty(Properties.lastParam.name());
-	      return container;
-	}
-
-	public static <T> T getHost(PropertyContainer container) { return get(container, Properties.host.name()); }
-	public static <T> T getHost(PropertyContainer container, T defaultValue) { return has(container, Properties.host.name()) ? get(container, Properties.host.name()) : defaultValue; }
-	public static boolean hasHost(PropertyContainer container) { return has(container, Properties.host.name()); }
-	public static <T extends PropertyContainer> T setHost(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.host.name());
-	   else
-	   	container.setProperty(Properties.host.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeHost(T container) {
-		if (has(container, Properties.host.name())) container.removeProperty(Properties.host.name());
-	      return container;
-	}
+	// host
+	public static <T> T getHostProperty(PropertyContainer container) { return getEntityProperty(container, Properties.host.name()); }
+	public static <T> T getHostProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.host.name(), defaultValue); }
+	public static boolean hasHostProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.host.name()); }
+	public static <T extends PropertyContainer> T setHostProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.host.name(), value); return container; }
+	protected <T extends PropertyContainer> T setHostProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.host.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeHostProperty(T container) { removeEntityProperty(container, Properties.host.name()); return container; }
 
 }

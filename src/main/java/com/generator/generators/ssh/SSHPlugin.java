@@ -433,7 +433,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                   if (file == null) return;
 
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
+                  upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
                }
             });
 
@@ -445,7 +445,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                @Override
                protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                   final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                  upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
+                  upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
                }
             });
 
@@ -457,7 +457,7 @@ public class SSHPlugin extends SSHDomainPlugin {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                      final Node hostNode = other(neoNode.getNode(), singleIncoming(neoNode.getNode(), Relations.PATHS));
-                     upload(getSession(hostNode), file.getAbsolutePath(), getName(neoNode));
+                     upload(getSession(hostNode), file.getAbsolutePath(), getPathProperty(neoNode.getNode()));
                   }
                });
             }
@@ -1020,12 +1020,7 @@ public class SSHPlugin extends SSHDomainPlugin {
          // commands for host:
          final Node hostNode = other(sessionNode.getNode(), singleIncoming(sessionNode.getNode(), Relations.SESSIONS));
          final CommandCategoryNode hostCommands = new CommandCategoryNode("Host", hostNode);
-         outgoingCOMMANDS(hostNode, new RelationConsumer() {
-            @Override
-            public void accept(Relationship commandRelation, Node commandNode) {
-               hostCommands.add(new CommandNode(SSHPlugin.getName(commandNode), getCmdCommand(commandNode)));
-            }
-         });
+         outgoingCOMMANDS(hostNode, (commandRelation, commandNode) -> hostCommands.add(new CommandNode(getNameProperty(commandNode), getCmdCommandProperty(commandNode))));
          commands.add(hostCommands);
 
          // all general-commands:
@@ -1034,7 +1029,7 @@ public class SSHPlugin extends SSHDomainPlugin {
             final String categoryName = getString(categoryNode, AppMotif.Properties.name.name());
             final CommandCategoryNode labelNode = new CommandCategoryNode(categoryName, categoryNode);
             commands.add(labelNode);
-            outgoingCOMMANDS(categoryNode, (commandRelation, commandNode) -> labelNode.add(new CommandNode(SSHPlugin.getName(commandNode), getCmdCommand(commandNode))));
+            outgoingCOMMANDS(categoryNode, (commandRelation, commandNode) -> labelNode.add(new CommandNode(getNameProperty(commandNode), getCmdCommandProperty(commandNode))));
          });
 
          // paths for host:
@@ -1347,12 +1342,12 @@ public class SSHPlugin extends SSHDomainPlugin {
    @NotNull
    public static Session getSession(Node hostNode) throws JSchException {
 
-      final String username = getUsername(hostNode);
-      final String host = getIp(hostNode);
-      final int port = getPort(hostNode, 22);
+      final String username = getUsernameProperty(hostNode);
+      final String host = getIpProperty(hostNode);
+      final int port = getPortProperty(hostNode, 22);
 
-      final String keyPath = getPrivateKeyPath(hostNode);
-      final String password = getPassword(hostNode);
+      final String keyPath = getPrivateKeyPathProperty(hostNode);
+      final String password = getPasswordProperty(hostNode);
       return keyPath == null ? JschUtil.getSessionUsingPassword(username, host, port, password) : JschUtil.getSessionUsingPrivateKey(username, host, port, keyPath);
    }
 

@@ -39,7 +39,7 @@ public abstract class CSVDomainPlugin extends Plugin {
    CSVDomainPlugin(App app) {
       super(app, "CSV");
 
-		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Domain");
+		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "CSV");
 		entitiesNodeMap.put(Entities.CSV, newDomainEntity(getGraph(), Entities.CSV, domainNode));
 		entitiesNodeMap.put(Entities.Header, newDomainEntity(getGraph(), Entities.Header, domainNode));
 		entitiesNodeMap.put(Entities.HeaderColumn, newDomainEntity(getGraph(), Entities.HeaderColumn, domainNode));

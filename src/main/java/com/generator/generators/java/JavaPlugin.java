@@ -297,15 +297,15 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
       final Node packageNode = other(classNode, singleIncoming(classNode, Relations.CLASS));
 
       final JavaGroup.ClassST classST = javaGroup.newClass().
-            setPackage(getEntityName(packageNode)).
-            setName(getEntityName(classNode));
+            setPackage(getNameProperty(packageNode)).
+            setName(getNameProperty(classNode));
 
       outgoingFIELD(classNode, (fieldRelation, fieldNode) -> {
 
          final Node typeNode = singleOutgoingTYPE(fieldNode);
          final Node instantiationNode = singleOutgoingINSTANTIATION(fieldNode);
 
-         classST.addFieldsValue(getEntityName(instantiationNode), getEntityName(fieldNode), getEntityName(typeNode), DomainMotif.getEntityProperty(fieldNode, Properties.scope.name()));
+         classST.addFieldsValue(getNameProperty(instantiationNode), getNameProperty(fieldNode), getNameProperty(typeNode), DomainMotif.getEntityProperty(fieldNode, Properties.scope.name()));
       });
 
       outgoingMETHOD(classNode, (methodRelation, methodNode) -> {
@@ -313,14 +313,14 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
          if (isMethod(methodNode)) {
 
             final JavaGroup.methodST methodST = javaGroup.newmethod().
-                  setName(getEntityName(methodNode)).
+                  setName(getNameProperty(methodNode)).
                   setScope(DomainMotif.getEntityProperty(methodNode, Properties.scope.name()));
 
             outgoingPARAMETER(methodNode, (parameterRelation, parameterNode) -> {
 
                final Node typeNode = singleOutgoingTYPE(parameterNode);
 
-               methodST.addParametersValue(getEntityName(parameterNode), getEntityName(typeNode));
+               methodST.addParametersValue(getNameProperty(parameterNode), getNameProperty(typeNode));
             });
 
             createStatementBlock(singleOutgoingBLOCK(methodNode), methodST);
@@ -343,7 +343,7 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
 
    private static void createStatementBlock(Node statementNode, JavaGroup.methodST methodST) {
       if (statementNode == null) return;
-      methodST.addStatementsValue(getEntityName(statementNode));
+      methodST.addStatementsValue(getNameProperty(statementNode));
       createStatementBlock(singleOutgoingNEXT(statementNode), methodST);
    }
 }

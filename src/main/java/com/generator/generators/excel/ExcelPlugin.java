@@ -85,18 +85,18 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                            case _NONE:
                               break;
                            case NUMERIC:
-                              setValue(cellNode, currentCell.getNumericCellValue() + "");
+                              setValueProperty(cellNode, currentCell.getNumericCellValue() + "");
                               break;
                            case STRING:
-                              setValue(cellNode, currentCell.getStringCellValue());
+                              setValueProperty(cellNode, currentCell.getStringCellValue());
                               break;
                            case FORMULA:
                               break;
                            case BLANK:
-                              setValue(cellNode, "");
+                              setValueProperty(cellNode, "");
                               break;
                            case BOOLEAN:
-                              setValue(cellNode, currentCell.getBooleanCellValue() + "");
+                              setValueProperty(cellNode, currentCell.getBooleanCellValue() + "");
                               break;
                            case ERROR:
                               break;
@@ -129,7 +129,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
          }
       });
 
-      ProjectPlugin.outgoingRENDERER(neoNode.getNode(), (rendererRelationship, directory) -> pop.add(new App.TransactionAction("Write to " + ProjectPlugin.getPath(directory), app) {
+      ProjectPlugin.outgoingRENDERER(neoNode.getNode(), (rendererRelationship, directory) -> pop.add(new App.TransactionAction("Write to " + ProjectPlugin.getPathProperty(directory), app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
@@ -141,12 +141,12 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                   final XSSFRow row = sheet.createRow(Integer.valueOf(getNameProperty(rowNode)));
                   outgoingCELL(rowNode, (cellRowRelation, cellNode) -> {
 
-                     if ("".equals(ExcelPlugin.getValue(cellNode))) return;
+                     if ("".equals(getValueProperty(cellNode))) return;
 
                      incomingCELL(cellNode, (cellColumnRelation, other) -> {
                         if (isColumn(other)) {
                            final XSSFCell cell = row.createCell(Integer.valueOf(getNameProperty(other)));
-                           cell.setCellValue((String) ExcelPlugin.getValue(cellNode));
+                           cell.setCellValue((String) getValueProperty(cellNode));
                         }
                      });
                   });
@@ -266,9 +266,9 @@ public class ExcelPlugin extends ExcelDomainPlugin {
       pop.add(new App.TransactionAction("Set value", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-            final String value = SwingUtil.showInputDialog("Value", app, ExcelPlugin.getValue(cellNode.getNode()));
-            if (value == null || value.equals(ExcelPlugin.getValue(cellNode.getNode()))) return;
-            setValue(cellNode.getNode(), value);
+            final String value = SwingUtil.showInputDialog("Value", app, getValueProperty(cellNode.getNode()));
+            if (value == null || value.equals(getValueProperty(cellNode.getNode()))) return;
+            setValueProperty(cellNode.getNode(), value);
          }
       });
    }
@@ -396,7 +396,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
             Cell(int name, Node cellNode) {
                this.name = name;
                this.cellNode = cellNode;
-               this.value = cellNode == null ? null : getValue(cellNode);
+               this.value = cellNode == null ? null : getValueProperty(cellNode);
             }
 
             @Override
@@ -410,7 +410,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                   public void doAction(Transaction tx) throws Throwable {
 
                      if (cellNode != null) {
-                        ExcelPlugin.setValue(cellNode, aValue);
+                        setValueProperty(cellNode, aValue);
                         value = aValue == null ? null : aValue.toString();
                         return;
                      }
@@ -419,7 +419,7 @@ public class ExcelPlugin extends ExcelDomainPlugin {
                      final Node colNode = getColumnNode();
 
                      final Node cellNode = newCell();
-                     ExcelPlugin.setValue(cellNode, aValue);
+                     setValueProperty(cellNode, aValue);
                      value = aValue == null ? null : aValue.toString();
                      relateCELL(rowNode, cellNode);
                      relateCELL(colNode, cellNode);

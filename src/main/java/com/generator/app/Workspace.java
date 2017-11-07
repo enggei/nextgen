@@ -2,7 +2,6 @@ package com.generator.app;
 
 import com.generator.app.nodes.NeoNode;
 import com.generator.app.nodes.NeoRelationship;
-import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import com.generator.util.ColorBrewerSelector;

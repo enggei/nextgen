@@ -4,34 +4,77 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.app.DomainMotif;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
+import static com.generator.app.DomainMotif.*;
+import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
  * Auto-generated from domain JavaDomainDomainPlugin
  */
-abstract class JavaDomainDomainPlugin extends Plugin {
+public abstract class JavaDomainDomainPlugin extends Plugin {
 
 	public enum Entities implements Label {
       _package, Class, Object, Field, FieldType, Instantiator, Method, Statement, Parameter, Constructor
    }
 
    public enum Relations implements RelationshipType {
-      CLASS, OBJECT, FIELD, TYPE, INSTANTIATION, METHOD, BLOCK, NEXT, PARAMETER, CONSTRUCTOR
+      _PACKAGE, CLASS, OBJECT, FIELD, TYPE, INSTANTIATION, METHOD, BLOCK, NEXT, PARAMETER, CONSTRUCTOR
    }
 
    public enum Properties {
-      elementType, scope
+      name, elementType, scope
    }
+
+	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
 
    JavaDomainDomainPlugin(App app) {
       super(app, "JavaDomain");
+
+		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "JavaDomain");
+		entitiesNodeMap.put(Entities._package, newDomainEntity(getGraph(), Entities._package, domainNode));
+		entitiesNodeMap.put(Entities.Class, newDomainEntity(getGraph(), Entities.Class, domainNode));
+		entitiesNodeMap.put(Entities.Object, newDomainEntity(getGraph(), Entities.Object, domainNode));
+		entitiesNodeMap.put(Entities.Field, newDomainEntity(getGraph(), Entities.Field, domainNode));
+		entitiesNodeMap.put(Entities.FieldType, newDomainEntity(getGraph(), Entities.FieldType, domainNode));
+		entitiesNodeMap.put(Entities.Instantiator, newDomainEntity(getGraph(), Entities.Instantiator, domainNode));
+		entitiesNodeMap.put(Entities.Method, newDomainEntity(getGraph(), Entities.Method, domainNode));
+		entitiesNodeMap.put(Entities.Statement, newDomainEntity(getGraph(), Entities.Statement, domainNode));
+		entitiesNodeMap.put(Entities.Parameter, newDomainEntity(getGraph(), Entities.Parameter, domainNode));
+		entitiesNodeMap.put(Entities.Constructor, newDomainEntity(getGraph(), Entities.Constructor, domainNode));
+
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities._package), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Class), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Object), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Field), Properties.scope.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Field), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.FieldType), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.FieldType), Properties.elementType.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Instantiator), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Method), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Statement), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Parameter), Properties.name.name());
+
+		relate(domainNode, entitiesNodeMap.get(Entities._package), DomainPlugin.Relations.ENTITY);
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities._package), Relations.CLASS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Class));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.OBJECT.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Object));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.FIELD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Field));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.METHOD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Method));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.CONSTRUCTOR.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Constructor));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Field), Relations.TYPE.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.FieldType));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Field), Relations.INSTANTIATION.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Instantiator));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Method), Relations.BLOCK.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Statement));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Method), Relations.PARAMETER.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Parameter));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Statement), Relations.NEXT.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Statement));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Parameter), Relations.TYPE.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Class));
    }
 
    @Override
@@ -68,48 +111,27 @@ abstract class JavaDomainDomainPlugin extends Plugin {
       return null;
    }
 
-	protected void handle_package(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleClass(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleObject(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleField(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleFieldType(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleInstantiator(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleMethod(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleStatement(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleParameter(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleConstructor(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }	
+	protected void handle_package(JPopupMenu pop, NeoNode _packageNode, Set<NeoNode> selectedNodes) { }
+	protected void handleClass(JPopupMenu pop, NeoNode classNode, Set<NeoNode> selectedNodes) { }
+	protected void handleObject(JPopupMenu pop, NeoNode objectNode, Set<NeoNode> selectedNodes) { }
+	protected void handleField(JPopupMenu pop, NeoNode fieldNode, Set<NeoNode> selectedNodes) { }
+	protected void handleFieldType(JPopupMenu pop, NeoNode fieldTypeNode, Set<NeoNode> selectedNodes) { }
+	protected void handleInstantiator(JPopupMenu pop, NeoNode instantiatorNode, Set<NeoNode> selectedNodes) { }
+	protected void handleMethod(JPopupMenu pop, NeoNode methodNode, Set<NeoNode> selectedNodes) { }
+	protected void handleStatement(JPopupMenu pop, NeoNode statementNode, Set<NeoNode> selectedNodes) { }
+	protected void handleParameter(JPopupMenu pop, NeoNode parameterNode, Set<NeoNode> selectedNodes) { }
+	protected void handleConstructor(JPopupMenu pop, NeoNode constructorNode, Set<NeoNode> selectedNodes) { }	
 
-	protected JComponent new_packageEditor(NeoNode neoNode) { return null; }
-	protected JComponent newClassEditor(NeoNode neoNode) { return null; }
-	protected JComponent newObjectEditor(NeoNode neoNode) { return null; }
-	protected JComponent newFieldEditor(NeoNode neoNode) { return null; }
-	protected JComponent newFieldTypeEditor(NeoNode neoNode) { return null; }
-	protected JComponent newInstantiatorEditor(NeoNode neoNode) { return null; }
-	protected JComponent newMethodEditor(NeoNode neoNode) { return null; }
-	protected JComponent newStatementEditor(NeoNode neoNode) { return null; }
-	protected JComponent newParameterEditor(NeoNode neoNode) { return null; }
-	protected JComponent newConstructorEditor(NeoNode neoNode) { return null; }
-
-	protected Node new_package(String name) { return new_package(getGraph(), name); }
-	protected Node new_package() { return new_package(getGraph()); } 
-	protected Node newClass(String name) { return newClass(getGraph(), name); }
-	protected Node newClass() { return newClass(getGraph()); } 
-	protected Node newObject(String name) { return newObject(getGraph(), name); }
-	protected Node newObject() { return newObject(getGraph()); } 
-	protected Node newField(String name) { return newField(getGraph(), name); }
-	protected Node newField() { return newField(getGraph()); } 
-	protected Node newFieldType(String name) { return newFieldType(getGraph(), name); }
-	protected Node newFieldType() { return newFieldType(getGraph()); } 
-	protected Node newInstantiator(String name) { return newInstantiator(getGraph(), name); }
-	protected Node newInstantiator() { return newInstantiator(getGraph()); } 
-	protected Node newMethod(String name) { return newMethod(getGraph(), name); }
-	protected Node newMethod() { return newMethod(getGraph()); } 
-	protected Node newStatement(String name) { return newStatement(getGraph(), name); }
-	protected Node newStatement() { return newStatement(getGraph()); } 
-	protected Node newParameter(String name) { return newParameter(getGraph(), name); }
-	protected Node newParameter() { return newParameter(getGraph()); } 
-	protected Node newConstructor(String name) { return newConstructor(getGraph(), name); }
-	protected Node newConstructor() { return newConstructor(getGraph()); } 
+	protected JComponent new_packageEditor(NeoNode _packageNode) { return null; }
+	protected JComponent newClassEditor(NeoNode classNode) { return null; }
+	protected JComponent newObjectEditor(NeoNode objectNode) { return null; }
+	protected JComponent newFieldEditor(NeoNode fieldNode) { return null; }
+	protected JComponent newFieldTypeEditor(NeoNode fieldTypeNode) { return null; }
+	protected JComponent newInstantiatorEditor(NeoNode instantiatorNode) { return null; }
+	protected JComponent newMethodEditor(NeoNode methodNode) { return null; }
+	protected JComponent newStatementEditor(NeoNode statementNode) { return null; }
+	protected JComponent newParameterEditor(NeoNode parameterNode) { return null; }
+	protected JComponent newConstructorEditor(NeoNode constructorNode) { return null; }
 
 	public static boolean is_package(Node node) { return hasLabel(node, Entities._package); }
 	public static boolean isClass(Node node) { return hasLabel(node, Entities.Class); }
@@ -122,26 +144,97 @@ abstract class JavaDomainDomainPlugin extends Plugin {
 	public static boolean isParameter(Node node) { return hasLabel(node, Entities.Parameter); }
 	public static boolean isConstructor(Node node) { return hasLabel(node, Entities.Constructor); }
 
-	public static Node new_package(NeoModel graph, String name) { return graph.newNode(Entities._package, AppMotif.Properties.name.name(), name); }
-	public static Node new_package(NeoModel graph) { return graph.newNode(Entities._package); }
-	public static Node newClass(NeoModel graph, String name) { return graph.newNode(Entities.Class, AppMotif.Properties.name.name(), name); }
-	public static Node newClass(NeoModel graph) { return graph.newNode(Entities.Class); }
-	public static Node newObject(NeoModel graph, String name) { return graph.newNode(Entities.Object, AppMotif.Properties.name.name(), name); }
-	public static Node newObject(NeoModel graph) { return graph.newNode(Entities.Object); }
-	public static Node newField(NeoModel graph, String name) { return graph.newNode(Entities.Field, AppMotif.Properties.name.name(), name); }
-	public static Node newField(NeoModel graph) { return graph.newNode(Entities.Field); }
-	public static Node newFieldType(NeoModel graph, String name) { return graph.newNode(Entities.FieldType, AppMotif.Properties.name.name(), name); }
-	public static Node newFieldType(NeoModel graph) { return graph.newNode(Entities.FieldType); }
-	public static Node newInstantiator(NeoModel graph, String name) { return graph.newNode(Entities.Instantiator, AppMotif.Properties.name.name(), name); }
-	public static Node newInstantiator(NeoModel graph) { return graph.newNode(Entities.Instantiator); }
-	public static Node newMethod(NeoModel graph, String name) { return graph.newNode(Entities.Method, AppMotif.Properties.name.name(), name); }
-	public static Node newMethod(NeoModel graph) { return graph.newNode(Entities.Method); }
-	public static Node newStatement(NeoModel graph, String name) { return graph.newNode(Entities.Statement, AppMotif.Properties.name.name(), name); }
-	public static Node newStatement(NeoModel graph) { return graph.newNode(Entities.Statement); }
-	public static Node newParameter(NeoModel graph, String name) { return graph.newNode(Entities.Parameter, AppMotif.Properties.name.name(), name); }
-	public static Node newParameter(NeoModel graph) { return graph.newNode(Entities.Parameter); }
-	public static Node newConstructor(NeoModel graph, String name) { return graph.newNode(Entities.Constructor, AppMotif.Properties.name.name(), name); }
-	public static Node newConstructor(NeoModel graph) { return graph.newNode(Entities.Constructor); }
+	protected Node new_package() { return new_package(getGraph()); } 
+	public static Node new_package(NeoModel graph) { return newInstanceNode(graph, Entities._package.name(), entitiesNodeMap.get(Entities._package)); } 
+	protected Node new_package(Object name) { return new_package(getGraph(), name); } 
+	public static Node new_package(NeoModel graph, Object name) {  	
+		final Node newNode = new_package(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newClass() { return newClass(getGraph()); } 
+	public static Node newClass(NeoModel graph) { return newInstanceNode(graph, Entities.Class.name(), entitiesNodeMap.get(Entities.Class)); } 
+	protected Node newClass(Object name) { return newClass(getGraph(), name); } 
+	public static Node newClass(NeoModel graph, Object name) {  	
+		final Node newNode = newClass(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newObject() { return newObject(getGraph()); } 
+	public static Node newObject(NeoModel graph) { return newInstanceNode(graph, Entities.Object.name(), entitiesNodeMap.get(Entities.Object)); } 
+	protected Node newObject(Object name) { return newObject(getGraph(), name); } 
+	public static Node newObject(NeoModel graph, Object name) {  	
+		final Node newNode = newObject(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newField() { return newField(getGraph()); } 
+	public static Node newField(NeoModel graph) { return newInstanceNode(graph, Entities.Field.name(), entitiesNodeMap.get(Entities.Field)); } 
+	protected Node newField(Object scope, Object name) { return newField(getGraph(), scope, name); } 
+	public static Node newField(NeoModel graph, Object scope, Object name) {  	
+		final Node newNode = newField(graph); 	
+		if (scope != null) relate(newNode, newValueNode(graph, scope), RelationshipType.withName(Properties.scope.name()));
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newFieldType() { return newFieldType(getGraph()); } 
+	public static Node newFieldType(NeoModel graph) { return newInstanceNode(graph, Entities.FieldType.name(), entitiesNodeMap.get(Entities.FieldType)); } 
+	protected Node newFieldType(Object name, Object elementType) { return newFieldType(getGraph(), name, elementType); } 
+	public static Node newFieldType(NeoModel graph, Object name, Object elementType) {  	
+		final Node newNode = newFieldType(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name()));
+		if (elementType != null) relate(newNode, newValueNode(graph, elementType), RelationshipType.withName(Properties.elementType.name())); 	
+		return newNode; 
+	}
+
+	protected Node newInstantiator() { return newInstantiator(getGraph()); } 
+	public static Node newInstantiator(NeoModel graph) { return newInstanceNode(graph, Entities.Instantiator.name(), entitiesNodeMap.get(Entities.Instantiator)); } 
+	protected Node newInstantiator(Object name) { return newInstantiator(getGraph(), name); } 
+	public static Node newInstantiator(NeoModel graph, Object name) {  	
+		final Node newNode = newInstantiator(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newMethod() { return newMethod(getGraph()); } 
+	public static Node newMethod(NeoModel graph) { return newInstanceNode(graph, Entities.Method.name(), entitiesNodeMap.get(Entities.Method)); } 
+	protected Node newMethod(Object name) { return newMethod(getGraph(), name); } 
+	public static Node newMethod(NeoModel graph, Object name) {  	
+		final Node newNode = newMethod(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newStatement() { return newStatement(getGraph()); } 
+	public static Node newStatement(NeoModel graph) { return newInstanceNode(graph, Entities.Statement.name(), entitiesNodeMap.get(Entities.Statement)); } 
+	protected Node newStatement(Object name) { return newStatement(getGraph(), name); } 
+	public static Node newStatement(NeoModel graph, Object name) {  	
+		final Node newNode = newStatement(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newParameter() { return newParameter(getGraph()); } 
+	public static Node newParameter(NeoModel graph) { return newInstanceNode(graph, Entities.Parameter.name(), entitiesNodeMap.get(Entities.Parameter)); } 
+	protected Node newParameter(Object name) { return newParameter(getGraph(), name); } 
+	public static Node newParameter(NeoModel graph, Object name) {  	
+		final Node newNode = newParameter(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
+	protected Node newConstructor() { return newConstructor(getGraph()); } 
+	public static Node newConstructor(NeoModel graph) { return newInstanceNode(graph, Entities.Constructor.name(), entitiesNodeMap.get(Entities.Constructor)); }
+
+
+	public static void outgoing_PACKAGE(Node src, RelationConsumer consumer) { outgoing(src, Relations._PACKAGE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoing_PACKAGE(Node src) { return other(src, singleOutgoing(src, Relations._PACKAGE)); }
+	public static void incoming_PACKAGE(Node src, RelationConsumer consumer) { incoming(src, Relations._PACKAGE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncoming_PACKAGE(Node src) { return other(src, singleIncoming(src, Relations._PACKAGE)); }
 
 	public static void outgoingCLASS(Node src, RelationConsumer consumer) { outgoing(src, Relations.CLASS).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingCLASS(Node src) { return other(src, singleOutgoing(src, Relations.CLASS)); }
@@ -194,6 +287,7 @@ abstract class JavaDomainDomainPlugin extends Plugin {
 	public static Node singleIncomingCONSTRUCTOR(Node src) { return other(src, singleIncoming(src, Relations.CONSTRUCTOR)); }
 
 
+	public static Relationship relate_PACKAGE(Node src, Node dst) { return relate(src, dst, Relations._PACKAGE); }
 	public static Relationship relateCLASS(Node src, Node dst) { return relate(src, dst, Relations.CLASS); }
 	public static Relationship relateOBJECT(Node src, Node dst) { return relate(src, dst, Relations.OBJECT); }
 	public static Relationship relateFIELD(Node src, Node dst) { return relate(src, dst, Relations.FIELD); }
@@ -205,44 +299,28 @@ abstract class JavaDomainDomainPlugin extends Plugin {
 	public static Relationship relatePARAMETER(Node src, Node dst) { return relate(src, dst, Relations.PARAMETER); }
 	public static Relationship relateCONSTRUCTOR(Node src, Node dst) { return relate(src, dst, Relations.CONSTRUCTOR); }
 
-	// get name as property of a node (node.name)
-	public static String getNameProperty(PropertyContainer node) { return DomainMotif.getName(node); }
-	public static String getNameProperty(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
-	public static void setNameProperty(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
-	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
+	// name
+	public static <T> T getNameProperty(PropertyContainer container) { return getEntityProperty(container, Properties.name.name()); }
+	public static <T> T getNameProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.name.name(), defaultValue); }
+	public static boolean hasNameProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.name.name()); }
+	public static <T extends PropertyContainer> T setNameProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.name.name(), value); return container; }
+	protected <T extends PropertyContainer> T setNameProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.name.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeNameProperty(T container) { removeEntityProperty(container, Properties.name.name()); return container; }
 
-	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
-	public static String getEntityName(Node classNode) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name()); }
-	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name(), defaultValue); }
+	// elementType
+	public static <T> T getElementTypeProperty(PropertyContainer container) { return getEntityProperty(container, Properties.elementType.name()); }
+	public static <T> T getElementTypeProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.elementType.name(), defaultValue); }
+	public static boolean hasElementTypeProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.elementType.name()); }
+	public static <T extends PropertyContainer> T setElementTypeProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.elementType.name(), value); return container; }
+	protected <T extends PropertyContainer> T setElementTypeProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.elementType.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeElementTypeProperty(T container) { removeEntityProperty(container, Properties.elementType.name()); return container; }
 
-	public static <T> T getElementType(PropertyContainer container) { return get(container, Properties.elementType.name()); }
-	public static <T> T getElementType(PropertyContainer container, T defaultValue) { return has(container, Properties.elementType.name()) ? get(container, Properties.elementType.name()) : defaultValue; }
-	public static boolean hasElementType(PropertyContainer container) { return has(container, Properties.elementType.name()); }
-	public static <T extends PropertyContainer> T setElementType(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.elementType.name());
-	   else
-	   	container.setProperty(Properties.elementType.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeElementType(T container) {
-		if (has(container, Properties.elementType.name())) container.removeProperty(Properties.elementType.name());
-	      return container;
-	}
-
-	public static <T> T getScope(PropertyContainer container) { return get(container, Properties.scope.name()); }
-	public static <T> T getScope(PropertyContainer container, T defaultValue) { return has(container, Properties.scope.name()) ? get(container, Properties.scope.name()) : defaultValue; }
-	public static boolean hasScope(PropertyContainer container) { return has(container, Properties.scope.name()); }
-	public static <T extends PropertyContainer> T setScope(T container, Object value) {
-		if (value == null)
-	   	container.removeProperty(Properties.scope.name());
-	   else
-	   	container.setProperty(Properties.scope.name(), value);
-	   return container;
-	}
-	public static <T extends PropertyContainer> T removeScope(T container) {
-		if (has(container, Properties.scope.name())) container.removeProperty(Properties.scope.name());
-	      return container;
-	}
+	// scope
+	public static <T> T getScopeProperty(PropertyContainer container) { return getEntityProperty(container, Properties.scope.name()); }
+	public static <T> T getScopeProperty(PropertyContainer container, T defaultValue) { return getEntityProperty(container, Properties.scope.name(), defaultValue); }
+	public static boolean hasScopeProperty(PropertyContainer container) { return hasEntityProperty(container, Properties.scope.name()); }
+	public static <T extends PropertyContainer> T setScopeProperty(NeoModel graph, T container, Object value) { setEntityProperty(graph, container, Properties.scope.name(), value); return container; }
+	protected <T extends PropertyContainer> T setScopeProperty(T container, Object value) { setEntityProperty(getGraph(), container, Properties.scope.name(), value); return container; }
+	public static <T extends PropertyContainer> T removeScopeProperty(T container) { removeEntityProperty(container, Properties.scope.name()); return container; }
 
 }

@@ -104,9 +104,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                final SpringGroup.DAOST daost = springGroup.newDAO().
                      setPackage("com.ud.tr.dao").
                      setName("TestDAO").
-                     setDatabase(getNameProperty(neoNode)).
-                     setHost(getHost(neoNode.getNode())).
-                     setUsername(getUsername(neoNode.getNode())).
+                     setDatabase(getNameProperty(neoNode.getNode())).
+                     setHost(getHostProperty(neoNode.getNode())).
+                     setUsername(getUsernameProperty(neoNode.getNode())).
                      setPort(3306);
 
                for (Node queryNode : queryNodes) {
@@ -163,8 +163,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
                         outgoingQUERY_COLUMN(neoNode.getNode(), (relationship, other) -> relationship.delete());
                         for (QueryColumn selectedColumn : selectedColumns) {
                            final Relationship relationship = relateQUERY_COLUMN(neoNode.getNode(), selectedColumn.columnNode);
-                           setInSelect(relationship, selectedColumn.selected);
-                           setWhereOperator(relationship, selectedColumn.whereOperator == null || selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
+                           setInSelectProperty(relationship, selectedColumn.selected);
+                           setWhereOperatorProperty(relationship, selectedColumn.whereOperator == null || selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
                         }
                      }
 
@@ -189,13 +189,13 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       for (Node column : getSelectColumns(queryNode)) {
          final String columnName = getNameProperty(column);
-         final String columnType = getColumnType(column, "");
+         final String columnType = getColumnTypeProperty(column, "");
          queryMethodST.addColumnsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
 
       for (WhereParam queryColumn : getWhereColumnsForQuery(queryNode)) {
          final String columnName = getNameProperty(queryColumn.propertyContainer);
-         final String columnType = getColumnType(queryColumn.propertyContainer, "");
+         final String columnType = getColumnTypeProperty(queryColumn.propertyContainer, "");
          queryMethodST.addParamsValue(columnName, MySQLUtil.columnMapping(columnType));
       }
       return queryMethodST;
@@ -366,9 +366,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             @Override
             public void doAction(Transaction tx) throws Throwable {
                for (QueryColumn selectedColumn : columnTableModel.content) {
-                  setInSelect(selectedColumn.columnNode, selectedColumn.selected);
-                  setWhereOperator(selectedColumn.columnNode, selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
-                  setValue(selectedColumn.columnNode, (selectedColumn.value == null || selectedColumn.value.toString().length() == 0) ? null : selectedColumn.value);
+                  setInSelectProperty(selectedColumn.columnNode, selectedColumn.selected);
+                  setWhereOperatorProperty(selectedColumn.columnNode, selectedColumn.whereOperator.length() == 0 ? null : selectedColumn.whereOperator);
+                  setValueProperty(selectedColumn.columnNode, (selectedColumn.value == null || selectedColumn.value.toString().length() == 0) ? null : selectedColumn.value);
                }
                txtQuery.setText(tableNodeToSQL(tableNode.getNode()));
             }
@@ -608,9 +608,9 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             @Override
             public void doAction(Transaction tx) throws Throwable {
                if ((aValue == null || aValue.toString().length() == 0)) {
-                  removeLastParam(whereParam.propertyContainer);
+                  removeLastParamProperty(whereParam.propertyContainer);
                } else
-                  setLastParam(whereParam.propertyContainer, aValue);
+                  setLastParamProperty(whereParam.propertyContainer, aValue);
             }
 
             @Override
@@ -639,7 +639,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
       WhereParam(Relationship whereColumn) {
          this.propertyContainer = whereColumn;
          this.name = getNameProperty(whereColumn.getEndNode());
-         this.value = getLastParam(whereColumn, "");
+         this.value = getLastParamProperty(whereColumn, "");
       }
    }
 
@@ -736,13 +736,13 @@ public class MySQLPlugin extends MySQLDomainPlugin {
             selectST.addTablesValue(getNameProperty(tableNode) + " " + StringUtil.lowFirst(getNameProperty(tableNode)));
          }
 
-         if (getInSelect(queryColumnRelation)) {
+         if (getInSelectProperty(queryColumnRelation)) {
             selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
          }
 
-         final String whereOperator = getWhereOperator(queryColumnRelation, "");
+         final String whereOperator = getWhereOperatorProperty(queryColumnRelation, "");
          if (whereOperator.length() > 0)
-            selectST.addWhereValue("?", getWhereOperator(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
+            selectST.addWhereValue("?", getWhereOperatorProperty(queryColumnRelation), getQualifiedColumnName(columnNode, tableNode));
       });
 
       // todo auto-join tables through fk-columns
@@ -774,10 +774,10 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
       outgoingCOLUMN(tableNode, (queryColumnRelation, columnNode) -> {
 
-         if (getInSelect(columnNode, true))
+         if (getInSelectProperty(columnNode, true))
             selectST.addColumnsValue(getQualifiedColumnName(columnNode, tableNode));
 
-         final String whereOperator = getWhereOperator(columnNode, "");
+         final String whereOperator = getWhereOperatorProperty(columnNode, "");
          if (whereOperator.length() > 0)
             selectST.addWhereValue("?", whereOperator, getQualifiedColumnName(columnNode, tableNode));
       });
@@ -794,7 +794,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    private static Set<Node> getSelectColumns(Node queryNode) {
       final Set<Node> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getInSelect(queryColumnRelation)) columns.add(other);
+         if (getInSelectProperty(queryColumnRelation)) columns.add(other);
       });
       return columns;
    }
@@ -803,7 +803,7 @@ public class MySQLPlugin extends MySQLDomainPlugin {
    private static Set<WhereParam> getWhereColumnsForQuery(Node queryNode) {
       final Set<WhereParam> columns = new LinkedHashSet<>();
       outgoingQUERY_COLUMN(queryNode, (queryColumnRelation, other) -> {
-         if (getWhereOperator(queryColumnRelation, "").length() > 0) columns.add(new WhereParam(queryColumnRelation));
+         if (getWhereOperatorProperty(queryColumnRelation, "").length() > 0) columns.add(new WhereParam(queryColumnRelation));
       });
       return columns;
    }
@@ -833,8 +833,8 @@ public class MySQLPlugin extends MySQLDomainPlugin {
 
          outgoingQUERY_COLUMN(queryNode, (relationship, columnNode) -> {
             final QueryColumn queryColumn = columnNodes.get(getNameProperty(other(columnNode, singleIncoming(columnNode, Relations.COLUMN))) + "." + getNameProperty(columnNode));
-            queryColumn.selected = getInSelect(relationship);
-            queryColumn.whereOperator = getWhereOperator(relationship, "");
+            queryColumn.selected = getInSelectProperty(relationship);
+            queryColumn.whereOperator = getWhereOperatorProperty(relationship, "");
          });
 
          tblColumns = new JTable(new ColumnTableModel(queryColumns));
@@ -998,13 +998,13 @@ public class MySQLPlugin extends MySQLDomainPlugin {
          this.tableName = getNameProperty(tableNode);
          this.columnName = getNameProperty(columnNode);
 
-         selected = getInSelect(columnNode, defaultSelected);
-         whereOperator = getWhereOperator(columnNode, "");
-         value = getValue(columnNode);
+         selected = getInSelectProperty(columnNode, defaultSelected);
+         whereOperator = getWhereOperatorProperty(columnNode, "");
+         value = getValueProperty(columnNode);
       }
    }
 
    public static MySQLSession getSession(Node dbNode, char[] password) throws Exception {
-      return new MySQLSession(getHost(dbNode), getNameProperty(dbNode), getUsername(dbNode), new String(password));
+      return new MySQLSession(getHostProperty(dbNode), getNameProperty(dbNode), getUsernameProperty(dbNode), new String(password));
    }
 }

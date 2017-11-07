@@ -82,7 +82,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
             final File dir = SwingUtil.showOpenDir(app, System.getProperty("user.home"));
             if (dir == null) return;
 
-            final Node fileNode = setPath(newDirectory(), dir.getPath());
+            final Node fileNode = setPathProperty(newDirectory(), dir.getPath());
             relateDIRECTORY(neoNode.getNode(), fileNode);
             fireNodesLoaded(fileNode);
          }
@@ -143,7 +143,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                         getGraph().doInTransaction(new NeoModel.Committer() {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
-                              final Node fileNode = setExtension(newFile(name), extension);
+                              final Node fileNode = setExtensionProperty(newFile(null,name, null), extension);
                               relateFILE(neoNode.getNode(), fileNode);
                               fireNodesLoaded(fileNode);
                            }

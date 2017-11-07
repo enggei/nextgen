@@ -22,8 +22,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.generator.app.DomainMotif.*;
-import static com.generator.app.DomainMotif.getName;
-import static com.generator.app.DomainMotif.setName;
 import static com.generator.generators.project.ProjectPlugin.*;
 import static com.generator.util.NeoUtil.*;
 
@@ -80,7 +78,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                new DomainVisitor<Void>(true) {
                   @Override
                   public void visitEntity(Node node) {
-                     if (name.equals(getName(node))) exists.set(true);
+                     if (name.equals(getNameProperty(node))) exists.set(true);
                      super.visitEntity(node);
                   }
                }.visit(neoNode.getNode());
@@ -106,13 +104,13 @@ public class DomainPlugin extends DomainDomainPlugin {
                   setPackageNameProperty(neoNode.getNode(), packageName);
                }
 
-               final String className = getName(neoNode.getNode()) + "DomainPlugin";
+               final String className = getNameProperty(neoNode.getNode()) + "DomainPlugin";
 
                final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
                final DomainPluginGroup.DomainPluginST domainPluginST = domainPluginGroup.newDomainPlugin().
                      setPackageName(getPackageNameProperty(neoNode.getNode())).
                      setName(className).
-                     setTitle(getName(neoNode.getNode()));
+                     setTitle(getNameProperty(neoNode.getNode()));
 
                // todo: group Entities.properties and Relations.properties, and use these to create default-add/set actions (like StringTemplatePlugin)
 
@@ -128,7 +126,7 @@ public class DomainPlugin extends DomainDomainPlugin {
 //                     entityRelations.put("Domain", new LinkedHashSet<>());
 
                      outgoingENTITY(node, (entityRelation, entity) -> {
-                        domainRelations.add(getNameProperty(entity).toUpperCase());
+                        domainRelations.add(getNameProperty(entity,"").toUpperCase());
                         domainPluginST.addRootRelationsValue(getNameProperty(entity));
                      });
                      super.visitDomain(node);
@@ -161,7 +159,7 @@ public class DomainPlugin extends DomainDomainPlugin {
 
                      // if Entity (not Property), add relation
                      if (!isProperty.get()) {
-                        domainRelations.add(getNameProperty(node).toUpperCase());
+                        domainRelations.add(getNameProperty(node,"").toUpperCase());
 
                         // add entity-relations
                         final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
@@ -216,10 +214,10 @@ public class DomainPlugin extends DomainDomainPlugin {
 
       } else if (StringTemplatePlugin.isSTTemplate(neoNode.getNode())) {
 
-         pop.add(new App.TransactionAction("New " + getName(neoNode.getNode()) + " instance", app) {
+         pop.add(new App.TransactionAction("New " + getNameProperty(neoNode.getNode()) + " instance", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final Node newNode = getGraph().newNode(Label.label(getName(neoNode.getNode())));
+               final Node newNode = getGraph().newNode(Label.label(getNameProperty(neoNode.getNode())));
                relateINSTANCE(neoNode.getNode(), newNode);
                fireNodesLoaded(newNode);
             }
@@ -227,16 +225,16 @@ public class DomainPlugin extends DomainDomainPlugin {
 
       } else if (isEntity(neoNode.getNode())) {
 
-         pop.add(new App.TransactionAction("New " + getName(neoNode.getNode()) + " instance", app) {
+         pop.add(new App.TransactionAction("New " + getNameProperty(neoNode.getNode()) + " instance", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final Node newNode = getGraph().newNode(Label.label(getName(neoNode.getNode())));
+               final Node newNode = getGraph().newNode(Label.label(getNameProperty(neoNode.getNode())));
                relateINSTANCE(neoNode.getNode(), newNode);
                fireNodesLoaded(newNode);
             }
          });
 
-         incomingVISITOR(neoNode.getNode(), (visitorRelation, visitorNode) -> pop.add(new App.TransactionAction("Visit with " + getName(visitorNode), app) {
+         incomingVISITOR(neoNode.getNode(), (visitorRelation, visitorNode) -> pop.add(new App.TransactionAction("Visit with " + getNameProperty(visitorNode), app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
                try {
@@ -261,17 +259,17 @@ public class DomainPlugin extends DomainDomainPlugin {
                new EntityRelationVisitor() {
                   @Override
                   public void onSingle(Node relationNode, Node dstNode) {
-                     if (name.equals(getName(relationNode))) exists.set(true);
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
                   }
 
                   @Override
                   public void onList(Node relationNode, Node dstNode) {
-                     if (name.equals(getName(relationNode))) exists.set(true);
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
                   }
                }.visit(neoNode.getNode());
 
                if (exists.get()) {
-                  SwingUtil.showMessage(getName(neoNode.getNode()) + " already has a property named " + name, app);
+                  SwingUtil.showMessage(getNameProperty(neoNode.getNode()) + " already has a property named " + name, app);
                   return;
                }
 
@@ -397,17 +395,17 @@ public class DomainPlugin extends DomainDomainPlugin {
                new EntityRelationVisitor() {
                   @Override
                   public void onSingle(Node relationNode, Node dstNode) {
-                     if (name.equals(getName(relationNode))) exists.set(true);
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
                   }
 
                   @Override
                   public void onList(Node relationNode, Node dstNode) {
-                     if (name.equals(getName(relationNode))) exists.set(true);
+                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
                   }
                }.visit(neoNode.getNode());
 
                if (exists.get()) {
-                  SwingUtil.showMessage(getName(neoNode.getNode()) + " already has a property named " + name, app);
+                  SwingUtil.showMessage(getNameProperty(neoNode.getNode()) + " already has a property named " + name, app);
                   return;
                }
 
@@ -452,12 +450,12 @@ public class DomainPlugin extends DomainDomainPlugin {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) {
 
-               final String oldValue = getName(neoNode.getNode());
+               final String oldValue = getNameProperty(neoNode.getNode());
 
                final String newValue = SwingUtil.showInputDialog("New value", app, oldValue);
                if (newValue == null || newValue.equals(oldValue)) return;
 
-               setName(neoNode.getNode(), newValue);
+               setNameProperty(neoNode.getNode(), newValue);
                fireNodeChanged(neoNode, AppMotif.Properties.name.name(), newValue);
             }
          });
@@ -480,10 +478,6 @@ public class DomainPlugin extends DomainDomainPlugin {
       }
 
       showEntityActions(pop, neoNode, selectedNodes);
-   }
-
-   private String getNameProperty(Node node) {
-      return getEntityProperty(node, AppMotif.Properties.name.name());
    }
 
    public void showEntityActions(JPopupMenu pop, NeoNode templateNeoNode, Set<NeoNode> selectedNodes) {
@@ -530,7 +524,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                   if (selectedNodes.size() == 1) {
                      final NeoNode selectedNode = selectedNodes.iterator().next();
 
-                     final String dstType = getName(dstNode);
+                     final String dstType = getNameProperty(dstNode);
                      if (!isRelated(templateNeoNode.getNode(), selectedNode.getNode(), RelationshipType.withName(parameterName)) && ((isProperty(dstNode) && isValue(selectedNode.getNode())) || hasLabel(selectedNode.getNode(), dstType))) {
                         referenceMenu.add(new App.TransactionAction("Set " + parameterName + " -> " + getNameAndLabelsFrom(selectedNode.getNode()), app) {
                            @Override
@@ -552,8 +546,8 @@ public class DomainPlugin extends DomainDomainPlugin {
                @Override
                public void onList(Node relationNode, Node dstNode) {
 
-                  final String parameterName = getName(relationNode);
-                  final String dstType = getName(dstNode);
+                  final String parameterName = getNameProperty(relationNode);
+                  final String dstType = getNameProperty(dstNode);
 
                   groupAssign.put(parameterName, new LinkedHashMap<>());
 
@@ -754,7 +748,7 @@ public class DomainPlugin extends DomainDomainPlugin {
 
 
       if(entityPropertiesMap.isEmpty()) {
-         final Node newEntityNode = newInstanceNode(getGraph(), getName(instanceNode), instanceNode);
+         final Node newEntityNode = newInstanceNode(getGraph(), getNameProperty(instanceNode), instanceNode);
          relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
          fireNodesLoaded(newEntityNode);
          return;
@@ -793,7 +787,7 @@ public class DomainPlugin extends DomainDomainPlugin {
                      if (value.trim().length() == 0) continue;
 
                      if (newEntityNode == null) {
-                        newEntityNode = newInstanceNode(getGraph(), getName(instanceNode), instanceNode);
+                        newEntityNode = newInstanceNode(getGraph(), getNameProperty(instanceNode), instanceNode);
                         relate(ownerNode, newEntityNode, RelationshipType.withName(parameterName));
                      }
 
@@ -826,7 +820,7 @@ public class DomainPlugin extends DomainDomainPlugin {
 
    public static void renderDomainVisitor(Relationship rendererRelationship, Node node) {
       final String packageName = getPackageNameProperty(rendererRelationship);
-      final String groupName = getName(node) + "Visitor";
+      final String groupName = getNameProperty(node) + "Visitor";
       final File targetDir = getFile(other(node, rendererRelationship));
 
       final Set<Node> visitedNodes = new LinkedHashSet<>();
@@ -882,13 +876,13 @@ public class DomainPlugin extends DomainDomainPlugin {
       if (visitedNodes.contains(entityNode)) return;
       visitedNodes.add(entityNode);
 
-      final String entityName = getName(entityNode);
+      final String entityName = getNameProperty(entityNode);
 
       final NeoVisitorGroup.entityVisitST newEntityVisitorST = visitorGroup.newentityVisit().
             setName(entityName);
 
       outgoingSRC(entityNode, (srcRelation, relationNode) -> {
-         newEntityVisitorST.addOutgoingValue(getName(relationNode));
+         newEntityVisitorST.addOutgoingValue(getNameProperty(relationNode));
          outgoingDST(relationNode, (dstRelation, dstNode) -> visitEntityNode(visitorMethods, visitedNodes, visitorGroup, dstNode));
       });
 

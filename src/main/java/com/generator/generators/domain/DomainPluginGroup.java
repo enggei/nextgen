@@ -430,7 +430,7 @@ public final class DomainPluginGroup {
 		"   ~name~(App app) {\n" + 
 		"      super(app, \"~title~\");\n" + 
 		"\n" + 
-		"		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), \"Domain\");\n" + 
+		"		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), \"~title~\");\n" + 
 		"		~entities:{it|entitiesNodeMap.put(Entities.~it.name~, newDomainEntity(getGraph(), Entities.~it.name~, domainNode));};separator=\"\\n\"~\n" + 
 		"		\n" + 
 		"		~entityProperties:{it|newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.~it.entityName~), Properties.~it.propertyName~.name());};separator=\"\\n\"~\n" + 

@@ -62,7 +62,7 @@ public class DockerPlugin extends DockerDomainPlugin {
       selectedNodes.stream()
             .filter(selectedNode -> isDirectory(selectedNode.getNode()))
             .forEach(selectedNode -> {
-               final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+               final String directoryPath = ProjectPlugin.getPathProperty(selectedNode.getNode());
                pop.add(new App.TransactionAction("Add " + directoryPath, app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -73,7 +73,7 @@ public class DockerPlugin extends DockerDomainPlugin {
 
       outgoingBUILD(neoNode.getNode(), (relationship, other) -> {
 
-         final File path = new File((String) ProjectPlugin.getPath(other));
+         final File path = new File((String) ProjectPlugin.getPathProperty(other));
 
          if (!path.exists()) return;
 
@@ -93,7 +93,7 @@ public class DockerPlugin extends DockerDomainPlugin {
       selectedNodes.stream()
             .filter(selectedNode -> isDirectory(selectedNode.getNode()))
             .forEach(selectedNode -> {
-               final String directoryPath = ProjectPlugin.getPath(selectedNode.getNode());
+               final String directoryPath = ProjectPlugin.getPathProperty(selectedNode.getNode());
                pop.add(new App.TransactionAction("Add " + directoryPath, app) {
                   @Override
                   protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
@@ -104,7 +104,7 @@ public class DockerPlugin extends DockerDomainPlugin {
 
       outgoingCOMPOSE(neoNode.getNode(), (relationship, other) -> {
 
-         final File path = new File((String) ProjectPlugin.getPath(other));
+         final File path = new File((String) ProjectPlugin.getPathProperty(other));
 
          pop.add(new TransactionAction("Compose " + path.toString(), app) {
             @Override

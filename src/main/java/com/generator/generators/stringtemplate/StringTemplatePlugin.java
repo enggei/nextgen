@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.generator.app.DomainMotif.*;
 import static com.generator.generators.domain.DomainPlugin.*;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.util.NeoUtil.*;
@@ -103,9 +104,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                   final Node stGroupNode = newSTGroup(name);
                   for (TemplateStatement templateStatement : templateFile.getStatements()) {
 
-                     final Node stNode = newSTTemplate(templateStatement.getName());
-                     setText(stNode, templateStatement.getText());
-                     //stNode.addLabel(DomainPlugin.Entities.Entity);
+                     final Node stNode = newSTTemplate(templateStatement.getText(), templateStatement.getName());
                      stGroupNode.createRelationshipTo(stNode, Relations.TEMPLATE);
 
                      for (TemplateParameter templateParameter : templateStatement.getParameters())
@@ -181,14 +180,14 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
             final AtomicBoolean exists = new AtomicBoolean(false);
             outgoingTEMPLATE(neoNode.getNode(), (relationship, other) -> {
-               if (name.equalsIgnoreCase(getName(other))) exists.set(true);
+               if (name.equalsIgnoreCase(getNameProperty(other))) exists.set(true);
             });
             if (exists.get()) {
                SwingUtil.showMessage(name + " already exists for group ", app);
                return;
             }
 
-            final Node newNode = newSTTemplate(name);
+            final Node newNode = newSTTemplate("",name);
             //newNode.addLabel(DomainPlugin.Entities.Entity); // todo check if this is necessary
             neoNode.getNode().createRelationshipTo(newNode, Relations.TEMPLATE);
             fireNodesLoaded(newNode);
@@ -202,7 +201,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             final String templateName = getString(selectedNode.getNode(), AppMotif.Properties.name.name());
             final AtomicBoolean exists = new AtomicBoolean(false);
             outgoingTEMPLATE(neoNode.getNode(), (relationship, other) -> {
-               if (templateName.equals(getName(other))) exists.set(true);
+               if (templateName.equals(getNameProperty(other))) exists.set(true);
             });
             if (exists.get()) continue;   // template with same name already exists for this STGroup
 
@@ -215,7 +214,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          }
       }
 
-      ProjectPlugin.incomingRENDERER(neoNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render " + ProjectPlugin.getFileType(rendererRelationship), app) {
+      ProjectPlugin.incomingRENDERER(neoNode.getNode(), (rendererRelationship, other) -> pop.add(new App.TransactionAction("Render " + ProjectPlugin.getFileTypeProperty(rendererRelationship), app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             new STGGroupRenderer(rendererRelationship).visit(neoNode.getNode());
@@ -338,7 +337,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                if (isSTTemplate(entityReferenceNode))
                   template.add(parameterName, renderStatement(node, entityReferenceNode));
                else if (isValue(entityReferenceNode))
-                  template.add(parameterName, getName(node));
+                  template.add(parameterName, getNameProperty(node));
                break;
 
             case LIST:
@@ -362,7 +361,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                      final Node referenceValueNode = other(node, valueRelation);
 
                      if (isValue(referenceValueNode)) {
-                        aggrValues.put(key, getName(referenceValueNode));
+                        aggrValues.put(key, getNameProperty(referenceValueNode));
                      } else {
                         final Node keyValueReferenceNode = other(referenceValueNode, singleIncoming(referenceValueNode, DomainPlugin.Relations.INSTANCE));
                         if (isSTTemplate(keyValueReferenceNode))
@@ -406,7 +405,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
       @Override
       public void visit(Node node) {
          final String packageName = getPackageNameProperty(rendererRelationship);
-         final String groupName = StringUtil.capitalize(getName(node)) + "Group";
+         final String groupName = StringUtil.capitalize(getNameProperty(node)) + "Group";
          final File targetDir = getFile(other(node, rendererRelationship));
 
          final TemplateGroupGroup.stgBuilderST stgBuilderST = group.newstgBuilder().
@@ -422,7 +421,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             if (!isSTTemplate(templateNode)) return;
 
             final TemplateGroupGroup.NewStatementDeclarationST declarationST = group.newNewStatementDeclaration().setGroupname(groupName);
-            final String statementName = getName(templateNode);
+            final String statementName = getNameProperty(templateNode);
 
             final TemplateGroupGroup.templateST templateST = group.newtemplate().
                   setName(statementName);
@@ -431,7 +430,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                @Override
                public void onSingle(Node relationNode, Node dstNode) {
-                  final String parameterName = getName(relationNode);
+                  final String parameterName = getNameProperty(relationNode);
                   templateST.addParamsValue(parameterName);
 
                   declarationST.addPropertiesValue(parameterName, group.newStatementStringPropertySetter().
@@ -441,7 +440,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
 
                @Override
                public void onList(Node relationNode, Node dstNode) {
-                  final String parameterName = getName(relationNode);
+                  final String parameterName = getNameProperty(relationNode);
                   templateST.addParamsValue(parameterName);
 
                   // list property
@@ -471,7 +470,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                         new EntityRelationVisitor() {
                            @Override
                            public void onSingle(Node relationNode, Node dstNode) {
-                              kvSetter.addKvNamesValue(getName(relationNode));
+                              kvSetter.addKvNamesValue(getNameProperty(relationNode));
                            }
 
                            @Override
@@ -487,7 +486,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }.visit(templateNode);
 
             // todo issue with template ending with >: it appends >> for template, so result is >>>, which STGroup cannot parse
-            final String content = escape(getText(templateNode)).replaceAll("\n", "\\\\n\" + \n\"");
+            final String content = escape(getTextProperty(templateNode)).replaceAll("\n", "\\\\n\" + \n\"");
             stgBuilderST.addAppendsValue(templateST.setContent(content.endsWith(">") ? (content.trim() + " ") : content.trim()));
             groupClassDeclaration.addStatementsValue(declarationST.setName(statementName), statementName);
          });
@@ -508,7 +507,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
    private static Set<String> getKeys(Node entityReferenceNode) {
       final Set<String> existingKeys = new LinkedHashSet<>();
       outgoingSRC(entityReferenceNode, (kvRelation, kvRelationNode) -> {
-         final String key = getName(kvRelationNode);
+         final String key = getNameProperty(kvRelationNode);
          if (key != null) existingKeys.add(key);
       });
       return existingKeys;
@@ -640,7 +639,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
          });
 
-         txtEditor.setText(getText(templateNode.getNode(),""));
+         txtEditor.setText(getTextProperty(templateNode.getNode(),""));
 
          final Border defaultBorder = txtEditor.getBorder();
          final Color uneditedColor = txtEditor.getBackground();
@@ -652,7 +651,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
          final DefaultHighlighter.DefaultHighlightPainter paramsHighlighter = new DefaultHighlighter.DefaultHighlightPainter(new Color(255, 127, 0));
          txtEditor.addKeyListener(new KeyAdapter() {
 
-            String startText = getText(templateNode.getNode(), "");
+            String startText = getTextProperty(templateNode.getNode(), "");
 
             public void keyPressed(KeyEvent ke) {
 
@@ -715,7 +714,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                               final Node existingParameter = existingParameters.get(i);
 
                               // if existing parameter has same name and cardinality
-                              if (templateParameter.getPropertyName().equals(StringTemplatePlugin.getName(existingParameter))) {
+                              if (templateParameter.getPropertyName().equals(getNameProperty(existingParameter))) {
                                  if (cardinality.equals(RelationCardinality.valueOf(getRelationCardinalityProperty(existingParameter)))) {
 
                                     if (templateParameter.getDomainEntityType().equals(TemplateEntities.KEYVALUELISTPROPERTY)) {
@@ -739,15 +738,12 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                                              final Relationship kvRelationship = singleOutgoing(kvRelationNode, DomainPlugin.Relations.DST);
                                              final Node keyNode = other(kvRelationNode, kvRelationship);
 
-                                             final String existingName = StringTemplatePlugin.getName(keyNode);
+                                             final String existingName = getNameProperty(keyNode);
                                              if (existingName.equals(oldKey)) {
                                                 // deprecate all INSTANCES of this property:
-                                                outgoingINSTANCE(keyNode, new RelationConsumer() {
-                                                   @Override
-                                                   public void accept(Relationship instanceRelation, Node instanceNode) {
-                                                      final Relationship oldPropertyRelation = singleOutgoing(instanceNode, RelationshipType.withName(oldKey));
-                                                      System.out.println("old key value " + existingName + " -> " + StringTemplatePlugin.getName(instanceNode));
-                                                   }
+                                                outgoingINSTANCE(keyNode, (instanceRelation, instanceNode) -> {
+                                                   final Relationship oldPropertyRelation = singleOutgoing(instanceNode, RelationshipType.withName(oldKey));
+                                                   System.out.println("old key value " + existingName + " -> " + getNameProperty(instanceNode));
                                                 });
 
                                                 kvRelation.delete();
@@ -759,7 +755,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                                        }
 
                                        for (String newKey : newKeys) {
-                                          DomainMotif.newDomainEntityRelation(getGraph(), entityNode, newKey, RelationCardinality.SINGLE, newProperty(getGraph(), newKey));
+                                          newDomainEntityRelation(getGraph(), entityNode, newKey, RelationCardinality.SINGLE, newProperty(getGraph(), newKey));
                                        }
                                     }
 
@@ -785,11 +781,11 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                            AppMotif.tryToDeleteValueNode(existingParameter);
                         }
 
-                        setText(templateNode.getNode(), txtEditor.getText().trim());
+                        setTextProperty(templateNode.getNode(), txtEditor.getText().trim());
 
                         txtEditor.setText(parsed.getText().trim());
                         txtEditor.setCaretPosition(Math.min(text.length(), Math.max(0, oldCaret)));
-                        startText = getText(templateNode.getNode());
+                        startText = getTextProperty(templateNode.getNode());
                         txtEditor.setBackground(uneditedColor);
 
                         templateEditorListener.onTemplateSaved(templateNode.getNode());
@@ -963,17 +959,15 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
    private void newTemplateParameter(TemplateParameter templateParameter, Node templateNode) {
       switch (templateParameter.getDomainEntityType()) {
          case STRINGPROPERTY:
-            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
+            newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
             break;
          case LISTPROPERTY:
-            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
+            newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, DomainPlugin.newProperty(getGraph(), templateParameter.getPropertyName()));
             break;
          case KEYVALUELISTPROPERTY:
             final Node newParameterNode = DomainPlugin.newEntity(getGraph(), templateParameter.getPropertyName());
-            templateParameter.getKvNames().forEach(key -> {
-               DomainMotif.newDomainEntityRelation(getGraph(), newParameterNode, key, RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), key));
-            });
-            DomainMotif.newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, newParameterNode);
+            templateParameter.getKvNames().forEach(key -> newDomainEntityRelation(getGraph(), newParameterNode, key, RelationCardinality.SINGLE, DomainPlugin.newProperty(getGraph(), key)));
+            newDomainEntityRelation(getGraph(), templateNode, templateParameter.getPropertyName(), RelationCardinality.LIST, newParameterNode);
             break;
       }
    }

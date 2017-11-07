@@ -18,24 +18,6 @@ import static com.generator.util.NeoUtil.*;
  */
 public class DomainMotif {
 
-   // todo cleanup these methods
-
-   public static String getName(NeoNode neoNode) {
-      return getName(neoNode.getNode());
-   }
-
-   public static String getName(PropertyContainer node) {
-      return getEntityProperty(node, AppMotif.Properties.name.name());
-   }
-
-   public static void setName(PropertyContainer node, String name) {
-      node.setProperty(AppMotif.Properties.name.name(), name);
-   }
-
-   public static void setName(NeoNode neoNode, String name) {
-      setName(neoNode.getNode(), name);
-   }
-
    // Domain utility-methods
    public static Node newDomainEntity(NeoModel graph, Label label, Node domainNode) {
 

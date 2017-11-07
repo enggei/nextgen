@@ -4,33 +4,59 @@ import com.generator.app.App;
 import com.generator.app.AppMotif;
 import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
-import com.generator.app.DomainMotif;
+import com.generator.generators.domain.DomainPlugin;
 import com.generator.neo.NeoModel;
 import org.neo4j.graphdb.*;
 
 import javax.swing.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
+import static com.generator.app.DomainMotif.*;
+import static com.generator.generators.domain.DomainDomainPlugin.Entities.Domain;
 import static com.generator.util.NeoUtil.*;
 
 /**
  * Auto-generated from domain JsonDomainPlugin
  */
-abstract class JsonDomainPlugin extends Plugin {
+public abstract class JsonDomainPlugin extends Plugin {
 
 	public enum Entities implements Label {
       Json, Array, String, Number, Object, Pair, Key, Value
    }
 
    public enum Relations implements RelationshipType {
-      ARRAY, STRING, NUMBER, OBJ, PAIR, KEY, VALUE
+      JSON, ARRAY, STRING, NUMBER, OBJ, PAIR, KEY, VALUE
    }
 
    public enum Properties {
    }
 
+	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();
+
    JsonDomainPlugin(App app) {
       super(app, "Json");
+
+		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), "Json");
+		entitiesNodeMap.put(Entities.Json, newDomainEntity(getGraph(), Entities.Json, domainNode));
+		entitiesNodeMap.put(Entities.Array, newDomainEntity(getGraph(), Entities.Array, domainNode));
+		entitiesNodeMap.put(Entities.String, newDomainEntity(getGraph(), Entities.String, domainNode));
+		entitiesNodeMap.put(Entities.Number, newDomainEntity(getGraph(), Entities.Number, domainNode));
+		entitiesNodeMap.put(Entities.Object, newDomainEntity(getGraph(), Entities.Object, domainNode));
+		entitiesNodeMap.put(Entities.Pair, newDomainEntity(getGraph(), Entities.Pair, domainNode));
+		entitiesNodeMap.put(Entities.Key, newDomainEntity(getGraph(), Entities.Key, domainNode));
+		entitiesNodeMap.put(Entities.Value, newDomainEntity(getGraph(), Entities.Value, domainNode));
+
+
+		relate(domainNode, entitiesNodeMap.get(Entities.Json), DomainPlugin.Relations.ENTITY);
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Json), Relations.ARRAY.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Array));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Json), Relations.STRING.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.String));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Json), Relations.NUMBER.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Number));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Json), Relations.OBJ.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Object));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Object), Relations.PAIR.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Pair));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Pair), Relations.KEY.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Key));
+		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Pair), Relations.VALUE.name(), DomainPlugin.RelationCardinality.SINGLE, entitiesNodeMap.get(Entities.Value));
    }
 
    @Override
@@ -63,40 +89,23 @@ abstract class JsonDomainPlugin extends Plugin {
       return null;
    }
 
-	protected void handleJson(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleArray(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleString(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleNumber(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleObject(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handlePair(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleKey(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }
-	protected void handleValue(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) { }	
+	protected void handleJson(JPopupMenu pop, NeoNode jsonNode, Set<NeoNode> selectedNodes) { }
+	protected void handleArray(JPopupMenu pop, NeoNode arrayNode, Set<NeoNode> selectedNodes) { }
+	protected void handleString(JPopupMenu pop, NeoNode stringNode, Set<NeoNode> selectedNodes) { }
+	protected void handleNumber(JPopupMenu pop, NeoNode numberNode, Set<NeoNode> selectedNodes) { }
+	protected void handleObject(JPopupMenu pop, NeoNode objectNode, Set<NeoNode> selectedNodes) { }
+	protected void handlePair(JPopupMenu pop, NeoNode pairNode, Set<NeoNode> selectedNodes) { }
+	protected void handleKey(JPopupMenu pop, NeoNode keyNode, Set<NeoNode> selectedNodes) { }
+	protected void handleValue(JPopupMenu pop, NeoNode valueNode, Set<NeoNode> selectedNodes) { }	
 
-	protected JComponent newJsonEditor(NeoNode neoNode) { return null; }
-	protected JComponent newArrayEditor(NeoNode neoNode) { return null; }
-	protected JComponent newStringEditor(NeoNode neoNode) { return null; }
-	protected JComponent newNumberEditor(NeoNode neoNode) { return null; }
-	protected JComponent newObjectEditor(NeoNode neoNode) { return null; }
-	protected JComponent newPairEditor(NeoNode neoNode) { return null; }
-	protected JComponent newKeyEditor(NeoNode neoNode) { return null; }
-	protected JComponent newValueEditor(NeoNode neoNode) { return null; }
-
-	protected Node newJson(String name) { return newJson(getGraph(), name); }
-	protected Node newJson() { return newJson(getGraph()); } 
-	protected Node newArray(String name) { return newArray(getGraph(), name); }
-	protected Node newArray() { return newArray(getGraph()); } 
-	protected Node newString(String name) { return newString(getGraph(), name); }
-	protected Node newString() { return newString(getGraph()); } 
-	protected Node newNumber(String name) { return newNumber(getGraph(), name); }
-	protected Node newNumber() { return newNumber(getGraph()); } 
-	protected Node newObject(String name) { return newObject(getGraph(), name); }
-	protected Node newObject() { return newObject(getGraph()); } 
-	protected Node newPair(String name) { return newPair(getGraph(), name); }
-	protected Node newPair() { return newPair(getGraph()); } 
-	protected Node newKey(String name) { return newKey(getGraph(), name); }
-	protected Node newKey() { return newKey(getGraph()); } 
-	protected Node newValue(String name) { return newValue(getGraph(), name); }
-	protected Node newValue() { return newValue(getGraph()); } 
+	protected JComponent newJsonEditor(NeoNode jsonNode) { return null; }
+	protected JComponent newArrayEditor(NeoNode arrayNode) { return null; }
+	protected JComponent newStringEditor(NeoNode stringNode) { return null; }
+	protected JComponent newNumberEditor(NeoNode numberNode) { return null; }
+	protected JComponent newObjectEditor(NeoNode objectNode) { return null; }
+	protected JComponent newPairEditor(NeoNode pairNode) { return null; }
+	protected JComponent newKeyEditor(NeoNode keyNode) { return null; }
+	protected JComponent newValueEditor(NeoNode valueNode) { return null; }
 
 	public static boolean isJson(Node node) { return hasLabel(node, Entities.Json); }
 	public static boolean isArray(Node node) { return hasLabel(node, Entities.Array); }
@@ -107,22 +116,35 @@ abstract class JsonDomainPlugin extends Plugin {
 	public static boolean isKey(Node node) { return hasLabel(node, Entities.Key); }
 	public static boolean isValue(Node node) { return hasLabel(node, Entities.Value); }
 
-	public static Node newJson(NeoModel graph, String name) { return graph.newNode(Entities.Json, AppMotif.Properties.name.name(), name); }
-	public static Node newJson(NeoModel graph) { return graph.newNode(Entities.Json); }
-	public static Node newArray(NeoModel graph, String name) { return graph.newNode(Entities.Array, AppMotif.Properties.name.name(), name); }
-	public static Node newArray(NeoModel graph) { return graph.newNode(Entities.Array); }
-	public static Node newString(NeoModel graph, String name) { return graph.newNode(Entities.String, AppMotif.Properties.name.name(), name); }
-	public static Node newString(NeoModel graph) { return graph.newNode(Entities.String); }
-	public static Node newNumber(NeoModel graph, String name) { return graph.newNode(Entities.Number, AppMotif.Properties.name.name(), name); }
-	public static Node newNumber(NeoModel graph) { return graph.newNode(Entities.Number); }
-	public static Node newObject(NeoModel graph, String name) { return graph.newNode(Entities.Object, AppMotif.Properties.name.name(), name); }
-	public static Node newObject(NeoModel graph) { return graph.newNode(Entities.Object); }
-	public static Node newPair(NeoModel graph, String name) { return graph.newNode(Entities.Pair, AppMotif.Properties.name.name(), name); }
-	public static Node newPair(NeoModel graph) { return graph.newNode(Entities.Pair); }
-	public static Node newKey(NeoModel graph, String name) { return graph.newNode(Entities.Key, AppMotif.Properties.name.name(), name); }
-	public static Node newKey(NeoModel graph) { return graph.newNode(Entities.Key); }
-	public static Node newValue(NeoModel graph, String name) { return graph.newNode(Entities.Value, AppMotif.Properties.name.name(), name); }
-	public static Node newValue(NeoModel graph) { return graph.newNode(Entities.Value); }
+	protected Node newJson() { return newJson(getGraph()); } 
+	public static Node newJson(NeoModel graph) { return newInstanceNode(graph, Entities.Json.name(), entitiesNodeMap.get(Entities.Json)); }
+
+	protected Node newArray() { return newArray(getGraph()); } 
+	public static Node newArray(NeoModel graph) { return newInstanceNode(graph, Entities.Array.name(), entitiesNodeMap.get(Entities.Array)); }
+
+	protected Node newString() { return newString(getGraph()); } 
+	public static Node newString(NeoModel graph) { return newInstanceNode(graph, Entities.String.name(), entitiesNodeMap.get(Entities.String)); }
+
+	protected Node newNumber() { return newNumber(getGraph()); } 
+	public static Node newNumber(NeoModel graph) { return newInstanceNode(graph, Entities.Number.name(), entitiesNodeMap.get(Entities.Number)); }
+
+	protected Node newObject() { return newObject(getGraph()); } 
+	public static Node newObject(NeoModel graph) { return newInstanceNode(graph, Entities.Object.name(), entitiesNodeMap.get(Entities.Object)); }
+
+	protected Node newPair() { return newPair(getGraph()); } 
+	public static Node newPair(NeoModel graph) { return newInstanceNode(graph, Entities.Pair.name(), entitiesNodeMap.get(Entities.Pair)); }
+
+	protected Node newKey() { return newKey(getGraph()); } 
+	public static Node newKey(NeoModel graph) { return newInstanceNode(graph, Entities.Key.name(), entitiesNodeMap.get(Entities.Key)); }
+
+	protected Node newValue() { return newValue(getGraph()); } 
+	public static Node newValue(NeoModel graph) { return newInstanceNode(graph, Entities.Value.name(), entitiesNodeMap.get(Entities.Value)); }
+
+
+	public static void outgoingJSON(Node src, RelationConsumer consumer) { outgoing(src, Relations.JSON).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingJSON(Node src) { return other(src, singleOutgoing(src, Relations.JSON)); }
+	public static void incomingJSON(Node src, RelationConsumer consumer) { incoming(src, Relations.JSON).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingJSON(Node src) { return other(src, singleIncoming(src, Relations.JSON)); }
 
 	public static void outgoingARRAY(Node src, RelationConsumer consumer) { outgoing(src, Relations.ARRAY).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingARRAY(Node src) { return other(src, singleOutgoing(src, Relations.ARRAY)); }
@@ -160,6 +182,7 @@ abstract class JsonDomainPlugin extends Plugin {
 	public static Node singleIncomingVALUE(Node src) { return other(src, singleIncoming(src, Relations.VALUE)); }
 
 
+	public static Relationship relateJSON(Node src, Node dst) { return relate(src, dst, Relations.JSON); }
 	public static Relationship relateARRAY(Node src, Node dst) { return relate(src, dst, Relations.ARRAY); }
 	public static Relationship relateSTRING(Node src, Node dst) { return relate(src, dst, Relations.STRING); }
 	public static Relationship relateNUMBER(Node src, Node dst) { return relate(src, dst, Relations.NUMBER); }
@@ -167,15 +190,5 @@ abstract class JsonDomainPlugin extends Plugin {
 	public static Relationship relatePAIR(Node src, Node dst) { return relate(src, dst, Relations.PAIR); }
 	public static Relationship relateKEY(Node src, Node dst) { return relate(src, dst, Relations.KEY); }
 	public static Relationship relateVALUE(Node src, Node dst) { return relate(src, dst, Relations.VALUE); }
-
-	// get name as property of a node (node.name)
-	public static String getNameProperty(PropertyContainer node) { return DomainMotif.getName(node); }
-	public static String getNameProperty(NeoNode neoNode) { return DomainMotif.getName(neoNode); }
-	public static void setNameProperty(PropertyContainer node, String name) { DomainMotif.setName(node, name); }
-	public static void setNameProperty(NeoNode neoNode, String name) { DomainMotif.setName(neoNode, name); }
-
-	// get name for Domain-Property (entityNode -> name -> valueNode.name)	
-	public static String getEntityName(Node classNode) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name()); }
-	public static String getEntityName(Node classNode, String defaultValue) { return DomainMotif.getEntityProperty(classNode, AppMotif.Properties.name.name(), defaultValue); }
 
 }

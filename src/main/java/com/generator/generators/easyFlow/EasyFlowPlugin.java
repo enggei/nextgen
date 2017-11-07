@@ -24,7 +24,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static com.generator.generators.easyFlow.EasyFlowDomainPlugin.Relations.*;
-import static com.generator.generators.project.ProjectPlugin.getPackageName;
+import static com.generator.generators.project.ProjectDomainPlugin.getPackageNameProperty;
 import static com.generator.generators.project.ProjectPlugin.getFile;
 import static com.generator.generators.project.ProjectPlugin.incomingRENDERER;
 import static com.generator.util.NeoUtil.*;
@@ -77,7 +77,7 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
             final String name = SwingUtil.showInputDialog("Name", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = newFlow(name);
+            final Node newNode = newFlow(name,null);
 //            flowNode.createRelationshipTo(newNode, DomainPlugin.Relations.INSTANCE);
 
             // set name-property = name
@@ -116,8 +116,8 @@ public class EasyFlowPlugin extends EasyFlowDomainPlugin {
 
    public static void renderEasyFlow(Relationship rendererRelationship, Node node) {
 
-      final String packageName = getPackageName(rendererRelationship);
-      final String name = getName(node);
+      final String packageName = getPackageNameProperty(rendererRelationship);
+      final String name = getNameProperty(node);
       final File targetDir = getFile(other(node, rendererRelationship));
 
       final JavaGenerator javaGenerator = new JavaGenerator(packageName);
