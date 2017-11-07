@@ -29,6 +29,8 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.app.AppEvents.*;
 import static com.generator.util.NeoUtil.*;
@@ -705,6 +707,47 @@ public class NeoNode extends PNode {
                }
             });
 
+            pop.addSeparator();
+            pop.add(new App.TransactionAction("Show roots", workspace.app) {
+               @Override
+               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                  final Node node = getNode();
+
+                  final Set<Node> visited = new LinkedHashSet<>();
+                  final Set<Node> parents = new LinkedHashSet<>();
+                  visitIncoming(node, visited, parents);
+
+                  fireNodesLoaded(parents.toArray(new Node[parents.size()]));
+               }
+
+               private void fireNodesLoaded(Node... nodes) {
+                  final Set<AppEvents.NodeLoadEvent> nodeEvents = new LinkedHashSet<>();
+                  for (Node node : nodes) {
+                     nodeEvents.add(new AppEvents.NodeLoadEvent(node, false));
+                  }
+                  workspace.app.events.firePropertyChange(NODE_LOAD, nodeEvents);
+               }
+
+               private void visitIncoming(Node node, Set<Node> visited, Set<Node> parents) {
+
+                  visited.add(node);
+
+                  final AtomicBoolean hasParents = new AtomicBoolean(false);
+                  incoming(node).forEach(relationship -> {
+                     final Node parent = other(node, relationship);
+                     hasParents.set(true);
+                     if (visited.contains(parent)) return;
+                     visitIncoming(parent, visited, parents);
+                  });
+
+//                  if (!hasParents.get()) {
+                     if (hasLabel(node, AppMotif.Entities._Layout)) return;
+                     parents.add(node);
+//                  }
+               }
+            });
+
             workspace.app.getRootPane().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             pop.show(nodeCanvas, (int) event.getCanvasPosition().getX(), (int) event.getCanvasPosition().getY());
          }
@@ -802,7 +845,7 @@ public class NeoNode extends PNode {
 
                for (Relationship instanceRelation : incoming(node, DomainPlugin.Relations.INSTANCE)) {
                   final Node instanceNode = other(node, instanceRelation);
-                  if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+                  if (StringTemplatePlugin.isSTTemplate(instanceNode)) {
                      return StringTemplatePlugin.renderStatement(node, instanceNode);
 
                   }

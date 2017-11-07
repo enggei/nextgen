@@ -28,9 +28,9 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		System.out.println("CsvFile");
-		final Node node = model.newNode(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
+		System.out.println("Hdr");
+		final Node node = model.newNode(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class CSVNeoVisitor extends CSVBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		System.out.println("Hdr");
-		final Node node = model.newNode(Label.label("Hdr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		System.out.println("CsvFile");
+		final Node node = model.newNode(Label.label("CsvFile"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

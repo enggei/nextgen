@@ -28,6 +28,256 @@ public class Python3NeoVisitor extends Python3BaseVisitor<Node> {
    }
 
 	@Override
+	public Node visitTypedargslist(com.generator.generators.python.parser.Python3Parser.TypedargslistContext arg) {
+		System.out.println("Typedargslist");
+		final Node node = model.newNode(Label.label("Typedargslist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTfpdef(com.generator.generators.python.parser.Python3Parser.TfpdefContext arg) {
+		System.out.println("Tfpdef");
+		final Node node = model.newNode(Label.label("Tfpdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVarargslist(com.generator.generators.python.parser.Python3Parser.VarargslistContext arg) {
+		System.out.println("Varargslist");
+		final Node node = model.newNode(Label.label("Varargslist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVfpdef(com.generator.generators.python.parser.Python3Parser.VfpdefContext arg) {
+		System.out.println("Vfpdef");
+		final Node node = model.newNode(Label.label("Vfpdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStmt(com.generator.generators.python.parser.Python3Parser.StmtContext arg) {
+		System.out.println("Stmt");
+		final Node node = model.newNode(Label.label("Stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSimple_stmt(com.generator.generators.python.parser.Python3Parser.Simple_stmtContext arg) {
+		System.out.println("Simple_stmt");
+		final Node node = model.newNode(Label.label("Simple_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSmall_stmt(com.generator.generators.python.parser.Python3Parser.Small_stmtContext arg) {
+		System.out.println("Small_stmt");
+		final Node node = model.newNode(Label.label("Small_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrint_stmt(com.generator.generators.python.parser.Python3Parser.Print_stmtContext arg) {
+		System.out.println("Print_stmt");
+		final Node node = model.newNode(Label.label("Print_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpr_stmt(com.generator.generators.python.parser.Python3Parser.Expr_stmtContext arg) {
+		System.out.println("Expr_stmt");
+		final Node node = model.newNode(Label.label("Expr_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTestlist_star_expr(com.generator.generators.python.parser.Python3Parser.Testlist_star_exprContext arg) {
+		System.out.println("Testlist_star_expr");
+		final Node node = model.newNode(Label.label("Testlist_star_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAugassign(com.generator.generators.python.parser.Python3Parser.AugassignContext arg) {
+		System.out.println("Augassign");
+		final Node node = model.newNode(Label.label("Augassign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
+		System.out.println("Del_stmt");
+		final Node node = model.newNode(Label.label("Del_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
+		System.out.println("Pass_stmt");
+		final Node node = model.newNode(Label.label("Pass_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
+		System.out.println("Flow_stmt");
+		final Node node = model.newNode(Label.label("Flow_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
+		System.out.println("Break_stmt");
+		final Node node = model.newNode(Label.label("Break_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
+		System.out.println("Continue_stmt");
+		final Node node = model.newNode(Label.label("Continue_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
+		System.out.println("Return_stmt");
+		final Node node = model.newNode(Label.label("Return_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
+		System.out.println("Yield_stmt");
+		final Node node = model.newNode(Label.label("Yield_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
+		System.out.println("Raise_stmt");
+		final Node node = model.newNode(Label.label("Raise_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
+		System.out.println("Import_from");
+		final Node node = model.newNode(Label.label("Import_from"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
+		System.out.println("Import_as_name");
+		final Node node = model.newNode(Label.label("Import_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
+		System.out.println("Dotted_as_name");
+		final Node node = model.newNode(Label.label("Dotted_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
+		System.out.println("Import_as_names");
+		final Node node = model.newNode(Label.label("Import_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
+		System.out.println("Dotted_as_names");
+		final Node node = model.newNode(Label.label("Dotted_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
+		System.out.println("Dotted_name");
+		final Node node = model.newNode(Label.label("Dotted_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
 		System.out.println("Global_stmt");
 		final Node node = model.newNode(Label.label("Global_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -498,9 +748,39 @@ public class Python3NeoVisitor extends Python3BaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
+		System.out.println("Atom");
+		final Node node = model.newNode(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSingle_input(com.generator.generators.python.parser.Python3Parser.Single_inputContext arg) {
 		System.out.println("Single_input");
 		final Node node = model.newNode(Label.label("Single_input"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
+		System.out.println("Import_stmt");
+		final Node node = model.newNode(Label.label("Import_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
+		System.out.println("Import_name");
+		final Node node = model.newNode(Label.label("Import_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -561,286 +841,6 @@ public class Python3NeoVisitor extends Python3BaseVisitor<Node> {
 	public Node visitFuncdef(com.generator.generators.python.parser.Python3Parser.FuncdefContext arg) {
 		System.out.println("Funcdef");
 		final Node node = model.newNode(Label.label("Funcdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypedargslist(com.generator.generators.python.parser.Python3Parser.TypedargslistContext arg) {
-		System.out.println("Typedargslist");
-		final Node node = model.newNode(Label.label("Typedargslist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTfpdef(com.generator.generators.python.parser.Python3Parser.TfpdefContext arg) {
-		System.out.println("Tfpdef");
-		final Node node = model.newNode(Label.label("Tfpdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVarargslist(com.generator.generators.python.parser.Python3Parser.VarargslistContext arg) {
-		System.out.println("Varargslist");
-		final Node node = model.newNode(Label.label("Varargslist"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVfpdef(com.generator.generators.python.parser.Python3Parser.VfpdefContext arg) {
-		System.out.println("Vfpdef");
-		final Node node = model.newNode(Label.label("Vfpdef"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStmt(com.generator.generators.python.parser.Python3Parser.StmtContext arg) {
-		System.out.println("Stmt");
-		final Node node = model.newNode(Label.label("Stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSimple_stmt(com.generator.generators.python.parser.Python3Parser.Simple_stmtContext arg) {
-		System.out.println("Simple_stmt");
-		final Node node = model.newNode(Label.label("Simple_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSmall_stmt(com.generator.generators.python.parser.Python3Parser.Small_stmtContext arg) {
-		System.out.println("Small_stmt");
-		final Node node = model.newNode(Label.label("Small_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrint_stmt(com.generator.generators.python.parser.Python3Parser.Print_stmtContext arg) {
-		System.out.println("Print_stmt");
-		final Node node = model.newNode(Label.label("Print_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr_stmt(com.generator.generators.python.parser.Python3Parser.Expr_stmtContext arg) {
-		System.out.println("Expr_stmt");
-		final Node node = model.newNode(Label.label("Expr_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTestlist_star_expr(com.generator.generators.python.parser.Python3Parser.Testlist_star_exprContext arg) {
-		System.out.println("Testlist_star_expr");
-		final Node node = model.newNode(Label.label("Testlist_star_expr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAugassign(com.generator.generators.python.parser.Python3Parser.AugassignContext arg) {
-		System.out.println("Augassign");
-		final Node node = model.newNode(Label.label("Augassign"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
-		System.out.println("Del_stmt");
-		final Node node = model.newNode(Label.label("Del_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
-		System.out.println("Pass_stmt");
-		final Node node = model.newNode(Label.label("Pass_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
-		System.out.println("Flow_stmt");
-		final Node node = model.newNode(Label.label("Flow_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
-		System.out.println("Break_stmt");
-		final Node node = model.newNode(Label.label("Break_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
-		System.out.println("Continue_stmt");
-		final Node node = model.newNode(Label.label("Continue_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
-		System.out.println("Return_stmt");
-		final Node node = model.newNode(Label.label("Return_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
-		System.out.println("Yield_stmt");
-		final Node node = model.newNode(Label.label("Yield_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
-		System.out.println("Raise_stmt");
-		final Node node = model.newNode(Label.label("Raise_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
-		System.out.println("Import_stmt");
-		final Node node = model.newNode(Label.label("Import_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
-		System.out.println("Import_name");
-		final Node node = model.newNode(Label.label("Import_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
-		System.out.println("Import_from");
-		final Node node = model.newNode(Label.label("Import_from"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
-		System.out.println("Import_as_name");
-		final Node node = model.newNode(Label.label("Import_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
-		System.out.println("Dotted_as_name");
-		final Node node = model.newNode(Label.label("Dotted_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
-		System.out.println("Import_as_names");
-		final Node node = model.newNode(Label.label("Import_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
-		System.out.println("Dotted_as_names");
-		final Node node = model.newNode(Label.label("Dotted_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
-		System.out.println("Dotted_name");
-		final Node node = model.newNode(Label.label("Dotted_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
-		System.out.println("Atom");
-		final Node node = model.newNode(Label.label("Atom"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

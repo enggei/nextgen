@@ -82,23 +82,6 @@ public class CypherNodeListener extends CypherBaseListener {
       return !inSet.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -131,6 +114,23 @@ public class CypherNodeListener extends CypherBaseListener {
 
 	public boolean inStatement() {
       return !inStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
+		onEnter(new Node("Literal", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.cypher.parser.CypherParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inCypher = new java.util.Stack<>();

@@ -48,6 +48,57 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
+
+	@Override
+	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
+		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inOption.push(true);
+	}
+
+	public void exitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
+		onExit();
+		this.inOption.pop();
+	}
+
+	public boolean inOption() {
+      return !inOption.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
+
+	@Override
+	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPackageDecl.push(true);
+	}
+
+	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		onExit();
+		this.inPackageDecl.pop();
+	}
+
+	public boolean inPackageDecl() {
+      return !inPackageDecl.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inPackageName = new java.util.Stack<>();
 
 	@Override
@@ -216,57 +267,6 @@ public class ProtobufNodeListener extends ProtobufBaseListener {
 
 	public boolean inExtensionMax() {
       return !inExtensionMax.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPackageDecl = new java.util.Stack<>();
-
-	@Override
-	public void enterPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onEnter(new Node("PackageDecl", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPackageDecl.push(true);
-	}
-
-	public void exitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		onExit();
-		this.inPackageDecl.pop();
-	}
-
-	public boolean inPackageDecl() {
-      return !inPackageDecl.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inOption = new java.util.Stack<>();
-
-	@Override
-	public void enterOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
-		onEnter(new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inOption.push(true);
-	}
-
-	public void exitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
-		onExit();
-		this.inOption.pop();
-	}
-
-	public boolean inOption() {
-      return !inOption.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPropertyName = new java.util.Stack<>();

@@ -38,19 +38,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		System.out.println("Number");
-		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		System.out.println("Expression");
-		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		System.out.println("BadCharset");
+		final Node node = model.newNode(Label.label("BadCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -68,9 +58,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		System.out.println("GoodCharset");
-		final Node node = model.newNode(Label.label("GoodCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
+		System.out.println("TypeSelector");
+		final Node node = model.newNode(Label.label("TypeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -78,9 +68,19 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		System.out.println("BadCharset");
-		final Node node = model.newNode(Label.label("BadCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		System.out.println("ElementName");
+		final Node node = model.newNode(Label.label("ElementName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		System.out.println("Expression");
+		final Node node = model.newNode(Label.label("Expression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -161,6 +161,26 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	public Node visitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
 		System.out.println("MediaQuery");
 		final Node node = model.newNode(Label.label("MediaQuery"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		System.out.println("Number");
+		final Node node = model.newNode(Label.label("Number"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		System.out.println("GoodCharset");
+		final Node node = model.newNode(Label.label("GoodCharset"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -258,29 +278,9 @@ public class css3NeoVisitor extends css3BaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		System.out.println("TypeSelector");
-		final Node node = model.newNode(Label.label("TypeSelector"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
 		System.out.println("TypeNamespacePrefix");
 		final Node node = model.newNode(Label.label("TypeNamespacePrefix"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		System.out.println("ElementName");
-		final Node node = model.newNode(Label.label("ElementName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

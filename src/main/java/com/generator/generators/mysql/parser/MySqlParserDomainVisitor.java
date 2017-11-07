@@ -7,8 +7,7 @@ public abstract class MySqlParserDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "NotExpression")) visitNotExpression(node);
-		else if(hasLabel(node, "Root")) visitRoot(node);
+		if(hasLabel(node, "Root")) visitRoot(node);
 		else if(hasLabel(node, "Sql_statements")) visitSql_statements(node);
 		else if(hasLabel(node, "Sql_statement")) visitSql_statement(node);
 		else if(hasLabel(node, "Empty_statement")) visitEmpty_statement(node);
@@ -472,13 +471,8 @@ public abstract class MySqlParserDomainVisitor {
 		else if(hasLabel(node, "Data_type_base")) visitData_type_base(node);
 		else if(hasLabel(node, "Keywords_can_be_id")) visitKeywords_can_be_id(node);
 		else if(hasLabel(node, "Function_name_base")) visitFunction_name_base(node);
+		else if(hasLabel(node, "NotExpression")) visitNotExpression(node);
    }
-
-	public void visitNotExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitRoot(Node node) {
 		if (visited.contains(node)) return;
@@ -3259,6 +3253,12 @@ public abstract class MySqlParserDomainVisitor {
 	}
 
 	public void visitFunction_name_base(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNotExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

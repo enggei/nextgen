@@ -48,23 +48,6 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNotExpression.push(true);
-	}
-
-	public void exitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		onExit();
-		this.inNotExpression.pop();
-	}
-
-	public boolean inNotExpression() {
-      return !inNotExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inRoot = new java.util.Stack<>();
 
 	@Override
@@ -7951,6 +7934,23 @@ public class MySqlParserNodeListener extends MySqlParserBaseListener {
 
 	public boolean inFunction_name_base() {
       return !inFunction_name_base.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		onEnter(new Node("NotExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNotExpression.push(true);
+	}
+
+	public void exitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		onExit();
+		this.inNotExpression.pop();
+	}
+
+	public boolean inNotExpression() {
+      return !inNotExpression.isEmpty(); 
    }
 
 }

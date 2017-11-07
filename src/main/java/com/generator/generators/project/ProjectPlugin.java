@@ -313,7 +313,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
          final Node entityNode = other(selectedNode.getNode(), selectedNodeInstanceRelation);
 
-         if (hasLabel(entityNode, StringTemplatePlugin.Entities.STTemplate)) {
+         if (StringTemplatePlugin.isSTTemplate(entityNode)) {
 
             if (isRelated(neoNode.getNode(), selectedNode.getNode(), Relations.RENDERER))
                return;
@@ -516,7 +516,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
          } else {
 
             final Node templateNode = other(nodeToRender, singleIncoming(nodeToRender, DomainPlugin.Relations.INSTANCE));
-            if (hasLabel(templateNode, StringTemplatePlugin.Entities.STTemplate))
+            if (StringTemplatePlugin.isSTTemplate(templateNode))
                renderToFile(rendererRelationship, nodeToRender, StringTemplatePlugin.renderStatement(nodeToRender, templateNode), node);
 
             // visitors:

@@ -28,176 +28,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitRefinement(com.generator.generators.scala.parser.ScalaParser.RefinementContext arg) {
-		System.out.println("Refinement");
-		final Node node = model.newNode(Label.label("Refinement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRefineStat(com.generator.generators.scala.parser.ScalaParser.RefineStatContext arg) {
-		System.out.println("RefineStat");
-		final Node node = model.newNode(Label.label("RefineStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypePat(com.generator.generators.scala.parser.ScalaParser.TypePatContext arg) {
-		System.out.println("TypePat");
-		final Node node = model.newNode(Label.label("TypePat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAscription(com.generator.generators.scala.parser.ScalaParser.AscriptionContext arg) {
-		System.out.println("Ascription");
-		final Node node = model.newNode(Label.label("Ascription"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr1(com.generator.generators.scala.parser.ScalaParser.Expr1Context arg) {
-		System.out.println("Expr1");
-		final Node node = model.newNode(Label.label("Expr1"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPostfixExpr(com.generator.generators.scala.parser.ScalaParser.PostfixExprContext arg) {
-		System.out.println("PostfixExpr");
-		final Node node = model.newNode(Label.label("PostfixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitInfixExpr(com.generator.generators.scala.parser.ScalaParser.InfixExprContext arg) {
-		System.out.println("InfixExpr");
-		final Node node = model.newNode(Label.label("InfixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrefixExpr(com.generator.generators.scala.parser.ScalaParser.PrefixExprContext arg) {
-		System.out.println("PrefixExpr");
-		final Node node = model.newNode(Label.label("PrefixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSimpleExpr(com.generator.generators.scala.parser.ScalaParser.SimpleExprContext arg) {
-		System.out.println("SimpleExpr");
-		final Node node = model.newNode(Label.label("SimpleExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSimpleExpr1(com.generator.generators.scala.parser.ScalaParser.SimpleExpr1Context arg) {
-		System.out.println("SimpleExpr1");
-		final Node node = model.newNode(Label.label("SimpleExpr1"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
-		System.out.println("SimpleExpr2");
-		final Node node = model.newNode(Label.label("SimpleExpr2"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
-		System.out.println("Exprs");
-		final Node node = model.newNode(Label.label("Exprs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
-		System.out.println("ArgumentExprs");
-		final Node node = model.newNode(Label.label("ArgumentExprs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
-		System.out.println("BlockExpr");
-		final Node node = model.newNode(Label.label("BlockExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
-		System.out.println("BlockStat");
-		final Node node = model.newNode(Label.label("BlockStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
-		System.out.println("ResultExpr");
-		final Node node = model.newNode(Label.label("ResultExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
-		System.out.println("Enumerators");
-		final Node node = model.newNode(Label.label("Enumerators"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitGenerator(com.generator.generators.scala.parser.ScalaParser.GeneratorContext arg) {
 		System.out.println("Generator");
 		final Node node = model.newNode(Label.label("Generator"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -271,26 +101,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitTypeParamClause(com.generator.generators.scala.parser.ScalaParser.TypeParamClauseContext arg) {
 		System.out.println("TypeParamClause");
 		final Node node = model.newNode(Label.label("TypeParamClause"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTraitTemplate(com.generator.generators.scala.parser.ScalaParser.TraitTemplateContext arg) {
-		System.out.println("TraitTemplate");
-		final Node node = model.newNode(Label.label("TraitTemplate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitConstr(com.generator.generators.scala.parser.ScalaParser.ConstrContext arg) {
-		System.out.println("Constr");
-		final Node node = model.newNode(Label.label("Constr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -738,6 +548,16 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitTraitTemplate(com.generator.generators.scala.parser.ScalaParser.TraitTemplateContext arg) {
+		System.out.println("TraitTemplate");
+		final Node node = model.newNode(Label.label("TraitTemplate"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitClassParents(com.generator.generators.scala.parser.ScalaParser.ClassParentsContext arg) {
 		System.out.println("ClassParents");
 		final Node node = model.newNode(Label.label("ClassParents"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -751,6 +571,16 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitTraitParents(com.generator.generators.scala.parser.ScalaParser.TraitParentsContext arg) {
 		System.out.println("TraitParents");
 		final Node node = model.newNode(Label.label("TraitParents"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitConstr(com.generator.generators.scala.parser.ScalaParser.ConstrContext arg) {
+		System.out.println("Constr");
+		final Node node = model.newNode(Label.label("Constr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -818,9 +648,9 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
-		System.out.println("QualId");
-		final Node node = model.newNode(Label.label("QualId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitTopStat(com.generator.generators.scala.parser.ScalaParser.TopStatContext arg) {
+		System.out.println("TopStat");
+		final Node node = model.newNode(Label.label("TopStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -828,9 +658,9 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitIds(com.generator.generators.scala.parser.ScalaParser.IdsContext arg) {
-		System.out.println("Ids");
-		final Node node = model.newNode(Label.label("Ids"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitPackaging(com.generator.generators.scala.parser.ScalaParser.PackagingContext arg) {
+		System.out.println("Packaging");
+		final Node node = model.newNode(Label.label("Packaging"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -838,29 +668,9 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
-		System.out.println("StableId");
-		final Node node = model.newNode(Label.label("StableId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitClassQualifier(com.generator.generators.scala.parser.ScalaParser.ClassQualifierContext arg) {
-		System.out.println("ClassQualifier");
-		final Node node = model.newNode(Label.label("ClassQualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
-		System.out.println("FunctionArgTypes");
-		final Node node = model.newNode(Label.label("FunctionArgTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitPackageObject(com.generator.generators.scala.parser.ScalaParser.PackageObjectContext arg) {
+		System.out.println("PackageObject");
+		final Node node = model.newNode(Label.label("PackageObject"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -948,6 +758,226 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitRefinement(com.generator.generators.scala.parser.ScalaParser.RefinementContext arg) {
+		System.out.println("Refinement");
+		final Node node = model.newNode(Label.label("Refinement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRefineStat(com.generator.generators.scala.parser.ScalaParser.RefineStatContext arg) {
+		System.out.println("RefineStat");
+		final Node node = model.newNode(Label.label("RefineStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTypePat(com.generator.generators.scala.parser.ScalaParser.TypePatContext arg) {
+		System.out.println("TypePat");
+		final Node node = model.newNode(Label.label("TypePat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAscription(com.generator.generators.scala.parser.ScalaParser.AscriptionContext arg) {
+		System.out.println("Ascription");
+		final Node node = model.newNode(Label.label("Ascription"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpr1(com.generator.generators.scala.parser.ScalaParser.Expr1Context arg) {
+		System.out.println("Expr1");
+		final Node node = model.newNode(Label.label("Expr1"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPostfixExpr(com.generator.generators.scala.parser.ScalaParser.PostfixExprContext arg) {
+		System.out.println("PostfixExpr");
+		final Node node = model.newNode(Label.label("PostfixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitInfixExpr(com.generator.generators.scala.parser.ScalaParser.InfixExprContext arg) {
+		System.out.println("InfixExpr");
+		final Node node = model.newNode(Label.label("InfixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrefixExpr(com.generator.generators.scala.parser.ScalaParser.PrefixExprContext arg) {
+		System.out.println("PrefixExpr");
+		final Node node = model.newNode(Label.label("PrefixExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSimpleExpr(com.generator.generators.scala.parser.ScalaParser.SimpleExprContext arg) {
+		System.out.println("SimpleExpr");
+		final Node node = model.newNode(Label.label("SimpleExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSimpleExpr1(com.generator.generators.scala.parser.ScalaParser.SimpleExpr1Context arg) {
+		System.out.println("SimpleExpr1");
+		final Node node = model.newNode(Label.label("SimpleExpr1"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSimpleExpr2(com.generator.generators.scala.parser.ScalaParser.SimpleExpr2Context arg) {
+		System.out.println("SimpleExpr2");
+		final Node node = model.newNode(Label.label("SimpleExpr2"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExprs(com.generator.generators.scala.parser.ScalaParser.ExprsContext arg) {
+		System.out.println("Exprs");
+		final Node node = model.newNode(Label.label("Exprs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitArgumentExprs(com.generator.generators.scala.parser.ScalaParser.ArgumentExprsContext arg) {
+		System.out.println("ArgumentExprs");
+		final Node node = model.newNode(Label.label("ArgumentExprs"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBlockExpr(com.generator.generators.scala.parser.ScalaParser.BlockExprContext arg) {
+		System.out.println("BlockExpr");
+		final Node node = model.newNode(Label.label("BlockExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBlockStat(com.generator.generators.scala.parser.ScalaParser.BlockStatContext arg) {
+		System.out.println("BlockStat");
+		final Node node = model.newNode(Label.label("BlockStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitResultExpr(com.generator.generators.scala.parser.ScalaParser.ResultExprContext arg) {
+		System.out.println("ResultExpr");
+		final Node node = model.newNode(Label.label("ResultExpr"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitEnumerators(com.generator.generators.scala.parser.ScalaParser.EnumeratorsContext arg) {
+		System.out.println("Enumerators");
+		final Node node = model.newNode(Label.label("Enumerators"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitQualId(com.generator.generators.scala.parser.ScalaParser.QualIdContext arg) {
+		System.out.println("QualId");
+		final Node node = model.newNode(Label.label("QualId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIds(com.generator.generators.scala.parser.ScalaParser.IdsContext arg) {
+		System.out.println("Ids");
+		final Node node = model.newNode(Label.label("Ids"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStableId(com.generator.generators.scala.parser.ScalaParser.StableIdContext arg) {
+		System.out.println("StableId");
+		final Node node = model.newNode(Label.label("StableId"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitClassQualifier(com.generator.generators.scala.parser.ScalaParser.ClassQualifierContext arg) {
+		System.out.println("ClassQualifier");
+		final Node node = model.newNode(Label.label("ClassQualifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFunctionArgTypes(com.generator.generators.scala.parser.ScalaParser.FunctionArgTypesContext arg) {
+		System.out.println("FunctionArgTypes");
+		final Node node = model.newNode(Label.label("FunctionArgTypes"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitBlock(com.generator.generators.scala.parser.ScalaParser.BlockContext arg) {
 		System.out.println("Block");
 		final Node node = model.newNode(Label.label("Block"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -961,16 +991,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitLiteral(com.generator.generators.scala.parser.ScalaParser.LiteralContext arg) {
 		System.out.println("Literal");
 		final Node node = model.newNode(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
-		System.out.println("Modifier");
-		final Node node = model.newNode(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -1028,6 +1048,16 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitModifier(com.generator.generators.scala.parser.ScalaParser.ModifierContext arg) {
+		System.out.println("Modifier");
+		final Node node = model.newNode(Label.label("Modifier"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitCompilationUnit(com.generator.generators.scala.parser.ScalaParser.CompilationUnitContext arg) {
 		System.out.println("CompilationUnit");
 		final Node node = model.newNode(Label.label("CompilationUnit"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -1041,36 +1071,6 @@ public class ScalaNeoVisitor extends ScalaBaseVisitor<Node> {
 	public Node visitAnnotation(com.generator.generators.scala.parser.ScalaParser.AnnotationContext arg) {
 		System.out.println("Annotation");
 		final Node node = model.newNode(Label.label("Annotation"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTopStat(com.generator.generators.scala.parser.ScalaParser.TopStatContext arg) {
-		System.out.println("TopStat");
-		final Node node = model.newNode(Label.label("TopStat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackaging(com.generator.generators.scala.parser.ScalaParser.PackagingContext arg) {
-		System.out.println("Packaging");
-		final Node node = model.newNode(Label.label("Packaging"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackageObject(com.generator.generators.scala.parser.ScalaParser.PackageObjectContext arg) {
-		System.out.println("PackageObject");
-		final Node node = model.newNode(Label.label("PackageObject"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

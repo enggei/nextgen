@@ -58,17 +58,8 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		final Node node = new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
-		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
+		final Node node = new Node("BadCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -85,8 +76,8 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
-		final Node node = new Node("GoodCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
+		final Node node = new Node("TypeSelector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -94,8 +85,17 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitBadCharset(com.generator.generators.css.parser.css3Parser.BadCharsetContext arg) {
-		final Node node = new Node("BadCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
+		final Node node = new Node("ElementName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpression(com.generator.generators.css.parser.css3Parser.ExpressionContext arg) {
+		final Node node = new Node("Expression", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -168,6 +168,24 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	@Override
 	public Node visitMediaQuery(com.generator.generators.css.parser.css3Parser.MediaQueryContext arg) {
 		final Node node = new Node("MediaQuery", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		final Node node = new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitGoodCharset(com.generator.generators.css.parser.css3Parser.GoodCharsetContext arg) {
+		final Node node = new Node("GoodCharset", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -256,26 +274,8 @@ public class css3NodeVisitor extends css3BaseVisitor<css3NodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitTypeSelector(com.generator.generators.css.parser.css3Parser.TypeSelectorContext arg) {
-		final Node node = new Node("TypeSelector", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitTypeNamespacePrefix(com.generator.generators.css.parser.css3Parser.TypeNamespacePrefixContext arg) {
 		final Node node = new Node("TypeNamespacePrefix", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitElementName(com.generator.generators.css.parser.css3Parser.ElementNameContext arg) {
-		final Node node = new Node("ElementName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

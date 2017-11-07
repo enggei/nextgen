@@ -8,6 +8,7 @@ public abstract class urlDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "String")) visitString(node);
+		else if(hasLabel(node, "Query")) visitQuery(node);
 		else if(hasLabel(node, "Url")) visitUrl(node);
 		else if(hasLabel(node, "Uri")) visitUri(node);
 		else if(hasLabel(node, "Scheme")) visitScheme(node);
@@ -22,10 +23,15 @@ public abstract class urlDomainVisitor {
 		else if(hasLabel(node, "Frag")) visitFrag(node);
 		else if(hasLabel(node, "Search")) visitSearch(node);
 		else if(hasLabel(node, "Searchparameter")) visitSearchparameter(node);
-		else if(hasLabel(node, "Query")) visitQuery(node);
    }
 
 	public void visitString(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -110,12 +116,6 @@ public abstract class urlDomainVisitor {
 	}
 
 	public void visitSearchparameter(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitQuery(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

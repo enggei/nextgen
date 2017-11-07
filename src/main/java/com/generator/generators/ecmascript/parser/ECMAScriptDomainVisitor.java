@@ -8,13 +8,14 @@ public abstract class ECMAScriptDomainVisitor {
 
    public void visit(Node node) {
 		if(hasLabel(node, "Block")) visitBlock(node);
+		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Keyword")) visitKeyword(node);
-		else if(hasLabel(node, "Statement")) visitStatement(node);
 		else if(hasLabel(node, "NotExpression")) visitNotExpression(node);
 		else if(hasLabel(node, "ParenthesizedExpression")) visitParenthesizedExpression(node);
 		else if(hasLabel(node, "ReservedWord")) visitReservedWord(node);
 		else if(hasLabel(node, "DoStatement")) visitDoStatement(node);
+		else if(hasLabel(node, "WhileStatement")) visitWhileStatement(node);
 		else if(hasLabel(node, "ForStatement")) visitForStatement(node);
 		else if(hasLabel(node, "ForVarStatement")) visitForVarStatement(node);
 		else if(hasLabel(node, "ForInStatement")) visitForInStatement(node);
@@ -104,10 +105,15 @@ public abstract class ECMAScriptDomainVisitor {
 		else if(hasLabel(node, "EmptyStatement")) visitEmptyStatement(node);
 		else if(hasLabel(node, "ExpressionStatement")) visitExpressionStatement(node);
 		else if(hasLabel(node, "IfStatement")) visitIfStatement(node);
-		else if(hasLabel(node, "WhileStatement")) visitWhileStatement(node);
    }
 
 	public void visitBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -120,12 +126,6 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitKeyword(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -150,6 +150,12 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitDoStatement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitWhileStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -684,12 +690,6 @@ public abstract class ECMAScriptDomainVisitor {
 	}
 
 	public void visitIfStatement(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitWhileStatement(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

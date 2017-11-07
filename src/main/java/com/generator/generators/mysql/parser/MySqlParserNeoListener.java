@@ -39,24 +39,6 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNotExpression.push(true);
-	}
-
-	public void exitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
-		onExit();
-		this.inNotExpression.pop();
-	}
-
-	public boolean inNotExpression() {
-      return !inNotExpression.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inRoot = new java.util.Stack<>();
 
 	@Override
@@ -8407,6 +8389,24 @@ public class MySqlParserNeoListener extends MySqlParserBaseListener {
 
 	public boolean inFunction_name_base() {
       return !inFunction_name_base.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		final Node node = model.findOrCreate(Label.label("NotExpression"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNotExpression.push(true);
+	}
+
+	public void exitNotExpression(com.generator.generators.mysql.parser.MySqlParser.NotExpressionContext arg) {
+		onExit();
+		this.inNotExpression.pop();
+	}
+
+	public boolean inNotExpression() {
+      return !inNotExpression.isEmpty(); 
    }
 
 }

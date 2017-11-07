@@ -7,7 +7,13 @@ public abstract class ClojureDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Set")) visitSet(node);
+		if(hasLabel(node, "File")) visitFile(node);
+		else if(hasLabel(node, "Form")) visitForm(node);
+		else if(hasLabel(node, "Forms")) visitForms(node);
+		else if(hasLabel(node, "List")) visitList(node);
+		else if(hasLabel(node, "Vector")) visitVector(node);
+		else if(hasLabel(node, "Map")) visitMap(node);
+		else if(hasLabel(node, "Set")) visitSet(node);
 		else if(hasLabel(node, "Reader_macro")) visitReader_macro(node);
 		else if(hasLabel(node, "Quote")) visitQuote(node);
 		else if(hasLabel(node, "Backtick")) visitBacktick(node);
@@ -28,12 +34,6 @@ public abstract class ClojureDomainVisitor {
 		else if(hasLabel(node, "Hex")) visitHex(node);
 		else if(hasLabel(node, "Bin")) visitBin(node);
 		else if(hasLabel(node, "Bign")) visitBign(node);
-		else if(hasLabel(node, "File")) visitFile(node);
-		else if(hasLabel(node, "Form")) visitForm(node);
-		else if(hasLabel(node, "Forms")) visitForms(node);
-		else if(hasLabel(node, "List")) visitList(node);
-		else if(hasLabel(node, "Vector")) visitVector(node);
-		else if(hasLabel(node, "Map")) visitMap(node);
 		else if(hasLabel(node, "Number")) visitNumber(node);
 		else if(hasLabel(node, "Character")) visitCharacter(node);
 		else if(hasLabel(node, "Named_char")) visitNamed_char(node);
@@ -48,6 +48,42 @@ public abstract class ClojureDomainVisitor {
 		else if(hasLabel(node, "Ns_symbol")) visitNs_symbol(node);
 		else if(hasLabel(node, "Param_name")) visitParam_name(node);
    }
+
+	public void visitFile(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitForm(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitForms(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitList(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitVector(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMap(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitSet(Node node) {
 		if (visited.contains(node)) return;
@@ -170,42 +206,6 @@ public abstract class ClojureDomainVisitor {
 	}
 
 	public void visitBign(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFile(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitForm(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitForms(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitList(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVector(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMap(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

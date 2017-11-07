@@ -78,9 +78,9 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
-		System.out.println("Stat");
-		final Node node = model.newNode(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
+		System.out.println("OperatorAddSub");
+		final Node node = model.newNode(Label.label("OperatorAddSub"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -98,6 +98,16 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
+	public Node visitStat(com.generator.generators.lua.parser.LuaParser.StatContext arg) {
+		System.out.println("Stat");
+		final Node node = model.newNode(Label.label("Stat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitRetstat(com.generator.generators.lua.parser.LuaParser.RetstatContext arg) {
 		System.out.println("Retstat");
 		final Node node = model.newNode(Label.label("Retstat"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
@@ -108,9 +118,9 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
-		System.out.println("OperatorBitwise");
-		final Node node = model.newNode(Label.label("OperatorBitwise"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
+		System.out.println("Functioncall");
+		final Node node = model.newNode(Label.label("Functioncall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -181,16 +191,6 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	public Node visitPrefixexp(com.generator.generators.lua.parser.LuaParser.PrefixexpContext arg) {
 		System.out.println("Prefixexp");
 		final Node node = model.newNode(Label.label("Prefixexp"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFunctioncall(com.generator.generators.lua.parser.LuaParser.FunctioncallContext arg) {
-		System.out.println("Functioncall");
-		final Node node = model.newNode(Label.label("Functioncall"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -338,9 +338,9 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitOperatorAddSub(com.generator.generators.lua.parser.LuaParser.OperatorAddSubContext arg) {
-		System.out.println("OperatorAddSub");
-		final Node node = model.newNode(Label.label("OperatorAddSub"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
+		System.out.println("OperatorMulDivMod");
+		final Node node = model.newNode(Label.label("OperatorMulDivMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -348,9 +348,9 @@ public class LuaNeoVisitor extends LuaBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitOperatorMulDivMod(com.generator.generators.lua.parser.LuaParser.OperatorMulDivModContext arg) {
-		System.out.println("OperatorMulDivMod");
-		final Node node = model.newNode(Label.label("OperatorMulDivMod"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitOperatorBitwise(com.generator.generators.lua.parser.LuaParser.OperatorBitwiseContext arg) {
+		System.out.println("OperatorBitwise");
+		final Node node = model.newNode(Label.label("OperatorBitwise"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

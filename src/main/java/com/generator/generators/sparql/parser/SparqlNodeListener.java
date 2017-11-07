@@ -48,23 +48,6 @@ public class SparqlNodeListener extends SparqlBaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
-
-	@Override
-	public void enterString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
-		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inString.push(true);
-	}
-
-	public void exitString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
-		onExit();
-		this.inString.pop();
-	}
-
-	public boolean inString() {
-      return !inString.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -80,6 +63,23 @@ public class SparqlNodeListener extends SparqlBaseListener {
 
 	public boolean inExpression() {
       return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inString = new java.util.Stack<>();
+
+	@Override
+	public void enterString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
+		onEnter(new Node("String", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inString.push(true);
+	}
+
+	public void exitString(com.generator.generators.sparql.parser.SparqlParser.StringContext arg) {
+		onExit();
+		this.inString.pop();
+	}
+
+	public boolean inString() {
+      return !inString.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inVar = new java.util.Stack<>();
@@ -131,74 +131,6 @@ public class SparqlNodeListener extends SparqlBaseListener {
 
 	public boolean inBooleanLiteral() {
       return !inBooleanLiteral.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMultiplicativeExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
-		onEnter(new Node("MultiplicativeExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inMultiplicativeExpression.push(true);
-	}
-
-	public void exitMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
-		onExit();
-		this.inMultiplicativeExpression.pop();
-	}
-
-	public boolean inMultiplicativeExpression() {
-      return !inMultiplicativeExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAdditiveExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
-		onEnter(new Node("AdditiveExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inAdditiveExpression.push(true);
-	}
-
-	public void exitAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
-		onExit();
-		this.inAdditiveExpression.pop();
-	}
-
-	public boolean inAdditiveExpression() {
-      return !inAdditiveExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRelationalExpression = new java.util.Stack<>();
-
-	@Override
-	public void enterRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
-		onEnter(new Node("RelationalExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inRelationalExpression.push(true);
-	}
-
-	public void exitRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
-		onExit();
-		this.inRelationalExpression.pop();
-	}
-
-	public boolean inRelationalExpression() {
-      return !inRelationalExpression.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNumericLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
-		onEnter(new Node("NumericLiteral", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNumericLiteral.push(true);
-	}
-
-	public void exitNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
-		onExit();
-		this.inNumericLiteral.pop();
-	}
-
-	public boolean inNumericLiteral() {
-      return !inNumericLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inPrologue = new java.util.Stack<>();
@@ -913,6 +845,74 @@ public class SparqlNodeListener extends SparqlBaseListener {
 
 	public boolean inVarOrIRIref() {
       return !inVarOrIRIref.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMultiplicativeExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
+		onEnter(new Node("MultiplicativeExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inMultiplicativeExpression.push(true);
+	}
+
+	public void exitMultiplicativeExpression(com.generator.generators.sparql.parser.SparqlParser.MultiplicativeExpressionContext arg) {
+		onExit();
+		this.inMultiplicativeExpression.pop();
+	}
+
+	public boolean inMultiplicativeExpression() {
+      return !inMultiplicativeExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAdditiveExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
+		onEnter(new Node("AdditiveExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inAdditiveExpression.push(true);
+	}
+
+	public void exitAdditiveExpression(com.generator.generators.sparql.parser.SparqlParser.AdditiveExpressionContext arg) {
+		onExit();
+		this.inAdditiveExpression.pop();
+	}
+
+	public boolean inAdditiveExpression() {
+      return !inAdditiveExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRelationalExpression = new java.util.Stack<>();
+
+	@Override
+	public void enterRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
+		onEnter(new Node("RelationalExpression", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inRelationalExpression.push(true);
+	}
+
+	public void exitRelationalExpression(com.generator.generators.sparql.parser.SparqlParser.RelationalExpressionContext arg) {
+		onExit();
+		this.inRelationalExpression.pop();
+	}
+
+	public boolean inRelationalExpression() {
+      return !inRelationalExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumericLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
+		onEnter(new Node("NumericLiteral", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNumericLiteral.push(true);
+	}
+
+	public void exitNumericLiteral(com.generator.generators.sparql.parser.SparqlParser.NumericLiteralContext arg) {
+		onExit();
+		this.inNumericLiteral.pop();
+	}
+
+	public boolean inNumericLiteral() {
+      return !inNumericLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inGraphTerm = new java.util.Stack<>();

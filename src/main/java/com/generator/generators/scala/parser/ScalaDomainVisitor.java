@@ -7,7 +7,57 @@ public abstract class ScalaDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "QualId")) visitQualId(node);
+		if(hasLabel(node, "PatVarDef")) visitPatVarDef(node);
+		else if(hasLabel(node, "Def")) visitDef(node);
+		else if(hasLabel(node, "PatDef")) visitPatDef(node);
+		else if(hasLabel(node, "VarDef")) visitVarDef(node);
+		else if(hasLabel(node, "FunDef")) visitFunDef(node);
+		else if(hasLabel(node, "TypeDef")) visitTypeDef(node);
+		else if(hasLabel(node, "TmplDef")) visitTmplDef(node);
+		else if(hasLabel(node, "ClassDef")) visitClassDef(node);
+		else if(hasLabel(node, "TraitDef")) visitTraitDef(node);
+		else if(hasLabel(node, "ObjectDef")) visitObjectDef(node);
+		else if(hasLabel(node, "ClassTemplateOpt")) visitClassTemplateOpt(node);
+		else if(hasLabel(node, "TraitTemplateOpt")) visitTraitTemplateOpt(node);
+		else if(hasLabel(node, "ClassTemplate")) visitClassTemplate(node);
+		else if(hasLabel(node, "TraitTemplate")) visitTraitTemplate(node);
+		else if(hasLabel(node, "ClassParents")) visitClassParents(node);
+		else if(hasLabel(node, "TraitParents")) visitTraitParents(node);
+		else if(hasLabel(node, "Constr")) visitConstr(node);
+		else if(hasLabel(node, "EarlyDefs")) visitEarlyDefs(node);
+		else if(hasLabel(node, "EarlyDef")) visitEarlyDef(node);
+		else if(hasLabel(node, "ConstrExpr")) visitConstrExpr(node);
+		else if(hasLabel(node, "ConstrBlock")) visitConstrBlock(node);
+		else if(hasLabel(node, "SelfInvocation")) visitSelfInvocation(node);
+		else if(hasLabel(node, "TopStatSeq")) visitTopStatSeq(node);
+		else if(hasLabel(node, "TopStat")) visitTopStat(node);
+		else if(hasLabel(node, "Packaging")) visitPackaging(node);
+		else if(hasLabel(node, "PackageObject")) visitPackageObject(node);
+		else if(hasLabel(node, "ParamType")) visitParamType(node);
+		else if(hasLabel(node, "ClassParamClauses")) visitClassParamClauses(node);
+		else if(hasLabel(node, "ClassParamClause")) visitClassParamClause(node);
+		else if(hasLabel(node, "ClassParams")) visitClassParams(node);
+		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
+		else if(hasLabel(node, "Bindings")) visitBindings(node);
+		else if(hasLabel(node, "Binding")) visitBinding(node);
+		else if(hasLabel(node, "LocalModifier")) visitLocalModifier(node);
+		else if(hasLabel(node, "AccessModifier")) visitAccessModifier(node);
+		else if(hasLabel(node, "AccessQualifier")) visitAccessQualifier(node);
+		else if(hasLabel(node, "ConstrAnnotation")) visitConstrAnnotation(node);
+		else if(hasLabel(node, "TemplateBody")) visitTemplateBody(node);
+		else if(hasLabel(node, "TemplateStat")) visitTemplateStat(node);
+		else if(hasLabel(node, "SelfType")) visitSelfType(node);
+		else if(hasLabel(node, "Import_")) visitImport_(node);
+		else if(hasLabel(node, "ImportExpr")) visitImportExpr(node);
+		else if(hasLabel(node, "ImportSelectors")) visitImportSelectors(node);
+		else if(hasLabel(node, "ImportSelector")) visitImportSelector(node);
+		else if(hasLabel(node, "Dcl")) visitDcl(node);
+		else if(hasLabel(node, "ValDcl")) visitValDcl(node);
+		else if(hasLabel(node, "VarDcl")) visitVarDcl(node);
+		else if(hasLabel(node, "FunDcl")) visitFunDcl(node);
+		else if(hasLabel(node, "FunSig")) visitFunSig(node);
+		else if(hasLabel(node, "TypeDcl")) visitTypeDcl(node);
+		else if(hasLabel(node, "QualId")) visitQualId(node);
 		else if(hasLabel(node, "Ids")) visitIds(node);
 		else if(hasLabel(node, "StableId")) visitStableId(node);
 		else if(hasLabel(node, "ClassQualifier")) visitClassQualifier(node);
@@ -62,57 +112,307 @@ public abstract class ScalaDomainVisitor {
 		else if(hasLabel(node, "CompilationUnit")) visitCompilationUnit(node);
 		else if(hasLabel(node, "Modifier")) visitModifier(node);
 		else if(hasLabel(node, "Annotation")) visitAnnotation(node);
-		else if(hasLabel(node, "ParamType")) visitParamType(node);
-		else if(hasLabel(node, "ClassParamClauses")) visitClassParamClauses(node);
-		else if(hasLabel(node, "ClassParamClause")) visitClassParamClause(node);
-		else if(hasLabel(node, "ClassParams")) visitClassParams(node);
-		else if(hasLabel(node, "ClassParam")) visitClassParam(node);
-		else if(hasLabel(node, "Bindings")) visitBindings(node);
-		else if(hasLabel(node, "Binding")) visitBinding(node);
-		else if(hasLabel(node, "LocalModifier")) visitLocalModifier(node);
-		else if(hasLabel(node, "AccessModifier")) visitAccessModifier(node);
-		else if(hasLabel(node, "AccessQualifier")) visitAccessQualifier(node);
-		else if(hasLabel(node, "ConstrAnnotation")) visitConstrAnnotation(node);
-		else if(hasLabel(node, "TemplateBody")) visitTemplateBody(node);
-		else if(hasLabel(node, "TemplateStat")) visitTemplateStat(node);
-		else if(hasLabel(node, "SelfType")) visitSelfType(node);
-		else if(hasLabel(node, "Import_")) visitImport_(node);
-		else if(hasLabel(node, "ImportExpr")) visitImportExpr(node);
-		else if(hasLabel(node, "ImportSelectors")) visitImportSelectors(node);
-		else if(hasLabel(node, "ImportSelector")) visitImportSelector(node);
-		else if(hasLabel(node, "Dcl")) visitDcl(node);
-		else if(hasLabel(node, "ValDcl")) visitValDcl(node);
-		else if(hasLabel(node, "VarDcl")) visitVarDcl(node);
-		else if(hasLabel(node, "FunDcl")) visitFunDcl(node);
-		else if(hasLabel(node, "FunSig")) visitFunSig(node);
-		else if(hasLabel(node, "TypeDcl")) visitTypeDcl(node);
-		else if(hasLabel(node, "PatVarDef")) visitPatVarDef(node);
-		else if(hasLabel(node, "Def")) visitDef(node);
-		else if(hasLabel(node, "PatDef")) visitPatDef(node);
-		else if(hasLabel(node, "VarDef")) visitVarDef(node);
-		else if(hasLabel(node, "FunDef")) visitFunDef(node);
-		else if(hasLabel(node, "TypeDef")) visitTypeDef(node);
-		else if(hasLabel(node, "TmplDef")) visitTmplDef(node);
-		else if(hasLabel(node, "ClassDef")) visitClassDef(node);
-		else if(hasLabel(node, "TraitDef")) visitTraitDef(node);
-		else if(hasLabel(node, "ObjectDef")) visitObjectDef(node);
-		else if(hasLabel(node, "ClassTemplateOpt")) visitClassTemplateOpt(node);
-		else if(hasLabel(node, "TraitTemplateOpt")) visitTraitTemplateOpt(node);
-		else if(hasLabel(node, "ClassTemplate")) visitClassTemplate(node);
-		else if(hasLabel(node, "TraitTemplate")) visitTraitTemplate(node);
-		else if(hasLabel(node, "ClassParents")) visitClassParents(node);
-		else if(hasLabel(node, "TraitParents")) visitTraitParents(node);
-		else if(hasLabel(node, "Constr")) visitConstr(node);
-		else if(hasLabel(node, "EarlyDefs")) visitEarlyDefs(node);
-		else if(hasLabel(node, "EarlyDef")) visitEarlyDef(node);
-		else if(hasLabel(node, "ConstrExpr")) visitConstrExpr(node);
-		else if(hasLabel(node, "ConstrBlock")) visitConstrBlock(node);
-		else if(hasLabel(node, "SelfInvocation")) visitSelfInvocation(node);
-		else if(hasLabel(node, "TopStatSeq")) visitTopStatSeq(node);
-		else if(hasLabel(node, "TopStat")) visitTopStat(node);
-		else if(hasLabel(node, "Packaging")) visitPackaging(node);
-		else if(hasLabel(node, "PackageObject")) visitPackageObject(node);
    }
+
+	public void visitPatVarDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPatDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitVarDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFunDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTypeDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTmplDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTraitDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitObjectDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassTemplateOpt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTraitTemplateOpt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassTemplate(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTraitTemplate(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParents(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTraitParents(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitConstr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEarlyDefs(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitEarlyDef(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitConstrExpr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitConstrBlock(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSelfInvocation(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTopStatSeq(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTopStat(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPackaging(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPackageObject(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitParamType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParamClauses(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParamClause(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParams(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitClassParam(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBindings(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBinding(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLocalModifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAccessModifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAccessQualifier(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitConstrAnnotation(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTemplateBody(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTemplateStat(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitSelfType(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImportExpr(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImportSelectors(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImportSelector(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDcl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitValDcl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitVarDcl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFunDcl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFunSig(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitTypeDcl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitQualId(Node node) {
 		if (visited.contains(node)) return;
@@ -439,306 +739,6 @@ public abstract class ScalaDomainVisitor {
 	}
 
 	public void visitAnnotation(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitParamType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassParamClauses(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassParamClause(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassParams(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassParam(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBindings(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBinding(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitLocalModifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAccessModifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAccessQualifier(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstrAnnotation(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTemplateBody(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTemplateStat(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSelfType(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImportExpr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImportSelectors(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImportSelector(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitValDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVarDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFunDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFunSig(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTypeDcl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPatVarDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPatDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitVarDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFunDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTypeDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTmplDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTraitDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitObjectDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassTemplateOpt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTraitTemplateOpt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassTemplate(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTraitTemplate(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitClassParents(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTraitParents(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEarlyDefs(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitEarlyDef(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstrExpr(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitConstrBlock(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitSelfInvocation(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTopStatSeq(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitTopStat(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPackaging(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPackageObject(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

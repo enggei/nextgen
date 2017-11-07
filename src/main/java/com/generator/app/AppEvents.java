@@ -128,7 +128,7 @@ public final class AppEvents {
          this(node, position, false);
       }
 
-      NodeLoadEvent(Node node, boolean centerOnScreen) {
+      public NodeLoadEvent(Node node, boolean centerOnScreen) {
          this(node, null, centerOnScreen);
       }
 

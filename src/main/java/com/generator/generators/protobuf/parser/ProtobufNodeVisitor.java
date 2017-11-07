@@ -49,44 +49,8 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
    }
 
 	@Override
-	public Node visitPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
-		final Node node = new Node("PropertyType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
-		final Node node = new Node("ExtensionMax", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
-		final Node node = new Node("PackageDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitPackageName(com.generator.generators.protobuf.parser.ProtobufParser.PackageNameContext arg) {
 		final Node node = new Node("PackageName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
-		final Node node = new Node("Extensions", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -139,15 +103,6 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	}
 
 	@Override
-	public Node visitPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
-		final Node node = new Node("PackedValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
 	public Node visitOption(com.generator.generators.protobuf.parser.ProtobufParser.OptionContext arg) {
 		final Node node = new Node("Option", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -159,6 +114,51 @@ public class ProtobufNodeVisitor extends ProtobufBaseVisitor<ProtobufNodeVisitor
 	@Override
 	public Node visitFile(com.generator.generators.protobuf.parser.ProtobufParser.FileContext arg) {
 		final Node node = new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackageDecl(com.generator.generators.protobuf.parser.ProtobufParser.PackageDeclContext arg) {
+		final Node node = new Node("PackageDecl", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPackedValue(com.generator.generators.protobuf.parser.ProtobufParser.PackedValueContext arg) {
+		final Node node = new Node("PackedValue", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExtensions(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionsContext arg) {
+		final Node node = new Node("Extensions", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPropertyType(com.generator.generators.protobuf.parser.ProtobufParser.PropertyTypeContext arg) {
+		final Node node = new Node("PropertyType", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExtensionMax(com.generator.generators.protobuf.parser.ProtobufParser.ExtensionMaxContext arg) {
+		final Node node = new Node("ExtensionMax", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

@@ -75,24 +75,6 @@ public class GolangNeoListener extends GolangBaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
-
-	@Override
-	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inLiteral.push(true);
-	}
-
-	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
-		onExit();
-		this.inLiteral.pop();
-	}
-
-	public boolean inLiteral() {
-      return !inLiteral.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -145,6 +127,24 @@ public class GolangNeoListener extends GolangBaseListener {
 
 	public boolean inDeclaration() {
       return !inDeclaration.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
+
+	@Override
+	public void enterLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		final Node node = model.findOrCreate(Label.label("Literal"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inLiteral.push(true);
+	}
+
+	public void exitLiteral(com.generator.generators.go.parser.GolangParser.LiteralContext arg) {
+		onExit();
+		this.inLiteral.pop();
+	}
+
+	public boolean inLiteral() {
+      return !inLiteral.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inSelector = new java.util.Stack<>();

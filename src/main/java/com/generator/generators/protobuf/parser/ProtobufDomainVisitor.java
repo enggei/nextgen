@@ -7,7 +7,10 @@ public abstract class ProtobufDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "PackageName")) visitPackageName(node);
+		if(hasLabel(node, "Option")) visitOption(node);
+		else if(hasLabel(node, "File")) visitFile(node);
+		else if(hasLabel(node, "PackageDecl")) visitPackageDecl(node);
+		else if(hasLabel(node, "PackageName")) visitPackageName(node);
 		else if(hasLabel(node, "Imports")) visitImports(node);
 		else if(hasLabel(node, "Message")) visitMessage(node);
 		else if(hasLabel(node, "EnumName")) visitEnumName(node);
@@ -17,12 +20,27 @@ public abstract class ProtobufDomainVisitor {
 		else if(hasLabel(node, "Extensions")) visitExtensions(node);
 		else if(hasLabel(node, "PropertyType")) visitPropertyType(node);
 		else if(hasLabel(node, "ExtensionMax")) visitExtensionMax(node);
-		else if(hasLabel(node, "PackageDecl")) visitPackageDecl(node);
-		else if(hasLabel(node, "Option")) visitOption(node);
-		else if(hasLabel(node, "File")) visitFile(node);
 		else if(hasLabel(node, "PropertyName")) visitPropertyName(node);
 		else if(hasLabel(node, "DefaultValue")) visitDefaultValue(node);
    }
+
+	public void visitOption(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFile(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPackageDecl(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
 
 	public void visitPackageName(Node node) {
 		if (visited.contains(node)) return;
@@ -79,24 +97,6 @@ public abstract class ProtobufDomainVisitor {
 	}
 
 	public void visitExtensionMax(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPackageDecl(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitOption(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFile(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

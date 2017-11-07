@@ -65,23 +65,6 @@ public class css3NodeListener extends css3BaseListener {
       return !inBlock.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
-
-	@Override
-	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inNumber.push(true);
-	}
-
-	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
-		onExit();
-		this.inNumber.pop();
-	}
-
-	public boolean inNumber() {
-      return !inNumber.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inExpression = new java.util.Stack<>();
 
 	@Override
@@ -97,6 +80,23 @@ public class css3NodeListener extends css3BaseListener {
 
 	public boolean inExpression() {
       return !inExpression.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();
+
+	@Override
+	public void enterNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onEnter(new Node("Number", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inNumber.push(true);
+	}
+
+	public void exitNumber(com.generator.generators.css.parser.css3Parser.NumberContext arg) {
+		onExit();
+		this.inNumber.pop();
+	}
+
+	public boolean inNumber() {
+      return !inNumber.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inStylesheet = new java.util.Stack<>();

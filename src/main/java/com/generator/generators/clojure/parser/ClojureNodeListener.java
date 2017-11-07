@@ -48,6 +48,108 @@ public class ClojureNodeListener extends ClojureBaseListener {
       return nodeStack.peek();
    }
 
+	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
+
+	@Override
+	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inFile.push(true);
+	}
+
+	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
+		onExit();
+		this.inFile.pop();
+	}
+
+	public boolean inFile() {
+      return !inFile.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
+
+	@Override
+	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		onEnter(new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inForm.push(true);
+	}
+
+	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
+		onExit();
+		this.inForm.pop();
+	}
+
+	public boolean inForm() {
+      return !inForm.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
+
+	@Override
+	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		onEnter(new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inForms.push(true);
+	}
+
+	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
+		onExit();
+		this.inForms.pop();
+	}
+
+	public boolean inForms() {
+      return !inForms.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
+
+	@Override
+	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inList.push(true);
+	}
+
+	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
+		onExit();
+		this.inList.pop();
+	}
+
+	public boolean inList() {
+      return !inList.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
+
+	@Override
+	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		onEnter(new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inVector.push(true);
+	}
+
+	public void exitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
+		onExit();
+		this.inVector.pop();
+	}
+
+	public boolean inVector() {
+      return !inVector.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inMap = new java.util.Stack<>();
+
+	@Override
+	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		onEnter(new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inMap.push(true);
+	}
+
+	public void exitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
+		onExit();
+		this.inMap.pop();
+	}
+
+	public boolean inMap() {
+      return !inMap.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inSet = new java.util.Stack<>();
 
 	@Override
@@ -403,108 +505,6 @@ public class ClojureNodeListener extends ClojureBaseListener {
 
 	public boolean inBign() {
       return !inBign.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFile = new java.util.Stack<>();
-
-	@Override
-	public void enterFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		onEnter(new Node("File", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inFile.push(true);
-	}
-
-	public void exitFile(com.generator.generators.clojure.parser.ClojureParser.FileContext arg) {
-		onExit();
-		this.inFile.pop();
-	}
-
-	public boolean inFile() {
-      return !inFile.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForm = new java.util.Stack<>();
-
-	@Override
-	public void enterForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		onEnter(new Node("Form", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inForm.push(true);
-	}
-
-	public void exitForm(com.generator.generators.clojure.parser.ClojureParser.FormContext arg) {
-		onExit();
-		this.inForm.pop();
-	}
-
-	public boolean inForm() {
-      return !inForm.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inForms = new java.util.Stack<>();
-
-	@Override
-	public void enterForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onEnter(new Node("Forms", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inForms.push(true);
-	}
-
-	public void exitForms(com.generator.generators.clojure.parser.ClojureParser.FormsContext arg) {
-		onExit();
-		this.inForms.pop();
-	}
-
-	public boolean inForms() {
-      return !inForms.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inList = new java.util.Stack<>();
-
-	@Override
-	public void enterList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		onEnter(new Node("List", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inList.push(true);
-	}
-
-	public void exitList(com.generator.generators.clojure.parser.ClojureParser.ListContext arg) {
-		onExit();
-		this.inList.pop();
-	}
-
-	public boolean inList() {
-      return !inList.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inVector = new java.util.Stack<>();
-
-	@Override
-	public void enterVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		onEnter(new Node("Vector", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inVector.push(true);
-	}
-
-	public void exitVector(com.generator.generators.clojure.parser.ClojureParser.VectorContext arg) {
-		onExit();
-		this.inVector.pop();
-	}
-
-	public boolean inVector() {
-      return !inVector.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inMap = new java.util.Stack<>();
-
-	@Override
-	public void enterMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		onEnter(new Node("Map", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inMap.push(true);
-	}
-
-	public void exitMap(com.generator.generators.clojure.parser.ClojureParser.MapContext arg) {
-		onExit();
-		this.inMap.pop();
-	}
-
-	public boolean inMap() {
-      return !inMap.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNumber = new java.util.Stack<>();

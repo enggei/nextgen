@@ -49,8 +49,8 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
    }
 
 	@Override
-	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
-		final Node node = new Node("CsvFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
+		final Node node = new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,8 +58,8 @@ public class CSVNodeVisitor extends CSVBaseVisitor<CSVNodeVisitor.Node> {
 	}
 
 	@Override
-	public Node visitHdr(com.generator.generators.csv.parser.CSVParser.HdrContext arg) {
-		final Node node = new Node("Hdr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitCsvFile(com.generator.generators.csv.parser.CSVParser.CsvFileContext arg) {
+		final Node node = new Node("CsvFile", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

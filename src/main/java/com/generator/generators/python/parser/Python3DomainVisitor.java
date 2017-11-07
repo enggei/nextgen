@@ -7,29 +7,7 @@ public abstract class Python3DomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "Del_stmt")) visitDel_stmt(node);
-		else if(hasLabel(node, "Pass_stmt")) visitPass_stmt(node);
-		else if(hasLabel(node, "Flow_stmt")) visitFlow_stmt(node);
-		else if(hasLabel(node, "Break_stmt")) visitBreak_stmt(node);
-		else if(hasLabel(node, "Continue_stmt")) visitContinue_stmt(node);
-		else if(hasLabel(node, "Return_stmt")) visitReturn_stmt(node);
-		else if(hasLabel(node, "Yield_stmt")) visitYield_stmt(node);
-		else if(hasLabel(node, "Raise_stmt")) visitRaise_stmt(node);
-		else if(hasLabel(node, "Import_stmt")) visitImport_stmt(node);
-		else if(hasLabel(node, "Import_name")) visitImport_name(node);
-		else if(hasLabel(node, "Import_from")) visitImport_from(node);
-		else if(hasLabel(node, "Import_as_name")) visitImport_as_name(node);
-		else if(hasLabel(node, "Dotted_as_name")) visitDotted_as_name(node);
-		else if(hasLabel(node, "Import_as_names")) visitImport_as_names(node);
-		else if(hasLabel(node, "Dotted_as_names")) visitDotted_as_names(node);
-		else if(hasLabel(node, "Dotted_name")) visitDotted_name(node);
-		else if(hasLabel(node, "Global_stmt")) visitGlobal_stmt(node);
-		else if(hasLabel(node, "Nonlocal_stmt")) visitNonlocal_stmt(node);
-		else if(hasLabel(node, "Assert_stmt")) visitAssert_stmt(node);
-		else if(hasLabel(node, "Compound_stmt")) visitCompound_stmt(node);
-		else if(hasLabel(node, "If_stmt")) visitIf_stmt(node);
-		else if(hasLabel(node, "While_stmt")) visitWhile_stmt(node);
-		else if(hasLabel(node, "For_stmt")) visitFor_stmt(node);
+		if(hasLabel(node, "For_stmt")) visitFor_stmt(node);
 		else if(hasLabel(node, "Try_stmt")) visitTry_stmt(node);
 		else if(hasLabel(node, "With_stmt")) visitWith_stmt(node);
 		else if(hasLabel(node, "With_item")) visitWith_item(node);
@@ -88,143 +66,33 @@ public abstract class Python3DomainVisitor {
 		else if(hasLabel(node, "Expr_stmt")) visitExpr_stmt(node);
 		else if(hasLabel(node, "Testlist_star_expr")) visitTestlist_star_expr(node);
 		else if(hasLabel(node, "Augassign")) visitAugassign(node);
+		else if(hasLabel(node, "Del_stmt")) visitDel_stmt(node);
+		else if(hasLabel(node, "Pass_stmt")) visitPass_stmt(node);
+		else if(hasLabel(node, "Flow_stmt")) visitFlow_stmt(node);
+		else if(hasLabel(node, "Break_stmt")) visitBreak_stmt(node);
+		else if(hasLabel(node, "Continue_stmt")) visitContinue_stmt(node);
+		else if(hasLabel(node, "Return_stmt")) visitReturn_stmt(node);
+		else if(hasLabel(node, "Yield_stmt")) visitYield_stmt(node);
+		else if(hasLabel(node, "Raise_stmt")) visitRaise_stmt(node);
+		else if(hasLabel(node, "Import_stmt")) visitImport_stmt(node);
+		else if(hasLabel(node, "Import_name")) visitImport_name(node);
+		else if(hasLabel(node, "Import_from")) visitImport_from(node);
+		else if(hasLabel(node, "Import_as_name")) visitImport_as_name(node);
+		else if(hasLabel(node, "Dotted_as_name")) visitDotted_as_name(node);
+		else if(hasLabel(node, "Import_as_names")) visitImport_as_names(node);
+		else if(hasLabel(node, "Dotted_as_names")) visitDotted_as_names(node);
+		else if(hasLabel(node, "Dotted_name")) visitDotted_name(node);
+		else if(hasLabel(node, "Global_stmt")) visitGlobal_stmt(node);
+		else if(hasLabel(node, "Nonlocal_stmt")) visitNonlocal_stmt(node);
+		else if(hasLabel(node, "Assert_stmt")) visitAssert_stmt(node);
+		else if(hasLabel(node, "Compound_stmt")) visitCompound_stmt(node);
+		else if(hasLabel(node, "If_stmt")) visitIf_stmt(node);
+		else if(hasLabel(node, "While_stmt")) visitWhile_stmt(node);
 		else if(hasLabel(node, "Atom")) visitAtom(node);
 		else if(hasLabel(node, "Number")) visitNumber(node);
 		else if(hasLabel(node, "Expr")) visitExpr(node);
 		else if(hasLabel(node, "Parameters")) visitParameters(node);
    }
-
-	public void visitDel_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitPass_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitFlow_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitBreak_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitContinue_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitReturn_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitYield_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRaise_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_name(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_from(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_as_name(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDotted_as_name(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitImport_as_names(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDotted_as_names(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitDotted_name(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitGlobal_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNonlocal_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAssert_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitCompound_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitIf_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitWhile_stmt(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
 
 	public void visitFor_stmt(Node node) {
 		if (visited.contains(node)) return;
@@ -575,6 +443,138 @@ public abstract class Python3DomainVisitor {
 	}
 
 	public void visitAugassign(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDel_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitPass_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitFlow_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitBreak_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitContinue_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitReturn_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitYield_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRaise_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_from(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_as_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDotted_as_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitImport_as_names(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDotted_as_names(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitDotted_name(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitGlobal_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNonlocal_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAssert_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitCompound_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitIf_stmt(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitWhile_stmt(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

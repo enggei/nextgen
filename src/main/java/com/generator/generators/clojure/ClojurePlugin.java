@@ -3,7 +3,6 @@ package com.generator.generators.clojure;
 import clojure.main;
 import com.generator.app.App;
 import com.generator.app.AppMotif;
-import com.generator.app.Plugin;
 import com.generator.app.nodes.NeoNode;
 import com.generator.neo.NeoModel;
 import com.generator.util.NeoUtil;
@@ -14,7 +13,9 @@ import io.vertx.core.net.NetClient;
 import io.vertx.core.net.NetClientOptions;
 import io.vertx.core.net.NetSocket;
 import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,19 +31,7 @@ import static com.generator.util.NeoUtil.*;
  * <p>
  * https://kimh.github.io/clojure-by-example
  */
-public class ClojurePlugin extends Plugin {
-
-   enum Entities implements Label {
-      Repl, Form, Symbol, Result
-   }
-
-   enum Relations implements RelationshipType {
-      EVALUATION, FORM, SYMBOL
-   }
-
-   enum Properties {
-
-   }
+public class ClojurePlugin extends ClojureDomainPlugin {
 
    private main replHandle = null;
    private NetSocket socket;
@@ -50,7 +39,7 @@ public class ClojurePlugin extends Plugin {
    private ReplManager delegateHandler;
 
    public ClojurePlugin(App app) {
-      super(app, "Clojure");
+      super(app);
       vertx = Vertx.vertx();
    }
 
@@ -68,9 +57,7 @@ public class ClojurePlugin extends Plugin {
 
             startRepl();
 
-            final Node newNode = getGraph().newNode(Entities.Repl, AppMotif.Properties.name.name(), "Repl");
-            fireNodesLoaded(newNode);
-
+            fireNodesLoaded(newRepl());
          }
       });
 
@@ -81,63 +68,59 @@ public class ClojurePlugin extends Plugin {
             final String name = SwingUtil.showInputDialog("Form", app);
             if (name == null || name.length() == 0) return;
 
-            final Node newNode = getGraph().newNode(Entities.Form, AppMotif.Properties.name.name(), name);
+            final Node newNode = newForm(name);
             fireNodesLoaded(newNode);
          }
       });
    }
 
+   @Override
+   protected void handleRepl(JPopupMenu pop, NeoNode replNode, Set<NeoNode> selectedNodes) {
+      if (replHandle == null) {
+         pop.add(new App.TransactionAction("Start", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               startRepl();
+            }
+         });
+      }
+   }
 
    @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
-      if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Repl)) {
+   protected void handleForm(JPopupMenu pop, NeoNode formNode, Set<NeoNode> selectedNodes) {
+      if (replHandle != null) {
 
-         if (replHandle == null) {
-            pop.add(new App.TransactionAction("Start", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  startRepl();
-               }
-            });
-         }
+         final String form = NeoUtil.getString(formNode.getNode(), AppMotif.Properties.name.name());
 
-      } else if (NeoUtil.hasLabel(neoNode.getNode(), Entities.Form)) {
-
-         if (replHandle != null) {
-
-            final String form = NeoUtil.getString(neoNode.getNode(), AppMotif.Properties.name.name());
-
-            pop.add(new App.TransactionAction("Evaluate", app) {
-               @Override
-               protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-                  evaluate(form, new EvaluationHandler() {
-                     @Override
-                     public void handle(String buffer) {
-                        getGraph().doInTransaction(new NeoModel.Committer() {
-                           @Override
-                           public void doAction(Transaction tx1) throws Throwable {
-                              final Relationship resultRelation = singleOutgoing(neoNode.getNode(), Relations.EVALUATION);
-                              if (resultRelation != null) {
-                                 final Node resultNode = other(neoNode.getNode(), resultRelation);
-                                 resultNode.setProperty(AppMotif.Properties.name.name(), buffer);
-                                 fireNodeChanged(resultNode);
-                              } else {
-                                 final Node newNode = getGraph().newNode(Entities.Result, AppMotif.Properties.name.name(), buffer);
-                                 NeoUtil.relate(neoNode.getNode(), newNode, Relations.EVALUATION);
-                                 fireNodesLoaded(newNode);
-                              }
+         pop.add(new App.TransactionAction("Evaluate", app) {
+            @Override
+            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+               evaluate(form, new EvaluationHandler() {
+                  @Override
+                  public void handle(String buffer) {
+                     getGraph().doInTransaction(new NeoModel.Committer() {
+                        @Override
+                        public void doAction(Transaction tx1) throws Throwable {
+                           final Node existingResult = singleOutgoingEVALUATION(formNode.getNode());
+                           if (existingResult != null) {
+                              setBufferProperty(existingResult, buffer);
+                              fireNodeChanged(existingResult);
+                           } else {
+                              final Node resultNode = newResult(buffer);
+                              relateEVALUATION(formNode.getNode(), resultNode);
+                              fireNodesLoaded(resultNode);
                            }
+                        }
 
-                           @Override
-                           public void exception(Throwable throwable) {
-                              SwingUtil.showException(app, throwable);
-                           }
-                        });
-                     }
-                  });
-               }
-            });
-         }
+                        @Override
+                        public void exception(Throwable throwable) {
+                           SwingUtil.showException(app, throwable);
+                        }
+                     });
+                  }
+               });
+            }
+         });
       }
    }
 
@@ -164,8 +147,6 @@ public class ClojurePlugin extends Plugin {
       @Override
       public void handle(String buffer) {
          System.out.println("Neo handler :" + buffer);
-
-
       }
    }
 
@@ -213,13 +194,13 @@ public class ClojurePlugin extends Plugin {
    }
 
    @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      if (hasLabel(neoNode.getNode(), Entities.Form)) {
-         return new FormEditor(neoNode);
-      } else if (hasLabel(neoNode.getNode(), Entities.Repl)) {
-         return new ReplEditor(neoNode);
-      }
-      return null;
+   protected JComponent newFormEditor(NeoNode formNode) {
+      return new FormEditor(formNode);
+   }
+
+   @Override
+   protected JComponent newReplEditor(NeoNode replNode) {
+      return new ReplEditor(replNode);
    }
 
    private final class FormEditor extends JPanel {
@@ -281,11 +262,11 @@ public class ClojurePlugin extends Plugin {
       final Color uneditedColor = txtEditor.getBackground();
       final Color editedColor = Color.decode("#fc8d59");
 
-      ReplEditor(NeoNode node) {
+      ReplEditor(NeoNode replNode) {
          super(new BorderLayout());
 
-         outgoing(node.getNode(), Relations.FORM).forEach(replFormRelation -> {
-            final FormNode form = new FormNode(getString(other(node.getNode(), replFormRelation), AppMotif.Properties.name.name()));
+         outgoingFORM(replNode.getNode(), (replFormRelation, formNode) -> {
+            final FormNode form = new FormNode(getNameProperty(formNode));
             formNodeStack.push(form);
             distinctForms.add(form);
          });
@@ -305,7 +286,7 @@ public class ClojurePlugin extends Plugin {
             public void keyPressed(KeyEvent ke) {
                if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
                   final String newText = txtFormLine.getText().trim();
-                  evaluateCommandLine(newText, node);
+                  evaluateCommandLine(newText, replNode);
                }
             }
          });
@@ -329,14 +310,14 @@ public class ClojurePlugin extends Plugin {
 
                final FormNode formNode = historyList.getModel().getElementAt(locationToIndex);
                if (formNode == null) return;
-               evaluateCommandLine(formNode.form, node);
+               evaluateCommandLine(formNode.form, replNode);
                txtFormLine.setText(formNode.form);
             }
          });
          add(new JScrollPane(historyList), BorderLayout.WEST);
       }
 
-      public void evaluateCommandLine(String newText, NeoNode node) {
+      public void evaluateCommandLine(String newText, NeoNode replNode) {
 
          if (replHandle == null) startRepl();
 
@@ -364,7 +345,7 @@ public class ClojurePlugin extends Plugin {
                         SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
                            @Override
                            public void doAction(Transaction tx) throws Throwable {
-                              relate(node.getNode(), getGraph().findOrCreate(Entities.Symbol, AppMotif.Properties.name.name(), newText), Relations.SYMBOL);
+                              relateSYMBOL(replNode.getNode(), newSymbol(newText));
                            }
 
                            @Override
@@ -390,7 +371,7 @@ public class ClojurePlugin extends Plugin {
                            SwingUtilities.invokeLater(() -> getGraph().doInTransaction(new NeoModel.Committer() {
                               @Override
                               public void doAction(Transaction tx) throws Throwable {
-                                 relate(node.getNode(), getGraph().findOrCreate(Entities.Form, AppMotif.Properties.name.name(), newText), Relations.FORM);
+                                 relateFORM(replNode.getNode(), newForm(newText));
                               }
 
                               @Override

@@ -57,6 +57,24 @@ public class urlNeoListener extends urlBaseListener {
       return !inString.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
+
+	@Override
+	public void enterQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inQuery.push(true);
+	}
+
+	public void exitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
+		onExit();
+		this.inQuery.pop();
+	}
+
+	public boolean inQuery() {
+      return !inQuery.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inUrl = new java.util.Stack<>();
 
 	@Override
@@ -307,24 +325,6 @@ public class urlNeoListener extends urlBaseListener {
 
 	public boolean inSearchparameter() {
       return !inSearchparameter.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inQuery = new java.util.Stack<>();
-
-	@Override
-	public void enterQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		final Node node = model.findOrCreate(Label.label("Query"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inQuery.push(true);
-	}
-
-	public void exitQuery(com.generator.generators.url.parser.urlParser.QueryContext arg) {
-		onExit();
-		this.inQuery.pop();
-	}
-
-	public boolean inQuery() {
-      return !inQuery.isEmpty(); 
    }
 
 }

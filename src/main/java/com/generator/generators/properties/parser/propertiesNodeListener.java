@@ -65,23 +65,6 @@ public class propertiesNodeListener extends propertiesBaseListener {
       return !inDecl.isEmpty(); 
    }
 
-	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
-
-	@Override
-	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
-		this.inPropertiesFile.push(true);
-	}
-
-	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
-		onExit();
-		this.inPropertiesFile.pop();
-	}
-
-	public boolean inPropertiesFile() {
-      return !inPropertiesFile.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inComment = new java.util.Stack<>();
 
 	@Override
@@ -97,6 +80,23 @@ public class propertiesNodeListener extends propertiesBaseListener {
 
 	public boolean inComment() {
       return !inComment.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPropertiesFile = new java.util.Stack<>();
+
+	@Override
+	public void enterPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onEnter(new Node("PropertiesFile", arg.getText(), arg.getStart().getText(), arg.getStop() == null ? "" : arg.getStop().getText()));
+		this.inPropertiesFile.push(true);
+	}
+
+	public void exitPropertiesFile(com.generator.generators.properties.parser.propertiesParser.PropertiesFileContext arg) {
+		onExit();
+		this.inPropertiesFile.pop();
+	}
+
+	public boolean inPropertiesFile() {
+      return !inPropertiesFile.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inValue = new java.util.Stack<>();

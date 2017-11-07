@@ -39,402 +39,6 @@ public class Python3NeoListener extends Python3BaseListener {
       return nodeStack.peek();
    }
 
-	protected java.util.Stack<Boolean> inDel_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Del_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDel_stmt.push(true);
-	}
-
-	public void exitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
-		onExit();
-		this.inDel_stmt.pop();
-	}
-
-	public boolean inDel_stmt() {
-      return !inDel_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inPass_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Pass_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inPass_stmt.push(true);
-	}
-
-	public void exitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
-		onExit();
-		this.inPass_stmt.pop();
-	}
-
-	public boolean inPass_stmt() {
-      return !inPass_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inFlow_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Flow_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inFlow_stmt.push(true);
-	}
-
-	public void exitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
-		onExit();
-		this.inFlow_stmt.pop();
-	}
-
-	public boolean inFlow_stmt() {
-      return !inFlow_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inBreak_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Break_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inBreak_stmt.push(true);
-	}
-
-	public void exitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
-		onExit();
-		this.inBreak_stmt.pop();
-	}
-
-	public boolean inBreak_stmt() {
-      return !inBreak_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inContinue_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Continue_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inContinue_stmt.push(true);
-	}
-
-	public void exitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
-		onExit();
-		this.inContinue_stmt.pop();
-	}
-
-	public boolean inContinue_stmt() {
-      return !inContinue_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inReturn_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Return_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inReturn_stmt.push(true);
-	}
-
-	public void exitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
-		onExit();
-		this.inReturn_stmt.pop();
-	}
-
-	public boolean inReturn_stmt() {
-      return !inReturn_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inYield_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Yield_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inYield_stmt.push(true);
-	}
-
-	public void exitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
-		onExit();
-		this.inYield_stmt.pop();
-	}
-
-	public boolean inYield_stmt() {
-      return !inYield_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inRaise_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Raise_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inRaise_stmt.push(true);
-	}
-
-	public void exitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
-		onExit();
-		this.inRaise_stmt.pop();
-	}
-
-	public boolean inRaise_stmt() {
-      return !inRaise_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Import_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inImport_stmt.push(true);
-	}
-
-	public void exitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
-		onExit();
-		this.inImport_stmt.pop();
-	}
-
-	public boolean inImport_stmt() {
-      return !inImport_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_name = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Import_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inImport_name.push(true);
-	}
-
-	public void exitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
-		onExit();
-		this.inImport_name.pop();
-	}
-
-	public boolean inImport_name() {
-      return !inImport_name.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_from = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
-		final Node node = model.findOrCreate(Label.label("Import_from"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inImport_from.push(true);
-	}
-
-	public void exitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
-		onExit();
-		this.inImport_from.pop();
-	}
-
-	public boolean inImport_from() {
-      return !inImport_from.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_as_name = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Import_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inImport_as_name.push(true);
-	}
-
-	public void exitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
-		onExit();
-		this.inImport_as_name.pop();
-	}
-
-	public boolean inImport_as_name() {
-      return !inImport_as_name.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDotted_as_name = new java.util.Stack<>();
-
-	@Override
-	public void enterDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dotted_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDotted_as_name.push(true);
-	}
-
-	public void exitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
-		onExit();
-		this.inDotted_as_name.pop();
-	}
-
-	public boolean inDotted_as_name() {
-      return !inDotted_as_name.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inImport_as_names = new java.util.Stack<>();
-
-	@Override
-	public void enterImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Import_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inImport_as_names.push(true);
-	}
-
-	public void exitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
-		onExit();
-		this.inImport_as_names.pop();
-	}
-
-	public boolean inImport_as_names() {
-      return !inImport_as_names.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDotted_as_names = new java.util.Stack<>();
-
-	@Override
-	public void enterDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dotted_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDotted_as_names.push(true);
-	}
-
-	public void exitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
-		onExit();
-		this.inDotted_as_names.pop();
-	}
-
-	public boolean inDotted_as_names() {
-      return !inDotted_as_names.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inDotted_name = new java.util.Stack<>();
-
-	@Override
-	public void enterDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
-		final Node node = model.findOrCreate(Label.label("Dotted_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inDotted_name.push(true);
-	}
-
-	public void exitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
-		onExit();
-		this.inDotted_name.pop();
-	}
-
-	public boolean inDotted_name() {
-      return !inDotted_name.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inGlobal_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Global_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inGlobal_stmt.push(true);
-	}
-
-	public void exitGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
-		onExit();
-		this.inGlobal_stmt.pop();
-	}
-
-	public boolean inGlobal_stmt() {
-      return !inGlobal_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inNonlocal_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterNonlocal_stmt(com.generator.generators.python.parser.Python3Parser.Nonlocal_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Nonlocal_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inNonlocal_stmt.push(true);
-	}
-
-	public void exitNonlocal_stmt(com.generator.generators.python.parser.Python3Parser.Nonlocal_stmtContext arg) {
-		onExit();
-		this.inNonlocal_stmt.pop();
-	}
-
-	public boolean inNonlocal_stmt() {
-      return !inNonlocal_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inAssert_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterAssert_stmt(com.generator.generators.python.parser.Python3Parser.Assert_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Assert_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inAssert_stmt.push(true);
-	}
-
-	public void exitAssert_stmt(com.generator.generators.python.parser.Python3Parser.Assert_stmtContext arg) {
-		onExit();
-		this.inAssert_stmt.pop();
-	}
-
-	public boolean inAssert_stmt() {
-      return !inAssert_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inCompound_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterCompound_stmt(com.generator.generators.python.parser.Python3Parser.Compound_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("Compound_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inCompound_stmt.push(true);
-	}
-
-	public void exitCompound_stmt(com.generator.generators.python.parser.Python3Parser.Compound_stmtContext arg) {
-		onExit();
-		this.inCompound_stmt.pop();
-	}
-
-	public boolean inCompound_stmt() {
-      return !inCompound_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inIf_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterIf_stmt(com.generator.generators.python.parser.Python3Parser.If_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("If_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inIf_stmt.push(true);
-	}
-
-	public void exitIf_stmt(com.generator.generators.python.parser.Python3Parser.If_stmtContext arg) {
-		onExit();
-		this.inIf_stmt.pop();
-	}
-
-	public boolean inIf_stmt() {
-      return !inIf_stmt.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inWhile_stmt = new java.util.Stack<>();
-
-	@Override
-	public void enterWhile_stmt(com.generator.generators.python.parser.Python3Parser.While_stmtContext arg) {
-		final Node node = model.findOrCreate(Label.label("While_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inWhile_stmt.push(true);
-	}
-
-	public void exitWhile_stmt(com.generator.generators.python.parser.Python3Parser.While_stmtContext arg) {
-		onExit();
-		this.inWhile_stmt.pop();
-	}
-
-	public boolean inWhile_stmt() {
-      return !inWhile_stmt.isEmpty(); 
-   }
-
 	protected java.util.Stack<Boolean> inFor_stmt = new java.util.Stack<>();
 
 	@Override
@@ -1495,6 +1099,402 @@ public class Python3NeoListener extends Python3BaseListener {
 
 	public boolean inAugassign() {
       return !inAugassign.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDel_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Del_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDel_stmt.push(true);
+	}
+
+	public void exitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
+		onExit();
+		this.inDel_stmt.pop();
+	}
+
+	public boolean inDel_stmt() {
+      return !inDel_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inPass_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Pass_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inPass_stmt.push(true);
+	}
+
+	public void exitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
+		onExit();
+		this.inPass_stmt.pop();
+	}
+
+	public boolean inPass_stmt() {
+      return !inPass_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inFlow_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Flow_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inFlow_stmt.push(true);
+	}
+
+	public void exitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
+		onExit();
+		this.inFlow_stmt.pop();
+	}
+
+	public boolean inFlow_stmt() {
+      return !inFlow_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inBreak_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Break_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inBreak_stmt.push(true);
+	}
+
+	public void exitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
+		onExit();
+		this.inBreak_stmt.pop();
+	}
+
+	public boolean inBreak_stmt() {
+      return !inBreak_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inContinue_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Continue_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inContinue_stmt.push(true);
+	}
+
+	public void exitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
+		onExit();
+		this.inContinue_stmt.pop();
+	}
+
+	public boolean inContinue_stmt() {
+      return !inContinue_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inReturn_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Return_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inReturn_stmt.push(true);
+	}
+
+	public void exitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
+		onExit();
+		this.inReturn_stmt.pop();
+	}
+
+	public boolean inReturn_stmt() {
+      return !inReturn_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inYield_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Yield_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inYield_stmt.push(true);
+	}
+
+	public void exitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
+		onExit();
+		this.inYield_stmt.pop();
+	}
+
+	public boolean inYield_stmt() {
+      return !inYield_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inRaise_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Raise_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inRaise_stmt.push(true);
+	}
+
+	public void exitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
+		onExit();
+		this.inRaise_stmt.pop();
+	}
+
+	public boolean inRaise_stmt() {
+      return !inRaise_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Import_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImport_stmt.push(true);
+	}
+
+	public void exitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
+		onExit();
+		this.inImport_stmt.pop();
+	}
+
+	public boolean inImport_stmt() {
+      return !inImport_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_name = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
+		final Node node = model.findOrCreate(Label.label("Import_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImport_name.push(true);
+	}
+
+	public void exitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
+		onExit();
+		this.inImport_name.pop();
+	}
+
+	public boolean inImport_name() {
+      return !inImport_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_from = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
+		final Node node = model.findOrCreate(Label.label("Import_from"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImport_from.push(true);
+	}
+
+	public void exitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
+		onExit();
+		this.inImport_from.pop();
+	}
+
+	public boolean inImport_from() {
+      return !inImport_from.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_as_name = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
+		final Node node = model.findOrCreate(Label.label("Import_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImport_as_name.push(true);
+	}
+
+	public void exitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
+		onExit();
+		this.inImport_as_name.pop();
+	}
+
+	public boolean inImport_as_name() {
+      return !inImport_as_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDotted_as_name = new java.util.Stack<>();
+
+	@Override
+	public void enterDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
+		final Node node = model.findOrCreate(Label.label("Dotted_as_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDotted_as_name.push(true);
+	}
+
+	public void exitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
+		onExit();
+		this.inDotted_as_name.pop();
+	}
+
+	public boolean inDotted_as_name() {
+      return !inDotted_as_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inImport_as_names = new java.util.Stack<>();
+
+	@Override
+	public void enterImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
+		final Node node = model.findOrCreate(Label.label("Import_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inImport_as_names.push(true);
+	}
+
+	public void exitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
+		onExit();
+		this.inImport_as_names.pop();
+	}
+
+	public boolean inImport_as_names() {
+      return !inImport_as_names.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDotted_as_names = new java.util.Stack<>();
+
+	@Override
+	public void enterDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
+		final Node node = model.findOrCreate(Label.label("Dotted_as_names"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDotted_as_names.push(true);
+	}
+
+	public void exitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
+		onExit();
+		this.inDotted_as_names.pop();
+	}
+
+	public boolean inDotted_as_names() {
+      return !inDotted_as_names.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inDotted_name = new java.util.Stack<>();
+
+	@Override
+	public void enterDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
+		final Node node = model.findOrCreate(Label.label("Dotted_name"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inDotted_name.push(true);
+	}
+
+	public void exitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
+		onExit();
+		this.inDotted_name.pop();
+	}
+
+	public boolean inDotted_name() {
+      return !inDotted_name.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inGlobal_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Global_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inGlobal_stmt.push(true);
+	}
+
+	public void exitGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
+		onExit();
+		this.inGlobal_stmt.pop();
+	}
+
+	public boolean inGlobal_stmt() {
+      return !inGlobal_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inNonlocal_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterNonlocal_stmt(com.generator.generators.python.parser.Python3Parser.Nonlocal_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Nonlocal_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inNonlocal_stmt.push(true);
+	}
+
+	public void exitNonlocal_stmt(com.generator.generators.python.parser.Python3Parser.Nonlocal_stmtContext arg) {
+		onExit();
+		this.inNonlocal_stmt.pop();
+	}
+
+	public boolean inNonlocal_stmt() {
+      return !inNonlocal_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inAssert_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterAssert_stmt(com.generator.generators.python.parser.Python3Parser.Assert_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Assert_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inAssert_stmt.push(true);
+	}
+
+	public void exitAssert_stmt(com.generator.generators.python.parser.Python3Parser.Assert_stmtContext arg) {
+		onExit();
+		this.inAssert_stmt.pop();
+	}
+
+	public boolean inAssert_stmt() {
+      return !inAssert_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inCompound_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterCompound_stmt(com.generator.generators.python.parser.Python3Parser.Compound_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("Compound_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inCompound_stmt.push(true);
+	}
+
+	public void exitCompound_stmt(com.generator.generators.python.parser.Python3Parser.Compound_stmtContext arg) {
+		onExit();
+		this.inCompound_stmt.pop();
+	}
+
+	public boolean inCompound_stmt() {
+      return !inCompound_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inIf_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterIf_stmt(com.generator.generators.python.parser.Python3Parser.If_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("If_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inIf_stmt.push(true);
+	}
+
+	public void exitIf_stmt(com.generator.generators.python.parser.Python3Parser.If_stmtContext arg) {
+		onExit();
+		this.inIf_stmt.pop();
+	}
+
+	public boolean inIf_stmt() {
+      return !inIf_stmt.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inWhile_stmt = new java.util.Stack<>();
+
+	@Override
+	public void enterWhile_stmt(com.generator.generators.python.parser.Python3Parser.While_stmtContext arg) {
+		final Node node = model.findOrCreate(Label.label("While_stmt"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inWhile_stmt.push(true);
+	}
+
+	public void exitWhile_stmt(com.generator.generators.python.parser.Python3Parser.While_stmtContext arg) {
+		onExit();
+		this.inWhile_stmt.pop();
+	}
+
+	public boolean inWhile_stmt() {
+      return !inWhile_stmt.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inAtom = new java.util.Stack<>();

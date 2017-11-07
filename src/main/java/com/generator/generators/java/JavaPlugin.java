@@ -17,6 +17,7 @@ import com.generator.util.SwingUtil;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 
 import javax.swing.*;
@@ -90,15 +91,74 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
    }
 
    @Override
+   protected void handleObject(JPopupMenu pop, NeoNode objectNode, Set<NeoNode> selectedNodes) {
+      // todo: nodeInstances will be null if restarting - needs to be cleaned-up
+      final Object instance = instanceMap.get(getString(objectNode.getNode(), TAG_UUID));
+      if (instance == null) return;
+
+      new BaseClassVisitor() {
+         @Override
+         public void onClass(Package classPackage, String className, Class superClass) {
+            System.out.println(className);
+         }
+
+         @Override
+         public void onPublicMethod(Method method) {
+
+            final Class<?> returnType = method.getReturnType();
+
+            if ("void".equals(returnType.getName())) {
+               pop.add(new App.TransactionAction("Call " + method.getName(), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     final Parameter[] parameters = method.getParameters();
+                     final Object[] args = new Object[parameters.length];
+
+                     for (int i = 0; i < parameters.length; i++) {
+                        Parameter parameter = parameters[i];
+
+                        // todo: generify this to support any arbitrary parameter, and remove if-else
+                        if ("java.lang.String".equals(parameter.getType().getName())) {
+
+                           final String value = SwingUtil.showInputDialog(parameter.getName(), app);
+                           if (value == null) return;
+
+                           final Reflect param = Reflect.on(parameter.getType());
+                           args[i] = param.create(value).get();
+
+                        } else if ("java.lang.Integer".equals(parameter.getType().getName())) {
+
+                           final String value = SwingUtil.showInputDialog(parameter.getName(), app);
+                           if (value == null) return;
+
+                           final Reflect param = Reflect.on(parameter.getType());
+                           args[i] = param.create(Integer.parseInt(value.trim())).get();
+
+                        } else {
+                           System.out.println("\t" + parameter.getType().getName());
+                           args[i] = parameter.getType().newInstance();
+                        }
+
+                     }
+
+                     Reflect.on(instance).call(method.getName(), args);
+                     fireNodeChanged(objectNode.getNode());
+                  }
+               });
+            }
+         }
+      }.visit(instance.getClass());
+   }
+
+   @Override
    public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
 
+      super.handleNodeRightClick(pop, neoNode, selectedNodes);
+
       // get incoming INSTANCE, and if of STTemplate, allow to create instance of, similar to renderer
-
-      incoming(neoNode.getNode(), DomainPlugin.Relations.INSTANCE).forEach(instanceRelation -> {
-
-         final Node instanceNode = other(neoNode.getNode(), instanceRelation);
-
-         if (hasLabel(instanceNode, StringTemplatePlugin.Entities.STTemplate)) {
+      DomainPlugin.incomingINSTANCE(neoNode.getNode(), (instanceRelation, instanceNode) -> {
+         if (StringTemplatePlugin.isSTTemplate(instanceNode)) {
 
             pop.add(new App.TransactionAction("TEST - new instance of " + getNameProperty(neoNode.getNode()), app) {
                @Override
@@ -128,70 +188,8 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
                   fireNodesLoaded(node);
                }
             });
-
          }
       });
-
-      if (hasLabel(neoNode.getNode(), Entities.Object)) {
-
-         // todo: nodeInstances will be null if restarting - needs to be cleaned-up
-         final Object instance = instanceMap.get(getString(neoNode.getNode(), TAG_UUID));
-         if (instance == null) return;
-
-         new BaseClassVisitor() {
-            @Override
-            public void onClass(Package classPackage, String className, Class superClass) {
-               System.out.println(className);
-            }
-
-            @Override
-            public void onPublicMethod(Method method) {
-
-               final Class<?> returnType = method.getReturnType();
-
-               if ("void".equals(returnType.getName())) {
-                  pop.add(new App.TransactionAction("Call " + method.getName(), app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                        final Parameter[] parameters = method.getParameters();
-                        final Object[] args = new Object[parameters.length];
-
-                        for (int i = 0; i < parameters.length; i++) {
-                           Parameter parameter = parameters[i];
-
-                           // todo: generify this to support any arbitrary parameter, and remove if-else
-                           if ("java.lang.String".equals(parameter.getType().getName())) {
-
-                              final String value = SwingUtil.showInputDialog(parameter.getName(), app);
-                              if (value == null) return;
-
-                              final Reflect param = Reflect.on(parameter.getType());
-                              args[i] = param.create(value).get();
-
-                           } else if ("java.lang.Integer".equals(parameter.getType().getName())) {
-
-                              final String value = SwingUtil.showInputDialog(parameter.getName(), app);
-                              if (value == null) return;
-
-                              final Reflect param = Reflect.on(parameter.getType());
-                              args[i] = param.create(Integer.parseInt(value.trim())).get();
-
-                           } else {
-                              System.out.println("\t" + parameter.getType().getName());
-                              args[i] = parameter.getType().newInstance();
-                           }
-
-                        }
-
-                        Reflect.on(instance).call(method.getName(), args);
-                        fireNodeChanged(neoNode.getNode());
-                     }
-                  });
-               }
-            }
-         }.visit(instance.getClass());
-      }
    }
 
    @Override
@@ -328,8 +326,9 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
             classST.addMethodsValue(methodST);
 
          } else {
-            final Node templateNode = other(methodNode,singleIncoming(methodNode, DomainPlugin.Relations.INSTANCE));
-            if(templateNode!=null) classST.addMethodsValue(StringTemplatePlugin.renderStatement(methodNode, templateNode));
+            final Node templateNode = other(methodNode, singleIncoming(methodNode, DomainPlugin.Relations.INSTANCE));
+            if (templateNode != null)
+               classST.addMethodsValue(StringTemplatePlugin.renderStatement(methodNode, templateNode));
          }
       });
 

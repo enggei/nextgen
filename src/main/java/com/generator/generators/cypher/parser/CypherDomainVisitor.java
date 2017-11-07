@@ -9,9 +9,9 @@ public abstract class CypherDomainVisitor {
    public void visit(Node node) {
 		if(hasLabel(node, "Atom")) visitAtom(node);
 		else if(hasLabel(node, "Set")) visitSet(node);
-		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Expression")) visitExpression(node);
 		else if(hasLabel(node, "Statement")) visitStatement(node);
+		else if(hasLabel(node, "Literal")) visitLiteral(node);
 		else if(hasLabel(node, "Cypher")) visitCypher(node);
 		else if(hasLabel(node, "Query")) visitQuery(node);
 		else if(hasLabel(node, "RegularQuery")) visitRegularQuery(node);
@@ -123,12 +123,6 @@ public abstract class CypherDomainVisitor {
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
 	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
@@ -136,6 +130,12 @@ public abstract class CypherDomainVisitor {
 	}
 
 	public void visitStatement(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

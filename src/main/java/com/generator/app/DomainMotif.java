@@ -63,15 +63,15 @@ public class DomainMotif {
       // check if already related
       for (Relationship relationship : outgoing(srcEntity, DomainPlugin.Relations.SRC)) {
          final Node existingRelationNode = other(srcEntity, relationship);
-         if (!name.equals(getString(existingRelationNode, AppMotif.Properties.name.name()))) continue;
+         if (!name.equals(getName(existingRelationNode))) continue;
 
          // same name on relation, merge any new dst to it
          final Set<Node> existingDst = new LinkedHashSet<>();
          for (Relationship dstRelation : outgoing(existingRelationNode, DomainPlugin.Relations.DST)) {
             final Node existingDstEntity = other(existingRelationNode, dstRelation);
             for (Node dstEntity : dstEntities) {
-               final String existingName = getString(existingDstEntity, AppMotif.Properties.name.name());
-               final String newName = getString(dstEntity, AppMotif.Properties.name.name());
+               final String existingName = getName(existingDstEntity);
+               final String newName = getName(dstEntity);
                if (existingName == null || newName == null) continue;
                if (existingName.equals(newName)) existingDst.add(dstEntity);
             }
@@ -101,6 +101,10 @@ public class DomainMotif {
    }
 
    // specific domain utilities
+
+   public static String getName(Node node) {
+      return getString(node, AppMotif.Properties.name.name());
+   }
 
    public static Node newValueNode(NeoModel graph, Object value) {
       return graph.newNode(DomainPlugin.Entities.Value, AppMotif.Properties.name.name(), value);

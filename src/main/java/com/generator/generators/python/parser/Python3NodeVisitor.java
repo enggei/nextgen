@@ -49,6 +49,231 @@ public class Python3NodeVisitor extends Python3BaseVisitor<Python3NodeVisitor.No
    }
 
 	@Override
+	public Node visitTypedargslist(com.generator.generators.python.parser.Python3Parser.TypedargslistContext arg) {
+		final Node node = new Node("Typedargslist", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTfpdef(com.generator.generators.python.parser.Python3Parser.TfpdefContext arg) {
+		final Node node = new Node("Tfpdef", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVarargslist(com.generator.generators.python.parser.Python3Parser.VarargslistContext arg) {
+		final Node node = new Node("Varargslist", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitVfpdef(com.generator.generators.python.parser.Python3Parser.VfpdefContext arg) {
+		final Node node = new Node("Vfpdef", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitStmt(com.generator.generators.python.parser.Python3Parser.StmtContext arg) {
+		final Node node = new Node("Stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSimple_stmt(com.generator.generators.python.parser.Python3Parser.Simple_stmtContext arg) {
+		final Node node = new Node("Simple_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitSmall_stmt(com.generator.generators.python.parser.Python3Parser.Small_stmtContext arg) {
+		final Node node = new Node("Small_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPrint_stmt(com.generator.generators.python.parser.Python3Parser.Print_stmtContext arg) {
+		final Node node = new Node("Print_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitExpr_stmt(com.generator.generators.python.parser.Python3Parser.Expr_stmtContext arg) {
+		final Node node = new Node("Expr_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitTestlist_star_expr(com.generator.generators.python.parser.Python3Parser.Testlist_star_exprContext arg) {
+		final Node node = new Node("Testlist_star_expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitAugassign(com.generator.generators.python.parser.Python3Parser.AugassignContext arg) {
+		final Node node = new Node("Augassign", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
+		final Node node = new Node("Del_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
+		final Node node = new Node("Pass_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
+		final Node node = new Node("Flow_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
+		final Node node = new Node("Break_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
+		final Node node = new Node("Continue_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
+		final Node node = new Node("Return_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
+		final Node node = new Node("Yield_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
+		final Node node = new Node("Raise_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
+		final Node node = new Node("Import_from", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
+		final Node node = new Node("Import_as_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
+		final Node node = new Node("Dotted_as_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
+		final Node node = new Node("Import_as_names", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
+		final Node node = new Node("Dotted_as_names", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
+		final Node node = new Node("Dotted_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitGlobal_stmt(com.generator.generators.python.parser.Python3Parser.Global_stmtContext arg) {
 		final Node node = new Node("Global_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
@@ -472,8 +697,35 @@ public class Python3NodeVisitor extends Python3BaseVisitor<Python3NodeVisitor.No
 	}
 
 	@Override
+	public Node visitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
+		final Node node = new Node("Atom", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
 	public Node visitSingle_input(com.generator.generators.python.parser.Python3Parser.Single_inputContext arg) {
 		final Node node = new Node("Single_input", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
+		final Node node = new Node("Import_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
+		final Node node = new Node("Import_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -528,258 +780,6 @@ public class Python3NodeVisitor extends Python3BaseVisitor<Python3NodeVisitor.No
 	@Override
 	public Node visitFuncdef(com.generator.generators.python.parser.Python3Parser.FuncdefContext arg) {
 		final Node node = new Node("Funcdef", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTypedargslist(com.generator.generators.python.parser.Python3Parser.TypedargslistContext arg) {
-		final Node node = new Node("Typedargslist", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTfpdef(com.generator.generators.python.parser.Python3Parser.TfpdefContext arg) {
-		final Node node = new Node("Tfpdef", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVarargslist(com.generator.generators.python.parser.Python3Parser.VarargslistContext arg) {
-		final Node node = new Node("Varargslist", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitVfpdef(com.generator.generators.python.parser.Python3Parser.VfpdefContext arg) {
-		final Node node = new Node("Vfpdef", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitStmt(com.generator.generators.python.parser.Python3Parser.StmtContext arg) {
-		final Node node = new Node("Stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSimple_stmt(com.generator.generators.python.parser.Python3Parser.Simple_stmtContext arg) {
-		final Node node = new Node("Simple_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitSmall_stmt(com.generator.generators.python.parser.Python3Parser.Small_stmtContext arg) {
-		final Node node = new Node("Small_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPrint_stmt(com.generator.generators.python.parser.Python3Parser.Print_stmtContext arg) {
-		final Node node = new Node("Print_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitExpr_stmt(com.generator.generators.python.parser.Python3Parser.Expr_stmtContext arg) {
-		final Node node = new Node("Expr_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitTestlist_star_expr(com.generator.generators.python.parser.Python3Parser.Testlist_star_exprContext arg) {
-		final Node node = new Node("Testlist_star_expr", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAugassign(com.generator.generators.python.parser.Python3Parser.AugassignContext arg) {
-		final Node node = new Node("Augassign", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDel_stmt(com.generator.generators.python.parser.Python3Parser.Del_stmtContext arg) {
-		final Node node = new Node("Del_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitPass_stmt(com.generator.generators.python.parser.Python3Parser.Pass_stmtContext arg) {
-		final Node node = new Node("Pass_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitFlow_stmt(com.generator.generators.python.parser.Python3Parser.Flow_stmtContext arg) {
-		final Node node = new Node("Flow_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitBreak_stmt(com.generator.generators.python.parser.Python3Parser.Break_stmtContext arg) {
-		final Node node = new Node("Break_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitContinue_stmt(com.generator.generators.python.parser.Python3Parser.Continue_stmtContext arg) {
-		final Node node = new Node("Continue_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitReturn_stmt(com.generator.generators.python.parser.Python3Parser.Return_stmtContext arg) {
-		final Node node = new Node("Return_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitYield_stmt(com.generator.generators.python.parser.Python3Parser.Yield_stmtContext arg) {
-		final Node node = new Node("Yield_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitRaise_stmt(com.generator.generators.python.parser.Python3Parser.Raise_stmtContext arg) {
-		final Node node = new Node("Raise_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_stmt(com.generator.generators.python.parser.Python3Parser.Import_stmtContext arg) {
-		final Node node = new Node("Import_stmt", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_name(com.generator.generators.python.parser.Python3Parser.Import_nameContext arg) {
-		final Node node = new Node("Import_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_from(com.generator.generators.python.parser.Python3Parser.Import_fromContext arg) {
-		final Node node = new Node("Import_from", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_as_name(com.generator.generators.python.parser.Python3Parser.Import_as_nameContext arg) {
-		final Node node = new Node("Import_as_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_as_name(com.generator.generators.python.parser.Python3Parser.Dotted_as_nameContext arg) {
-		final Node node = new Node("Dotted_as_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitImport_as_names(com.generator.generators.python.parser.Python3Parser.Import_as_namesContext arg) {
-		final Node node = new Node("Import_as_names", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_as_names(com.generator.generators.python.parser.Python3Parser.Dotted_as_namesContext arg) {
-		final Node node = new Node("Dotted_as_names", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitDotted_name(com.generator.generators.python.parser.Python3Parser.Dotted_nameContext arg) {
-		final Node node = new Node("Dotted_name", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitAtom(com.generator.generators.python.parser.Python3Parser.AtomContext arg) {
-		final Node node = new Node("Atom", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

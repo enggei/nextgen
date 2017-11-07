@@ -105,6 +105,7 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
                   for (TemplateStatement templateStatement : templateFile.getStatements()) {
 
                      final Node stNode = newSTTemplate(templateStatement.getText(), templateStatement.getName());
+                     stNode.addLabel(DomainPlugin.Entities.Entity);
                      relateTEMPLATE(stGroupNode, stNode);
 
                      for (TemplateParameter templateParameter : templateStatement.getParameters())
@@ -188,7 +189,8 @@ public class StringTemplatePlugin extends StringTemplateDomainPlugin {
             }
 
             final Node newNode = newSTTemplate("",name);
-            relateTEMPLATE(neoNode.getNode(), newNode);
+            newNode.addLabel(DomainPlugin.Entities.Entity);
+            neoNode.getNode().createRelationshipTo(newNode, Relations.TEMPLATE);
             fireNodesLoaded(newNode);
          }
       });

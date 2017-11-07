@@ -57,6 +57,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
       return !inBlock.isEmpty(); 
    }
 
+	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inStatement.push(true);
+	}
+
+	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
+		onExit();
+		this.inStatement.pop();
+	}
+
+	public boolean inStatement() {
+      return !inStatement.isEmpty(); 
+   }
+
 	protected java.util.Stack<Boolean> inLiteral = new java.util.Stack<>();
 
 	@Override
@@ -91,24 +109,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inKeyword() {
       return !inKeyword.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("Statement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inStatement.push(true);
-	}
-
-	public void exitStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.StatementContext arg) {
-		onExit();
-		this.inStatement.pop();
-	}
-
-	public boolean inStatement() {
-      return !inStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inNotExpression = new java.util.Stack<>();
@@ -181,6 +181,24 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inDoStatement() {
       return !inDoStatement.isEmpty(); 
+   }
+
+	protected java.util.Stack<Boolean> inWhileStatement = new java.util.Stack<>();
+
+	@Override
+	public void enterWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
+		final Node node = model.findOrCreate(Label.label("WhileStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
+		onEnter(node);
+		this.inWhileStatement.push(true);
+	}
+
+	public void exitWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
+		onExit();
+		this.inWhileStatement.pop();
+	}
+
+	public boolean inWhileStatement() {
+      return !inWhileStatement.isEmpty(); 
    }
 
 	protected java.util.Stack<Boolean> inForStatement = new java.util.Stack<>();
@@ -1783,24 +1801,6 @@ public class ECMAScriptNeoListener extends ECMAScriptBaseListener {
 
 	public boolean inIfStatement() {
       return !inIfStatement.isEmpty(); 
-   }
-
-	protected java.util.Stack<Boolean> inWhileStatement = new java.util.Stack<>();
-
-	@Override
-	public void enterWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
-		final Node node = model.findOrCreate(Label.label("WhileStatement"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", (arg.getStop() == null ? "" : arg.getStop().getText()));
-		onEnter(node);
-		this.inWhileStatement.push(true);
-	}
-
-	public void exitWhileStatement(com.generator.generators.ecmascript.parser.ECMAScriptParser.WhileStatementContext arg) {
-		onExit();
-		this.inWhileStatement.pop();
-	}
-
-	public boolean inWhileStatement() {
-      return !inWhileStatement.isEmpty(); 
    }
 
 }

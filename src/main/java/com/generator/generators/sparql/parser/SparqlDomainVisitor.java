@@ -7,15 +7,11 @@ public abstract class SparqlDomainVisitor {
 	protected final java.util.Set<Node> visited = new java.util.LinkedHashSet<>();
 
    public void visit(Node node) {
-		if(hasLabel(node, "String")) visitString(node);
-		else if(hasLabel(node, "Expression")) visitExpression(node);
+		if(hasLabel(node, "Expression")) visitExpression(node);
+		else if(hasLabel(node, "String")) visitString(node);
 		else if(hasLabel(node, "Var")) visitVar(node);
 		else if(hasLabel(node, "Query")) visitQuery(node);
 		else if(hasLabel(node, "BooleanLiteral")) visitBooleanLiteral(node);
-		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
-		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
-		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
-		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
 		else if(hasLabel(node, "Prologue")) visitPrologue(node);
 		else if(hasLabel(node, "BaseDecl")) visitBaseDecl(node);
 		else if(hasLabel(node, "PrefixDecl")) visitPrefixDecl(node);
@@ -58,6 +54,10 @@ public abstract class SparqlDomainVisitor {
 		else if(hasLabel(node, "GraphNode")) visitGraphNode(node);
 		else if(hasLabel(node, "VarOrTerm")) visitVarOrTerm(node);
 		else if(hasLabel(node, "VarOrIRIref")) visitVarOrIRIref(node);
+		else if(hasLabel(node, "MultiplicativeExpression")) visitMultiplicativeExpression(node);
+		else if(hasLabel(node, "AdditiveExpression")) visitAdditiveExpression(node);
+		else if(hasLabel(node, "RelationalExpression")) visitRelationalExpression(node);
+		else if(hasLabel(node, "NumericLiteral")) visitNumericLiteral(node);
 		else if(hasLabel(node, "GraphTerm")) visitGraphTerm(node);
 		else if(hasLabel(node, "ConditionalOrExpression")) visitConditionalOrExpression(node);
 		else if(hasLabel(node, "ConditionalAndExpression")) visitConditionalAndExpression(node);
@@ -78,13 +78,13 @@ public abstract class SparqlDomainVisitor {
 		else if(hasLabel(node, "BlankNode")) visitBlankNode(node);
    }
 
-	public void visitString(Node node) {
+	public void visitExpression(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
 	}
 
-	public void visitExpression(Node node) {
+	public void visitString(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -103,30 +103,6 @@ public abstract class SparqlDomainVisitor {
 	}
 
 	public void visitBooleanLiteral(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitMultiplicativeExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitAdditiveExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitRelationalExpression(Node node) {
-		if (visited.contains(node)) return;
-	   visited.add(node);
-		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
-	}
-
-	public void visitNumericLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
@@ -379,6 +355,30 @@ public abstract class SparqlDomainVisitor {
 	}
 
 	public void visitVarOrIRIref(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitMultiplicativeExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitAdditiveExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitRelationalExpression(Node node) {
+		if (visited.contains(node)) return;
+	   visited.add(node);
+		outgoing(node).forEach(relationship -> visit(other(node, relationship)));
+	}
+
+	public void visitNumericLiteral(Node node) {
 		if (visited.contains(node)) return;
 	   visited.add(node);
 		outgoing(node).forEach(relationship -> visit(other(node, relationship)));

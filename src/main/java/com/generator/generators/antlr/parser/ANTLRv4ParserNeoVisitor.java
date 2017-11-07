@@ -28,9 +28,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
    }
 
 	@Override
-	public Node visitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		System.out.println("Rules");
-		final Node node = model.newNode(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		System.out.println("ActionScopeName");
+		final Node node = model.newNode(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -38,9 +38,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		System.out.println("RuleSpec");
-		final Node node = model.newNode(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		System.out.println("ActionBlock");
+		final Node node = model.newNode(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -48,9 +48,19 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		System.out.println("GrammarSpec");
-		final Node node = model.newNode(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		System.out.println("Action");
+		final Node node = model.newNode(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		System.out.println("IdList");
+		final Node node = model.newNode(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -148,9 +158,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		System.out.println("IdList");
-		final Node node = model.newNode(Label.label("IdList"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		System.out.println("ModeSpec");
+		final Node node = model.newNode(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -158,29 +168,9 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		System.out.println("Action");
-		final Node node = model.newNode(Label.label("Action"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		System.out.println("ActionScopeName");
-		final Node node = model.newNode(Label.label("ActionScopeName"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
-      onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		System.out.println("ActionBlock");
-		final Node node = model.newNode(Label.label("ActionBlock"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		System.out.println("GrammarSpec");
+		final Node node = model.newNode(Label.label("GrammarSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();
@@ -198,9 +188,19 @@ public class ANTLRv4ParserNeoVisitor extends ANTLRv4ParserBaseVisitor<Node> {
 	}
 
 	@Override
-	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		System.out.println("ModeSpec");
-		final Node node = model.newNode(Label.label("ModeSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+	public Node visitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		System.out.println("Rules");
+		final Node node = model.newNode(Label.label("Rules"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
+      onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		System.out.println("RuleSpec");
+		final Node node = model.newNode(Label.label("RuleSpec"), "text", arg.getText(), "startToken", arg.getStart().getText(), "endToken", arg.getStop().getText());
       onEnter(node);
       visitChildren(arg);
       onExit();

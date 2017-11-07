@@ -49,8 +49,8 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
    }
 
 	@Override
-	public Node visitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
-		final Node node = new Node("Rules", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
+		final Node node = new Node("ActionScopeName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -58,8 +58,8 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
-		final Node node = new Node("RuleSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
+		final Node node = new Node("ActionBlock", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -67,8 +67,17 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
-		final Node node = new Node("GrammarSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
+		final Node node = new Node("Action", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
+		final Node node = new Node("IdList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -157,8 +166,8 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitIdList(com.generator.generators.antlr.parser.ANTLRv4Parser.IdListContext arg) {
-		final Node node = new Node("IdList", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
+		final Node node = new Node("ModeSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -166,26 +175,8 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitAction(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionContext arg) {
-		final Node node = new Node("Action", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitActionScopeName(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionScopeNameContext arg) {
-		final Node node = new Node("ActionScopeName", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
-		onEnter(node);
-      visitChildren(arg);
-      onExit();
-      return node;
-	}
-
-	@Override
-	public Node visitActionBlock(com.generator.generators.antlr.parser.ANTLRv4Parser.ActionBlockContext arg) {
-		final Node node = new Node("ActionBlock", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitGrammarSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.GrammarSpecContext arg) {
+		final Node node = new Node("GrammarSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();
@@ -202,8 +193,17 @@ public class ANTLRv4ParserNodeVisitor extends ANTLRv4ParserBaseVisitor<ANTLRv4Pa
 	}
 
 	@Override
-	public Node visitModeSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.ModeSpecContext arg) {
-		final Node node = new Node("ModeSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+	public Node visitRules(com.generator.generators.antlr.parser.ANTLRv4Parser.RulesContext arg) {
+		final Node node = new Node("Rules", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
+		onEnter(node);
+      visitChildren(arg);
+      onExit();
+      return node;
+	}
+
+	@Override
+	public Node visitRuleSpec(com.generator.generators.antlr.parser.ANTLRv4Parser.RuleSpecContext arg) {
+		final Node node = new Node("RuleSpec", arg.getText(), arg.getStart().getText(), arg.getStop().getText());
 		onEnter(node);
       visitChildren(arg);
       onExit();

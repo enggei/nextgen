@@ -1,6 +1,7 @@
 package com.generator.generators.antlr.bnf;
 
 import com.generator.app.AppMotif;
+import com.generator.app.DomainMotif;
 import com.generator.generators.antlr.AntlrGroup;
 import com.generator.generators.antlr.parser.*;
 import com.generator.util.NeoUtil;
@@ -925,7 +926,7 @@ public class AntlrGrammarPanel extends JPanel {
          }
 
          public InformationNode(Node node) {
-            label = NeoUtil.getString(node, AppMotif.Properties.name.name());
+            label = DomainMotif.getName(node);
             this.neoNode = node;
          }
 
