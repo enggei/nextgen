@@ -11,6 +11,7 @@ import org.neo4j.graphdb.Transaction;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -43,10 +44,13 @@ public class ChromeBookmarksPlugin extends ChromeBookmarksDomainPlugin {
    protected void handleCatalog(JPopupMenu pop, NeoNode catalogNode, Set<NeoNode> selectedNodes) {
 
       pop.add(new App.TransactionAction("Import From Chrome", app) {
+
+         private final SimpleDateFormat dd_mm_yyyy = new SimpleDateFormat("dd_MM_yyyy");
+
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
             final File file = SwingUtil.showOpenFile(app, "/home/goe/projects/nextgen/src/main/java/com/generator/generators/chromeBookmarks");
-            if (file == null || file.getName().toLowerCase().endsWith(".html")) return;
+            if (file == null || !file.getName().toLowerCase().endsWith(".html")) return;
 
             FileUtil.readString(file, new FileUtil.LineHandler() {
 
@@ -114,7 +118,8 @@ public class ChromeBookmarksPlugin extends ChromeBookmarksDomainPlugin {
                      });
 
                      if(foundBookmarkNode.isEmpty()) {
-                        final Node newBookmark = newBookmark(icon, hrefDate, currentHref, group);
+                        final String date = hrefDate==null ? null : dd_mm_yyyy.format(hrefDate);
+                        final Node newBookmark = newBookmark(icon, hrefDate==null ? null : date, currentHref, group);
                         relateBOOKMARK(groupNode, newBookmark);
                         foundBookmarkNode.add(newBookmark);
                      }
