@@ -178,7 +178,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
-                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.packageName.name(), packageName);
                   rendererRelationship.setProperty(Properties.className.name(), className + "Group");
                }
             });
@@ -231,7 +231,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
-                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.packageName.name(), packageName);
                   rendererRelationship.setProperty(Properties.className.name(), className);
                }
             });
@@ -253,7 +253,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
                   final Relationship rendererRelationship = neoNode.getNode().createRelationshipTo(selectedNode.getNode(), Relations.RENDERER);
                   rendererRelationship.setProperty(Properties.fileType.name(), Filetype.groupFile.name());
-                  rendererRelationship.setProperty("package", packageName);
+                  rendererRelationship.setProperty(Properties.packageName.name(), packageName);
                   rendererRelationship.setProperty(Properties.className.name(), className + "Group");
                }
             });
@@ -326,7 +326,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
 
                   final JRadioButton radJavaFile = new JRadioButton("Java file");
                   final JComboBox<Object> cboPackageProperty = new JComboBox<>(properties);
-                  SwingUtil.selectByLevensthein(cboPackageProperty, properties, "package");
+                  SwingUtil.selectByLevensthein(cboPackageProperty, properties, Properties.packageName.name());
                   final JComboBox<Object> cboClassnameProperty = new JComboBox<>(properties);
                   SwingUtil.selectByLevensthein(cboClassnameProperty, properties, "name");
 
@@ -380,7 +380,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
                                  if (cboPackageProperty.getSelectedItem().toString().equals(cboClassnameProperty.getSelectedItem().toString()))
                                     throw new IllegalStateException("package and classname are using same parameter.");
                                  rendererRelationship.setProperty(Properties.fileType.name(), Filetype.java.name());
-                                 rendererRelationship.setProperty("package", cboPackageProperty.getSelectedItem().toString());
+                                 rendererRelationship.setProperty(Properties.packageName.name(), cboPackageProperty.getSelectedItem().toString());
                                  rendererRelationship.setProperty(Properties.className.name(), cboClassnameProperty.getSelectedItem().toString());
 
                               } else if (radPlainFile.isSelected()) {
@@ -553,7 +553,7 @@ public class ProjectPlugin extends ProjectDomainPlugin {
       switch (Filetype.valueOf(getString(rendererRelationship, Properties.fileType.name()))) {
 
          case java: {
-            final String packageName = getEntityProperty(statementNode, getString(rendererRelationship, "package"));
+            final String packageName = getEntityProperty(statementNode, getString(rendererRelationship, Properties.packageName.name()));
             final String className = getEntityProperty(statementNode, getString(rendererRelationship, Properties.className.name()));
             try {
                GeneratedFile.newJavaFile(targetDir.getPath(), packageName, className).write(content);

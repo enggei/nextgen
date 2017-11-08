@@ -427,10 +427,12 @@ public final class DomainPluginGroup {
 		"\n" + 
 		"	private static final Map<Label,Node> entitiesNodeMap = new LinkedHashMap<>();\n" + 
 		"\n" + 
+		"	private final Node domainNode;\n" + 
+		"\n" + 
 		"   ~name~(App app) {\n" + 
 		"      super(app, \"~title~\");\n" + 
 		"\n" + 
-		"		final Node domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), \"~title~\");\n" + 
+		"		domainNode = getGraph().findOrCreate(Domain, AppMotif.Properties.name.name(), \"~title~\");\n" + 
 		"		~entities:{it|entitiesNodeMap.put(Entities.~it.name~, newDomainEntity(getGraph(), Entities.~it.name~, domainNode));};separator=\"\\n\"~\n" + 
 		"		\n" + 
 		"		~entityProperties:{it|newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.~it.entityName~), Properties.~it.propertyName~.name());};separator=\"\\n\"~\n" + 
@@ -454,6 +456,8 @@ public final class DomainPluginGroup {
 		"		~entities:{it|if (is~it.name~(neoNode.getNode())) return new~it.name~Editor(neoNode);};separator=\"\\n\"~\n" + 
 		"      return null;\n" + 
 		"   }\n" + 
+		"\n" + 
+		"	protected Node getDomainNode() { return domainNode; }\n" + 
 		"\n" + 
 		"	~entities:{it|protected void handle~it.name~(JPopupMenu pop, NeoNode ~it.name;format=\"lowFirst\"~Node, Set<NeoNode> selectedNodes) { ~eom()~};separator=\"\\n\"~	\n" + 
 		"\n" + 

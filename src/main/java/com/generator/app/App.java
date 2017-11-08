@@ -1,6 +1,7 @@
 package com.generator.app;
 
 import com.generator.generators.antlr.ANTLRPlugin;
+import com.generator.generators.chromeBookmarks.ChromeBookmarksPlugin;
 import com.generator.generators.clojure.ClojurePlugin;
 import com.generator.generators.csv.CSVPlugin;
 import com.generator.generators.docker.DockerPlugin;
@@ -248,6 +249,7 @@ public class App extends JFrame {
                   plugins.add(new CSVPlugin(App.this));
                   plugins.add(new JsonPlugin(App.this));
                   plugins.add(new ExcelPlugin(App.this));
+                  plugins.add(new ChromeBookmarksPlugin(App.this));
                }
             }
          });
@@ -425,6 +427,7 @@ public class App extends JFrame {
             @Override
             public void doAction(Transaction tx) throws Throwable {
                SSHPlugin.cleanupPreviousSessions(neoModel);
+               JavaPlugin.cleanupPreviousSessions(neoModel);
             }
 
             @Override
@@ -700,7 +703,7 @@ public class App extends JFrame {
 
          setAlwaysOnTop(true);
 
-         final Dimension size = new Dimension(800, 400);
+         final Dimension size = new Dimension(640, 320);
 
          final JPanel content = new JPanel(new BorderLayout());
          content.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));

@@ -63,418 +63,428 @@ public class DomainPlugin extends DomainDomainPlugin {
    }
 
    @Override
-   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+   protected void handleDomain(JPopupMenu pop, NeoNode domainNode, Set<NeoNode> selectedNodes) {
 
-      if (isDomain(neoNode.getNode())) {
+      pop.add(new App.TransactionAction("Add Entity", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-         pop.add(new App.TransactionAction("Add Entity", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final String name = SwingUtil.showInputDialog("Entity name", app);
+            if (name == null || name.length() == 0) return;
 
-               final String name = SwingUtil.showInputDialog("Entity name", app);
-               if (name == null || name.length() == 0) return;
-
-               final AtomicBoolean exists = new AtomicBoolean(false);
-               new DomainVisitor<Void>(true) {
-                  @Override
-                  public void visitEntity(Node node) {
-                     if (name.equals(getNameProperty(node))) exists.set(true);
-                     super.visitEntity(node);
-                  }
-               }.visit(neoNode.getNode());
-
-               if (exists.get()) {
-                  SwingUtil.showMessage(name + " already exists for domain", app);
-                  return;
+            final AtomicBoolean exists = new AtomicBoolean(false);
+            new DomainVisitor<Void>(true) {
+               @Override
+               public void visitEntity(Node node) {
+                  if (name.equals(getNameProperty(node))) exists.set(true);
+                  super.visitEntity(node);
                }
+            }.visit(domainNode.getNode());
 
-               final Node newNode = newEntity(name);
-               relateENTITY(neoNode.getNode(), newNode);
-               fireNodesLoaded(newNode);
+            if (exists.get()) {
+               SwingUtil.showMessage(name + " already exists for domain", app);
+               return;
             }
-         });
 
-         pop.add(new App.TransactionAction("Create Plugin", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Node newNode = newEntity(name);
+            relateENTITY(domainNode.getNode(), newNode);
+            fireNodesLoaded(newNode);
+         }
+      });
 
-               if (!hasPackageNameProperty(neoNode.getNode())) {
-                  final String packageName = SwingUtil.showInputDialog("Package", app);
-                  if (packageName == null || packageName.length() == 0) return;
-                  setPackageNameProperty(neoNode.getNode(), packageName);
+      pop.add(new App.TransactionAction("Create Plugin", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            if (!hasPackageNameProperty(domainNode.getNode())) {
+               final String packageName = SwingUtil.showInputDialog("Package", app);
+               if (packageName == null || packageName.length() == 0) return;
+               setPackageNameProperty(domainNode.getNode(), packageName);
+            }
+
+            final String className = getNameProperty(domainNode.getNode()) + "DomainPlugin";
+
+            final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
+            final DomainPluginGroup.DomainPluginST domainPluginST = domainPluginGroup.newDomainPlugin().
+                  setPackageName(getPackageNameProperty(domainNode.getNode())).
+                  setName(className).
+                  setTitle(getNameProperty(domainNode.getNode()));
+
+            // todo: group Entities.properties and Relations.properties, and use these to create default-add/set actions (like StringTemplatePlugin)
+
+            final Set<String> domainRelations = new LinkedHashSet<>();
+            final Set<String> domainProperties = new LinkedHashSet<>();
+            final Map<String, Set<String>> entityProperties = new LinkedHashMap<>();
+            final Map<String, Set<Map<Node, String>>> entityRelations = new LinkedHashMap<>();
+            new DomainVisitor<Object>(true) {
+
+               @Override
+               public void visitDomain(Node node) {
+                  outgoingENTITY(node, (entityRelation, entity) -> {
+                     domainRelations.add(getNameProperty(entity,"").toUpperCase());
+                     domainPluginST.addRootRelationsValue(getNameProperty(entity));
+                  });
+                  super.visitDomain(node);
                }
 
-               final String className = getNameProperty(neoNode.getNode()) + "DomainPlugin";
+               @Override
+               public void visitEntity(Node node) {
+                  if (!entityProperties.containsKey(getNameProperty(node)))
+                     entityProperties.put(getNameProperty(node), new LinkedHashSet<>());
 
-               final DomainPluginGroup domainPluginGroup = new DomainPluginGroup();
-               final DomainPluginGroup.DomainPluginST domainPluginST = domainPluginGroup.newDomainPlugin().
-                     setPackageName(getPackageNameProperty(neoNode.getNode())).
-                     setName(className).
-                     setTitle(getNameProperty(neoNode.getNode()));
+                  if (!entityRelations.containsKey(getNameProperty(node)))
+                     entityRelations.put(getNameProperty(node), new LinkedHashSet<>());
 
-               // todo: group Entities.properties and Relations.properties, and use these to create default-add/set actions (like StringTemplatePlugin)
+                  outgoingSRC(node, (src, relationNode) -> outgoingDST(relationNode, (dst, dstNode) -> {
+                     if (isProperty(dstNode))
+                        entityProperties.get(getNameProperty(node)).add(getNameProperty(dstNode));
+                  }));
 
-               final Set<String> domainRelations = new LinkedHashSet<>();
-               final Set<String> domainProperties = new LinkedHashSet<>();
-               final Map<String, Set<String>> entityProperties = new LinkedHashMap<>();
-               final Map<String, Set<Map<Node, String>>> entityRelations = new LinkedHashMap<>();
-               new DomainVisitor<Object>(true) {
+                  super.visitEntity(node);
+               }
 
-                  @Override
-                  public void visitDomain(Node node) {
-//                  if (!entityRelations.containsKey("Domain"))
-//                     entityRelations.put("Domain", new LinkedHashSet<>());
+               @Override
+               public void visitRelation(Node node) {
 
-                     outgoingENTITY(node, (entityRelation, entity) -> {
-                        domainRelations.add(getNameProperty(entity,"").toUpperCase());
-                        domainPluginST.addRootRelationsValue(getNameProperty(entity));
-                     });
-                     super.visitDomain(node);
+                  // relation can be either to a Property or Entity
+                  final AtomicBoolean isProperty = new AtomicBoolean(false);
+                  outgoingDST(node, (relationship, dstNode) -> {
+                     if (isProperty(dstNode)) isProperty.set(true);
+                  });
+
+                  // if Entity (not Property), add relation
+                  if (!isProperty.get()) {
+                     domainRelations.add(getNameProperty(node,"").toUpperCase());
+
+                     // add entity-relations
+                     final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
+                     relation.put(node, getNameProperty(singleOutgoingDST(node)));
+                     entityRelations.get(getNameProperty(singleIncomingSRC(node))).add(relation);
                   }
 
-                  @Override
-                  public void visitEntity(Node node) {
-                     if (!entityProperties.containsKey(getNameProperty(node)))
-                        entityProperties.put(getNameProperty(node), new LinkedHashSet<>());
+                  super.visitRelation(node);
+               }
 
-                     if (!entityRelations.containsKey(getNameProperty(node)))
-                        entityRelations.put(getNameProperty(node), new LinkedHashSet<>());
+               @Override
+               public void visitProperty(Node node) {
+                  domainProperties.add(getNameProperty(node));
+                  super.visitProperty(node);
+               }
+            }.visitDomain(domainNode.getNode());
 
-                     outgoingSRC(node, (src, relationNode) -> outgoingDST(relationNode, (dst, dstNode) -> {
-                        if (isProperty(dstNode))
-                           entityProperties.get(getNameProperty(node)).add(getNameProperty(dstNode));
-                     }));
+            for (String name : domainRelations) domainPluginST.addRelationsValue(name);
+            for (String name : domainProperties) domainPluginST.addPropertiesValue(name);
 
-                     super.visitEntity(node);
+            for (Map.Entry<String, Set<String>> entry : entityProperties.entrySet()) {
+
+               final DomainPluginGroup.EntityMethodsST entityMethodsST = domainPluginGroup.newEntityMethods().
+                     setName(entry.getKey());
+
+               for (String propertyName : entry.getValue()) {
+                  domainPluginST.addEntityPropertiesValue(entry.getKey(), propertyName);
+                  entityMethodsST.addPropertiesValue(propertyName);
+               }
+
+               domainPluginST.addEntitiesValue(entityMethodsST, entry.getKey());
+            }
+
+            for (Map.Entry<String, Set<Map<Node, String>>> entry : entityRelations.entrySet()) {
+               for (Map<Node, String> map : entry.getValue()) {
+                  for (Map.Entry<Node, String> relationEntry : map.entrySet()) {
+                     domainPluginST.addEntityRelationsValue(getEntityProperty(relationEntry.getKey(), Properties.relationCardinality.name()), relationEntry.getValue(), getNameProperty(relationEntry.getKey()), entry.getKey());
                   }
+               }
+            }
 
-                  @Override
-                  public void visitRelation(Node node) {
+            GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainPluginST.getPackageName(), className).write(domainPluginST);
+         }
+      });
 
-                     // relation can be either to a Property or Entity
-                     final AtomicBoolean isProperty = new AtomicBoolean(false);
-                     outgoingDST(node, (relationship, dstNode) -> {
-                        if (isProperty(dstNode)) isProperty.set(true);
-                     });
+      ProjectPlugin.incomingRENDERER(domainNode.getNode(), (relationship, other) -> pop.add(new App.TransactionAction("Render Domain visitor", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            renderDomainVisitor(relationship, domainNode.getNode());
+         }
+      }));
+   }
 
-                     // if Entity (not Property), add relation
-                     if (!isProperty.get()) {
-                        domainRelations.add(getNameProperty(node,"").toUpperCase());
+   @Override
+   protected void handleEntity(JPopupMenu pop, NeoNode entityNode, Set<NeoNode> selectedNodes) {
 
-                        // add entity-relations
-                        final LinkedHashMap<Node, String> relation = new LinkedHashMap<>();
-                        relation.put(node, getNameProperty(singleOutgoingDST(node)));
-                        entityRelations.get(getNameProperty(singleIncomingSRC(node))).add(relation);
+      pop.add(new App.TransactionAction("New " + getNameProperty(entityNode.getNode()) + " instance", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Node newNode = getGraph().newNode(Label.label(getNameProperty(entityNode.getNode())));
+            relateINSTANCE(entityNode.getNode(), newNode);
+            fireNodesLoaded(newNode);
+         }
+      });
+
+      incomingVISITOR(entityNode.getNode(), (visitorRelation, visitorNode) -> pop.add(new App.TransactionAction("Visit with " + getNameProperty(visitorNode), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            try {
+               final DomainVisitor visitor = (DomainVisitor) Class.forName(getVisitorClassProperty(visitorNode)).
+                     getConstructor(Node.class, App.class).
+                     newInstance(visitorNode, app);
+               visitor.visit(entityNode.getNode());
+            } catch (Exception ex) {
+               SwingUtil.showException(ex, app);
+            }
+         }
+      }));
+
+      pop.add(new App.TransactionAction("Add Property", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final String name = SwingUtil.showInputDialog("Property name", app);
+            if (name == null || name.length() == 0) return;
+
+            final AtomicBoolean exists = new AtomicBoolean(false);
+            new EntityRelationVisitor() {
+               @Override
+               public void onSingle(Node relationNode, Node dstNode) {
+                  if (name.equals(getNameProperty(relationNode))) exists.set(true);
+               }
+
+               @Override
+               public void onList(Node relationNode, Node dstNode) {
+                  if (name.equals(getNameProperty(relationNode))) exists.set(true);
+               }
+            }.visit(entityNode.getNode());
+
+            if (exists.get()) {
+               SwingUtil.showMessage(getNameProperty(entityNode.getNode()) + " already has a property named " + name, app);
+               return;
+            }
+
+            final Node newPropertyNode = newProperty(name);
+            fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), entityNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+         }
+      });
+
+      pop.add(new App.TransactionAction("Add Entity-relation", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final JTextField txtName = new JTextField();
+            final JComboBox<RelationCardinality> cboCardinality = new JComboBox<>(RelationCardinality.values());
+            final JTextField txtEntityName = new JTextField();
+
+            final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref, 4dlu, pref, 4dlu, pref");
+            editor.addLabel("Relation name", 1, 1);
+            editor.add(txtName, 3, 1);
+            editor.addLabel("Cardinality", 1, 3);
+            editor.add(cboCardinality, 3, 3);
+            editor.addLabel("Entity Name", 1, 5);
+            editor.add(txtEntityName, 3, 5);
+            editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+
+            SwingUtil.showDialog(editor, app, "New Relation", new SwingUtil.ConfirmAction() {
+               @Override
+               public void verifyAndCommit() throws Exception {
+                  getGraph().doInTransaction(new NeoModel.Committer() {
+                     @Override
+                     public void doAction(Transaction tx14) throws Throwable {
+
+                        final String name = StringUtil.toUpper(txtName.getText().trim());
+                        final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
+
+                        if (name.length() == 0)
+                           throw new IllegalStateException("Relation Name is required");
+                        if (txtEntityName.getText().trim().length() == 0)
+                           throw new IllegalStateException("Entity must have a name");
+
+                        final Node newEntityNode = newEntity(txtEntityName.getText().trim());
+                        fireNodesLoaded(newEntityNode, newDomainEntityRelation(getGraph(), entityNode.getNode(), name, relationCardinality, newEntityNode));
                      }
 
-                     super.visitRelation(node);
-                  }
-
-                  @Override
-                  public void visitProperty(Node node) {
-                     domainProperties.add(getNameProperty(node));
-                     super.visitProperty(node);
-                  }
-               }.visitDomain(neoNode.getNode());
-
-               for (String name : domainRelations) domainPluginST.addRelationsValue(name);
-               for (String name : domainProperties) domainPluginST.addPropertiesValue(name);
-
-               for (Map.Entry<String, Set<String>> entry : entityProperties.entrySet()) {
-
-                  final DomainPluginGroup.EntityMethodsST entityMethodsST = domainPluginGroup.newEntityMethods().
-                        setName(entry.getKey());
-
-                  for (String propertyName : entry.getValue()) {
-                     domainPluginST.addEntityPropertiesValue(entry.getKey(), propertyName);
-                     entityMethodsST.addPropertiesValue(propertyName);
-                  }
-
-                  domainPluginST.addEntitiesValue(entityMethodsST, entry.getKey());
-               }
-
-               for (Map.Entry<String, Set<Map<Node, String>>> entry : entityRelations.entrySet()) {
-                  for (Map<Node, String> map : entry.getValue()) {
-                     for (Map.Entry<Node, String> relationEntry : map.entrySet()) {
-                        domainPluginST.addEntityRelationsValue(getEntityProperty(relationEntry.getKey(), Properties.relationCardinality.name()), relationEntry.getValue(), getNameProperty(relationEntry.getKey()), entry.getKey());
+                     @Override
+                     public void exception(Throwable throwable) {
+                        SwingUtil.showException(editor, throwable);
                      }
-                  }
+                  });
                }
+            });
+         }
+      });
 
-               GeneratedFile.newJavaFile(ProjectConstants.MAIN_ROOT, domainPluginST.getPackageName(), className).write(domainPluginST);
-            }
-         });
+      if (selectedNodes.size() <= 20) {
+         for (NeoNode selectedNode : selectedNodes) {
+            if (isEntity(selectedNode.getNode())) {
 
-         ProjectPlugin.incomingRENDERER(neoNode.getNode(), (relationship, other) -> pop.add(new App.TransactionAction("Render Domain visitor", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               renderDomainVisitor(relationship, neoNode.getNode());
-            }
-         }));
-
-      } else if (StringTemplatePlugin.isSTTemplate(neoNode.getNode())) {
-
-         pop.add(new App.TransactionAction("New " + getNameProperty(neoNode.getNode()) + " instance", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final Node newNode = getGraph().newNode(Label.label(getNameProperty(neoNode.getNode())));
-               relateINSTANCE(neoNode.getNode(), newNode);
-               fireNodesLoaded(newNode);
-            }
-         });
-
-      } else if (isEntity(neoNode.getNode())) {
-
-         pop.add(new App.TransactionAction("New " + getNameProperty(neoNode.getNode()) + " instance", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               final Node newNode = getGraph().newNode(Label.label(getNameProperty(neoNode.getNode())));
-               relateINSTANCE(neoNode.getNode(), newNode);
-               fireNodesLoaded(newNode);
-            }
-         });
-
-         incomingVISITOR(neoNode.getNode(), (visitorRelation, visitorNode) -> pop.add(new App.TransactionAction("Visit with " + getNameProperty(visitorNode), app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               try {
-                  final DomainVisitor visitor = (DomainVisitor) Class.forName(getVisitorClassProperty(visitorNode)).
-                        getConstructor(Node.class, App.class).
-                        newInstance(visitorNode, app);
-                  visitor.visit(neoNode.getNode());
-               } catch (Exception ex) {
-                  SwingUtil.showException(ex, app);
-               }
-            }
-         }));
-
-         pop.add(new App.TransactionAction("Add Property", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final String name = SwingUtil.showInputDialog("Property name", app);
-               if (name == null || name.length() == 0) return;
-
-               final AtomicBoolean exists = new AtomicBoolean(false);
-               new EntityRelationVisitor() {
+               pop.add(new App.TransactionAction("Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(entityNode.getNode()), app) {
                   @Override
-                  public void onSingle(Node relationNode, Node dstNode) {
-                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
-                  }
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                  @Override
-                  public void onList(Node relationNode, Node dstNode) {
-                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
-                  }
-               }.visit(neoNode.getNode());
+                     final JTextField txtName = new JTextField();
+                     final JComboBox<RelationCardinality> cboCardinality = new JComboBox<>(RelationCardinality.values());
 
-               if (exists.get()) {
-                  SwingUtil.showMessage(getNameProperty(neoNode.getNode()) + " already has a property named " + name, app);
-                  return;
-               }
+                     final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref, 4dlu, pref");
+                     editor.addLabel("Relation name", 1, 1);
+                     editor.add(txtName, 3, 1);
+                     editor.addLabel("Cardinality", 1, 3);
+                     editor.add(cboCardinality, 3, 3);
 
-               final Node newPropertyNode = newProperty(name);
-               fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
-            }
-         });
-
-         pop.add(new App.TransactionAction("Add Entity-relation", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final JTextField txtName = new JTextField();
-               final JComboBox<RelationCardinality> cboCardinality = new JComboBox<>(RelationCardinality.values());
-               final JTextField txtEntityName = new JTextField();
-
-               final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref, 4dlu, pref, 4dlu, pref");
-               editor.addLabel("Relation name", 1, 1);
-               editor.add(txtName, 3, 1);
-               editor.addLabel("Cardinality", 1, 3);
-               editor.add(cboCardinality, 3, 3);
-               editor.addLabel("Entity Name", 1, 5);
-               editor.add(txtEntityName, 3, 5);
-               editor.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
-
-               SwingUtil.showDialog(editor, app, "New Relation", new SwingUtil.ConfirmAction() {
-                  @Override
-                  public void verifyAndCommit() throws Exception {
-                     getGraph().doInTransaction(new NeoModel.Committer() {
+                     SwingUtil.showDialog(editor, app, "Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(entityNode.getNode()), new SwingUtil.ConfirmAction() {
                         @Override
-                        public void doAction(Transaction tx14) throws Throwable {
+                        public void verifyAndCommit() throws Exception {
+                           getGraph().doInTransaction(new NeoModel.Committer() {
+                              @Override
+                              public void doAction(Transaction tx14) throws Throwable {
 
-                           final String name = StringUtil.toUpper(txtName.getText().trim());
-                           final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
+                                 final String name = StringUtil.toUpper(txtName.getText().trim());
+                                 final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
 
-                           if (name.length() == 0)
-                              throw new IllegalStateException("Relation Name is required");
-                           if (txtEntityName.getText().trim().length() == 0)
-                              throw new IllegalStateException("Entity must have a name");
+                                 if (name.length() == 0)
+                                    throw new IllegalStateException("Relation Name is required");
 
-                           final Node newEntityNode = newEntity(txtEntityName.getText().trim());
-                           fireNodesLoaded(newEntityNode, newDomainEntityRelation(getGraph(), neoNode.getNode(), name, relationCardinality, newEntityNode));
-                        }
+                                 fireNodesLoaded(newDomainEntityRelation(getGraph(), selectedNode.getNode(), name, relationCardinality, entityNode.getNode()));
+                              }
 
-                        @Override
-                        public void exception(Throwable throwable) {
-                           SwingUtil.showException(editor, throwable);
+                              @Override
+                              public void exception(Throwable throwable) {
+                                 SwingUtil.showException(editor, throwable);
+                              }
+                           });
                         }
                      });
                   }
                });
-            }
-         });
 
-         if (selectedNodes.size() <= 20) {
-            for (NeoNode selectedNode : selectedNodes) {
-               if (isEntity(selectedNode.getNode())) {
+            } else if (isRelation(selectedNode.getNode())) {
+               pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> DST ->" + getNameAndLabelsFrom(entityNode.getNode()), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-                  pop.add(new App.TransactionAction("Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(neoNode.getNode()), app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                        final JTextField txtName = new JTextField();
-                        final JComboBox<RelationCardinality> cboCardinality = new JComboBox<>(RelationCardinality.values());
-
-                        final SwingUtil.FormPanel editor = new SwingUtil.FormPanel("75dlu,4dlu,75dlu:grow", "pref, 4dlu, pref");
-                        editor.addLabel("Relation name", 1, 1);
-                        editor.add(txtName, 3, 1);
-                        editor.addLabel("Cardinality", 1, 3);
-                        editor.add(cboCardinality, 3, 3);
-
-                        SwingUtil.showDialog(editor, app, "Add Relation " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> " + getNameAndLabelsFrom(neoNode.getNode()), new SwingUtil.ConfirmAction() {
-                           @Override
-                           public void verifyAndCommit() throws Exception {
-                              getGraph().doInTransaction(new NeoModel.Committer() {
-                                 @Override
-                                 public void doAction(Transaction tx14) throws Throwable {
-
-                                    final String name = StringUtil.toUpper(txtName.getText().trim());
-                                    final RelationCardinality relationCardinality = RelationCardinality.valueOf(cboCardinality.getSelectedItem().toString());
-
-                                    if (name.length() == 0)
-                                       throw new IllegalStateException("Relation Name is required");
-
-                                    fireNodesLoaded(newDomainEntityRelation(getGraph(), selectedNode.getNode(), name, relationCardinality, neoNode.getNode()));
-                                 }
-
-                                 @Override
-                                 public void exception(Throwable throwable) {
-                                    SwingUtil.showException(editor, throwable);
-                                 }
-                              });
-                           }
-                        });
-                     }
-                  });
-
-               } else if (isRelation(selectedNode.getNode())) {
-                  pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> DST ->" + getNameAndLabelsFrom(neoNode.getNode()), app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-                        // remove old DST
-                        System.out.println("removing existing DST");
-                        outgoingDST(selectedNode.getNode(), (relationship, other) -> relationship.delete());
-                        relateDST(selectedNode.getNode(), neoNode.getNode());
-                     }
-                  });
-               }
+                     // remove old DST
+                     System.out.println("removing existing DST");
+                     outgoingDST(selectedNode.getNode(), (relationship, other) -> relationship.delete());
+                     relateDST(selectedNode.getNode(), entityNode.getNode());
+                  }
+               });
             }
          }
+      }
+   }
 
-      } else if (isRelation(neoNode.getNode())) {
+   @Override
+   protected void handleRelation(JPopupMenu pop, NeoNode relationNode, Set<NeoNode> selectedNodes) {
 
-         pop.add(new App.TransactionAction("Add Property", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+      pop.add(new App.TransactionAction("Add Property", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
 
-               final String name = SwingUtil.showInputDialog("Property name", app);
-               if (name == null || name.length() == 0) return;
+            final String name = SwingUtil.showInputDialog("Property name", app);
+            if (name == null || name.length() == 0) return;
 
-               final AtomicBoolean exists = new AtomicBoolean(false);
-               new EntityRelationVisitor() {
-                  @Override
-                  public void onSingle(Node relationNode, Node dstNode) {
-                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
-                  }
-
-                  @Override
-                  public void onList(Node relationNode, Node dstNode) {
-                     if (name.equals(getNameProperty(relationNode))) exists.set(true);
-                  }
-               }.visit(neoNode.getNode());
-
-               if (exists.get()) {
-                  SwingUtil.showMessage(getNameProperty(neoNode.getNode()) + " already has a property named " + name, app);
-                  return;
+            final AtomicBoolean exists = new AtomicBoolean(false);
+            new EntityRelationVisitor() {
+               @Override
+               public void onSingle(Node relationNode, Node dstNode) {
+                  if (name.equals(getNameProperty(relationNode))) exists.set(true);
                }
 
-               final Node newPropertyNode = newProperty(name);
-               fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), neoNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+               @Override
+               public void onList(Node relationNode, Node dstNode) {
+                  if (name.equals(getNameProperty(relationNode))) exists.set(true);
+               }
+            }.visit(relationNode.getNode());
+
+            if (exists.get()) {
+               SwingUtil.showMessage(getNameProperty(relationNode.getNode()) + " already has a property named " + name, app);
+               return;
             }
-         });
 
-         if (selectedNodes.size() <= 20) {
-            for (NeoNode selectedNode : selectedNodes) {
-               if (isEntity(selectedNode.getNode())) {
-                  pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> src ->" + getNameAndLabelsFrom(neoNode.getNode()), app) {
-                     @Override
-                     protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            final Node newPropertyNode = newProperty(name);
+            fireNodesLoaded(newPropertyNode, newDomainEntityRelation(getGraph(), relationNode.getNode(), name, RelationCardinality.SINGLE, newPropertyNode));
+         }
+      });
 
-                        // remove old SRC
-                        System.out.println("removing existing SRC");
-                        incomingSRC(neoNode.getNode(), (relationship, other) -> relationship.delete());
-                        relateSRC(selectedNode.getNode(), neoNode.getNode());
-                     }
-                  });
-               }
+      if (selectedNodes.size() <= 20) {
+         for (NeoNode selectedNode : selectedNodes) {
+            if (isEntity(selectedNode.getNode())) {
+               pop.add(new App.TransactionAction("Set " + getNameAndLabelsFrom(selectedNode.getNode()) + " -> src ->" + getNameAndLabelsFrom(relationNode.getNode()), app) {
+                  @Override
+                  protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+                     // remove old SRC
+                     System.out.println("removing existing SRC");
+                     incomingSRC(relationNode.getNode(), (relationship, other) -> relationship.delete());
+                     relateSRC(selectedNode.getNode(), relationNode.getNode());
+                  }
+               });
             }
          }
+      }
 
-         pop.add(new App.TransactionAction("Change cardinality", app) {
+      pop.add(new App.TransactionAction("Change cardinality", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+            final RelationCardinality existing = RelationCardinality.valueOf(getRelationCardinalityProperty(relationNode.getNode()));
+            final RelationCardinality relationCardinality = SwingUtil.showSelectDialog(app, RelationCardinality.values(), existing);
+            if (relationCardinality == null || existing.equals(relationCardinality)) return;
+
+            setRelationCardinalityProperty(relationNode.getNode(), relationCardinality.name());
+
+            fireNodeChanged(relationNode, Properties.relationCardinality.name(), relationCardinality);
+         }
+      });
+   }
+
+   @Override
+   protected void handleValue(JPopupMenu pop, NeoNode valueNode, Set<NeoNode> selectedNodes) {
+
+      pop.add(new App.TransactionAction("Set value", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) {
+
+            final String oldValue = getNameProperty(valueNode.getNode());
+
+            final String newValue = SwingUtil.showInputDialog("New value", app, oldValue);
+            if (newValue == null || newValue.equals(oldValue)) return;
+
+            setNameProperty(valueNode.getNode(), newValue);
+            fireNodeChanged(valueNode.getNode());
+         }
+      });
+   }
+
+   @Override
+   protected void handleVisitor(JPopupMenu pop, NeoNode visitorNode, Set<NeoNode> selectedNodes) {
+
+      outgoingVISITOR(visitorNode.getNode(), (relationship, nodeToVisit) -> pop.add(new App.TransactionAction("Visit " + getNameOrLabelFrom(nodeToVisit), app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+            try {
+               final DomainVisitor visitor = (DomainVisitor) Class.forName(getVisitorClassProperty(visitorNode.getNode())).
+                     getConstructor(Node.class, App.class).
+                     newInstance(visitorNode.getNode(), app);
+               visitor.visit(nodeToVisit);
+            } catch (Exception ex) {
+               SwingUtil.showException(ex, app);
+            }
+         }
+      }));
+   }
+
+   @Override
+   public void handleNodeRightClick(JPopupMenu pop, NeoNode neoNode, Set<NeoNode> selectedNodes) {
+
+      super.handleNodeRightClick(pop,neoNode, selectedNodes);
+
+      if (StringTemplatePlugin.isSTTemplate(neoNode.getNode())) {
+
+         pop.add(new App.TransactionAction("New " + getNameProperty(neoNode.getNode()) + " instance", app) {
             @Override
             protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-
-               final RelationCardinality existing = RelationCardinality.valueOf(getRelationCardinalityProperty(neoNode.getNode()));
-               final RelationCardinality relationCardinality = SwingUtil.showSelectDialog(app, RelationCardinality.values(), existing);
-               if (relationCardinality == null || existing.equals(relationCardinality)) return;
-
-               setRelationCardinalityProperty(neoNode.getNode(), relationCardinality.name());
-
-               fireNodeChanged(neoNode, Properties.relationCardinality.name(), relationCardinality);
+               final Node newNode = getGraph().newNode(Label.label(getNameProperty(neoNode.getNode())));
+               relateINSTANCE(neoNode.getNode(), newNode);
+               fireNodesLoaded(newNode);
             }
          });
-
-      } else if (isValue(neoNode.getNode())) {
-         pop.add(new App.TransactionAction("Set value", app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) {
-
-               final String oldValue = getNameProperty(neoNode.getNode());
-
-               final String newValue = SwingUtil.showInputDialog("New value", app, oldValue);
-               if (newValue == null || newValue.equals(oldValue)) return;
-
-               setNameProperty(neoNode.getNode(), newValue);
-               fireNodeChanged(neoNode, AppMotif.Properties.name.name(), newValue);
-            }
-         });
-
-      } else if (isVisitor(neoNode.getNode())) {
-
-         outgoingVISITOR(neoNode.getNode(), (relationship, nodeToVisit) -> pop.add(new App.TransactionAction("Visit " + getNameOrLabelFrom(nodeToVisit), app) {
-            @Override
-            protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
-               try {
-                  final DomainVisitor visitor = (DomainVisitor) Class.forName(getVisitorClassProperty(neoNode.getNode())).
-                        getConstructor(Node.class, App.class).
-                        newInstance(neoNode.getNode(), app);
-                  visitor.visit(nodeToVisit);
-               } catch (Exception ex) {
-                  SwingUtil.showException(ex, app);
-               }
-            }
-         }));
       }
 
       showEntityActions(pop, neoNode, selectedNodes);
@@ -809,13 +819,10 @@ public class DomainPlugin extends DomainDomainPlugin {
    }
 
    @Override
-   public JComponent getEditorFor(NeoNode neoNode) {
-      if (hasLabel(neoNode.getNode(), Entities.Visitor)) {
-         final JTabbedPane rendererPanels = new JTabbedPane();
-         outgoingVISITOR(neoNode.getNode(), (visitorRelation, other) -> rendererPanels.add(getNameOrLabelFrom(neoNode.getNode()), new VisitorRenderPanel(neoNode, visitorRelation)));
-         return rendererPanels;
-      }
-      return null;
+   protected JComponent newVisitorEditor(NeoNode visitorNode) {
+      final JTabbedPane rendererPanels = new JTabbedPane();
+      outgoingVISITOR(visitorNode.getNode(), (visitorRelation, other) -> rendererPanels.add(getNameOrLabelFrom(visitorNode.getNode()), new VisitorRenderPanel(visitorNode, visitorRelation)));
+      return rendererPanels;
    }
 
    public static void renderDomainVisitor(Relationship rendererRelationship, Node node) {

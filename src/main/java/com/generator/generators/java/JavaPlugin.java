@@ -10,6 +10,7 @@ import com.generator.generators.java.parser.JavaLexer;
 import com.generator.generators.java.parser.JavaParser;
 import com.generator.generators.java.parser.JavaParserNeoVisitor;
 import com.generator.generators.stringtemplate.StringTemplatePlugin;
+import com.generator.neo.NeoModel;
 import com.generator.util.CompilerUtil;
 import com.generator.util.NeoUtil;
 import com.generator.util.Reflect;
@@ -28,9 +29,12 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -39,9 +43,13 @@ import static com.generator.util.NeoUtil.*;
  */
 public class JavaPlugin extends JavaDomainDomainPlugin {
 
+   public static void cleanupPreviousSessions(NeoModel graph) {
+      instanceMap.clear();
+   }
+
    private static final JavaGroup javaGroup = new JavaGroup();
 
-   private final Map<String, Object> instanceMap = new LinkedHashMap<>();
+   private static final Map<String, Object> instanceMap = new LinkedHashMap<>();
 
    public JavaPlugin(App app) {
       super(app);
@@ -49,6 +57,30 @@ public class JavaPlugin extends JavaDomainDomainPlugin {
 
    @Override
    protected void addActionsTo(JMenu menu) {
+
+
+      menu.add(new App.TransactionAction("Import jar-file", app) {
+         @Override
+         protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {
+
+//            final File jarFile = SwingUtil.showOpenFile(app, System.getProperty("user.home"));
+            final File jarFile = SwingUtil.showOpenFile(app, "/home/goe/projects/nextgen/lib/");
+            if(jarFile==null || !jarFile.exists() || !jarFile.getName().toLowerCase().endsWith(".jar")) return;
+
+            final JarFile jar = new JarFile(jarFile);
+            final Enumeration<JarEntry> entries = jar.entries();
+            while (entries.hasMoreElements()) {
+               final JarEntry entry = entries.nextElement();
+               final String name = entry.getName();
+               final int extIndex = name.lastIndexOf(".class");
+               if (extIndex > 0) {
+                  final String name2 = name.substring(0, extIndex).replace("/", ".");
+                  System.out.println(name + " -> " + name2);
+               }
+            }
+         }
+      });
+
       menu.add(new App.TransactionAction("New test - instance", app) {
          @Override
          protected void actionPerformed(ActionEvent e, Transaction tx) throws Exception {

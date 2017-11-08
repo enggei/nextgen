@@ -1,5 +1,6 @@
 package com.generator.app;
 
+import com.generator.generators.domain.DomainDomainPlugin;
 import com.generator.generators.domain.DomainPlugin;
 import com.generator.generators.domain.DomainVisitor;
 import com.generator.neo.NeoModel;
@@ -9,6 +10,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 import static com.generator.util.NeoUtil.*;
 
@@ -18,13 +20,28 @@ import static com.generator.util.NeoUtil.*;
 public class DomainMotif {
 
    // Domain utility-methods
+
+   public static Node newDomain(NeoModel graph, String name) {
+
+      final Set<Node> foundDomain = new LinkedHashSet<>();
+      graph.getAll(DomainPlugin.Entities.Domain.name()).forEach(domainNode -> {
+         if(name.equals(getEntityProperty(domainNode, AppMotif.Properties.name.name()))) foundDomain.add(domainNode);
+      });
+
+      if(foundDomain.isEmpty()) {
+         return graph.newNode(DomainPlugin.Entities.Domain.name(), AppMotif.Properties.name.name(), name);
+      }
+
+      return foundDomain.iterator().next();
+   }
+
    public static Node newDomainEntity(NeoModel graph, Label label, Node domainNode) {
 
       final Set<Node> foundEntity = new LinkedHashSet<>();
       new DomainVisitor<Void>(false) {
          @Override
          public void visitEntity(Node node) {
-            if (label.name().equals(get(node, AppMotif.Properties.name.name())))
+            if (label.name().equals(getEntityProperty(node, AppMotif.Properties.name.name())))
                foundEntity.add(node);
             super.visitEntity(node);
          }

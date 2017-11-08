@@ -175,6 +175,7 @@ public class Tests {
             new BaseClassVisitor() {
                @Override
                public void onClass(Package classPackage, String className, Class superClass) {
+                  if(className.contains("$")) return;
                   System.out.println(classPackage.getName() + "\n\t" + className);
                }
 

@@ -23,11 +23,11 @@ import static com.generator.util.NeoUtil.*;
 public abstract class JavaDomainDomainPlugin extends Plugin {
 
 	public enum Entities implements Label {
-      _package, Class, Object, Field, FieldType, Instantiator, Method, Statement, Parameter, Constructor
+      _package, Class, Object, Field, FieldType, Instantiator, Method, Statement, Parameter, Constructor, Jar
    }
 
    public enum Relations implements RelationshipType {
-      _PACKAGE, CLASS, OBJECT, FIELD, TYPE, INSTANTIATION, METHOD, BLOCK, NEXT, PARAMETER, CONSTRUCTOR
+      _PACKAGE, JAR, CLASS, OBJECT, FIELD, TYPE, INSTANTIATION, METHOD, BLOCK, NEXT, PARAMETER, CONSTRUCTOR
    }
 
    public enum Properties {
@@ -50,6 +50,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 		entitiesNodeMap.put(Entities.Statement, newDomainEntity(getGraph(), Entities.Statement, domainNode));
 		entitiesNodeMap.put(Entities.Parameter, newDomainEntity(getGraph(), Entities.Parameter, domainNode));
 		entitiesNodeMap.put(Entities.Constructor, newDomainEntity(getGraph(), Entities.Constructor, domainNode));
+		entitiesNodeMap.put(Entities.Jar, newDomainEntity(getGraph(), Entities.Jar, domainNode));
 
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities._package), Properties.name.name());
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Class), Properties.name.name());
@@ -62,8 +63,10 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Method), Properties.name.name());
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Statement), Properties.name.name());
 		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Parameter), Properties.name.name());
+		newDomainEntityProperty(getGraph(), domainNode, entitiesNodeMap.get(Entities.Jar), Properties.name.name());
 
 		relate(domainNode, entitiesNodeMap.get(Entities._package), DomainPlugin.Relations.ENTITY);
+		relate(domainNode, entitiesNodeMap.get(Entities.Jar), DomainPlugin.Relations.ENTITY);
 		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities._package), Relations.CLASS.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Class));
 		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.OBJECT.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Object));
 		newDomainEntityRelation(getGraph(), entitiesNodeMap.get(Entities.Class), Relations.FIELD.name(), DomainPlugin.RelationCardinality.LIST, entitiesNodeMap.get(Entities.Field));
@@ -94,6 +97,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 		if (isStatement(neoNode.getNode())) handleStatement(pop, neoNode, selectedNodes);
 		if (isParameter(neoNode.getNode())) handleParameter(pop, neoNode, selectedNodes);
 		if (isConstructor(neoNode.getNode())) handleConstructor(pop, neoNode, selectedNodes);
+		if (isJar(neoNode.getNode())) handleJar(pop, neoNode, selectedNodes);
    }
 
    @Override
@@ -108,6 +112,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 		if (isStatement(neoNode.getNode())) return newStatementEditor(neoNode);
 		if (isParameter(neoNode.getNode())) return newParameterEditor(neoNode);
 		if (isConstructor(neoNode.getNode())) return newConstructorEditor(neoNode);
+		if (isJar(neoNode.getNode())) return newJarEditor(neoNode);
       return null;
    }
 
@@ -120,7 +125,8 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 	protected void handleMethod(JPopupMenu pop, NeoNode methodNode, Set<NeoNode> selectedNodes) { }
 	protected void handleStatement(JPopupMenu pop, NeoNode statementNode, Set<NeoNode> selectedNodes) { }
 	protected void handleParameter(JPopupMenu pop, NeoNode parameterNode, Set<NeoNode> selectedNodes) { }
-	protected void handleConstructor(JPopupMenu pop, NeoNode constructorNode, Set<NeoNode> selectedNodes) { }	
+	protected void handleConstructor(JPopupMenu pop, NeoNode constructorNode, Set<NeoNode> selectedNodes) { }
+	protected void handleJar(JPopupMenu pop, NeoNode jarNode, Set<NeoNode> selectedNodes) { }	
 
 	protected JComponent new_packageEditor(NeoNode _packageNode) { return null; }
 	protected JComponent newClassEditor(NeoNode classNode) { return null; }
@@ -132,6 +138,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 	protected JComponent newStatementEditor(NeoNode statementNode) { return null; }
 	protected JComponent newParameterEditor(NeoNode parameterNode) { return null; }
 	protected JComponent newConstructorEditor(NeoNode constructorNode) { return null; }
+	protected JComponent newJarEditor(NeoNode jarNode) { return null; }
 
 	public static boolean is_package(Node node) { return hasLabel(node, Entities._package); }
 	public static boolean isClass(Node node) { return hasLabel(node, Entities.Class); }
@@ -143,6 +150,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 	public static boolean isStatement(Node node) { return hasLabel(node, Entities.Statement); }
 	public static boolean isParameter(Node node) { return hasLabel(node, Entities.Parameter); }
 	public static boolean isConstructor(Node node) { return hasLabel(node, Entities.Constructor); }
+	public static boolean isJar(Node node) { return hasLabel(node, Entities.Jar); }
 
 	protected Node new_package() { return new_package(getGraph()); } 
 	public static Node new_package(NeoModel graph) { return newInstanceNode(graph, Entities._package.name(), entitiesNodeMap.get(Entities._package)); } 
@@ -230,11 +238,25 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 	protected Node newConstructor() { return newConstructor(getGraph()); } 
 	public static Node newConstructor(NeoModel graph) { return newInstanceNode(graph, Entities.Constructor.name(), entitiesNodeMap.get(Entities.Constructor)); }
 
+	protected Node newJar() { return newJar(getGraph()); } 
+	public static Node newJar(NeoModel graph) { return newInstanceNode(graph, Entities.Jar.name(), entitiesNodeMap.get(Entities.Jar)); } 
+	protected Node newJar(Object name) { return newJar(getGraph(), name); } 
+	public static Node newJar(NeoModel graph, Object name) {  	
+		final Node newNode = newJar(graph); 	
+		if (name != null) relate(newNode, newValueNode(graph, name), RelationshipType.withName(Properties.name.name())); 	
+		return newNode; 
+	}
+
 
 	public static void outgoing_PACKAGE(Node src, RelationConsumer consumer) { outgoing(src, Relations._PACKAGE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoing_PACKAGE(Node src) { return other(src, singleOutgoing(src, Relations._PACKAGE)); }
 	public static void incoming_PACKAGE(Node src, RelationConsumer consumer) { incoming(src, Relations._PACKAGE).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleIncoming_PACKAGE(Node src) { return other(src, singleIncoming(src, Relations._PACKAGE)); }
+
+	public static void outgoingJAR(Node src, RelationConsumer consumer) { outgoing(src, Relations.JAR).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleOutgoingJAR(Node src) { return other(src, singleOutgoing(src, Relations.JAR)); }
+	public static void incomingJAR(Node src, RelationConsumer consumer) { incoming(src, Relations.JAR).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
+	public static Node singleIncomingJAR(Node src) { return other(src, singleIncoming(src, Relations.JAR)); }
 
 	public static void outgoingCLASS(Node src, RelationConsumer consumer) { outgoing(src, Relations.CLASS).forEach(relationship -> consumer.accept(relationship, other(src, relationship))); }
 	public static Node singleOutgoingCLASS(Node src) { return other(src, singleOutgoing(src, Relations.CLASS)); }
@@ -288,6 +310,7 @@ public abstract class JavaDomainDomainPlugin extends Plugin {
 
 
 	public static Relationship relate_PACKAGE(Node src, Node dst) { return relate(src, dst, Relations._PACKAGE); }
+	public static Relationship relateJAR(Node src, Node dst) { return relate(src, dst, Relations.JAR); }
 	public static Relationship relateCLASS(Node src, Node dst) { return relate(src, dst, Relations.CLASS); }
 	public static Relationship relateOBJECT(Node src, Node dst) { return relate(src, dst, Relations.OBJECT); }
 	public static Relationship relateFIELD(Node src, Node dst) { return relate(src, dst, Relations.FIELD); }
