@@ -45,6 +45,8 @@ import com.generator.generators.stringtemplate.parserg4.STGParserListener;
 import com.generator.generators.stringtemplate.parserg4.STGParserVisitor;
 import com.generator.generators.stringtemplate.parserg4.STParserListener;
 import com.generator.generators.stringtemplate.parserg4.STParserVisitor;
+import com.generator.generators.turtle.parser.TurtleListener;
+import com.generator.generators.turtle.parser.TurtleVisitor;
 import com.generator.generators.url.parser.urlListener;
 import com.generator.generators.url.parser.urlVisitor;
 import com.generator.generators.xml.parser.XMLParserListener;
@@ -84,6 +86,7 @@ public class AntlrGenerator {
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stacktrace.parser", "StackTrace", StackTraceVisitor.class, StackTraceListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STParser", STParserVisitor.class, STParserListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".stringtemplate.parserg4", "STGParser", STGParserVisitor.class, STGParserListener.class);
+      AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".turtle.parser", "Turtle", TurtleVisitor.class, TurtleListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".url.parser", "url", urlVisitor.class, urlListener.class);
       AntlrGenerator.generateVisitorAndListener(MAIN_ROOT, GENERATORS_PACKAGE + ".xml.parser", "XMLParser", XMLParserVisitor.class, XMLParserListener.class);
    }
